@@ -61,27 +61,6 @@ dependencies {
   runtimeOnly("ch.qos.logback:logback-classic")
 }
 
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
-  images.set(listOf(
-    "us-docker.pkg.dev/elide-fw/samples/helloworld/jvm:latest"
-  ))
-}
-
-tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
-  images.set(listOf(
-    "us-docker.pkg.dev/elide-fw/samples/helloworld/native:latest"
-  ))
-}
-
-tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage.set("us-docker.pkg.dev/elide-fw/tools/graalvm:latest")
-}
-
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
-  args("-H:+StaticExecutableWithDynamicLibC")
-}
-
 tasks.withType<Copy>().named("processResources") {
   dependsOn("copyStatic")
 }

@@ -9,6 +9,8 @@ include(
   ":base",
   ":frontend",
   ":server",
+  ":rpc:js",
+  ":rpc:jvm",
 )
 
 val buildSamples: String by settings
@@ -17,7 +19,10 @@ if (buildSamples == "true") {
   include(
     ":samples:server:hellocss",
     ":samples:server:helloworld",
-    ":samples:fullstack:basic",
+    ":samples:fullstack:basic:frontend",
+    ":samples:fullstack:basic:server",
+    ":samples:fullstack:react:frontend",
+    ":samples:fullstack:react:server",
   )
 }
 

@@ -85,14 +85,6 @@ kotlin {
                 implementation("jakarta.inject:jakarta.inject-api:$jakartaVersion")
                 implementation("com.google.protobuf:protobuf-java:$protobufVersion")
                 implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-                implementation("io.grpc:grpc-core:$grpcVersion")
-                implementation("io.grpc:grpc-api:$grpcVersion")
-                implementation("io.grpc:grpc-auth:$grpcVersion")
-                implementation("io.grpc:grpc-stub:$grpcVersion")
-                implementation("io.grpc:grpc-services:$grpcVersion")
-                implementation("io.grpc:grpc-netty:$grpcVersion")
-                implementation("io.grpc:grpc-protobuf:$grpcVersion")
-                implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinxCoroutinesVersion")
@@ -105,9 +97,7 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                implementation(npm("@types/google-protobuf", protobufTypesVersion))
-                implementation(npm("google-protobuf", protobufVersion))
-                implementation(npm("grpc-web", grpcWebVersion, generateExternals = true))
+                implementation(kotlin("stdlib-js"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-js:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:$kotlinxSerializationVersion")

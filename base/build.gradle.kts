@@ -13,10 +13,13 @@ val grpcWebVersion = project.properties["versions.grpcWeb"] as String
 val micronautVersion = project.properties["versions.micronaut"] as String
 val micronautPluginVersion = project.properties["versions.micronautPlugin"] as String
 val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
+val kotlinxCollectionsVersion = project.properties["versions.kotlinx.collections"] as String
+val kotlinxDatetimeVersion = project.properties["versions.kotlinx.datetime"] as String
 val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.atomicfu")
     kotlin("plugin.serialization")
 }
 
@@ -65,6 +68,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
                 implementation("org.jetbrains.kotlin:atomicfu:1.6.21")  // bugfix for missing dep
             }
         }

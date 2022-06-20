@@ -6,6 +6,7 @@ plugins {
   idea
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
   id("io.micronaut.library")
 }

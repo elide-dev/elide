@@ -19,4 +19,7 @@ object Versions {
   const val protobuf = "3.20.1"
   const val netty = "4.1.72.Final"
   const val tcNative = "2.0.46.Final"
+  const val atomicfu = "1.7.0"
+  const val atomicfuPlugin = "0.18.0"
+  const val koverPlugin = "0.5.0"
 }

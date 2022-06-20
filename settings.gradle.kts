@@ -9,9 +9,17 @@ include(
   ":base",
   ":frontend",
   ":server",
-  ":samples:server:hellocss",
-  ":samples:server:helloworld",
 )
+
+val buildSamples: String by settings
+
+if (buildSamples == "true") {
+  include(
+    ":samples:server:hellocss",
+    ":samples:server:helloworld",
+    ":samples:fullstack:basic",
+  )
+}
 
 gradleEnterprise {
   buildScan {

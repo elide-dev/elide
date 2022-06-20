@@ -2,6 +2,7 @@
 
 plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
+  id("org.jetbrains.kotlinx.kover") version "0.5.0"
 }
 
 buildscript {
@@ -14,6 +15,8 @@ buildscript {
   dependencies {
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
+    classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
+    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
   }
 }
 

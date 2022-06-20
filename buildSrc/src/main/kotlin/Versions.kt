@@ -17,4 +17,6 @@ object Versions {
   const val grpc = "1.46.0"
   const val grpcKotlin = "1.3.0"
   const val protobuf = "3.20.1"
+  const val netty = "4.1.72.Final"
+  const val tcNative = "2.0.46.Final"
 }

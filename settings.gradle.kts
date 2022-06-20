@@ -9,6 +9,8 @@ include(
   ":base",
   ":frontend",
   ":server",
+  ":samples:server:hellocss",
+  ":samples:server:helloworld",
 )
 
 gradleEnterprise {

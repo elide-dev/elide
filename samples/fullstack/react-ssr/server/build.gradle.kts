@@ -137,6 +137,23 @@ dependencies {
   )
 }
 
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/jvm:latest"
+  ))
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/native:latest"
+  ))
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  baseImage("gcr.io/distroless/cc-debian10")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}
+
 tasks.withType<Copy>().named("processResources") {
   dependsOn("copyJs")
   dependsOn("copyStatic")

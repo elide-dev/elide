@@ -6,6 +6,7 @@
 *.BUILD -linguist-detectable
 *.bzl linguist-language=Starlark linguist-detectable
 **/package-info.java -linguist-detectable linguist-generated
+samples/** -linguist-detectable
 graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
 graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
 graalvm-react/src/main/node/** -linguist-detectable linguist-generated

@@ -12,6 +12,20 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 
+/** Describes the expected interface for a response rendering object. */
+interface ResponseRenderer<R> {
+  /** @return Rendered result. */
+  fun render(): R
+}
+
+
+/** Describes the expected interface for a response rendering object which leverages co-routines. */
+interface SuspensionRenderer<R> {
+  /** @return Rendered result. */
+  suspend fun render(): R
+}
+
+
 /**
  * Serve a static file which is embedded in the application JAR, at the path `/static/[file]`.
  *
@@ -81,8 +95,8 @@ fun html(block: HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
 internal class HtmlContent (
   private val prettyhtml: Boolean = false,
   private val builder: HTML.() -> Unit
-) {
-  fun render(): ByteArrayOutputStream {
+): ResponseRenderer<ByteArrayOutputStream> {
+  override fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {
       it.appendHTML(
@@ -115,8 +129,8 @@ fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
 // HTML content rendering and container utility.
 class CssContent (
   private val builder: CssBuilder.() -> Unit
-) {
-  fun render(): ByteArray {
+): ResponseRenderer<ByteArray> {
+  override fun render(): ByteArray {
     return CssBuilder().apply(builder).toString().toByteArray(
       StandardCharsets.UTF_8
     )

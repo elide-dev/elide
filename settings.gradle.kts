@@ -1,4 +1,3 @@
-
 plugins {
   id("com.gradle.enterprise") version("3.10.2")
 }
@@ -9,6 +8,9 @@ include(
   ":base",
   ":frontend",
   ":server",
+  ":graalvm",
+  ":graalvm-js",
+  ":graalvm-react",
   ":rpc:js",
   ":rpc:jvm",
 )
@@ -23,6 +25,11 @@ if (buildSamples == "true") {
     ":samples:fullstack:basic:server",
     ":samples:fullstack:react:frontend",
     ":samples:fullstack:react:server",
+    ":samples:fullstack:ssr:node",
+    ":samples:fullstack:ssr:server",
+    ":samples:fullstack:react-ssr:frontend",
+    ":samples:fullstack:react-ssr:node",
+    ":samples:fullstack:react-ssr:server",
   )
 }
 

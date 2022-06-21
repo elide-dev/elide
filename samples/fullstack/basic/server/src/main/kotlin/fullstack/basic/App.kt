@@ -22,8 +22,8 @@ object App {
     @Get("/") fun index() = html {
       head {
         title { +"Hello, Elide!" }
-        stylesheet(this@Index::styles)
-        script(this@Index::js, defer = true)
+        stylesheet("/styles/main.css")
+        script("/scripts/ui.js", defer = true)
       }
       body {
         strong { +"Hello, Elide!" }

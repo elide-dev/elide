@@ -66,8 +66,6 @@ dependencies {
   implementation(project(":base"))
 
   // Kotlin
-  implementation(kotlin("reflect"))
-  implementation(kotlin("stdlib-jdk8"))
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:${Versions.kotlinSerialization}")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:${Versions.kotlinSerialization}")
@@ -76,7 +74,7 @@ dependencies {
   // Kotlin Wrappers
   implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-${Versions.kotlinWrappers}")
 
-  // gRPC
+  // Google
   implementation("io.grpc:grpc-core")
   implementation("io.grpc:grpc-api")
   implementation("io.grpc:grpc-auth")
@@ -85,6 +83,7 @@ dependencies {
   implementation("io.grpc:grpc-netty")
   implementation("io.grpc:grpc-protobuf")
   implementation("io.grpc:grpc-kotlin-stub:${Versions.grpcKotlin}")
+  implementation("com.google.guava:guava:${Versions.guava}")
 
   // Protocol Buffers
   implementation("com.google.protobuf:protobuf-java:${Versions.protobuf}")

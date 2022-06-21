@@ -1,0 +1,11 @@
+*.proto linguist-language=Protocol-Buffer linguist-detectable
+*.soy linguist-language=Closure-Templates linguist-detectable
+*.ts linguist-language=TypeScript linguist-detectable
+*.build linguist-language=Starlark -linguist-detectable
+*.owl linguist-language=Web-Ontology-Language
+*.BUILD -linguist-detectable
+*.bzl linguist-language=Starlark linguist-detectable
+graalvm/src/test/resources/embedded/*.js -linguist-detectable
+graalvm-react/src/main/node/* -linguist-detectable
+graalvm-react/src/main/node/*.js -linguist-detectable
+docs/* linguist-documentation

@@ -81,7 +81,6 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 api("org.slf4j:slf4j-api:$slf4jVersion")
-                implementation(kotlin("stdlib-jdk8"))
                 implementation("jakarta.inject:jakarta.inject-api:$jakartaVersion")
                 implementation("com.google.protobuf:protobuf-java:$protobufVersion")
                 implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")

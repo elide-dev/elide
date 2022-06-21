@@ -13,10 +13,12 @@ buildscript {
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {
+    classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
+    classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
   }
 }
 
@@ -25,6 +27,7 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+    jcenter()
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
     kotlinOptions {

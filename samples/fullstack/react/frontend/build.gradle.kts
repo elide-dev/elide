@@ -30,11 +30,9 @@ kotlin {
 dependencies {
   implementation(project(":base"))
   implementation(kotlin("stdlib-js"))
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:0.0.1-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.1.0-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.1.0-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-mui:5.8.3-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:5.3.5-${kotlinWrapperVersion}")
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:0.0.1-${Versions.kotlinWrappers}")
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${Versions.kotlinWrappers}")
+  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${Versions.react}-${Versions.kotlinWrappers}")
 }
 
 tasks.withType<Tar> {

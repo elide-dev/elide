@@ -25,10 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean
     @JvmStatic @Factory private fun initializeContext(): org.graalvm.polyglot.Context {
       return org.graalvm.polyglot.Context
         .newBuilder("js")
-        .allowIO(true)
         .allowExperimentalOptions(true)
         .option("js.ecmascript-version", "2020")
-        .option("js.nashorn-compat", "true")
         .option("js.v8-compat", "true")
         .build()
     }

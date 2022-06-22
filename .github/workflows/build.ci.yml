@@ -2,6 +2,10 @@ name: Build
 
 on: [push]
 
+env:
+  JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
+  GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
+
 jobs:
   gradle:
     strategy:
@@ -97,7 +101,124 @@ jobs:
 
       ## CI: Build
       - name: "🛠️ Build"
-        run: echo "Building Elide..."; env && ./gradlew build -Pelide.ci=true build -x nativeCompile -x test
-        env:
-          JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
-          GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
+        run: |
+          echo "Building Elide..."; env \
+            && ./gradlew build \
+              -Pelide.ci=true \
+              -PbuildSamples=false \
+              -x nativeCompile \
+              -x test \
+              build
+
+    ## Build
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: my_file.txt
+        retention-days: 5
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [gradle]
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Setup: QEMU
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      ## Setup: Docker
+      - uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          install: true
+
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      ## Setup: `gu` components
+      - name: Install native-image component
+        run: |
+          ${{ matrix.gu-binary }} install native-image espresso
+
+      ## Setup: GCloud Auth
+      - id: 'auth'
+        name: 'Authorize Service Account'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}'
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+
+      ## Setup: GCloud SDK
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+
+      ## -- Samples -- ##
+
+      ## Docker Samples: Server - Hello World - JVM
+      - name: "Samples/Server: Hello World (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:server:helloworld:dockerBuild \
+            :samples:server:helloworld:dockerPush;
+
+      ## Docker Samples: Server - Hello CSS - JVM
+      - name: "Samples/Server: Hello CSS (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:server:hellocss:dockerBuild \
+            :samples:server:hellocss:dockerPush;
+
+      ## Docker Samples: Fullstack - Basic - JVM
+      - name: "Samples/Fullstack: Basic (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:fullstack:basic:server:dockerBuild \
+            :samples:fullstack:basic:server:dockerPush;
+
+      ## Docker Samples: Fullstack - React - JVM
+      - name: "Samples/Fullstack: React (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:fullstack:react:server:dockerBuild \
+            :samples:fullstack:react:server:dockerPush;
+
+      ## Docker Samples: Fullstack - SSR - JVM
+      - name: "Samples/Fullstack: Vanilla SSR (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:fullstack:ssr:server:dockerBuild \
+            :samples:fullstack:ssr:server:dockerPush;
+
+      ## Docker Samples: Fullstack - React SSR - JVM
+      - name: "Samples/Fullstack: React SSR (JVM)"
+        run: |
+          ./gradlew -Pelide.ci=true -x nativeCompile \
+            :samples:fullstack:react-ssr:server:dockerBuild \
+            :samples:fullstack:react-ssr:server:dockerPush;

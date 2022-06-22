@@ -85,6 +85,12 @@ jobs:
           version: 389.0.0
           project_id: elide-fw
 
+      ## Setup: Docker Auth
+      - name: Authorize Docker
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev && \
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u dymebot --password-stdin
+
       ## Setup: Gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -178,6 +184,12 @@ jobs:
         with:
           version: 389.0.0
           project_id: elide-fw
+
+      ## Setup: Docker Auth
+      - name: Authorize Docker
+        run: |
+          yes Y | gcloud auth configure-docker us-docker.pkg.dev && \
+          echo "$GITHUB_TOKEN" | docker login ghcr.io -u dymebot --password-stdin
 
       ## Prep: Download Caches
       - name: Cache dependencies

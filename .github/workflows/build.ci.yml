@@ -97,7 +97,7 @@ jobs:
 
       ## CI: Build
       - name: "🛠️ Build"
-        run: echo "Building Elide..."; env && ./gradlew build -Pelide.ci=true build test -x nativeCompile
+        run: echo "Building Elide..."; env && ./gradlew build -Pelide.ci=true build -x nativeCompile -x test
         env:
           JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
           GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64

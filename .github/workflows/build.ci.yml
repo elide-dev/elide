@@ -75,11 +75,18 @@ jobs:
           version: 389.0.0
           project_id: elide-fw
 
-      ## Setup: Docker Auth
-      - name: Authorize Docker
+      ## Setup: Docker Auth (GAR)
+      - name: "Authorize Docker: GCP"
         run: |
-          gcloud auth configure-docker us-docker.pkg.dev && \
-          echo "$GITHUB_TOKEN" | docker login ghcr.io -u dymebot --password-stdin
+          gcloud auth configure-docker us-docker.pkg.dev
+
+      ## Setup: Docker Auth (GHCR)
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
 
       ## Setup: Gradle
       - name: Setup Gradle

@@ -40,7 +40,7 @@ micronaut {
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
   processing {
     incremental.set(true)
-    annotations.add("helloworld.*")
+    annotations.add("hellocss.*")
   }
   aot {
     optimizeServiceLoading.set(true)
@@ -70,4 +70,27 @@ tasks.withType<Copy>().named("processResources") {
 tasks.register<Copy>("copyStatic") {
   from("src/main/resources/static/**/*.*")
   into("$buildDir/resources/main/static")
+}
+
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
+  baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/server/hellocss/jvm:latest"
+  ))
+  this.target
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/server/hellocss/native:latest"
+  ))
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  graalImage.set("us-docker.pkg.dev/elide-fw/tools/builder:latest")
+  baseImage("gcr.io/distroless/cc-debian10")
+  args("-H:+StaticExecutableWithDynamicLibC")
 }

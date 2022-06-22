@@ -98,3 +98,26 @@ tasks.register<Copy>("copyStatic") {
   from("src/main/resources/static/**/*.*")
   into("$buildDir/resources/main/static")
 }
+
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
+  baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/basic/jvm:latest"
+  ))
+  this.target
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/basic/native:latest"
+  ))
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  graalImage.set("us-docker.pkg.dev/elide-fw/tools/builder:latest")
+  baseImage("gcr.io/distroless/cc-debian10")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}

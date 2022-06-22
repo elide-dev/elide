@@ -140,7 +140,6 @@ dependencies {
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
   baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
-  args("-H:+StaticExecutableWithDynamicLibC")
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

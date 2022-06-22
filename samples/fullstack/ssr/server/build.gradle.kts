@@ -95,6 +95,7 @@ graalvmNative {
         "--language:java",
         "--language:regex",
         "--enable-all-security-services",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {
@@ -127,4 +128,27 @@ tasks.register<Copy>("copyStatic") {
 tasks.register<Copy>("copyEmbedded") {
   from(nodeDist)
   into("$buildDir/resources/main/embedded")
+}
+
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
+  baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/ssr/jvm:latest"
+  ))
+  this.target
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
+  images.set(listOf(
+    "us-docker.pkg.dev/elide-fw/samples/fullstack/ssr/native:latest"
+  ))
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  graalImage.set("us-docker.pkg.dev/elide-fw/tools/builder:latest")
+  baseImage("gcr.io/distroless/cc-debian10")
+  args("-H:+StaticExecutableWithDynamicLibC")
 }

@@ -62,6 +62,7 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     jcenter()
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {

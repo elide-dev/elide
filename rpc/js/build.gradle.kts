@@ -1,3 +1,4 @@
+import java.net.URI
 
 val protobufVersion = project.properties["versions.protobuf"] as String
 val protobufTypesVersion = project.properties["versions.protobufTypes"] as String
@@ -26,7 +27,7 @@ kotlin {
       create<MavenPublication>("main") {
         groupId = "dev.elide"
         artifactId = "rpc-js"
-        version = rootProject.version as String ?: "1.0-SNAPSHOT"
+        version = rootProject.version as String
 
         from(components["kotlin"])
       }
@@ -40,8 +41,21 @@ val javadocJar by tasks.registering(Jar::class) {
 
 publishing {
   repositories {
-    maven("gcs://elide-snapshots/repository/v3")
+    maven {
+      name = "elide"
+      url = URI.create(project.properties["elide.publish.repo.maven"] as String)
+
+      if (project.hasProperty("elide.publish.repo.maven.auth")) {
+          credentials {
+              username = (project.properties["elide.publish.repo.maven.username"] as? String
+                  ?: System.getenv("PUBLISH_USER"))?.ifBlank { null }
+              password = (project.properties["elide.publish.repo.maven.password"] as? String
+                  ?: System.getenv("PUBLISH_TOKEN"))?.ifBlank { null }
+          }
+      }
+    }
   }
+
   publications.withType<MavenPublication> {
     artifact(javadocJar.get())
     pom {

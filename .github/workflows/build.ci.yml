@@ -27,6 +27,19 @@ jobs:
         shell: bash
 
     steps:
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
       ## Setup: QEMU
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -39,13 +52,6 @@ jobs:
 
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
-
-      ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
-        with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
 
       ## Setup: `gu` components
       - name: Install native-image component
@@ -92,3 +98,6 @@ jobs:
       ## CI: Build
       - name: "🛠️ Build"
         run: echo "Building Elide..."; env && ./gradlew build -Pelide.ci=true build test -x nativeCompile
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
+          GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64

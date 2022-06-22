@@ -20,9 +20,6 @@ jobs:
 
     container:
       image: us-docker.pkg.dev/elide-fw/tools/builder:latest
-      credentials:
-        username: '_json_key_base64'
-        password: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT_B64 }}'
 
     permissions:
       contents: 'read'

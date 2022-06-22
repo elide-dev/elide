@@ -63,17 +63,11 @@ jobs:
         run: |
           ${{ matrix.gu-binary }} install native-image espresso
 
-      ## Setup: Gradle
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
       ## Prep: Download Caches
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
             ./node_modules
             ./build
             ./*/build
@@ -85,14 +79,45 @@ jobs:
 
       ## CI: Build
       - name: "🛠️ Build"
-        run: |
-          echo "Building Elide..." \
-            && ./gradlew build \
-              -Pelide.ci=true \
-              -PbuildSamples=false \
-              -x nativeCompile \
-              -x test \
-              build;
+        uses: gradle/gradle-build-action@v2
+        env:
+          CI: true
+        with:
+          arguments: |
+            build
+            --scan
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -x nativeCompile
+            -x test
+
+      ## CI: Failure Comment
+      - name: "Comment: Build Scan (Failure)"
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request' && failure()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
+            })
+
+      ## CI: Success Comment
+      - name: "Comment: Build Scan (Success)"
+        uses: actions/github-script@v5
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ ${{ github.workflow }} completed: ${{ steps.gradle.outputs.build-scan-url }}'
+            })
 
   docker-jvm:
     runs-on: ubuntu-latest
@@ -103,10 +128,6 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-
-    defaults:
-      run:
-        shell: bash
 
     steps:
       ## Setup: Java
@@ -175,8 +196,6 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
             ./node_modules
             ./build
             ./*/build
@@ -190,42 +209,66 @@ jobs:
 
       ## Docker Samples: Server - Hello World - JVM
       - name: "Samples/Server: Hello World (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:server:helloworld:dockerBuild \
-            :samples:server:helloworld:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:server:helloworld:dockerBuild
+            :samples:server:helloworld:dockerPush
 
       ## Docker Samples: Server - Hello CSS - JVM
       - name: "Samples/Server: Hello CSS (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:server:hellocss:dockerBuild \
-            :samples:server:hellocss:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:server:hellocss:dockerBuild
+            :samples:server:hellocss:dockerPush
 
       ## Docker Samples: Fullstack - Basic - JVM
       - name: "Samples/Fullstack: Basic (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:fullstack:basic:server:dockerBuild \
-            :samples:fullstack:basic:server:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:fullstack:basic:server:dockerBuild
+            :samples:fullstack:basic:server:dockerPush
 
       ## Docker Samples: Fullstack - React - JVM
       - name: "Samples/Fullstack: React (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:fullstack:react:server:dockerBuild \
-            :samples:fullstack:react:server:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:fullstack:react:server:dockerBuild
+            :samples:fullstack:react:server:dockerPush
 
       ## Docker Samples: Fullstack - SSR - JVM
       - name: "Samples/Fullstack: Vanilla SSR (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:fullstack:ssr:server:dockerBuild \
-            :samples:fullstack:ssr:server:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:fullstack:ssr:server:dockerBuild
+            :samples:fullstack:ssr:server:dockerPush
 
       ## Docker Samples: Fullstack - React SSR - JVM
       - name: "Samples/Fullstack: React SSR (JVM)"
-        run: |
-          ./gradlew -Pelide.ci=true -x nativeCompile \
-            :samples:fullstack:react-ssr:server:dockerBuild \
-            :samples:fullstack:react-ssr:server:dockerPush;
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x nativeCompile
+            -x test
+            :samples:fullstack:react-ssr:server:dockerBuild
+            :samples:fullstack:react-ssr:server:dockerPush

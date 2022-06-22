@@ -75,3 +75,6 @@ jobs:
       ## CI: Build
       - name: "🛠️ Build"
         run: ./gradlew -Pelide.ci=true build test
+        env:
+          GRAALVM_HOME: /usr/lib/gvm
+          JAVA_HOME: /usr/lib/jvm/zulu11

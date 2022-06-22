@@ -18,9 +18,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    container:
-      image: us-docker.pkg.dev/elide-fw/tools/builder:latest
-
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -43,6 +40,18 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Setup: `gu` components
+      - name: Install native-image component
+        run: |
+          ${{ matrix.gu-binary }} install native-image espresso
+
       ## Setup: GCloud Auth
       - id: 'auth'
         name: 'Authorize Service Account'
@@ -60,6 +69,10 @@ jobs:
           version: 389.0.0
           project_id: elide-fw
 
+      ## Setup: Gradle
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
       ## Prep: Download Caches
       - name: Cache dependencies
         uses: actions/cache@v2
@@ -74,7 +87,4 @@ jobs:
 
       ## CI: Build
       - name: "🛠️ Build"
-        run: ./gradlew -Pelide.ci=true build test -x nativeCompile
-        env:
-          GRAALVM_HOME: /usr/lib/gvm
-          JAVA_HOME: /usr/lib/gvm
+        run: echo "Building Elide..."; env && ./gradlew build -Pelide.ci=true build test -x nativeCompile

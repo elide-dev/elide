@@ -108,17 +108,9 @@ jobs:
               -PbuildSamples=false \
               -x nativeCompile \
               -x test \
-              build
+              build;
 
-    ## Build
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: my_file.txt
-        retention-days: 5
-
-  docker:
+  docker-jvm:
     runs-on: ubuntu-latest
     needs: [gradle]
 
@@ -178,6 +170,22 @@ jobs:
         with:
           version: 389.0.0
           project_id: elide-fw
+
+      ## Prep: Download Caches
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
 
       ## -- Samples -- ##
 

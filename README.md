@@ -1,9 +1,7 @@
 
 ## `@elide` (v3)
 
-<hr />
-
-_**Elide is under construction. You can also browse to [`v2`][11] or [`v1`][12].**_
+_**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].**_
 
 <hr />
 

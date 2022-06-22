@@ -18,15 +18,20 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         gu-binary: [gu, gu.cmd]
-        exclude:
+        experimental: [false]
+        include:
           - os: ubuntu-latest
-            gu-binary: gu.cmd
-          - os: macos-latest
-            gu-binary: gu.cmd
-          - os: windows-latest
+            experimental: false
             gu-binary: gu
+          - os: macos-latest
+            experimental: true
+            gu-binary: gu
+          - os: windows-latest
+            experimental: true
+            gu-binary: gu.cmd
 
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
 
     permissions:
       contents: 'read'

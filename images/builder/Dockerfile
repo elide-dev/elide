@@ -184,7 +184,7 @@ RUN echo "Building Elide builder image..." \
     && bash install_gcloud.sh --disable-prompts --install-dir=/var/lib/gcloud \
     && rm -fv install_gcloud.sh \
     && cd ~ \
-    && /var/lib/gcloud/bin/gcloud auth configure-docker us-docker.pkg.dev \
+    && /var/lib/gcloud/google-cloud-sdk/bin/gcloud auth configure-docker us-docker.pkg.dev \
     && rm -rf /var/lib/apt/lists/* \
     && export GOPATH="/go" \
     && mkdir -p "$GOPATH/src" "$GOPATH/bin" \
@@ -195,4 +195,4 @@ ENV GRADLE_HOME="/opt/gradle" \
     KOTLIN_HOME="/opt/kotlinc" \
     GOPATH="/go" \
     QTWEBENGINE_DISABLE_SANDBOX="1" \
-    PATH="$GRADLE_HOME/bin:$KOTLIN_HOME/bin:$GOPATH/bin:/usr/local/go:/var/lib/gcloud/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin"
+    PATH="$GRADLE_HOME/bin:$KOTLIN_HOME/bin:$GOPATH/bin:/usr/local/go:/var/lib/gcloud/google-cloud-sdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin"

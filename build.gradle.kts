@@ -20,8 +20,10 @@ buildscript {
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
     classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
   }
-  configurations.classpath {
-    resolutionStrategy.activateDependencyLocking()
+  if (project.property("elide.lockDeps") == "true") {
+    configurations.classpath {
+      resolutionStrategy.activateDependencyLocking()
+    }
   }
 }
 
@@ -33,9 +35,11 @@ tasks.register("relock") {
   )
 }
 
-subprojects {
-  dependencyLocking {
-    lockAllConfigurations()
+if (project.property("elide.lockDeps") == "true") {
+  subprojects {
+    dependencyLocking {
+      lockAllConfigurations()
+    }
   }
 }
 

@@ -13,6 +13,7 @@ buildscript {
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {
+    classpath("com.bmuschko:gradle-docker-plugin:${Versions.dockerPlugin}")
     classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")

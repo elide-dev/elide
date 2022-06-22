@@ -1,0 +1,17 @@
+
+alias gcaa="git add . && git commit --amend"
+alias b="bazelisk"
+alias c="clear"
+alias gdc="clear && git diff --cached"
+alias gd="clear && git diff"
+alias ga="clear && git add -p"
+alias gs="clear && git status -sb"
+alias g="git"
+alias m="make"
+alias k="clear && kubectl"
+
+gsha () {
+  echo "Fingerprinting '$1@$2'...";
+  TARGET_URL="https://github.com/$1/archive/$2.tar.gz";
+  curl -sSL "$TARGET_URL" | shasum -a 256 -;
+}

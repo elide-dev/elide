@@ -39,4 +39,6 @@ RUN apt-get update \
 
 ENV JAVA_HOME=/usr/lib/gvm \
     GRAALVM_HOME=/usr/lib/gvm \
+    LC_CTYPE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin

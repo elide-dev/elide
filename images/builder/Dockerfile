@@ -193,6 +193,8 @@ RUN echo "Building Elide builder image..." \
 
 ENV GRADLE_HOME="/opt/gradle" \
     KOTLIN_HOME="/opt/kotlinc" \
+    JAVA_HOME="/usr/lib/jvm/zulu11" \
+    GRAALVM_HOME="/usr/lib/gvm" \
     GOPATH="/go" \
     QTWEBENGINE_DISABLE_SANDBOX="1" \
     PATH="$GRADLE_HOME/bin:$KOTLIN_HOME/bin:$GOPATH/bin:/usr/local/go/bin:/var/lib/gcloud/google-cloud-sdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin"

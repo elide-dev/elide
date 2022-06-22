@@ -4,15 +4,28 @@ FROM us-docker.pkg.dev/elide-fw/tools/builder:latest
 ARG DEV_USER=dev
 ARG IBAZEL_VERSION=v0.15.10
 
-ENV EDITOR=vim \
+ARG INSTALL_ZSH="true"
+ARG UPGRADE_PACKAGES="true"
+ARG USERNAME=${DEV_USER}
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+ENV EDITOR=code \
     SHELL=zsh \
     LANG=en_US.UTF-8 \
+    LC_CTYPE=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
     TZ=America/Los_Angeles \
     PATH="/home/$DEV_USER/bin:$PATH"
 
-RUN groupadd dev \
-    && useradd -g dev -m ${DEV_USER} \
-    && usermod -aG sudo ${DEV_USER} \
+COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
+COPY zshrc /home/$DEV_USER/.zshrc
+COPY alias /home/$DEV_USER/.alias
+
+RUN echo "Setting up Debian-based codespace..." \
+    && yes | unminimize 2>&1 \
+    && bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+    && echo "Installing updates and dev packages..." \
     && apt-get update \
     && apt-get -y install \
         apt-transport-https \
@@ -44,15 +57,15 @@ RUN groupadd dev \
         zsh \
     && echo "$DEV_USER  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && rm -rf /var/lib/apt/lists/* \
     && chsh -s /bin/zsh "$DEV_USER" \
     && su "$DEV_USER" \
-    && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
     && go install github.com/bazelbuild/buildtools/buildifier@latest \
     && go install github.com/bazelbuild/buildtools/buildozer@latest \
     && go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest \
     && go install github.com/fullstorydev/grpcui/cmd/grpcui@latest \
     && go install github.com/bazelbuild/bazelisk@latest \
+    && rm -rf /var/lib/apt/lists/* \
+    && chown "$DEV_USER" "/home/$DEV_USER/.zshrc" "/home/$DEV_USER/.alias" \
     && mkdir -p /home/dev/bin \
     && curl -o /home/dev/bin/ibazel "https://github.com/bazelbuild/bazel-watcher/releases/download/$IBAZEL_VERSION/ibazel_linux_amd64" \
     && echo "Codespace image ready."

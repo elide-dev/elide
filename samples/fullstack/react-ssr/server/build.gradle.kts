@@ -42,6 +42,7 @@ graalvmNative {
         "--language:java",
         "--language:regex",
         "--enable-all-security-services",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {

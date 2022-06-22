@@ -90,7 +90,10 @@ dependencies {
   implementation("com.google.protobuf:protobuf-kotlin:${Versions.protobuf}")
 
   // Micronaut
-  implementation("io.micronaut:micronaut-http")
+  implementation("io.micronaut:micronaut-http:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-context:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-inject:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-inject-java:${Versions.micronaut}")
   implementation("io.micronaut.grpc:micronaut-grpc-runtime:${Versions.micronautGrpc}")
   implementation("io.micronaut.grpc:micronaut-grpc-client-runtime:${Versions.micronautGrpc}")
 

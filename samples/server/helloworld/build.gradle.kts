@@ -58,7 +58,7 @@ dependencies {
   implementation("io.micronaut:micronaut-context")
   implementation("io.micronaut:micronaut-runtime")
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
-  runtimeOnly("ch.qos.logback:logback-classic")
+  runtimeOnly("ch.qos.logback:logback-classic:${Versions.logbackClassic}")
 }
 
 tasks.withType<Copy>().named("processResources") {

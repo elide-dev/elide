@@ -20,8 +20,24 @@ buildscript {
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
     classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
   }
+  configurations.classpath {
+    resolutionStrategy.activateDependencyLocking()
+  }
 }
 
+tasks.register("relock") {
+  dependsOn(
+    *(subprojects.map {
+      it.tasks.named("dependencies")
+    }.toTypedArray())
+  )
+}
+
+subprojects {
+  dependencyLocking {
+    lockAllConfigurations()
+  }
+}
 
 allprojects {
   repositories {

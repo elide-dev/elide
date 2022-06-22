@@ -117,7 +117,7 @@ dependencies {
   implementation("io.micronaut:micronaut-runtime")
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
   implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-${Versions.kotlinWrappers}")
-  runtimeOnly("ch.qos.logback:logback-classic")
+  runtimeOnly("ch.qos.logback:logback-classic:${Versions.logbackClassic}")
 
   browserDist(
     project(

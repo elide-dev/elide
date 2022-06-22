@@ -71,8 +71,10 @@ dependencies {
   implementation("com.google.guava:guava:${Versions.guava}")
 
   // Micronaut
-  implementation("io.micronaut:micronaut-http")
-  implementation("io.micronaut:micronaut-context")
+  implementation("io.micronaut:micronaut-http:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-context:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-inject:${Versions.micronaut}")
+  implementation("io.micronaut:micronaut-inject-java:${Versions.micronaut}")
 
   // GraalVM SDK
   implementation("org.graalvm.sdk:graal-sdk:${Versions.graalvm}")

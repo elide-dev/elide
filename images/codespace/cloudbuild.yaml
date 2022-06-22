@@ -1,0 +1,6 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-docker.pkg.dev/elide-fw/tools/codespace', '.']
+images: ['us-docker.pkg.dev/elide-fw/tools/codespace']
+options:
+  logging: CLOUD_LOGGING_ONLY

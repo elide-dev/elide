@@ -1,0 +1,65 @@
+name: Build
+
+on: pull_request
+
+jobs:
+  gradle:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        gu-binary: [gu, gu.cmd]
+        exclude:
+          - os: ubuntu-latest
+            gu-binary: gu.cmd
+          - os: macos-latest
+            gu-binary: gu.cmd
+          - os: windows-latest
+            gu-binary: gu
+
+    runs-on: ${{ matrix.os }}
+
+    container:
+      image: us-docker.pkg.dev/elide-fw/tools/builder:latest
+      credentials:
+        username: '_json_key_base64'
+        password: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT_B64 }}'
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: 'auth'
+        name: 'Authorize Service Account'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}'
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/gradle.lockfile') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+
+      - name: "🛠️ Build"
+        run: ./gradlew -Pelide.ci=true build test

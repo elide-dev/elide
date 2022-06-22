@@ -63,36 +63,6 @@ jobs:
         run: |
           ${{ matrix.gu-binary }} install native-image espresso
 
-      ## Setup: GCloud Auth
-      - id: 'auth'
-        name: 'Authorize Service Account'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}'
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
-
-      ## Setup: GCloud SDK
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
-        with:
-          version: 389.0.0
-          project_id: elide-fw
-
-      ## Setup: Docker Auth (GAR)
-      - name: "Authorize Docker: GCP"
-        run: |
-          gcloud auth configure-docker us-docker.pkg.dev
-
-      ## Setup: Docker Auth (GHCR)
-      - name: "Authorize Docker: GHCR"
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: elidebot
-          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
-
       ## Setup: Gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -187,11 +157,18 @@ jobs:
           version: 389.0.0
           project_id: elide-fw
 
-      ## Setup: Docker Auth
-      - name: Authorize Docker
+      ## Setup: Docker Auth (GAR)
+      - name: "Authorize Docker: GCP"
         run: |
-          yes Y | gcloud auth configure-docker us-docker.pkg.dev && \
-          echo "$GITHUB_TOKEN" | docker login ghcr.io -u dymebot --password-stdin
+          gcloud auth configure-docker us-docker.pkg.dev
+
+      ## Setup: Docker Auth (GHCR)
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
 
       ## Prep: Download Caches
       - name: Cache dependencies

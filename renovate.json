@@ -1,5 +1,58 @@
 {
+  "enabled": true,
   "extends": [
     "config:base"
+  ],
+  "enabledManagers": [
+    "bazel",
+    "cloudbuild",
+    "dockerfile",
+    "github-actions",
+    "git-submodules",
+    "npm",
+    "pip_requirements",
+    "bazelisk",
+    "buildkite",
+    "html"
+  ],
+  "pinDigests": true,
+  "rangeStrategy": "pin",
+  "updateLockFiles": true,
+  "dependencyDashboard": true,
+  "dependencyDashboardApproval": true,
+  "lockFileMaintenance": { "enabled": true },
+  "labels": ["dependencies"],
+  "hostRules": [
+    {
+      "hostType": "docker",
+      "matchHost": "us-docker.pkg.dev",
+      "username": "_json_key_base64",
+      "encrypted": {
+        "password": "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"
+      }
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@bazel/"],
+      "matchPackageNames": ["build_bazel_rules_nodejs", "rules_nodejs"],
+      "groupName": "Bazel Rules: Node"
+    },
+    {
+      "matchPackagePatterns": ["*kotlin*"],
+      "groupName": "Kotlin"
+    },
+    {
+      "matchPackageNames": ["react", "react-dom", "@types/react"],
+      "groupName": "React"
+    },
+    {
+      "matchPackagePatterns": ["^@firebase/"],
+      "matchPackageNames": ["firebase"],
+      "groupName": "Firebase"
+    }
+  ],
+  "postUpdateOptions": [
+    "yarnDedupeHighest"
   ]
 }

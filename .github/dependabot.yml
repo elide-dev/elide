@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "sgammon"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "sgammon"
+
+  # Maintain dependencies for Gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "sgammon"
+
+  # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    directory: "images"
+    schedule:
+      interval: "daily"
+    assignees:
+      - "sgammon"

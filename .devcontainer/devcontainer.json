@@ -1,0 +1,34 @@
+{
+  "name": "elide",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "settings": {
+    "java.completion.enabled": true,
+    "java.debug.settings.enableRunDebugCodeLens": true,
+    "java.test.editor.enableShortcuts": true
+  },
+  "extensions": [
+    "bazelbuild.vscode-bazel",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "fwcd.kotlin",
+    "github.codespaces",
+    "github.copilot",
+    "googlecloudtools.cloudcode",
+    "ms-azuretools.vscode-docker",
+    "ms-python.python",
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "redhat.java",
+    "redhat.vscode-yaml",
+    "sswg.swift-lang",
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-java-test"
+  ],
+  "updateContentCommand": "./gradlew build -x nativeCompile",
+  "forwardPorts": [8080, 50051],
+  "remoteUser": "dev"
+}

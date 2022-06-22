@@ -1,7 +1,13 @@
 name: Build
 
-on: [push]
-
+on:
+  push:
+    branches:
+      - v3
+      - main
+      - stable
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
 env:
   JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
   GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
@@ -113,6 +119,8 @@ jobs:
   docker-jvm:
     runs-on: ubuntu-latest
     needs: [gradle]
+    if: |
+      github.ref == 'refs/heads/v3' || github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm')
 
     permissions:
       contents: 'read'
@@ -152,7 +160,7 @@ jobs:
       ## Setup: `gu` components
       - name: Install native-image component
         run: |
-          ${{ matrix.gu-binary }} install native-image espresso
+          gu install native-image espresso
 
       ## Setup: GCloud Auth
       - id: 'auth'

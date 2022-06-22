@@ -108,7 +108,7 @@ jobs:
       ## CI: Build
       - name: "🛠️ Build"
         run: |
-          echo "Building Elide..."; env \
+          echo "Building Elide..." \
             && ./gradlew build \
               -Pelide.ci=true \
               -PbuildSamples=false \

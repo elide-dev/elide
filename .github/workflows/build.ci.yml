@@ -50,16 +50,6 @@ jobs:
           java: 'java11'
           arch: 'amd64'
 
-      ## Setup: QEMU
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      ## Setup: Docker
-      - uses: docker/setup-buildx-action@v2
-        id: buildx
-        with:
-          install: true
-
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 

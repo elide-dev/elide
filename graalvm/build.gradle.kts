@@ -31,6 +31,9 @@ java {
         }))
       }
     }
+    if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
+
+    }
   }
 }
 

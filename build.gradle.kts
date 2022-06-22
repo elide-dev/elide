@@ -1,9 +1,18 @@
 @file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
 
+import java.util.Properties
+
 plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
   id("org.jetbrains.kotlinx.kover") version "0.5.0"
 }
+
+val props = java.util.Properties()
+props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
+  "gradle-ci.properties"
+} else {
+  "local.properties"
+}).inputStream())
 
 buildscript {
   repositories {

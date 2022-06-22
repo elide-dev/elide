@@ -26,6 +26,7 @@ object Versions {
   const val guava = "31.1-jre"
   const val react = "18.1.0"
   const val dockerPlugin = "7.4.0"
+  const val gauthPlugin = "2.1.5"
   const val nodePlugin = "3.0.1"
   const val node = "17.0.42"
   const val nodeDeclarations = "0.0.7"

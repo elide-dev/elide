@@ -5,9 +5,13 @@ import java.util.Properties
 plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
   id("org.jetbrains.kotlinx.kover") version "0.5.0"
+  id("com.google.cloud.artifactregistry.gradle-plugin")
 }
 
-val props = java.util.Properties()
+group = "dev.elide"
+version = "1.0-SNAPSHOT"
+
+val props = Properties()
 props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
   "gradle-ci.properties"
 } else {
@@ -24,6 +28,7 @@ buildscript {
   dependencies {
     classpath("com.bmuschko:gradle-docker-plugin:${Versions.dockerPlugin}")
     classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
+    classpath("gradle.plugin.com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:${Versions.gauthPlugin}")
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")

@@ -18,16 +18,57 @@ val kotlinxDatetimeVersion = project.properties["versions.kotlinx.datetime"] as 
 val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
 
 plugins {
+    `maven-publish`
+    signing
     kotlin("multiplatform")
     kotlin("plugin.atomicfu")
     kotlin("plugin.serialization")
+    id("com.google.cloud.artifactregistry.gradle-plugin")
 }
 
 group = "dev.elide"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    google()
     mavenCentral()
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
+    maven("gcs://elide-snapshots/repository/v3")
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
+publishing {
+    repositories {
+        maven("gcs://elide-snapshots/repository/v3")
+    }
+    publications.withType<MavenPublication> {
+        artifact(javadocJar.get())
+        pom {
+            name.set("Elide")
+            description.set("Polyglot application framework")
+            url.set("https://github.com/elide-dev/v3")
+
+            licenses {
+                license {
+                    name.set("Properity License")
+                    url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+                }
+            }
+            developers {
+                developer {
+                    id.set("sgammon")
+                    name.set("Sam Gammon")
+                    email.set("samuel.gammon@gmail.com")
+                }
+            }
+            scm {
+                url.set("https://github.com/elide-dev/v3")
+            }
+        }
+    }
 }
 
 kotlin {
@@ -50,6 +91,11 @@ kotlin {
             }
         }
     }
+
+    publishing {
+        publications {}
+    }
+
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -58,7 +104,6 @@ kotlin {
         isMingwX64 -> mingwX64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
-
     
     sourceSets {
         val commonMain by getting {

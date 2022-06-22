@@ -195,4 +195,4 @@ ENV GRADLE_HOME="/opt/gradle" \
     KOTLIN_HOME="/opt/kotlinc" \
     GOPATH="/go" \
     QTWEBENGINE_DISABLE_SANDBOX="1" \
-    PATH="$GRADLE_HOME/bin:$KOTLIN_HOME/bin:$GOPATH/bin:/usr/local/go:/var/lib/gcloud/google-cloud-sdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin"
+    PATH="$GRADLE_HOME/bin:$KOTLIN_HOME/bin:$GOPATH/bin:/usr/local/go/bin:/var/lib/gcloud/google-cloud-sdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin"

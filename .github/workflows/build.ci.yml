@@ -160,6 +160,7 @@ jobs:
       - name: Install native-image component
         run: |
           gu install native-image espresso
+          gu rebuild-images
 
       ## Setup: GCloud Auth
       - id: 'auth'

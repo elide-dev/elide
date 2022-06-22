@@ -79,11 +79,15 @@ jobs:
         with:
           path: |
             ~/.gradle/caches
+            ~/.gradle/wrapper
             ./node_modules
             ./build
             ./*/build
             ./*/*/build
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/gradle.lockfile') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
 
       ## CI: Build
       - name: "🛠️ Build"

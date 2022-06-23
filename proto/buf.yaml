@@ -1,0 +1,57 @@
+version: v1
+
+name: buf.build/elide/v3
+
+build:
+  excludes:
+    - bazel-bin
+    - bazel-elide
+    - bazel-out
+    - bazel-testlogs
+    - dist
+    - external
+    - node_modules
+lint:
+  use:
+    - DEFAULT
+    - COMMENT_ENUM
+    - COMMENT_ENUM_VALUE
+    - COMMENT_FIELD
+    - COMMENT_MESSAGE
+    - COMMENT_RPC
+    - COMMENT_ONEOF
+    - COMMENT_SERVICE
+    - ENUM_FIRST_VALUE_ZERO
+    - PACKAGE_NO_IMPORT_CYCLE
+    - PACKAGE_SAME_CSHARP_NAMESPACE
+    - PACKAGE_SAME_GO_PACKAGE
+    - PACKAGE_SAME_JAVA_MULTIPLE_FILES
+    - PACKAGE_SAME_JAVA_PACKAGE
+    - PACKAGE_SAME_PHP_NAMESPACE
+    - PACKAGE_SAME_RUBY_PACKAGE
+    - PACKAGE_SAME_SWIFT_PREFIX
+    - RPC_NO_CLIENT_STREAMING
+    - RPC_NO_SERVER_STREAMING
+  except:
+    - FILE_LOWER_SNAKE_CASE
+    - ENUM_VALUE_PREFIX
+    - ENUM_ZERO_VALUE_SUFFIX
+    - ENUM_NO_ALLOW_ALIAS
+    - PACKAGE_VERSION_SUFFIX
+    - SERVICE_SUFFIX
+    - PACKAGE_DIRECTORY_MATCH
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME
+    - RPC_REQUEST_RESPONSE_UNIQUE
+  enum_zero_value_suffix: _UNSPECIFIED
+  rpc_allow_same_request_response: true
+  rpc_allow_google_protobuf_empty_requests: true
+  rpc_allow_google_protobuf_empty_responses: true
+  allow_comment_ignores: true
+breaking:
+  use:
+    - FILE
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/elide/safe-html-types
+

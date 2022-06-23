@@ -92,7 +92,7 @@ jobs:
 
       ## CI: Failure Comment
       - name: "Comment: Build Scan (Failure)"
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: github.event_name == 'pull_request' && failure()
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -106,7 +106,7 @@ jobs:
 
       ## CI: Success Comment
       - name: "Comment: Build Scan (Success)"
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -304,7 +304,7 @@ jobs:
       ## Download coverage reports (TBD)
 
       ## Upload to Codecov
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
           files: ./coverage1.xml,./coverage2.xml # optional

@@ -26,6 +26,7 @@ plugins {
     kotlin("plugin.atomicfu")
     kotlin("plugin.serialization")
     id("com.google.cloud.artifactregistry.gradle-plugin")
+    id("org.sonarqube")
 }
 
 group = "dev.elide"

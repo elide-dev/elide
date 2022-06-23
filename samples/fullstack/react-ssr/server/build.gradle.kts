@@ -9,6 +9,7 @@ plugins {
   kotlin("plugin.serialization")
   id("io.micronaut.application")
   id("io.micronaut.aot")
+  id("org.sonarqube")
 }
 
 kotlin {

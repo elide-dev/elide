@@ -5,6 +5,7 @@ plugins {
   kotlin("js")
   kotlin("kapt")
   kotlin("plugin.serialization")
+  id("org.sonarqube")
 }
 
 val kotlinWrapperVersion = Versions.kotlinWrappers

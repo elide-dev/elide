@@ -14,6 +14,7 @@ plugins {
   kotlin("plugin.serialization")
   id("io.micronaut.library")
   id("com.adarshr.test-logger")
+  id("org.sonarqube")
 }
 
 kotlin {

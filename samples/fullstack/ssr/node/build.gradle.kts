@@ -16,6 +16,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   id("com.github.node-gradle.node")
+  id("org.sonarqube")
 }
 
 val kotlinWrapperVersion = Versions.kotlinWrappers

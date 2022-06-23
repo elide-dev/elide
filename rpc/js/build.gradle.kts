@@ -14,6 +14,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  id("org.sonarqube")
 }
 
 kotlin {

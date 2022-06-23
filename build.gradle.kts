@@ -4,8 +4,9 @@ import java.util.Properties
 
 plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
-  id("org.jetbrains.kotlinx.kover") version "0.5.0"
   id("com.google.cloud.artifactregistry.gradle-plugin")
+  id("org.jetbrains.kotlinx.kover") version "0.5.0"
+  id("org.sonarqube") version "3.4.0.2513"
 }
 
 group = "dev.elide"

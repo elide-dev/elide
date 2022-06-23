@@ -59,6 +59,40 @@ if (project.property("elide.lockDeps") == "true") {
   }
 }
 
+sonarqube {
+  properties {
+    property("sonar.projectKey", "elide-dev_v3")
+    property("sonar.organization", "elide-dev")
+    property("sonar.host.url", "https://sonarcloud.io")
+    property("sonar.dynamicAnalysis", "reuseReports")
+    property("sonar.junit.reportsPath", "build/reports/")
+    property("sonar.java.coveragePlugin", "jacoco")
+    property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
+  }
+}
+
+subprojects {
+  val name = this.name
+
+  sonarqube {
+    if (name != "base") {
+      properties {
+        property("sonar.sources", "src/main/kotlin")
+        property("sonar.tests", "src/test/kotlin")
+        property(
+          "sonar.coverage.jacoco.xmlReportPaths",
+          "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"
+        )
+      }
+    } else {
+      properties {
+        property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
+        property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
+      }
+    }
+  }
+}
+
 allprojects {
   repositories {
     google()

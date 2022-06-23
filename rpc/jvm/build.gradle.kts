@@ -51,6 +51,25 @@ val javadocJar by tasks.registering(Jar::class) {
   archiveClassifier.set("javadoc")
 }
 
+tasks.jacocoTestReport {
+  dependsOn(tasks.test)
+  reports {
+    xml.required.set(true)
+  }
+  classDirectories.setFrom(
+    files(classDirectories.files.map {
+      fileTree(it) {
+        exclude(
+          "**/generated/**",
+          "**/com/**",
+          "**/grpc/gateway/**",
+          "**/tools/elide/**",
+        )
+      }
+    })
+  )
+}
+
 publishing {
   repositories {
     maven {

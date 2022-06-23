@@ -1,4 +1,4 @@
-(function(undefined) {
+(function(_) {
     if (!("TextEncoder"in self&&"TextDecoder"in self
     )) {
 // TextEncoder

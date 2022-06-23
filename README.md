@@ -16,7 +16,7 @@ _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].
 
 <hr />
 
-Elide is **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
+Elide is a **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
 Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
 

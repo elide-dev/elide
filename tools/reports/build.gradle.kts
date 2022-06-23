@@ -2,6 +2,7 @@
 
 plugins {
   id("test-report-aggregation")
+  id("org.sonarqube")
 }
 
 reporting {
@@ -10,6 +11,10 @@ reporting {
       testType.set(TestSuiteType.UNIT_TEST)
     }
   }
+}
+
+sonarqube {
+  skipProject = true
 }
 
 dependencies {

@@ -6,3 +6,6 @@ buildSrc/.gradle/
 kotlin-js-store/yarn.lock
 .buildstate.tar.gz
 local.properties
+node_modules/
+.yarn/cache
+.yarn/install-state.gz

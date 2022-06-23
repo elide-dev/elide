@@ -13,6 +13,10 @@ env:
   GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
 
 jobs:
+  ##
+  ## Job: Library Build
+  ##
+
   gradle:
     strategy:
       matrix:
@@ -118,6 +122,70 @@ jobs:
               repo: context.repo.repo,
               body: '✅ ${{ github.workflow }} completed: ${{ steps.gradle.outputs.build-scan-url }}'
             })
+
+
+  ##
+  ## Job: Sonar
+  ##
+
+  sonar:
+    runs-on: ubuntu-latest
+    needs: [gradle]
+    steps:
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Setup: Checkout Code
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      ## Prep: Download Caches
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
+
+      ## Run Sonar
+      - name: "Run Sonar"
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: |
+            sonarqube
+            --scan
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -x nativeCompile
+            -x test
+
+
+  ##
+  ## Job: Docker Samples (JVM)
+  ##
 
   docker-jvm:
     runs-on: ubuntu-latest

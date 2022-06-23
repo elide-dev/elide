@@ -1,0 +1,64 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "v3" ]
+  pull_request:
+    branches: [ "v3" ]
+  schedule:
+    - cron: '17 14 * * 3'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'java', 'typescript' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+
+      ## Prep: Download Caches
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
+
+      ## CI: Re-Build
+      - name: "🛠️ Build"
+        uses: gradle/gradle-build-action@v2
+        env:
+          CI: true
+        with:
+          arguments: |
+            build
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -x nativeCompile
+            -x test
+
+      ## Code QL: Perform analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2

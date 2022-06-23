@@ -13,6 +13,7 @@ include(
   ":graalvm-react",
   ":rpc:js",
   ":rpc:jvm",
+  ":tools:reports",
 )
 
 val buildSamples: String by settings

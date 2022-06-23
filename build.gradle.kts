@@ -104,7 +104,12 @@ subprojects {
         property("sonar.tests", "src/test/kotlin")
         property(
           "sonar.coverage.jacoco.xmlReportPaths",
-          "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"
+          listOf(
+            "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+            "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+            "build/reports/jacoco/test/jacocoTestReport.xml",
+            "build/reports/kover/xml/coverage.xml",
+          )
         )
       }
     } else {
@@ -142,5 +147,30 @@ allprojects {
       apiVersion = Versions.kotlinLanguage
       languageVersion = Versions.kotlinLanguage
     }
+  }
+}
+
+kover {
+  if (project.hasProperty("elide.ci") && (project.properties["elide.ci"] as String) == "true") {
+    coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
+  } else {
+    coverageEngine.set(kotlinx.kover.api.CoverageEngine.INTELLIJ)
+  }
+}
+
+tasks.koverMergedHtmlReport {
+  isEnabled = true
+  htmlReportDir.set(layout.buildDirectory.dir("${rootProject.buildDir}/reports/kover/html"))
+}
+
+tasks.koverMergedXmlReport {
+  isEnabled = true
+  xmlReportFile.set(layout.buildDirectory.file("${rootProject.buildDir}/reports/kover/xml/coverage.xml"))
+}
+
+subprojects {
+  tasks.koverXmlReport {
+    isEnabled = true
+    xmlReportFile.set(layout.buildDirectory.file("${project.buildDir}/reports/kover/xml/coverage.xml"))
   }
 }

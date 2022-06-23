@@ -295,7 +295,7 @@ jobs:
   ##
   tools-codecov:
     runs-on: ubuntu-latest
-    needs: [gradle, tests-jvm]
+    needs: [tests-jvm]
     if: github.ref == 'refs/heads/non-existent'  # disable temporarily
     steps:
       ## Setup: Checkout Code

@@ -20,8 +20,12 @@ SAMPLES ?= no
 GRADLE ?= ./gradlew
 RM ?= $(shell which rm)
 FIND ?= $(shell which find)
+MKDIR ?= $(shell which mkdir)
+CP ?= $(shell which cp)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
+DOCS ?= $(PWD)/docs
+REPORTS ?= $(DOCS)/reports
 
 POSIX_FLAGS ?=
 GRADLE_ARGS ?=
@@ -95,8 +99,24 @@ clean:  ## Clean build outputs and caches.
 docs: $(DOCS)  ## Generate docs for all library modules.
 	@echo "Generating docs..."
 	$(CMD)$(GRADLE) docs $(_ARGS)
-	@cd $(TARGET)/docs && cp -frv ./* $(PWD)/docs/
+	$(CMD)$(MKDIR) -p $(DOCS)
+	$(CMD)cd $(TARGET)/docs && $(CP) -fr$(POSIX_FLAGS) ./* $(PWD)/docs/
 	@echo "Docs update complete."
+
+reports:  ## Generate reports for tests, coverage, etc.
+	@echo "Generating reports..."
+	$(CMD)$(GRADLE) \
+		koverMergedHtmlReport \
+		koverMergedXmlReport \
+		:tools:reports:reports \
+		-x nativeCompile \
+		-x test
+	$(CMD)$(MKDIR) -p $(REPORTS)
+	@echo "Copying merged reports to '$(REPORTS)'..."
+	$(CMD)cd $(TARGET)/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	@echo "Copying test reports to '$(REPORTS)'..."
+	$(CMD)cd tools/reports/build && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	@echo "Reports synced."
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."

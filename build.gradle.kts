@@ -10,7 +10,13 @@ plugins {
 }
 
 group = "dev.elide"
-version = "1.0-SNAPSHOT"
+
+// Set version from `.version` if stamping is enabled.
+version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
+  file(".version").readText().trim().replace("\n", "")
+} else {
+  "1.0-SNAPSHOT"
+}
 
 val props = Properties()
 props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {

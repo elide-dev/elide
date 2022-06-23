@@ -133,11 +133,6 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
                 implementation("org.jetbrains.kotlin:atomicfu:1.6.21")  // bugfix for missing dep
-
-                // docs dependencies
-//                dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.kotlin}")
-//                dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.kotlin}")
-//                dokkaJavadocPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.kotlin}")
             }
         }
         val commonTest by getting {

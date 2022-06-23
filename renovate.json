@@ -39,10 +39,6 @@
       "groupName": "Bazel Rules: Node"
     },
     {
-      "matchPackagePatterns": ["*kotlin*"],
-      "groupName": "Kotlin"
-    },
-    {
       "matchPackageNames": ["react", "react-dom", "@types/react"],
       "groupName": "React"
     },

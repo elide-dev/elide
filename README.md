@@ -1,6 +1,15 @@
 
 ## `@elide` (v3)
 
+[![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.7.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![GraalVM](https://img.shields.io/badge/graal-22.1.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
+[![Micronaut](https://img.shields.io/badge/micronaut-3.5.x-blue.svg?logo=java)](https://micronaut.io)
+[![React](https://img.shields.io/badge/react-18.x-blue.svg?logo=react)](https://reactjs.org/)
+
 _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].**_
 
 <hr />

@@ -62,11 +62,6 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Setup: `gu` components
-      - name: Install native-image component
-        run: |
-          ${{ matrix.gu-binary }} install native-image espresso
-
       ## Prep: Download Caches
       - name: Cache dependencies
         uses: actions/cache@v2
@@ -123,6 +118,53 @@ jobs:
               body: '✅ ${{ github.workflow }} completed: ${{ steps.gradle.outputs.build-scan-url }}'
             })
 
+  ##
+  ## Job: Testsuite (JVM)
+  ##
+
+  tests-jvm:
+    runs-on: ubuntu-latest
+    needs: [gradle]
+    continue-on-error: true  # temporary
+    steps:
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Prep: Download Caches
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
+
+      ## Run Sonar
+      - name: "Run Tests"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            test
+            -Pelide.ci=true
+            -x nativeCompile
 
   ##
   ## Job: Sonar
@@ -197,8 +239,8 @@ jobs:
       (
         github.ref == 'refs/heads/stable' ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
-        contains(github.event.head_commit.message, 'build-img-jvm') ||
-        startsWith(github.ref, 'refs/tags/')
+        contains(github.event.head_commit.message, 'ci:build-img-jvm') ||
+        startsWith(github.ref, 'refs/tags/v')
       )
 
     permissions:
@@ -349,3 +391,162 @@ jobs:
             -x test
             :samples:fullstack:react-ssr:server:dockerBuild
             :samples:fullstack:react-ssr:server:dockerPush
+
+
+  ##
+  ## Job: Docker Samples (JVM)
+  ##
+
+  docker-native:
+    runs-on: ubuntu-latest
+    needs: [gradle]
+    if: |
+      (
+        github.ref == 'refs/heads/stable' ||
+        contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
+        contains(github.event.head_commit.message, 'ci:build-img-native') ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Setup: QEMU
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      ## Setup: Docker
+      - uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          install: true
+
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      ## Setup: `gu` components
+      - name: Install native-image component
+        run: |
+          gu install native-image espresso
+          gu rebuild-images
+
+      ## Setup: GCloud Auth
+      - id: 'auth'
+        name: 'Authorize Service Account'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}'
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+
+      ## Setup: GCloud SDK
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+
+      ## Setup: Docker Auth (GAR)
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+
+      ## Setup: Docker Auth (GHCR)
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
+
+      ## Prep: Download Caches
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ./node_modules
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
+          restore-keys: |
+            elide-${{ runner.os }}
+            elide-
+
+      ## -- Samples -- ##
+
+      ## Docker Samples: Server - Hello World - Native
+      - name: "Samples/Server: Hello World (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:server:helloworld:dockerBuildNative
+            :samples:server:helloworld:dockerPushNative
+
+      ## Docker Samples: Server - Hello CSS - Native
+      - name: "Samples/Server: Hello CSS (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:server:hellocss:dockerBuildNative
+            :samples:server:hellocss:dockerPushNative
+
+      ## Docker Samples: Fullstack - Basic - Native
+      - name: "Samples/Fullstack: Basic (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:fullstack:basic:server:dockerBuildNative
+            :samples:fullstack:basic:server:dockerPushNative
+
+      ## Docker Samples: Fullstack - React - Native
+      - name: "Samples/Fullstack: React (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:fullstack:react:server:dockerBuildNative
+            :samples:fullstack:react:server:dockerPushNative
+
+      ## Docker Samples: Fullstack - SSR - Native
+      - name: "Samples/Fullstack: Vanilla SSR (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:fullstack:ssr:server:dockerBuildNative
+            :samples:fullstack:ssr:server:dockerPushNative
+
+      ## Docker Samples: Fullstack - React SSR - Native
+      - name: "Samples/Fullstack: React SSR (Native)"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -Pelide.ci=true
+            -x test
+            :samples:fullstack:react-ssr:server:dockerBuildNative
+            :samples:fullstack:react-ssr:server:dockerPushNative

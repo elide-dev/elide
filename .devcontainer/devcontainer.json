@@ -29,9 +29,10 @@
     "vscjava.vscode-java-pack",
     "bufbuild.vscode-buf",
     "googlecloudtools.cloudcode",
-    "sswg.swift-lang"
+    "sswg.swift-lang",
+    "sourcegraph.sourcegraph"
   ],
-  "updateContentCommand": "./gradlew build -x nativeCompile && git checkout kotlin-js-store",
+  "updateContentCommand": "./gradlew build -x test -x nativeCompile && git checkout kotlin-js-store",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"
 }

@@ -232,8 +232,7 @@ jobs:
   ##
   ## Job: Sonar
   ##
-
-  sonar:
+  tools-sonar:
     runs-on: ubuntu-latest
     needs: [gradle]
     steps:
@@ -292,9 +291,32 @@ jobs:
 
 
   ##
+  ## Job: Report Coverage
+  ##
+  tools-codecov:
+    runs-on: ubuntu-latest
+    needs: [gradle, tests-jvm]
+    if: github.ref == 'refs/heads/non-existent'  # disable temporarily
+    steps:
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      ## Download coverage reports (TBD)
+
+      ## Upload to Codecov
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: ./coverage1.xml,./coverage2.xml # optional
+          flags: unittests # optional
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+
+
+  ##
   ## Job: Docker Samples (JVM)
   ##
-
   docker-jvm:
     runs-on: ubuntu-latest
     needs: [gradle]

@@ -139,25 +139,25 @@ dependencies {
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage("us-docker.pkg.dev/elide-fw/tools/base:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/base:latest")
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
   images.set(listOf(
-    "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/jvm:latest"
+    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:latest"
   ))
   this.target
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
   images.set(listOf(
-    "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/native:latest"
+    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:latest"
   ))
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  graalImage.set("us-docker.pkg.dev/elide-fw/tools/builder:latest")
-  baseImage("gcr.io/distroless/cc-debian10")
+  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  baseImage(project.properties["elide.samples.docker.base.native"] as String)
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 

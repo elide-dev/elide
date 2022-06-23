@@ -64,7 +64,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules
@@ -144,7 +144,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules
@@ -207,7 +207,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules
@@ -255,7 +255,7 @@ jobs:
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -263,7 +263,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules
@@ -369,7 +369,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules
@@ -534,7 +534,7 @@ jobs:
 
       ## Prep: Download Caches
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ./node_modules

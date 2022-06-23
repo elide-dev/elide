@@ -1,11 +1,9 @@
 
-## `@elide` (v3)
+# `elide` (v3) · [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 
-[![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+_elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge._
 
+<hr />
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.7.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
@@ -18,15 +16,15 @@ _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].
 
 <hr />
 
-Elide is **Kotlin/Multiplatform framework** for **rapid application development** which brings together some of the best
-tools and techniques available today for effective and robust application development.
+Elide is **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
+Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
 
-### What do you mean by _application framework_?
+### What do you mean by _meta-framework_?
 
-Elide could be characterized as a _meta-framework_, in the sense that it is largely powered by mature and well-supported
-software under the hood. Via a thin combination of build tooling and runtime interfaces, the developer is able to
-leverage these tools together without needing to stitch them together in brittle and unreliable ways.
+Elide could be characterized as a _meta-framework_ in the sense that it is powered entirely by mature and well-supported
+software under the hood. Via a thin combination of build tooling and runtime interfaces, the developer can
+leverage these tools together without worrying about performance or compatibility.
 
 
 #### Cross-platform features
@@ -38,7 +36,7 @@ leverage these tools together without needing to stitch them together in brittle
   [`datetime`](https://github.com/Kotlin/kotlinx-datetime).
 
 - **Logging.** Use an identical interface across platforms, which calls into the best layer available for that system.
-  For example, on the JVM logging calls into `slf4j`, and in JavaScript, `console.*`.
+  For example, on the JVM, logging calls into `slf4j`, and in JavaScript, `console.*`.
 
 - **Observability.** Generate uniform logs across platforms, which correlate and provide a fully observable picture of
   application behavior.
@@ -62,14 +60,14 @@ leverage these tools together without needing to stitch them together in brittle
 
 - **Model-driven development.** Write your models once, and use them everywhere, across platforms, **without copying**,
   **without glue-code**, and **without DTOs**. Via [Protobuf][5] and
-  [Kotlin data classes](https://kotlinlang.org/docs/data-classes.html), the same Elide model can be used with your
-  database, your API, and your UI.
+  [Kotlin data classes](https://kotlinlang.org/docs/data-classes.html), the same Elide model is code-generated for use
+  with your database, API, and UI.
 
 
 ## Code samples
 
-There are a full suite of [code samples](./samples) which can be run locally or via pre-built Docker images. Click
-through to each one for a short tour and getting started guide.
+A full suite of [code samples](./samples) demo various functionality. The samples are runnable locally or via pre-built
+Docker images. Click through to each one for a short tour and getting started guide.
 
 "Blah blah blah, okay, show me some code." Certainly:
 
@@ -141,29 +139,29 @@ That's it. That's the entire app. In fact, it's just the [`fullstack/react-ssr`]
 pasted into the README. What we get out of this is surprising:
 
 - **Server:** JVM or Native server (via GraalVM) that serves our root page, our CSS, and our JS
-- **Client:** Embedded JS VM that executes a Node copy of our React UI, and splices it into the page for isomorphic rendering
+- **Client:** Embedded JS VM that executes a Node copy of our React UI and splices it into the page for isomorphic rendering
 - **For us** (the developer):
   - Completely type-checked calls across platforms, with almost no boilerplate
   - Single build graph, with aggressive caching and tool support
-  - Build & test virtualized, on any platform
-  - Ship & perform natively, on any platform
+  - Build & test virtualized on any platform
+  - Ship & perform natively on any platform
 
 
 What's going on here? Elide has helped us wire together code from **Micronaut** (that's where `@Controller` comes from),
-**Kotlin/JS**, **GraalVM**, and **esbuild** to make the above code make sense on both platforms. The React code is built
-for the browser _and_ a pure server environment, both are embedded into the JAR, and served through a thin runtime layer
+**Kotlin/JS**, **GraalVM**, and **esbuild** to make the above code make sense on both platforms. The React code builds
+for the browser _and_ a pure server environment; both are embedded into the JAR and served through a thin runtime layer
 provided by the framework.
 
 
 #### That's not a big deal
 
-I mean, it is. If you're participating in the React and Java ecosystems, this gives you an amazing best-of-both-worlds
-scenario: great tooling support for React and Kotlin, and an ideal serving and rendering mode, all handled for you.
+If you're participating in the React and Java ecosystems, this gives you a fantastic best-of-both-worlds runtime option:
+superb tooling support for React and Kotlin and an ideal serving and rendering mode, all handled for you.
 
-Also, it's not a big deal. You can do the same thing with these same tools in a custom codebase, but setting up the
-build environment for this kind of app is challenging and error-prone. Elide _intentionally_ leverages existing
-frameworks with rich ecosystems and docs, so that you always have an escape hatch up to a more powerful toolset if you
-need it.
+You can do the same thing with these same tools in a custom codebase, but setting up the build environment for this kind
+of app is challenging and error-prone. Elide _intentionally_ leverages existing frameworks with rich ecosystems and
+docs, _instead of_ re-providing existing functionality so that you always have an escape hatch up to a more industrial
+toolset if you need it.
 
 
 ### Powered-by
@@ -171,8 +169,8 @@ need it.
 Elide is modular. You can mix and match the following technologies in **server**, **client**, or **hybrid/fullstack**
 development scenarios:
 
-- [**Kotlin**][1]. Elide is written from the inside-out with support for Kotlin/Multiplatform, including native
-  platforms. This means you can use the same consistent code across the server-side and client-side(s) of your app.
+- [**Kotlin**][1]. Elide is written from the inside out with support for Kotlin/Multiplatform, including native
+  platforms. Write once and use the same consistent code across server-side and client-side(s) platforms.
 
 - [**GraalVM**][2]. GraalVM is a JVM and toolchain from Oracle which includes modernized JIT support, cross-language
   [polyglot][10] development in JS, Ruby, Python, and LLVM, and the ability to build native binaries from JVM apps.
@@ -182,7 +180,7 @@ development scenarios:
   [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) and
   [AOP](https://docs.micronaut.io/latest/guide/#aop) features, and transparently works with most add-ons.
 
-- [**React**][4]. React is a popular UI library, written for browser and server environments. Elide leverages
+- [**React**][4]. React is a popular UI library written for browser and server environments. Elide leverages
   [Kotlin/JS support for React](https://kotlinlang.org/docs/js-get-started.html) for isomorphic UI rendering. CSR and
   SSR modes are supported natively.
 
@@ -191,12 +189,12 @@ development scenarios:
   module, and includes **native support for [gRPC Web](https://github.com/grpc/grpc-web)** without running a proxy.
   Enforce API keys and traceability without [ESPv2](https://github.com/GoogleCloudPlatform/esp-v2).
 
-- [**Closure**][7]. Use the Closure Tools family of software to develop performant and low-level JavaScript apps, which
-  are served on-the-fly directly from your application JAR. Render Soy templates server-side with Google's blazing-fast
+- [**Closure**][7]. Use the Closure Tools family of software to develop performant and low-level JavaScript apps that
+  are served directly from your application JAR. Render Soy templates server-side with Google's blazing-fast
   [Soy Sauce](https://github.com/google/closure-templates/blob/master/documentation/dev/adv-java.md) runtime, via
   pre-compiling templates to Java bytecode.
 
-- [**Bazel**][8]. Built-in support for Bazel. Load directly from a tarball, build only what you use. Extensive suite of
+- [**Bazel**][8]. Built-in support for Bazel. Load directly from a tarball; build only what you use. Extensive suite of
   utility macros and rules.
 
 - [**Gradle**][9]. Early support for building multi-platform Kotlin applications via Gradle, including integrated
@@ -214,17 +212,16 @@ development scenarios:
 ## Version compatibility
 
 The following version matrix indicates tested support across tool and platform versions, including **Java**,
-**Kotlin**, **GraalVM**, **Micronaut**, and **React**. Additional columns are included for **Gradle** and **Bazel**. You
-will generally want to pick one or the other of those last two.
+**Kotlin**, **GraalVM**, **Micronaut**, and **React**.
 
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**      | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Netty**      | **Protobuf/gRPC** | **Gradle** | **Bazel** |
-|-----------------------------------------------------------------|---------------|------------|-------------|---------------|-----------|----------------|-------------------|------------|-----------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | **`Java 17`** | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `4.1.72.Final` | `3.20.1`/`1.46.0` | `7.4.x`    | **`6.x`** |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`     | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `4.1.72.Final` | `3.20.1`/`1.46.0` | `7.4.x`    | `5.x`     |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`      | --         | --          | --            | --        | --             | --                | --         | --        |
+| Status                                                          | **Java**      | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
+|-----------------------------------------------------------------|---------------|------------|-------------|---------------|-----------|-------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | **`Java 17`** | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`     | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`      | --         | --          | --            | --        | --                |
 
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
@@ -246,20 +243,19 @@ Please consult the table below for a complete list of supported platforms and ar
 | [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `arm64`  | `libc` | ☢️ | _Experimental_         |
 | [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Windows        | `x86_64` | N/A    | ☢️ | _Experimental_         |
 
-Bazel, Gradle, GraalVM, and Kotlin/Native must all support a platform for Elide to work properly across architectures.
+Bazel, Gradle, GraalVM, and Kotlin/Native must support a given platform for Elide to work across architectures.
 
 
 ## What about ...?
 
-There are two forms of this question that typically come up from people new to Elide.
+Two forms of this question typically come up from people new to Elide's style of development.
 
 ### **"What about [x] functionality that I want/need?"**
 
-Fair question and there is no possible way to answer every variant of this. This caveat being said, Java, and by
-extension Kotlin, has **one of the richest and most active software ecosystems** on the planet, closely followed by
-NodeJS, via NPM.
+Java, and, by extension, Kotlin, has **one of the broadest and most active software ecosystems** on the planet, closely
+followed by NodeJS, via NPM.
 
-Elide supports both, and allows you to access software written for both. Here are some examples to get you going.
+Elide supports both and allows you to access software written for both. Here are some examples to get you going.
 
 - _I want to..._
   - **Server-side (Micronaut)**
@@ -289,19 +285,19 @@ Elide supports both, and allows you to access software written for both. Here ar
 
 ### **"Why not just use [x] or [x + y]?"**
 
-This is another one that varies so much it defies a stable answer. However, here are some common ones:
+This question is another one that varies so much that it defies a stable answer. However, here are some common ones:
 
-- **Why not just use Node?** This is _way_ faster at runtime, and the toolchain and ecosystem are stronger and more durable.
-- **Why not just use Micronaut?** First of all, you should, it's awesome. Elide is just a set of extensions on top of Micronaut. Feel free to use it directly, or shortcut and use Elide.
-- **Why not just use Ktor?** Ktor is missing the ecosystem Micronaut has, and is less compatible with GraalVM at this time.
-- **Why not put these pieces together myself?** You totally can, and if you already want to try, you should consider contributing instead ;). It's a non-trivial endeavor, though.
-- **Why develop on the JVM?** Consistency across dev machines, extremely strong industry and ecosystem support, _really_ fast tooling, _full_ typechecking. Coverage and reporting work great.
-- **Why compile for native vs ship on JVM?** Startup time is measured in `ms`. No JIT warmup = instant performance. Container replicas don't copy a full JVM footprint.
-- **Why not use Nashorn or Rhino?** Because they are slow and unlikely to get any better. GraalVM is fast and likely to get more faster and more stable.
+- **Why not just use Node?** Kotlin is _way_ faster at runtime, and the toolchain are broader and more robust.
+- **Why not just use Micronaut?** You should. Micronaut is awesome. Elide is just a set of extensions on top of Micronaut. Feel free to use it directly or jump-start with Elide.
+- **Why not just use Ktor?** Ktor is missing the ecosystem Micronaut has and is less compatible with GraalVM (for now).
+- **Why not put these pieces together myself?** You totally can, and if you already want to try, you should consider contributing. It's a non-trivial endeavor, though.
+- **Why develop on the JVM?** Consistency across dev machines, robust industry and ecosystem support, _really_ fast tooling, _full_ type checking. Coverage and reporting work great.
+- **Why compile for native vs. ship on JVM?** Startup time is measured in `ms`. No JIT warmup = instant performance. Container replicas don't copy an entire JVM footprint.
+- **Why not use Nashorn or Rhino?** Because they are slow and unlikely to get any better. GraalVM is fast, likely to get faster, and more likely to see updates.
 
 ## Cold Showers
 
-Like any approach, Elide is not helpful in all situations, and at this time **should be considered alpha-quality** for
+Like any approach, Elide is not helpful in all situations and, at this time, **should be considered alpha-quality** for
 use in production as a public release. Privately, Elide has undergone extensive use in production (see
 _Adopters & history_ below). Even with perfect stability, though, you should consider these points before you pick this
 stack:
@@ -310,49 +306,40 @@ stack:
 #### Living on the bleeding edge can be painful
 
 Kotlin/Multiplatform and GraalVM are still considered new technologies. You may encounter bugs or missing platform
-support which can't easily be remedied. This is true of any young technology, and Elide happens to be a mix of young
-technologies, aside from only being a few years old itself.
+support which can't easily be remedied. This is true of any young technology.
 
 
 #### GraalVM's polyglot engine isn't insanely fast or stable yet
 
 Many of the performance and stability issues here will resolve over time, but it's worth noting that using Elide in
-isomorphic mode is new and may hit some of these issues. As a workaround, you can always switch back to CSR, and _still_
+isomorphic mode is new and may hit some of these issues. As a workaround, you can always switch back to CSR and _still_
 beat an equivalent Node app to the TTFB punch.
 
 
 #### Reflection can be a pain with native images
 
 If you're compiling a native server binary, it can be a pain to mark reflection sites sufficiently to avoid runtime
-errors. This is slowly getting better with improved Micronaut code-gen support but it's still a problem for now.
+errors. These pains are slowly improving with improved Micronaut code-gen support, but it's still a problem.
 
 
 ## About this framework
 
-Elide has existed in different forms for over 10 years. It was first released under the name `canteen` in 2011, and was
-originally written in Python. Later, it evolved into Bazel/Java, then Bazel/Kotlin, and now Bazel/Gradle/Kotlin, for a
-time took on the name `gust`, and eventually settled on `elide`.
+Elide has existed in different forms for over a decade. It was first released under the name `canteen` in 2011 as a
+Python package. Later, the code evolved into Bazel/Java, then Bazel/Kotlin, and now Bazel/Gradle/Kotlin.
 
 These frameworks were distinct from each other, written for a moment in time, but they shared authors, design patterns,
 and goals:
 
-- **The developer should have to write as little code as possible**, without resorting to convention. This is a reaction
-  to the drawback of Rails-style architectures.
+- **The developer should have to write as little code as possible** without resorting to convention. Elide, in this way,
+  is partly a reaction to the drawbacks of Rails-style architectures (and Next.js, which came much later).
 
-- **If it builds, it should work.** As much as possible, typechecking and code-gen should be leveraged where a human
+- **If it builds, it should work.** As much as possible, type checking and code-gen should be leveraged where a human
   developer adds little or no value. Aligning types is a detailed and error-prone process, which is well suited for a
   computer.
 
 - **A thing is just a thing. Not what is said of that thing.** Data is the effective king of runtime. An application's
   concepts should be strongly expressed as models, and the developer _should not have to repeat themselves_ across
   platforms to actualize or interchange expressions of those concepts.
-
-
-#### Why rewrite it several times?
-
-Fulfilling the above goals in full is challenging, and is a constantly moving target. New software techniques and tools
-are emerging and maturing all the time. Each framework revision was written to incorporate newer ideas and techniques,
-for example:
 
 
 ### History
@@ -369,10 +356,10 @@ organizations (newest first):
 - **[Bloombox](https://github.com/bloombox).** Elide powered the APIs underlying Bloombox's B2B retail application,
   scaling to millions of requests per month.
 
-- **[Ampush](https://ampush.com).** Elide powered internal adtech systems at Ampush which reached millions of events and
-  requests per day.
+- **[Ampush](https://ampush.com).** Elide powered internal ad-tech systems at Ampush, which reached millions of events
+  and requests per day.
 
-- **[Keen IO](https://keen.io).** Elide powered the Keen website for a time which reached millions of developers across
+- **[Keen IO](https://keen.io).** Elide powered the Keen website for a time, which reached millions of developers across
   the span of its early use in Python.
 
 
@@ -381,7 +368,7 @@ organizations (newest first):
 
 - [2012] **`canteen`**: Leveraged Python meta-classes and cooperative greenlets after the release of
   [`gevent`](http://www.gevent.org/). "Holds more water than a [flask](https://pypi.org/project/Flask/)." Inspired
-  heavily by [`tipfy`](https://github.com/moraes/tipfy). Created at [Keen IO](https://keen.io), and adopted to run
+  heavily by [`tipfy`](https://github.com/moraes/tipfy). Created at [Keen IO](https://keen.io) and adopted to run
   production systems at [Ampush Media](https://ampush.com).
 
 - [2015]: **`gust`**: Written to integrate Kotlin with Bazel, ultimately with support for Soy, J2CL, Protobuf,
@@ -391,8 +378,8 @@ organizations (newest first):
 - [2020]: **`gust` (`elide` v1)**: Rewritten in Java/Kotlin, with native support for Bazel, to continue `gust`'s
   evolution for production use at [Cookies](https://cookies.co).
 
-- [2021]: **`elide` v2**: New model layer support with addition of Redis, Firestore, and Spanner, to support the launch
-  of [Cookies](https://cookies.co)' integrated e-commerce experience.
+- [2021]: **`elide` v2**: New model layer support with the addition of Redis, Firestore, and Spanner, to support the
+  launch of [Cookies](https://cookies.co)' integrated e-commerce experience.
 
 - [2022-now]: **`elide` v3**: Complete rewrite into pure Kotlin to leverage Kotlin Multiplatform, with native support
   for polyglot development via GraalVM, gRPC/Protobuf, and React. Build tooling support through Bazel and Gradle.

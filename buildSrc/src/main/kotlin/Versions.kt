@@ -36,5 +36,6 @@ object Versions {
   const val esbuild = "0.14.47"
   const val esbuildPluginAlias = "0.2.1"
   const val testLoggerPlugin = "3.2.0"
+  const val versionsPlugin = "0.42.0"
   const val logbackClassic = "1.2.11"
 }

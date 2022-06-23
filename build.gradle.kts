@@ -58,6 +58,7 @@ buildscript {
     classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
     classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
+    classpath("com.github.ben-manes:gradle-versions-plugin:${Versions.versionsPlugin}")
   }
   if (project.property("elide.lockDeps") == "true") {
     configurations.classpath {

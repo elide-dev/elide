@@ -8,9 +8,11 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@types/prettier": "^2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "esbuild": "^0.14.47",
+    "prettier": "^2.7.1",
     "webpack": "5"
   },
   "scripts": {

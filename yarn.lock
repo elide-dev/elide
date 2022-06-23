@@ -98,6 +98,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/prettier@npm:^2":
+  version: 2.6.3
+  resolution: "@types/prettier@npm:2.6.3"
+  checksum: e1836699ca189fff6d2a73dc22e028b6a6f693ed1180d5998ac29fa197caf8f85aa92cb38db642e4a370e616b451cb5722ad2395dab11c78e025a1455f37d1f0
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*":
   version: 15.7.5
   resolution: "@types/prop-types@npm:15.7.5"
@@ -396,9 +403,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "elide@workspace:."
   dependencies:
+    "@types/prettier": ^2
     "@types/react": ^18
     "@types/react-dom": ^18
     esbuild: ^0.14.47
+    prettier: ^2.7.1
     react: 18.2.0
     react-dom: 18.2.0
     webpack: 5
@@ -806,6 +815,15 @@ __metadata:
   version: 1.0.0
   resolution: "picocolors@npm:1.0.0"
   checksum: a2e8092dd86c8396bdba9f2b5481032848525b3dc295ce9b57896f931e63fc16f79805144321f72976383fc249584672a75cc18d6777c6b757603f372f745981
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "prettier@npm:2.7.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
   languageName: node
   linkType: hard
 

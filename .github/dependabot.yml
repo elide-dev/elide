@@ -3,6 +3,7 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "weekly"
     assignees:
@@ -11,6 +12,7 @@ updates:
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "daily"
     assignees:
@@ -19,6 +21,7 @@ updates:
   # Maintain dependencies for Gradle
   - package-ecosystem: "gradle"
     directory: "/"
+    target-branch: "develop"
     schedule:
       interval: "daily"
     assignees:
@@ -27,6 +30,7 @@ updates:
   # Maintain dependencies for Docker
   - package-ecosystem: "docker"
     directory: "images"
+    target-branch: "develop"
     schedule:
       interval: "daily"
     assignees:

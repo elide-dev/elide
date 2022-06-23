@@ -24,7 +24,8 @@
     "sswg.swift-lang",
     "vscjava.vscode-gradle",
     "vscjava.vscode-java-debug",
-    "vscjava.vscode-java-pack"
+    "vscjava.vscode-java-pack",
+    "bufbuild.vscode-buf"
   ],
   "updateContentCommand": "./gradlew build -x nativeCompile && git checkout kotlin-js-store",
   "forwardPorts": [8080, 50051],

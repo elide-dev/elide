@@ -1,0 +1,32 @@
+codecov:
+  require_ci_to_pass: true
+  bot: "elidebot"
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "25...40"
+  status:
+    project:
+      default:
+        informational: true
+
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: false
+
+parsers:
+  javascript:
+    enable_partials: yes
+  gcov:
+    branch_detection:
+      conditional: yes
+      loop: yes
+      method: no
+      macro: no
+
+github_checks:
+  annotations: true

@@ -34,15 +34,10 @@ tasks.dokkaGfmMultiModule.configure {
   outputDirectory.set(buildDir.resolve("docs/kotlin/gfm"))
 }
 
-tasks.dokkaJavadocMultiModule.configure {
-  outputDirectory.set(buildDir.resolve("docs/kotlin/javadoc"))
-}
-
 tasks.create("docs") {
   dependsOn(listOf(
     "dokkaHtmlMultiModule",
     "dokkaGfmMultiModule",
-    "dokkaJavadocMultiModule",
   ))
 }
 

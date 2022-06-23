@@ -6,21 +6,22 @@
 VERSION ?= $(shell cat .version)
 
 SAMPLES ?= no
-DEBUG ?= no
-RELEASE ?= no
-JVMDEBUG ?= no
-NATIVE ?= no
-CI ?= no
-VERBOSE ?= no
-DRY ?= no
-IGNORE_ERRORS ?= no
+
+# Flags that control this makefile, along with their defaults:
+#
+# DEBUG ?= no
+# RELEASE ?= no
+# JVMDEBUG ?= no
+# NATIVE ?= no
+# CI ?= no
+# DRY ?= no
+# IGNORE_ERRORS ?= no
 
 GRADLE ?= ./gradlew
 RM ?= $(shell which rm)
 FIND ?= $(shell which find)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
-GRADLE_LOGS ?= info
 
 POSIX_FLAGS ?=
 GRADLE_ARGS ?=
@@ -31,6 +32,8 @@ ARGS ?=
 
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
+else
+BUILD_ARGS += -PbuildSamples=false
 endif
 
 ifeq ($(CI),yes)
@@ -42,18 +45,19 @@ BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true
 endif
 
 
-_ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
-
-ifeq ($(NATIVE),no)
-_ARGS += $(patsubst %,-d %,$(NATIVE_TASKS))
+ifneq ($(NATIVE),)
+ifneq ($(NATIVE),no)
+BUILD_ARGS += $(patsubst %,-d %,$(NATIVE_TASKS))
+endif
 endif
 
-ifeq ($(VERBOSE),no)
-RULE ?= @
-else
+ifneq ($(VERBOSE),)
 RULE ?=
 POSIX_FLAGS += v
+GRADLE_LOGS ?= info
 GRADLE_ARGS += --$(GRADLE_LOGS)
+else
+RULE ?= @
 endif
 
 ifeq ($(IGNORE_ERRORS),yes)
@@ -61,10 +65,12 @@ RULE += -
 endif
 
 ifeq ($(DRY),yes)
-CMD ?= $(RULE)echo
+CMD ?= "$(RULE)echo "
 else
 CMD ?= $(RULE)
 endif
+
+_ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 
 
 # ---- Targets ---- #
@@ -75,7 +81,7 @@ all: build test docs
 
 build:  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide v3...)
-	$(CMD)$(GRADLE) build -x test $(_ARGS)
+	$(CMD) $(GRADLE) build -x test $(_ARGS)
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)

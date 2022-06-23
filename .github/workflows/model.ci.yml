@@ -1,0 +1,89 @@
+name: Model
+
+on:
+  push:
+    branches:
+      - v3
+      - main
+      - stable
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
+
+jobs:
+  ##
+  ## Job: Buf Lint
+  ##
+  buf-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: 'read'
+    steps:
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      # Setup: Buf
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+
+      # Job: Lint
+      - uses: bufbuild/buf-lint-action@v1
+
+  ##
+  ## Job: Buf Breaking
+  ##
+  buf-breaking:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: 'read'
+    steps:
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      # Setup: Buf
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+
+      # Job: Breaking
+      - uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: 'https://github.com/elide-dev/v3.git#branch=v3'
+
+  ##
+  ## Job: Buf Push
+  ##
+  buf-push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    needs: ["buf-lint", "buf-breaking"]
+    if: |
+      (
+        github.ref == 'refs/heads/stable' ||
+        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
+        contains(github.event.head_commit.message, 'ci:build-img-jvm') ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
+    permissions:
+      contents: 'read'
+    steps:
+      ## Setup: Checkout Code
+      - uses: actions/checkout@v3
+
+      # Setup: Buf
+      - uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+
+      # Job: Breaking
+      - uses: bufbuild/buf-push-action@v1
+        with:
+          buf_token: ${{ secrets.BUF_TOKEN }}

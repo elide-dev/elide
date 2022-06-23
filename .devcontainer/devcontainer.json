@@ -25,7 +25,8 @@
     "vscjava.vscode-gradle",
     "vscjava.vscode-java-debug",
     "vscjava.vscode-java-pack",
-    "bufbuild.vscode-buf"
+    "bufbuild.vscode-buf",
+    "googlecloudtools.cloudcode"
   ],
   "updateContentCommand": "./gradlew build -x nativeCompile && git checkout kotlin-js-store",
   "forwardPorts": [8080, 50051],

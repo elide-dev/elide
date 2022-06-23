@@ -1,0 +1,1471 @@
+<?xml version="1.0" ?>
+<report name="Intellij Coverage Report">
+<package name="helloworld">
+<class name="helloworld/App$Index$index$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/html/HTML;)V">
+<counter type="INSTRUCTION" missed="22" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="22" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="helloworld/App$Index" sourcefilename="App.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="index" desc="()Lio/micronaut/http/HttpResponse;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+<counter type="METHOD" missed="2" covered="0"/>
+</class>
+<class name="helloworld/App" sourcefilename="App.kt">
+<method name="main" desc="([Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<sourcefile name="App.kt">
+<line nr="16" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="17" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="18" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="19" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="20" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="21" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="22" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="23" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="29" mi="9" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="36" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="9" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="36" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="9" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+<counter type="CLASS" missed="3" covered="0"/>
+</package>
+<package name="hellocss">
+<class name="hellocss/App$Index$styles$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="hellocss/App" sourcefilename="App.kt">
+<method name="main" desc="([Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="hellocss/App$Index" sourcefilename="App.kt">
+<method name="styles" desc="()Lio/micronaut/http/HttpResponse;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="index" desc="()Lio/micronaut/http/HttpResponse;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+<counter type="METHOD" missed="3" covered="0"/>
+</class>
+<class name="hellocss/App$Index$styles$1$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="hellocss/App$Index$index$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/html/HTML;)V">
+<counter type="INSTRUCTION" missed="26" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="26" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="hellocss/App$Index$styles$1$2" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<sourcefile name="App.kt">
+<line nr="21" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="23" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="24" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="25" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="26" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="27" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="28" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="29" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="30" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="34" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="35" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="38" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="39" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="46" mi="9" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="66" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="15" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="66" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="15" covered="0"/>
+<counter type="METHOD" missed="8" covered="0"/>
+<counter type="CLASS" missed="6" covered="0"/>
+</package>
+<package name="fullstack/ssr">
+<class name="fullstack/ssr/App$Index$index$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/html/HTML;)V">
+<counter type="INSTRUCTION" missed="28" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="28" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="fullstack/ssr/App$Index$styles$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="fullstack/ssr/App$Index" sourcefilename="App.kt">
+<method name="index" desc="()Lio/micronaut/http/MutableHttpResponse;">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="styles" desc="()Lio/micronaut/http/HttpResponse;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+<counter type="METHOD" missed="3" covered="0"/>
+</class>
+<class name="fullstack/ssr/App" sourcefilename="App.kt">
+<method name="main" desc="([Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="fullstack/ssr/App$Index$styles$1$2" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="fullstack/ssr/App$Index$styles$1$1" sourcefilename="App.kt">
+<method name="invoke" desc="(Lkotlinx/css/CssBuilder;)V">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<sourcefile name="App.kt">
+<line nr="19" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="21" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="22" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="23" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="24" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="25" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="26" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="27" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="28" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="32" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="33" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="34" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="37" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="44" mi="9" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="72" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="15" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="72" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="15" covered="0"/>
+<counter type="METHOD" missed="8" covered="0"/>
+<counter type="CLASS" missed="6" covered="0"/>
+</package>
+<package name="elide/runtime">
+<class name="elide/runtime/LogLevel" sourcefilename="LogLevel.kt">
+<method name="resolve$base" desc="(Lorg/slf4j/Logger;)Lkotlin/jvm/functions/Function1;">
+<counter type="INSTRUCTION" missed="40" covered="0"/>
+<counter type="BRANCH" missed="5" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<method name="isEnabled" desc="(Lorg/slf4j/Logger;)Z">
+<counter type="INSTRUCTION" missed="25" covered="0"/>
+<counter type="BRANCH" missed="5" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="32" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+</method>
+<method name="getJvmLevel" desc="()Lorg/slf4j/event/Level;">
+<counter type="INSTRUCTION" missed="20" covered="0"/>
+<counter type="BRANCH" missed="5" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="117" covered="0"/>
+<counter type="BRANCH" missed="15" covered="0"/>
+<counter type="LINE" missed="23" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+</class>
+<class name="elide/runtime/Logging$Companion" sourcefilename="Logging.kt">
+<method name="named" desc="(Ljava/lang/String;)Lelide/runtime/jvm/Logger;">
+<counter type="INSTRUCTION" missed="26" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<method name="root" desc="()Lelide/runtime/jvm/Logger;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="of" desc="(Lkotlin/reflect/KClass;)Lelide/runtime/jvm/Logger;">
+<counter type="INSTRUCTION" missed="13" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="of" desc="(Ljava/lang/Class;)Lelide/runtime/jvm/Logger;">
+<counter type="INSTRUCTION" missed="18" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="60" covered="0"/>
+<counter type="BRANCH" missed="16" covered="0"/>
+<counter type="LINE" missed="9" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+</class>
+<class name="elide/runtime/LogLevel$resolve$2" sourcefilename="LogLevel.kt">
+<method name="invoke" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/runtime/LogLevel$resolve$1" sourcefilename="LogLevel.kt">
+<method name="invoke" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/runtime/LogLevel$resolve$5" sourcefilename="LogLevel.kt">
+<method name="invoke" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/runtime/LogLevel$resolve$4" sourcefilename="LogLevel.kt">
+<method name="invoke" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/runtime/LogLevel$resolve$3" sourcefilename="LogLevel.kt">
+<method name="invoke" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/runtime/Logger$DefaultImpls" sourcefilename="Logger.kt">
+<method name="trace" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="debug" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="info" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="warn" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="warning" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="warning" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="error" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="debug" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="error" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="debug" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="info" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="warn" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="log$default" desc="(Lelide/runtime/Logger;Lelide/runtime/LogLevel;Ljava/util/List;ZILjava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="18" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="trace" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="trace" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="info" desc="(Lelide/runtime/Logger;Ljava/lang/String;[Ljava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="warn" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="8" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="error" desc="(Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="warning" desc="(Lelide/runtime/Logger;[Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="185" covered="0"/>
+<counter type="BRANCH" missed="12" covered="0"/>
+<counter type="LINE" missed="25" covered="0"/>
+<counter type="METHOD" missed="19" covered="0"/>
+</class>
+<class name="elide/runtime/Logging" sourcefilename="Logging.kt">
+<method name="logger" desc="()Lelide/runtime/Logger;">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="logger" desc="(Ljava/lang/String;)Lelide/runtime/Logger;">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="24" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+</class>
+<sourcefile name="LogLevel.kt">
+<line nr="6" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="7" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="8" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="9" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="10" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="13" mi="6" ci="0" mb="5" cb="0"/>
+<line nr="14" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="15" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="16" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="17" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="18" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="22" mi="6" ci="0" mb="5" cb="0"/>
+<line nr="23" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="24" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="25" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="26" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="27" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="31" mi="6" ci="0" mb="5" cb="0"/>
+<line nr="32" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="32" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="33" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="33" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="34" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="34" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="35" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="35" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="10" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="5" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="142" covered="0"/>
+<counter type="BRANCH" missed="15" covered="0"/>
+<counter type="LINE" missed="28" covered="0"/>
+</sourcefile>
+<sourcefile name="Logging.kt">
+<line nr="8" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="11" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="14" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="15" mi="11" ci="0" mb="4" cb="0"/>
+<line nr="19" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="20" mi="16" ci="0" mb="6" cb="0"/>
+<line nr="24" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="25" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="30" mi="12" ci="0" mb="6" cb="0"/>
+<line nr="31" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="33" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="46" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="47" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="57" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="58" mi="5" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="84" covered="0"/>
+<counter type="BRANCH" missed="16" covered="0"/>
+<counter type="LINE" missed="15" covered="0"/>
+</sourcefile>
+<sourcefile name="Logger.kt">
+<line nr="25" mi="16" ci="0" mb="2" cb="0"/>
+<line nr="28" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="37" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="48" mi="11" ci="0" mb="0" cb="0"/>
+<line nr="60" mi="4" ci="0" mb="2" cb="0"/>
+<line nr="61" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="75" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="86" mi="11" ci="0" mb="0" cb="0"/>
+<line nr="98" mi="4" ci="0" mb="2" cb="0"/>
+<line nr="99" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="113" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="124" mi="11" ci="0" mb="0" cb="0"/>
+<line nr="136" mi="4" ci="0" mb="2" cb="0"/>
+<line nr="137" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="151" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="162" mi="11" ci="0" mb="0" cb="0"/>
+<line nr="174" mi="4" ci="0" mb="2" cb="0"/>
+<line nr="175" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="191" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="204" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="217" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="230" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="241" mi="11" ci="0" mb="0" cb="0"/>
+<line nr="253" mi="4" ci="0" mb="2" cb="0"/>
+<line nr="254" mi="7" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="185" covered="0"/>
+<counter type="BRANCH" missed="12" covered="0"/>
+<counter type="LINE" missed="25" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="411" covered="0"/>
+<counter type="BRANCH" missed="43" covered="0"/>
+<counter type="LINE" missed="68" covered="0"/>
+<counter type="METHOD" missed="36" covered="0"/>
+<counter type="CLASS" missed="9" covered="0"/>
+</package>
+<package name="elide/rpc/web">
+<class name="elide/rpc/web/MessageHandler" sourcefilename="MessageHandler.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/rpc/web/ResponseSender" sourcefilename="ResponseSender.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/rpc/web/MetadataUtil" sourcefilename="MetadataUtil.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/rpc/web/RequestHandler" sourcefilename="RequestHandler.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/rpc/web/MessageFramer" sourcefilename="MessageFramer.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<class name="elide/rpc/web/MessageDeframer" sourcefilename="MessageDeframer.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<sourcefile name="MessageHandler.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<sourcefile name="MessageDeframer.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<sourcefile name="MessageFramer.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<sourcefile name="ResponseSender.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<sourcefile name="RequestHandler.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<sourcefile name="MetadataUtil.kt">
+<line nr="5" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="12" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+<counter type="METHOD" missed="6" covered="0"/>
+<counter type="CLASS" missed="6" covered="0"/>
+</package>
+<package name="elide/server/ssr">
+<class name="elide/server/ssr/ServerSSRRenderer" sourcefilename="ServerSSRRenderer.kt">
+<method name="render" desc="()Ljava/io/ByteArrayOutputStream;">
+<counter type="INSTRUCTION" missed="76" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+</method>
+<method name="renderInline" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="renderResponse" desc="(Lio/micronaut/http/MutableHttpResponse;)Lio/micronaut/http/MutableHttpResponse;">
+<counter type="INSTRUCTION" missed="7" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)V">
+<counter type="INSTRUCTION" missed="5" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="97" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="12" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+</class>
+<sourcefile name="ServerSSRRenderer.kt">
+<line nr="15" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="23" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="24" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="37" mi="54" ci="0" mb="2" cb="0"/>
+<line nr="38" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="39" mi="5" ci="0" mb="2" cb="0"/>
+<line nr="40" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="42" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="43" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="56" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="57" mi="2" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="97" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="12" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="97" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="12" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+<counter type="CLASS" missed="1" covered="0"/>
+</package>
+<package name="elide/runtime/jvm">
+<class name="elide/runtime/jvm/Logger" sourcefilename="Logger.kt">
+<method name="log" desc="(Lelide/runtime/LogLevel;Ljava/util/List;Z)V">
+<counter type="INSTRUCTION" missed="21" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="4" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(Lorg/slf4j/Logger;)V">
+<counter type="INSTRUCTION" missed="65" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="formatLogLine" desc="(Ljava/util/List;)Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="20" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+</method>
+<method name="isEnabled" desc="(Lelide/runtime/LogLevel;)Z">
+<counter type="INSTRUCTION" missed="4" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="110" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="11" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+</class>
+<sourcefile name="Logger.kt">
+<line nr="7" mi="65" ci="0" mb="0" cb="0"/>
+<line nr="10" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="11" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="12" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="13" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="14" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="18" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="22" mi="10" ci="0" mb="4" cb="0"/>
+<line nr="23" mi="2" ci="0" mb="2" cb="0"/>
+<line nr="24" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="25" mi="3" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="110" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="11" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="110" covered="0"/>
+<counter type="BRANCH" missed="6" covered="0"/>
+<counter type="LINE" missed="11" covered="0"/>
+<counter type="METHOD" missed="4" covered="0"/>
+<counter type="CLASS" missed="1" covered="0"/>
+</package>
+<package name="elide/runtime/graalvm">
+<class name="elide/runtime/graalvm/JsRuntimeConfig$Companion" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="4"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="4"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+<counter type="METHOD" missed="0" covered="1"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$EmbeddedScript" sourcefilename="JsRuntime.kt">
+<method name="&lt;init&gt;" desc="(Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="0" covered="21"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="5"/>
+</method>
+<method name="load" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="10" covered="58"/>
+<counter type="BRANCH" missed="2" covered="2"/>
+<counter type="LINE" missed="1" covered="3"/>
+</method>
+<method name="getId" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V">
+<counter type="INSTRUCTION" missed="4" covered="18"/>
+<counter type="BRANCH" missed="3" covered="3"/>
+<counter type="LINE" missed="0" covered="4"/>
+</method>
+<counter type="INSTRUCTION" missed="16" covered="97"/>
+<counter type="BRANCH" missed="5" covered="5"/>
+<counter type="LINE" missed="2" covered="12"/>
+<counter type="METHOD" missed="1" covered="3"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$Script" sourcefilename="JsRuntime.kt">
+<method name="embedded" desc="(Ljava/lang/String;Ljava/nio/charset/Charset;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;">
+<counter type="INSTRUCTION" missed="0" covered="21"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="0" covered="4"/>
+</method>
+<method name="literal" desc="(Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;">
+<counter type="INSTRUCTION" missed="6" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="6" covered="21"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="1" covered="5"/>
+<counter type="METHOD" missed="1" covered="2"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntimeConfig$JsRuntimeArtifact" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;init&gt;" desc="(Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="5" covered="23"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="0" covered="2"/>
+</method>
+<counter type="INSTRUCTION" missed="5" covered="23"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="0" covered="2"/>
+<counter type="METHOD" missed="0" covered="1"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntimeConfig" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;init&gt;" desc="(Ljava/lang/String;Ljava/util/List;)V">
+<counter type="INSTRUCTION" missed="8" covered="40"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="0" covered="3"/>
+</method>
+<counter type="INSTRUCTION" missed="8" covered="40"/>
+<counter type="BRANCH" missed="1" covered="1"/>
+<counter type="LINE" missed="0" covered="3"/>
+<counter type="METHOD" missed="0" covered="1"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$ExecutableScript" sourcefilename="JsRuntime.kt">
+<method name="render$graalvm" desc="()Lorg/graalvm/polyglot/Source;">
+<counter type="INSTRUCTION" missed="21" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(ZZLjava/lang/String;Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="0" covered="22"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="5"/>
+</method>
+<method name="assignRendered$graalvm" desc="(Ljava/lang/StringBuilder;)V">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="24" covered="22"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="7" covered="5"/>
+<counter type="METHOD" missed="2" covered="1"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime" sourcefilename="JsRuntime.kt">
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="4"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="evalExecuteScript$graalvm" desc="(Lorg/graalvm/polyglot/Context;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="127" covered="0"/>
+<counter type="BRANCH" missed="16" covered="0"/>
+<counter type="LINE" missed="33" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="7"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="2"/>
+</method>
+<method name="execute" desc="(Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="40" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="167" covered="11"/>
+<counter type="BRANCH" missed="16" covered="0"/>
+<counter type="LINE" missed="40" covered="3"/>
+<counter type="METHOD" missed="2" covered="2"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntimeConfig$$serializer" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="7" covered="146"/>
+<counter type="BRANCH" missed="1" covered="6"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="7" covered="146"/>
+<counter type="BRANCH" missed="1" covered="6"/>
+<counter type="LINE" missed="0" covered="2"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntimeConfig$JsRuntimeArtifact$$serializer" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="7" covered="96"/>
+<counter type="BRANCH" missed="1" covered="5"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="7" covered="96"/>
+<counter type="BRANCH" missed="1" covered="5"/>
+<counter type="LINE" missed="0" covered="2"/>
+<counter type="METHOD" missed="0" covered="2"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$ScriptRuntime" sourcefilename="JsRuntime.kt">
+<method name="&lt;clinit&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="25"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="6"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="2"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="prepare$graalvm" desc="(Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;">
+<counter type="INSTRUCTION" missed="31" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="13" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="31" covered="27"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="13" covered="7"/>
+<counter type="METHOD" missed="1" covered="2"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$LiteralScript" sourcefilename="JsRuntime.kt">
+<method name="load" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(Ljava/lang/String;Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="14" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<method name="getId" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="18" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+<counter type="METHOD" missed="3" covered="0"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntimeConfig$JsRuntimeArtifact$Companion" sourcefilename="JsRuntimeConfig.kt">
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="4"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="0" covered="4"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+<counter type="METHOD" missed="0" covered="1"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$ScriptRuntime$Companion" sourcefilename="JsRuntime.kt">
+<method name="loadArtifact" desc="(Ljava/lang/String;)Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="9" covered="60"/>
+<counter type="BRANCH" missed="2" covered="2"/>
+<counter type="LINE" missed="1" covered="4"/>
+</method>
+<method name="initialize" desc="()Lkotlin/Pair;">
+<counter type="INSTRUCTION" missed="14" covered="134"/>
+<counter type="BRANCH" missed="5" covered="5"/>
+<counter type="LINE" missed="4" covered="18"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="23" covered="194"/>
+<counter type="BRANCH" missed="7" covered="7"/>
+<counter type="LINE" missed="5" covered="23"/>
+<counter type="METHOD" missed="0" covered="3"/>
+</class>
+<class name="elide/runtime/graalvm/JsRuntime$Companion" sourcefilename="JsRuntime.kt">
+<method name="initializeContext" desc="()Lorg/graalvm/polyglot/Context;">
+<counter type="INSTRUCTION" missed="21" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<method name="acquire" desc="()Lelide/runtime/graalvm/JsRuntime;">
+<counter type="INSTRUCTION" missed="0" covered="1"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="0" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="0" covered="1"/>
+</method>
+<counter type="INSTRUCTION" missed="21" covered="1"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="6" covered="2"/>
+<counter type="METHOD" missed="1" covered="2"/>
+</class>
+<sourcefile name="JsRuntime.kt">
+<line nr="16" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="17" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="19" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="22" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="26" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="27" mi="9" ci="0" mb="0" cb="0"/>
+<line nr="28" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="29" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="30" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="31" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="38" mi="0" ci="19" mb="1" cb="1"/>
+<line nr="39" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="40" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="41" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="44" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="48" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="49" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="52" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="60" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="61" mi="0" ci="11" mb="0" cb="0"/>
+<line nr="62" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="63" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="64" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="68" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="69" mi="0" ci="8" mb="1" cb="1"/>
+<line nr="70" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="71" mi="3" ci="49" mb="1" cb="1"/>
+<line nr="72" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="78" mi="0" ci="3" mb="1" cb="1"/>
+<line nr="79" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="80" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="81" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="85" mi="0" ci="6" mb="1" cb="1"/>
+<line nr="86" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="87" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="88" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="93" mi="3" ci="50" mb="1" cb="1"/>
+<line nr="96" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="97" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="98" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="102" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="103" mi="0" ci="6" mb="0" cb="0"/>
+<line nr="104" mi="0" ci="20" mb="0" cb="0"/>
+<line nr="108" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="109" mi="1" ci="8" mb="2" cb="2"/>
+<line nr="110" mi="0" ci="15" mb="0" cb="0"/>
+<line nr="113" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="114" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="117" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="118" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="126" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="127" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="128" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="129" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="130" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="133" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="134" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="136" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="137" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="138" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="141" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="142" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="144" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="149" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="150" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="151" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="152" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="153" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="165" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="166" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="169" mi="13" ci="0" mb="4" cb="0"/>
+<line nr="170" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="172" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="173" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="174" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="180" mi="4" ci="14" mb="3" cb="3"/>
+<line nr="181" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="182" mi="0" ci="8" mb="0" cb="0"/>
+<line nr="183" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="184" mi="0" ci="2" mb="0" cb="0"/>
+<line nr="185" mi="0" ci="6" mb="0" cb="0"/>
+<line nr="186" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="187" mi="0" ci="1" mb="0" cb="0"/>
+<line nr="190" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="194" mi="0" ci="12" mb="1" cb="1"/>
+<line nr="195" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="197" mi="3" ci="43" mb="1" cb="1"/>
+<line nr="198" mi="0" ci="3" mb="0" cb="0"/>
+<line nr="201" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="205" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="206" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="207" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="209" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="213" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="218" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="227" mi="7" ci="0" mb="2" cb="0"/>
+<line nr="228" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="229" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="230" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="233" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="234" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="235" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="236" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="237" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="238" mi="19" ci="0" mb="0" cb="0"/>
+<line nr="239" mi="7" ci="0" mb="2" cb="0"/>
+<line nr="240" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="241" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="242" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="244" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="245" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="247" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="251" mi="7" ci="0" mb="2" cb="0"/>
+<line nr="252" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="253" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="254" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="257" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="258" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="259" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="262" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="266" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="271" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="272" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="273" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="274" mi="6" ci="0" mb="2" cb="0"/>
+<line nr="275" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="278" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="279" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="293" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="294" mi="28" ci="0" mb="0" cb="0"/>
+<line nr="295" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="296" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="297" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="298" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="299" mi="4" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="306" covered="373"/>
+<counter type="BRANCH" missed="37" covered="13"/>
+<counter type="LINE" missed="79" covered="57"/>
+</sourcefile>
+<sourcefile name="JsRuntimeConfig.kt">
+<line nr="12" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="12" mi="8" ci="30" mb="1" cb="1"/>
+<line nr="12" mi="7" ci="146" mb="1" cb="6"/>
+<line nr="13" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="14" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="21" mi="5" ci="18" mb="1" cb="1"/>
+<line nr="21" mi="7" ci="96" mb="1" cb="5"/>
+<line nr="21" mi="0" ci="4" mb="0" cb="0"/>
+<line nr="22" mi="0" ci="5" mb="0" cb="0"/>
+<line nr="23" mi="0" ci="0" mb="0" cb="0"/>
+<line nr="24" mi="0" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="27" covered="313"/>
+<counter type="BRANCH" missed="4" covered="13"/>
+<counter type="LINE" missed="0" covered="11"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="333" covered="686"/>
+<counter type="BRANCH" missed="41" covered="26"/>
+<counter type="LINE" missed="79" covered="68"/>
+<counter type="METHOD" missed="11" covered="23"/>
+<counter type="CLASS" missed="1" covered="13"/>
+</package>
+<package name="elide/model">
+<class name="elide/model/AppRecord$DefaultImpls" sourcefilename="BaseModel.kt">
+<method name="displayName" desc="(Lelide/model/AppRecord;)Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="id" desc="(Lelide/model/AppRecord;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="parentId" desc="(Lelide/model/AppRecord;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+<counter type="METHOD" missed="3" covered="0"/>
+</class>
+<class name="elide/model/VersionedRecord$DefaultImpls" sourcefilename="BaseModel.kt">
+<method name="version" desc="(Lelide/model/VersionedRecord;)J">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="createdAt" desc="(Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;">
+<counter type="INSTRUCTION" missed="15" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="16" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="2" covered="0"/>
+<counter type="METHOD" missed="2" covered="0"/>
+</class>
+<class name="elide/model/StampedRecord$DefaultImpls" sourcefilename="BaseModel.kt">
+<method name="createdAt" desc="(Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="updatedAt" desc="(Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;">
+<counter type="INSTRUCTION" missed="1" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="id" desc="(Lelide/model/StampedRecord;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="9" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+<counter type="METHOD" missed="3" covered="0"/>
+</class>
+<class name="elide/model/WireMessage" sourcefilename="BaseModel.kt">
+<method name="getMessage$base" desc="()Lcom/google/protobuf/Message;">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="toSerializedString" desc="()Ljava/lang/String;">
+<counter type="INSTRUCTION" missed="3" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="()V">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="getProto" desc="()Lcom/google/protobuf/Message;">
+<counter type="INSTRUCTION" missed="2" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<method name="toSerializedBytes" desc="()[B">
+<counter type="INSTRUCTION" missed="6" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="1" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="24" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+<counter type="METHOD" missed="5" covered="0"/>
+</class>
+<sourcefile name="BaseModel.kt">
+<line nr="7" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="9" mi="11" ci="0" mb="2" cb="0"/>
+<line nr="21" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="31" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="36" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="73" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="78" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="83" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="95" mi="9" ci="0" mb="0" cb="0"/>
+<line nr="98" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="103" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="115" mi="15" ci="0" mb="0" cb="0"/>
+<line nr="118" mi="1" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="54" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="13" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="54" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="13" covered="0"/>
+<counter type="METHOD" missed="13" covered="0"/>
+<counter type="CLASS" missed="4" covered="0"/>
+</package>
+<package name="elide/server">
+<class name="elide/server/SSRExtensionsKt" sourcefilename="SSRExtensions.kt">
+<method name="ssr" desc="(Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="38" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="11" covered="0"/>
+</method>
+<method name="ssr" desc="(Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function1;)Lio/micronaut/http/MutableHttpResponse;">
+<counter type="INSTRUCTION" missed="27" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="6" covered="0"/>
+</method>
+<method name="ssr$default" desc="(Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;">
+<counter type="INSTRUCTION" missed="19" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<method name="ssr$default" desc="(Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/micronaut/http/MutableHttpResponse;">
+<counter type="INSTRUCTION" missed="19" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<method name="injectSSR$default" desc="(Lkotlinx/html/BODY;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V">
+<counter type="INSTRUCTION" missed="30" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="5" covered="0"/>
+</method>
+<method name="injectSSR" desc="(Lkotlinx/html/BODY;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;)V">
+<counter type="INSTRUCTION" missed="74" covered="0"/>
+<counter type="BRANCH" missed="0" covered="0"/>
+<counter type="LINE" missed="17" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="207" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="45" covered="0"/>
+<counter type="METHOD" missed="6" covered="0"/>
+</class>
+<class name="elide/server/SSRContent" sourcefilename="SSRExtensions.kt">
+<method name="render" desc="()Ljava/io/ByteArrayOutputStream;">
+<counter type="INSTRUCTION" missed="73" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="7" covered="0"/>
+</method>
+<method name="&lt;init&gt;" desc="(ZLkotlin/jvm/functions/Function1;)V">
+<counter type="INSTRUCTION" missed="18" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="91" covered="0"/>
+<counter type="BRANCH" missed="4" covered="0"/>
+<counter type="LINE" missed="10" covered="0"/>
+<counter type="METHOD" missed="2" covered="0"/>
+</class>
+<class name="elide/server/SSRExtensionsKt$injectSSR$1$1" sourcefilename="SSRExtensions.kt">
+<method name="invoke" desc="(Lkotlinx/html/Unsafe;)V">
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+</method>
+<counter type="INSTRUCTION" missed="11" covered="0"/>
+<counter type="BRANCH" missed="2" covered="0"/>
+<counter type="LINE" missed="3" covered="0"/>
+<counter type="METHOD" missed="1" covered="0"/>
+</class>
+<sourcefile name="SSRExtensions.kt">
+<line nr="45" mi="12" ci="0" mb="0" cb="0"/>
+<line nr="46" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="47" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="49" mi="8" ci="0" mb="2" cb="0"/>
+<line nr="50" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="51" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="52" mi="13" ci="0" mb="0" cb="0"/>
+<line nr="53" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="55" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="56" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="57" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="58" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="59" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="60" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="79" mi="22" ci="0" mb="0" cb="0"/>
+<line nr="80" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="81" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="82" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="83" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="84" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="85" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="86" mi="18" ci="0" mb="0" cb="0"/>
+<line nr="87" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="88" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="89" mi="13" ci="0" mb="0" cb="0"/>
+<line nr="90" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="91" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="92" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="93" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="95" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="96" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="98" mi="9" ci="0" mb="0" cb="0"/>
+<line nr="99" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="100" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="102" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="103" mi="3" ci="0" mb="2" cb="0"/>
+<line nr="104" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="106" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="109" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="126" mi="12" ci="0" mb="0" cb="0"/>
+<line nr="127" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="128" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="131" mi="8" ci="0" mb="2" cb="0"/>
+<line nr="132" mi="1" ci="0" mb="0" cb="0"/>
+<line nr="134" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="135" mi="8" ci="0" mb="0" cb="0"/>
+<line nr="136" mi="6" ci="0" mb="0" cb="0"/>
+<line nr="137" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="143" mi="10" ci="0" mb="2" cb="0"/>
+<line nr="144" mi="5" ci="0" mb="0" cb="0"/>
+<line nr="145" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="148" mi="4" ci="0" mb="0" cb="0"/>
+<line nr="149" mi="54" ci="0" mb="2" cb="0"/>
+<line nr="150" mi="7" ci="0" mb="0" cb="0"/>
+<line nr="151" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="152" mi="2" ci="0" mb="0" cb="0"/>
+<line nr="153" mi="3" ci="0" mb="0" cb="0"/>
+<line nr="156" mi="1" ci="0" mb="0" cb="0"/>
+<counter type="INSTRUCTION" missed="309" covered="0"/>
+<counter type="BRANCH" missed="10" covered="0"/>
+<counter type="LINE" missed="58" covered="0"/>
+</sourcefile>
+<counter type="INSTRUCTION" missed="309" covered="0"/>
+<counter type="BRANCH" missed="10" covered="0"/>
+<counter type="LINE" missed="58" covered="0"/>
+<counter type="METHOD" missed="9" covered="0"/>
+<counter type="CLASS" missed="3" covered="0"/>
+</package>
+<counter type="INSTRUCTION" missed="1500" covered="686"/>
+<counter type="BRANCH" missed="106" covered="26"/>
+<counter type="LINE" missed="286" covered="68"/>
+<counter type="METHOD" missed="103" covered="23"/>
+<counter type="CLASS" missed="40" covered="13"/>
+</report>
+

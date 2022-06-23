@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class elide.runtime.graalvm.PolyglotScriptTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class elide.runtime.graalvm.PolyglotScriptTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/elide.runtime.graalvm.html">elide.runtime.graalvm</a> &gt; PolyglotScriptTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">7</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">7.646s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">basicPolyglotInlineTest()</td>
+<td class="success">3.228s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">basicPolyglotSourceCallableArgTest()</td>
+<td class="success">0.028s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">basicPolyglotSourceCallableTest()</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">basicPolyglotSourceTest()</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testAcquireRuntime()</td>
+<td class="success">0.155s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testEvaluateEmbeddedScriptHarness()</td>
+<td class="success">3.865s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testLoadEmbeddedScript()</td>
+<td class="success">0.341s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.nfi.NFILanguage: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/RootNode not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.llvm.runtime.LLVMLanguage: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/exception/AbstractTruffleException not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: org.graalvm.tools.lsp.instrument.LSPInstrument: java.lang.RuntimeException: java.io.IOException: Class org/graalvm/polyglot/Context not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: org.graalvm.compiler.truffle.runtime.debug.TraceSplittingListener: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.JSRealm: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.GraalJSException: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/TruffleStackTraceElement not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.GraalJSException$JSStackTraceElement: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.objects.JSObject: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:51] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.JavaScriptNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/Frame not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.GraalJSEvaluator: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.GraalJSEvaluator$3: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.JSContext: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/RootCallTarget not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSPrimitive: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSRegExp: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSProxy: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.intl.JSDisplayNames: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.wasm.JSWebAssemblyInstance: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSFunction: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSFunctionObject: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSFunction$BoundConstructNewTargetRootNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.array.SparseArray: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSNewNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.DeclareGlobalFunctionNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.ForNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/VirtualFrame not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.InstanceofNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSTypeofIdenticalNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.DeletePropertyNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.ClassDefinitionNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/HiddenKey not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.IteratorValueNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.promise.ImportCallNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/RootNode not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.Symbol: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToObjectNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.objects.JSObjectUtil: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSError$1: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.JSRuntime: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSBuiltin: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/CallTarget not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.FunctionRootNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/CallTarget not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.ConstructorRootNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.objects.Accessor: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ConstructorBuiltins: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:52] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.DefinePropertyUtil: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.TypedArrayPrototypeBuiltins: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertySetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyCacheNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyCacheNode$TraversePrototypeChainShapeCheckNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertySetNode$IntPropertySetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/IncompatibleLocationException not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertySetNode$BooleanPropertySetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/IncompatibleLocationException not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertySetNode$ObjectPropertySetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/IncompatibleLocationException not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertySetNode$ForeignPropertySetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyGetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.InstanceofNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.unary.IsCallableNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.GraalJSTranslator: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.EvalNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.js.parser.Parser: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.env.Environment$WrappedVarRef: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.ScopeFrameNode$EnclosingFunctionScopeFrameNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/MaterializedFrame not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.ArrayLiteralNode$DefaultArrayLiteralWithSpreadNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.JSWriteFrameSlotNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.JSWriteCurrentFrameSlotNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/FrameSlotKind not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.interop.ExportValueNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.interop.ExportValueNodeGen$Uncached: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/TruffleObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.ReadElementNode$ForeignObjectReadElementTypeCacheNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.IsArrayNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:53] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.ToArrayIndexNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.HasPropertyCacheNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.JSGetOwnPropertyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.IsExtensibleNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/Shape not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyGetNode$CheckNoSuchPropertyNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyGetNode$JavaStringMethodGetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyGetNode$ForeignPropertyGetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.env.Environment$3: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.GlobalScopeLookupNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/Assumption not found
+[2022.06.22 23:32:54] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSTypeofIdenticalNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$ForeignInstantiateNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$ForeignInvokeNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$ForeignExecuteNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$BoundFunctionInstanceCallNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$DynamicBoundFunctionCallNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$InvokeNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSFunctionCallNode$GenericFallbackCacheNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.JSNewNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.JSWriteScopeFrameSlotNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/FrameSlotKind not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSLessThanNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToPrimitiveNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownIdentifierException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.parser.env.FunctionEnvironment$JumpTargetCloseable: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.BlockScopeNode$FrameBlockScopeNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/frame/MaterializedFrame not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.WriteElementNode$ForeignObjectWriteElementTypeCacheNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.RequireObjectCoercibleNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSIdenticalNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSEqualNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.unary.JSIsNullOrUndefinedNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.unary.JSIsNullOrUndefinedNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSAddNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSAddNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.EnumerateNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.IsObjectNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.TryFinallyNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/ControlFlowException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSSubtractNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSGreaterThanNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSGreaterOrEqualNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSModuloNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSMultiplyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSDivideNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSBitwiseOrNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSLeftShiftNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSBitwiseAndNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSRightShiftNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSLessOrEqualNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToInt32NodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSEqualNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.DeletePropertyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.InitializeInstanceElementsNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.unary.IsConstructorNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.binary.JSExponentiateNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.promise.PerformPromiseThenNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.AsyncIteratorCloseWrapperNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/ControlFlowException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.GeneratorWrapperNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.SpecializedNewObjectNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.function.SpecializedNewObjectNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.control.YieldNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.CopyDataPropertiesNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InvalidArrayIndexException not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSPrepareThisNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.CachedGetPropertyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.JSHasPropertyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltinsFactory$ObjectCreateNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:55] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.FunctionPrototypeBuiltins$JSBindNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.CachedSetPropertyNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltinsFactory$ObjectGetOwnPropertyNamesOrSymbolsNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltins$ObjectGetOwnPropertyNamesOrSymbolsNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ForInIteratorPrototypeBuiltins$ForInIteratorPrototypeNextNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltins$AssignPropertiesNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InvalidArrayIndexException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltinsFactory$AssignPropertiesNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InteropReadMemberNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InteropReadMemberNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.TRegexExecNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/exception/AbstractTruffleException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.dfa.TRegexDFAExecutorNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.input.InputReadNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InvalidArrayIndexException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.TRegexExecNode$LazyCaptureGroupRegexSearchNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/CallTarget not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.TRegexExecutorEntryNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ConstructorBuiltins$ConstructWithNewTargetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.JSConstructTypedArrayNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ArrayPrototypeBuiltins$ArraySpeciesConstructorNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.builtins.JSArrayBufferObject$Interop: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ConstructorBuiltinsFactory$ConstructArrayNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToPrimitiveNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltinsFactory$ObjectKeysNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltins$ObjectKeysNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.EnumerableOwnPropertyNamesNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltinsFactory$ObjectGetOwnPropertyDescriptorNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ObjectFunctionBuiltins$ObjectGetOwnPropertyDescriptorNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InteropException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ArrayIteratorPrototypeBuiltins$ArrayIteratorNextNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.array.JSGetLengthNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InteropReadStringMemberNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ArrayPrototypeBuiltins$BasicArrayOperation: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.array.JSArrayFirstElementIndexNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.array.JSArrayLastElementIndexNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.array.JSArrayNextElementIndexNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.RegExpPrototypeBuiltins$JSRegExpReplaceNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$TRegexNamedCaptureGroupsAccessor: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToIntegerAsIntNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InteropReadBooleanMemberNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InteropReadBooleanMemberNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InteropToBooleanNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.helper.JSRegExpExecIntlNode$JSRegExpExecBuiltinNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InvokeExecMethodNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InteropReadIntMemberNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtil$InvokeGetGroupBoundariesMethodNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/ArityException not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InvokeGetGroupBoundariesMethodNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InvokeExecMethodNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.runtime.nodes.ToLongNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.RegexObjectFactory$InvokeCacheNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.runtime.nodes.ExpectStringOrTruffleObjectNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.input.InputLengthNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.input.InputReadNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InteropToIntNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.runtime.nodes.ToIntNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.result.RegexResultFactory$InvokeCacheNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:56] (Coverage): Error during class instrumentation: com.oracle.truffle.js.runtime.util.TRegexUtilFactory$InteropReadIntMemberNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/EncapsulatingNodeReference not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.dfa.DFAGenerator: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/nodes/Node not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.input.InputIndexOfNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.StringPrototypeBuiltinsFactory$JSStringSubstringNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.StringPrototypeBuiltinsFactory$JSStringSubstringNodeGen$InlinedNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.StringPrototypeBuiltins$JSStringSubstringNode$Inlined: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.parser.ast.InnerLiteral: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.regex.tregex.nodes.input.InputStartsWithNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/strings/TruffleString not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ArrayBufferPrototypeBuiltins$JSArrayBufferSliceNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnsupportedMessageException not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToObjectArrayNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InvalidArrayIndexException not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.cast.JSToObjectArrayNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.helper.JSCollectionsNormalizeNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.nodes.access.PropertyGetNode$GetPropertyFromJSObjectNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.MapPrototypeBuiltinsFactory$JSMapGetNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.MapPrototypeBuiltinsFactory$JSMapSetNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.MapPrototypeBuiltins$JSMapSetNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/UnknownKeyException not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.ArrayPrototypeBuiltins$JSArraySpliceNode: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/interop/InvalidArrayIndexException not found
+[2022.06.22 23:32:57] (Coverage): Error during class instrumentation: com.oracle.truffle.js.builtins.SetPrototypeBuiltinsFactory$JSSetForEachNodeGen: java.lang.RuntimeException: java.io.IOException: Class com/oracle/truffle/api/object/DynamicObject not found
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.4.2</a> at Jun 22, 2022, 11:32:59 PM</p>
+</div>
+</div>
+</body>
+</html>

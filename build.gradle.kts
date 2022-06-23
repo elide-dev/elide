@@ -92,6 +92,7 @@ sonarqube {
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
     property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
+    property("sonar.sourceEncoding", "UTF-8")
   }
 }
 

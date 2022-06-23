@@ -13,10 +13,6 @@ reporting {
   }
 }
 
-sonarqube {
-  skipProject = true
-}
-
 dependencies {
   testReportAggregation(project(":base"))
   testReportAggregation(project(":server"))

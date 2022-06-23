@@ -18,8 +18,8 @@ _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].
 
 <hr />
 
-Elide is a polyglot application framework which brings together some of the best tools and  techniques available today
-for effective and robust application development.
+Elide is **Kotlin/Multiplatform framework** for **rapid application development** which brings together some of the best
+tools and techniques available today for effective and robust application development.
 
 
 ### What do you mean by _application framework_?
@@ -66,6 +66,106 @@ leverage these tools together without needing to stitch them together in brittle
   database, your API, and your UI.
 
 
+## Code samples
+
+There are a full suite of [code samples](./samples) which can be run locally or via pre-built Docker images. Click
+through to each one for a short tour and getting started guide.
+
+"Blah blah blah, okay, show me some code." Certainly:
+
+**`App.kt`** (for the server)
+```kotlin
+/** GET `/`: Controller for index page. */
+@Controller class Index {
+  // Serve an HTML page with isomorphic React SSR.
+  @Get("/") fun index() = ssr {
+    head {
+      title { +"Hello, Elide!" }
+      stylesheet("/styles/main.css")
+      script("/scripts/ui.js", defer = true)
+    }
+    body {
+      injectSSR()
+    }
+  }
+
+  // Serve styles for the page.
+  @Get("/styles/main.css") fun styles() = css {
+    rule("body") {
+      backgroundColor = Color("#bada55")
+    }
+    rule("strong") {
+      fontFamily = "-apple-system, BlinkMacSystemFont, sans-serif"
+    }
+  }
+
+  // Serve the built & embedded JavaScript.
+  @Get("/scripts/ui.js") fun js() = asset(
+    "frontend.js",
+    "js",
+    MediaType("application/javascript", "js"),
+  )
+}
+```
+
+**`main.kt`** (for the browser)
+```kotlin
+// React props for a component
+external interface HelloProps: Props {
+  var name: String
+}
+
+// React component which says hello
+val HelloApp = FC<HelloProps> { props ->
+  div {
+    strong {
+      +props.name
+    }
+  }
+}
+
+// Entrypoint for the browser
+fun main() {
+  hydrateRoot(
+    document.getElementById("root"),
+    Fragment.create() {
+      HelloApp {
+        name = "Elide"
+      }
+    }
+  )
+}
+```
+
+That's it. That's the entire app. In fact, it's just the [`fullstack/react-ssr`](./samples/fullstack/react-ssr) sample
+pasted into the README. What we get out of this is surprising:
+
+- **Server:** JVM or Native server (via GraalVM) that serves our root page, our CSS, and our JS
+- **Client:** Embedded JS VM that executes a Node copy of our React UI, and splices it into the page for isomorphic rendering
+- **For us** (the developer):
+  - Completely type-checked calls across platforms, with almost no boilerplate
+  - Single build graph, with aggressive caching and tool support
+  - Build & test virtualized, on any platform
+  - Ship & perform natively, on any platform
+
+
+What's going on here? Elide has helped us wire together code from **Micronaut** (that's where `@Controller` comes from),
+**Kotlin/JS**, **GraalVM**, and **esbuild** to make the above code make sense on both platforms. The React code is built
+for the browser _and_ a pure server environment, both are embedded into the JAR, and served through a thin runtime layer
+provided by the framework.
+
+
+#### That's not a big deal
+
+I mean, it is. If you're participating in the React and Java ecosystems, this gives you an amazing best-of-both-worlds
+scenario: great tooling support for React and Kotlin, and an ideal serving and rendering mode, all handled for you.
+
+Also, it's not a big deal. You can do the same thing with these same tools in a custom codebase, but setting up the
+build environment for this kind of app is challenging and error-prone. Elide _intentionally_ leverages existing
+frameworks with rich ecosystems and docs, so that you always have an escape hatch up to a more powerful toolset if you
+need it.
+
+
 ### Powered-by
 
 Elide is modular. You can mix and match the following technologies in **server**, **client**, or **hybrid/fullstack**
@@ -107,6 +207,196 @@ development scenarios:
   [Pagespeed Optimization Libraries](https://developers.google.com/speed/pagespeed/module), enabling on-the-fly
   optimization of server-side content.
 
+- [**Buf**][13]. Planned support for shipping generated models to [BSR](https://docs.buf.build/bsr/overview), and
+  integration with `buf lint` / `buf breaking`.
+
+
+## Version compatibility
+
+The following version matrix indicates tested support across tool and platform versions, including **Java**,
+**Kotlin**, **GraalVM**, **Micronaut**, and **React**. Additional columns are included for **Gradle** and **Bazel**. You
+will generally want to pick one or the other of those last two.
+
+Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
+not need some of these components:
+
+| Status                                                          | **Java**      | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Netty**      | **Protobuf/gRPC** | **Gradle** | **Bazel** |
+|-----------------------------------------------------------------|---------------|------------|-------------|---------------|-----------|----------------|-------------------|------------|-----------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | **`Java 17`** | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `4.1.72.Final` | `3.20.1`/`1.46.0` | `7.4.x`    | **`6.x`** |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`     | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `4.1.72.Final` | `3.20.1`/`1.46.0` | `7.4.x`    | `5.x`     |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`      | --         | --          | --            | --        | --             | --                | --         | --        |
+
+
+If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
+
+
+## Platform Support
+
+Elide itself generally supports any platform supported by GraalVM. This includes **Linux**, **macOS**, and **Windows**.
+Client-side, all major browsers are supported, along with Android and iOS via Kotlin/Native.
+
+Please consult the table below for a complete list of supported platforms and architectures:
+
+| Build | OS             | Arch     | Libc   | Supported | Notes                  |
+|-------|:---------------|----------|--------|:---------:|:-----------------------|
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `x86_64` | `libc` | ✅ | Default JVM platform   |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `x86_64` | `libc` | ✅ | Supported dev platform |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `arm64`  | `libc` | ✅ | Supported dev platform |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Alpine) | `x86_64` | `musl` | ☢️ | _Experimental_         |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `arm64`  | `libc` | ☢️ | _Experimental_         |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Windows        | `x86_64` | N/A    | ☢️ | _Experimental_         |
+
+Bazel, Gradle, GraalVM, and Kotlin/Native must all support a platform for Elide to work properly across architectures.
+
+
+## What about ...?
+
+There are two forms of this question that typically come up from people new to Elide.
+
+### **"What about [x] functionality that I want/need?"**
+
+Fair question and there is no possible way to answer every variant of this. This caveat being said, Java, and by
+extension Kotlin, has **one of the richest and most active software ecosystems** on the planet, closely followed by
+NodeJS, via NPM.
+
+Elide supports both, and allows you to access software written for both. Here are some examples to get you going.
+
+- _I want to..._
+  - **Server-side (Micronaut)**
+    - ... localize my app: [Micronaut i18n](https://guides.micronaut.io/latest/localized-message-source-gradle-kotlin.html)
+    - ... build an event-driven app: [RabbitMQ](https://guides.micronaut.io/latest/micronaut-rabbitmq.html), [nats.io](https://micronaut-projects.github.io/micronaut-nats/latest/guide/)
+    - ... connect to my SQL database: [Hibernate](https://guides.micronaut.io/latest/micronaut-jpa-hibernate-gradle-java.html), [Exposed](https://github.com/JetBrains/Exposed)
+    - ... connect to my NoSQL database: Micronaut supports [MongoDB](https://micronaut-projects.github.io/micronaut-mongodb/latest/guide/) and [Cassandra](https://micronaut-projects.github.io/micronaut-cassandra/latest/guide), Elide additionally provides [Firestore](https://firebase.google.com/docs/firestore) and [Redis](https://redis.io)
+    - ... send emails to users: [Micronaut Email](https://micronaut-projects.github.io/micronaut-email/latest/guide/) (Sendgrid, Postmark, SES, Mailjet, JavaMail)
+    - ... use a templating engine: [Micronaut Views](https://micronaut-projects.github.io/micronaut-views/latest/guide/) (Soy, Thymeleaf, Velocity, Freemarker, Rocker, Handlebars, JTE)
+    - ... cache intelligently: [Micronaut Cache](https://guides.micronaut.io/latest/micronaut-cache-gradle-kotlin.html), (Ehcache, Redis, Hazelcast, Infinispan)
+    - ... authorize my users: [Micronaut Security](https://micronaut-projects.github.io/micronaut-security/latest/guide/) (JWT, OAuth2, OIDC, LDAP, X.509)
+    - ... build containers: compatibility with [Docker Gradle Plugin](https://github.com/bmuschko/gradle-docker-plugin), [`rules_docker`](https://github.com/bazelbuild/rules_docker), and [Jib](https://github.com/GoogleContainerTools/jib)
+    - ... host on [Kubernetes](https://kubernetes.io): [Micronaut Kubernetes](https://micronaut-projects.github.io/micronaut-kubernetes/snapshot/guide/), [Skaffold](https://skaffold.dev) is supported
+  - **Serve an API**
+    - ... you can use [gRPC](https://grpc.io): [Micronaut gRPC](https://micronaut-projects.github.io/micronaut-grpc/snapshot/guide/index.html), with native [gRPC-Web](https://github.com/grpc/grpc-web) support coming soon
+    - ... you can use [GraphQL](https://graphql.org): [Micronaut GraphQL](https://micronaut-projects.github.io/micronaut-graphql/latest/guide/) (RESTful or via WebSockets)
+    - ... you can use [OpenAPI](https://www.openapis.org): [Micronaut OpenAPI](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html) can generate your specs directly from your code
+  - **Build a web app**
+    - ... you can use pure Kotlin: [`kotlinx.html`](https://github.com/Kotlin/kotlinx.html), [Kotlin/JS](https://kotlinlang.org/docs/js-get-started.html)
+    - ... you can use TypeScript or pure JS: [`esbuild`](https://esbuild.github.io/) can be used to build both bundle types
+    - ... you can use [Angular](https://angular.io/): SSR is supported via [Angular Universal](https://angular.io/guide/universal)
+    - ... you can use [Vue](https://vuejs.org/): SSR is supported [out of the box](https://vuejs.org/guide/scaling-up/ssr.html)
+    - ... you can use [J2CL](https://github.com/google/j2cl) & [Closure][7]: rule-level support for [Elemental2](https://github.com/google/elemental2) as well
+  - **Build a mobile app**
+    - (tbd)
+
+
+### **"Why not just use [x] or [x + y]?"**
+
+This is another one that varies so much it defies a stable answer. However, here are some common ones:
+
+- **Why not just use Node?** This is _way_ faster at runtime, and the toolchain and ecosystem are stronger and more durable.
+- **Why not just use Micronaut?** First of all, you should, it's awesome. Elide is just a set of extensions on top of Micronaut. Feel free to use it directly, or shortcut and use Elide.
+- **Why not just use Ktor?** Ktor is missing the ecosystem Micronaut has, and is less compatible with GraalVM at this time.
+- **Why not put these pieces together myself?** You totally can, and if you already want to try, you should consider contributing instead ;). It's a non-trivial endeavor, though.
+- **Why develop on the JVM?** Consistency across dev machines, extremely strong industry and ecosystem support, _really_ fast tooling, _full_ typechecking. Coverage and reporting work great.
+- **Why compile for native vs ship on JVM?** Startup time is measured in `ms`. No JIT warmup = instant performance. Container replicas don't copy a full JVM footprint.
+- **Why not use Nashorn or Rhino?** Because they are slow and unlikely to get any better. GraalVM is fast and likely to get more faster and more stable.
+
+## Cold Showers
+
+Like any approach, Elide is not helpful in all situations, and at this time **should be considered alpha-quality** for
+use in production as a public release. Privately, Elide has undergone extensive use in production (see
+_Adopters & history_ below). Even with perfect stability, though, you should consider these points before you pick this
+stack:
+
+
+#### Living on the bleeding edge can be painful
+
+Kotlin/Multiplatform and GraalVM are still considered new technologies. You may encounter bugs or missing platform
+support which can't easily be remedied. This is true of any young technology, and Elide happens to be a mix of young
+technologies, aside from only being a few years old itself.
+
+
+#### GraalVM's polyglot engine isn't insanely fast or stable yet
+
+Many of the performance and stability issues here will resolve over time, but it's worth noting that using Elide in
+isomorphic mode is new and may hit some of these issues. As a workaround, you can always switch back to CSR, and _still_
+beat an equivalent Node app to the TTFB punch.
+
+
+#### Reflection can be a pain with native images
+
+If you're compiling a native server binary, it can be a pain to mark reflection sites sufficiently to avoid runtime
+errors. This is slowly getting better with improved Micronaut code-gen support but it's still a problem for now.
+
+
+## About this framework
+
+Elide has existed in different forms for over 10 years. It was first released under the name `canteen` in 2011, and was
+originally written in Python. Later, it evolved into Bazel/Java, then Bazel/Kotlin, and now Bazel/Gradle/Kotlin, for a
+time took on the name `gust`, and eventually settled on `elide`.
+
+These frameworks were distinct from each other, written for a moment in time, but they shared authors, design patterns,
+and goals:
+
+- **The developer should have to write as little code as possible**, without resorting to convention. This is a reaction
+  to the drawback of Rails-style architectures.
+
+- **If it builds, it should work.** As much as possible, typechecking and code-gen should be leveraged where a human
+  developer adds little or no value. Aligning types is a detailed and error-prone process, which is well suited for a
+  computer.
+
+- **A thing is just a thing. Not what is said of that thing.** Data is the effective king of runtime. An application's
+  concepts should be strongly expressed as models, and the developer _should not have to repeat themselves_ across
+  platforms to actualize or interchange expressions of those concepts.
+
+
+#### Why rewrite it several times?
+
+Fulfilling the above goals in full is challenging, and is a constantly moving target. New software techniques and tools
+are emerging and maturing all the time. Each framework revision was written to incorporate newer ideas and techniques,
+for example:
+
+
+### History
+
+
+#### Adopters
+
+Collectively, over a span of 10+ years, Elide has served millions of requests per month on behalf of the following
+organizations (newest first):
+
+- **[Cookies](https://cookies.co).** Elide powered all customer-facing digital properties, including the main Cookies
+  site and e-commerce experience, with traffic reaching millions of users and unique hits per month.
+
+- **[Bloombox](https://github.com/bloombox).** Elide powered the APIs underlying Bloombox's B2B retail application,
+  scaling to millions of requests per month.
+
+- **[Ampush](https://ampush.com).** Elide powered internal adtech systems at Ampush which reached millions of events and
+  requests per day.
+
+- **[Keen IO](https://keen.io).** Elide powered the Keen website for a time which reached millions of developers across
+  the span of its early use in Python.
+
+
+
+#### Timeline
+
+- [2012] **`canteen`**: Leveraged Python meta-classes and cooperative greenlets after the release of
+  [`gevent`](http://www.gevent.org/). "Holds more water than a [flask](https://pypi.org/project/Flask/)." Inspired
+  heavily by [`tipfy`](https://github.com/moraes/tipfy). Created at [Keen IO](https://keen.io), and adopted to run
+  production systems at [Ampush Media](https://ampush.com).
+
+- [2015]: **`gust`**: Written to integrate Kotlin with Bazel, ultimately with support for Soy, J2CL, Protobuf,
+  and the Closure ecosystem of tools (via [`rules_closure`](https://github.com/bazelbuild/rules_closure), shout out to
+  @jart!). Powered production systems at Momentum Ideas and [Bloombox](https://github.com/bloombox).
+
+- [2020]: **`gust` (`elide` v1)**: Rewritten in Java/Kotlin, with native support for Bazel, to continue `gust`'s
+  evolution for production use at [Cookies](https://cookies.co).
+
+- [2021]: **`elide` v2**: New model layer support with addition of Redis, Firestore, and Spanner, to support the launch
+  of [Cookies](https://cookies.co)' integrated e-commerce experience.
+
+- [2022-now]: **`elide` v3**: Complete rewrite into pure Kotlin to leverage Kotlin Multiplatform, with native support
+  for polyglot development via GraalVM, gRPC/Protobuf, and React. Build tooling support through Bazel and Gradle.
+
 
 [1]: https://kotlinlang.org/
 [2]: https://graalvm.org/
@@ -120,3 +410,4 @@ development scenarios:
 [10]: https://developers.google.com/speed/pagespeed/module
 [11]: https://github.com/sgammon/elide/tree/master
 [12]: https://github.com/sgammon/elide
+[13]: https://buf.build

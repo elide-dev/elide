@@ -29,7 +29,6 @@ BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
 ARGS ?=
 
-
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
 else
@@ -113,5 +112,5 @@ help:  ## Show this help text ('make help').
 	$(info Elide:)
 	@grep -E '^[a-z1-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all build test clean distclean forceclean
+.PHONY: all build test clean distclean forceclean docs
 

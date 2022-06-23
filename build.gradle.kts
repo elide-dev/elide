@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
   id("com.google.cloud.artifactregistry.gradle-plugin")
+  id("org.jetbrains.dokka") version "1.7.0"
   id("org.jetbrains.kotlinx.kover") version "0.5.0"
   id("org.sonarqube") version "3.4.0.2513"
 }
@@ -25,6 +26,26 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
+tasks.dokkaHtmlMultiModule.configure {
+  outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
+}
+
+tasks.dokkaGfmMultiModule.configure {
+  outputDirectory.set(buildDir.resolve("docs/kotlin/gfm"))
+}
+
+tasks.dokkaJavadocMultiModule.configure {
+  outputDirectory.set(buildDir.resolve("docs/kotlin/javadoc"))
+}
+
+tasks.create("docs") {
+  dependsOn(listOf(
+    "dokkaHtmlMultiModule",
+    "dokkaGfmMultiModule",
+    "dokkaJavadocMultiModule",
+  ))
+}
+
 buildscript {
   repositories {
     google()
@@ -37,6 +58,7 @@ buildscript {
     classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
     classpath("gradle.plugin.com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:${Versions.gauthPlugin}")
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
+    classpath("org.jetbrains.dokka:dokka-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")

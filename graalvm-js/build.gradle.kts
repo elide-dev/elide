@@ -9,6 +9,7 @@ plugins {
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
   id("org.sonarqube")
+  id("org.jetbrains.dokka")
 }
 
 kotlin {

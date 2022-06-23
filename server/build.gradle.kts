@@ -13,6 +13,7 @@ plugins {
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
   id("io.micronaut.library")
+  id("org.jetbrains.dokka")
   id("org.sonarqube")
 }
 

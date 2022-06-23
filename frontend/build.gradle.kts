@@ -8,6 +8,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  id("org.jetbrains.dokka")
   id("org.sonarqube")
 }
 

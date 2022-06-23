@@ -5,3 +5,4 @@ build/
 buildSrc/.gradle/
 kotlin-js-store/yarn.lock
 .buildstate.tar.gz
+local.properties

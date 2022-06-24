@@ -115,7 +115,7 @@ reports:  ## Generate reports for tests, coverage, etc.
 	@echo "Copying merged reports to '$(REPORTS)'..."
 	$(CMD)cd $(TARGET)/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
 	@echo "Copying test reports to '$(REPORTS)'..."
-	$(CMD)cd tools/reports/build && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
 	@echo "Reports synced."
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
@@ -133,4 +133,3 @@ help:  ## Show this help text ('make help').
 	@grep -E '^[a-z1-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: all build test clean distclean forceclean docs
-

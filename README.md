@@ -48,15 +48,11 @@ leverage these tools together without worrying about performance or compatibilit
 ## Distinguishing features
 
 - **Native development with Kotlin.** Write your core application logic and models once, and share them across platforms
-  transparently. Leverage [Kotest](https://kotest.io) for cross-platform write-once-run-everywhere testing.
+  transparently. Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing.
 
 - **Isomorphic SSR with React.** Write your UI in React, using JavaScript, TypeScript, or Kotlin. Package it for serving
   via [client-side rendering or hybrid isomorphic rendering](https://web.dev/rendering-on-the-web/) directly from your
   Kotlin server.
-
-- **Transparent API services with gRPC.** Cross-service AOP with
-  [gRPC Dekorator](https://github.com/mottljan/grpc-dekorator), with the native ability to serve data to native clients
-  via raw [gRPC][6] or native [gRPC-Web](https://github.com/grpc/grpc-web).
 
 - **Model-driven development.** Write your models once, and use them everywhere, across platforms, **without copying**,
   **without glue-code**, and **without DTOs**. Via [Protobuf][5] and
@@ -153,7 +149,7 @@ for the browser _and_ a pure server environment; both are embedded into the JAR 
 provided by the framework.
 
 
-#### That's not a big deal
+#### Why is this useful?
 
 If you're participating in the React and Java ecosystems, this gives you a fantastic best-of-both-worlds runtime option:
 superb tooling support for React and Kotlin and an ideal serving and rendering mode, all handled for you.
@@ -187,7 +183,6 @@ development scenarios:
 - [**Protobuf**][5] / [**gRPC**][6]. Elide leverages cross-platform serialization through KotlinX's
   [`protobuf`](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md#protobuf-experimental)
   module, and includes **native support for [gRPC Web](https://github.com/grpc/grpc-web)** without running a proxy.
-  Enforce API keys and traceability without [ESPv2](https://github.com/GoogleCloudPlatform/esp-v2).
 
 - [**Closure**][7]. Use the Closure Tools family of software to develop performant and low-level JavaScript apps that
   are served directly from your application JAR. Render Soy templates server-side with Google's blazing-fast
@@ -200,13 +195,6 @@ development scenarios:
 - [**Gradle**][9]. Early support for building multi-platform Kotlin applications via Gradle, including integrated
   support for [Webpack](https://webpack.js.org/)-based frontend builds and [esbuild](https://esbuild.github.io/)-based
   embedded SSR builds.
-
-- [**PSOL**][10]. Early support for native integration with the
-  [Pagespeed Optimization Libraries](https://developers.google.com/speed/pagespeed/module), enabling on-the-fly
-  optimization of server-side content.
-
-- [**Buf**][13]. Planned support for shipping generated models to [BSR](https://docs.buf.build/bsr/overview), and
-  integration with `buf lint` / `buf breaking`.
 
 
 ## Version compatibility

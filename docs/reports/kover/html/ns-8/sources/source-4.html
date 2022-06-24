@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > Logic</title>
+  <title>Coverage Report > Generated</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/highlight-idea.css";
@@ -20,7 +20,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">elide.annotations</a>
 </div>
 
-<h1>Coverage Summary for Class: Logic (elide.annotations)</h1>
+<h1>Coverage Summary for Class: Generated (elide.annotations)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -31,7 +31,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 </th>
 </tr>
 <tr>
-  <td class="name">Logic</td>
+  <td class="name">Generated</td>
     <td class="coverageStat"/>
 </tr>
 
@@ -46,16 +46,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">2</i>&nbsp;
 <i class="no-highlight">3</i>&nbsp;
 <i class="no-highlight">4</i>&nbsp;/**
-<i class="no-highlight">5</i>&nbsp; * Marks an application class as &quot;business logic,&quot; which automatically makes it eligible for dependency injection, auto-
-<i class="no-highlight">6</i>&nbsp; * wired logging, and other framework features.
-<i class="no-highlight">7</i>&nbsp; *
-<i class="no-highlight">8</i>&nbsp; * This annotation should be used on the &lt;i&gt;implementation&lt;/i&gt; of a given Java or Kotlin interface. API interfaces
-<i class="no-highlight">9</i>&nbsp; * should be marked with {@link API} to participate in auto-documentation and other AOT-based features.
-<i class="no-highlight">10</i>&nbsp; */
-<i class="no-highlight">11</i>&nbsp;@MustBeDocumented
-<i class="no-highlight">12</i>&nbsp;@Retention(AnnotationRetention.RUNTIME)
-<i class="no-highlight">13</i>&nbsp;@Target(AnnotationTarget.TYPE)
-<i class="no-highlight">14</i>&nbsp;expect annotation class Logic
+<i class="no-highlight">5</i>&nbsp; * Marks a given Java or Kotlin class as &quot;Generated,&quot; which excuses it from coverage requirements and other tooling
+<i class="no-highlight">6</i>&nbsp; * strictness; should be used sparingly.
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;@Retention(AnnotationRetention.RUNTIME)
+<i class="no-highlight">9</i>&nbsp;@Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
+<i class="no-highlight">10</i>&nbsp;@MustBeDocumented
+<i class="no-highlight">11</i>&nbsp;annotation class Generated
 </div>
 </pre>
 </div>
@@ -82,7 +79,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-06-22 22:04</div>
+    <div style="float:right;">generated on 2022-06-23 13:15</div>
 </div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 
 expect annotation class [Logic](index.md)
 
-Marks an application class as &quot;business logic,&quot; which automatically makes it eligible for dependency injection, auto- wired logging, and other framework features.
+Marks an application class as &quot;business logic,&quot; which automatically makes it eligible for dependency injection, autowired logging, and other framework features.
 
 This annotation should be used on the <i>implementation</i> of a given Java or Kotlin interface. API interfaces should be marked with {@link API} to participate in auto-documentation and other AOT-based features.
 

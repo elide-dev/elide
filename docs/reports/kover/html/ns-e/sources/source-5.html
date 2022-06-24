@@ -1,0 +1,89 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Model</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">elide.annotations</a>
+</div>
+
+<h1>Coverage Summary for Class: Model (elide.annotations)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+</tr>
+<tr>
+  <td class="name">Model</td>
+    <td class="coverageStat"/>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package elide.annotations
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;
+<i class="no-highlight">4</i>&nbsp;/**
+<i class="no-highlight">5</i>&nbsp; * Marks an application-level class as a data model, which makes it eligible for reflective use (even in native
+<i class="no-highlight">6</i>&nbsp; * circumstances such as on GraalVM).
+<i class="no-highlight">7</i>&nbsp; *
+<i class="no-highlight">8</i>&nbsp; * Classes marked as models become available for reflection for all constructors, fields, and methods. Models should
+<i class="no-highlight">9</i>&nbsp; * typically only depend on other models (ideally via encapsulation), and should be immutable. Kotlin data classes are
+<i class="no-highlight">10</i>&nbsp; * an example of good model semantics.
+<i class="no-highlight">11</i>&nbsp; */
+<i class="no-highlight">12</i>&nbsp;@MustBeDocumented
+<i class="no-highlight">13</i>&nbsp;@Retention(AnnotationRetention.RUNTIME)
+<i class="no-highlight">14</i>&nbsp;@Target(AnnotationTarget.TYPE)
+<i class="no-highlight">15</i>&nbsp;expect annotation class Model
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-06-24 01:33</div>
+</div>
+</body>
+</html>

@@ -204,7 +204,7 @@ git clone git@github.com:elide-dev/v3.git && cd v3
 
 #### Requirements to build
 
-To build the JVM or JS samples in Kotlin, you just need **JDK 11 or later**. [Zulu](https://www.azul.com/downloads/) is
+To build the JVM or JS samples in Kotlin, you will need **JDK 11 or later**. [Zulu](https://www.azul.com/downloads/) is
 a good option if you don't have a preferred JVM.
 
 To build native code, you'll need a recent version of [GraalVM](https://www.graalvm.org/downloads/). Make sure to
@@ -298,10 +298,6 @@ Please consult the table below for a complete list of supported platforms and ar
 
 Bazel, Gradle, GraalVM, and Kotlin/Native must support a given platform for Elide to work across architectures.
 
-
-## What about ...?
-
-Two forms of this question typically come up from people new to Elide's style of development.
 
 ### **"What about [x] functionality that I want/need?"**
 

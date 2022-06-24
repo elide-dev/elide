@@ -136,7 +136,7 @@ jobs:
           java-version: '11'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: elide-tools/setup-graalvm@5.0
         with:
           graalvm: '21.0.0.2'
           java: 'java11'
@@ -246,7 +246,7 @@ jobs:
           java-version: '11'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: elide-tools/setup-graalvm@5.0
         with:
           graalvm: '21.0.0.2'
           java: 'java11'

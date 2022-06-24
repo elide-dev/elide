@@ -160,6 +160,41 @@ docs, _instead of_ re-providing existing functionality so that you always have a
 toolset if you need it.
 
 
+### Trying it out
+
+> **Note**
+> Elide is early. This guide will soon be usable without cloning the source.
+
+There are currently two ways to try out Elide. You can build a sample from source, or run the pre-built Docker images.
+Native images are not yet available via Docker, but you can build and test them locally.
+
+The `react-ssr` sample is recommended, because it demoes the broadest set of functionality currently available. Source
+code for each sample is in the [`samples/`](./samples) directory.
+
+
+**Run the `helloworld` sample via Docker (JVM):**
+```
+docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-server-helloworld-jvm
+```
+
+**Run the `react-ssr` sample via Docker (JVM):**
+```
+docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-fullstack-react-ssr-jvm:latest
+```
+
+**Run the `react-ssr` sample via Gradle (JVM):**
+```
+git clone git@github.com:elide-dev/v3.git && cd v3
+./gradlew :samples:fullstack:react-ssr:server:run
+```
+
+**Run the `react-ssr` sample via Gradle (Native):**
+```
+git clone git@github.com:elide-dev/v3.git && cd v3
+./gradlew :samples:fullstack:react-ssr:server:runNative
+```
+
+
 ### Powered-by
 
 Elide is modular. You can mix and match the following technologies in **server**, **client**, or **hybrid/fullstack**

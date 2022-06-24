@@ -1,9 +1,15 @@
 
-# `elide` (v3) · [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+# `elide` (v3)
 
 _elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge._
 
 <hr />
+
+[![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.7.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
@@ -169,7 +175,8 @@ There are currently two ways to try out Elide. You can build a sample from sourc
 Native images are not yet available via Docker, but you can build and test them locally.
 
 The `react-ssr` sample is recommended, because it demoes the broadest set of functionality currently available. Source
-code for each sample is in the [`samples/`](./samples) directory.
+code for each sample is in the [`samples/`](./samples) directory. If you're going to build from source, make sure to see
+the _Requirements to build_ section.
 
 
 **Run the `helloworld` sample via Docker (JVM):**
@@ -193,6 +200,29 @@ git clone git@github.com:elide-dev/v3.git && cd v3
 git clone git@github.com:elide-dev/v3.git && cd v3
 ./gradlew :samples:fullstack:react-ssr:server:runNative
 ```
+
+
+#### Requirements to build
+
+To build the JVM or JS samples in Kotlin, you just need **JDK 11 or later**. [Zulu](https://www.azul.com/downloads/) is
+a good option if you don't have a preferred JVM.
+
+To build native code, you'll need a recent version of [GraalVM](https://www.graalvm.org/downloads/). Make sure to
+install the `native-image` tool after initially downloading, which you can do with:
+
+```
+gu install native-image espresso
+gu rebuild-images
+```
+
+Finally, you'll need a recent [Node.js](https://nodejs.org/) runtime if you want to build JS or frontend code. That's
+it!
+
+To summarize:
+
+- **For building via Gradle:** JDK11+, any reasonable JVM should work.
+- **For building native:** GraalVM (consult compat table for version advice).
+- **For building browser/embedded JS:** Recent Node.js toolchain. 16.x+ is recommended.
 
 
 ### Powered-by
@@ -304,45 +334,6 @@ Elide supports both and allows you to access software written for both. Here are
     - ... you can use [J2CL](https://github.com/google/j2cl) & [Closure][7]: rule-level support for [Elemental2](https://github.com/google/elemental2) as well
   - **Build a mobile app**
     - (tbd)
-
-
-### **"Why not just use [x] or [x + y]?"**
-
-This question is another one that varies so much that it defies a stable answer. However, here are some common ones:
-
-- **Why not just use Node?** Kotlin is _way_ faster at runtime, and the toolchain are broader and more robust.
-- **Why not just use Micronaut?** You should. Micronaut is awesome. Elide is just a set of extensions on top of Micronaut. Feel free to use it directly or jump-start with Elide.
-- **Why not just use Ktor?** Ktor is missing the ecosystem Micronaut has and is less compatible with GraalVM (for now).
-- **Why not put these pieces together myself?** You totally can, and if you already want to try, you should consider contributing. It's a non-trivial endeavor, though.
-- **Why develop on the JVM?** Consistency across dev machines, robust industry and ecosystem support, _really_ fast tooling, _full_ type checking. Coverage and reporting work great.
-- **Why compile for native vs. ship on JVM?** Startup time is measured in `ms`. No JIT warmup = instant performance. Container replicas don't copy an entire JVM footprint.
-- **Why not use Nashorn or Rhino?** Because they are slow and unlikely to get any better. GraalVM is fast, likely to get faster, and more likely to see updates.
-
-## Cold Showers
-
-Like any approach, Elide is not helpful in all situations and, at this time, **should be considered alpha-quality** for
-use in production as a public release. Privately, Elide has undergone extensive use in production (see
-_Adopters & history_ below). Even with perfect stability, though, you should consider these points before you pick this
-stack:
-
-
-#### Living on the bleeding edge can be painful
-
-Kotlin/Multiplatform and GraalVM are still considered new technologies. You may encounter bugs or missing platform
-support which can't easily be remedied. This is true of any young technology.
-
-
-#### GraalVM's polyglot engine isn't insanely fast or stable yet
-
-Many of the performance and stability issues here will resolve over time, but it's worth noting that using Elide in
-isomorphic mode is new and may hit some of these issues. As a workaround, you can always switch back to CSR and _still_
-beat an equivalent Node app to the TTFB punch.
-
-
-#### Reflection can be a pain with native images
-
-If you're compiling a native server binary, it can be a pain to mark reflection sites sufficiently to avoid runtime
-errors. These pains are slowly improving with improved Micronaut code-gen support, but it's still a problem.
 
 
 ## About this framework

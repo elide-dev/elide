@@ -35,8 +35,8 @@ leverage these tools together without worrying about performance or compatibilit
 
 #### Cross-platform features
 
-- **Primitives.** Access the entire [Kotlin Standard Library](), with additional extensions and a the full suite of
-  [KotlinX]() extensions, including [`serialization`](https://kotlinlang.org/docs/serialization.html),
+- **Primitives.** Access the entire [Kotlin Standard Library](), with additional sugar added, and the full suite of
+  [KotlinX]() extensions including [`serialization`](https://kotlinlang.org/docs/serialization.html),
   [`atomicfu`](https://github.com/Kotlin/kotlinx.atomicfu),
   [`coroutines`](https://github.com/Kotlin/kotlinx.coroutines), and
   [`datetime`](https://github.com/Kotlin/kotlinx-datetime).

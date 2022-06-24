@@ -12,6 +12,9 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
+group = "dev.elide"
+version = rootProject.version as String
+
 kotlin {
   js {
     nodejs()

@@ -21,6 +21,9 @@ plugins {
   id("org.sonarqube")
 }
 
+group = "dev.elide"
+version = rootProject.version as String
+
 micronaut {
   version.set(Versions.micronaut)
 }

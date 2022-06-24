@@ -19,6 +19,9 @@ plugins {
   id("org.sonarqube")
 }
 
+group = "dev.elide.samples"
+version = rootProject.version as String
+
 val kotlinWrapperVersion = Versions.kotlinWrappers
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 

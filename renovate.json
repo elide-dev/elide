@@ -13,7 +13,9 @@
     "pip_requirements",
     "bazelisk",
     "buildkite",
-    "html"
+    "html",
+    "gradle",
+    "gradle-wrapper"
   ],
   "pinDigests": true,
   "rangeStrategy": "pin",

@@ -11,6 +11,9 @@ plugins {
   id("io.micronaut.aot")
 }
 
+group = "dev.elide.samples"
+version = rootProject.version as String
+
 kotlin {
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))

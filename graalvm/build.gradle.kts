@@ -18,6 +18,9 @@ plugins {
   id("org.sonarqube")
 }
 
+group = "dev.elide"
+version = rootProject.version as String
+
 kotlin {
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))

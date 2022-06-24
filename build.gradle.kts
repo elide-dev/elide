@@ -3,6 +3,7 @@
 import java.util.Properties
 
 plugins {
+  kotlin("plugin.allopen") version "1.7.0" apply false
   kotlin("plugin.serialization") version "1.7.0" apply false
   id("com.google.cloud.artifactregistry.gradle-plugin")
   id("org.jetbrains.dokka") version "1.7.0"
@@ -15,7 +16,9 @@ group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
 version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
-  file(".version").readText().trim().replace("\n", "")
+  file(".version").readText().trim().replace("\n", "").ifBlank {
+    throw IllegalStateException("Failed to load `.version`")
+  }
 } else {
   "1.0-SNAPSHOT"
 }
@@ -58,6 +61,7 @@ buildscript {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
+    classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${Versions.benchmarkPlugin}")
     classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${Versions.versionsPlugin}")
   }

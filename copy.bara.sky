@@ -9,7 +9,6 @@ protocolHttp = "https://github.com/elide-dev/protocol"
 frameworkRepo = "https://github.com/elide-dev/v3"
 frameworkBranch = "v3"
 
-
 def github_source_status(workflow_name, ctx_url = None):
     """After a migration runs, let the source know with a commit status."""
     return core.dynamic_feedback(
@@ -54,7 +53,7 @@ def _github_notification_impl(ctx):
 core.workflow(
     name = "protocol",
     origin = git.github_pr_origin(
-        url = sourceRepo,
+        url = frameworkRepo,
         required_labels = ["migrate:protocol"],
     ),
     destination = git.github_pr_destination(
@@ -135,7 +134,7 @@ ${GITHUB_PR_BODY}
 core.workflow(
     name = "buildtools",
     origin = git.github_pr_origin(
-        url = sourceRepo,
+        url = frameworkRepo,
         required_labels = ["migrate:buildtools"],
     ),
     destination = git.github_pr_destination(
@@ -208,4 +207,3 @@ ${GITHUB_PR_BODY}
         github_source_status("buildtools", "https://github.com/elide-dev/buildtools/pulls"),
     ],
 )
-

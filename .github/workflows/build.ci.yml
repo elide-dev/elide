@@ -89,6 +89,7 @@ jobs:
             -PbuildSamples=false
             -x nativeCompile
             -x test
+            -x koverMergedHtmlReport
 
       ## CI: Failure Comment
       - name: "Comment: Build Scan (Failure)"

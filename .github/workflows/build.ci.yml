@@ -165,9 +165,9 @@ jobs:
             test
             -Pelide.ci=true
             -x nativeCompile
-            -x graalvm:test
-            -x graalvm-js:test
-            -x graalvm-react:test
+            -x :packages:graalvm:test
+            -x :packages:graalvm-js:test
+            -x :packages:graalvm-react:test
 
   ##
   ## Job: Testsuite (Native)

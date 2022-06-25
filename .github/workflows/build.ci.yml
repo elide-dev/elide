@@ -108,7 +108,7 @@ jobs:
       ## CI: Success Comment
       - name: "Comment: Build Scan (Success)"
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && success()
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |

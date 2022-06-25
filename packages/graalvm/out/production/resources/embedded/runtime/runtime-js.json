@@ -1,7 +1,0 @@
-{
-  "artifacts": [
-    {"name": "preamble.js"},
-    {"name": "abort-controller.js"}
-  ],
-  "entry": "invoke.js"
-}

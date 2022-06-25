@@ -1,6 +1,9 @@
 .DS_Store
 .idea/
 build/
+out/
+packages/*/out
+packages/*/build
 .gradle/
 buildSrc/.gradle/
 kotlin-js-store/yarn.lock

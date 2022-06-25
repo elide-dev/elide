@@ -7,8 +7,8 @@
 *.bzl linguist-language=Starlark linguist-detectable
 **/package-info.java -linguist-detectable linguist-generated
 samples/** -linguist-detectable
-graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
-graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
-graalvm-react/src/main/node/** -linguist-detectable linguist-generated
-graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
+packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
+packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated
+packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated
+packages/graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
 docs/* linguist-documentation

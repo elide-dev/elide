@@ -25,9 +25,14 @@ elide.js.ssr
 react.dom.client
 module:server
 elide.server
+elide.server.controller
+elide.server.runtime
+module:test
+elide.server.runtime
 module:js
 grpc_web
 grpc_web.MethodType
 tsstdlib
 module:jvm
-elide.rpc.web
+elide.server.rpc
+elide.server.rpc.web

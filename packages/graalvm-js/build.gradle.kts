@@ -83,4 +83,7 @@ dependencies {
   api(npm("readable-stream", Versions.nodeStreams))
   implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
   implementation("org.jetbrains.kotlin-wrappers:kotlin-node:${Versions.node}-${Versions.kotlinWrappers}")
+
+  // Testing
+  testImplementation(project(":packages:test"))
 }

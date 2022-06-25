@@ -7,9 +7,9 @@ plugins {
   kotlin("plugin.serialization") version "1.7.0" apply false
   id("com.google.cloud.artifactregistry.gradle-plugin")
   id("org.jetbrains.dokka") version "1.7.0"
-  id("org.jetbrains.kotlinx.kover") version "0.5.1"
   id("org.sonarqube") version "3.4.0.2513"
   id("com.github.ben-manes.versions") version "0.42.0"
+  jacoco
 }
 
 group = "dev.elide"
@@ -56,10 +56,10 @@ buildscript {
     classpath("com.bmuschko:gradle-docker-plugin:${Versions.dockerPlugin}")
     classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
     classpath("gradle.plugin.com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:${Versions.gauthPlugin}")
+    classpath("gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:${Versions.protobufPlugin}")
     classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${Versions.kotlin}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
-    classpath("org.jetbrains.kotlinx:kover:${Versions.koverPlugin}")
     classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
     classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${Versions.benchmarkPlugin}")
     classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
@@ -105,19 +105,10 @@ subprojects {
   val name = this.name
 
   sonarqube {
-    if (name != "base") {
+    if (name != "base" && name != "test") {
       properties {
         property("sonar.sources", "src/main/kotlin")
         property("sonar.tests", "src/test/kotlin")
-        property(
-          "sonar.coverage.jacoco.xmlReportPaths",
-          listOf(
-            "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-            "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-            "build/reports/jacoco/test/jacocoTestReport.xml",
-            "build/reports/kover/xml/coverage.xml",
-          )
-        )
       }
     } else {
       properties {
@@ -154,30 +145,5 @@ allprojects {
       apiVersion = Versions.kotlinLanguage
       languageVersion = Versions.kotlinLanguage
     }
-  }
-}
-
-kover {
-  if (project.hasProperty("elide.ci") && (project.properties["elide.ci"] as String) == "true") {
-    coverageEngine.set(kotlinx.kover.api.CoverageEngine.JACOCO)
-  } else {
-    coverageEngine.set(kotlinx.kover.api.CoverageEngine.INTELLIJ)
-  }
-}
-
-tasks.koverMergedHtmlReport {
-  isEnabled = true
-  htmlReportDir.set(layout.buildDirectory.dir("${rootProject.buildDir}/reports/kover/html"))
-}
-
-tasks.koverMergedXmlReport {
-  isEnabled = true
-  xmlReportFile.set(layout.buildDirectory.file("${rootProject.buildDir}/reports/kover/xml/coverage.xml"))
-}
-
-subprojects {
-  tasks.koverXmlReport {
-    isEnabled = true
-    xmlReportFile.set(layout.buildDirectory.file("${project.buildDir}/reports/kover/xml/coverage.xml"))
   }
 }

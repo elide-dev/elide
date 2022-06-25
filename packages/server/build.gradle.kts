@@ -173,4 +173,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:${Versions.coroutinesVersion}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.coroutinesVersion}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Versions.coroutinesVersion}")
+
+  // Testing
+  testImplementation(project(":packages:test"))
 }

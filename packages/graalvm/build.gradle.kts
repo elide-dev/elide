@@ -165,4 +165,7 @@ dependencies {
 
   // GraalVM SDK
   implementation("org.graalvm.sdk:graal-sdk:${Versions.graalvm}")
+
+  // Testing
+  testImplementation(project(":packages:test"))
 }

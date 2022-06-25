@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrpcWeb.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.rpc.web</a> &gt; <span class="el_source">GrpcWeb.kt</span></div><h1>GrpcWeb.kt</h1><pre class="source lang-java linenums">package elide.server.rpc.web
+
+import io.grpc.Metadata.ASCII_STRING_MARSHALLER
+import io.grpc.Metadata.Key
+
+/** Provides constant values which are used internally by Elide's gRPC integration layer. */
+@Suppress(&quot;unused&quot;) object GrpcWeb {
+  /** Special header names. */
+  object Headers {
+    /** gRPC status header, used on a gRPC-Web response. */
+    const val status = &quot;grpc-status&quot;
+
+    /** Error message header, used on an exceptional gRPC-Web response. */
+    const val errorMessage = &quot;grpc-error&quot;
+
+    /** Indicates whether a given HTTP request is encoded for use with gRPC-web. */
+    const val sentinel = &quot;grpc-web&quot;
+  }
+
+  /** Special metadata keys. */
+  object Metadata {
+    /** Key which is used to signify an internal gRPC Web call to the backing server. */
+<span class="fc" id="L23">    val internalCall: Key&lt;String&gt; = Key.of(</span>
+<span class="fc" id="L24">      &quot;x-grpc-web-internal&quot;,</span>
+<span class="fc" id="L25">      ASCII_STRING_MARSHALLER,</span>
+    )
+
+    /** User-provided `authorization` header. */
+<span class="pc" id="L29">    val authorization: Key&lt;String&gt; = Key.of(</span>
+<span class="fc" id="L30">      &quot;authorization&quot;,</span>
+<span class="fc" id="L31">      ASCII_STRING_MARSHALLER,</span>
+    )
+
+    /** User-provided `x-api-key` header. */
+<span class="pc" id="L35">    val apiKey: Key&lt;String&gt; = Key.of(</span>
+<span class="fc" id="L36">      &quot;x-api-key&quot;,</span>
+<span class="fc" id="L37">      ASCII_STRING_MARSHALLER,</span>
+    )
+
+    /** Trace header. */
+<span class="pc" id="L41">    val trace: Key&lt;String&gt; = Key.of(</span>
+<span class="fc" id="L42">      &quot;x-trace&quot;,</span>
+<span class="fc" id="L43">      ASCII_STRING_MARSHALLER,</span>
+    )
+  }
+
+  /** Suffix applied to headers which should be considered with a binary value. */
+  const val BINARY_HEADER_SUFFIX = &quot;-bin&quot;
+
+  /** Prefix for gRPC-standard headers. */
+  const val GRPC_HEADER_PREFIX = &quot;x-grpc-&quot;
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

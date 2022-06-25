@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrpcWebCall.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.rpc.web</a> &gt; <span class="el_source">GrpcWebCall.kt</span></div><h1>GrpcWebCall.kt</h1><pre class="source lang-java linenums">package elide.server.rpc.web
+
+import elide.server.rpc.web.GrpcWebCall.Binary
+import elide.server.rpc.web.GrpcWebCall.Text
+import io.grpc.ManagedChannel
+import io.grpc.ServerMethodDefinition
+import io.grpc.ServerServiceDefinition
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.MutableHttpResponse
+import java.security.Principal
+
+/**
+ * Sealed class which represents all format cases for a gRPC Web call, namely [Text] and [Binary] cases; objects are
+ * created from each child depending on the request format, to keep track of that state for the response.
+ *
+ * @param contentType gRPC Web Protocol content type which is in use for this call.
+ * @param config gRPC Web configuration which is active for the lifecycle of this call.
+ * @param service Resolved gRPC service binding which is under invocation in this call.
+ * @param method Resolved gRPC service method binding which is under invocation in this call.
+ * @param channel gRPC channel over which the call will be invoked, or was invoked.
+ * @param principal Logged-in principal reported by Micronaut, as applicable.
+ * @param httpRequest Original HTTP request which produced this gRPC Web call.
+ * @param httpResponse HTTP response that will ultimately be filled and returned if the request succeeds.
+ */
+<span class="fc" id="L26">internal sealed class GrpcWebCall private constructor (</span>
+<span class="fc" id="L27">  val contentType: GrpcWebContentType,</span>
+<span class="fc" id="L28">  val config: GrpcWebConfig,</span>
+<span class="fc" id="L29">  val service: ServerServiceDefinition,</span>
+<span class="fc" id="L30">  val method: ServerMethodDefinition&lt;*, *&gt;,</span>
+<span class="fc" id="L31">  val channel: ManagedChannel,</span>
+<span class="pc" id="L32">  val principal: Principal?,</span>
+<span class="fc" id="L33">  val httpRequest: HttpRequest&lt;RawRpcPayload&gt;,</span>
+<span class="fc" id="L34">  val httpResponse: MutableHttpResponse&lt;RawRpcPayload&gt; = HttpResponse.ok(),</span>
+) {
+  // Response which will be filled in once the call has completed.
+  private var response: GrpcWebCallResponse? = null
+
+  /**
+   * Implementation of a [GrpcWebCall] which is based on the gRPC Web Protocol's base64-encoded text format.
+   *
+   * @param config gRPC Web configuration which is active for the lifecycle of this call.
+   * @param httpRequest Original HTTP request which produced this gRPC Web call.
+   */
+<span class="nc" id="L45">  internal class Text(</span>
+    config: GrpcWebConfig,
+    service: ServerServiceDefinition,
+    method: ServerMethodDefinition&lt;*, *&gt;,
+    channel: ManagedChannel,
+    httpRequest: HttpRequest&lt;RawRpcPayload&gt;,
+    principal: Principal?,
+<span class="nc" id="L52">  ): GrpcWebCall(</span>
+<span class="nc" id="L53">    contentType = GrpcWebContentType.TEXT,</span>
+<span class="nc" id="L54">    config = config,</span>
+<span class="nc" id="L55">    service = service,</span>
+<span class="nc" id="L56">    method = method,</span>
+<span class="nc" id="L57">    channel = channel,</span>
+<span class="nc" id="L58">    httpRequest = httpRequest,</span>
+<span class="nc" id="L59">    principal = principal,</span>
+  )
+
+  /**
+   * Implementation of a [GrpcWebCall] which is based on the gRPC Web Protocol's raw binary format.
+   *
+   * @param config gRPC Web configuration which is active for the lifecycle of this call.
+   * @param httpRequest Original HTTP request which produced this gRPC Web call.
+   */
+<span class="fc" id="L68">  internal class Binary(</span>
+    config: GrpcWebConfig,
+    service: ServerServiceDefinition,
+    method: ServerMethodDefinition&lt;*, *&gt;,
+    channel: ManagedChannel,
+    httpRequest: HttpRequest&lt;RawRpcPayload&gt;,
+    principal: Principal?,
+<span class="fc" id="L75">  ): GrpcWebCall(</span>
+<span class="fc" id="L76">    contentType = GrpcWebContentType.BINARY,</span>
+<span class="fc" id="L77">    config = config,</span>
+<span class="fc" id="L78">    service = service,</span>
+<span class="fc" id="L79">    method = method,</span>
+<span class="fc" id="L80">    channel = channel,</span>
+<span class="fc" id="L81">    httpRequest = httpRequest,</span>
+<span class="fc" id="L82">    principal = principal,</span>
+  )
+
+  companion object {
+    /**
+     * Create a new [GrpcWebCall] typed to the current [GrpcWebContentType]; enclose all relevant information for the
+     * call to be fulfilled.
+     *
+     * @param config Active gRPC Web integration settings.
+     * @param service Resolved gRPC service definition.
+     * @param method Resolved gRPC method definition.
+     * @param channel Channel over which we should communicate with the gRPC server.
+     * @param request HTTP request carrying the payload bytes.
+     * @param principal Logged-in request principal.
+     * @return gRPC call object.
+     */
+    @JvmStatic fun GrpcWebContentType.newCall(
+      config: GrpcWebConfig,
+      service: ServerServiceDefinition,
+      method: ServerMethodDefinition&lt;*, *&gt;,
+      channel: ManagedChannel,
+      request: HttpRequest&lt;RawRpcPayload&gt;,
+      principal: Principal?,
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">    ): GrpcWebCall = when (this) {</span>
+      // return a binary call
+<span class="fc" id="L107">      GrpcWebContentType.BINARY -&gt; Binary(</span>
+<span class="fc" id="L108">        config,</span>
+<span class="fc" id="L109">        service,</span>
+<span class="fc" id="L110">        method,</span>
+<span class="fc" id="L111">        channel,</span>
+<span class="fc" id="L112">        request,</span>
+<span class="fc" id="L113">        principal,</span>
+      )
+
+      // return a text call
+<span class="nc" id="L117">      GrpcWebContentType.TEXT -&gt; Text(</span>
+<span class="nc" id="L118">        config,</span>
+<span class="nc" id="L119">        service,</span>
+<span class="nc" id="L120">        method,</span>
+<span class="nc" id="L121">        channel,</span>
+<span class="nc" id="L122">        request,</span>
+<span class="nc" id="L123">        principal,</span>
+      )
+<span class="fc" id="L125">    }</span>
+  }
+
+  // Internal mutable function to notify the call that a response has been received.
+  @Synchronized internal fun notifyResponse(response: GrpcWebCallResponse): GrpcWebCall {
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    if (finished()) {</span>
+<span class="nc" id="L131">      throw IllegalStateException(</span>
+<span class="nc" id="L132">        &quot;Cannot provide more than one response to a given `GrpcWebCall` structure&quot;</span>
+      )
+    }
+<span class="fc" id="L135">    this.response = response</span>
+<span class="fc" id="L136">    response.fill(httpResponse)</span>
+<span class="fc" id="L137">    return this</span>
+  }
+
+  /** @return Whether this call has finished processing yet. */
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">  fun finished(): Boolean = response != null</span>
+<span class="fc" id="L142">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

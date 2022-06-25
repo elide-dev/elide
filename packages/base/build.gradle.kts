@@ -10,14 +10,13 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinSdkVersion = project.properties["versions.kotlin.sdk"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val grpcVersion = project.properties["versions.grpc"] as String
-val grpcKotlinVersion = project.properties["versions.grpcKotlin"] as String
-val grpcWebVersion = project.properties["versions.grpcWeb"] as String
-val micronautVersion = project.properties["versions.micronaut"] as String
-val micronautPluginVersion = project.properties["versions.micronautPlugin"] as String
+val kotlinxAtomicFuVersion = project.properties["versions.kotlinx.atomicfu"] as String
 val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
 val kotlinxCollectionsVersion = project.properties["versions.kotlinx.collections"] as String
 val kotlinxDatetimeVersion = project.properties["versions.kotlinx.datetime"] as String
 val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
+val junitJupiterVersion =  project.properties["versions.junit.jupiter"] as String
+val logbackVersion = project.properties["versions.logback"] as String
 
 plugins {
     `maven-publish`
@@ -131,12 +130,13 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-                implementation("org.jetbrains.kotlin:atomicfu:1.6.21")  // bugfix for missing dep
+                implementation("org.jetbrains.kotlinx:atomicfu:$kotlinxAtomicFuVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(kotlin("stdlib-common"))
             }
         }
         val jvmMain by getting {
@@ -154,7 +154,14 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:$kotlinxCoroutinesVersion")
             }
         }
-        val jvmTest by getting
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("stdlib"))
+                implementation(kotlin("test-junit5"))
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+                runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+            }
+        }
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))

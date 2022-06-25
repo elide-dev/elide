@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrpcWebServiceRelay.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.rpc.web</a> &gt; <span class="el_source">GrpcWebServiceRelay.kt</span></div><h1>GrpcWebServiceRelay.kt</h1><pre class="source lang-java linenums">package elide.rpc.web
+
+import com.google.common.annotations.VisibleForTesting
+import com.google.common.util.concurrent.Futures
+import com.google.protobuf.Message
+import elide.rpc.RpcRuntime
+import elide.runtime.Logger
+import elide.runtime.Logging
+import io.grpc.Channel
+import io.grpc.ManagedChannel
+import io.grpc.Metadata
+import io.grpc.ServerServiceDefinition
+import io.grpc.Status
+import io.grpc.StatusException
+import io.grpc.StatusRuntimeException
+import io.grpc.protobuf.ProtoFileDescriptorSupplier
+import io.grpc.protobuf.ProtoServiceDescriptorSupplier
+import io.grpc.stub.AbstractStub
+import io.grpc.stub.MetadataUtils
+import io.grpc.stub.StreamObserver
+import io.micronaut.context.annotation.Context
+import jakarta.inject.Inject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
+import java.io.ByteArrayInputStream
+import java.lang.reflect.Method
+import java.util.LinkedList
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+
+/**
+ * Implementation of a [GrpcWebService] which calls the underlying gRPC service directly, in essence simulating an
+ * incoming HTTP/2 gRPC request without engaging the TCP/IP stack.
+ *
+ * This connection manager leverages the [elide.rpc.RpcRuntime] to dispatch services over a stubbed &quot;connection&quot; without
+ * leaving the JVM. The default service relay implementation works based on reflection, much like gRPC itself. gRPC
+ * stubs are loaded by qualified class name (but still must be registered with [elide.rpc.RpcRuntime]).
+ *
+ * Once a class is loaded, a stub is acquired and connected to the channel provided by the [runtime]. If the class in
+ * question cannot be loaded, or a stub cannot be acquired, [IllegalStateException] is thrown. See [fulfillAsync] for
+ * more information.
+ *
+ * @see GrpcWebTransport for transport-oriented methods which are made available here.
+ * @see fulfillAsync for details about how reflective fulfillment works.
+ * @param runtime Active RPC runtime to use for service fulfillment.
+ */
+<span class="nc" id="L49">@Context internal class GrpcWebServiceRelay @Inject constructor(</span>
+<span class="nc" id="L50">  private val runtime: RpcRuntime</span>
+) : GrpcWebService {
+  // Private logger.
+<span class="nc" id="L53">  private val logging: Logger = Logging.of(GrpcWebServiceRelay::class)</span>
+
+  // Message deserializer.
+<span class="nc" id="L56">  private val deserializer: MessageDeserializer = ReflectiveMessageDeserializer()</span>
+
+  // Synthesize an error status from the provided `throwable`, or fall back to `INTERNAL`.
+  private fun statusFromThrowable(throwable: Throwable): Status {
+<span class="nc" id="L60">    return when (throwable) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">      is StatusRuntimeException -&gt; throwable.status</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">      is StatusException -&gt; throwable.status</span>
+<span class="nc" id="L63">      else -&gt; Status.INTERNAL</span>
+    }
+  }
+
+  // Return a set of error trailers, if any, for the provided `throwable`, otherwise, return `null`.
+  private fun trailersFromThrowable(throwable: Throwable): Metadata? {
+<span class="nc" id="L69">    return when (throwable) {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">      is StatusRuntimeException -&gt; throwable.trailers</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">      is StatusException -&gt; throwable.trailers</span>
+<span class="nc" id="L72">      else -&gt; null</span>
+    }
+  }
+
+  // Resolve a gRPC service binding to the Java package and class name that were generated for it.
+  private fun resolveServiceJavaPackageAndName(serviceBinding: ServerServiceDefinition): Pair&lt;String, String&gt; {
+<span class="nc" id="L78">    val descriptorSupplier = (serviceBinding.serviceDescriptor.schemaDescriptor as ProtoServiceDescriptorSupplier)</span>
+<span class="nc" id="L79">    val fileDescriptorSupplier = (serviceBinding.serviceDescriptor.schemaDescriptor as ProtoFileDescriptorSupplier)</span>
+<span class="nc" id="L80">    val fileDescriptor = fileDescriptorSupplier.fileDescriptor</span>
+<span class="nc" id="L81">    val serviceDescriptor = descriptorSupplier.serviceDescriptor</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">    val targetPackage = fileDescriptor.options.javaPackage.ifBlank {</span>
+<span class="nc" id="L83">      logging.trace {</span>
+<span class="nc" id="L84">        &quot;Explicit Java package path not defined for gRPC service '${serviceBinding.serviceDescriptor.name}'. Using &quot; +</span>
+<span class="nc" id="L85">        &quot;proto package path: '${fileDescriptor.`package`}'&quot;</span>
+      }
+<span class="nc" id="L87">      fileDescriptor.`package`</span>
+    }
+<span class="nc" id="L89">    logging.debug {</span>
+<span class="fc" id="L90">      &quot;Resolved package path '$targetPackage' for service '${serviceBinding.serviceDescriptor.name}'&quot;</span>
+    }
+
+<span class="nc" id="L93">    return (</span>
+<span class="nc" id="L94">      targetPackage to serviceDescriptor.name</span>
+    )
+  }
+
+  // Load the gRPC stub wrapper class from the classpath, and resolve the expected method from the class.
+  private fun reflectivelyLoadGrpcClass(className: String): Class&lt;*&gt; {
+<span class="nc" id="L100">    return try {</span>
+<span class="nc" id="L101">      logging.trace {</span>
+<span class="fc" id="L102">        &quot;Loading class '$className' for gRPC stub&quot;</span>
+      }
+<span class="nc" id="L104">      Class.forName(className)</span>
+<span class="nc" id="L105">    } catch (err: Throwable) {</span>
+<span class="nc" id="L106">      logging.error(</span>
+<span class="nc" id="L107">        &quot;Failed to load class for gRPC relay at name '$className'&quot;,</span>
+<span class="nc" id="L108">        err</span>
+      )
+<span class="nc" id="L110">      throw Status.INTERNAL.withCause(</span>
+<span class="nc" id="L111">        err</span>
+<span class="nc" id="L112">      ).withDescription(</span>
+<span class="nc" id="L113">        &quot;Service or method not found&quot;</span>
+<span class="nc" id="L114">      ).asRuntimeException()</span>
+    }
+  }
+
+  // Load the appropriate method to dispatch (at `methodName`) from the provided `klass` definition.
+  private fun reflectivelyLoadGrpcMethod(klass: Class&lt;*&gt;, methodName: String): Method {
+<span class="nc" id="L120">    return try {</span>
+<span class="nc bnc" id="L121" title="All 6 branches missed.">      klass.methods.find { it.name == methodName.lowercase() }</span>
+<span class="nc" id="L122">        ?: throw IllegalStateException(&quot;Method not found: $methodName&quot;)</span>
+<span class="nc" id="L123">    } catch (err: Throwable) {</span>
+<span class="nc" id="L124">      logging.error(</span>
+<span class="nc" id="L125">        &quot;Failed to resolve method at name '$methodName' from class '${klass.name}' for gRPC web dispatch&quot;,</span>
+<span class="nc" id="L126">        err</span>
+      )
+<span class="nc" id="L128">      throw Status.INTERNAL.withCause(</span>
+<span class="nc" id="L129">        err</span>
+<span class="nc" id="L130">      ).withDescription(</span>
+<span class="nc" id="L131">        &quot;Service or method not found&quot;</span>
+<span class="nc" id="L132">      ).asRuntimeException()</span>
+    }
+  }
+
+  // Serialize a set of protocol buffer response messages as raw bytes.
+  private fun serializeResponses(responses: List&lt;Any&gt;): ByteArray {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">    val payload = if (responses.size &gt; 1) {</span>
+<span class="nc" id="L139">      logging.warn(&quot;Multiple responses not supported at this time by the gRPC engine. Picking the first response.&quot;)</span>
+<span class="nc" id="L140">      responses.first()</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    } else if (responses.size == 1) {</span>
+<span class="nc" id="L142">      responses.first()</span>
+    } else {
+<span class="nc" id="L144">      return ByteArray(0)</span>
+    }
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">    return if (payload is Message) {</span>
+<span class="nc" id="L148">      payload.toByteArray()</span>
+<span class="nc" id="L149">    } else throw IllegalArgumentException(</span>
+<span class="nc" id="L150">      &quot;No support for decoding non-message responses at this time. Instead, got instance of '${payload.javaClass.name}'&quot;</span>
+    )
+  }
+
+  /**
+   * Fulfill a single gRPC Web [call], using the provided [interceptor], and return the result to the caller; the
+   * call object is not guaranteed to be the same.
+   *
+   * @param call gRPC web call which we should fulfill against the backing server.
+   * @param interceptor Interceptor we should use to affix headers, etc.
+   * @return Completed gRPC web call, either with an error or successful response payload.
+   */
+  @VisibleForTesting
+  internal fun fulfillSingleCall(call: GrpcWebCall, interceptor: GrpcWebClientInterceptor): GrpcWebCall {
+    // resolve the Java package path for the generated gRPC service we're invoking
+<span class="nc" id="L165">    val (targetPackage, serviceName) = resolveServiceJavaPackageAndName(call.service)</span>
+
+    // prep metadata and attach a one-shot interceptor for it
+<span class="nc" id="L168">    val metadata = MetadataUtil.metadataFromHeaders(call.httpRequest.headers)</span>
+
+<span class="nc" id="L170">    val headersCapture = AtomicReference(Metadata())</span>
+<span class="nc" id="L171">    val trailersCapture = AtomicReference(Metadata())</span>
+<span class="nc" id="L172">    val headerReceiver = MetadataUtils.newCaptureMetadataInterceptor(</span>
+<span class="nc" id="L173">      headersCapture,</span>
+<span class="nc" id="L174">      trailersCapture,</span>
+    )
+<span class="nc bnc" id="L176" title="All 4 branches missed.">    val extraInterceptors = if (metadata.keys().isNotEmpty()) {</span>
+<span class="nc" id="L177">      listOf(MetadataUtils.newAttachHeadersInterceptor(metadata))</span>
+    } else {
+<span class="nc" id="L179">      emptyList()</span>
+    }
+
+    // resolve the outer class definition, then create a stub from the embedded stub factory.
+<span class="nc" id="L183">    val klass = reflectivelyLoadGrpcClass(&quot;$targetPackage.${serviceName}Grpc&quot;)</span>
+<span class="nc" id="L184">    val stubFactory = klass.getDeclaredMethod(&quot;newStub&quot;, Channel::class.java)</span>
+<span class="nc" id="L185">    val stub: AbstractStub&lt;*&gt; = runtime.prepareStub(</span>
+<span class="nc" id="L186">      stubFactory.invoke(null, call.channel) as AbstractStub&lt;*&gt;,</span>
+<span class="nc" id="L187">      listOf(</span>
+<span class="nc" id="L188">        headerReceiver,</span>
+<span class="nc" id="L189">        interceptor</span>
+<span class="nc" id="L190">      ).plus(extraInterceptors),</span>
+    )
+
+    // pluck the desired method from the stub, prepare to de-serialize the request
+<span class="nc" id="L194">    val grpcMethod = reflectivelyLoadGrpcMethod(</span>
+<span class="nc" id="L195">      stub.javaClass,</span>
+<span class="nc" id="L196">      call.method.methodDescriptor.fullMethodName.split(&quot;/&quot;).last(),</span>
+    )
+<span class="nc bnc" id="L198" title="All 2 branches missed.">    val stream = if (call.httpRequest.body.isPresent) {</span>
+<span class="nc" id="L199">      ByteArrayInputStream(call.httpRequest.body.get())</span>
+    } else {
+<span class="nc" id="L201">      throw IllegalArgumentException(</span>
+<span class="nc" id="L202">        &quot;Failed to decode or acquire input request body for gRPC-Web dispatch.&quot;</span>
+      )
+    }
+
+    // begin by de-framing the request payload
+<span class="nc" id="L207">    val deframer = MessageDeframer()</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">    val incomingMessage: Message = if (deframer.processInput(stream, call.contentType)) {</span>
+<span class="nc" id="L209">      deserializer.deserialize(</span>
+<span class="nc" id="L210">        grpcMethod,</span>
+<span class="nc" id="L211">        deframer.toByteArray()</span>
+      )
+    } else {
+<span class="nc" id="L214">      throw IllegalArgumentException(</span>
+<span class="nc" id="L215">        &quot;Data stream for gRPC Web dispatch was malformed&quot;</span>
+      )
+    }
+
+    // dispatch the method
+<span class="nc" id="L220">    val observer = GrpcCallObserver(</span>
+<span class="nc" id="L221">      interceptor.latch,</span>
+    )
+
+    // invoke the reflected method
+<span class="nc" id="L225">    try {</span>
+<span class="nc" id="L226">      grpcMethod.invoke(</span>
+<span class="nc" id="L227">        stub,</span>
+<span class="nc" id="L228">        incomingMessage,</span>
+<span class="nc" id="L229">        observer,</span>
+      )
+<span class="nc bnc" id="L231" title="All 2 branches missed.">      if (!observer.await()) {</span>
+<span class="nc" id="L232">        throw Status.DEADLINE_EXCEEDED.withDescription(</span>
+<span class="nc" id="L233">          &quot;CALL_TIMEOUT&quot;</span>
+<span class="nc" id="L234">        ).asRuntimeException()</span>
+      }
+<span class="nc" id="L236">    } catch (sre: StatusRuntimeException) {</span>
+<span class="nc" id="L237">      logging.debug {</span>
+<span class="nc" id="L238">        &quot;Encountered error while executing gRPC method, of status '${sre.status.code.name}'&quot;</span>
+      }
+<span class="nc" id="L240">      throw sre</span>
+<span class="nc" id="L241">    } catch (err: Throwable) {</span>
+<span class="nc" id="L242">      logging.error(</span>
+<span class="nc" id="L243">        &quot;Encountered error while dispatching gRPC method&quot;,</span>
+<span class="nc" id="L244">        err</span>
+      )
+<span class="nc" id="L246">      throw err</span>
+    }
+
+    // if we get this far, the method executed, and now we can prepare a response by interrogating the observer to
+    // find  out how the call went.
+<span class="nc" id="L251">    val err = observer.error</span>
+<span class="nc" id="L252">    val responses = observer.values</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">    return if (err != null) {</span>
+<span class="nc" id="L254">      logging.debug(</span>
+<span class="nc" id="L255">        &quot;Encountered remote error from backing gRPC Web method '${call.method.methodDescriptor.fullMethodName}'&quot;,</span>
+<span class="nc" id="L256">        err</span>
+      )
+
+      // try to synthesize the error into a gRPC status
+<span class="nc" id="L260">      val errorStatus = statusFromThrowable(err)</span>
+<span class="nc bnc" id="L261" title="All 4 branches missed.">      val errorTrailers = trailersFromThrowable(err) ?: trailersCapture.acquire ?: Metadata()</span>
+<span class="nc" id="L262">      call.notifyResponse(</span>
+<span class="nc" id="L263">        GrpcWebCallResponse.Error(</span>
+<span class="nc" id="L264">          call.contentType,</span>
+<span class="nc" id="L265">          errorStatus,</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">          headers = headersCapture.acquire ?: Metadata(),</span>
+<span class="nc" id="L267">          trailers = errorTrailers,</span>
+        )
+      )
+    } else {
+<span class="nc" id="L271">      logging.debug {</span>
+<span class="fc" id="L272">        &quot;Received total of ${responses.size} responses from backing gRPC Web method &quot; +</span>
+<span class="fc" id="L273">          &quot;'${call.method.methodDescriptor.fullMethodName}'. Relaying to client&quot;</span>
+      }
+<span class="nc" id="L275">      call.notifyResponse(</span>
+<span class="nc" id="L276">        GrpcWebCallResponse.UnaryResponse(</span>
+<span class="nc" id="L277">          call.contentType,</span>
+<span class="nc" id="L278">          payload = serializeResponses(responses),</span>
+<span class="nc" id="L279">          headers = headersCapture.acquire,</span>
+<span class="nc" id="L280">          trailers = trailersCapture.acquire,</span>
+        )
+      )
+    }
+  }
+
+  /** @inheritDoc */
+<span class="nc" id="L287">  override fun channel(): ManagedChannel = runtime.inProcessChannel()</span>
+
+  /** @inheritDoc */
+  override suspend fun fulfillAsync(call: GrpcWebCall, interceptor: GrpcWebClientInterceptor): Deferred&lt;GrpcWebCall&gt; {
+<span class="nc" id="L291">    return Futures.immediateFuture(</span>
+<span class="nc" id="L292">      fulfillSingleCall(</span>
+<span class="nc" id="L293">        call,</span>
+<span class="nc" id="L294">        interceptor,</span>
+      )
+<span class="nc" id="L296">    ).asDeferred()</span>
+  }
+
+  /**
+   * Observes a single gRPC Web dispatch cycle, buffering any response values provided via [onNext], and handling call
+   * state via [onCompleted] and [onError].
+   *
+   * Once the call completes, the provided [latch] is notified, which lets dependent callers begin interrogating this
+   * object to determine the outcome of the call.
+   */
+<span class="fc" id="L306">  private inner class GrpcCallObserver constructor (</span>
+<span class="fc" id="L307">    private val latch: CountDownLatch</span>
+  ): StreamObserver&lt;Any&gt; {
+    /** Set of values returned via [onNext]. */
+<span class="fc" id="L310">    val values = LinkedList&lt;Any&gt;()</span>
+
+    /** Terminal error provided by [onError], if any. */
+<span class="pc" id="L313">    var error: Throwable? = null</span>
+
+    /** Atomically flipped to `true` when the call closes. */
+<span class="pc" id="L316">    var completed: AtomicBoolean = AtomicBoolean(false)</span>
+
+    // Wait for the configured timeout duration for `latch` to signal method completion.
+    fun await(): Boolean {
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">      return if (!latch.await(90, TimeUnit.SECONDS)) {</span>
+<span class="nc" id="L321">        logging.warn {</span>
+<span class="nc" id="L322">          &quot;gRPC web call took more than 90 seconds; assuming timeout&quot;</span>
+        }
+<span class="nc" id="L324">        false</span>
+      } else {
+<span class="fc" id="L326">        true</span>
+      }
+    }
+
+    /** @inheritDoc */
+    override fun onNext(value: Any) {
+<span class="pc bpc" id="L332" title="1 of 2 branches missed.">      if (!completed.get()) {</span>
+<span class="fc" id="L333">        values.add(value)</span>
+      }
+<span class="fc" id="L335">    }</span>
+
+    /** @inheritDoc */
+    override fun onError(t: Throwable) {
+<span class="nc" id="L339">      completed.compareAndExchange(</span>
+<span class="nc" id="L340">        false,</span>
+<span class="nc" id="L341">        true,</span>
+      )
+<span class="nc" id="L343">      error = t</span>
+<span class="nc" id="L344">      latch.countDown()</span>
+<span class="nc" id="L345">    }</span>
+
+    /** @inheritDoc */
+    override fun onCompleted() {
+<span class="fc" id="L349">      completed.compareAndExchange(</span>
+<span class="fc" id="L350">        false,</span>
+<span class="fc" id="L351">        true,</span>
+      )
+<span class="fc" id="L353">      latch.countDown()</span>
+<span class="fc" id="L354">    }</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

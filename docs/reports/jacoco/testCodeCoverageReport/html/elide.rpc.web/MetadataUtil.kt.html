@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetadataUtil.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.rpc.web</a> &gt; <span class="el_source">MetadataUtil.kt</span></div><h1>MetadataUtil.kt</h1><pre class="source lang-java linenums">package elide.rpc.web
+
+import elide.rpc.web.GrpcWeb.BINARY_HEADER_SUFFIX
+import elide.rpc.web.GrpcWeb.GRPC_HEADER_PREFIX
+import io.grpc.Metadata
+import io.micronaut.core.type.Headers
+import io.micronaut.core.type.MutableHeaders
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.util.SortedSet
+
+/** Provides metadata-related declarations and tooling for gRPC and gRPC Web. */
+object MetadataUtil {
+  // Excluded headers from conversion between gRPC-Web and HTTP.
+<span class="fc" id="L15">  private val EXCLUDED: SortedSet&lt;String&gt; = sortedSetOf(</span>
+<span class="fc" id="L16">    &quot;content-type&quot;,</span>
+<span class="fc" id="L17">    &quot;grpc-accept-encoding&quot;,</span>
+<span class="fc" id="L18">    &quot;grpc-encoding&quot;,</span>
+<span class="fc" id="L19">    &quot;x-grpc-encoding&quot;,</span>
+<span class="fc" id="L20">    &quot;x-grpc-web&quot;,</span>
+<span class="fc" id="L21">    &quot;x-grpc-web-internal&quot;,</span>
+  )
+
+  // Headers explicitly allow-listed for inclusion. Overrides all other considerations.
+<span class="fc" id="L25">  private val INCLUDED: SortedSet&lt;String&gt; = sortedSetOf(</span>
+<span class="fc" id="L26">    &quot;authorization&quot;,</span>
+<span class="fc" id="L27">    &quot;x-api-key&quot;,</span>
+  )
+
+  /**
+   * Given a raw [name]/[value] pair which should be used as a trailer in a gRPC Web response, pack them together in a
+   * manner consistent with the gRPC Web Protocol, and add them to the provided [stream].
+   *
+   * This method works on raw strings, see [packTrailers] for a method which works based on a full set of [Metadata].
+   *
+   * @param stream Byte stream which should receive the packed result.
+   * @param name Name of the trailer which we should add to the [stream].
+   * @param value Value of the trailer which we should add to the [stream].
+   */
+  @JvmStatic fun packTrailer(stream: ByteArrayOutputStream, name: String, value: ByteArray) {
+<span class="fc" id="L41">    stream.writeBytes(</span>
+<span class="fc" id="L42">      &quot;${name.lowercase().trim()}:&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+    )
+<span class="fc" id="L44">    stream.writeBytes(</span>
+<span class="fc" id="L45">      value</span>
+    )
+<span class="fc" id="L47">    stream.writeBytes(</span>
+<span class="fc" id="L48">      &quot;\r\n&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+    )
+<span class="fc" id="L50">  }</span>
+
+  /**
+   * Given a set of [trailers] as gRPC [Metadata], and the provided string [stream], pack the present set of trailers
+   * into the response in a manner consistent with the gRPC Web Protocol.
+   *
+   * Trailers are packed at the end of a given response, formatted as a set of `key:value` pairs, with each pair
+   * separated by `\r\n`. A special [RpcSymbol] denotes the `TRAILER` section ([RpcSymbol.TRAILER]), and separates it
+   * from the `DATA` section ([RpcSymbol.DATA]).
+   *
+   * @param stream Byte stream which should receive the packed trailers.
+   * @param trailers Set of trailers to pack into the provided [stream].
+   */
+  @JvmStatic fun packTrailers(stream: ByteArrayOutputStream, trailers: Metadata) {
+<span class="fc" id="L64">    val all = trailers.keys()</span>
+<span class="fc" id="L65">    all.forEach { name -&gt;</span>
+      // determine whether we're dealing with a binary trailer
+<span class="nc bnc" id="L67" title="All 2 branches missed.">      val (metadataKey, rawValues) = if (name.endsWith(BINARY_HEADER_SUFFIX)) {</span>
+<span class="nc" id="L68">        val k = Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER)</span>
+<span class="nc" id="L69">        val values = trailers.getAll(k)</span>
+
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        k to (values?.toList() ?: emptyList())</span>
+      } else {
+<span class="nc" id="L73">        val k = Metadata.Key.of(</span>
+<span class="nc" id="L74">          name,</span>
+<span class="nc" id="L75">          Metadata.ASCII_STRING_MARSHALLER</span>
+        )
+<span class="nc" id="L77">        val values = trailers.getAll(k)</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        k to (values?.map { it.toByteArray(StandardCharsets.UTF_8) } ?: emptyList())</span>
+      }
+
+<span class="nc" id="L81">      rawValues.forEach { rawValue -&gt;</span>
+<span class="nc" id="L82">        packTrailer(</span>
+<span class="nc" id="L83">          stream,</span>
+<span class="nc" id="L84">          metadataKey.name(),</span>
+<span class="nc" id="L85">          rawValue</span>
+        )
+<span class="nc" id="L87">      }</span>
+<span class="nc" id="L88">    }</span>
+<span class="fc" id="L89">  }</span>
+
+  /**
+   * Given a set of [headers] from a generic HTTP or gRPC request, determine a corresponding set of gRPC call
+   * [io.grpc.Metadata].
+   *
+   * @param headers Headers to decode into metadata.
+   * @return gRPC metadata decoded from the provided [headers].
+   */
+  @JvmStatic fun metadataFromHeaders(headers: Headers): Metadata {
+<span class="fc" id="L99">    val metadata = Metadata()</span>
+<span class="fc" id="L100">    headers.filter {</span>
+      (
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        INCLUDED.contains(it.key) ||</span>
+          (
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &amp;&amp;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            !EXCLUDED.contains(it.key)</span>
+          )
+      )
+<span class="fc" id="L108">    }.forEach { entry -&gt;</span>
+<span class="fc" id="L109">      val (key, values) = entry</span>
+<span class="fc" id="L110">      values.forEach { value -&gt;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (key.endsWith(BINARY_HEADER_SUFFIX)) {</span>
+<span class="fc" id="L112">          metadata.put(</span>
+<span class="fc" id="L113">            Metadata.Key.of(</span>
+<span class="fc" id="L114">              key,</span>
+<span class="fc" id="L115">              Metadata.BINARY_BYTE_MARSHALLER</span>
+            ),
+<span class="fc" id="L117">            value.toByteArray(StandardCharsets.UTF_8)</span>
+          )
+        } else {
+<span class="fc" id="L120">          metadata.put(</span>
+<span class="fc" id="L121">            Metadata.Key.of(</span>
+<span class="fc" id="L122">              key,</span>
+<span class="fc" id="L123">              Metadata.ASCII_STRING_MARSHALLER</span>
+            ),
+<span class="fc" id="L125">            value</span>
+          )
+        }
+<span class="fc" id="L128">      }</span>
+<span class="fc" id="L129">    }</span>
+<span class="fc" id="L130">    return metadata</span>
+  }
+
+  /**
+   * Given a set of gRPC [io.grpc.Metadata], compute a corresponding set of HTTP [Headers] and return them.
+   *
+   * @param metadata gRPC metadata to convert into HTTP headers.
+   * @param target Headers which should receive the converted results.
+   * @return HTTP headers from the provided [metadata].
+   */
+  @JvmStatic fun fillHeadersFromMetadata(metadata: Metadata, target: MutableHeaders) {
+<span class="fc" id="L141">    metadata.keys().forEach { key -&gt;</span>
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">      if (!INCLUDED.contains(key) &amp;&amp; EXCLUDED.contains(key)) {</span>
+<span class="fc" id="L143">        return@forEach  // skip excluded headers</span>
+      } else {
+<span class="fc" id="L145">        val isBinaryHeader = key.endsWith(BINARY_HEADER_SUFFIX)</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        metadata.getAll(if (isBinaryHeader) {</span>
+<span class="fc" id="L147">          Metadata.Key.of(</span>
+<span class="fc" id="L148">            key,</span>
+<span class="fc" id="L149">            Metadata.BINARY_BYTE_MARSHALLER</span>
+          )
+        } else {
+<span class="fc" id="L152">          Metadata.Key.of(</span>
+<span class="fc" id="L153">            key,</span>
+<span class="fc" id="L154">            Metadata.ASCII_STRING_MARSHALLER</span>
+          )
+<span class="fc" id="L156">        })!!.forEach {  value -&gt;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">          if (value is String) {</span>
+<span class="fc" id="L158">            target[key] = value</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">          } else if (value is ByteArray) {</span>
+<span class="fc" id="L160">            target[key] = String(value)</span>
+          }
+<span class="fc" id="L162">        }</span>
+      }
+<span class="fc" id="L164">    }</span>
+<span class="fc" id="L165">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

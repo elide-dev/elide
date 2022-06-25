@@ -1,6 +1,6 @@
+@file:Suppress("unused")
+
 package elide.runtime
-
-
 
 /** Describes the interface for loggers shared across platforms. */
 @Suppress("unused") expect interface Logger {
@@ -33,16 +33,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun trace(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.TRACE] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun trace(message: String, vararg context: Any)
+  open fun trace(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.TRACE], assuming trace-level logging
@@ -63,16 +54,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun debug(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.DEBUG] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun debug(message: String, vararg context: Any)
+  open fun debug(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.DEBUG], assuming debug-level logging
@@ -93,16 +75,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun info(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.INFO] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun info(message: String, vararg context: Any)
+  open fun info(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.INFO], assuming info-level logging
@@ -123,16 +96,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun warn(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.WARN] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun warn(message: String, vararg context: Any)
+  open fun warn(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.WARN], assuming warn-level logging
@@ -155,18 +119,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun warning(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.WARN] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * This method is a thin alias for the equivalent [warn] call.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun warning(message: String, vararg context: Any)
+  open fun warning(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.WARN], assuming warn-level logging
@@ -188,16 +141,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun error(vararg message: String)
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.ERROR] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  open fun error(message: String, vararg context: Any)
+  open fun error(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.ERROR], assuming error-level logging

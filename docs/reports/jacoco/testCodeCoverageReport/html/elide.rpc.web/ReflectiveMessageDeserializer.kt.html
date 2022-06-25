@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReflectiveMessageDeserializer.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.rpc.web</a> &gt; <span class="el_source">ReflectiveMessageDeserializer.kt</span></div><h1>ReflectiveMessageDeserializer.kt</h1><pre class="source lang-java linenums">package elide.rpc.web
+
+import com.google.protobuf.InvalidProtocolBufferException
+import com.google.protobuf.Message
+import elide.runtime.Logger
+import elide.runtime.Logging
+import java.lang.reflect.Method
+
+
+/**
+ * Deserializer which is responsible for (1) resolving a protocol buffer object from a given reflective [Method], then
+ * (2) de-serializing a set of raw bytes into a resolved [Message].
+ */
+<span class="fc" id="L14">internal class ReflectiveMessageDeserializer: MessageDeserializer {</span>
+  // Private logger.
+<span class="fc" id="L16">  private val logging: Logger = Logging.of(ReflectiveMessageDeserializer::class)</span>
+
+  /** @inheritDoc */
+  override fun deserialize(method: Method, rawData: ByteArray): Message {
+<span class="pc bpc" id="L20" title="2 of 4 branches missed.">    if (method.parameterTypes.isEmpty())</span>
+<span class="nc" id="L21">      throw IllegalStateException(&quot;Failed to locate protocol buffer request type from method '${method.name}'&quot;)</span>
+<span class="fc" id="L22">    val firstArgType: Class&lt;*&gt; = method.parameterTypes.first()</span>
+
+    // resolve a parser method for this message type
+<span class="fc" id="L25">    val parser = try {</span>
+<span class="fc" id="L26">      firstArgType.getMethod(&quot;parseFrom&quot;, ByteArray::class.java)</span>
+<span class="nc" id="L27">    } catch (noSuch: NoSuchMethodException) {</span>
+<span class="nc" id="L28">      val msg = &quot;Failed to resolve `parseFrom` method from protocol buffer type '${firstArgType.name}'&quot;</span>
+<span class="nc" id="L29">      logging.error(</span>
+<span class="nc" id="L30">        msg,</span>
+<span class="nc" id="L31">        noSuch</span>
+      )
+<span class="nc" id="L33">      throw IllegalStateException(</span>
+<span class="nc" id="L34">        msg,</span>
+<span class="nc" id="L35">        noSuch,</span>
+      )
+    }
+
+    // invoke the parser
+<span class="fc" id="L40">    return try {</span>
+<span class="fc" id="L41">      when (val message: Any? = parser.invoke(null, rawData)) {</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        null -&gt; {</span>
+<span class="nc" id="L43">          logging.warn {</span>
+<span class="nc" id="L44">            &quot;Invalid data: failed to decode protocol buffer message for request type '${firstArgType.name}'&quot;</span>
+          }
+<span class="nc" id="L46">          throw IllegalStateException(</span>
+<span class="nc" id="L47">            &quot;Failed to decode protocol buffer request of type '${firstArgType.name}'&quot;</span>
+          )
+        }
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        !is Message -&gt; {</span>
+<span class="nc" id="L51">          logging.error {</span>
+<span class="nc" id="L52">            &quot;Unfamiliar type received for expected protocol buffer message type '${firstArgType.name}': $message &quot; +</span>
+<span class="nc" id="L53">                &quot;of type '${message.javaClass.name}'&quot;</span>
+          }
+<span class="nc" id="L55">          throw IllegalStateException(</span>
+<span class="nc" id="L56">            &quot;Failed to resolve request type '${firstArgType.name}': object is of type '${message.javaClass.name}'&quot;</span>
+          )
+        }
+        else -&gt; {
+<span class="fc" id="L60">          logging.trace {</span>
+<span class="fc" id="L61">            &quot;Decoded protocol buffer message as request of type '${firstArgType.name}': $message&quot;</span>
+          }
+<span class="fc" id="L63">          message</span>
+        }
+      }
+<span class="nc" id="L66">    } catch (ipbe: InvalidProtocolBufferException) {</span>
+<span class="nc" id="L67">      logging.warn(</span>
+<span class="nc" id="L68">        &quot;Failed to decode request message of type '${firstArgType.name}': invalid proto data&quot;,</span>
+<span class="nc" id="L69">        ipbe</span>
+      )
+<span class="nc" id="L71">      throw IllegalArgumentException(</span>
+<span class="nc" id="L72">        &quot;Invalid protocol buffer request data&quot;,</span>
+<span class="nc" id="L73">        ipbe</span>
+      )
+
+<span class="nc" id="L76">    } catch (thr: Throwable) {</span>
+<span class="nc" id="L77">      logging.error(</span>
+<span class="nc" id="L78">        &quot;Encountered fatal and unexpected error of type '${thr.javaClass.name}' while deserializing proto request of &quot; +</span>
+<span class="nc" id="L79">        &quot;type '${firstArgType.name}'&quot;,</span>
+<span class="nc" id="L80">        thr</span>
+      )
+<span class="pc" id="L82">      throw IllegalStateException(</span>
+<span class="nc" id="L83">        &quot;Fatal error while deserializing message of type '${firstArgType.name}'&quot;,</span>
+<span class="nc" id="L84">        thr</span>
+      )
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

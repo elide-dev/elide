@@ -1,0 +1,23 @@
+const esbuild = require('esbuild');
+const nodePath = process.env.NODE_PATH;
+if (!nodePath) {
+    throw new Error("Failed to resolve NODE_PATH");
+}
+const settings = {
+    entryPoints: ['{{ENTRY}}'],
+    outfile: '{{OUTFILE}}',
+    format: '{{FORMAT}}',
+    minify: {{MINIFY}},
+    platform: '{{PLATFORM}}',
+    globalName: '{{LIBNAME}}',
+    bundle: {{BUNDLE}},
+    nodePaths: [{{NODEPATH}}],
+    mainFields: ['module', 'main'],
+    resolveExtensions: ['.ts','.js'],
+    inject: [
+        '{{{PROCESS}}}'
+    ]
+};
+esbuild.build(
+    settings
+).catch(() => process.exit(1));

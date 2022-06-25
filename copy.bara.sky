@@ -1,0 +1,211 @@
+buildtoolsRepo = "git@github.com:elide-dev/buildtools.git"
+buildtoolsBranch = "update/upstream"
+buildtoolsHttp = "https://github.com/elide-dev/buildtools"
+
+protocolRepo = "git@github.com:elide-dev/protocol.git"
+protocolBranch = "live"
+protocolHttp = "https://github.com/elide-dev/protocol"
+
+frameworkRepo = "https://github.com/elide-dev/v3"
+frameworkBranch = "v3"
+
+
+def github_source_status(workflow_name, ctx_url = None):
+    """After a migration runs, let the source know with a commit status."""
+    return core.dynamic_feedback(
+        impl = _github_source_status_impl,
+        params = {
+            "botlabel": workflow_name,
+            "ctxurl": ctx_url,
+        },
+    )
+
+def _github_source_status_impl(ctx):
+    src_ref = ctx.revision.labels["GIT_SHA1"][0]
+    ctx.console.info("Notifying source ref '%s' of Copybara run" % src_ref)
+    ctx.origin.create_status(
+        src_ref,
+        "success",
+        "copybara/%s" % ctx.params["botlabel"],
+        "Migration completed",
+        ctx.params["ctxurl"],
+    )
+
+def github_source_notification():
+    """After migration action that notifies in GitHub PRs the status of the import."""
+    return core.dynamic_feedback(
+        impl = _github_notification_impl,
+        params = {},
+    )
+
+def _github_notification_impl(ctx):
+    ctx.console.info("Notifying GitHub about the import")
+    if "GITHUB_PR_NUMBER" in ctx.revision.labels:
+        pr_number = ctx.revision.labels["GITHUB_PR_NUMBER"][0]
+        for effect in ctx.effects:
+            if effect.type == "CREATED":
+                ctx.origin.post_issue_comment(int(pr_number), "Change synchronized by Copybara")
+                return
+
+#
+# WORKFLOWS
+#
+
+core.workflow(
+    name = "protocol",
+    origin = git.github_pr_origin(
+        url = sourceRepo,
+        required_labels = ["migrate:protocol"],
+    ),
+    destination = git.github_pr_destination(
+        url = protocolHttp,
+        destination_ref = "main",
+        title = "🤖 ${GITHUB_PR_TITLE} (PR ${GITHUB_PR_NUMBER})",
+        update_description = True,
+        body = (
+            """Update `protocol` sources with the latest code from the [framework repository](https://github.com/elide-dev/v3).
+
+Notes from each changed enclosed on the commit. The [original PR](https://github.com/elide-dev/v3/pulls/${GITHUB_PR_NUMBER}) body is enclosed below.
+
+### Changeset info
+
+- PR: elide-dev/v3#${GITHUB_PR_NUMBER}
+- Author: `@${GITHUB_PR_USER}`
+- Revision: `elide-dev/v3#${GITHUB_PR_HEAD_SHA}`
+
+
+### Imported change
+
+${GITHUB_PR_BODY}
+"""
+        ),
+        integrates = [],
+    ),
+    origin_files = glob([
+        "proto/**/*.proto",
+        "proto/**/*.yaml",
+        "proto/README.md",
+    ], exclude = [
+        # Nothing yet.
+    ]),
+    destination_files = glob([
+        "elide/**/*.proto",
+        "elide/**/*.yaml",
+    ], exclude = [
+        # Nothing yet.
+    ]),
+    authoring = authoring.allowed(
+        default = "Elidebot <bot@elide.dev>",
+        allowlist = [
+            "sam@dyme.com",
+            "samuel.gammon@gmail.com",
+        ],
+    ),
+    transformations = [
+        metadata.save_author(),
+        metadata.restore_author(),
+        metadata.expose_label("COPYBARA_CONTEXT_REFERENCE"),
+        metadata.expose_label("COPYBARA_INTEGRATE_REVIEW"),
+        metadata.expose_label("GITHUB_PR_NUMBER", new_name = "Closes", separator = " #", ignore_label_not_found = True),
+        metadata.squash_notes(
+            prefix = "protocol: elide-dev/v3#${GITHUB_PR_NUMBER}\n\n",
+            max = 100,
+            compact = True,
+            show_ref = True,
+            show_author = True,
+            show_description = True,
+            oldest_first = False,
+            use_merge = True,
+        ),
+        core.replace(
+            before = "${x}",
+            after = "",
+            multiline = True,
+            regex_groups = {
+                "x": "(?m)^.*BEGIN-INTERNAL[\\w\\W]*?END-INTERNAL.*$\\n",
+            },
+        ),
+        core.move(before = "proto/", after = ""),
+    ],
+    after_workflow = [
+        github_source_status("protocol", "https://github.com/elide-dev/protocol/pulls"),
+    ],
+)
+
+core.workflow(
+    name = "buildtools",
+    origin = git.github_pr_origin(
+        url = sourceRepo,
+        required_labels = ["migrate:buildtools"],
+    ),
+    destination = git.github_pr_destination(
+        url = buildtoolsHttp,
+        pr_branch = "update/upstream",
+        destination_ref = "main",
+        title = "🤖 ${GITHUB_PR_TITLE} (PR ${GITHUB_PR_NUMBER})",
+        update_description = True,
+        body = (
+            """Update `buildtools` sources with the latest code from the [framework repository](https://github.com/elide-dev/v3).
+
+### Changeset info
+
+- PR: elide-dev/v3#${GITHUB_PR_NUMBER}
+- Author: `@${GITHUB_PR_USER}`
+- Revision: `elide-dev/v3#${GITHUB_PR_HEAD_SHA}`
+
+
+### Imported change
+
+${GITHUB_PR_BODY}
+"""
+        ),
+        integrates = [],
+    ),
+    origin_files = glob([
+        "tools/plugin/gradle/**/*.*",
+    ], exclude = [
+        # Nothing yet.
+    ]),
+    destination_files = glob([
+        "**/*.*",
+    ], exclude = [
+        # Nothing yet.
+    ]),
+    authoring = authoring.allowed(
+        default = "Elidebot <bot@elide.dev>",
+        allowlist = [
+            "sam@dyme.com",
+            "samuel.gammon@gmail.com",
+        ],
+    ),
+    transformations = [
+        metadata.save_author(),
+        metadata.restore_author(),
+        metadata.expose_label("COPYBARA_CONTEXT_REFERENCE"),
+        metadata.expose_label("COPYBARA_INTEGRATE_REVIEW"),
+        metadata.expose_label("GITHUB_PR_NUMBER", new_name = "Closes", separator = " #", ignore_label_not_found = True),
+        metadata.squash_notes(
+            prefix = "buildtools: elide-dev/v3#${GITHUB_PR_NUMBER}\n\n",
+            max = 100,
+            compact = True,
+            show_ref = True,
+            show_author = True,
+            show_description = True,
+            oldest_first = False,
+            use_merge = True,
+        ),
+        core.replace(
+            before = "${x}",
+            after = "",
+            multiline = True,
+            regex_groups = {
+                "x": "(?m)^.*BEGIN-INTERNAL[\\w\\W]*?END-INTERNAL.*$\\n",
+            },
+        ),
+        core.move(before = "tools/plugin/gradle", after = ""),
+    ],
+    after_workflow = [
+        github_source_status("buildtools", "https://github.com/elide-dev/buildtools/pulls"),
+    ],
+)
+

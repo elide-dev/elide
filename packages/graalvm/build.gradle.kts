@@ -141,8 +141,8 @@ dependencies {
   api("jakarta.inject:jakarta.inject-api:2.0.1")
 
   // Modules
-  implementation(project(":base"))
-  implementation(project(":server"))
+  implementation(project(":packages:base"))
+  implementation(project(":packages:server"))
 
   // KotlinX
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")

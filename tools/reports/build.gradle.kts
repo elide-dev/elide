@@ -14,14 +14,14 @@ reporting {
 }
 
 dependencies {
-  testReportAggregation(project(":base"))
-  testReportAggregation(project(":server"))
-  testReportAggregation(project(":frontend"))
-  testReportAggregation(project(":graalvm"))
-  testReportAggregation(project(":graalvm-js"))
-  testReportAggregation(project(":graalvm-react"))
-  testReportAggregation(project(":rpc:js"))
-  testReportAggregation(project(":rpc:jvm"))
+  testReportAggregation(project(":packages:base"))
+  testReportAggregation(project(":packages:server"))
+  testReportAggregation(project(":packages:frontend"))
+  testReportAggregation(project(":packages:graalvm"))
+  testReportAggregation(project(":packages:graalvm-js"))
+  testReportAggregation(project(":packages:graalvm-react"))
+  testReportAggregation(project(":packages:rpc:js"))
+  testReportAggregation(project(":packages:rpc:jvm"))
 }
 
 tasks.create("reports") {

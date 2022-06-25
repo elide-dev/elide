@@ -70,7 +70,7 @@ open class GenerateEsBuildConfig : DefaultTask() {
         file("node_modules"),
         file("${project.rootDir}/build/js/node_modules"),
       ).plus(if (enableReact) {
-        listOf(file("${project(":graalvm-react").projectDir}/src/main/node"))
+        listOf(file("${project(":packages:graalvm-react").projectDir}/src/main/node"))
       } else {
         emptyList()
       }))

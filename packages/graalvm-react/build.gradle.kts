@@ -81,7 +81,7 @@ dependencies {
   api(npm("esbuild-plugin-alias", Versions.esbuildPluginAlias))
   api(npm("buffer", Versions.nodeBuffers))
   api(npm("readable-stream", Versions.nodeStreams))
-  implementation(project(":graalvm-js"))
+  implementation(project(":packages:graalvm-js"))
   implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
   implementation("org.jetbrains.kotlin-wrappers:kotlin-node:${Versions.node}-${Versions.kotlinWrappers}")
   implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${Versions.kotlinWrappers}")

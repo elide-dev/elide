@@ -131,7 +131,7 @@ dependencies {
   api(platform("io.netty:netty-bom:${Versions.netty}"))
 
   // Modules
-  implementation(project(":base"))
+  implementation(project(":packages:base"))
 
   // Kotlin
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")

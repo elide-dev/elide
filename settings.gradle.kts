@@ -5,14 +5,14 @@ plugins {
 rootProject.name = "elide"
 
 include(
-  ":base",
-  ":frontend",
-  ":server",
-  ":graalvm",
-  ":graalvm-js",
-  ":graalvm-react",
-  ":rpc:js",
-  ":rpc:jvm",
+  ":packages:base",
+  ":packages:frontend",
+  ":packages:server",
+  ":packages:graalvm",
+  ":packages:graalvm-js",
+  ":packages:graalvm-react",
+  ":packages:rpc:js",
+  ":packages:rpc:jvm",
   ":tools:reports",
 )
 

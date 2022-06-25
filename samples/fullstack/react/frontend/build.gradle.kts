@@ -32,7 +32,7 @@ kotlin {
 }
 
 dependencies {
-  implementation(project(":base"))
+  implementation(project(":packages:base"))
   implementation(kotlin("stdlib-js"))
   implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:0.0.1-${Versions.kotlinWrappers}")
   implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${Versions.kotlinWrappers}")

@@ -34,9 +34,9 @@ kotlin {
 }
 
 dependencies {
-  implementation(project(":base"))
-  implementation(project(":graalvm-js"))
-  implementation(project(":graalvm-react"))
+  implementation(project(":packages:base"))
+  implementation(project(":packages:graalvm-js"))
+  implementation(project(":packages:graalvm-react"))
   implementation(project(":samples:fullstack:react-ssr:frontend"))
 
   // Kotlin Wrappers

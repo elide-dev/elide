@@ -57,7 +57,7 @@ micronaut {
 }
 
 dependencies {
-  implementation(project(":server"))
+  implementation(project(":packages:server"))
   implementation("io.micronaut:micronaut-context")
   implementation("io.micronaut:micronaut-runtime")
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")

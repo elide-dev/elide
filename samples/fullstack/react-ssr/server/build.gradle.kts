@@ -115,9 +115,9 @@ val nodeDist: Configuration by configurations.creating {
 }
 
 dependencies {
-  implementation(project(":base"))
-  implementation(project(":server"))
-  implementation(project(":graalvm"))
+  implementation(project(":packages:base"))
+  implementation(project(":packages:server"))
+  implementation(project(":packages:graalvm"))
   implementation("io.micronaut:micronaut-context")
   implementation("io.micronaut:micronaut-runtime")
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")

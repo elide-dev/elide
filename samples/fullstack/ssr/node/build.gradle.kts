@@ -34,8 +34,8 @@ kotlin {
 }
 
 dependencies {
-  implementation(project(":base"))
-  implementation(project(":graalvm-js"))
+  implementation(project(":packages:base"))
+  implementation(project(":packages:graalvm-js"))
   implementation(npm("esbuild", Versions.esbuild))
 
   // Kotlin Wrappers

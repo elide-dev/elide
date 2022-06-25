@@ -1,0 +1,67 @@
+name: "Copybara"
+
+on:
+  push:
+    branches:
+      - v3
+      - main
+      - stable
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
+
+jobs:
+  copybara-protocol:
+    name: "Job: Protocol"
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/v3') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/stable') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'migrate:protocol') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'migrate:protocol'))
+    steps:
+      # Pull code.
+      - uses: actions/checkout@v2
+
+      - name: "Migrate: Protocol"
+        uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
+        with:
+          git_name: Dymebot
+          git_email: bot@dyme.com
+          git_credentials: ${{ secrets.BOT_API_CREDS }}
+          ssh_key: ${{ secrets.BOT_SSH_KEY }}
+          ssh_known_hosts: ${{ secrets.BOT_KNOWN_HOSTS }}
+          image: us-docker.pkg.dev/elide-fw/tools/copybara:latest
+          invocation: "copybara"
+          workflow: "protocol"
+          options: "--init-history --ignore-noop"
+          command: "migrate"
+          path: "copy.bara.sky"
+          ref: "${{ github.event.pull_request.head.sha }}"
+
+  copybara-buildtools:
+    name: "Job: Build Tools"
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/v3') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/stable') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'migrate:buildtools') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'migrate:buildtools'))
+    steps:
+      # Pull code.
+      - uses: actions/checkout@v2
+
+      - name: "Migrate: Cluster"
+        uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
+        with:
+          git_name: Dymebot
+          git_email: bot@dyme.com
+          git_credentials: ${{ secrets.BOT_API_CREDS }}
+          ssh_key: ${{ secrets.BOT_SSH_KEY }}
+          ssh_known_hosts: ${{ secrets.BOT_KNOWN_HOSTS }}
+          image: us-docker.pkg.dev/elide-fw/tools/copybara:latest
+          invocation: "copybara"
+          workflow: "buildtools"
+          options: "--init-history --ignore-noop"
+          command: "migrate"
+          path: "copy.bara.sky"
+          ref: "${{ github.event.pull_request.head.sha }}"

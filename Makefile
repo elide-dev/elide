@@ -98,6 +98,7 @@ clean:  ## Clean build outputs and caches.
 
 docs: $(DOCS)  ## Generate docs for all library modules.
 	@echo "Generating docs..."
+	$(CMD)$(RM) -fr$(POSIX_FLAGS) docs/kotlin docs/reports
 	$(CMD)$(GRADLE) docs $(_ARGS)
 	$(CMD)$(MKDIR) -p $(DOCS)
 	$(CMD)cd $(TARGET)/docs && $(CP) -fr$(POSIX_FLAGS) ./* $(PWD)/docs/
@@ -106,15 +107,14 @@ docs: $(DOCS)  ## Generate docs for all library modules.
 reports:  ## Generate reports for tests, coverage, etc.
 	@echo "Generating reports..."
 	$(CMD)$(GRADLE) \
-		koverMergedHtmlReport \
-		koverMergedXmlReport \
 		:tools:reports:reports \
 		-x nativeCompile \
 		-x test
-	$(CMD)$(MKDIR) -p $(REPORTS)
+	$(CMD)$(MKDIR) -p $(REPORTS) $(TARGET)/reports
 	@echo "Copying merged reports to '$(REPORTS)'..."
-	$(CMD)cd $(TARGET)/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	$(CMD)-cd $(TARGET)/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
 	@echo "Copying test reports to '$(REPORTS)'..."
+	$(CMD)$(MKDIR) -p tools/reports/build/reports
 	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
 	@echo "Reports synced."
 

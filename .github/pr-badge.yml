@@ -1,17 +1,3 @@
-## PR Size
-- label: "PR Size"
-  message: "Large"
-  color: "red"
-  when: "$additions > 5000"
-- label: "PR Size"
-  message: "Medium"
-  color: "yellow"
-  when: "$additions > 1000"
-- label: "PR Size"
-  message: "Small"
-  color: "green"
-  when: "$additions < 1000"
-
 ## Draft/ready for review
 - label: "Status"
   message: "Draft"

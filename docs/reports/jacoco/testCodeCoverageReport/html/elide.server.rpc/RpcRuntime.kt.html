@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RpcRuntime.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.rpc</a> &gt; <span class="el_source">RpcRuntime.kt</span></div><h1>RpcRuntime.kt</h1><pre class="source lang-java linenums">@file:Suppress(&quot;unused&quot;)
+
+package elide.server.rpc
+
+import elide.runtime.Logger
+import elide.runtime.Logging
+import io.grpc.*
+import io.grpc.inprocess.InProcessChannelBuilder
+import io.grpc.inprocess.InProcessServerBuilder
+import io.grpc.protobuf.services.ProtoReflectionService
+import io.grpc.reflection.v1alpha.ServerReflectionGrpc
+import io.grpc.stub.AbstractStub
+import io.micronaut.context.annotation.Context
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+
+/**
+ * Manages access to gRPC services at runtime, primarily for the purpose of dispatching arbitrary gRPC methods from RPCs
+ * encountered via Elide's Micronaut frontend; responsible for safely initializing and registering the full set of RPC
+ * services supported by a developer's application, resolving those services, and mediating state of service health.
+ *
+ * Elide's RPC runtime is built on top of Micronaut's built-in gRPC runtime support. When a gRPC server is initialized
+ * during server startup, a Bean creation event is received via [GrpcConfigurator] and handled here, to start up the
+ * RPC runtime.
+ *
+ * Later, when RPCs arrive at the server, the handler resolves the appropriate service and method via this logic.
+ *
+ * @param healthManager Service health manager, which keeps track of each service's health state.
+ */
+<span class="fc" id="L32">@Context @Singleton internal class RpcRuntime @Inject constructor (</span>
+<span class="fc" id="L33">  private val healthManager: ServiceHealthManager,</span>
+) {
+  // Private logger.
+<span class="fc" id="L36">  private val logging: Logger = Logging.of(RpcRuntime::class)</span>
+
+  // Whether the RPC runtime has initialized.
+<span class="fc" id="L39">  private var initialized: AtomicBoolean = AtomicBoolean(false)</span>
+
+  // Whether the RPC runtime is ready for requests yet.
+<span class="fc" id="L42">  private var ready: AtomicBoolean = AtomicBoolean(false)</span>
+
+  // Set of registered gRPC services.
+<span class="fc" id="L45">  private var registeredServices: MutableMap&lt;String, ServerServiceDefinition&gt; = WeakHashMap()</span>
+
+  // Registry of applicable compressors.
+<span class="fc" id="L48">  private val compressorRegistry: CompressorRegistry = CompressorRegistry.getDefaultInstance()</span>
+
+  // Registry of applicable de-compressors.
+<span class="fc" id="L51">  private val decompressorRegistry: DecompressorRegistry = DecompressorRegistry.getDefaultInstance()</span>
+
+  // Name of the in-process gRPC server mirror.
+  private var serviceName: String? = null
+
+  // In-process gRPC server mirror.
+  private lateinit var serviceRelay: Server
+
+  // In-process gRPC channel.
+  private lateinit var internalChannel: ManagedChannel
+
+  // Notify the RPC runtime that the RPC server is ready to handle requests.
+  internal fun notifyReady() {
+<span class="fc" id="L64">    ready.compareAndExchange(false, true)</span>
+<span class="fc" id="L65">  }</span>
+
+  // Configure an arbitrary `builder` for use as an Elide-enabled gRPC server.
+<span class="fc" id="L68">  internal fun configureServer(builder: ServerBuilder&lt;*&gt;, compression: Boolean = true): ServerBuilder&lt;*&gt; {</span>
+    // setup any server-level settings
+<span class="fc bfc" id="L70" title="All 2 branches covered.">    if (compression) {</span>
+<span class="fc" id="L71">      builder.compressorRegistry(compressorRegistry)</span>
+<span class="fc" id="L72">      builder.decompressorRegistry(decompressorRegistry)</span>
+    }
+
+    // add reflection service and indicate it is up
+<span class="fc" id="L76">    builder.addService(</span>
+<span class="fc" id="L77">      ProtoReflectionService.newInstance()</span>
+    )
+<span class="fc" id="L79">    healthManager.notifyServing(</span>
+<span class="fc" id="L80">      ServerReflectionGrpc.getServiceDescriptor()</span>
+    )
+
+    // indicate health service as up
+<span class="fc" id="L84">    builder.addService(</span>
+<span class="fc" id="L85">      healthManager.service</span>
+    )
+<span class="fc" id="L87">    return builder</span>
+  }
+
+  // Acquire a managed channel which is connected to the in-process service relay.
+  internal fun inProcessChannel(): ManagedChannel {
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">    return this.internalChannel</span>
+  }
+
+  // Prepare a stub with settings that integrate execution, compression, etc., with Elide settings.
+  internal fun prepareStub(stub: AbstractStub&lt;*&gt;, interceptors: List&lt;ClientInterceptor&gt;): AbstractStub&lt;*&gt; {
+<span class="fc" id="L97">    return stub.withInterceptors(</span>
+<span class="fc" id="L98">      *interceptors.toTypedArray()</span>
+    )
+  }
+
+  // Prepare an in-process server which mirrors the real one's behavior.
+  private fun prepInProcessServer() {
+<span class="fc" id="L104">    val serverName = InProcessServerBuilder.generateName()</span>
+<span class="fc" id="L105">    logging.debug {</span>
+<span class="fc" id="L106">      &quot;Generated inprocess gRPC server name: '$serverName'&quot;</span>
+    }
+
+<span class="fc" id="L109">    val builder = configureServer(</span>
+<span class="fc" id="L110">      InProcessServerBuilder.forName(serverName),</span>
+<span class="fc" id="L111">      compression = false,  // force-disable compression so we don't double-compress with the backing server</span>
+    )
+<span class="fc" id="L113">    registeredServices.forEach { (_, binding) -&gt;</span>
+<span class="fc" id="L114">      builder.addService(binding)</span>
+<span class="fc" id="L115">    }</span>
+
+    // build and start the in-proc server
+<span class="fc" id="L118">    val server = builder.build()</span>
+<span class="fc" id="L119">    serviceRelay = server</span>
+<span class="fc" id="L120">    serviceName = serverName</span>
+<span class="fc" id="L121">    server.start()</span>
+
+    // set up an internal channel to the new server
+<span class="fc" id="L124">    internalChannel = InProcessChannelBuilder.forName(</span>
+<span class="fc" id="L125">      serverName</span>
+<span class="fc" id="L126">    ).build()</span>
+
+<span class="fc" id="L128">    initialized.compareAndExchange(</span>
+<span class="fc" id="L129">      false,</span>
+<span class="fc" id="L130">      true</span>
+    )
+<span class="fc" id="L132">  }</span>
+
+  /**
+   * Register the provided list of service [descriptors] with the RPC runtime as the exhaustive list of supported gRPC
+   * services available for dispatch via Elide.
+   *
+   * @param descriptors Set of service descriptors to register with the RPC runtime.
+   */
+  @Synchronized internal fun registerServices(descriptors: List&lt;ServerServiceDefinition&gt;) {
+    // gate initialization
+<span class="fc" id="L142">    descriptors.map { svc -&gt;</span>
+<span class="fc" id="L143">      registeredServices[svc.serviceDescriptor.name] = svc</span>
+<span class="fc" id="L144">      logging.trace(&quot;Registered gRPC service with Elide RPC runtime: '${svc.serviceDescriptor.name}'&quot;)</span>
+<span class="fc" id="L145">    }</span>
+<span class="fc" id="L146">    prepInProcessServer()</span>
+<span class="fc" id="L147">  }</span>
+
+  /**
+   * Resolve the service matching the specified [name], or provide `null` instead to indicate that there is no service
+   * at that [name].
+   *
+   * @param name Fully-qualified name of the gRPC service to resolve.
+   * @return Corresponding service descriptor, or `null` if none could be located.
+   */
+  fun resolveService(name: String): ServerServiceDefinition? {
+<span class="fc" id="L157">    return registeredServices[name]</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

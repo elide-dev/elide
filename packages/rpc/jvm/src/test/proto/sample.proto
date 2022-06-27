@@ -1,0 +1,49 @@
+
+syntax = "proto3";
+
+package elide.grpctest;
+
+option java_package = "elide.grpctest";
+
+
+// Sample service interface.
+service SampleService {
+  // Method that always times out.
+  rpc MethodThatTakesTooLong(SampleRequest) returns (SampleResponse);
+
+  // Method that throws a given error.
+  rpc MethodThatErrors(StatusRequest) returns (SampleResponse);
+
+  // Method that affixes response trailers.
+  rpc MethodWithTrailers(SampleRequest) returns (SampleResponse);
+
+  // Method that throws a non-gRPC fatal error.
+  rpc MethodWithFatalError(SampleRequest) returns (SampleResponse);
+
+  // Method that calls `onNext` multiple times.
+  rpc MethodWithMultipleResponses(SampleRequest) returns (SampleResponse);
+
+  // Method that calls `onNext` after `onCompleted`, which is illegal.
+  rpc MethodWithNextAfterClose(SampleRequest) returns (SampleResponse);
+
+  // Method that calls `onNext` after `onError`, which is illegal.
+  rpc MethodWithNextAfterError(SampleRequest) returns (SampleResponse);
+}
+
+// Sample request payload.
+message SampleRequest {
+  // Rendered message.
+  string name = 1;
+}
+
+// Sample response payload.
+message SampleResponse {
+  // Rendered message.
+  string message = 1;
+}
+
+// Request to return an error of a given status code.
+message StatusRequest {
+  // Status code for the error to throw.
+  int32 statusCode = 1;
+}

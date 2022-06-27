@@ -4,10 +4,11 @@
 
 | Name |
 |---|
-| [base](base/index.md) |  |
-| [graalvm](graalvm/index.md) |  |
-| [graalvm-js](graalvm-js/index.md) |  |
-| [graalvm-react](graalvm-react/index.md) |  |
-| [js](rpc/js/index.md) |  |
-| [jvm](rpc/jvm/index.md) |  |
-| [server](server/index.md) |  |
+| [base](packages/base/index.md) |  |
+| [graalvm](packages/graalvm/index.md) |  |
+| [graalvm-js](packages/graalvm-js/index.md) |  |
+| [graalvm-react](packages/graalvm-react/index.md) |  |
+| [js](packages/rpc/js/index.md) |  |
+| [jvm](packages/rpc/jvm/index.md) |  |
+| [server](packages/server/index.md) |  |
+| [test](packages/test/index.md) |  |

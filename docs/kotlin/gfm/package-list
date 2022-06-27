@@ -31,18 +31,6 @@ $dokka.location:elide.model/WireMessage/toSerializedBytes/#/PointingToDeclaratio
 $dokka.location:elide.model/WireMessage/toSerializedString/#/PointingToDeclaration/base/base/elide.model/-wire-message/to-serialized-string.md
 $dokka.location:elide.nodejs////PointingToDeclaration/graalvm-js/graalvm-js/elide.nodejs/index.md
 $dokka.location:elide.nodejs//process/#/PointingToDeclaration/graalvm-js/graalvm-js/elide.nodejs/process.md
-$dokka.location:elide.rpc.web////PointingToDeclaration/jvm/jvm/elide.rpc.web/index.md
-$dokka.location:elide.rpc.web/MessageDeframer///PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-deframer/index.md
-$dokka.location:elide.rpc.web/MessageDeframer/MessageDeframer/#/PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-deframer/-message-deframer.md
-$dokka.location:elide.rpc.web/MessageFramer///PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-framer/index.md
-$dokka.location:elide.rpc.web/MessageFramer/MessageFramer/#/PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-framer/-message-framer.md
-$dokka.location:elide.rpc.web/MessageHandler///PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-handler/index.md
-$dokka.location:elide.rpc.web/MessageHandler/MessageHandler/#/PointingToDeclaration/jvm/jvm/elide.rpc.web/-message-handler/-message-handler.md
-$dokka.location:elide.rpc.web/MetadataUtil///PointingToDeclaration/jvm/jvm/elide.rpc.web/-metadata-util/index.md
-$dokka.location:elide.rpc.web/RequestHandler///PointingToDeclaration/jvm/jvm/elide.rpc.web/-request-handler/index.md
-$dokka.location:elide.rpc.web/RequestHandler/RequestHandler/#/PointingToDeclaration/jvm/jvm/elide.rpc.web/-request-handler/-request-handler.md
-$dokka.location:elide.rpc.web/ResponseSender///PointingToDeclaration/jvm/jvm/elide.rpc.web/-response-sender/index.md
-$dokka.location:elide.rpc.web/ResponseSender/ResponseSender/#/PointingToDeclaration/jvm/jvm/elide.rpc.web/-response-sender/-response-sender.md
 $dokka.location:elide.runtime.graalvm////PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Companion///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-companion/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Companion/acquire/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-companion/acquire.md
@@ -99,26 +87,20 @@ $dokka.location:elide.runtime/LogLevel///PointingToDeclaration/base/base/elide.
 $dokka.location:elide.runtime/LogLevel/isEnabled/#org.slf4j.Logger/PointingToDeclaration/base/base/elide.runtime/-log-level/is-enabled.md
 $dokka.location:elide.runtime/LogLevel/jvmLevel/#/PointingToDeclaration/base/base/elide.runtime/-log-level/jvm-level.md
 $dokka.location:elide.runtime/Logger///PointingToDeclaration/base/base/elide.runtime/-logger/index.md
-$dokka.location:elide.runtime/Logger/debug/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
+$dokka.location:elide.runtime/Logger/debug/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
 $dokka.location:elide.runtime/Logger/debug/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
-$dokka.location:elide.runtime/Logger/debug/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
-$dokka.location:elide.runtime/Logger/error/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/error.md
+$dokka.location:elide.runtime/Logger/error/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/error.md
 $dokka.location:elide.runtime/Logger/error/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/error.md
-$dokka.location:elide.runtime/Logger/error/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/error.md
-$dokka.location:elide.runtime/Logger/info/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/info.md
+$dokka.location:elide.runtime/Logger/info/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/info.md
 $dokka.location:elide.runtime/Logger/info/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/info.md
-$dokka.location:elide.runtime/Logger/info/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/info.md
 $dokka.location:elide.runtime/Logger/isEnabled/#elide.runtime.LogLevel/PointingToDeclaration/base/base/elide.runtime/-logger/is-enabled.md
 $dokka.location:elide.runtime/Logger/log/#elide.runtime.LogLevel#kotlin.collections.List[kotlin.Any]#kotlin.Boolean/PointingToDeclaration/base/base/elide.runtime/-logger/log.md
-$dokka.location:elide.runtime/Logger/trace/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/trace.md
+$dokka.location:elide.runtime/Logger/trace/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/trace.md
 $dokka.location:elide.runtime/Logger/trace/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/trace.md
-$dokka.location:elide.runtime/Logger/trace/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/trace.md
-$dokka.location:elide.runtime/Logger/warn/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/warn.md
+$dokka.location:elide.runtime/Logger/warn/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/warn.md
 $dokka.location:elide.runtime/Logger/warn/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/warn.md
-$dokka.location:elide.runtime/Logger/warn/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/warn.md
-$dokka.location:elide.runtime/Logger/warning/#kotlin.Array[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/warning.md
+$dokka.location:elide.runtime/Logger/warning/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/warning.md
 $dokka.location:elide.runtime/Logger/warning/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/warning.md
-$dokka.location:elide.runtime/Logger/warning/#kotlin.String#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/warning.md
 $dokka.location:elide.runtime/Logging.Companion///PointingToDeclaration/base/base/elide.runtime/-logging/[jvm]-companion/index.md
 $dokka.location:elide.runtime/Logging.Companion/acquire/#/PointingToDeclaration/base/base/elide.runtime/-logging/[js]-companion/acquire.md
 $dokka.location:elide.runtime/Logging.Companion/named/#kotlin.String/PointingToDeclaration/base/base/elide.runtime/-logging/[jvm]-companion/named.md
@@ -129,6 +111,101 @@ $dokka.location:elide.runtime/Logging///PointingToDeclaration/base/base/elide.r
 $dokka.location:elide.runtime/Logging/Logging/#/PointingToDeclaration/base/base/elide.runtime/-logging/-logging.md
 $dokka.location:elide.runtime/Logging/logger/#/PointingToDeclaration/base/base/elide.runtime/-logging/logger.md
 $dokka.location:elide.runtime/Logging/logger/#kotlin.String/PointingToDeclaration/base/base/elide.runtime/-logging/logger.md
+$dokka.location:elide.server.controller////PointingToDeclaration/server/server/elide.server.controller/index.md
+$dokka.location:elide.server.controller/StatusEnabledController///PointingToDeclaration/server/server/elide.server.controller/-status-enabled-controller/index.md
+$dokka.location:elide.server.rpc.web////PointingToDeclaration/jvm/jvm/elide.server.rpc.web/index.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Headers///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-headers/index.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Headers/errorMessage/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-headers/error-message.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Headers/sentinel/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-headers/sentinel.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Headers/status/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-headers/status.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-metadata/index.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata/apiKey/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-metadata/api-key.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata/authorization/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-metadata/authorization.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata/internalCall/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-metadata/internal-call.md
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata/trace/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-metadata/trace.md
+$dokka.location:elide.server.rpc.web/GrpcWeb///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/index.md
+$dokka.location:elide.server.rpc.web/GrpcWeb/BINARY_HEADER_SUFFIX/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-b-i-n-a-r-y_-h-e-a-d-e-r_-s-u-f-f-i-x.md
+$dokka.location:elide.server.rpc.web/GrpcWeb/GRPC_HEADER_PREFIX/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web/-g-r-p-c_-h-e-a-d-e-r_-p-r-e-f-i-x.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/Error/#elide.server.rpc.web.GrpcWebContentType#io.grpc.Status#kotlin.Throwable?#io.grpc.Metadata#io.grpc.Metadata/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/-error.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/cause/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/cause.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/contentType/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/content-type.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/fill/#io.micronaut.http.MutableHttpResponse[kotlin.ByteArray]/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/fill.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/headers/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/headers.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/status/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/status.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error/trailers/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-error/trailers.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/UnaryResponse/#elide.server.rpc.web.GrpcWebContentType#kotlin.ByteArray#io.grpc.Metadata#io.grpc.Metadata/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/-unary-response.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/contentType/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/content-type.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/fill/#io.micronaut.http.MutableHttpResponse[kotlin.ByteArray]/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/fill.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/headers/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/headers.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/payload/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/payload.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse/trailers/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/-unary-response/trailers.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse/fill/#io.micronaut.http.MutableHttpResponse[kotlin.ByteArray]/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/fill.md
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse/success/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-call-response/success.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig.Companion///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/-companion/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig.Companion/DEFAULTS/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/-companion/-d-e-f-a-u-l-t-s.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig.Companion/defaultEndpoint/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/-companion/default-endpoint.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig/GrpcWebConfig/#kotlin.Boolean#kotlin.String#java.time.Duration/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/-grpc-web-config.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig/enabled/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/enabled.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig/endpoint/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/endpoint.md
+$dokka.location:elide.server.rpc.web/GrpcWebConfig/timeout/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-config/timeout.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType.BINARY///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/-b-i-n-a-r-y/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType.Companion///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/-companion/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType.TEXT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/-t-e-x-t/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType/contentType/#kotlin.Boolean/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/content-type.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType/mediaType/#kotlin.Boolean/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-content-type/media-type.md
+$dokka.location:elide.server.rpc.web/GrpcWebController///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-controller/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebController/GrpcWebController/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-controller/-grpc-web-controller.md
+$dokka.location:elide.server.rpc.web/GrpcWebController/handleRequest/#kotlin.String#kotlin.String#io.micronaut.http.HttpRequest[kotlin.ByteArray]#java.security.Principal?/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-controller/handle-request.md
+$dokka.location:elide.server.rpc.web/GrpcWebController/settings/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-controller/settings.md
+$dokka.location:elide.server.rpc.web/GrpcWebTransport///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-transport/index.md
+$dokka.location:elide.server.rpc.web/GrpcWebTransport/channel/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-grpc-web-transport/channel.md
+$dokka.location:elide.server.rpc.web/MessageDeserializer///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-message-deserializer/index.md
+$dokka.location:elide.server.rpc.web/MessageDeserializer/deserialize/#java.lang.reflect.Method#kotlin.ByteArray/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-message-deserializer/deserialize.md
+$dokka.location:elide.server.rpc.web/MetadataUtil///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-metadata-util/index.md
+$dokka.location:elide.server.rpc.web/MetadataUtil/fillHeadersFromMetadata/#io.grpc.Metadata#io.micronaut.core.type.MutableHeaders/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-metadata-util/fill-headers-from-metadata.md
+$dokka.location:elide.server.rpc.web/MetadataUtil/metadataFromHeaders/#io.micronaut.core.type.Headers/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-metadata-util/metadata-from-headers.md
+$dokka.location:elide.server.rpc.web/MetadataUtil/packTrailer/#java.io.ByteArrayOutputStream#kotlin.String#kotlin.ByteArray/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-metadata-util/pack-trailer.md
+$dokka.location:elide.server.rpc.web/MetadataUtil/packTrailers/#java.io.ByteArrayOutputStream#io.grpc.Metadata/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-metadata-util/pack-trailers.md
+$dokka.location:elide.server.rpc.web/RpcSymbol.DATA///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}jvm/jvm/elide.server.rpc.web/-rpc-symbol/-d-a-t-a/index.md
+$dokka.location:elide.server.rpc.web/RpcSymbol.TRAILER///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}jvm/jvm/elide.server.rpc.web/-rpc-symbol/-t-r-a-i-l-e-r/index.md
+$dokka.location:elide.server.rpc.web/RpcSymbol///PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-rpc-symbol/index.md
+$dokka.location:elide.server.rpc.web/RpcSymbol/value/#/PointingToDeclaration/jvm/jvm/elide.server.rpc.web/-rpc-symbol/value.md
+$dokka.location:elide.server.rpc////PointingToDeclaration/jvm/jvm/elide.server.rpc/index.md
+$dokka.location:elide.server.rpc/ServiceHealthManager///PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/index.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/ServiceHealthManager/#/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/-service-health-manager.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/currentStatus/#io.grpc.ServiceDescriptor/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/current-status.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/currentStatus/#kotlin.String/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/current-status.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/notify/#kotlin.String#io.grpc.health.v1.HealthCheckResponse.ServingStatus?/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/notify.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/notifyNotServing/#io.grpc.ServiceDescriptor/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/notify-not-serving.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/notifyPending/#io.grpc.ServiceDescriptor/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/notify-pending.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/notifyServing/#io.grpc.ServiceDescriptor/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/notify-serving.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/notifyUnknown/#io.grpc.ServiceDescriptor/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/notify-unknown.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/service/#/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/service.md
+$dokka.location:elide.server.rpc/ServiceHealthManager/terminalShutdown/#/PointingToDeclaration/jvm/jvm/elide.server.rpc/-service-health-manager/terminal-shutdown.md
+$dokka.location:elide.server.runtime////PointingToDeclaration/test/test/elide.server.runtime/index.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor.Companion///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/-companion/index.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor.Companion/acquire/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/-companion/acquire.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/index.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor/DefaultExecutor/#java.lang.Thread.UncaughtExceptionHandler/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/-default-executor.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor/overrideExecutor/#com.google.common.util.concurrent.ListeningScheduledExecutorService/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/override-executor.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor/service/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/service.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultSettings///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-settings/index.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultSettings/poolSize/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-settings/pool-size.md
+$dokka.location:elide.server.runtime/AppExecutor.DefaultSettings/priority/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-settings/priority.md
+$dokka.location:elide.server.runtime/AppExecutor///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/index.md
+$dokka.location:elide.server.runtime/AppExecutor/executor/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/executor.md
+$dokka.location:elide.server.runtime/AppExecutor/service/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/service.md
+$dokka.location:elide.server.runtime/TestAppExecutor///PointingToDeclaration/test/test/elide.server.runtime/-test-app-executor/index.md
+$dokka.location:elide.server.runtime/TestAppExecutor/TestAppExecutor/#/PointingToDeclaration/test/test/elide.server.runtime/-test-app-executor/-test-app-executor.md
+$dokka.location:elide.server.runtime/TestAppExecutor/service/#/PointingToDeclaration/test/test/elide.server.runtime/-test-app-executor/service.md
+$dokka.location:elide.server.runtime/UncaughtExceptionHandler///PointingToDeclaration/server/server/elide.server.runtime/-uncaught-exception-handler/index.md
+$dokka.location:elide.server.runtime/UncaughtExceptionHandler/UncaughtExceptionHandler/#/PointingToDeclaration/server/server/elide.server.runtime/-uncaught-exception-handler/-uncaught-exception-handler.md
+$dokka.location:elide.server.runtime/UncaughtExceptionHandler/uncaughtException/#java.lang.Thread#kotlin.Throwable/PointingToDeclaration/server/server/elide.server.runtime/-uncaught-exception-handler/uncaught-exception.md
 $dokka.location:elide.server.ssr////PointingToDeclaration/graalvm/graalvm/elide.server.ssr/index.md
 $dokka.location:elide.server.ssr/ServerRenderer///PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-renderer/index.md
 $dokka.location:elide.server.ssr/ServerSSRRenderer///PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/index.md
@@ -149,11 +226,6 @@ $dokka.location:elide.server//ssr/#kotlin.String#io.micronaut.http.MutableHttpRe
 $dokka.location:elide.server//ssr/#kotlin.String#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]/PointingToDeclaration/graalvm/graalvm/elide.server/ssr.md
 $dokka.location:elide.server//staticFile/#kotlin.String#kotlin.String/PointingToDeclaration/server/server/elide.server/static-file.md
 $dokka.location:elide.server//stylesheet/kotlinx.html.HEAD#kotlin.String#kotlin.String?#kotlin.collections.Map[kotlin.String,kotlin.String]?/PointingToDeclaration/server/server/elide.server/stylesheet.md
-$dokka.location:elide.server/AppController.Companion///PointingToDeclaration/server/server/elide.server/-app-controller/-companion/index.md
-$dokka.location:elide.server/AppController.Companion/logger/#kotlin.reflect.KClass[TypeParam(bounds=[elide.server.AppController])]/PointingToDeclaration/server/server/elide.server/-app-controller/-companion/logger.md
-$dokka.location:elide.server/AppController///PointingToDeclaration/server/server/elide.server/-app-controller/index.md
-$dokka.location:elide.server/AppController/AppController/#/PointingToDeclaration/server/server/elide.server/-app-controller/-app-controller.md
-$dokka.location:elide.server/AppController/cacheable/#/PointingToDeclaration/server/server/elide.server/-app-controller/cacheable.md
 $dokka.location:elide.server/CssContent///PointingToDeclaration/server/server/elide.server/-css-content/index.md
 $dokka.location:elide.server/CssContent/CssContent/#kotlin.Function1[kotlinx.css.CssBuilder,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/-css-content/-css-content.md
 $dokka.location:elide.server/CssContent/render/#/PointingToDeclaration/server/server/elide.server/-css-content/render.md
@@ -815,9 +887,14 @@ elide.js.ssr
 react.dom.client
 module:server
 elide.server
+elide.server.controller
+elide.server.runtime
+module:test
+elide.server.runtime
 module:js
 grpc_web
 grpc_web.MethodType
 tsstdlib
 module:jvm
-elide.rpc.web
+elide.server.rpc
+elide.server.rpc.web

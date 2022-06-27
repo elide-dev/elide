@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrpcConfigurator.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.rpc</a> &gt; <span class="el_source">GrpcConfigurator.kt</span></div><h1>GrpcConfigurator.kt</h1><pre class="source lang-java linenums">package elide.server.rpc
+
+import io.grpc.ServerBuilder
+import io.grpc.health.v1.HealthGrpc
+import io.micronaut.context.annotation.Context
+import io.micronaut.context.event.BeanCreatedEvent
+import io.micronaut.context.event.BeanCreatedEventListener
+import jakarta.inject.Inject
+
+/**
+ * Bean creation listener which is responsible for observing the creation of a gRPC server, as applicable; configuration
+ * is intercepted to facilitate additional features (compression, security, health monitoring), and service state is
+ * additionally relayed to [RpcRuntime] for registered service resolution.
+ *
+ * @param runtime RPC runtime which should be notified of service configuration state.
+ * @param healthManager Manager which keeps track of individual service state/health.
+ */
+<span class="fc" id="L18">@Context</span>
+<span class="fc" id="L19">internal class GrpcConfigurator @Inject constructor (</span>
+<span class="fc" id="L20">  private val runtime: RpcRuntime,</span>
+<span class="fc" id="L21">  private val healthManager: ServiceHealthManager</span>
+): BeanCreatedEventListener&lt;ServerBuilder&lt;*&gt;&gt; {
+<span class="fc" id="L23">  init {</span>
+    // start health status monitor in boot mode, by indicating `NOT_SERVING` for the health service itself.
+<span class="fc" id="L25">    healthManager.notifyPending(HealthGrpc.getServiceDescriptor())</span>
+<span class="fc" id="L26">  }</span>
+
+  /** @inheritDoc */
+  override fun onCreated(event: BeanCreatedEvent&lt;ServerBuilder&lt;*&gt;&gt;): ServerBuilder&lt;*&gt; {
+    // grab the server as it is being created
+<span class="fc" id="L31">    val builder = runtime.configureServer(</span>
+<span class="fc" id="L32">      event.bean</span>
+    )
+
+    // notify the runtime of available services
+    // @TODO(sgammon): avoid double-building the gRPC server
+<span class="fc" id="L37">    val server = builder.build()</span>
+<span class="fc" id="L38">    runtime.registerServices(server.services)</span>
+
+<span class="fc" id="L40">    healthManager.notifyServing(</span>
+<span class="fc" id="L41">      HealthGrpc.getServiceDescriptor()</span>
+    )
+<span class="fc" id="L43">    runtime.notifyReady()</span>
+
+    // mount reflection, if so directed
+<span class="fc" id="L46">    return builder</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

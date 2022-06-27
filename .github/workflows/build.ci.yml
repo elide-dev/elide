@@ -40,6 +40,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+      checks: 'write'
+      pull-requests: 'write'
 
     defaults:
       run:
@@ -53,7 +55,7 @@ jobs:
           java-version: '11'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: elide-tools/setup-graalvm@5.0
         with:
           graalvm: '21.0.0.2'
           java: 'java11'
@@ -79,6 +81,7 @@ jobs:
       ## CI: Build
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2
+        id: gradlebuild
         env:
           CI: true
         with:
@@ -89,12 +92,11 @@ jobs:
             -PbuildSamples=false
             -x nativeCompile
             -x test
-            -x koverMergedHtmlReport
 
       ## CI: Failure Comment
       - name: "Comment: Build Scan (Failure)"
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && failure()
+        if: github.event_name == 'pull_request' && failure() && contains(matrix.os, 'ubuntu')
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -102,21 +104,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ ${{ github.workflow }} failed: ${{ steps.gradle.outputs.build-scan-url }}'
-            })
-
-      ## CI: Success Comment
-      - name: "Comment: Build Scan (Success)"
-        uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && success()
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '✅ ${{ github.workflow }} completed: ${{ steps.gradle.outputs.build-scan-url }}'
+              body: '❌ ${{ github.workflow }} run failed: ${{ steps.gradlebuild.outputs.build-scan-url }}'
             })
 
   ##
@@ -125,7 +113,12 @@ jobs:
   tests-jvm:
     runs-on: ubuntu-latest
     needs: [gradle]
-    continue-on-error: true  # temporary
+    continue-on-error: true
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      checks: 'write'
+      pull-requests: 'write'
     steps:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
@@ -157,17 +150,36 @@ jobs:
             elide-${{ runner.os }}
             elide-
 
-      ## Run Sonar
+      ## Run JVM Tests
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@v2
         with:
           arguments: |
             test
+            :tools:reports:reports
             -Pelide.ci=true
             -x nativeCompile
             -x :packages:graalvm:test
             -x :packages:graalvm-js:test
             -x :packages:graalvm-react:test
+
+      ## Collect Reports
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-reports-jvm
+          path: |
+            **/build/reports/jacoco/test/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+            tools/reports/build/reports/**/*.xml
+            tools/reports/build/test-results/**/*.xml
+
+      ## Annotate test results
+      - name: Annotate test results
+        uses: elide-tools/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
 
   ##
   ## Job: Testsuite (Native)
@@ -220,7 +232,7 @@ jobs:
             elide-${{ runner.os }}
             elide-
 
-      ## Run Sonar
+      ## Run Native Tests
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2
         with:
@@ -228,14 +240,27 @@ jobs:
             graalvm:test
             graalvm-js:test
             graalvm-react:test
+            :tools:reports:reports
             -Pelide.ci=true
+
+      ## Collect Reports
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-reports-native
+          path: |
+            **/build/reports/jacoco/test/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml
+            **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+            tools/reports/build/reports/**/*.xml
+            tools/reports/build/test-results/**/*.xml
+
 
   ##
   ## Job: Sonar
   ##
   tools-sonar:
     runs-on: ubuntu-latest
-    needs: [gradle]
+    needs: [gradle, tests-jvm]
     steps:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
@@ -275,6 +300,16 @@ jobs:
             elide-${{ runner.os }}
             elide-
 
+      ## Download JVM reports
+      - name: Download JVM test reports
+        uses: actions/download-artifact@v3
+        with:
+          name: test-reports-jvm
+
+      ## Inflate missing git history
+      - name: "Inflate Git history"
+        run: git fetch --unshallow
+
       ## Run Sonar
       - name: "Run Sonar"
         uses: gradle/gradle-build-action@v2
@@ -297,23 +332,25 @@ jobs:
   tools-codecov:
     runs-on: ubuntu-latest
     needs: [tests-jvm]
-    if: github.ref == 'refs/heads/non-existent'  # disable temporarily
+    continue-on-error: true
     steps:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Download coverage reports (TBD)
+      ## Download JVM reports
+      - name: Download JVM test reports
+        uses: actions/download-artifact@v3
+        with:
+          name: test-reports-jvm
 
-      ## Upload to Codecov
+      ## Upload to Codecov (JVM)
       - uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-          files: ./coverage1.xml,./coverage2.xml # optional
-          flags: unittests # optional
-          name: codecov-umbrella # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
-
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          name: jvm
+          fail_ci_if_error: false
+          verbose: true
 
   ##
   ## Job: Docker Samples (JVM)

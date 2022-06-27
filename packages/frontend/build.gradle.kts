@@ -81,3 +81,11 @@ publishing {
     }
   }
 }
+
+dependencies {
+  implementation(kotlin("stdlib-js"))
+  implementation(project(":packages:base"))
+
+  // Testing
+  testImplementation(project(":packages:test"))
+}

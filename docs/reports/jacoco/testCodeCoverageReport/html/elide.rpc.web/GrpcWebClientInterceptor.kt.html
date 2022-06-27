@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GrpcWebClientInterceptor.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.rpc.web</a> &gt; <span class="el_source">GrpcWebClientInterceptor.kt</span></div><h1>GrpcWebClientInterceptor.kt</h1><pre class="source lang-java linenums">package elide.rpc.web
+
+import com.google.common.annotations.VisibleForTesting
+import elide.runtime.Logger
+import elide.runtime.Logging
+import io.grpc.*
+import io.grpc.ClientCall.Listener
+import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
+import io.grpc.ForwardingClientCallListener.SimpleForwardingClientCallListener
+import java.util.concurrent.CountDownLatch
+
+/**
+ * Client-facing interceptor which is responsible for mediating traffic between Elide's gRPC Web integration layer and
+ * the backing gRPC server which is fulfilling requests.
+ *
+ * Outgoing headers to the backing server are affixed by this interceptor, and trailers/headers are captured on the
+ * response side of the cycle.
+ */
+<span class="fc" id="L19">@Suppress(&quot;unused&quot;)</span>
+<span class="fc" id="L20">internal class GrpcWebClientInterceptor (</span>
+<span class="fc" id="L21">  internal val latch: CountDownLatch,</span>
+<span class="fc" id="L22">  private val call: GrpcWebCall</span>
+): ClientInterceptor {
+  // Private logger.
+<span class="fc" id="L25">  private val logging: Logger = Logging.of(GrpcWebClientInterceptor::class)</span>
+
+  // Terminal status for this call.
+  private var terminalStatus: Status? = null
+
+  // Response headers for this call.
+  private var headers: Metadata? = null
+
+  // Response trailers for this call.
+  private var trailers: Metadata? = null
+
+  /**
+   * Affix base headers to the provided [headers], returning a set which combines any call-specific headers and any base
+   * headers which are added to all outgoing RPCs.
+   *
+   * @param headers Call-specific headers to equip with base header values.
+   * @return Merged set of headers to use on the outgoing RPC.
+   */
+  @VisibleForTesting
+  internal fun affixHeaders(headers: Metadata): Metadata {
+    // affix special header to indicate that this is an internal call
+<span class="fc" id="L46">    headers.put(GrpcWeb.Metadata.internalCall, &quot;1&quot;)</span>
+<span class="fc" id="L47">    return headers</span>
+  }
+
+  /**
+   * Event handler called when we have received the provided set of [headers] as part of a response from the backing
+   * gRPC server.
+   *
+   * @param headers Metadata, as headers, received as part of a gRPC Web dispatch cycle.
+   */
+  @VisibleForTesting
+  internal fun headersReceived(headers: Metadata) {
+<span class="fc" id="L58">    logging.trace {</span>
+<span class="fc" id="L59">      &quot;Headers received for gRPC request: $headers&quot;</span>
+    }
+<span class="fc" id="L61">    this.headers = headers</span>
+<span class="fc" id="L62">  }</span>
+
+  /**
+   * Event handler called when we have received a final [status] and set of [trailers] as part of a response from the
+   * backing gRPC server.
+   *
+   * @param status Terminal status for the request/response cycle.
+   * @param trailers Set of trailers enclosed on the response.
+   */
+  @VisibleForTesting
+  internal fun trailersReceived(status: Status, trailers: Metadata) {
+<span class="fc" id="L73">    logging.debug {</span>
+<span class="fc" id="L74">      &quot;Status received for gRPC Web request: '${status.code.name}'&quot;</span>
+    }
+<span class="fc" id="L76">    logging.trace {</span>
+<span class="fc" id="L77">      &quot;Trailers received for gRPC Web Request: $trailers&quot;</span>
+    }
+<span class="fc" id="L79">    this.terminalStatus = status</span>
+<span class="fc" id="L80">    this.trailers = trailers</span>
+<span class="fc" id="L81">  }</span>
+
+  /**
+   * Listener which is installed by this interceptor to (1) emit request headers in merged form, and (2) capture headers
+   * and trailers from the response.
+   */
+<span class="fc" id="L87">  inner class MetadataResponseListener&lt;T&gt;(listener: Listener&lt;T&gt;): SimpleForwardingClientCallListener&lt;T&gt;(listener) {</span>
+    /** @inheritDoc */
+    override fun onHeaders(headers: Metadata) {
+<span class="fc" id="L90">      headersReceived(headers)</span>
+<span class="fc" id="L91">      super.onHeaders(headers)</span>
+<span class="fc" id="L92">    }</span>
+
+    /** @inheritDoc */
+    override fun onClose(status: Status, trailers: Metadata) {
+<span class="fc" id="L96">      trailersReceived(status, trailers)</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">      if (status != Status.OK) {</span>
+        // we may not get a terminal event if this is an error, so we call the countdown latch here to make sure we
+        // avoid a deadlock in `GrpcWebController`. otherwise, `countDown` is called in `onCompleted()` or `onError()`
+        // in the call observer.
+<span class="nc" id="L101">        latch.countDown()</span>
+      }
+<span class="fc" id="L103">      super.onClose(status, trailers)</span>
+<span class="fc" id="L104">    }</span>
+  }
+
+  /** @inheritDoc */
+  override fun &lt;Req: Any, Resp: Any&gt; interceptCall(
+    method: MethodDescriptor&lt;Req, Resp&gt;,
+    callOptions: CallOptions,
+    next: Channel
+  ): ClientCall&lt;Req, Resp&gt; {
+<span class="fc" id="L113">    return object: SimpleForwardingClientCall&lt;Req, Resp&gt;(next.newCall(</span>
+<span class="fc" id="L114">      method, callOptions</span>
+    )) {
+      /** @inheritDoc */
+      override fun start(responseListener: Listener&lt;Resp&gt;, headers: Metadata) {
+<span class="fc" id="L118">        super.start(</span>
+<span class="fc" id="L119">          MetadataResponseListener(responseListener),</span>
+<span class="fc" id="L120">          affixHeaders(headers)</span>
+        )
+<span class="fc" id="L122">      }</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

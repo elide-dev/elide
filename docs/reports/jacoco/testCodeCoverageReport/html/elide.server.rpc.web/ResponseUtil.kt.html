@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseUtil.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.rpc.web</a> &gt; <span class="el_source">ResponseUtil.kt</span></div><h1>ResponseUtil.kt</h1><pre class="source lang-java linenums">package elide.server.rpc.web
+
+import io.grpc.Metadata
+import io.grpc.Status
+import io.micronaut.http.MutableHttpResponse
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.util.*
+
+/** Provides static utilities used internally to prepare compliant gRPC-Web responses. */
+internal object ResponseUtil {
+  // Trailers which are included with every response, and indicated in the `Trailer` header.
+<span class="fc" id="L13">  private val baseTrailers = sortedSetOf(</span>
+<span class="fc" id="L14">    &quot;grpc-status&quot;,</span>
+<span class="fc" id="L15">    &quot;grpc-message&quot;,</span>
+  )
+
+  // Headers included on every response.
+<span class="fc" id="L19">  private val baseHeaders = sortedMapOf(</span>
+<span class="fc" id="L20">    &quot;trailer&quot; to baseTrailers.joinToString(&quot;,&quot;),</span>
+<span class="fc" id="L21">    &quot;transfer-encoding&quot; to &quot;chunked&quot;,</span>
+  )
+
+  /**
+   * Given a [stream] of pending output data which will be converted to gRPC Web format, write the provided [data] as a
+   * chunk of the provided [type].
+   *
+   * The data is written using [MessageFramer] to enclose the expected prefix symbol.
+   *
+   * @param stream Data stream which we should write the payload to.
+   * @param data Payload data which we should write to the stream, prefixed via [MessageFramer].
+   * @param type Type of data being written to the stream.
+   */
+  @JvmStatic private fun writeRawData(
+    stream: ByteArrayOutputStream,
+    data: ByteArray,
+    type: RpcSymbol,
+  ) {
+    // generate prefixed stanza
+<span class="fc" id="L40">    val prefix = MessageFramer.getPrefix(</span>
+<span class="fc" id="L41">      data,</span>
+<span class="fc" id="L42">      type,</span>
+    )
+
+    // if instructed, base64-wrap the payload
+<span class="fc" id="L46">    stream.writeBytes(prefix.plus(data))</span>
+<span class="fc" id="L47">  }</span>
+
+  /**
+   * Given a [stream] of pending output data which will be converted to gRPC Web format, write the provided [status] and
+   * set of [trailers] as a [RpcSymbol.TRAILER] chunk.
+   *
+   * The trailers, including the terminal [status], are written via [MetadataUtil.packTrailer].
+   *
+   * @param stream Data stream which we should write the computed set of trailers to.
+   * @param status Terminal status for the call, which we should write as a [GrpcWeb.Headers.status] trailer.
+   * @param trailers Set of extra trailers to write with the status trailer.
+   */
+  @JvmStatic private fun writeTrailer(stream: ByteArrayOutputStream, status: Status, trailers: Metadata) {
+<span class="fc" id="L60">    val trailerStream = ByteArrayOutputStream()</span>
+<span class="pc" id="L61">    trailerStream.use { target -&gt;</span>
+      // pack any extra trailers first
+<span class="fc" id="L63">      MetadataUtil.packTrailers(</span>
+<span class="fc" id="L64">        target,</span>
+<span class="fc" id="L65">        trailers,</span>
+      )
+
+      // finally, pack the status trailer
+<span class="fc" id="L69">      MetadataUtil.packTrailer(</span>
+<span class="fc" id="L70">        target,</span>
+<span class="fc" id="L71">        GrpcWeb.Headers.status,</span>
+<span class="fc" id="L72">        status.code.value().toString().toByteArray(StandardCharsets.UTF_8),</span>
+      )
+<span class="fc" id="L74">    }</span>
+
+<span class="fc" id="L76">    writeRawData(</span>
+<span class="fc" id="L77">      stream,</span>
+<span class="fc" id="L78">      trailerStream.toByteArray(),</span>
+<span class="fc" id="L79">      RpcSymbol.TRAILER,</span>
+    )
+<span class="fc" id="L81">  }</span>
+
+  /**
+   * Given a [response] which we are preparing in gRPC Web format, write any baseline headers included on all responses,
+   * plus any [headers] provided as extra metadata, plus any content-type headers for the provided [contentType].
+   *
+   * @param response HTTP response which we are preparing in gRPC Web format.
+   * @param contentType gRPC Web content type which applies to this response.
+   * @param headers Headers which should be written in the response.
+   */
+  @JvmStatic fun writeHeaders(
+    response: MutableHttpResponse&lt;RawRpcPayload&gt;,
+    contentType: GrpcWebContentType,
+    headers: Metadata
+  ) {
+<span class="fc" id="L96">    baseHeaders.forEach {</span>
+<span class="fc" id="L97">      response.headers.set(it.key, it.value)</span>
+<span class="fc" id="L98">    }</span>
+<span class="fc" id="L99">    MetadataUtil.fillHeadersFromMetadata(</span>
+<span class="fc" id="L100">      headers,</span>
+<span class="fc" id="L101">      response.headers,</span>
+    )
+<span class="fc" id="L103">    response.contentType(</span>
+<span class="fc" id="L104">      contentType.mediaType()</span>
+    )
+<span class="fc" id="L106">  }</span>
+
+  /**
+   * Prepare the provided [response] as a protocol-compliant gRP Web response with the provided [contentType].
+   *
+   * Headers provided via [headers] are provided as regular HTTP headers. The provided terminal [status] and set of
+   * extra [trailers] are then written in encoded form as part of the response body, and wrapped with the provided
+   * [payload], if any.
+   *
+   * If no [payload] is provided, an empty byte array is sent, effectively creating a trailers-only response which is
+   * allowed by spec.
+   *
+   * @param contentType gRPC Web content type which applies to this response.
+   * @param response HTTP response which we are preparing.
+   * @param status Terminal status for the call, which is either [Status.OK] or an error.
+   * @param headers Set of headers (gRPC [Metadata]) to provide as HTTP response headers.
+   * @param trailers Set of values (gRPC [Metadata]) to provide as arbitrary extra response trailers.
+   * @param payload Response payload data to enclose, as applicable. If no payload is provided, an empty byte array is
+   *   sent, effectively creating a trailers-only response.
+   */
+  @JvmStatic fun writeResponse(
+    contentType: GrpcWebContentType,
+    response: MutableHttpResponse&lt;RawRpcPayload&gt;,
+    status: Status,
+    headers: Metadata,
+    trailers: Metadata,
+    payload: ByteArray,
+  ) {
+    // add headers
+<span class="fc" id="L135">    writeHeaders(response, contentType, headers)</span>
+
+    // begin a response stream
+<span class="fc" id="L138">    val responseStream = ByteArrayOutputStream()</span>
+<span class="pc" id="L139">    responseStream.use { stream -&gt;</span>
+      // write payload body first, headers are already in. if there is no payload, add an empty byte array, which is
+      // allowed by spec and signifies a trailers-only response.
+<span class="fc" id="L142">      writeRawData(</span>
+<span class="fc" id="L143">        stream,</span>
+<span class="fc" id="L144">        payload,</span>
+<span class="fc" id="L145">        RpcSymbol.DATA,</span>
+      )
+
+      // finally, write any trailer portion of the body.
+<span class="fc" id="L149">      writeTrailer(</span>
+<span class="fc" id="L150">        stream,</span>
+<span class="fc" id="L151">        status,</span>
+<span class="fc" id="L152">        trailers,</span>
+      )
+<span class="fc" id="L154">    }</span>
+
+    // collect the stream in the final response, wrapping the entire thing in Base64 if we're operating in `TEXT` mode.
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">    response.body(if (contentType == GrpcWebContentType.TEXT) {</span>
+<span class="nc" id="L158">      Base64.getEncoder().encode(</span>
+<span class="nc" id="L159">        responseStream.toByteArray()</span>
+      )
+    } else {
+<span class="fc" id="L162">      responseStream.toByteArray()</span>
+    })
+<span class="fc" id="L164">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

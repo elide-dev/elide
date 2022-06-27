@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseExtensions.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server</a> &gt; <span class="el_source">ResponseExtensions.kt</span></div><h1>ResponseExtensions.kt</h1><pre class="source lang-java linenums">@file:Suppress(&quot;unused&quot;)
+
+package elide.server
+
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
+import kotlinx.css.CssBuilder
+import kotlinx.html.HTML
+import kotlinx.html.html
+import kotlinx.html.stream.appendHTML
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+
+
+/** Describes the expected interface for a response rendering object. */
+interface ResponseRenderer&lt;R&gt; {
+  /** @return Rendered result. */
+  fun render(): R
+}
+
+
+/** Describes the expected interface for a response rendering object which leverages co-routines. */
+interface SuspensionRenderer&lt;R&gt; {
+  /** @return Rendered result. */
+  suspend fun render(): R
+}
+
+
+/**
+ * Serve a static file which is embedded in the application JAR, at the path `/static/[file]`.
+ *
+ * @param file Filename to load from the `/static` root directory.
+ * @param contentType `Content-Type` value to send back for this file.
+ * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
+ *    located at the specified path.
+ */
+fun staticFile(file: String, contentType: String): HttpResponse&lt;*&gt; {
+<span class="nc" id="L38">  val target = HtmlContent::class.java.getResourceAsStream(&quot;/static/$file&quot;)</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">  return if (target != null) {</span>
+<span class="nc" id="L40">    HttpResponse.ok(</span>
+<span class="nc" id="L41">      target</span>
+<span class="nc" id="L42">    ).contentType(</span>
+<span class="nc" id="L43">      contentType</span>
+    )
+<span class="nc" id="L45">  } else {</span>
+<span class="nc" id="L46">    HttpResponse.notFound&lt;Any&gt;()</span>
+  }
+}
+
+
+/**
+ * Serve an application asset file which is embedded in the application JAR, from the path `/assets/[type]/[path]`.
+ *
+ * @param path Path to the file within the provided [type] directory.
+ * @param type Type of asset to serve; accepted values are `css` and `js`.
+ * @param contentType Resolved [MediaType] to use when serving this asset. Must not be null.
+ * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
+ *    located at the specified path.
+ */
+fun asset(path: String, type: String, contentType: MediaType?): HttpResponse&lt;*&gt; {
+<span class="nc bnc" id="L61" title="All 6 branches missed.">  return if (path.isBlank() || type.isBlank() || contentType == null) {</span>
+<span class="nc" id="L62">    HttpResponse.notFound&lt;Any&gt;()</span>
+<span class="nc" id="L63">  } else {</span>
+<span class="nc" id="L64">    val file = HtmlContent::class.java.getResourceAsStream(&quot;/assets/$type/$path&quot;)</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">    if (file == null) {</span>
+<span class="nc" id="L66">      HttpResponse.notFound&lt;Any&gt;()</span>
+    } else {
+<span class="nc" id="L68">      HttpResponse.ok(</span>
+<span class="nc" id="L69">        file</span>
+<span class="nc" id="L70">      ).characterEncoding(</span>
+<span class="nc" id="L71">        StandardCharsets.UTF_8</span>
+<span class="nc" id="L72">      ).contentType(</span>
+<span class="nc" id="L73">        contentType</span>
+      )
+    }
+  }
+}
+
+
+/**
+ * Responds to a client with an HTML response, using specified [block] to build an HTML page via Kotlin's HTML DSL.
+ *
+ * @param block Block to execute to build the HTML page.
+ * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
+ */
+fun html(block: HTML.() -&gt; Unit): HttpResponse&lt;ByteArrayOutputStream&gt; {
+<span class="nc" id="L87">  return HttpResponse.ok(</span>
+<span class="nc" id="L88">    HtmlContent(builder = block).render()</span>
+<span class="nc" id="L89">  ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
+<span class="nc" id="L90">    &quot;text/html; charset=utf-8&quot;</span>
+  )
+}
+
+// HTML content rendering and container utility.
+<span class="nc" id="L95">internal class HtmlContent (</span>
+<span class="nc" id="L96">  private val prettyhtml: Boolean = false,</span>
+<span class="nc" id="L97">  private val builder: HTML.() -&gt; Unit</span>
+): ResponseRenderer&lt;ByteArrayOutputStream&gt; {
+  override fun render(): ByteArrayOutputStream {
+<span class="nc" id="L100">    val baos = ByteArrayOutputStream()</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
+<span class="nc" id="L102">      it.appendHTML(</span>
+<span class="nc" id="L103">        prettyPrint = prettyhtml,</span>
+<span class="nc" id="L104">      ).html(</span>
+<span class="nc" id="L105">        block = builder</span>
+      )
+    }
+<span class="nc" id="L108">    return baos</span>
+  }
+<span class="nc" id="L110">}</span>
+
+
+/**
+ * Responds to a client with an HTML response, using specified [block] to build the CSS document via Kotlin's CSS DSL.
+ *
+ * @param block Block to execute to build the CSS document.
+ * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
+ */
+fun css(block: CssBuilder.() -&gt; Unit): HttpResponse&lt;ByteArray&gt; {
+<span class="nc" id="L120">  return HttpResponse.ok(</span>
+<span class="nc" id="L121">    CssContent(block).render()</span>
+<span class="nc" id="L122">  ).characterEncoding(</span>
+<span class="nc" id="L123">    StandardCharsets.UTF_8</span>
+<span class="nc" id="L124">  ).contentType(</span>
+<span class="nc" id="L125">    &quot;text/css; chartset=utf-8&quot;</span>
+  )
+}
+
+// HTML content rendering and container utility.
+<span class="nc" id="L130">class CssContent (</span>
+<span class="nc" id="L131">  private val builder: CssBuilder.() -&gt; Unit</span>
+): ResponseRenderer&lt;ByteArray&gt; {
+  override fun render(): ByteArray {
+<span class="nc" id="L134">    return CssBuilder().apply(builder).toString().toByteArray(</span>
+<span class="nc" id="L135">      StandardCharsets.UTF_8</span>
+    )
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

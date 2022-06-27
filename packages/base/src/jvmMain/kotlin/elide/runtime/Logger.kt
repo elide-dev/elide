@@ -1,6 +1,6 @@
+@file:Suppress("unused")
+
 package elide.runtime
-
-
 
 /** Describes the interface for loggers shared across platforms. */
 actual interface Logger {
@@ -33,19 +33,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun trace(vararg message: String) {
+  actual fun trace(vararg message: Any) {
     this.log(LogLevel.TRACE, message.toList())
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.TRACE] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun trace(message: String, vararg context: Any) {
-    this.log(LogLevel.TRACE, listOf(message).plus(context))
   }
 
   /**
@@ -71,19 +60,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun debug(vararg message: String) {
+  actual fun debug(vararg message: Any) {
     this.log(LogLevel.DEBUG, message.toList())
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.DEBUG] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun debug(message: String, vararg context: Any) {
-    this.log(LogLevel.DEBUG, listOf(message).plus(context))
   }
 
   /**
@@ -109,19 +87,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun info(vararg message: String) {
-    this.log(LogLevel.INFO, listOf(message))
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.INFO] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun info(message: String, vararg context: Any) {
-    this.log(LogLevel.INFO, listOf(message).plus(context))
+  actual fun info(vararg message: Any) {
+    this.log(LogLevel.INFO, message.toList())
   }
 
   /**
@@ -147,19 +114,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun warn(vararg message: String) {
-    this.log(LogLevel.WARN, listOf(message))
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.WARN] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun warn(message: String, vararg context: Any) {
-    this.log(LogLevel.WARN, listOf(message).plus(context))
+  actual fun warn(vararg message: Any) {
+    this.log(LogLevel.WARN, message.toList())
   }
 
   /**
@@ -187,21 +143,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun warning(vararg message: String) {
+  actual fun warning(vararg message: Any) {
     this.warn(*message)
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.WARN] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * This method is a thin alias for the equivalent [warn] call.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun warning(message: String, vararg context: Any) {
-    this.warn(message, *context)
   }
 
   /**
@@ -226,19 +169,8 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun error(vararg message: String) {
-    this.log(LogLevel.ERROR, listOf(message))
-  }
-
-  /**
-   * Log the provided [message] to the console at the [LogLevel.ERROR] level along with any provided [context] values,
-   * each of which will be string formatted before being concatenated and logged or printed.
-   *
-   * @param message Message to emit to the log as a prefix for [context] values.
-   * @param context Additional context values, potentially strings, to string-format and concatenate.
-   */
-  actual fun error(message: String, vararg context: Any) {
-    this.log(LogLevel.ERROR, listOf(message).plus(context))
+  actual fun error(vararg message: Any) {
+    this.log(LogLevel.ERROR, message.toList())
   }
 
   /**

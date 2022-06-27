@@ -13,6 +13,7 @@ include(
   ":packages:graalvm-react",
   ":packages:rpc:js",
   ":packages:rpc:jvm",
+  ":packages:test",
   ":tools:reports",
 )
 

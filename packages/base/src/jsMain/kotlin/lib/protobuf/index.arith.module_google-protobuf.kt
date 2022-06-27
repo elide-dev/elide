@@ -1,10 +1,16 @@
 @file:JsQualifier("arith")
-@file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS")
+@file:Suppress(
+  "INTERFACE_WITH_SUPERCLASS",
+  "OVERRIDING_FINAL_MEMBER",
+  "RETURN_TYPE_MISMATCH_ON_OVERRIDE",
+  "CONFLICTING_OVERLOADS",
+  "unused",
+)
 package lib.protobuf
 
 import kotlin.js.*
 
-external open class UInt64(lo: Number, hi: Number) {
+open external class UInt64(lo: Number, hi: Number) {
     open var lo: Number
     open var hi: Number
     open fun cmp(other: UInt64): Number
@@ -26,7 +32,7 @@ external open class UInt64(lo: Number, hi: Number) {
     }
 }
 
-external open class Int64(lo: Number, hi: Number) {
+open external class Int64(lo: Number, hi: Number) {
     open var lo: Number
     open var hi: Number
     open fun add(other: Int64): Int64

@@ -12,6 +12,7 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  id("com.adarshr.test-logger")
   id("io.micronaut.library")
   id("org.jetbrains.dokka")
   id("org.sonarqube")

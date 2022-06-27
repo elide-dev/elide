@@ -43,4 +43,6 @@ object Versions {
   const val logbackClassic = "1.2.11"
   const val antJUnit = "1.10.12"
   const val truth = "1.1.3"
+  const val jsUuid = "8.3.2"
+  const val jsUuidTypes = "8.3.4"
 }

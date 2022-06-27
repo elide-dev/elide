@@ -24,6 +24,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.atomicfu")
     kotlin("plugin.serialization")
+    id("com.adarshr.test-logger")
     id("com.google.cloud.artifactregistry.gradle-plugin")
     id("org.jetbrains.dokka")
     id("org.sonarqube")
@@ -168,6 +169,9 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-js:$kotlinxSerializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:$kotlinxSerializationVersion")
+
+                implementation(npm("uuid", Versions.jsUuid))
+                implementation(npm("@types/uuid", Versions.jsUuidTypes))
             }
         }
         val jsTest by getting

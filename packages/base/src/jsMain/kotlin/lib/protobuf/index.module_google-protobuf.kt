@@ -1,23 +1,18 @@
-@file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "unused",
-    "DEPRECATION",
-    "ClassName"
+@file:Suppress(
+  "INTERFACE_WITH_SUPERCLASS",
+  "OVERRIDING_FINAL_MEMBER",
+  "RETURN_TYPE_MISMATCH_ON_OVERRIDE",
+  "CONFLICTING_OVERLOADS",
+  "unused",
+  "DEPRECATION",
+  "ClassName",
+  "PropertyName"
 )
 
 package lib.protobuf
 
 import kotlin.js.*
 import org.khronos.webgl.*
-import org.w3c.dom.*
-import org.w3c.dom.events.*
-import org.w3c.dom.parsing.*
-import org.w3c.dom.svg.*
-import org.w3c.dom.url.*
-import org.w3c.fetch.*
-import org.w3c.files.*
-import org.w3c.notifications.*
-import org.w3c.performance.*
-import org.w3c.workers.*
-import org.w3c.xhr.*
 
 typealias MessageArray = Array<Any>
 
@@ -39,7 +34,7 @@ external interface `T$1` {
     operator fun set(key: Number, value: ExtensionFieldBinaryInfo<Message>)
 }
 
-external open class Message {
+open external class Message {
     open fun getJsPbMessageId(): String?
     open fun <T> serializeBinaryExtensions(proto: Message, writer: BinaryWriter, extensions: `T$1`, getExtensionFn: (fieldInfo: ExtensionFieldInfo<T>) -> T)
     open fun <T> readBinaryExtension(proto: Message, reader: BinaryReader, extensions: `T$1`, setExtensionFn: (fieldInfo: ExtensionFieldInfo<T>, param_val: T) -> Unit)
@@ -110,7 +105,7 @@ external interface `T$2` {
     operator fun set(key: String, value: Number)
 }
 
-external open class ExtensionFieldInfo<T>(fieldIndex: Number, fieldName: `T$2`, ctor: Any, toObjectFn: StaticToObject, isRepeated: Number) {
+open external class ExtensionFieldInfo<T>(fieldIndex: Number, fieldName: `T$2`, ctor: Any, toObjectFn: StaticToObject, isRepeated: Number) {
     open var fieldIndex: Number
     open var fieldName: Number
     open var ctor: Any
@@ -119,7 +114,7 @@ external open class ExtensionFieldInfo<T>(fieldIndex: Number, fieldName: `T$2`, 
     open fun isMessageType(): Boolean
 }
 
-external open class ExtensionFieldBinaryInfo<T>(fieldInfo: ExtensionFieldInfo<T>, binaryReaderFn: BinaryRead, binaryWriterFn: BinaryWrite, opt_binaryMessageSerializeFn: (msg: Message, writer: BinaryWriter) -> Unit, opt_binaryMessageDeserializeFn: (msg: Message, reader: BinaryReader) -> Message, opt_isPacked: Boolean) {
+open external class ExtensionFieldBinaryInfo<T>(fieldInfo: ExtensionFieldInfo<T>, binaryReaderFn: BinaryRead, binaryWriterFn: BinaryWrite, opt_binaryMessageSerializeFn: (msg: Message, writer: BinaryWriter) -> Unit, opt_binaryMessageDeserializeFn: (msg: Message, reader: BinaryReader) -> Message, opt_isPacked: Boolean) {
     open var fieldInfo: ExtensionFieldInfo<T>
     open var binaryReaderFn: BinaryRead
     open var binaryWriterFn: BinaryWrite
@@ -128,7 +123,7 @@ external open class ExtensionFieldBinaryInfo<T>(fieldInfo: ExtensionFieldInfo<T>
     open var opt_isPacked: Boolean
 }
 
-external open class Map<K, V>(arr: Array<Any /* JsTuple<K, V> */>, valueCtor: Any = definedExternally) {
+open external class Map<K, V>(arr: Array<Any /* JsTuple<K, V> */>, valueCtor: Any = definedExternally) {
     open fun toArray(): Array<dynamic /* JsTuple<K, V> */>
     open fun toObject(includeInstance: Boolean = definedExternally): Array<dynamic /* JsTuple<K, V> */>
     open fun toObject(): Array<dynamic /* JsTuple<K, V> */>
@@ -169,7 +164,7 @@ typealias BinaryWriteCallback = (value: Any, binaryWriter: BinaryWriter) -> Unit
 
 typealias BinaryWrite = (fieldNumber: Number, value: Any, writerCallback: BinaryWriteCallback) -> Unit
 
-external open class BinaryReader {
+open external class BinaryReader {
     constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
     constructor()
     constructor(bytes: ArrayBuffer = definedExternally)
@@ -293,7 +288,7 @@ external open class BinaryReader {
     }
 }
 
-external open class BinaryWriter {
+open external class BinaryWriter {
     open fun writeSerializedMessage(bytes: Uint8Array, start: Number, end: Number)
     open fun maybeWriteSerializedMessage(bytes: Uint8Array = definedExternally, start: Number = definedExternally, end: Number = definedExternally)
     open fun reset()
@@ -390,7 +385,7 @@ external open class BinaryWriter {
     open fun writePackedVarintHash64(field: Number, value: Array<String> = definedExternally)
 }
 
-external open class BinaryEncoder {
+open external class BinaryEncoder {
     open fun length(): Number
     open fun end(): Array<Number>
     open fun writeSplitVarint64(lowBits: Number, highBits: Number)
@@ -421,7 +416,7 @@ external open class BinaryEncoder {
     open fun writeString(value: String): Number
 }
 
-external open class BinaryDecoder {
+open external class BinaryDecoder {
     constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
     constructor()
     constructor(bytes: ArrayBuffer = definedExternally)
@@ -501,7 +496,7 @@ external open class BinaryDecoder {
     }
 }
 
-external open class BinaryIterator(decoder: BinaryDecoder = definedExternally, next: () -> Any? = definedExternally, elements: Array<Any /* Number | Boolean | String */> = definedExternally) {
+open external class BinaryIterator(decoder: BinaryDecoder = definedExternally, next: () -> Any? = definedExternally, elements: Array<Any /* Number | Boolean | String */> = definedExternally) {
     open fun free()
     open fun clear()
     open fun get(): dynamic /* Boolean? | Number? | String? */

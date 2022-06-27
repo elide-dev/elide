@@ -29,7 +29,7 @@ dependencies {
     "base",
     "server",
     "graalvm",
-    "rpc:jvm",
+    "rpc-jvm",
     "test",
   ).forEach {
     testReportAggregation(project(":packages:$it"))

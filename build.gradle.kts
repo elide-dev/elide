@@ -105,7 +105,7 @@ subprojects {
   val name = this.name
 
   sonarqube {
-    if (name != "base" && name != "test") {
+    if (name != "base" && name != "test" && name != "model") {
       properties {
         property("sonar.sources", "src/main/kotlin")
         property("sonar.tests", "src/test/kotlin")

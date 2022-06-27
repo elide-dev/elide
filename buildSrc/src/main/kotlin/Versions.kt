@@ -42,4 +42,5 @@ object Versions {
   const val versionsPlugin = "0.42.0"
   const val logbackClassic = "1.2.11"
   const val antJUnit = "1.10.12"
+  const val truth = "1.1.3"
 }

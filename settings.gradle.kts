@@ -12,8 +12,8 @@ include(
   ":packages:graalvm-js",
   ":packages:graalvm-react",
   ":packages:model",
-  ":packages:rpc:js",
-  ":packages:rpc:jvm",
+  ":packages:rpc-js",
+  ":packages:rpc-jvm",
   ":packages:test",
   ":tools:reports",
 )

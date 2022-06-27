@@ -101,3 +101,8 @@ dependencies {
   // Testing
   testImplementation(project(":packages:test"))
 }
+
+dokkaHtml {
+  moduleDisplayName.set("rpc-js")
+  platform.set(org.jetbrains.dokka.Platform.jvm)
+}

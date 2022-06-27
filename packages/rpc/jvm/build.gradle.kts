@@ -204,3 +204,8 @@ tasks.jacocoTestReport {
 tasks.test {
   finalizedBy(tasks.jacocoTestReport)
 }
+
+dokkaHtml {
+  moduleDisplayName.set("rpc-jvm")
+  platform.set(org.jetbrains.dokka.Platform.jvm)
+}

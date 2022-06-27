@@ -15,7 +15,7 @@ on:
 env:
   # Release tag associated with version of Detekt to be installed
   # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
-  DETEKT_RELEASE_TAG: v1.21.0-RC1
+  DETEKT_RELEASE_TAG: v1.15.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,6 +24,7 @@ jobs:
     name: Scan
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

@@ -93,7 +93,7 @@ dependencies {
   implementation(project(":packages:frontend"))
   implementation(npm("@types/google-protobuf", protobufTypesVersion))
   implementation(npm("google-protobuf", protobufVersion))
-  implementation(npm("grpc-web", grpcWebVersion, generateExternals = true))
+  implementation(npm("grpc-web", grpcWebVersion))
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-js:$kotlinxSerializationVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:$kotlinxSerializationVersion")

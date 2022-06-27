@@ -31,6 +31,7 @@ plugins {
 }
 
 group = "dev.elide"
+version = rootProject.version as String
 
 repositories {
     google()

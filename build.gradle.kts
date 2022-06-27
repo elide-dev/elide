@@ -19,6 +19,8 @@ version = if (project.hasProperty("elide.stamp") && project.properties["elide.st
   file(".version").readText().trim().replace("\n", "").ifBlank {
     throw IllegalStateException("Failed to load `.version`")
   }
+} else if (project.hasProperty("version")) {
+  project.properties["version"] as String
 } else {
   "1.0-SNAPSHOT"
 }

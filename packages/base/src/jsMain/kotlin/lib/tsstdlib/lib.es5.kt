@@ -5,6 +5,7 @@
   "CONFLICTING_OVERLOADS",
   "unused",
   "FunctionName",
+  "DEPRECATION",
 )
 package lib.tsstdlib
 
@@ -32,4 +33,14 @@ inline operator fun <T> ArrayLike<T>.get(n: Number): T? = asDynamic()[n] as? T
 @Suppress("NOTHING_TO_INLINE")
 inline operator fun <T> ArrayLike<T>.set(n: Number, value: T) {
   asDynamic()[n] = value
+}
+
+external interface ErrorConstructor {
+  @nativeInvoke
+  operator fun invoke(message: String = definedExternally): Error
+  var prototype: Error
+}
+
+external interface PromiseLike<T> {
+  fun then(onfulfilled: ((value: T) -> Any?)? = definedExternally, onrejected: ((reason: Any) -> Any?)? = definedExternally): PromiseLike<dynamic /* TResult1 | TResult2 */>
 }

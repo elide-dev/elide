@@ -23,7 +23,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
+    languageVersion.set(JavaLanguageVersion.of(17))
     vendor.set(JvmVendorSpec.GRAAL_VM)
     if (project.hasProperty("elide.graalvm.variant")) {
       val variant = project.property("elide.graalvm.variant") as String
@@ -50,7 +50,7 @@ graalvmNative {
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {

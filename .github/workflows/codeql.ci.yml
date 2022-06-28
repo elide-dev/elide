@@ -33,11 +33,11 @@ jobs:
           java-version: '11'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: '21.1.0'
+          java-version: '17'
+          components: 'native-image'
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL

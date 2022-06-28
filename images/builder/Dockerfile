@@ -4,7 +4,7 @@ ARG BASE_ARCH="amd64"
 
 FROM --platform=linux/${BASE_ARCH} us-docker.pkg.dev/elide-fw/tools/base${BASE_IMAGE}
 
-ARG JDK_VERSION="11"
+ARG JDK_VERSION="17"
 ARG NODE_VERSION="17"
 ARG YARN_VERSION="berry"
 ARG GRADLE_VERSION=7.4.2
@@ -193,7 +193,7 @@ RUN echo "Building Elide builder image..." \
 
 ENV GRADLE_HOME="/opt/gradle" \
     KOTLIN_HOME="/opt/kotlinc" \
-    JAVA_HOME="/usr/lib/jvm/zulu11" \
+    JAVA_HOME="/usr/lib/jvm/zulu17" \
     GRAALVM_HOME="/usr/lib/gvm" \
     GOPATH="/go" \
     QTWEBENGINE_DISABLE_SANDBOX="1" \

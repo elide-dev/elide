@@ -78,7 +78,7 @@ publishing {
 
 dependencies {
   api(npm("esbuild", Versions.esbuild))
-  api(npm("esbuild-plugin-alias", Versions.esbuildPluginAlias))
+  api(npm("prepack", Versions.prepack))
   api(npm("buffer", Versions.nodeBuffers))
   api(npm("readable-stream", Versions.nodeStreams))
   implementation(project(":packages:graalvm-js"))

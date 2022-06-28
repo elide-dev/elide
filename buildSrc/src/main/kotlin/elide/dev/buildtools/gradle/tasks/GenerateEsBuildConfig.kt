@@ -8,8 +8,11 @@ import java.io.Serializable
 import java.nio.charset.StandardCharsets
 
 
-val GenerateEsBuildConfig.outputBundleFile
+public val GenerateEsBuildConfig.outputBundleFile
   get() = File(outputBundleFolder, outputBundleName)
+
+public val GenerateEsBuildConfig.outputPrepackedFile
+  get() = File(outputBundleFolder, outputPrepackedName)
 
 open class GenerateEsBuildConfig : DefaultTask() {
   enum class Mode {
@@ -41,6 +44,9 @@ open class GenerateEsBuildConfig : DefaultTask() {
   @get:Input
   var outputBundleName by project.objects.property<String>()
 
+  @get:Input
+  var outputPrepackedName by project.objects.property<String>()
+
   @get:InputFiles
   var modulesFolder = project.objects.listProperty(File::class)
 
@@ -66,6 +72,7 @@ open class GenerateEsBuildConfig : DefaultTask() {
     with(project) {
       outputBundleFolder = file("$buildDir\\bundle").absolutePath
       outputBundleName = "bundle.js"
+      outputPrepackedName = "bundle.pack.js"
       modulesFolder.set(listOf(
         file("node_modules"),
         file("${project.rootDir}/build/js/node_modules"),
@@ -79,8 +86,9 @@ open class GenerateEsBuildConfig : DefaultTask() {
 
   @get:Input
   val configTemplate = """
+      const fs = require('fs');
       const esbuild = require('esbuild');
-      const alias = require('esbuild-plugin-alias');
+      const Prepack = require('prepack');
       const nodePath = process.env.NODE_PATH;
       if (!nodePath) {
         throw new Error("Failed to resolve NODE_PATH");
@@ -100,10 +108,24 @@ open class GenerateEsBuildConfig : DefaultTask() {
           '%%%PROCESS%%%'
         ]
       };
-      
+
       esbuild.build(
         settings
       ).catch(() => process.exit(1));
+
+      const prepacked = Prepack.prepackFileSync([
+        '%%%OUTFILE%%%'
+      ], {
+        compatibility: 'browser',
+        inlineExpressions: true,
+        timeout: 300 * 60 * 1000,
+        sourceMaps: false,
+        filename: 'ssr.js'
+      });
+
+      fs.writeFileSync('%%%PACKEDFILE%%%', prepacked.code, {
+       encoding: 'utf8'
+      });
     """.trimIndent()
 
   @get:Input
@@ -126,6 +148,7 @@ open class GenerateEsBuildConfig : DefaultTask() {
       .replace("%%%MINIFY%%%", minify.toString())
       .replace("%%%LIBNAME%%%", libraryName)
       .replace("%%%PLATFORM%%%", platform)
+      .replace("%%%PACKEDFILE%%%", outputPrepackedFile.absolutePath.fixSlashes())
       .replace("%%%PROCESS%%%", processShim.absolutePath.fixSlashes())
       .replace("%%%OUTFILE%%%", outputBundleFile.absolutePath.fixSlashes())
       .replace("%%%NODEPATH%%%", modulesFolder.get().joinToString(",") {

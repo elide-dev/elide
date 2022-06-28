@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
 import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig
 import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig.Mode
 import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig.Mode.*
-import elide.dev.buildtools.gradle.tasks.outputBundleFile
+import elide.dev.buildtools.gradle.tasks.outputPrepackedFile
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask
 import java.util.*
 
@@ -92,6 +92,14 @@ tasks {
             }
             append(".js")
           }
+          outputPrepackedName = buildString {
+            append(project.name)
+            when (mode) {
+              PRODUCTION -> append("-prod")
+              DEVELOPMENT -> append("-dev")
+            }
+            append(".pack.js")
+          }
           outputBundleFolder = file("$buildDir/distributions").absolutePath
           processShim = file("$buildDir/esbuild/process-shim.js")
           outputConfig = file("$buildDir/esbuild/esbuild.${modeName.toLowerCase()}.js")
@@ -114,7 +122,7 @@ tasks {
         inputs.file(generateEsBuildConfig.processShim)
         inputs.file(generateEsBuildConfig.outputConfig)
         inputs.file(fixNodeFetch.destinationDir / "ssr.js")
-        outputs.file(generateEsBuildConfig.outputBundleFile)
+        outputs.file(generateEsBuildConfig.outputPrepackedFile)
       }
     }
 }

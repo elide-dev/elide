@@ -18,10 +18,10 @@ import java.nio.charset.StandardCharsets
 private const val embeddedRoot = "embedded"
 
 // Production script name default.
-private const val nodeProdDefault = "node-prod.js"
+private const val nodeProdDefault = "node-prod.pack.js"
 
 // Development script name default.
-private const val nodeDevDefault = "node-dev.js"
+private const val nodeDevDefault = "node-dev.pack.js"
 
 // Default name if no mode is specified or resolvable.
 const val nodeSsrDefaultPath = nodeDevDefault

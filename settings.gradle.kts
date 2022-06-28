@@ -19,6 +19,7 @@ include(
 )
 
 val buildSamples: String by settings
+val buildPlugins: String by settings
 
 if (buildSamples == "true") {
   include(
@@ -33,6 +34,12 @@ if (buildSamples == "true") {
     ":samples:fullstack:react-ssr:frontend",
     ":samples:fullstack:react-ssr:node",
     ":samples:fullstack:react-ssr:server",
+  )
+}
+
+if (buildPlugins == "true") {
+  includeBuild(
+    "tools/plugin/gradle-plugin",
   )
 }
 

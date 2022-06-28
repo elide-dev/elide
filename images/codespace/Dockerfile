@@ -68,7 +68,7 @@ RUN echo "Setting up Debian-based codespace..." \
     && chown "$DEV_USER" "/home/$DEV_USER/.zshrc" "/home/$DEV_USER/.alias" \
     && mkdir -p /home/dev/bin \
     && curl -o /home/dev/bin/ibazel "https://github.com/bazelbuild/bazel-watcher/releases/download/$IBAZEL_VERSION/ibazel_linux_amd64" \
-    && gcloud components install -y kubectl \
+    && yes Y | gcloud components install kubectl \
     && echo "Codespace image ready."
 
 USER ${DEV_USER}

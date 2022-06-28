@@ -46,4 +46,6 @@ object Versions {
   const val jsUuid = "8.3.2"
   const val jsUuidTypes = "8.3.4"
   const val kotlinUuid = "0.4.1"
+  const val ecmaVersion = "v5"
+  const val prepack = "0.2.54"
 }

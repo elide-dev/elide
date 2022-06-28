@@ -9,6 +9,8 @@ val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as St
 val grpcVersion = project.properties["versions.grpc"] as String
 val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
 val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
+val kotlinxCollectionsVersion = project.properties["versions.kotlinx.collections"] as String
+val kotlinxDatetimeVersion = project.properties["versions.kotlinx.datetime"] as String
 val junitJupiterVersion =  project.properties["versions.junit.jupiter"] as String
 val logbackVersion = project.properties["versions.logback"] as String
 
@@ -119,6 +121,8 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib-common"))
         implementation(project(":packages:base"))
+        implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
       }
     }
     val commonTest by getting {

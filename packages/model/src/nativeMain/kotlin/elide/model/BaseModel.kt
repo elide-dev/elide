@@ -1,13 +1,10 @@
 package elide.model
 
-import elide.runtime.js.toByteArray
 import kotlinx.datetime.Instant
 
 
 /** Describes the expected interface for wire messages, usually implemented via Protocol Buffers on a given platform. */
 public actual open class WireMessage {
-  private lateinit var message: lib.protobuf.Message
-
   /**
    * Serialize this [WireMessage] instance into a raw [ByteArray], which is suitable for sending over the wire; formats
    * expressed via this interface must keep schema in sync on both sides.
@@ -18,7 +15,7 @@ public actual open class WireMessage {
    * @return Raw bytes of this message, in serialized form.
    */
   public actual open fun toSerializedBytes(): ByteArray {
-    return this.message.serializeBinary().buffer.toByteArray()
+    TODO("not yet implemented")
   }
 
   /**
@@ -28,12 +25,12 @@ public actual open class WireMessage {
    * @return String-formatted [WireMessage] instance.
    */
   public actual open fun toSerializedString(): String {
-    return this.message.toString()
+    TODO("not yet implemented")
   }
 
   /** @return Underlying [lib.protobuf.Message] object. */
-  public fun getProto(): lib.protobuf.Message {
-    return message
+  public fun getProto(): Any {
+    TODO("not yet implemented")
   }
 }
 
@@ -71,17 +68,17 @@ public actual interface AppModel<M: WireMessage> {
 public actual interface AppRecord<K, M: WireMessage> {
   /** @return Assigned ID (of type [K]) for this record, or `null` if no ID has been assigned at this time. */
   public actual fun id(): K? {
-    return null
+    TODO("not yet implemented")
   }
 
   /** @return Assigned parent ID (of type [K]) for this record, or `null` if no ID is applicable or assigned. */
   public actual fun parentId(): K? {
-    return null
+    TODO("not yet implemented")
   }
 
   /** @return Display name for this record, if applicable/available, otherwise, `null`. */
   public actual fun displayName(): String? {
-    return null
+    TODO("not yet implemented")
   }
 }
 

@@ -8,14 +8,14 @@ import java.util.Date
  * Utilities to convert between different time objects, particularly a standard Protocol Buffer [Timestamp] and Java's
  * time objects, such as [Instant] and [Date].
  */
-actual object InstantFactory {
+public actual object InstantFactory {
   /**
    * Convert a Protocol Buffers [Timestamp] record to a Java [Instant].
    *
    * @param subject Subject timestamp to convert.
    * @return Converted Java Instant.
    */
-  @JvmStatic fun instant(subject: Timestamp): Instant {
+  @JvmStatic public fun instant(subject: Timestamp): Instant {
     return Instant.ofEpochSecond(subject.seconds, if (subject.nanos > 0) subject.nanos.toLong() else 0)
   }
 
@@ -25,7 +25,7 @@ actual object InstantFactory {
    * @param subject Subject timestamp to convert.
    * @return Converted Java Date.
    */
-  @JvmStatic fun date(subject: Timestamp): Date {
+  @JvmStatic public fun date(subject: Timestamp): Date {
     return Date.from(instant(subject))
   }
 }

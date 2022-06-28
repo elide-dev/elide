@@ -109,23 +109,25 @@ open class GenerateEsBuildConfig : DefaultTask() {
         ]
       };
 
+      console.info("Bundling SSR library '%%%LIBNAME%%%'...");
       esbuild.build(
         settings
-      ).catch(() => process.exit(1));
+      ).then(() => {
+        console.info("ESBuild bundle step complete. Packing SSR bundle with Prepack...");
+        const prepacked = Prepack.prepackFileSync([
+          '%%%OUTFILE%%%'
+        ], {
+          compatibility: 'browser',
+          inlineExpressions: true,
+          timeout: 300 * 60 * 1000,
+          sourceMaps: false,
+          filename: 'ssr.js'
+        });
 
-      const prepacked = Prepack.prepackFileSync([
-        '%%%OUTFILE%%%'
-      ], {
-        compatibility: 'browser',
-        inlineExpressions: true,
-        timeout: 300 * 60 * 1000,
-        sourceMaps: false,
-        filename: 'ssr.js'
-      });
-
-      fs.writeFileSync('%%%PACKEDFILE%%%', prepacked.code, {
-       encoding: 'utf8'
-      });
+        fs.writeFileSync('%%%PACKEDFILE%%%', prepacked.code, {
+         encoding: 'utf8'
+        });
+      }, () => process.exit(1));
     """.trimIndent()
 
   @get:Input

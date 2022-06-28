@@ -1,4 +1,9 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 plugins {
   java
@@ -7,9 +12,9 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("io.micronaut.application")
-  id("io.micronaut.aot")
-  id("org.sonarqube")
+  alias(libs.plugins.micronautApplication)
+  alias(libs.plugins.micronautAot)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide.samples"
@@ -17,13 +22,13 @@ version = rootProject.version as String
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
 }
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
 }
 
@@ -48,7 +53,7 @@ application {
 }
 
 micronaut {
-  version.set(Versions.micronaut)
+  version.set(libs.versions.micronaut.lib.get())
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
   processing {
     incremental.set(true)

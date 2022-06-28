@@ -1,33 +1,18 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress(
+    "UNUSED_VARIABLE",
+    "DSL_SCOPE_VIOLATION",
+)
 
 import java.net.URI
-
-val jakartaVersion = project.properties["versions.jakarta-inject"] as String
-val protobufVersion = project.properties["versions.protobuf"] as String
-val protobufTypesVersion = project.properties["versions.protobufTypes"] as String
-val slf4jVersion = project.properties["versions.slf4j"] as String
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val kotlinSdkVersion = project.properties["versions.kotlin.sdk"] as String
-val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
-val grpcVersion = project.properties["versions.grpc"] as String
-val kotlinxAtomicFuVersion = project.properties["versions.kotlinx.atomicfu"] as String
-val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
-val kotlinxCollectionsVersion = project.properties["versions.kotlinx.collections"] as String
-val kotlinxDatetimeVersion = project.properties["versions.kotlinx.datetime"] as String
-val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
-val junitJupiterVersion =  project.properties["versions.junit.jupiter"] as String
-val logbackVersion = project.properties["versions.logback"] as String
 
 plugins {
     `maven-publish`
     signing
     kotlin("multiplatform")
-    kotlin("plugin.atomicfu")
     kotlin("plugin.serialization")
-    id("com.adarshr.test-logger")
-    id("com.google.cloud.artifactregistry.gradle-plugin")
-    id("org.jetbrains.dokka")
-    id("org.sonarqube")
+    alias(libs.plugins.testLogger)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -136,8 +121,8 @@ kotlin {
 
     sourceSets.all {
         languageSettings.apply {
-            languageVersion = kotlinLanguageVersion
-            apiVersion = kotlinLanguageVersion
+            languageVersion = libs.versions.kotlin.language.get()
+            apiVersion = libs.versions.kotlin.language.get()
             optIn("kotlin.ExperimentalUnsignedTypes")
             progressiveMode = true
         }
@@ -147,14 +132,13 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-                implementation("org.jetbrains.kotlinx:atomicfu:$kotlinxAtomicFuVersion")
-                implementation("com.benasher44:uuid:${Versions.kotlinUuid}")
+                implementation(libs.kotlinx.serialization.core)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serialization.protobuf)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.uuid)
             }
         }
         val commonTest by getting {
@@ -165,36 +149,34 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                api("org.slf4j:slf4j-api:$slf4jVersion")
-                implementation("jakarta.inject:jakarta.inject-api:$jakartaVersion")
-                implementation("com.google.protobuf:protobuf-java:$protobufVersion")
-                implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:$kotlinxCoroutinesVersion")
+                api(libs.slf4j)
+                implementation(libs.jakarta.inject)
+                implementation(libs.protobuf.java)
+                implementation(libs.protobuf.kotlin)
+                implementation(libs.kotlinx.serialization.core)
+                implementation(libs.kotlinx.serialization.json.jvm)
+                implementation(libs.kotlinx.serialization.protobuf.jvm)
+                implementation(libs.kotlinx.coroutines.core.jvm)
+                implementation(libs.kotlinx.coroutines.jdk8)
+                implementation(libs.kotlinx.coroutines.jdk9)
+                implementation(libs.kotlinx.coroutines.slf4j)
+                implementation(libs.kotlinx.coroutines.guava)
             }
         }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test-junit5"))
-                runtimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-                runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+                runtimeOnly(libs.junit.jupiter.engine)
+                runtimeOnly(libs.logback)
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-js:$kotlinxSerializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:$kotlinxSerializationVersion")
-
-                implementation(npm("uuid", Versions.jsUuid))
-                implementation(npm("@types/uuid", Versions.jsUuidTypes))
+                implementation(libs.kotlinx.coroutines.core.js)
+                implementation(libs.kotlinx.serialization.json.js)
+                implementation(libs.kotlinx.serialization.protobuf.js)
             }
         }
         val jsTest by getting
@@ -206,21 +188,21 @@ kotlin {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
     kotlinOptions {
-        apiVersion = kotlinLanguageVersion
-        languageVersion = kotlinLanguageVersion
+        apiVersion = libs.versions.kotlin.language.get()
+        languageVersion = libs.versions.kotlin.language.get()
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        apiVersion = kotlinLanguageVersion
-        languageVersion = kotlinLanguageVersion
-        jvmTarget = javaLanguageVersion
+        apiVersion = libs.versions.kotlin.language.get()
+        languageVersion = libs.versions.kotlin.language.get()
+        jvmTarget = libs.versions.java.get()
         javaParameters = true
     }
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile>().configureEach {
     kotlinOptions {
-        apiVersion = kotlinLanguageVersion
-        languageVersion = kotlinLanguageVersion
+        apiVersion = libs.versions.kotlin.language.get()
+        languageVersion = libs.versions.kotlin.language.get()
     }
 }

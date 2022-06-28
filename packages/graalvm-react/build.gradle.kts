@@ -1,3 +1,10 @@
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
+
 import java.net.URI
 
 plugins {
@@ -6,10 +13,9 @@ plugins {
   signing
   kotlin("js")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -77,15 +83,17 @@ publishing {
 }
 
 dependencies {
-  api(npm("esbuild", Versions.esbuild))
-  api(npm("prepack", Versions.prepack))
-  api(npm("buffer", Versions.nodeBuffers))
-  api(npm("readable-stream", Versions.nodeStreams))
+  api(npm("esbuild", libs.versions.npm.esbuild.get()))
+  api(npm("prepack", libs.versions.npm.prepack.get()))
+  api(npm("buffer", libs.versions.npm.buffer.get()))
+  api(npm("readable-stream", libs.versions.npm.stream.get()))
+
   implementation(project(":packages:graalvm-js"))
-  implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-node:${Versions.node}-${Versions.kotlinWrappers}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${Versions.kotlinWrappers}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${Versions.react}-${Versions.kotlinWrappers}")
+
+  implementation(libs.kotlinx.nodejs)
+  implementation(libs.kotlinx.wrappers.node)
+  implementation(libs.kotlinx.wrappers.react)
+  implementation(libs.kotlinx.wrappers.react.dom)
 
   // Testing
   testImplementation(project(":packages:test"))

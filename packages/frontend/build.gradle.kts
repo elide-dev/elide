@@ -1,3 +1,8 @@
+@file:Suppress(
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
+
 import java.net.URI
 
 plugins {
@@ -6,10 +11,9 @@ plugins {
   signing
   kotlin("js")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -85,6 +89,11 @@ publishing {
 dependencies {
   implementation(kotlin("stdlib-js"))
   implementation(project(":packages:base"))
+
+  implementation(libs.kotlinx.coroutines.core.js)
+  implementation(libs.kotlinx.serialization.core.js)
+  implementation(libs.kotlinx.serialization.json.js)
+  implementation(libs.kotlinx.serialization.protobuf.js)
 
   // Testing
   testImplementation(project(":packages:test"))

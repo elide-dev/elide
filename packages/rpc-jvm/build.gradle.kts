@@ -1,16 +1,12 @@
-@file:Suppress("UNUSED_VARIABLE", "UnstableApiUsage")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 import java.net.URI
 import com.google.protobuf.gradle.*
-
-val protobufVersion = project.properties["versions.protobuf"] as String
-val grpcVersion = project.properties["versions.grpc"] as String
-val grpcKotlinVersion = project.properties["versions.grpcKotlin"] as String
-val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
-val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
-val junitJupiterVersion =  project.properties["versions.junit.jupiter"] as String
-val micronautTestVersion = project.properties["versions.micronaut.test"] as String
-val logbackVersion = project.properties["versions.logback"] as String
 
 plugins {
   java
@@ -21,20 +17,19 @@ plugins {
   `maven-publish`
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("com.adarshr.test-logger")
-  id("com.google.protobuf")
-  id("io.micronaut.library")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.testLogger)
+  alias(libs.plugins.protobuf)
+  alias(libs.plugins.micronautLibrary)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
 version = rootProject.version as String
 
 micronaut {
-  version.set(Versions.micronaut)
+  version.set(libs.versions.micronaut.lib.get())
   processing {
     incremental.set(true)
   }
@@ -42,14 +37,14 @@ micronaut {
 
 protobuf {
   protoc {
-    artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
+    artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
   }
   plugins {
     id("grpc") {
-      artifact = "io.grpc:protoc-gen-grpc-java:${Versions.grpc}"
+      artifact = "io.grpc:protoc-gen-grpc-java:${libs.versions.grpc.java.get()}"
     }
     id("grpckt") {
-      artifact = "io.grpc:protoc-gen-grpc-kotlin:${Versions.grpcKotlin}:jdk8@jar"
+      artifact = "io.grpc:protoc-gen-grpc-kotlin:${libs.versions.grpc.kotlin.get()}:jdk8@jar"
     }
   }
   generateProtoTasks {
@@ -76,7 +71,7 @@ protobuf {
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
   publishing {
     publications {
@@ -93,7 +88,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
 }
 
@@ -157,42 +152,49 @@ dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
 
-  implementation("io.grpc:grpc-core:$grpcVersion")
-  implementation("io.grpc:grpc-api:$grpcVersion")
-  implementation("io.grpc:grpc-auth:$grpcVersion")
-  implementation("io.grpc:grpc-stub:$grpcVersion")
-  implementation("io.grpc:grpc-services:$grpcVersion")
-  implementation("io.grpc:grpc-netty:$grpcVersion")
-  implementation("io.grpc:grpc-protobuf:$grpcVersion")
-  implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
+  // Protobuf
+  implementation(libs.protobuf.java)
+  implementation(libs.protobuf.util)
+  implementation(libs.protobuf.kotlin)
 
-  implementation("com.google.protobuf:protobuf-java:${Versions.protobuf}")
-  implementation("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
-  implementation("com.google.protobuf:protobuf-kotlin:${Versions.protobuf}")
+  // gRPC
+  implementation(libs.grpc.api)
+  implementation(libs.grpc.auth)
+  implementation(libs.grpc.core)
+  implementation(libs.grpc.stub)
+  implementation(libs.grpc.services)
+  implementation(libs.grpc.netty)
+  implementation(libs.grpc.protobuf)
+  implementation(libs.grpc.kotlin.stub)
 
-  implementation("io.micronaut:micronaut-http:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-context:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject-java:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-management:${Versions.micronaut}")
-  implementation("io.micronaut.grpc:micronaut-grpc-runtime:${Versions.micronautGrpc}")
-  implementation("io.micronaut.grpc:micronaut-grpc-client-runtime:${Versions.micronautGrpc}")
+  // Micronaut
+  implementation(libs.micronaut.http)
+  implementation(libs.micronaut.context)
+  implementation(libs.micronaut.inject)
+  implementation(libs.micronaut.inject.java)
+  implementation(libs.micronaut.management)
+  implementation(libs.micronaut.grpc.runtime)
+  implementation(libs.micronaut.grpc.client.runtime)
+  implementation(libs.micronaut.grpc.server.runtime)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:$kotlinxSerializationVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:$kotlinxSerializationVersion")
+  // Serialization
+  implementation(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.core.jvm)
+  implementation(libs.kotlinx.serialization.json.jvm)
+  implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // Coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:${Versions.coroutinesVersion}")
+  implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.core.jvm)
+  implementation(libs.kotlinx.coroutines.jdk8)
+  implementation(libs.kotlinx.coroutines.guava)
 
   // Testing
   testImplementation(project(":packages:test"))
   testImplementation(kotlin("test-junit5"))
-  testImplementation("io.micronaut.test:micronaut-test-junit5:$micronautTestVersion")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-  testRuntimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+  testImplementation(libs.micronaut.test.junit5)
+  testRuntimeOnly(libs.junit.jupiter.engine)
+  testRuntimeOnly(libs.logback)
 }
 
 tasks.jacocoTestReport {

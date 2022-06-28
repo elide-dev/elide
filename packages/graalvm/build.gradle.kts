@@ -1,4 +1,9 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 import java.net.URI
 
@@ -10,12 +15,11 @@ plugins {
   signing
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("io.micronaut.library")
-  id("com.adarshr.test-logger")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.micronautLibrary)
+  alias(libs.plugins.testLogger)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -23,7 +27,7 @@ version = rootProject.version as String
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
   publishing {
     publications {
@@ -40,7 +44,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     vendor.set(JvmVendorSpec.GRAAL_VM)
     if (project.hasProperty("elide.graalvm.variant")) {
       val variant = project.property("elide.graalvm.variant") as String
@@ -63,7 +67,7 @@ testing {
 }
 
 micronaut {
-  version.set(Versions.micronaut)
+  version.set(libs.versions.micronaut.lib.get())
 }
 
 val javadocJar by tasks.registering(Jar::class) {
@@ -133,38 +137,35 @@ publishing {
   }
 }
 
-// add to graalvm flags:
-// -Dpolyglot.image-build-time.PreinitializeContexts=js
-
 dependencies {
   // API Deps
-  api("jakarta.inject:jakarta.inject-api:2.0.1")
+  api(libs.jakarta.inject)
 
   // Modules
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
 
   // KotlinX
-  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:${Versions.coroutinesVersion}")
+  implementation(libs.kotlinx.html.jvm)
+  implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.core.jvm)
+  implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.core.jvm)
+  implementation(libs.kotlinx.serialization.json.jvm)
+  implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // Google
-  implementation("com.google.guava:guava:${Versions.guava}")
+  implementation(libs.guava)
 
   // Micronaut
-  implementation("io.micronaut:micronaut-http:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-context:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject-java:${Versions.micronaut}")
+  implementation(libs.micronaut.http)
+  implementation(libs.micronaut.context)
+  implementation(libs.micronaut.inject)
+  implementation(libs.micronaut.inject.java)
 
   // GraalVM SDK
-  implementation("org.graalvm.sdk:graal-sdk:${Versions.graalvm}")
+  implementation(libs.graalvm.sdk)
 
   // Testing
   testImplementation(project(":packages:test"))

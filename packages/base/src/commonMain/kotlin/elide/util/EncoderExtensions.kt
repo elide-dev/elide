@@ -10,7 +10,7 @@ package elide.util
  *
  * @return Base64 encoded string from the current set of bytes.
  */
-fun ByteArray.toBase64String(): String {
+public fun ByteArray.toBase64String(): String {
   return Base64.encodeToString(this)
 }
 
@@ -19,7 +19,7 @@ fun ByteArray.toBase64String(): String {
  *
  * @return Base64 encoded bytes from the current set of bytes.
  */
-fun ByteArray.toBase64(): ByteArray {
+public fun ByteArray.toBase64(): ByteArray {
   return Base64.encode(this)
 }
 
@@ -28,7 +28,7 @@ fun ByteArray.toBase64(): ByteArray {
  *
  * @return Base64 encoded string from the current string.
  */
-fun String.toBase64String(): String {
+public fun String.toBase64String(): String {
   return Base64.encodeToString(this)
 }
 
@@ -37,7 +37,7 @@ fun String.toBase64String(): String {
  *
  * @return Base64 encoded byte array from the current string.
  */
-fun String.toBase64(): ByteArray {
+public fun String.toBase64(): ByteArray {
   return Base64.encode(this)
 }
 
@@ -48,7 +48,7 @@ fun String.toBase64(): ByteArray {
  *
  * @return Hex-encoded string from the current string.
  */
-fun String.toHexString(): String {
+public fun String.toHexString(): String {
   return Hex.encodeToString(this)
 }
 
@@ -57,6 +57,6 @@ fun String.toHexString(): String {
  *
  * @return Hex-encoded byte array from the current string.
  */
-fun String.toHex(): ByteArray {
+public fun String.toHex(): ByteArray {
   return Hex.encode(this)
 }

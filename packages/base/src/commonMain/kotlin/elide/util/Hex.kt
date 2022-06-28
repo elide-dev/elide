@@ -1,10 +1,9 @@
 package elide.util
 
 /** Provides cross-platform utilities for encoding values into hex, or decoding values from hex. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") object Hex: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate") public object Hex: Encoder {
   /** Array of hex-allowable characters.  */
-  val CHARACTER_SET = "0123456789abcdef".toCharArray()
-
+  public val CHARACTER_SET: CharArray = "0123456789abcdef".toCharArray()
 
   /**
    * Convert a byte array to a hex-encoded string.

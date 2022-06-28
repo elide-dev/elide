@@ -4,8 +4,8 @@ import elide.runtime.LogLevel
 
 
 /** Specifies a lightweight [elide.runtime.Logger] implementation for use in JavaScript. */
-data class Logger(
-  val name: String? = null,
+public data class Logger(
+  public val name: String? = null,
 ): elide.runtime.Logger {
   /** @inheritDoc */
   override fun isEnabled(level: LogLevel): Boolean {

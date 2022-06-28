@@ -11,4 +11,4 @@ package elide.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.TYPE)
 @MustBeDocumented
-annotation class API
+public annotation class API

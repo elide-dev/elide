@@ -8,4 +8,4 @@ package elide.annotations
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION)
 @MustBeDocumented
-annotation class Generated
+public annotation class Generated

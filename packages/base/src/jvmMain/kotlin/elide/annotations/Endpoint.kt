@@ -14,4 +14,4 @@ import jakarta.inject.Singleton
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class Endpoint
+public annotation class Endpoint

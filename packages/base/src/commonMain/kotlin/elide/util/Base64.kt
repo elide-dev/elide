@@ -1,7 +1,7 @@
 package elide.util
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-expect object Base64: Encoder {
+public expect object Base64: Encoder {
   // -- Basic: Encoding -- //
 
   /**
@@ -45,7 +45,7 @@ expect object Base64: Encoder {
    * @param string String to encode with web-safe Base64.
    * @return Base64-encoded string, using only web-safe characters.
    */
-  fun encodeWebSafe(string: String): String
+  public fun encodeWebSafe(string: String): String
 
   /**
    * Encode the provided [data] into a Base64-encoded set of bytes, omitting characters which are unsafe for use on the
@@ -54,7 +54,7 @@ expect object Base64: Encoder {
    * @param data Raw bytes to encode with web-safe Base64.
    * @return Base64-encoded bytes, using only web-safe characters.
    */
-  fun encodeWebSafe(data: ByteArray): ByteArray
+  public fun encodeWebSafe(data: ByteArray): ByteArray
 
   // -- Basic: Decoding -- //
 
@@ -89,22 +89,4 @@ expect object Base64: Encoder {
    * @return Decoded string value.
    */
   override fun decodeToString(string: String): String
-
-  // -- Basic: Decoding (Web Safe) -- //
-
-  /**
-   * Decode the provided Base64 web-safe [string] value into a string.
-   *
-   * @param string String to decode with web-safe Base64.
-   * @return Regular decoded string.
-   */
-  fun decodeWebSafe(string: String): String
-
-  /**
-   * Decode the provided Base64 web-safe [data] into a raw set of bytes.
-   *
-   * @param data Raw bytes to decode with web-safe Base64.
-   * @return Raw decoded bytes.
-   */
-  fun decodeWebSafe(data: ByteArray): ByteArray
 }

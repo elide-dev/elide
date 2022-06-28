@@ -80,6 +80,7 @@ publishing {
 }
 
 kotlin {
+  explicitApi()
   jvm {
     compilations.all {
       kotlinOptions {

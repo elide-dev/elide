@@ -1,5 +1,6 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import org.jetbrains.kotlin.konan.target.HostManager
 import java.net.URI
 
 val jakartaVersion = project.properties["versions.jakarta-inject"] as String
@@ -89,6 +90,8 @@ publishing {
 }
 
 kotlin {
+    explicitApi()
+
     jvm {
         compilations.all {
             kotlinOptions {
@@ -102,12 +105,45 @@ kotlin {
         }
     }
     js(BOTH) {
+        compilations.all {
+            kotlinOptions {
+                sourceMap = true
+                moduleKind = "umd"
+                metaInfo = true
+            }
+        }
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
             }
         }
     }
+//    targets {
+//        if (HostManager.hostIsMac) {
+//            macosX64()
+//            macosArm64()
+//            iosX64()
+//            iosArm64()
+//            iosArm32()
+//            iosSimulatorArm64()
+//            watchosArm32()
+//            watchosArm64()
+//            watchosX86()
+//            watchosX64()
+//            watchosSimulatorArm64()
+//            tvosArm64()
+//            tvosX64()
+//            tvosSimulatorArm64()
+//        }
+//        if (HostManager.hostIsMingw || HostManager.hostIsMac) {
+//            mingwX64 {
+//                binaries.findTest(DEBUG)!!.linkerOpts = mutableListOf("-Wl,--subsystem,windows")
+//            }
+//        }
+//        if (HostManager.hostIsLinux || HostManager.hostIsMac) {
+//            linuxX64()
+//        }
+//    }
 
     publishing {
         publications {}
@@ -133,6 +169,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
                 implementation("org.jetbrains.kotlinx:atomicfu:$kotlinxAtomicFuVersion")
+                implementation("com.benasher44:uuid:${Versions.kotlinUuid}")
             }
         }
         val commonTest by getting {
@@ -165,6 +202,7 @@ kotlin {
             }
         }
         val jsMain by getting {
+            kotlin.srcDir("src/nonJvmMain/kotlin")
             dependencies {
                 implementation(kotlin("stdlib-js"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")

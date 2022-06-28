@@ -3,7 +3,7 @@ package elide.util
 import java.nio.charset.StandardCharsets
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-actual object Base64: Encoder {
+public actual object Base64: Encoder {
   /** @inheritDoc */
   override fun encoding(): Encoding {
     return Encoding.BASE64
@@ -68,7 +68,7 @@ actual object Base64: Encoder {
    * @param string String to encode with web-safe Base64.
    * @return Base64-encoded string, using only web-safe characters.
    */
-  actual fun encodeWebSafe(string: String): String {
+  public actual fun encodeWebSafe(string: String): String {
     return java.util.Base64.getEncoder().withoutPadding().encodeToString(
       string.toByteArray(StandardCharsets.UTF_8)
     )
@@ -81,7 +81,7 @@ actual object Base64: Encoder {
    * @param data Raw bytes to encode with web-safe Base64.
    * @return Base64-encoded bytes, using only web-safe characters.
    */
-  actual fun encodeWebSafe(data: ByteArray): ByteArray {
+  public actual fun encodeWebSafe(data: ByteArray): ByteArray {
     return java.util.Base64.getEncoder().withoutPadding().encode(
       data
     )
@@ -135,31 +135,5 @@ actual object Base64: Encoder {
     return String(java.util.Base64.getDecoder().decode(
       string
     ))
-  }
-
-  // -- Base64: Decoding (Web-safe) -- //
-
-  /**
-   * Decode the provided Base64 web-safe [string] value into a string.
-   *
-   * @param string String to decode with web-safe Base64.
-   * @return Regular decoded string.
-   */
-  actual fun decodeWebSafe(string: String): String {
-    return String(java.util.Base64.getDecoder().decode(
-      string
-    ))
-  }
-
-  /**
-   * Decode the provided Base64 web-safe [data] into a raw set of bytes.
-   *
-   * @param data Raw bytes to decode with web-safe Base64.
-   * @return Raw decoded bytes.
-   */
-  actual fun decodeWebSafe(data: ByteArray): ByteArray {
-    return java.util.Base64.getDecoder().decode(
-      data
-    )
   }
 }

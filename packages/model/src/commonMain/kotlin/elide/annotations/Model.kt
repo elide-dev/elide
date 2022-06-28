@@ -1,6 +1,5 @@
 package elide.annotations
 
-
 /**
  * Marks an application-level class as a data model, which makes it eligible for reflective use (even in native
  * circumstances such as on GraalVM).
@@ -12,4 +11,4 @@ package elide.annotations
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.TYPE)
-actual annotation class Model
+public annotation class Model

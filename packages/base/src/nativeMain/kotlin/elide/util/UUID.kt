@@ -1,13 +1,15 @@
 package elide.util
 
+import com.benasher44.uuid.uuid4
+
 /** UUID tools provided to all platforms. */
-actual object UUID {
+public actual object UUID {
   /**
    * Generate a random UUIDv4, based on no input data at all.
    *
    * @return Randomly-generated UUID.
    */
-  actual fun random(): String {
-    TODO("not yet implemented")
+  public actual fun random(): String {
+    return uuid4().toString().uppercase()
   }
 }

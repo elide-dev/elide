@@ -5,28 +5,28 @@ import kotlin.reflect.KClass
 
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
-@Suppress("unused") actual class Logging private constructor () {
-  companion object {
+@Suppress("unused") public actual class Logging private constructor () {
+  public companion object {
     // Singleton logging manager instance.
     private val singleton = Logging()
 
     /** @return Logger created, or resolved, for the [target] Kotlin class. */
-    @JvmStatic fun of(target: KClass<*>): elide.runtime.jvm.Logger = named(
+    @JvmStatic public fun of(target: KClass<*>): elide.runtime.jvm.Logger = named(
       target.qualifiedName ?: target.simpleName ?: ""
     )
 
     /** @return Logger created, or resolved, for the [target] Java class. */
-    @JvmStatic fun of(target: Class<*>): elide.runtime.jvm.Logger = named(
+    @JvmStatic public fun of(target: Class<*>): elide.runtime.jvm.Logger = named(
       target.canonicalName ?: target.name ?: target.simpleName ?: ""
     )
 
     /** @return Logger resolved at the root name. */
-    @JvmStatic fun root(): elide.runtime.jvm.Logger = named(
+    @JvmStatic public fun root(): elide.runtime.jvm.Logger = named(
       ""
     )
 
     /** @return Logger created for the specified [name]. */
-    @JvmStatic fun named(name: String): elide.runtime.jvm.Logger {
+    @JvmStatic public fun named(name: String): elide.runtime.jvm.Logger {
       return if (name.isEmpty() || name.isBlank()) {
         singleton.logger() as elide.runtime.jvm.Logger
       } else {
@@ -42,7 +42,7 @@ import kotlin.reflect.KClass
    * @param name Name of the logger to create and return.
    * @return Desired logger.
    */
-  actual fun logger(name: String): Logger {
+  public actual fun logger(name: String): Logger {
     return elide.runtime.jvm.Logger(
       LoggerFactory.getLogger(name)
     )
@@ -53,7 +53,7 @@ import kotlin.reflect.KClass
    *
    * @return Root logger.
    */
-  actual fun logger(): Logger {
+  public actual fun logger(): Logger {
     return elide.runtime.jvm.Logger(
       LoggerFactory.getLogger("")
     )

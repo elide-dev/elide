@@ -3,9 +3,9 @@ package elide.util
 import kotlinx.browser.window
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") actual object Base64: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
   /** Array of Base64-allowable characters in web-safe mode.  */
-  val CHARACTER_SET_WEBSAFE: CharArray = run {
+  public val CHARACTER_SET_WEBSAFE: CharArray = run {
     listOf(
       ('A'..'Z'),
       ('a'..'z'),
@@ -18,7 +18,7 @@ import kotlinx.browser.window
   }
 
   /** Array of Base64-allowable characters.  */
-  val CHARACTER_SET: CharArray = run {
+  public val CHARACTER_SET: CharArray = run {
     listOf(
       ('A'..'Z'),
       ('a'..'z'),
@@ -87,7 +87,7 @@ import kotlinx.browser.window
    * @param string String to encode with web-safe Base64.
    * @return Base64-encoded string, using only web-safe characters.
    */
-  actual fun encodeWebSafe(string: String): String {
+  public actual fun encodeWebSafe(string: String): String {
     return this.encodeToString(string).replace("=", "")
   }
 
@@ -98,7 +98,7 @@ import kotlinx.browser.window
    * @param data Raw bytes to encode with web-safe Base64.
    * @return Base64-encoded bytes, using only web-safe characters.
    */
-  actual fun encodeWebSafe(data: ByteArray): ByteArray {
+  public actual fun encodeWebSafe(data: ByteArray): ByteArray {
     return this.encode(data).decodeToString().replace("=", "").encodeToByteArray()
   }
 
@@ -142,27 +142,5 @@ import kotlinx.browser.window
    */
   actual override fun decodeToString(string: String): String {
     return window.atob(string)
-  }
-
-  // -- Basic: Decoding (Web Safe) -- //
-
-  /**
-   * Decode the provided Base64 web-safe [string] value into a string.
-   *
-   * @param string String to decode with web-safe Base64.
-   * @return Regular decoded string.
-   */
-  actual fun decodeWebSafe(string: String): String {
-    return window.atob(string)
-  }
-
-  /**
-   * Decode the provided Base64 web-safe [data] into a raw set of bytes.
-   *
-   * @param data Raw bytes to decode with web-safe Base64.
-   * @return Raw decoded bytes.
-   */
-  actual fun decodeWebSafe(data: ByteArray): ByteArray {
-    return window.atob(data.decodeToString()).encodeToByteArray()
   }
 }

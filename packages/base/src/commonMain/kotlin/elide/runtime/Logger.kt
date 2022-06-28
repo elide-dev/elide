@@ -3,14 +3,14 @@
 package elide.runtime
 
 /** Describes the interface for loggers shared across platforms. */
-@Suppress("unused") expect interface Logger {
+@Suppress("unused") public expect interface Logger {
   /**
    * Indicate whether the provided [level] is enabled for the current logger.
    *
    * @param level Log level to check.
    * @return Whether the log level is enabled.
    */
-  fun isEnabled(level: LogLevel): Boolean
+  public fun isEnabled(level: LogLevel): Boolean
 
   /**
    * Log one or more arbitrary [message]s to the console or log, depending on the current platform.
@@ -22,7 +22,7 @@ package elide.runtime
    * @param message Set of messages to log in this entry.
    * @param levelChecked Whether the log level has already been checked.
    */
-  fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean = false)
+  public fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean = false)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.TRACE].
@@ -33,7 +33,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun trace(vararg message: Any)
+  public open fun trace(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.TRACE], assuming trace-level logging
@@ -43,7 +43,7 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun trace(producer: () -> String)
+  public open fun trace(producer: () -> String)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.DEBUG].
@@ -54,7 +54,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun debug(vararg message: Any)
+  public open fun debug(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.DEBUG], assuming debug-level logging
@@ -64,7 +64,7 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun debug(producer: () -> String)
+  public open fun debug(producer: () -> String)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.INFO].
@@ -75,7 +75,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun info(vararg message: Any)
+  public open fun info(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.INFO], assuming info-level logging
@@ -85,7 +85,7 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun info(producer: () -> String)
+  public open fun info(producer: () -> String)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.WARN].
@@ -96,7 +96,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun warn(vararg message: Any)
+  public open fun warn(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.WARN], assuming warn-level logging
@@ -106,7 +106,7 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun warn(producer: () -> String)
+  public open fun warn(producer: () -> String)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.WARN].
@@ -119,7 +119,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun warning(vararg message: Any)
+  public open fun warning(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.WARN], assuming warn-level logging
@@ -130,7 +130,7 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun warning(producer: () -> String)
+  public open fun warning(producer: () -> String)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.ERROR].
@@ -141,7 +141,7 @@ package elide.runtime
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  open fun error(vararg message: Any)
+  public open fun error(vararg message: Any)
 
   /**
    * Log the message produced by the provided [producer], at the level of [LogLevel.ERROR], assuming error-level logging
@@ -151,5 +151,5 @@ package elide.runtime
    *
    * @param producer Function that produces the message to log.
    */
-  open fun error(producer: () -> String)
+  public open fun error(producer: () -> String)
 }

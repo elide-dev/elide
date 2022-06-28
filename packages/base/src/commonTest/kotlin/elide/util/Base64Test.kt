@@ -45,11 +45,6 @@ class Base64Test: AbstractEncoderTest<Base64>() {
       Base64.decodeToString(input),
       "should get expected output from Base64 decode"
     )
-    assertEquals(
-      "abc123123",
-      Base64.decodeWebSafe(input),
-      "should get expected output from websafe Base64 decode"
-    )
   }
 
   @Test fun testEncodeDecodeBase64() {

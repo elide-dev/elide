@@ -4,10 +4,7 @@ import kotlinx.datetime.Instant
 
 
 /** Describes the expected interface for wire messages, usually implemented via Protocol Buffers on a given platform. */
-@Suppress("MemberVisibilityCanBePrivate") actual open class WireMessage {
-  /** Message which is wrapped by this wire message. */
-  internal lateinit var message: com.google.protobuf.Message
-
+public expect open class WireMessage {
   /**
    * Serialize this [WireMessage] instance into a raw [ByteArray], which is suitable for sending over the wire; formats
    * expressed via this interface must keep schema in sync on both sides.
@@ -17,9 +14,7 @@ import kotlinx.datetime.Instant
    *
    * @return Raw bytes of this message, in serialized form.
    */
-  actual open fun toSerializedBytes(): ByteArray {
-    return this.message.toByteArray()
-  }
+  public open fun toSerializedBytes(): ByteArray
 
   /**
    * Return this [WireMessage] as a debug-friendly [String] representation, which emits property values and other info
@@ -27,25 +22,18 @@ import kotlinx.datetime.Instant
    *
    * @return String-formatted [WireMessage] instance.
    */
-  actual open fun toSerializedString(): String {
-    return this.message.toString()
-  }
-
-  /** @return Underlying [com.google.protobuf.Message] for this [WireMessage]. */
-  fun getProto(): com.google.protobuf.Message {
-    return this.message
-  }
+  public open fun toSerializedString(): String
 }
 
 
 /** Describes the expected interface for model objects which are reliably serializable into [WireMessage] instances. */
-actual interface AppModel<M: WireMessage> {
+public expect interface AppModel<M: WireMessage> {
   /**
    * Translate the current [AppModel] into an equivalent [WireMessage] instance [M].
    *
    * @return Message instance corresponding to this model.
    */
-  actual fun toMessage(): M
+  public fun toMessage(): M
 }
 
 
@@ -67,21 +55,15 @@ actual interface AppModel<M: WireMessage> {
  * but are not always addressable or persistent. [AppRecord] objects are expected to be identified (perhaps with type
  * annotations), and typically correspond to database records which need CRUD-like operations.
  */
-actual interface AppRecord<K, M: WireMessage> {
+public expect interface AppRecord<K, M: WireMessage> {
   /** @return Assigned ID (of type [K]) for this record, or `null` if no ID has been assigned at this time. */
-  actual fun id(): K? {
-    return null
-  }
+  public open fun id(): K?
 
   /** @return Assigned parent ID (of type [K]) for this record, or `null` if no ID is applicable or assigned. */
-  actual fun parentId(): K? {
-    return null
-  }
+  public open fun parentId(): K?
 
   /** @return Display name for this record, if applicable/available, otherwise, `null`. */
-  actual fun displayName(): String? {
-    return null
-  }
+  public open fun displayName(): String?
 }
 
 
@@ -92,16 +74,12 @@ actual interface AppRecord<K, M: WireMessage> {
  * fields are typically provided by the database or the application runtime, and don't need to be set explicitly by the
  * developer, although explicitly set values do override automatic values.
  */
-actual interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
+public expect interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
   /** @return Created-at timestamp for this record, or `null` if the record has not yet been persisted. */
-  actual fun createdAt(): Instant? {
-    return null
-  }
+  public open fun createdAt(): Instant?
 
   /** @return Updated-at timestamp for this record, or `null` if the record has not yet been persisted. */
-  actual fun updatedAt(): Instant? {
-    return null
-  }
+  public open fun updatedAt(): Instant?
 }
 
 
@@ -112,9 +90,7 @@ actual interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
  * update to the associated entity. The Micronaut Data layer will enforce optimistic concurrency when persisting records
  * which inherit from this interface and provide a valid version value.
  */
-actual interface VersionedRecord<K, M: WireMessage>: StampedRecord<K, M> {
+public expect interface VersionedRecord<K, M: WireMessage>: StampedRecord<K, M> {
   /** @return Version number assigned to this instance, within the scope of [id], or `-1` if no version is present. */
-  actual fun version(): Long {
-    return -1
-  }
+  public open fun version(): Long
 }

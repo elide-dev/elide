@@ -45,4 +45,5 @@ object Versions {
   const val truth = "1.1.3"
   const val jsUuid = "8.3.2"
   const val jsUuidTypes = "8.3.4"
+  const val kotlinUuid = "0.4.1"
 }

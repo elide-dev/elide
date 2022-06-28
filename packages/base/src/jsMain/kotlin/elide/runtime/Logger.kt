@@ -3,14 +3,14 @@
 package elide.runtime
 
 /** Describes the interface for loggers shared across platforms. */
-actual interface Logger {
+public actual interface Logger {
   /**
    * Indicate whether the provided [level] is enabled for the current logger.
    *
    * @param level Log level to check.
    * @return Whether the log level is enabled.
    */
-  actual fun isEnabled(level: LogLevel): Boolean
+  public actual fun isEnabled(level: LogLevel): Boolean
 
   /**
    * Log one or more arbitrary [message]s to the console or log, depending on the current platform.
@@ -22,7 +22,7 @@ actual interface Logger {
    * @param message Set of messages to log in this entry.
    * @param levelChecked Whether the log level has already been checked.
    */
-  actual fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean)
+  public actual fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean)
 
   /**
    * Log one or more arbitrary [message]s to the console or log, at the level of [LogLevel.TRACE].
@@ -33,7 +33,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun trace(vararg message: Any) {
+  public actual fun trace(vararg message: Any) {
     this.log(LogLevel.TRACE, message.toList())
   }
 
@@ -45,7 +45,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun trace(producer: () -> String) {
+  public actual fun trace(producer: () -> String) {
     if (isEnabled(LogLevel.TRACE)) {
       log(LogLevel.TRACE, listOf(producer.invoke()), levelChecked = true)
     }
@@ -60,7 +60,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun debug(vararg message: Any) {
+  public actual fun debug(vararg message: Any) {
     this.log(LogLevel.DEBUG, message.toList())
   }
 
@@ -72,7 +72,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun debug(producer: () -> String) {
+  public actual fun debug(producer: () -> String) {
     if (isEnabled(LogLevel.DEBUG)) {
       log(LogLevel.DEBUG, listOf(producer.invoke()), levelChecked = true)
     }
@@ -87,7 +87,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun info(vararg message: Any) {
+  public actual fun info(vararg message: Any) {
     this.log(LogLevel.INFO, listOf(message))
   }
 
@@ -99,7 +99,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun info(producer: () -> String) {
+  public actual fun info(producer: () -> String) {
     if (isEnabled(LogLevel.DEBUG)) {
       log(LogLevel.DEBUG, listOf(producer.invoke()), levelChecked = true)
     }
@@ -114,7 +114,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun warn(vararg message: Any) {
+  public actual fun warn(vararg message: Any) {
     this.log(LogLevel.WARN, listOf(message))
   }
 
@@ -126,7 +126,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun warn(producer: () -> String) {
+  public actual fun warn(producer: () -> String) {
     if (isEnabled(LogLevel.WARN)) {
       log(LogLevel.WARN, listOf(producer.invoke()), levelChecked = true)
     }
@@ -143,7 +143,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun warning(vararg message: Any) {
+  public actual fun warning(vararg message: Any) {
     this.warn(*message)
   }
 
@@ -156,7 +156,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun warning(producer: () -> String) {
+  public actual fun warning(producer: () -> String) {
     this.warn(producer)
   }
 
@@ -169,7 +169,7 @@ actual interface Logger {
    * @see info other variants of this method.
    * @param message Set of messages to log in this entry.
    */
-  actual fun error(vararg message: Any) {
+  public actual fun error(vararg message: Any) {
     this.log(LogLevel.ERROR, listOf(message))
   }
 
@@ -181,7 +181,7 @@ actual interface Logger {
    *
    * @param producer Function that produces the message to log.
    */
-  actual fun error(producer: () -> String) {
+  public actual fun error(producer: () -> String) {
     if (isEnabled(LogLevel.ERROR)) {
       log(LogLevel.ERROR, listOf(producer.invoke()), levelChecked = true)
     }

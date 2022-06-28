@@ -2,7 +2,7 @@ package elide.runtime
 
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
-actual class Logging {
+public actual class Logging {
   /**
    * Acquire a [Logger] for the given logger [name], which can be any identifying string; in JVM circumstances, the full
    * class name of the subject which is sending the logs is usually used.
@@ -10,7 +10,7 @@ actual class Logging {
    * @param name Name of the logger to create and return.
    * @return Desired logger.
    */
-  actual fun logger(name: String): Logger {
+  public actual fun logger(name: String): Logger {
     TODO("Not yet implemented")
   }
 
@@ -19,7 +19,7 @@ actual class Logging {
    *
    * @return Root logger.
    */
-  actual fun logger(): Logger {
+  public actual fun logger(): Logger {
     TODO("Not yet implemented")
   }
 }

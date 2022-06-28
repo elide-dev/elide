@@ -7,7 +7,7 @@ FROM --platform=linux/${UBUNTU_ARCH} ubuntu:${UBUNTU_VERSION}
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=22.1.0
 ARG GRAAL_ARCH=amd64
-ARG JAVA_VERSION=java11
+ARG JAVA_VERSION=java17
 
 RUN apt-get update \
     && apt-get -y upgrade \

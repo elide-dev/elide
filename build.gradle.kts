@@ -32,6 +32,8 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
+val javaVersion = Versions.javaLanguage
+
 tasks.dokkaHtmlMultiModule.configure {
   outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
 }
@@ -127,6 +129,10 @@ allprojects {
     mavenCentral()
     maven("https://maven-central.storage-download.googleapis.com/maven2/")
     jcenter()
+  }
+  tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
     kotlinOptions {

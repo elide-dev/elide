@@ -8,9 +8,6 @@ on:
       - stable
   pull_request:
     types: [labeled, opened, reopened, synchronize]
-env:
-  JAVA_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
-  GRAALVM_HOME: /opt/hostedtoolcache/GraalVM/21.0.0-2-java11-amd64/x64
 
 jobs:
   ##
@@ -52,14 +49,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: elide-tools/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
@@ -127,14 +125,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: elide-tools/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Prep: Download Caches
       - name: Cache dependencies
@@ -203,14 +202,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: `gu` components
       - name: Install native-image component
@@ -269,14 +269,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: elide-tools/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
@@ -375,14 +376,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
       - name: Set up QEMU
@@ -534,14 +536,15 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       ## Setup: GraalVM
-      - uses: DeLaGuardo/setup-graalvm@5.0
+      - uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
       - name: Set up QEMU

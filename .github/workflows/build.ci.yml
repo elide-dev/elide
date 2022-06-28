@@ -54,9 +54,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
@@ -129,9 +130,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Prep: Download Caches
       - name: Cache dependencies
@@ -205,9 +207,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: `gu` components
       - name: Install native-image component
@@ -271,9 +274,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
@@ -377,9 +381,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
       - name: Set up QEMU
@@ -536,9 +541,10 @@ jobs:
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: '21.1.0'
+          version: 'latest'
           java-version: '17'
           components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
       - name: Set up QEMU

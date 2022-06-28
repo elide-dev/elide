@@ -80,13 +80,16 @@ publishing {
 }
 
 kotlin {
-  jvm {
-    compilations.all {
-      kotlinOptions {
-        apiVersion = kotlinLanguageVersion
-        languageVersion = kotlinLanguageVersion
-      }
+  sourceSets.all {
+    languageSettings.apply {
+      languageVersion = kotlinLanguageVersion
+      apiVersion = kotlinLanguageVersion
+      optIn("kotlin.ExperimentalUnsignedTypes")
+      progressiveMode = true
     }
+  }
+
+  jvm {
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()

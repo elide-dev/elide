@@ -118,32 +118,32 @@ kotlin {
             }
         }
     }
-//    targets {
-//        if (HostManager.hostIsMac) {
-//            macosX64()
-//            macosArm64()
-//            iosX64()
-//            iosArm64()
-//            iosArm32()
-//            iosSimulatorArm64()
-//            watchosArm32()
-//            watchosArm64()
-//            watchosX86()
-//            watchosX64()
-//            watchosSimulatorArm64()
-//            tvosArm64()
-//            tvosX64()
-//            tvosSimulatorArm64()
-//        }
-//        if (HostManager.hostIsMingw || HostManager.hostIsMac) {
-//            mingwX64 {
-//                binaries.findTest(DEBUG)!!.linkerOpts = mutableListOf("-Wl,--subsystem,windows")
-//            }
-//        }
-//        if (HostManager.hostIsLinux || HostManager.hostIsMac) {
-//            linuxX64()
-//        }
-//    }
+    targets {
+        if (HostManager.hostIsMac) {
+            macosX64()
+            macosArm64()
+            iosX64()
+            iosArm64()
+            iosArm32()
+            iosSimulatorArm64()
+            watchosArm32()
+            watchosArm64()
+            watchosX86()
+            watchosX64()
+            watchosSimulatorArm64()
+            tvosArm64()
+            tvosX64()
+            tvosSimulatorArm64()
+        }
+        if (HostManager.hostIsMingw || HostManager.hostIsMac) {
+            mingwX64 {
+                binaries.findTest(DEBUG)!!.linkerOpts = mutableListOf("-Wl,--subsystem,windows")
+            }
+        }
+        if (HostManager.hostIsLinux || HostManager.hostIsMac) {
+            linuxX64()
+        }
+    }
 
     publishing {
         publications {}
@@ -214,8 +214,77 @@ kotlin {
             }
         }
         val jsTest by getting
-        val nativeMain by getting
-        val nativeTest by getting
+
+        val nix64MainSourceDirs = listOf(
+            "src/nonJvmMain/kotlin",
+            "src/nativeMain/kotlin",
+            "src/nix64Main/kotlin"
+        )
+
+        val nix32MainSourceDirs = listOf(
+            "src/nonJvmMain/kotlin",
+            "src/nativeMain/kotlin",
+            "src/nix32Main/kotlin"
+        )
+
+        if (HostManager.hostIsMac) {
+            val appleMain32SourceDirs = listOf(
+                "src/appleMain/kotlin"
+            ) + nix32MainSourceDirs
+
+            val appleMain64SourceDirs = listOf(
+                "src/appleMain/kotlin"
+            ) + nix64MainSourceDirs
+
+            val macosX64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val macosX64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val macosArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val macosArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val iosArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val iosArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val iosArm32Main by getting { kotlin.srcDirs(appleMain32SourceDirs) }
+            val iosArm32Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val iosX64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val iosX64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val iosSimulatorArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val iosSimulatorArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val watchosArm32Main by getting { kotlin.srcDirs(appleMain32SourceDirs) }
+            val watchosArm32Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val watchosArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val watchosArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val watchosX64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val watchosX64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val watchosX86Main by getting { kotlin.srcDirs(appleMain32SourceDirs) }
+            val watchosX86Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val watchosSimulatorArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val watchosSimulatorArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val tvosArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val tvosArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val tvosX64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val tvosX64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+            val tvosSimulatorArm64Main by getting { kotlin.srcDirs(appleMain64SourceDirs) }
+            val tvosSimulatorArm64Test by getting { kotlin.srcDir("src/appleTest/kotlin") }
+        }
+        if (HostManager.hostIsMingw || HostManager.hostIsMac) {
+            val mingwX64Main by getting {
+                kotlin.srcDirs(
+                    listOf(
+                        "src/nonJvmMain/kotlin",
+                        "src/nativeMain/kotlin",
+                        "src/mingwMain/kotlin"
+                    )
+                )
+            }
+            val mingwX64Test by getting {
+                kotlin.srcDir("src/mingwTest/kotlin")
+            }
+        }
+        if (HostManager.hostIsLinux || HostManager.hostIsMac) {
+            val linuxX64Main by getting { kotlin.srcDirs(nix64MainSourceDirs) }
+        }
+
+//        val nativeMain by getting
+//        val nativeTest by getting
     }
 }
 

@@ -7,7 +7,7 @@ import io.micronaut.http.MediaType
  *
  * @param symbol HTTP `Content-Type` value corresponding to this format.
  */
-<span class="pc" id="L10">enum class GrpcWebContentType constructor (internal val symbol: String) {</span>
+<span class="fc" id="L10">enum class GrpcWebContentType constructor (internal val symbol: String) {</span>
   /**
    * Binary dispatch for gRPC-Web, potentially with Protocol Buffers.
    *
@@ -32,14 +32,14 @@ import io.micronaut.http.MediaType
 <span class="fc" id="L32">    ).toTypedArray()</span>
 
     // Resolve a `GrpcWebContentType` from the provided HTTP `MediaType`, or throw.
-<span class="pc bpc" id="L35" title="11 of 13 branches missed.">    @JvmStatic internal fun resolve(contentType: MediaType): GrpcWebContentType = when (</span>
+<span class="pc bpc" id="L35" title="4 of 13 branches missed.">    @JvmStatic internal fun resolve(contentType: MediaType): GrpcWebContentType = when (</span>
 <span class="fc" id="L36">      contentType.toString().trim().lowercase()</span>
     ) {
       &quot;application/grpc-web+proto&quot;,
 <span class="fc" id="L39">      &quot;application/grpc-web&quot; -&gt; BINARY</span>
       &quot;application/grpc-web-text+proto&quot;,
-<span class="nc" id="L41">      &quot;application/grpc-web-text&quot; -&gt; TEXT</span>
-<span class="nc" id="L42">      else -&gt; throw IllegalArgumentException(&quot;Cannot resolve invalid `Content-Type` for gRPC-Web: '$contentType'&quot;)</span>
+<span class="fc" id="L41">      &quot;application/grpc-web-text&quot; -&gt; TEXT</span>
+<span class="fc" id="L42">      else -&gt; throw IllegalArgumentException(&quot;Cannot resolve invalid `Content-Type` for gRPC-Web: '$contentType'&quot;)</span>
 <span class="fc" id="L43">    }</span>
   }
 

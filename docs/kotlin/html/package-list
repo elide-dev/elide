@@ -1,32 +1,37 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-$dokka.location:elide.model/WireMessage/getProto/#/PointingToDeclaration/base/elide.model/-wire-message/[jvm]get-proto.html
+$dokka.location:elide.model/WireMessage/getProto/#/PointingToDeclaration/model/elide.model/-wire-message/[native]get-proto.html
 $dokka.location:elide.runtime/Logging.Companion///PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/index.html
 $dokka.location:elide.runtime/Logging.Companion/acquire/#/PointingToDeclaration/base/elide.runtime/-logging/[js]-companion/acquire.html
 $dokka.location:elide.runtime/Logging.Companion/named/#kotlin.String/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/named.html
 $dokka.location:elide.runtime/Logging.Companion/of/#java.lang.Class[*]/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/of.html
 $dokka.location:elide.runtime/Logging.Companion/of/#kotlin.reflect.KClass[*]/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/of.html
 $dokka.location:elide.runtime/Logging.Companion/root/#/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/root.html
+$dokka.location:elide.util/Base64/encoding/#/PointingToDeclaration/base/elide.util/-base64/[native]encoding.html
 module:base
 elide.annotations
-elide.model
 elide.runtime
 elide.runtime.js
 elide.runtime.jvm
+elide.util
+module:frontend
 lib.protobuf
+lib.tsstdlib
+lib.tsstdlib.intl
+lib.uuid
 module:graalvm
 elide.runtime.graalvm
 elide.server
 elide.server.ssr
-module:graalvm-js
-elide.nodejs
 module:graalvm-react
 elide.js.ssr
 react.dom.client
+module:model
+elide.annotations
+elide.model
+elide.model.util
 module:rpc-js
-grpc_web
-grpc_web.MethodType
-tsstdlib
+lib.grpcweb
 module:rpc-jvm
 elide.server.rpc
 elide.server.rpc.web

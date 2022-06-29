@@ -3,4 +3,4 @@
 # isEnabled
 
 [jvm]\
-open override fun [isEnabled](is-enabled.md)(level: [LogLevel](../../elide.runtime/-log-level/index.md)): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+open override fun [isEnabled](is-enabled.md)(level: [LogLevel](../../elide.runtime/-log-level/index.md#456488815%2FExtensions%2F-272498224)): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

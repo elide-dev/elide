@@ -29,39 +29,39 @@ import kotlin.experimental.or
   private var malformed: Boolean = false
 
   /** Size of the stream consumed by this deframer instance. */
-<span class="nc" id="L32">  val size: Int get() = length</span>
+<span class="fc" id="L32">  val size: Int get() = length</span>
 
   /** Count of discovered gRPC-Web `DATA` frames consumed by this deframer instance. */
-<span class="nc" id="L35">  val count: Int get() = frameCount</span>
+<span class="fc" id="L35">  val count: Int get() = frameCount</span>
 
   // Retrieve the next frame's worth of bytes from the input stream.
   private fun getNextFrameBytes(input: ByteArray): Boolean {
     // first byte of the stream should be 0x00 (indicating a DATA frame)
 <span class="fc" id="L40">    val firstByteValue: Int = (input[readSoFar] or RpcSymbol.DATA.value).toInt()</span>
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">    return if (firstByteValue != 0) {</span>
-<span class="nc" id="L42">      logging.trace {</span>
-<span class="nc" id="L43">        &quot;Finished consuming bytes from stream frame&quot;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">    return if (firstByteValue != 0) {</span>
+<span class="fc" id="L42">      logging.trace {</span>
+<span class="fc" id="L43">        &quot;Finished consuming bytes from stream frame&quot;</span>
       }
-<span class="nc" id="L45">      malformed = true</span>
-<span class="nc" id="L46">      false  // terminate</span>
+<span class="fc" id="L45">      malformed = true</span>
+<span class="fc" id="L46">      false  // terminate</span>
     } else {
       // following 4 bytes = length of the byte array containing message data
 <span class="fc" id="L49">      var offset = readSoFar + 1</span>
 <span class="fc" id="L50">      val len = ByteBuffer.wrap(input, offset, 4).int</span>
 
       // special case: empty messages
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">      if (len == 0) {</span>
-<span class="nc" id="L54">        frames.add(ByteArray(0))</span>
-<span class="nc" id="L55">        false  // terminate</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">      if (len == 0) {</span>
+<span class="fc" id="L54">        frames.add(ByteArray(0))</span>
+<span class="fc" id="L55">        false  // terminate</span>
       } else {
 <span class="fc" id="L57">        val expectedNumBytes = len + 5 + readSoFar</span>
-<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (input.size &lt; expectedNumBytes) {</span>
-<span class="nc" id="L59">          logging.warning {</span>
-<span class="nc" id="L60">            &quot;Input stream did not provide enough bytes for decoding as gRPC-Web. &quot; +</span>
-<span class="nc" id="L61">            &quot;Expected: $expectedNumBytes, but found ${input.size}.&quot;</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (input.size &lt; expectedNumBytes) {</span>
+<span class="fc" id="L59">          logging.warning {</span>
+<span class="fc" id="L60">            &quot;Input stream did not provide enough bytes for decoding as gRPC-Web. &quot; +</span>
+<span class="fc" id="L61">            &quot;Expected: $expectedNumBytes, but found ${input.size}.&quot;</span>
           }
-<span class="nc" id="L63">          malformed = true</span>
-<span class="nc" id="L64">          false  // terminate</span>
+<span class="fc" id="L63">          malformed = true</span>
+<span class="fc" id="L64">          false  // terminate</span>
         } else {
           // read `len` into message
 <span class="fc" id="L67">          length += len</span>
@@ -71,7 +71,7 @@ import kotlin.experimental.or
 <span class="fc" id="L71">          readSoFar += len + 5</span>
 
           // if there are remaining bytes, there may be another frame to process
-<span class="pc bpc" id="L74" title="1 of 2 branches missed.">          return input.size &gt; readSoFar</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">          return input.size &gt; readSoFar</span>
         }
       }
     }
@@ -80,7 +80,7 @@ import kotlin.experimental.or
   /**
    * @return Byte array of the decoded [msg], or an empty byte array if no message was decoded.
    */
-<span class="pc bpc" id="L83" title="1 of 2 branches missed.">  fun toByteArray(): ByteArray = msg ?: ByteArray(0)</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">  fun toByteArray(): ByteArray = msg ?: ByteArray(0)</span>
 
   /**
    * Process the input [stream] to extract any present `DATA` frames, formatted for expression via gRPC-Web; collect
@@ -95,44 +95,44 @@ import kotlin.experimental.or
   fun processInput(stream: InputStream, format: GrpcWebContentType): Boolean {
     // read stream into an array of bytes
 <span class="fc" id="L97">    val messageBytes: ByteArray = try {</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">      (if (format == GrpcWebContentType.TEXT) {</span>
-<span class="nc" id="L99">        Base64.getDecoder().wrap(stream)</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">      (if (format == GrpcWebContentType.TEXT) {</span>
+<span class="fc" id="L99">        Base64.getDecoder().wrap(stream)</span>
       } else {
 <span class="fc" id="L101">        stream</span>
 <span class="fc" id="L102">      }).readAllBytes()</span>
-<span class="nc" id="L103">    } catch (ioe: IOException) {</span>
-<span class="nc" id="L104">      ioe.printStackTrace()</span>
-<span class="nc" id="L105">      logging.warning(&quot;Invalid input gRPC-Web message input&quot;, ioe)</span>
-<span class="nc" id="L106">      return false</span>
+<span class="fc" id="L103">    } catch (ioe: IOException) {</span>
+<span class="fc" id="L104">      ioe.printStackTrace()</span>
+<span class="fc" id="L105">      logging.warning(&quot;Invalid input gRPC-Web message input&quot;, ioe)</span>
+<span class="fc" id="L106">      return false</span>
     }
 
     // check minimum stream size
-<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if (messageBytes.size &lt; 5) {</span>
-<span class="nc" id="L111">      logging.warning {</span>
-<span class="nc" id="L112">        &quot;Invalid input gRPC-Web message input: expected at least 5 bytes, but got ${messageBytes.size}&quot;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    if (messageBytes.size &lt; 5) {</span>
+<span class="fc" id="L111">      logging.warning {</span>
+<span class="fc" id="L112">        &quot;Invalid input gRPC-Web message input: expected at least 5 bytes, but got ${messageBytes.size}&quot;</span>
       }
-<span class="nc" id="L114">      return false</span>
+<span class="fc" id="L114">      return false</span>
     }
 
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">    while (getNextFrameBytes(messageBytes)) {</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    while (getNextFrameBytes(messageBytes)) {</span>
       // nothing: `getNextFrameBytes` will tell us when processing completes
     }
 <span class="fc" id="L120">    frameCount = frames.size</span>
 
     // often, there is just one frame (unary call that fits).
-<span class="pc bpc" id="L123" title="1 of 2 branches missed.">    if (frameCount == 1) {</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (frameCount == 1) {</span>
 <span class="fc" id="L124">      msg = frames.first()</span>
     } else {
-<span class="nc" id="L126">      val outStream = ByteArrayOutputStream()</span>
-<span class="nc" id="L127">      outStream.use { out -&gt;</span>
-<span class="nc" id="L128">        frames.forEach { frame -&gt;</span>
-<span class="nc" id="L129">          out.writeBytes(frame)</span>
-<span class="nc" id="L130">        }</span>
-<span class="nc" id="L131">      }</span>
-<span class="nc" id="L132">      msg = outStream.toByteArray()</span>
-<span class="nc" id="L133">      frames.clear()</span>
+<span class="fc" id="L126">      val outStream = ByteArrayOutputStream()</span>
+<span class="pc" id="L127">      outStream.use { out -&gt;</span>
+<span class="fc" id="L128">        frames.forEach { frame -&gt;</span>
+<span class="fc" id="L129">          out.writeBytes(frame)</span>
+<span class="fc" id="L130">        }</span>
+<span class="fc" id="L131">      }</span>
+<span class="fc" id="L132">      msg = outStream.toByteArray()</span>
+<span class="fc" id="L133">      frames.clear()</span>
     }
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">    return !malformed</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    return !malformed</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

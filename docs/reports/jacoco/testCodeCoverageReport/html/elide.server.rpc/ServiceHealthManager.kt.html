@@ -22,10 +22,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 <span class="fc" id="L22">  private val healthMonitor: HealthStatusManager = HealthStatusManager()</span>
 
   // Private current-status state.
-<span class="pc" id="L25">  @VisibleForTesting internal val currentStatus: MutableMap&lt;String, ServingStatus&gt; = ConcurrentSkipListMap()</span>
+<span class="fc" id="L25">  @VisibleForTesting internal val currentStatus: MutableMap&lt;String, ServingStatus&gt; = ConcurrentSkipListMap()</span>
 
   // Indicates whether the server is shutting down.
-<span class="pc" id="L28">  @VisibleForTesting internal val terminalState: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="fc" id="L28">  @VisibleForTesting internal val terminalState: AtomicBoolean = AtomicBoolean(false)</span>
 
   // Read-only access to health service.
 <span class="fc" id="L31">  @VisibleForTesting val service: BindableService get() = healthMonitor.healthService</span>
@@ -45,14 +45,14 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @param status Status we are reporting for the specified service.
    */
   fun notify(service: String, status: ServingStatus?) {
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">    if (status == null) {</span>
-<span class="nc" id="L49">      currentStatus.remove(service)</span>
-<span class="nc" id="L50">      healthMonitor.clearStatus(</span>
-<span class="nc" id="L51">        service</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">    if (status == null) {</span>
+<span class="fc" id="L49">      currentStatus.remove(service)</span>
+<span class="fc" id="L50">      healthMonitor.clearStatus(</span>
+<span class="fc" id="L51">        service</span>
       )
     } else {
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">      if (status == ServingStatus.SERVICE_UNKNOWN) throw IllegalArgumentException(</span>
-<span class="nc" id="L55">        &quot;Cannot set service status to `SERVICE_UNKNOWN`: it is output-only&quot;</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">      if (status == ServingStatus.SERVICE_UNKNOWN) throw IllegalArgumentException(</span>
+<span class="fc" id="L55">        &quot;Cannot set service status to `SERVICE_UNKNOWN`: it is output-only&quot;</span>
       )
 <span class="fc" id="L57">      currentStatus[service] = status</span>
 <span class="fc" id="L58">      healthMonitor.setStatus(</span>
@@ -98,11 +98,11 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @param service Descriptor for the service we are reporting status for.
    */
   fun notifyNotServing(service: ServiceDescriptor) {
-<span class="nc" id="L101">    notify(</span>
-<span class="nc" id="L102">      service.name,</span>
-<span class="nc" id="L103">      ServingStatus.NOT_SERVING</span>
+<span class="fc" id="L101">    notify(</span>
+<span class="fc" id="L102">      service.name,</span>
+<span class="fc" id="L103">      ServingStatus.NOT_SERVING</span>
     )
-<span class="nc" id="L105">  }</span>
+<span class="fc" id="L105">  }</span>
 
   /**
    * Notify the central service health system that the provided [service] is currently in an `UNKNOWN` state; a
@@ -112,11 +112,11 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @param service Descriptor for the service we are reporting status for.
    */
   fun notifyUnknown(service: ServiceDescriptor) {
-<span class="nc" id="L115">    notify(</span>
-<span class="nc" id="L116">      service.name,</span>
-<span class="nc" id="L117">      ServingStatus.UNKNOWN</span>
+<span class="fc" id="L115">    notify(</span>
+<span class="fc" id="L116">      service.name,</span>
+<span class="fc" id="L117">      ServingStatus.UNKNOWN</span>
     )
-<span class="nc" id="L119">  }</span>
+<span class="fc" id="L119">  }</span>
 
   /**
    * Query for the current service status for the service at [name]. If no status is available, return `UNKNOWN`.
@@ -125,10 +125,10 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @return Current serving status, or [ServingStatus.UNKNOWN] if unknown.
    */
   fun currentStatus(name: String): ServingStatus {
-<span class="nc bnc" id="L128" title="All 2 branches missed.">    if (terminalState.get()) {</span>
-<span class="nc" id="L129">      return ServingStatus.NOT_SERVING</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">    if (terminalState.get()) {</span>
+<span class="fc" id="L129">      return ServingStatus.NOT_SERVING</span>
     }
-<span class="nc bnc" id="L131" title="All 2 branches missed.">    return currentStatus[name] ?: ServingStatus.SERVICE_UNKNOWN</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">    return currentStatus[name] ?: ServingStatus.SERVICE_UNKNOWN</span>
   }
 
   /**
@@ -139,7 +139,7 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @return Current serving status, or [ServingStatus.UNKNOWN] if unknown.
    */
   fun currentStatus(descriptor: ServiceDescriptor): ServingStatus {
-<span class="nc" id="L142">    return currentStatus(descriptor.name)</span>
+<span class="fc" id="L142">    return currentStatus(descriptor.name)</span>
   }
 
   /**
@@ -148,10 +148,10 @@ import java.util.concurrent.atomic.AtomicBoolean
    * recoverable,** and should only be used for system shutdown events.
    */
   fun terminalShutdown() {
-<span class="nc bnc" id="L151" title="All 2 branches missed.">    if (!terminalState.get()) {</span>
-<span class="nc" id="L152">      terminalState.compareAndSet(false, true)</span>
-<span class="nc" id="L153">      healthMonitor.enterTerminalState()</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">    if (!terminalState.get()) {</span>
+<span class="fc" id="L152">      terminalState.compareAndSet(false, true)</span>
+<span class="fc" id="L153">      healthMonitor.enterTerminalState()</span>
     }
-<span class="nc" id="L155">  }</span>
+<span class="fc" id="L155">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

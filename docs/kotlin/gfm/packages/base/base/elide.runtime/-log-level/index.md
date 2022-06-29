@@ -3,12 +3,7 @@
 # LogLevel
 
 [common]\
-expect enum [LogLevel](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[LogLevel](index.md)&gt; 
-
-Enumerates log levels on a given platform.
-
-[js, jvm, native]\
-actual enum [LogLevel](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[LogLevel](index.md)&gt; 
+enum [LogLevel](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[LogLevel](index.md)&gt; 
 
 Enumerates log levels on a given platform.
 
@@ -16,22 +11,23 @@ Enumerates log levels on a given platform.
 
 | | |
 |---|---|
-| [TRACE](-t-r-a-c-e/index.md) | [common, js, jvm, native]<br>[TRACE](-t-r-a-c-e/index.md) |
-| [DEBUG](-d-e-b-u-g/index.md) | [common, js, jvm, native]<br>[DEBUG](-d-e-b-u-g/index.md) |
-| [WARN](-w-a-r-n/index.md) | [common, js, jvm, native]<br>[WARN](-w-a-r-n/index.md) |
-| [INFO](-i-n-f-o/index.md) | [common, js, jvm, native]<br>[INFO](-i-n-f-o/index.md) |
-| [ERROR](-e-r-r-o-r/index.md) | [common, js, jvm, native]<br>[ERROR](-e-r-r-o-r/index.md) |
-
-## Functions
-
-| Name | Summary |
-|---|---|
-| [isEnabled](is-enabled.md) | [jvm]<br>fun [isEnabled](is-enabled.md)(logger: Logger): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [TRACE](-t-r-a-c-e/index.md) | [common]<br>[TRACE](-t-r-a-c-e/index.md) |
+| [DEBUG](-d-e-b-u-g/index.md) | [common]<br>[DEBUG](-d-e-b-u-g/index.md) |
+| [WARN](-w-a-r-n/index.md) | [common]<br>[WARN](-w-a-r-n/index.md) |
+| [INFO](-i-n-f-o/index.md) | [common]<br>[INFO](-i-n-f-o/index.md) |
+| [ERROR](-e-r-r-o-r/index.md) | [common]<br>[ERROR](-e-r-r-o-r/index.md) |
 
 ## Properties
 
 | Name | Summary |
 |---|---|
-| [jvmLevel](jvm-level.md) | [jvm]<br>val [jvmLevel](jvm-level.md): Level |
-| name | [common]<br>val [name](-e-r-r-o-r/index.md#-372974862%2FProperties%2F-1416663450): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>[js]<br>val [name](../../lib.protobuf/-wire-type/-f-i-x-e-d32/index.md#-372974862%2FProperties%2F-431612152): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>[jvm]<br>val [name](-e-r-r-o-r/index.md#-372974862%2FProperties%2F-272498224): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>[native]<br>val [name](-e-r-r-o-r/index.md#-372974862%2FProperties%2F911148602): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| ordinal | [common]<br>val [ordinal](-e-r-r-o-r/index.md#-739389684%2FProperties%2F-1416663450): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>[js]<br>val [ordinal](../../lib.protobuf/-wire-type/-f-i-x-e-d32/index.md#-739389684%2FProperties%2F-431612152): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>[jvm]<br>val [ordinal](-e-r-r-o-r/index.md#-739389684%2FProperties%2F-272498224): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>[native]<br>val [ordinal](-e-r-r-o-r/index.md#-739389684%2FProperties%2F911148602): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [name](../../elide.util/-encoding/-b-a-s-e64/index.md#-372974862%2FProperties%2F-1416663450) | [common]<br>val [name](../../elide.util/-encoding/-b-a-s-e64/index.md#-372974862%2FProperties%2F-1416663450): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [ordinal](../../elide.util/-encoding/-b-a-s-e64/index.md#-739389684%2FProperties%2F-1416663450) | [common]<br>val [ordinal](../../elide.util/-encoding/-b-a-s-e64/index.md#-739389684%2FProperties%2F-1416663450): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+
+## Extensions
+
+| Name | Summary |
+|---|---|
+| [isEnabled](../../elide.runtime.jvm/is-enabled.md) | [jvm]<br>fun [LogLevel](index.md#456488815%2FExtensions%2F-272498224).[isEnabled](../../elide.runtime.jvm/is-enabled.md)(logger: Logger): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [jvmLevel](../../elide.runtime.jvm/jvm-level.md) | [jvm]<br>val [LogLevel](index.md#456488815%2FExtensions%2F-272498224).[jvmLevel](../../elide.runtime.jvm/jvm-level.md): Level |
+| [resolve](../../elide.runtime.jvm/resolve.md) | [jvm]<br>fun [LogLevel](index.md#456488815%2FExtensions%2F-272498224).[resolve](../../elide.runtime.jvm/resolve.md)(logger: Logger): ([String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |

@@ -1,0 +1,1 @@
+var projectDependencyReport = {"gradleVersion":"Gradle 7.4.2","generationDate":"Tue Jun 28 21:12:26 PDT 2022","project":{"name":"basic","description":null,"configurations":[]}};

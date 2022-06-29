@@ -41,16 +41,16 @@ import java.util.concurrent.CountDownLatch
    * @param message Message to include with the error, if desired.
    * @param cause Cause of the error, if applicable.
    */
-<span class="nc" id="L44">  private class GrpcWebControllerError (</span>
-<span class="nc" id="L45">    val status: Status,</span>
+<span class="fc" id="L44">  private class GrpcWebControllerError (</span>
+<span class="fc" id="L45">    val status: Status,</span>
     message: String?,
     cause: Throwable?,
-<span class="nc" id="L48">  ): RuntimeException(</span>
-<span class="nc" id="L49">    message,</span>
-<span class="nc" id="L50">    cause,</span>
+<span class="fc" id="L48">  ): RuntimeException(</span>
+<span class="fc" id="L49">    message,</span>
+<span class="fc" id="L50">    cause,</span>
   ) {
     // Return a set of trailers to use for this error.
-<span class="nc" id="L53">    fun trailers(): Metadata = Metadata()</span>
+<span class="fc" id="L53">    fun trailers(): Metadata = Metadata()</span>
   }
 
   // Private logger.
@@ -67,7 +67,7 @@ import java.util.concurrent.CountDownLatch
 
   // Check that the `Content-Type` on an RPC request is eligible for processing.
   @VisibleForTesting internal fun checkContentType(request: HttpRequest&lt;RawRpcPayload&gt;): Boolean {
-<span class="pc bpc" id="L70" title="2 of 4 branches missed.">    return (!request.contentType.isEmpty &amp;&amp; allValidContentTypes.contains(request.contentType.get().toString()))</span>
+<span class="fc bfc" id="L70" title="All 4 branches covered.">    return (!request.contentType.isEmpty &amp;&amp; allValidContentTypes.contains(request.contentType.get().toString()))</span>
   }
 
   // Check that the special `grpc-web` header is present on an RPC request.
@@ -92,10 +92,10 @@ import java.util.concurrent.CountDownLatch
     errMessage: String?,
     cause: Throwable?
   ): GrpcWebControllerError {
-<span class="nc" id="L95">    return GrpcWebControllerError(</span>
-<span class="nc" id="L96">      status,</span>
-<span class="nc" id="L97">      errMessage,</span>
-<span class="nc" id="L98">      cause,</span>
+<span class="fc" id="L95">    return GrpcWebControllerError(</span>
+<span class="fc" id="L96">      status,</span>
+<span class="fc" id="L97">      errMessage,</span>
+<span class="fc" id="L98">      cause,</span>
     )
   }
 
@@ -132,18 +132,18 @@ import java.util.concurrent.CountDownLatch
     body: RawRpcPayload,
   ): HttpResponse&lt;RawRpcPayload&gt; {
     // generate an unconditional HTTP 200
-<span class="nc" id="L135">    val response = HttpResponse.ok&lt;RawRpcPayload&gt;()</span>
+<span class="fc" id="L135">    val response = HttpResponse.ok&lt;RawRpcPayload&gt;()</span>
 
     // write the RPC response
-<span class="nc" id="L138">    ResponseUtil.writeResponse(</span>
-<span class="nc" id="L139">      contentType,</span>
-<span class="nc" id="L140">      response,</span>
-<span class="nc" id="L141">      status,</span>
-<span class="nc" id="L142">      headers,</span>
-<span class="nc" id="L143">      trailers,</span>
-<span class="nc" id="L144">      body,</span>
+<span class="fc" id="L138">    ResponseUtil.writeResponse(</span>
+<span class="fc" id="L139">      contentType,</span>
+<span class="fc" id="L140">      response,</span>
+<span class="fc" id="L141">      status,</span>
+<span class="fc" id="L142">      headers,</span>
+<span class="fc" id="L143">      trailers,</span>
+<span class="fc" id="L144">      body,</span>
     )
-<span class="nc" id="L146">    return response</span>
+<span class="fc" id="L146">    return response</span>
   }
 
   /**
@@ -160,16 +160,16 @@ import java.util.concurrent.CountDownLatch
     method: String
   ): Pair&lt;ServerServiceDefinition, ServerMethodDefinition&lt;*, *&gt;&gt; {
 <span class="fc" id="L162">    val svc = runtime.resolveService(service)</span>
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">    if (svc != null) {</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">    if (svc != null) {</span>
 <span class="fc" id="L164">      val target = svc.getMethod(&quot;$service/$method&quot;)</span>
-<span class="pc bpc" id="L165" title="1 of 2 branches missed.">      if (target != null) {</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">      if (target != null) {</span>
 <span class="fc" id="L166">        return svc to target</span>
       }
     }
-<span class="nc" id="L169">    throw synthesizeGrpcError(</span>
-<span class="nc" id="L170">      Status.UNIMPLEMENTED,</span>
-<span class="nc" id="L171">      &quot;Service or method not found&quot;,</span>
-<span class="nc" id="L172">      cause = null,</span>
+<span class="fc" id="L169">    throw synthesizeGrpcError(</span>
+<span class="fc" id="L170">      Status.UNIMPLEMENTED,</span>
+<span class="fc" id="L171">      &quot;Service or method not found&quot;,</span>
+<span class="fc" id="L172">      cause = null,</span>
     )
   }
 
@@ -259,33 +259,33 @@ import java.util.concurrent.CountDownLatch
     principal: Principal?
   ): HttpResponse&lt;RawRpcPayload&gt; {
     // make sure gRPC-web integration is enabled
-<span class="pc bpc" id="L262" title="1 of 2 branches missed.">    return if (!settings.enabled) {</span>
-<span class="nc" id="L263">      return HttpResponse.notFound()</span>
+<span class="fc bfc" id="L262" title="All 2 branches covered.">    return if (!settings.enabled) {</span>
+<span class="fc" id="L263">      return HttpResponse.notFound()</span>
 <span class="fc" id="L264">    } else try {</span>
       // `servicePath` and `methodName` must be non-empty/non-blank
-<span class="pc bpc" id="L266" title="3 of 6 branches missed.">      if (servicePath.isEmpty() || servicePath.isBlank()) {</span>
-<span class="nc" id="L267">        logging.warn {</span>
-<span class="nc" id="L268">          &quot;gRPC-web service path was blank or empty; rejecting request with `SERVICE_PATH_INVALID`.&quot;</span>
+<span class="fc bfc" id="L266" title="All 6 branches covered.">      if (servicePath.isEmpty() || servicePath.isBlank()) {</span>
+<span class="fc" id="L267">        logging.warn {</span>
+<span class="fc" id="L268">          &quot;gRPC-web service path was blank or empty; rejecting request with `SERVICE_PATH_INVALID`.&quot;</span>
         }
-<span class="nc" id="L270">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L271">          &quot;SERVICE_PATH_INVALID&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L270">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L271">          &quot;SERVICE_PATH_INVALID&quot;.toByteArray(StandardCharsets.UTF_8)</span>
         )
-<span class="pc bpc" id="L273" title="3 of 6 branches missed.">      } else if (methodName.isEmpty() || methodName.isBlank()) {</span>
-<span class="nc" id="L274">        logging.warn {</span>
-<span class="nc" id="L275">          &quot;gRPC-web service method was blank or empty; rejecting request with `METHOD_NAME_INVALID`.&quot;</span>
+<span class="fc bfc" id="L273" title="All 6 branches covered.">      } else if (methodName.isEmpty() || methodName.isBlank()) {</span>
+<span class="fc" id="L274">        logging.warn {</span>
+<span class="fc" id="L275">          &quot;gRPC-web service method was blank or empty; rejecting request with `METHOD_NAME_INVALID`.&quot;</span>
         }
-<span class="nc" id="L277">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L278">          &quot;METHOD_NAME_INVALID&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L277">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L278">          &quot;METHOD_NAME_INVALID&quot;.toByteArray(StandardCharsets.UTF_8)</span>
         )
       }
 
       // `content-type` must be specified, and must be an acceptable value
-<span class="pc bpc" id="L283" title="1 of 2 branches missed.">      if (!checkContentType(request)) {</span>
-<span class="nc" id="L284">        logging.warn {</span>
-<span class="nc" id="L285">          &quot;gRPC-web content type was not allowed or missing; rejecting request with `INVALID_CONTENT_TYPE`.&quot;</span>
+<span class="fc bfc" id="L283" title="All 2 branches covered.">      if (!checkContentType(request)) {</span>
+<span class="fc" id="L284">        logging.warn {</span>
+<span class="fc" id="L285">          &quot;gRPC-web content type was not allowed or missing; rejecting request with `INVALID_CONTENT_TYPE`.&quot;</span>
         }
-<span class="nc" id="L287">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L288">          &quot;INVALID_CONTENT_TYPE&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L287">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L288">          &quot;INVALID_CONTENT_TYPE&quot;.toByteArray(StandardCharsets.UTF_8)</span>
         )
       }
 
@@ -293,12 +293,12 @@ import java.util.concurrent.CountDownLatch
 <span class="fc" id="L293">      val grpcWebContentType = GrpcWebContentType.resolve(request.contentType.get())</span>
 
       // sentinel header must be present on the request
-<span class="pc bpc" id="L296" title="1 of 2 branches missed.">      if (!checkSentinelHeader(request)) {</span>
-<span class="nc" id="L297">        logging.warn {</span>
-<span class="nc" id="L298">          &quot;gRPC-web request was missing sentinel header; rejecting request with `BAD_REQUEST`.&quot;</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">      if (!checkSentinelHeader(request)) {</span>
+<span class="fc" id="L297">        logging.warn {</span>
+<span class="fc" id="L298">          &quot;gRPC-web request was missing sentinel header; rejecting request with `BAD_REQUEST`.&quot;</span>
         }
-<span class="nc" id="L300">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L301">          &quot;BAD_REQUEST&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L300">        return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L301">          &quot;BAD_REQUEST&quot;.toByteArray(StandardCharsets.UTF_8)</span>
         )
       }
 
@@ -317,48 +317,48 @@ import java.util.concurrent.CountDownLatch
 <span class="fc" id="L317">            principal</span>
 <span class="fc" id="L318">          ).await()</span>
         )
-<span class="nc" id="L320">      } catch (sre: StatusRuntimeException) {</span>
-<span class="nc" id="L321">        logging.warn(</span>
-<span class="nc" id="L322">          &quot;The gRPC Web request threw a gRPC-compatible exception of status '${sre.status}'&quot;</span>
+<span class="fc" id="L320">      } catch (sre: StatusRuntimeException) {</span>
+<span class="fc" id="L321">        logging.warn(</span>
+<span class="fc" id="L322">          &quot;The gRPC Web request threw a gRPC-compatible exception of status '${sre.status}'&quot;</span>
         )
-<span class="nc" id="L324">        synthesizeGrpcResponse(</span>
-<span class="nc" id="L325">          sre.status,</span>
-<span class="nc" id="L326">          Metadata(),</span>
-<span class="nc bnc" id="L327" title="All 2 branches missed.">          sre.trailers ?: Metadata(),</span>
-<span class="nc" id="L328">          grpcWebContentType,</span>
-<span class="nc" id="L329">          ByteArray(0),</span>
+<span class="fc" id="L324">        synthesizeGrpcResponse(</span>
+<span class="fc" id="L325">          sre.status,</span>
+<span class="fc" id="L326">          Metadata(),</span>
+<span class="pc bpc" id="L327" title="1 of 2 branches missed.">          sre.trailers ?: Metadata(),</span>
+<span class="fc" id="L328">          grpcWebContentType,</span>
+<span class="fc" id="L329">          ByteArray(0),</span>
         )
-<span class="nc" id="L331">      } catch (cre: GrpcWebControllerError) {</span>
+<span class="fc" id="L331">      } catch (cre: GrpcWebControllerError) {</span>
         // an error occurred before method processing began
-<span class="nc" id="L333">        logging.warn(</span>
-<span class="nc" id="L334">          &quot;Relaying pre-fulfillment gRPC-Web error: '${cre.status}'&quot;</span>
+<span class="fc" id="L333">        logging.warn(</span>
+<span class="fc" id="L334">          &quot;Relaying pre-fulfillment gRPC-Web error: '${cre.status}'&quot;</span>
         )
-<span class="pc" id="L336">        synthesizeGrpcResponse(</span>
-<span class="nc" id="L337">          cre.status.withCause(</span>
-<span class="nc" id="L338">            cre.cause</span>
-<span class="nc" id="L339">          ).withDescription(</span>
-<span class="nc bnc" id="L340" title="All 2 branches missed.">            cre.message ?: &quot;&quot;</span>
+<span class="fc" id="L336">        synthesizeGrpcResponse(</span>
+<span class="fc" id="L337">          cre.status.withCause(</span>
+<span class="fc" id="L338">            cre.cause</span>
+<span class="fc" id="L339">          ).withDescription(</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">            cre.message ?: &quot;&quot;</span>
           ),
-<span class="nc" id="L342">          Metadata(),</span>
-<span class="nc" id="L343">          cre.trailers(),</span>
-<span class="nc" id="L344">          grpcWebContentType,</span>
-<span class="nc" id="L345">          ByteArray(0),</span>
+<span class="fc" id="L342">          Metadata(),</span>
+<span class="fc" id="L343">          cre.trailers(),</span>
+<span class="fc" id="L344">          grpcWebContentType,</span>
+<span class="fc" id="L345">          ByteArray(0),</span>
         )
       }
-<span class="nc" id="L348">    } catch (ipbe: InvalidProtocolBufferException) {</span>
+<span class="fc" id="L348">    } catch (ipbe: InvalidProtocolBufferException) {</span>
       // an internal error occurred of some other kind
-<span class="nc" id="L350">      logging.warn(</span>
-<span class="nc" id="L351">        &quot;Request was reported as invalid protocol buffer; rejecting with `MALFORMED_PAYLOAD` (Bad Request HTTP 400).&quot;,</span>
+<span class="fc" id="L350">      logging.warn(</span>
+<span class="fc" id="L351">        &quot;Request was reported as invalid protocol buffer; rejecting with `MALFORMED_PAYLOAD` (Bad Request HTTP 400).&quot;,</span>
       )
-<span class="nc" id="L353">      return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L354">        &quot;MALFORMED_PAYLOAD&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L353">      return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L354">        &quot;MALFORMED_PAYLOAD&quot;.toByteArray(StandardCharsets.UTF_8)</span>
       )
-<span class="nc" id="L356">    } catch (iae: IllegalArgumentException) {</span>
-<span class="nc" id="L357">      logging.warn(</span>
-<span class="nc" id="L358">        &quot;The gRPC Web request was malformed; rejecting with 'MALFORMED_STREAM'.&quot;</span>
+<span class="fc" id="L356">    } catch (iae: IllegalArgumentException) {</span>
+<span class="fc" id="L357">      logging.warn(</span>
+<span class="fc" id="L358">        &quot;The gRPC Web request was malformed; rejecting with 'MALFORMED_STREAM'.&quot;</span>
       )
-<span class="pc" id="L360">      return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
-<span class="nc" id="L361">        &quot;MALFORMED_STREAM&quot;.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L360">      return HttpResponse.badRequest&lt;RawRpcPayload?&gt;().body(</span>
+<span class="fc" id="L361">        &quot;MALFORMED_STREAM&quot;.toByteArray(StandardCharsets.UTF_8)</span>
       )
     }
   }

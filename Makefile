@@ -119,6 +119,7 @@ reports:  ## Generate reports for tests, coverage, etc.
 	@echo "Copying test reports to '$(REPORTS)'..."
 	$(CMD)$(MKDIR) -p tools/reports/build/reports
 	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	$(CMD)$(RM) -f docs/reports/project/properties.txt docs/reports/project/tasks.txt
 	@echo "Reports synced."
 
 update-dep-hashes:
@@ -152,6 +153,12 @@ update-jdeps:  ## Interactively update Gradle dependencies.
 relock-deps:  ## Update dependency locks and hashes across Yarn and Gradle.
 	@echo "Relocking dependencies..."
 	$(CMD)$(MAKE) update-dep-hashes update-dep-locks
+
+serve-docs:  ## Serve documentation locally.
+	@echo "Serving docs at http://localhost:8000..."
+	$(CMD)cd docs \
+		&& open http://localhost:8000 \
+		&& python -m SimpleHTTPServer
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."

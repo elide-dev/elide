@@ -1,0 +1,1177 @@
+
+------------------------------------------------------------
+Project ':tools:reports'
+------------------------------------------------------------
+
+allCodeCoverageReportClassDirectories - Supplies the class directories used to produce all aggregated JaCoCo coverage data reports
++--- project :packages:base
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3
+|    |    \--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0
+|    |         |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+|    |         |    \--- org.jetbrains:annotations:13.0
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3
+|    |    \--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 (*)
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0
+|    |         \--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3
+|    |    \--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0
+|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3
+|    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3
+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (c)
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (c)
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 (c)
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 (c)
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 (c)
+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3 (c)
+|    |         |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3 (c)
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0
+|    |         |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0 (*)
+|    |         |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.0
+|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0
+|    +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5
+|    |    \--- org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.3.5
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.0 -> 1.7.0 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.0 -> 1.7.0
+|    +--- org.jetbrains.kotlinx:kotlinx-datetime:0.3.3
+|    |    \--- org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.3.3
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0-Beta -> 1.7.0 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0-Beta -> 1.7.0
+|    +--- com.benasher44:uuid:0.4.1
+|    |    \--- com.benasher44:uuid-jvm:0.4.1
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0
+|    +--- org.slf4j:slf4j-api:1.7.36
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1
+|    +--- com.google.protobuf:protobuf-java:3.20.1
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1
+|    |    +--- com.google.protobuf:protobuf-java:3.20.1
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 -> 1.7.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3 (*)
+|    |    |    +--- org.reactivestreams:reactive-streams:1.0.3 -> 1.0.4
+|    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3
+|    |    +--- org.slf4j:slf4j-api:1.7.32 -> 1.7.36
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
+|    \--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3
+|         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|         +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.3 (*)
+|         +--- com.google.guava:guava:31.0.1-jre -> 31.1-jre
+|         |    +--- com.google.guava:failureaccess:1.0.1
+|         |    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|         |    +--- com.google.code.findbugs:jsr305:3.0.2
+|         |    +--- org.checkerframework:checker-qual:3.12.0
+|         |    +--- com.google.errorprone:error_prone_annotations:2.11.0
+|         |    \--- com.google.j2objc:j2objc-annotations:1.3
+|         \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (*)
++--- project :packages:server
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1
+|    +--- org.slf4j:slf4j-api:1.7.36
+|    +--- io.grpc:grpc-bom:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 (c)
+|    |    +--- io.grpc:grpc-auth:1.46.0 (c)
+|    |    +--- io.grpc:grpc-core:1.46.0 (c)
+|    |    +--- io.grpc:grpc-netty:1.46.0 (c)
+|    |    +--- io.grpc:grpc-protobuf:1.46.0 (c)
+|    |    +--- io.grpc:grpc-services:1.46.0 (c)
+|    |    +--- io.grpc:grpc-stub:1.46.0 (c)
+|    |    +--- io.grpc:grpc-testing:1.46.0 (c)
+|    |    +--- io.grpc:grpc-context:1.46.0 (c)
+|    |    \--- io.grpc:grpc-protobuf-lite:1.46.0 (c)
+|    +--- io.netty:netty-bom:4.1.72.Final -> 4.1.77.Final
+|    |    +--- io.netty:netty-codec-http2:4.1.77.Final (c)
+|    |    +--- io.netty:netty-handler-proxy:4.1.77.Final (c)
+|    |    +--- io.netty:netty-common:4.1.77.Final (c)
+|    |    +--- io.netty:netty-buffer:4.1.77.Final (c)
+|    |    +--- io.netty:netty-transport:4.1.77.Final (c)
+|    |    +--- io.netty:netty-codec:4.1.77.Final (c)
+|    |    +--- io.netty:netty-handler:4.1.77.Final (c)
+|    |    +--- io.netty:netty-codec-http:4.1.77.Final (c)
+|    |    +--- io.netty:netty-codec-socks:4.1.77.Final (c)
+|    |    \--- io.netty:netty-resolver:4.1.77.Final (c)
+|    +--- io.micronaut:micronaut-inject -> 3.5.2
+|    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    +--- javax.annotation:javax.annotation-api:1.3.2
+|    |    +--- jakarta.inject:jakarta.inject-api:2.0.1
+|    |    +--- jakarta.annotation:jakarta.annotation-api:2.0.0
+|    |    +--- io.micronaut:micronaut-core:3.5.2
+|    |    |    \--- org.slf4j:slf4j-api:1.7.36
+|    |    \--- org.yaml:snakeyaml:1.30
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+|    +--- project :packages:base (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10 -> 1.7.0 (*)
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.10 -> 1.7.0
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.347
+|    |    \--- org.jetbrains.kotlin-wrappers:kotlin-css-jvm:1.0.0-pre.347
+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+|    +--- com.google.protobuf:protobuf-java:3.20.1
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1
+|    |    +--- com.google.protobuf:protobuf-java:3.20.1
+|    |    +--- com.google.guava:guava:30.1.1-android -> 31.1-jre (*)
+|    |    +--- com.google.errorprone:error_prone_annotations:2.5.1 -> 2.11.0
+|    |    +--- com.google.j2objc:j2objc-annotations:1.3
+|    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    \--- com.google.code.gson:gson:2.8.9
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 (*)
+|    +--- io.grpc:grpc-core:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0
+|    |    |    +--- io.grpc:grpc-context:1.46.0
+|    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    +--- com.google.errorprone:error_prone_annotations:2.10.0 -> 2.11.0
+|    |    |    \--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    +--- com.google.code.gson:gson:2.8.9
+|    |    +--- com.google.android:annotations:4.1.1.4
+|    |    +--- org.codehaus.mojo:animal-sniffer-annotations:1.19
+|    |    +--- com.google.errorprone:error_prone_annotations:2.10.0 -> 2.11.0
+|    |    +--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    \--- io.perfmark:perfmark-api:0.25.0
+|    +--- io.grpc:grpc-api:1.46.0 (*)
+|    +--- io.grpc:grpc-auth:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 (*)
+|    |    +--- com.google.auth:google-auth-library-credentials:1.4.0
+|    |    \--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    +--- io.grpc:grpc-stub:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 (*)
+|    |    +--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    \--- com.google.errorprone:error_prone_annotations:2.10.0 -> 2.11.0
+|    +--- io.grpc:grpc-services:1.46.0
+|    |    +--- io.grpc:grpc-protobuf:1.46.0
+|    |    |    +--- io.grpc:grpc-api:1.46.0 (*)
+|    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    +--- com.google.protobuf:protobuf-java:3.19.2 -> 3.20.1
+|    |    |    +--- com.google.api.grpc:proto-google-common-protos:2.0.1
+|    |    |    |    \--- com.google.protobuf:protobuf-java:3.13.0 -> 3.20.1
+|    |    |    +--- io.grpc:grpc-protobuf-lite:1.46.0
+|    |    |    |    +--- io.grpc:grpc-api:1.46.0 (*)
+|    |    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    |    \--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    |    \--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    +--- io.grpc:grpc-stub:1.46.0 (*)
+|    |    +--- io.grpc:grpc-core:1.46.0 (*)
+|    |    +--- com.google.protobuf:protobuf-java-util:3.19.2 -> 3.20.1 (*)
+|    |    +--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    \--- com.google.errorprone:error_prone_annotations:2.10.0 -> 2.11.0
+|    +--- io.grpc:grpc-netty:1.46.0
+|    |    +--- io.grpc:grpc-core:1.46.0 (*)
+|    |    +--- io.netty:netty-codec-http2:4.1.72.Final -> 4.1.77.Final
+|    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    +--- io.netty:netty-buffer:4.1.77.Final
+|    |    |    |    \--- io.netty:netty-common:4.1.77.Final
+|    |    |    +--- io.netty:netty-transport:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    |    \--- io.netty:netty-resolver:4.1.77.Final
+|    |    |    |         \--- io.netty:netty-common:4.1.77.Final
+|    |    |    +--- io.netty:netty-codec:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    |    \--- io.netty:netty-transport:4.1.77.Final (*)
+|    |    |    +--- io.netty:netty-handler:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-resolver:4.1.77.Final (*)
+|    |    |    |    +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    |    +--- io.netty:netty-transport:4.1.77.Final (*)
+|    |    |    |    \--- io.netty:netty-codec:4.1.77.Final (*)
+|    |    |    \--- io.netty:netty-codec-http:4.1.77.Final
+|    |    |         +--- io.netty:netty-common:4.1.77.Final
+|    |    |         +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |         +--- io.netty:netty-transport:4.1.77.Final (*)
+|    |    |         +--- io.netty:netty-codec:4.1.77.Final (*)
+|    |    |         \--- io.netty:netty-handler:4.1.77.Final (*)
+|    |    +--- io.netty:netty-handler-proxy:4.1.72.Final -> 4.1.77.Final
+|    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    +--- io.netty:netty-transport:4.1.77.Final (*)
+|    |    |    +--- io.netty:netty-codec:4.1.77.Final (*)
+|    |    |    +--- io.netty:netty-codec-socks:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-common:4.1.77.Final
+|    |    |    |    +--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    |    +--- io.netty:netty-transport:4.1.77.Final (*)
+|    |    |    |    \--- io.netty:netty-codec:4.1.77.Final (*)
+|    |    |    \--- io.netty:netty-codec-http:4.1.77.Final (*)
+|    |    +--- com.google.guava:guava:31.0.1-android -> 31.1-jre (*)
+|    |    +--- com.google.errorprone:error_prone_annotations:2.10.0 -> 2.11.0
+|    |    \--- io.perfmark:perfmark-api:0.25.0
+|    +--- io.grpc:grpc-protobuf:1.46.0 (*)
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0
+|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 (*)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1 -> 1.6.3 (*)
+|    |    +--- io.grpc:grpc-stub:1.46.0 (*)
+|    |    \--- javax.annotation:javax.annotation-api:1.3.2
+|    +--- com.google.guava:guava:31.1-jre (*)
+|    +--- io.micronaut:micronaut-http:3.5.2
+|    |    +--- io.projectreactor:reactor-core:3.4.18
+|    |    |    \--- org.reactivestreams:reactive-streams:1.0.3 -> 1.0.4
+|    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    \--- io.micronaut:micronaut-core-reactive:3.5.2
+|    |         +--- org.slf4j:slf4j-api:1.7.36
+|    |         +--- io.micronaut:micronaut-core:3.5.2 (*)
+|    |         \--- org.reactivestreams:reactive-streams:1.0.4
+|    +--- io.micronaut:micronaut-context:3.5.2
+|    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    +--- io.micronaut:micronaut-aop:3.5.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    |    \--- io.micronaut:micronaut-core:3.5.2 (*)
+|    |    \--- javax.validation:validation-api:2.0.1.Final
+|    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    +--- io.micronaut:micronaut-inject-java:3.5.2
+|    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    \--- io.micronaut:micronaut-aop:3.5.2 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1
+|    |    +--- io.micronaut:micronaut-bom:3.4.4 -> 3.5.2
+|    |    |    +--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    |    +--- com.fasterxml.jackson:jackson-bom:2.13.2
+|    |    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.13.2 -> 2.13.2.2 (c)
+|    |    |    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.2 (c)
+|    |    |    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2 (c)
+|    |    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.13.2 (c)
+|    |    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.13.2 (c)
+|    |    |    +--- org.junit:junit-bom:5.7.2 -> 5.8.2
+|    |    |    |    +--- org.junit.jupiter:junit-jupiter-api:5.8.2 (c)
+|    |    |    |    +--- org.junit.jupiter:junit-jupiter-engine:5.8.2 (c)
+|    |    |    |    +--- org.junit.platform:junit-platform-engine:1.8.2 (c)
+|    |    |    |    \--- org.junit.platform:junit-platform-commons:1.8.2 (c)
+|    |    |    +--- org.jetbrains.kotlin:kotlin-bom:1.6.21
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-test:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-test-junit5:1.6.21 -> 1.7.0 (c)
+|    |    |    |    +--- org.jetbrains.kotlin:kotlin-test-common:1.6.21 -> 1.7.0 (c)
+|    |    |    |    \--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.6.21 -> 1.7.0 (c)
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.5.1 -> 1.6.3 (*)
+|    |    |    +--- io.ktor:ktor-bom:1.6.8
+|    |    |    +--- io.micrometer:micrometer-bom:1.9.0
+|    |    |    +--- io.micronaut.aws:micronaut-aws-bom:3.5.0
+|    |    |    |    +--- com.amazonaws:aws-java-sdk-bom:1.12.223
+|    |    |    |    \--- software.amazon.awssdk:bom:2.17.194
+|    |    |    +--- io.micronaut.azure:micronaut-azure-bom:3.2.3
+|    |    |    |    \--- com.azure:azure-sdk-bom:1.1.1
+|    |    |    +--- io.micronaut.cache:micronaut-cache-bom:3.4.1
+|    |    |    +--- io.micronaut.coherence:micronaut-coherence-bom:3.4.1
+|    |    |    +--- io.micronaut.data:micronaut-data-bom:3.4.2
+|    |    |    +--- io.micronaut.email:micronaut-email-bom:1.2.3
+|    |    |    +--- io.micronaut.flyway:micronaut-flyway-bom:5.3.0
+|    |    |    +--- io.micronaut.gcp:micronaut-gcp-bom:4.2.0
+|    |    |    +--- io.micronaut.groovy:micronaut-groovy-bom:3.1.0
+|    |    |    |    \--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-bom:3.3.1
+|    |    |    |    +--- io.grpc:grpc-protobuf:1.46.0 (c)
+|    |    |    |    +--- io.grpc:grpc-services:1.46.0 (c)
+|    |    |    |    +--- io.grpc:grpc-stub:1.46.0 (c)
+|    |    |    |    +--- com.google.protobuf:protobuf-java:3.20.1 (c)
+|    |    |    |    +--- com.google.protobuf:protobuf-java-util:3.20.1 (c)
+|    |    |    |    +--- io.micronaut.grpc:micronaut-grpc-annotation:3.3.1 (c)
+|    |    |    |    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 (c)
+|    |    |    |    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 (c)
+|    |    |    |    \--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 (c)
+|    |    |    +--- io.micronaut.jaxrs:micronaut-jaxrs-bom:3.3.0
+|    |    |    +--- io.micronaut.kafka:micronaut-kafka-bom:4.3.0
+|    |    |    +--- io.micronaut.kotlin:micronaut-kotlin-bom:3.2.2
+|    |    |    +--- io.micronaut.kubernetes:micronaut-kubernetes-bom:3.4.0
+|    |    |    +--- io.micronaut.micrometer:micronaut-micrometer-bom:4.3.0
+|    |    |    +--- io.micronaut.microstream:micronaut-microstream-bom:1.0.0-M1
+|    |    |    +--- io.micronaut.mongodb:micronaut-mongo-bom:4.2.0
+|    |    |    +--- io.micronaut.mqtt:micronaut-mqtt-bom:2.2.0
+|    |    |    +--- io.micronaut.oraclecloud:micronaut-oraclecloud-bom:2.1.4
+|    |    |    +--- io.micronaut.picocli:micronaut-picocli-bom:4.2.1
+|    |    |    +--- io.micronaut.problem:micronaut-problem-json-bom:2.3.1
+|    |    |    +--- io.micronaut.r2dbc:micronaut-r2dbc-bom:3.0.0
+|    |    |    |    \--- org.testcontainers:testcontainers-bom:1.17.1 -> 1.17.2
+|    |    |    +--- io.micronaut.reactor:micronaut-reactor-bom:2.2.2
+|    |    |    |    \--- io.projectreactor:reactor-core:3.4.15 -> 3.4.18 (c)
+|    |    |    +--- io.micronaut.redis:micronaut-redis-bom:5.2.0
+|    |    |    +--- io.micronaut.rxjava2:micronaut-rxjava2-bom:1.2.1
+|    |    |    +--- io.micronaut.rxjava3:micronaut-rxjava3-bom:2.2.1
+|    |    |    +--- io.micronaut.security:micronaut-security-bom:3.6.1
+|    |    |    +--- io.micronaut.serde:micronaut-serde-bom:1.1.0
+|    |    |    +--- io.micronaut.servlet:micronaut-servlet-bom:3.2.3
+|    |    |    +--- io.micronaut.sql:micronaut-sql-bom:4.4.0
+|    |    |    |    \--- org.jdbi:jdbi3-bom:3.20.1
+|    |    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1
+|    |    |    |    +--- org.junit:junit-bom:5.8.2 (*)
+|    |    |    |    \--- org.spockframework:spock-bom:2.1-groovy-3.0
+|    |    |    +--- io.micronaut.tracing:micronaut-tracing-bom:4.1.1
+|    |    |    +--- io.micronaut.views:micronaut-views-bom:3.4.0
+|    |    |    +--- io.netty:netty-bom:4.1.77.Final (*)
+|    |    |    +--- org.testcontainers:testcontainers-bom:1.17.2
+|    |    |    +--- org.graalvm.sdk:graal-sdk:22.1.0.1 (c)
+|    |    |    +--- jakarta.annotation:jakarta.annotation-api:2.0.0 (c)
+|    |    |    +--- javax.annotation:javax.annotation-api:1.3.2 (c)
+|    |    |    +--- com.google.code.findbugs:jsr305:3.0.2 (c)
+|    |    |    +--- ch.qos.logback:logback-classic:1.2.11 (c)
+|    |    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1 (c)
+|    |    |    +--- io.netty:netty-codec-http2:4.1.77.Final (c)
+|    |    |    +--- io.netty:netty-handler-proxy:4.1.77.Final (c)
+|    |    |    +--- org.reactivestreams:reactive-streams:1.0.4 (c)
+|    |    |    +--- io.projectreactor:reactor-core:3.4.18 (c)
+|    |    |    +--- org.slf4j:slf4j-api:1.7.36 (c)
+|    |    |    +--- org.yaml:snakeyaml:1.30 (c)
+|    |    |    +--- javax.validation:validation-api:2.0.1.Final (c)
+|    |    |    +--- io.micronaut:micronaut-aop:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-buffer-netty:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-context:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-core:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-core-reactive:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-http:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-inject:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-inject-java:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-management:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-router:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-runtime:3.5.2 (c)
+|    |    |    +--- io.micronaut:micronaut-jackson-databind:3.5.2 (c)
+|    |    |    +--- io.netty:netty-buffer:4.1.77.Final (c)
+|    |    |    +--- io.netty:netty-handler:4.1.77.Final (c)
+|    |    |    +--- io.netty:netty-codec-http:4.1.77.Final (c)
+|    |    |    +--- io.micronaut:micronaut-jackson-core:3.5.2 (c)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.13.2.2 (c)
+|    |    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.2 (c)
+|    |    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2 (c)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.13.2 (c)
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.13.2 (c)
+|    |    |    \--- io.micronaut:micronaut-json-core:3.5.2 (c)
+|    |    +--- io.micronaut:micronaut-inject:3.4.4 -> 3.5.2 (*)
+|    |    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1
+|    |    |    +--- io.grpc:grpc-netty:1.46.0 (*)
+|    |    |    +--- io.projectreactor:reactor-core:3.4.18 (*)
+|    |    |    +--- io.micronaut:micronaut-buffer-netty:3.4.4 -> 3.5.2
+|    |    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    |    +--- io.micronaut:micronaut-core:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    |    |    \--- io.netty:netty-buffer:4.1.77.Final (*)
+|    |    |    +--- io.micronaut:micronaut-bom:3.4.4 -> 3.5.2 (*)
+|    |    |    +--- io.micronaut:micronaut-inject:3.4.4 -> 3.5.2 (*)
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-annotation:3.3.1
+|    |    |    |    +--- io.micronaut:micronaut-bom:3.4.4 -> 3.5.2 (*)
+|    |    |    |    \--- io.micronaut:micronaut-inject:3.4.4 -> 3.5.2 (*)
+|    |    |    +--- io.micronaut:micronaut-runtime:3.4.4 -> 3.5.2
+|    |    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    |    +--- io.micronaut:micronaut-http:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-aop:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-context:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-core-reactive:3.5.2 (*)
+|    |    |    |    +--- io.micronaut:micronaut-jackson-databind:3.5.2
+|    |    |    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    |    |    +--- io.micronaut:micronaut-jackson-core:3.5.2
+|    |    |    |    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    |    |    |    +--- io.micronaut:micronaut-json-core:3.5.2
+|    |    |    |    |    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    |    |    |    |    +--- io.micronaut:micronaut-context:3.5.2 (*)
+|    |    |    |    |    |    |    \--- io.micronaut:micronaut-http:3.5.2 (*)
+|    |    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.13.2
+|    |    |    |    |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.13.2 (*)
+|    |    |    |    |    |    \--- com.fasterxml.jackson.core:jackson-annotations:2.13.2
+|    |    |    |    |    |         \--- com.fasterxml.jackson:jackson-bom:2.13.2 (*)
+|    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.13.2.2
+|    |    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.13.2 (*)
+|    |    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.13.2 (*)
+|    |    |    |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.13.2 (*)
+|    |    |    |    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.2
+|    |    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.13.2 (*)
+|    |    |    |    |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.13.2 -> 2.13.2.2 (*)
+|    |    |    |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.13.2 (*)
+|    |    |    |    |    \--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2
+|    |    |    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.13.2 (*)
+|    |    |    |    |         +--- com.fasterxml.jackson.core:jackson-core:2.13.2 (*)
+|    |    |    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.13.2 -> 2.13.2.2 (*)
+|    |    |    |    |         \--- com.fasterxml.jackson:jackson-bom:2.13.2 (*)
+|    |    |    |    +--- javax.validation:validation-api:2.0.1.Final
+|    |    |    |    \--- io.projectreactor:reactor-core:3.4.18 (*)
+|    |    |    +--- io.grpc:grpc-protobuf:1.46.0 (*)
+|    |    |    \--- io.grpc:grpc-stub:1.46.0 (*)
+|    |    \--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1
+|    |         +--- io.grpc:grpc-netty:1.46.0 (*)
+|    |         +--- io.micronaut:micronaut-buffer-netty:3.4.4 -> 3.5.2 (*)
+|    |         +--- io.micronaut:micronaut-bom:3.4.4 -> 3.5.2 (*)
+|    |         +--- io.micronaut:micronaut-inject:3.4.4 -> 3.5.2 (*)
+|    |         +--- io.micronaut.grpc:micronaut-grpc-annotation:3.3.1 (*)
+|    |         +--- io.micronaut:micronaut-runtime:3.4.4 -> 3.5.2 (*)
+|    |         +--- io.grpc:grpc-protobuf:1.46.0 (*)
+|    |         \--- io.grpc:grpc-stub:1.46.0 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3 (*)
+|    \--- io.micronaut:micronaut-bom:3.5.2 (*)
++--- project :packages:graalvm
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1
+|    +--- io.micronaut:micronaut-inject -> 3.5.2 (*)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+|    +--- project :packages:base (*)
+|    +--- project :packages:server (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 (*)
+|    +--- com.google.guava:guava:31.1-jre (*)
+|    +--- io.micronaut:micronaut-http:3.5.2 (*)
+|    +--- io.micronaut:micronaut-context:3.5.2 (*)
+|    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 (*)
+|    +--- org.graalvm.sdk:graal-sdk:22.1.0 -> 22.1.0.1
+|    \--- io.micronaut:micronaut-bom:3.5.2 (*)
++--- project :packages:rpc-jvm
+|    +--- io.micronaut:micronaut-inject -> 3.5.2 (*)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+|    +--- project :packages:base (*)
+|    +--- project :packages:server (*)
+|    +--- com.google.protobuf:protobuf-java:3.20.1
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 (*)
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 (*)
+|    +--- io.grpc:grpc-api:1.46.0 (*)
+|    +--- io.grpc:grpc-auth:1.46.0 (*)
+|    +--- io.grpc:grpc-core:1.46.0 (*)
+|    +--- io.grpc:grpc-stub:1.46.0 (*)
+|    +--- io.grpc:grpc-services:1.46.0 (*)
+|    +--- io.grpc:grpc-netty:1.46.0 (*)
+|    +--- io.grpc:grpc-protobuf:1.46.0 (*)
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 (*)
+|    +--- io.micronaut:micronaut-http:3.5.2 (*)
+|    +--- io.micronaut:micronaut-context:3.5.2 (*)
+|    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 (*)
+|    +--- io.micronaut:micronaut-management:3.5.2
+|    |    +--- io.projectreactor:reactor-core:3.4.18 (*)
+|    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    +--- io.micronaut:micronaut-router:3.5.2
+|    |    |    +--- org.slf4j:slf4j-api:1.7.36
+|    |    |    +--- io.micronaut:micronaut-inject:3.5.2 (*)
+|    |    |    \--- io.micronaut:micronaut-http:3.5.2 (*)
+|    |    \--- io.micronaut:micronaut-runtime:3.5.2 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 (*)
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 (*)
+|    \--- io.micronaut:micronaut-bom:3.5.2 (*)
+\--- project :packages:test
+     +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+     +--- project :packages:base (*)
+     +--- org.jetbrains.kotlin:kotlin-test:1.7.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0 (*)
+     +--- org.jetbrains.kotlin:kotlin-test-common:1.7.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+     +--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.7.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 (*)
+     +--- project :packages:server (*)
+     +--- jakarta.inject:jakarta.inject-api:2.0.1
+     +--- com.google.protobuf:protobuf-java:3.20.1
+     +--- com.google.protobuf:protobuf-java-util:3.20.1 (*)
+     +--- com.google.protobuf:protobuf-kotlin:3.20.1 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 (*)
+     +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 (*)
+     +--- io.grpc:grpc-testing:1.46.0
+     |    +--- io.grpc:grpc-core:1.46.0 (*)
+     |    +--- io.grpc:grpc-stub:1.46.0 (*)
+     |    +--- junit:junit:4.12
+     |    |    \--- org.hamcrest:hamcrest-core:1.3
+     |    \--- io.grpc:grpc-context:1.46.0
+     +--- org.jetbrains.kotlin:kotlin-test-junit5:1.7.0
+     |    +--- org.junit.jupiter:junit-jupiter-engine:5.6.0 -> 5.8.2
+     |    |    +--- org.junit:junit-bom:5.8.2 (*)
+     |    |    +--- org.junit.platform:junit-platform-engine:1.8.2
+     |    |    |    +--- org.junit:junit-bom:5.8.2 (*)
+     |    |    |    +--- org.opentest4j:opentest4j:1.2.0
+     |    |    |    \--- org.junit.platform:junit-platform-commons:1.8.2
+     |    |    |         \--- org.junit:junit-bom:5.8.2 (*)
+     |    |    \--- org.junit.jupiter:junit-jupiter-api:5.8.2
+     |    |         +--- org.junit:junit-bom:5.8.2 (*)
+     |    |         +--- org.opentest4j:opentest4j:1.2.0
+     |    |         \--- org.junit.platform:junit-platform-commons:1.8.2 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-test:1.7.0 (*)
+     |    \--- org.junit.jupiter:junit-jupiter-api:5.6.0 -> 5.8.2 (*)
+     +--- org.jsoup:jsoup:1.15.1
+     +--- org.junit.jupiter:junit-jupiter-engine:5.8.2 (*)
+     \--- ch.qos.logback:logback-classic:1.2.11
+          +--- ch.qos.logback:logback-core:1.2.11
+          \--- org.slf4j:slf4j-api:1.7.32 -> 1.7.36
+
+allCodeCoverageReportSourceDirectories - Supplies the source directories used to produce all aggregated JaCoCo coverage data reports
++--- project :packages:base
++--- project :packages:server
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|    +--- io.grpc:grpc-bom:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    |    \--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.netty:netty-bom:4.1.72.Final -> 4.1.77.Final
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.347 FAILED
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3 FAILED
+|    \--- io.micronaut:micronaut-bom:3.5.2
+|         +--- org.codehaus.groovy:groovy-bom:3.0.10
+|         +--- com.fasterxml.jackson:jackson-bom:2.13.2
+|         +--- org.junit:junit-bom:5.7.2 -> 5.8.2
+|         +--- org.jetbrains.kotlin:kotlin-bom:1.6.21
+|         |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 FAILED
+|         +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.5.1
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1 -> 1.6.3 FAILED
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1 -> 1.6.3 FAILED
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.5.1 -> 1.6.3 FAILED
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1 -> 1.6.3 FAILED
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.5.1 -> 1.6.3 FAILED
+|         |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.5.1 -> 1.6.3 FAILED
+|         |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.5.1 -> 1.6.3 FAILED
+|         +--- io.ktor:ktor-bom:1.6.8
+|         +--- io.micrometer:micrometer-bom:1.9.0
+|         +--- io.micronaut.aws:micronaut-aws-bom:3.5.0
+|         |    +--- com.amazonaws:aws-java-sdk-bom:1.12.223
+|         |    \--- software.amazon.awssdk:bom:2.17.194
+|         +--- io.micronaut.azure:micronaut-azure-bom:3.2.3
+|         |    \--- com.azure:azure-sdk-bom:1.1.1
+|         +--- io.micronaut.cache:micronaut-cache-bom:3.4.1
+|         +--- io.micronaut.coherence:micronaut-coherence-bom:3.4.1
+|         +--- io.micronaut.data:micronaut-data-bom:3.4.2
+|         +--- io.micronaut.email:micronaut-email-bom:1.2.3
+|         +--- io.micronaut.flyway:micronaut-flyway-bom:5.3.0
+|         +--- io.micronaut.gcp:micronaut-gcp-bom:4.2.0
+|         +--- io.micronaut.groovy:micronaut-groovy-bom:3.1.0
+|         |    \--- org.codehaus.groovy:groovy-bom:3.0.10
+|         +--- io.micronaut.grpc:micronaut-grpc-bom:3.3.1
+|         |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|         |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|         |    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|         |    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|         |    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|         |    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|         |    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|         |    \--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|         +--- io.micronaut.jaxrs:micronaut-jaxrs-bom:3.3.0
+|         +--- io.micronaut.kafka:micronaut-kafka-bom:4.3.0
+|         +--- io.micronaut.kotlin:micronaut-kotlin-bom:3.2.2
+|         +--- io.micronaut.kubernetes:micronaut-kubernetes-bom:3.4.0
+|         +--- io.micronaut.micrometer:micronaut-micrometer-bom:4.3.0
+|         +--- io.micronaut.microstream:micronaut-microstream-bom:1.0.0-M1
+|         +--- io.micronaut.mongodb:micronaut-mongo-bom:4.2.0
+|         +--- io.micronaut.mqtt:micronaut-mqtt-bom:2.2.0
+|         +--- io.micronaut.oraclecloud:micronaut-oraclecloud-bom:2.1.4
+|         +--- io.micronaut.picocli:micronaut-picocli-bom:4.2.1
+|         +--- io.micronaut.problem:micronaut-problem-json-bom:2.3.1
+|         +--- io.micronaut.r2dbc:micronaut-r2dbc-bom:3.0.0
+|         |    \--- org.testcontainers:testcontainers-bom:1.17.1 -> 1.17.2
+|         +--- io.micronaut.reactor:micronaut-reactor-bom:2.2.2
+|         +--- io.micronaut.redis:micronaut-redis-bom:5.2.0
+|         +--- io.micronaut.rxjava2:micronaut-rxjava2-bom:1.2.1
+|         +--- io.micronaut.rxjava3:micronaut-rxjava3-bom:2.2.1
+|         +--- io.micronaut.security:micronaut-security-bom:3.6.1
+|         +--- io.micronaut.serde:micronaut-serde-bom:1.1.0
+|         +--- io.micronaut.servlet:micronaut-servlet-bom:3.2.3
+|         +--- io.micronaut.sql:micronaut-sql-bom:4.4.0
+|         |    \--- org.jdbi:jdbi3-bom:3.20.1
+|         +--- io.micronaut.test:micronaut-test-bom:3.3.1
+|         |    +--- org.junit:junit-bom:5.8.2
+|         |    \--- org.spockframework:spock-bom:2.1-groovy-3.0
+|         +--- io.micronaut.tracing:micronaut-tracing-bom:4.1.1
+|         +--- io.micronaut.views:micronaut-views-bom:3.4.0
+|         +--- io.netty:netty-bom:4.1.77.Final
+|         +--- org.testcontainers:testcontainers-bom:1.17.2
+|         +--- org.graalvm.sdk:graal-sdk:22.1.0.1 -> 22.1.0 FAILED
+|         +--- io.micronaut.test:micronaut-test-bom:3.3.1 (c)
+|         +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|         +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|         +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|         +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|         +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|         \--- io.micronaut:micronaut-management:3.5.2 FAILED
++--- project :packages:graalvm
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- project :packages:server (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- org.graalvm.sdk:graal-sdk:22.1.0 FAILED
+|    \--- io.micronaut:micronaut-bom:3.5.2 (*)
++--- project :packages:rpc-jvm
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- project :packages:server (*)
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-management:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    \--- io.micronaut:micronaut-bom:3.5.2 (*)
+\--- project :packages:test
+
+antJUnit
+\--- org.apache.ant:ant-junit:1.10.12
+     +--- org.apache.ant:ant:1.10.12
+     |    \--- org.apache.ant:ant-launcher:1.10.12
+     \--- junit:junit:4.13.1
+          \--- org.hamcrest:hamcrest-core:1.3
+
+jacocoAgent - The Jacoco agent to use to get coverage data.
+\--- org.jacoco:org.jacoco.agent:0.8.7
+
+jacocoAggregation - Collects project dependencies for purposes of JaCoCo coverage report aggregation (n)
++--- project base (n)
++--- project server (n)
++--- project graalvm (n)
++--- project rpc-jvm (n)
+\--- project test (n)
+
+jacocoAnt - The Jacoco ant tasks to use to get execute Gradle tasks.
+\--- org.jacoco:org.jacoco.ant:0.8.7
+     +--- org.jacoco:org.jacoco.core:0.8.7
+     |    +--- org.ow2.asm:asm:9.1
+     |    +--- org.ow2.asm:asm-commons:9.1
+     |    |    +--- org.ow2.asm:asm:9.1
+     |    |    +--- org.ow2.asm:asm-tree:9.1
+     |    |    |    \--- org.ow2.asm:asm:9.1
+     |    |    \--- org.ow2.asm:asm-analysis:9.1
+     |    |         \--- org.ow2.asm:asm-tree:9.1 (*)
+     |    \--- org.ow2.asm:asm-tree:9.1 (*)
+     +--- org.jacoco:org.jacoco.report:0.8.7
+     |    \--- org.jacoco:org.jacoco.core:0.8.7 (*)
+     \--- org.jacoco:org.jacoco.agent:0.8.7
+
+testAggregateTestReportResults - Supplies test result data to the testAggregateTestReport.  External library dependencies may appear as resolution failures, but this is expected behavior.
++--- project :packages:base
++--- project :packages:server
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|    +--- io.grpc:grpc-bom:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    |    \--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.netty:netty-bom:4.1.72.Final -> 4.1.77.Final
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.347 FAILED
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2
+|    |    +--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    +--- com.fasterxml.jackson:jackson-bom:2.13.2
+|    |    +--- org.junit:junit-bom:5.7.2 -> 5.8.2
+|    |    |    +--- org.junit.jupiter:junit-jupiter:5.8.2 -> 5.7.2 FAILED
+|    |    |    +--- org.junit.jupiter:junit-jupiter-api:5.8.2 -> 5.6.0 FAILED
+|    |    |    \--- org.junit.jupiter:junit-jupiter-engine:5.8.2 FAILED
+|    |    +--- org.jetbrains.kotlin:kotlin-bom:1.6.21
+|    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 FAILED
+|    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 FAILED
+|    |    |    +--- org.jetbrains.kotlin:kotlin-test:1.6.21 -> 1.7.0 (c)
+|    |    |    \--- org.jetbrains.kotlin:kotlin-test-junit5:1.6.21 -> 1.7.0 (c)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.5.1
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.5.1 -> 1.6.3 FAILED
+|    |    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.5.1 -> 1.6.3 FAILED
+|    |    +--- io.ktor:ktor-bom:1.6.8
+|    |    +--- io.micrometer:micrometer-bom:1.9.0
+|    |    +--- io.micronaut.aws:micronaut-aws-bom:3.5.0
+|    |    |    +--- com.amazonaws:aws-java-sdk-bom:1.12.223
+|    |    |    \--- software.amazon.awssdk:bom:2.17.194
+|    |    +--- io.micronaut.azure:micronaut-azure-bom:3.2.3
+|    |    |    \--- com.azure:azure-sdk-bom:1.1.1
+|    |    +--- io.micronaut.cache:micronaut-cache-bom:3.4.1
+|    |    +--- io.micronaut.coherence:micronaut-coherence-bom:3.4.1
+|    |    +--- io.micronaut.data:micronaut-data-bom:3.4.2
+|    |    +--- io.micronaut.email:micronaut-email-bom:1.2.3
+|    |    +--- io.micronaut.flyway:micronaut-flyway-bom:5.3.0
+|    |    +--- io.micronaut.gcp:micronaut-gcp-bom:4.2.0
+|    |    +--- io.micronaut.groovy:micronaut-groovy-bom:3.1.0
+|    |    |    \--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    +--- io.micronaut.grpc:micronaut-grpc-bom:3.3.1
+|    |    |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    |    |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    |    |    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    |    |    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    |    |    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    |    |    \--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    |    +--- io.micronaut.jaxrs:micronaut-jaxrs-bom:3.3.0
+|    |    +--- io.micronaut.kafka:micronaut-kafka-bom:4.3.0
+|    |    +--- io.micronaut.kotlin:micronaut-kotlin-bom:3.2.2
+|    |    +--- io.micronaut.kubernetes:micronaut-kubernetes-bom:3.4.0
+|    |    +--- io.micronaut.micrometer:micronaut-micrometer-bom:4.3.0
+|    |    +--- io.micronaut.microstream:micronaut-microstream-bom:1.0.0-M1
+|    |    +--- io.micronaut.mongodb:micronaut-mongo-bom:4.2.0
+|    |    +--- io.micronaut.mqtt:micronaut-mqtt-bom:2.2.0
+|    |    +--- io.micronaut.oraclecloud:micronaut-oraclecloud-bom:2.1.4
+|    |    +--- io.micronaut.picocli:micronaut-picocli-bom:4.2.1
+|    |    +--- io.micronaut.problem:micronaut-problem-json-bom:2.3.1
+|    |    +--- io.micronaut.r2dbc:micronaut-r2dbc-bom:3.0.0
+|    |    |    \--- org.testcontainers:testcontainers-bom:1.17.1 -> 1.17.2
+|    |    +--- io.micronaut.reactor:micronaut-reactor-bom:2.2.2
+|    |    +--- io.micronaut.redis:micronaut-redis-bom:5.2.0
+|    |    +--- io.micronaut.rxjava2:micronaut-rxjava2-bom:1.2.1
+|    |    +--- io.micronaut.rxjava3:micronaut-rxjava3-bom:2.2.1
+|    |    +--- io.micronaut.security:micronaut-security-bom:3.6.1
+|    |    +--- io.micronaut.serde:micronaut-serde-bom:1.1.0
+|    |    +--- io.micronaut.servlet:micronaut-servlet-bom:3.2.3
+|    |    +--- io.micronaut.sql:micronaut-sql-bom:4.4.0
+|    |    |    \--- org.jdbi:jdbi3-bom:3.20.1
+|    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1
+|    |    |    +--- org.junit:junit-bom:5.8.2 (*)
+|    |    |    +--- org.spockframework:spock-bom:2.1-groovy-3.0
+|    |    |    \--- io.micronaut.test:micronaut-test-junit5:3.3.1 -> 3.4.0 FAILED
+|    |    +--- io.micronaut.tracing:micronaut-tracing-bom:4.1.1
+|    |    +--- io.micronaut.views:micronaut-views-bom:3.4.0
+|    |    +--- io.netty:netty-bom:4.1.77.Final
+|    |    +--- org.testcontainers:testcontainers-bom:1.17.2
+|    |    +--- org.graalvm.sdk:graal-sdk:22.1.0.1 -> 22.1.0 FAILED
+|    |    +--- ch.qos.logback:logback-classic:1.2.11 FAILED
+|    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1 (c)
+|    |    +--- io.micronaut.test:micronaut-test-junit5:3.3.1 -> 3.4.0 FAILED
+|    |    +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|    |    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    |    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    |    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    |    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    |    \--- io.micronaut:micronaut-management:3.5.2 FAILED
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test
+|    \--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
++--- project :packages:graalvm
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- project :packages:server (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- org.graalvm.sdk:graal-sdk:22.1.0 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2 (*)
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test
+|    \--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
++--- project :packages:rpc-jvm
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base
+|    +--- project :packages:server (*)
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-management:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2 (*)
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test
+|    +--- org.jetbrains.kotlin:kotlin-test-junit5:1.7.0
+|    |    +--- org.junit.jupiter:junit-jupiter-engine:5.6.0 FAILED
+|    |    +--- org.jetbrains.kotlin:kotlin-test:1.7.0
+|    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0 FAILED
+|    |    \--- org.junit.jupiter:junit-jupiter-api:5.6.0 FAILED
+|    +--- io.micronaut.test:micronaut-test-junit5:3.4.0 FAILED
+|    +--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
+|    +--- org.junit.jupiter:junit-jupiter-engine:5.8.2 FAILED
+|    \--- ch.qos.logback:logback-classic:1.2.11 FAILED
+\--- project :packages:test
+
+testCodeCoverageReportExecutionData - Supplies JaCoCo coverage data to the testCodeCoverageReport.  External library dependencies may appear as resolution failures, but this is expected behavior.
++--- project :packages:base FAILED
++--- project :packages:server
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|    +--- io.grpc:grpc-bom:1.46.0
+|    |    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    |    \--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.netty:netty-bom:4.1.72.Final -> 4.1.77.Final
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.347 FAILED
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.3 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2
+|    |    +--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    +--- com.fasterxml.jackson:jackson-bom:2.13.2
+|    |    +--- org.junit:junit-bom:5.7.2 -> 5.8.2
+|    |    |    +--- org.junit.jupiter:junit-jupiter:5.8.2 -> 5.7.2 FAILED
+|    |    |    +--- org.junit.jupiter:junit-jupiter-api:5.8.2 -> 5.6.0 FAILED
+|    |    |    \--- org.junit.jupiter:junit-jupiter-engine:5.8.2 FAILED
+|    |    +--- org.jetbrains.kotlin:kotlin-bom:1.6.21
+|    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.6.21 -> 1.7.0 FAILED
+|    |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21 -> 1.7.0 FAILED
+|    |    |    +--- org.jetbrains.kotlin:kotlin-test:1.6.21 -> 1.7.0 (c)
+|    |    |    \--- org.jetbrains.kotlin:kotlin-test-junit5:1.6.21 -> 1.7.0 (c)
+|    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.5.1
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.5.1 -> 1.6.3 FAILED
+|    |    |    +--- org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.5.1 -> 1.6.3 FAILED
+|    |    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.5.1 -> 1.6.3 FAILED
+|    |    +--- io.ktor:ktor-bom:1.6.8
+|    |    +--- io.micrometer:micrometer-bom:1.9.0
+|    |    +--- io.micronaut.aws:micronaut-aws-bom:3.5.0
+|    |    |    +--- com.amazonaws:aws-java-sdk-bom:1.12.223
+|    |    |    \--- software.amazon.awssdk:bom:2.17.194
+|    |    +--- io.micronaut.azure:micronaut-azure-bom:3.2.3
+|    |    |    \--- com.azure:azure-sdk-bom:1.1.1
+|    |    +--- io.micronaut.cache:micronaut-cache-bom:3.4.1
+|    |    +--- io.micronaut.coherence:micronaut-coherence-bom:3.4.1
+|    |    +--- io.micronaut.data:micronaut-data-bom:3.4.2
+|    |    +--- io.micronaut.email:micronaut-email-bom:1.2.3
+|    |    +--- io.micronaut.flyway:micronaut-flyway-bom:5.3.0
+|    |    +--- io.micronaut.gcp:micronaut-gcp-bom:4.2.0
+|    |    +--- io.micronaut.groovy:micronaut-groovy-bom:3.1.0
+|    |    |    \--- org.codehaus.groovy:groovy-bom:3.0.10
+|    |    +--- io.micronaut.grpc:micronaut-grpc-bom:3.3.1
+|    |    |    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    |    |    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    |    |    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    |    |    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    |    |    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    |    |    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    |    |    \--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    |    +--- io.micronaut.jaxrs:micronaut-jaxrs-bom:3.3.0
+|    |    +--- io.micronaut.kafka:micronaut-kafka-bom:4.3.0
+|    |    +--- io.micronaut.kotlin:micronaut-kotlin-bom:3.2.2
+|    |    +--- io.micronaut.kubernetes:micronaut-kubernetes-bom:3.4.0
+|    |    +--- io.micronaut.micrometer:micronaut-micrometer-bom:4.3.0
+|    |    +--- io.micronaut.microstream:micronaut-microstream-bom:1.0.0-M1
+|    |    +--- io.micronaut.mongodb:micronaut-mongo-bom:4.2.0
+|    |    +--- io.micronaut.mqtt:micronaut-mqtt-bom:2.2.0
+|    |    +--- io.micronaut.oraclecloud:micronaut-oraclecloud-bom:2.1.4
+|    |    +--- io.micronaut.picocli:micronaut-picocli-bom:4.2.1
+|    |    +--- io.micronaut.problem:micronaut-problem-json-bom:2.3.1
+|    |    +--- io.micronaut.r2dbc:micronaut-r2dbc-bom:3.0.0
+|    |    |    \--- org.testcontainers:testcontainers-bom:1.17.1 -> 1.17.2
+|    |    +--- io.micronaut.reactor:micronaut-reactor-bom:2.2.2
+|    |    +--- io.micronaut.redis:micronaut-redis-bom:5.2.0
+|    |    +--- io.micronaut.rxjava2:micronaut-rxjava2-bom:1.2.1
+|    |    +--- io.micronaut.rxjava3:micronaut-rxjava3-bom:2.2.1
+|    |    +--- io.micronaut.security:micronaut-security-bom:3.6.1
+|    |    +--- io.micronaut.serde:micronaut-serde-bom:1.1.0
+|    |    +--- io.micronaut.servlet:micronaut-servlet-bom:3.2.3
+|    |    +--- io.micronaut.sql:micronaut-sql-bom:4.4.0
+|    |    |    \--- org.jdbi:jdbi3-bom:3.20.1
+|    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1
+|    |    |    +--- org.junit:junit-bom:5.8.2 (*)
+|    |    |    +--- org.spockframework:spock-bom:2.1-groovy-3.0
+|    |    |    \--- io.micronaut.test:micronaut-test-junit5:3.3.1 -> 3.4.0 FAILED
+|    |    +--- io.micronaut.tracing:micronaut-tracing-bom:4.1.1
+|    |    +--- io.micronaut.views:micronaut-views-bom:3.4.0
+|    |    +--- io.netty:netty-bom:4.1.77.Final
+|    |    +--- org.testcontainers:testcontainers-bom:1.17.2
+|    |    +--- org.graalvm.sdk:graal-sdk:22.1.0.1 -> 22.1.0 FAILED
+|    |    +--- ch.qos.logback:logback-classic:1.2.11 FAILED
+|    |    +--- io.micronaut.test:micronaut-test-bom:3.3.1 (c)
+|    |    +--- io.micronaut.test:micronaut-test-junit5:3.3.1 -> 3.4.0 FAILED
+|    |    +--- org.slf4j:slf4j-api:1.7.36 FAILED
+|    |    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    |    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    |    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    |    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    |    \--- io.micronaut:micronaut-management:3.5.2 FAILED
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test FAILED
+|    \--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
++--- project :packages:graalvm
+|    +--- jakarta.inject:jakarta.inject-api:2.0.1 FAILED
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base FAILED
+|    +--- project :packages:server (*)
+|    +--- org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- com.google.guava:guava:31.1-jre FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- org.graalvm.sdk:graal-sdk:22.1.0 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2 (*)
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test FAILED
+|    \--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
++--- project :packages:rpc-jvm
+|    +--- io.micronaut:micronaut-inject FAILED
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0 FAILED
+|    +--- project :packages:base FAILED
+|    +--- project :packages:server (*)
+|    +--- com.google.protobuf:protobuf-java:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-java-util:3.20.1 FAILED
+|    +--- com.google.protobuf:protobuf-kotlin:3.20.1 FAILED
+|    +--- io.grpc:grpc-api:1.46.0 FAILED
+|    +--- io.grpc:grpc-auth:1.46.0 FAILED
+|    +--- io.grpc:grpc-core:1.46.0 FAILED
+|    +--- io.grpc:grpc-stub:1.46.0 FAILED
+|    +--- io.grpc:grpc-services:1.46.0 FAILED
+|    +--- io.grpc:grpc-netty:1.46.0 FAILED
+|    +--- io.grpc:grpc-protobuf:1.46.0 FAILED
+|    +--- io.grpc:grpc-kotlin-stub:1.3.0 FAILED
+|    +--- io.micronaut:micronaut-http:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-context:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-inject:3.5.2 ->  FAILED
+|    +--- io.micronaut:micronaut-inject-java:3.5.2 FAILED
+|    +--- io.micronaut:micronaut-management:3.5.2 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-client-runtime:3.3.1 FAILED
+|    +--- io.micronaut.grpc:micronaut-grpc-server-runtime:3.3.1 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.3.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.3 FAILED
+|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.6.3 FAILED
+|    +--- io.micronaut:micronaut-bom:3.5.2 (*)
+|    +--- org.junit.jupiter:junit-jupiter:5.7.2 FAILED
+|    +--- project :packages:test FAILED
+|    +--- org.jetbrains.kotlin:kotlin-test-junit5:1.7.0
+|    |    +--- org.junit.jupiter:junit-jupiter-engine:5.6.0 FAILED
+|    |    +--- org.jetbrains.kotlin:kotlin-test:1.7.0
+|    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.7.0 FAILED
+|    |    \--- org.junit.jupiter:junit-jupiter-api:5.6.0 FAILED
+|    +--- io.micronaut.test:micronaut-test-junit5:3.4.0 FAILED
+|    +--- org.graalvm.buildtools:junit-platform-native:0.9.11 FAILED
+|    +--- org.junit.jupiter:junit-jupiter-engine:5.8.2 FAILED
+|    \--- ch.qos.logback:logback-classic:1.2.11 FAILED
+\--- project :packages:test FAILED
+
+testReportAggregation - A configuration to collect test execution results (n)
++--- project base (n)
++--- project server (n)
++--- project graalvm (n)
++--- project rpc-jvm (n)
+\--- project test (n)
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.

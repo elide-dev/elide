@@ -11,13 +11,13 @@ import java.time.Duration
  */
 <span class="fc" id="L12">@ConfigurationProperties(&quot;elide.grpc.web&quot;)</span>
 <span class="fc" id="L13">data class GrpcWebConfig(</span>
-<span class="pc" id="L14">  var enabled: Boolean = false,</span>
-<span class="pc" id="L15">  var endpoint: String = defaultEndpoint,</span>
-<span class="pc" id="L16">  var timeout: Duration = Duration.ofSeconds(30),</span>
+<span class="fc" id="L14">  var enabled: Boolean = false,</span>
+<span class="fc" id="L15">  var endpoint: String = defaultEndpoint,</span>
+<span class="fc" id="L16">  var timeout: Duration = Duration.ofSeconds(30),</span>
 ) {
   companion object {
     const val defaultEndpoint: String = &quot;/_/rpc&quot;
-<span class="pc" id="L20">    val DEFAULTS: GrpcWebConfig = GrpcWebConfig()</span>
+<span class="fc" id="L20">    val DEFAULTS: GrpcWebConfig = GrpcWebConfig()</span>
   }
 <span class="fc" id="L22">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

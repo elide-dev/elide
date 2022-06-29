@@ -6,7 +6,7 @@
 
 | Name | Summary |
 |---|---|
-| [ConsoleCallable](index.md#1317001511%2FClasslikes%2F-431612152) | [js]<br>typealias [ConsoleCallable](index.md#1317001511%2FClasslikes%2F-431612152) = ([Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Typealias for a console callable function like `console.log` or `console.warn`. |
+| [ConsoleCallable](index.md#1317001511%2FClasslikes%2F-431612152) | [js]<br>typealias [ConsoleCallable](index.md#1317001511%2FClasslikes%2F-431612152) = ([Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?&gt;) -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>Type alias for a console callable function like `console.log` or `console.warn`. |
 | [Logger](-logger/index.md) | [js]<br>data class [Logger](-logger/index.md)(val name: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [Logger](../elide.runtime/-logger/index.md)<br>Specifies a lightweight [elide.runtime.Logger](../elide.runtime/-logger/index.md) implementation for use in JavaScript. |
 
 ## Functions

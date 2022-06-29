@@ -64,28 +64,28 @@ object MetadataUtil {
 <span class="fc" id="L64">    val all = trailers.keys()</span>
 <span class="fc" id="L65">    all.forEach { name -&gt;</span>
       // determine whether we're dealing with a binary trailer
-<span class="nc bnc" id="L67" title="All 2 branches missed.">      val (metadataKey, rawValues) = if (name.endsWith(BINARY_HEADER_SUFFIX)) {</span>
-<span class="nc" id="L68">        val k = Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER)</span>
-<span class="nc" id="L69">        val values = trailers.getAll(k)</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      val (metadataKey, rawValues) = if (name.endsWith(BINARY_HEADER_SUFFIX)) {</span>
+<span class="fc" id="L68">        val k = Metadata.Key.of(name, Metadata.BINARY_BYTE_MARSHALLER)</span>
+<span class="fc" id="L69">        val values = trailers.getAll(k)</span>
 
-<span class="nc bnc" id="L71" title="All 4 branches missed.">        k to (values?.toList() ?: emptyList())</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">        k to (values?.toList() ?: emptyList())</span>
       } else {
-<span class="nc" id="L73">        val k = Metadata.Key.of(</span>
-<span class="nc" id="L74">          name,</span>
-<span class="nc" id="L75">          Metadata.ASCII_STRING_MARSHALLER</span>
+<span class="fc" id="L73">        val k = Metadata.Key.of(</span>
+<span class="fc" id="L74">          name,</span>
+<span class="fc" id="L75">          Metadata.ASCII_STRING_MARSHALLER</span>
         )
-<span class="nc" id="L77">        val values = trailers.getAll(k)</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        k to (values?.map { it.toByteArray(StandardCharsets.UTF_8) } ?: emptyList())</span>
+<span class="fc" id="L77">        val values = trailers.getAll(k)</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        k to (values?.map { it.toByteArray(StandardCharsets.UTF_8) } ?: emptyList())</span>
       }
 
-<span class="nc" id="L81">      rawValues.forEach { rawValue -&gt;</span>
-<span class="nc" id="L82">        packTrailer(</span>
-<span class="nc" id="L83">          stream,</span>
-<span class="nc" id="L84">          metadataKey.name(),</span>
-<span class="nc" id="L85">          rawValue</span>
+<span class="fc" id="L81">      rawValues.forEach { rawValue -&gt;</span>
+<span class="fc" id="L82">        packTrailer(</span>
+<span class="fc" id="L83">          stream,</span>
+<span class="fc" id="L84">          metadataKey.name(),</span>
+<span class="fc" id="L85">          rawValue</span>
         )
-<span class="nc" id="L87">      }</span>
-<span class="nc" id="L88">    }</span>
+<span class="fc" id="L87">      }</span>
+<span class="fc" id="L88">    }</span>
 <span class="fc" id="L89">  }</span>
 
   /**
@@ -99,34 +99,34 @@ object MetadataUtil {
 <span class="fc" id="L99">    val metadata = Metadata()</span>
 <span class="fc" id="L100">    headers.filter {</span>
       (
-<span class="pc bpc" id="L102" title="2 of 4 branches missed.">        INCLUDED.contains(it.key) ||</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        INCLUDED.contains(it.key) ||</span>
           (
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &amp;&amp;</span>
-<span class="pc bnc" id="L105" title="All 2 branches missed.">            !EXCLUDED.contains(it.key)</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &amp;&amp;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            !EXCLUDED.contains(it.key)</span>
           )
       )
 <span class="fc" id="L108">    }.forEach { entry -&gt;</span>
-<span class="nc" id="L109">      val (key, values) = entry</span>
-<span class="nc" id="L110">      values.forEach { value -&gt;</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (key.endsWith(BINARY_HEADER_SUFFIX)) {</span>
-<span class="nc" id="L112">          metadata.put(</span>
-<span class="nc" id="L113">            Metadata.Key.of(</span>
-<span class="nc" id="L114">              key,</span>
-<span class="nc" id="L115">              Metadata.BINARY_BYTE_MARSHALLER</span>
+<span class="fc" id="L109">      val (key, values) = entry</span>
+<span class="fc" id="L110">      values.forEach { value -&gt;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (key.endsWith(BINARY_HEADER_SUFFIX)) {</span>
+<span class="fc" id="L112">          metadata.put(</span>
+<span class="fc" id="L113">            Metadata.Key.of(</span>
+<span class="fc" id="L114">              key,</span>
+<span class="fc" id="L115">              Metadata.BINARY_BYTE_MARSHALLER</span>
             ),
-<span class="nc" id="L117">            value.toByteArray(StandardCharsets.UTF_8)</span>
+<span class="fc" id="L117">            value.toByteArray(StandardCharsets.UTF_8)</span>
           )
         } else {
-<span class="nc" id="L120">          metadata.put(</span>
-<span class="nc" id="L121">            Metadata.Key.of(</span>
-<span class="nc" id="L122">              key,</span>
-<span class="nc" id="L123">              Metadata.ASCII_STRING_MARSHALLER</span>
+<span class="fc" id="L120">          metadata.put(</span>
+<span class="fc" id="L121">            Metadata.Key.of(</span>
+<span class="fc" id="L122">              key,</span>
+<span class="fc" id="L123">              Metadata.ASCII_STRING_MARSHALLER</span>
             ),
-<span class="nc" id="L125">            value</span>
+<span class="fc" id="L125">            value</span>
           )
         }
-<span class="nc" id="L128">      }</span>
-<span class="nc" id="L129">    }</span>
+<span class="fc" id="L128">      }</span>
+<span class="fc" id="L129">    }</span>
 <span class="fc" id="L130">    return metadata</span>
   }
 
@@ -139,29 +139,29 @@ object MetadataUtil {
    */
   @JvmStatic fun fillHeadersFromMetadata(metadata: Metadata, target: MutableHeaders) {
 <span class="fc" id="L141">    metadata.keys().forEach { key -&gt;</span>
-<span class="pc bpc" id="L142" title="2 of 4 branches missed.">      if (!INCLUDED.contains(key) &amp;&amp; EXCLUDED.contains(key)) {</span>
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">      if (!INCLUDED.contains(key) &amp;&amp; EXCLUDED.contains(key)) {</span>
 <span class="fc" id="L143">        return@forEach  // skip excluded headers</span>
       } else {
-<span class="nc" id="L145">        val isBinaryHeader = key.endsWith(BINARY_HEADER_SUFFIX)</span>
-<span class="nc bnc" id="L146" title="All 2 branches missed.">        metadata.getAll(if (isBinaryHeader) {</span>
-<span class="nc" id="L147">          Metadata.Key.of(</span>
-<span class="nc" id="L148">            key,</span>
-<span class="nc" id="L149">            Metadata.BINARY_BYTE_MARSHALLER</span>
+<span class="fc" id="L145">        val isBinaryHeader = key.endsWith(BINARY_HEADER_SUFFIX)</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        metadata.getAll(if (isBinaryHeader) {</span>
+<span class="fc" id="L147">          Metadata.Key.of(</span>
+<span class="fc" id="L148">            key,</span>
+<span class="fc" id="L149">            Metadata.BINARY_BYTE_MARSHALLER</span>
           )
         } else {
-<span class="nc" id="L152">          Metadata.Key.of(</span>
-<span class="nc" id="L153">            key,</span>
-<span class="nc" id="L154">            Metadata.ASCII_STRING_MARSHALLER</span>
+<span class="fc" id="L152">          Metadata.Key.of(</span>
+<span class="fc" id="L153">            key,</span>
+<span class="fc" id="L154">            Metadata.ASCII_STRING_MARSHALLER</span>
           )
-<span class="nc" id="L156">        })!!.forEach {  value -&gt;</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">          if (value is String) {</span>
-<span class="nc" id="L158">            target[key] = value</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">          } else if (value is ByteArray) {</span>
-<span class="nc" id="L160">            target[key] = String(value)</span>
+<span class="fc" id="L156">        })!!.forEach {  value -&gt;</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">          if (value is String) {</span>
+<span class="fc" id="L158">            target[key] = value</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">          } else if (value is ByteArray) {</span>
+<span class="fc" id="L160">            target[key] = String(value)</span>
           }
-<span class="nc" id="L162">        }</span>
+<span class="fc" id="L162">        }</span>
       }
-<span class="nc" id="L164">    }</span>
+<span class="fc" id="L164">    }</span>
 <span class="fc" id="L165">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

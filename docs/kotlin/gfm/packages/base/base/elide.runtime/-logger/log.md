@@ -6,8 +6,11 @@
 [common]\
 expect abstract fun [log](log.md)(level: [LogLevel](../-log-level/index.md), message: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;, levelChecked: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false)
 
-[js, jvm, native]\
-actual abstract fun [log](log.md)(level: [LogLevel](../-log-level/index.md), message: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;, levelChecked: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html))
+[js, native]\
+actual abstract fun [log](log.md)(level: [LogLevel](../../../../../packages/base/base/elide.runtime/-log-level/index.md), message: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;, levelChecked: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html))
+
+[jvm]\
+actual abstract fun [log](log.md)(level: [LogLevel](../-log-level/index.md#456488815%2FExtensions%2F-272498224), message: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;, levelChecked: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html))
 
 Log one or more arbitrary [message](log.md)s to the console or log, depending on the current platform.
 

@@ -29,7 +29,7 @@ import java.security.Principal
 <span class="fc" id="L29">  val service: ServerServiceDefinition,</span>
 <span class="fc" id="L30">  val method: ServerMethodDefinition&lt;*, *&gt;,</span>
 <span class="fc" id="L31">  val channel: ManagedChannel,</span>
-<span class="pc" id="L32">  val principal: Principal?,</span>
+<span class="fc" id="L32">  val principal: Principal?,</span>
 <span class="fc" id="L33">  val httpRequest: HttpRequest&lt;RawRpcPayload&gt;,</span>
 <span class="fc" id="L34">  val httpResponse: MutableHttpResponse&lt;RawRpcPayload&gt; = HttpResponse.ok(),</span>
 ) {
@@ -42,21 +42,21 @@ import java.security.Principal
    * @param config gRPC Web configuration which is active for the lifecycle of this call.
    * @param httpRequest Original HTTP request which produced this gRPC Web call.
    */
-<span class="nc" id="L45">  internal class Text(</span>
+<span class="fc" id="L45">  internal class Text(</span>
     config: GrpcWebConfig,
     service: ServerServiceDefinition,
     method: ServerMethodDefinition&lt;*, *&gt;,
     channel: ManagedChannel,
     httpRequest: HttpRequest&lt;RawRpcPayload&gt;,
     principal: Principal?,
-<span class="nc" id="L52">  ): GrpcWebCall(</span>
-<span class="nc" id="L53">    contentType = GrpcWebContentType.TEXT,</span>
-<span class="nc" id="L54">    config = config,</span>
-<span class="nc" id="L55">    service = service,</span>
-<span class="nc" id="L56">    method = method,</span>
-<span class="nc" id="L57">    channel = channel,</span>
-<span class="nc" id="L58">    httpRequest = httpRequest,</span>
-<span class="nc" id="L59">    principal = principal,</span>
+<span class="fc" id="L52">  ): GrpcWebCall(</span>
+<span class="fc" id="L53">    contentType = GrpcWebContentType.TEXT,</span>
+<span class="fc" id="L54">    config = config,</span>
+<span class="fc" id="L55">    service = service,</span>
+<span class="fc" id="L56">    method = method,</span>
+<span class="fc" id="L57">    channel = channel,</span>
+<span class="fc" id="L58">    httpRequest = httpRequest,</span>
+<span class="fc" id="L59">    principal = principal,</span>
   )
 
   /**
@@ -102,7 +102,7 @@ import java.security.Principal
       channel: ManagedChannel,
       request: HttpRequest&lt;RawRpcPayload&gt;,
       principal: Principal?,
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">    ): GrpcWebCall = when (this) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    ): GrpcWebCall = when (this) {</span>
       // return a binary call
 <span class="fc" id="L107">      GrpcWebContentType.BINARY -&gt; Binary(</span>
 <span class="fc" id="L108">        config,</span>
@@ -114,22 +114,22 @@ import java.security.Principal
       )
 
       // return a text call
-<span class="nc" id="L117">      GrpcWebContentType.TEXT -&gt; Text(</span>
-<span class="nc" id="L118">        config,</span>
-<span class="nc" id="L119">        service,</span>
-<span class="nc" id="L120">        method,</span>
-<span class="nc" id="L121">        channel,</span>
-<span class="nc" id="L122">        request,</span>
-<span class="nc" id="L123">        principal,</span>
+<span class="fc" id="L117">      GrpcWebContentType.TEXT -&gt; Text(</span>
+<span class="fc" id="L118">        config,</span>
+<span class="fc" id="L119">        service,</span>
+<span class="fc" id="L120">        method,</span>
+<span class="fc" id="L121">        channel,</span>
+<span class="fc" id="L122">        request,</span>
+<span class="fc" id="L123">        principal,</span>
       )
 <span class="fc" id="L125">    }</span>
   }
 
   // Internal mutable function to notify the call that a response has been received.
   @Synchronized internal fun notifyResponse(response: GrpcWebCallResponse): GrpcWebCall {
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    if (finished()) {</span>
-<span class="nc" id="L131">      throw IllegalStateException(</span>
-<span class="nc" id="L132">        &quot;Cannot provide more than one response to a given `GrpcWebCall` structure&quot;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">    if (finished()) {</span>
+<span class="fc" id="L131">      throw IllegalStateException(</span>
+<span class="fc" id="L132">        &quot;Cannot provide more than one response to a given `GrpcWebCall` structure&quot;</span>
       )
     }
 <span class="fc" id="L135">    this.response = response</span>
@@ -138,6 +138,6 @@ import java.security.Principal
   }
 
   /** @return Whether this call has finished processing yet. */
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">  fun finished(): Boolean = response != null</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">  fun finished(): Boolean = response != null</span>
 <span class="fc" id="L142">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

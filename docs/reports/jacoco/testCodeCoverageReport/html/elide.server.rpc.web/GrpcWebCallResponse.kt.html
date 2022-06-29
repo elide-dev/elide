@@ -17,7 +17,7 @@ import io.micronaut.http.MutableHttpResponse
  */
 <span class="fc" id="L18">@Suppress(&quot;ArrayInDataClass&quot;)</span>
 <span class="fc" id="L19">sealed class GrpcWebCallResponse(</span>
-<span class="pc" id="L20">  val success: Boolean,</span>
+<span class="fc" id="L20">  val success: Boolean,</span>
 ) {
   /**
    * Response structure which carries information for a gRPC Web call which encountered a fatal error, including the
@@ -31,24 +31,24 @@ import io.micronaut.http.MutableHttpResponse
    * @param headers Header metadata which was captured as part of this response cycle.
    * @param trailers Response trailers to enclose which describe this error state, if available.
    */
-<span class="nc" id="L34">  data class Error(</span>
-<span class="nc" id="L35">    val contentType: GrpcWebContentType,</span>
-<span class="nc" id="L36">    val status: Status,</span>
-<span class="nc" id="L37">    val cause: Throwable?,</span>
-<span class="nc" id="L38">    val headers: Metadata,</span>
-<span class="nc" id="L39">    val trailers: Metadata,</span>
-<span class="nc" id="L40">  ): GrpcWebCallResponse(success = false) {</span>
+<span class="fc" id="L34">  data class Error(</span>
+<span class="fc" id="L35">    val contentType: GrpcWebContentType,</span>
+<span class="fc" id="L36">    val status: Status,</span>
+<span class="fc" id="L37">    val cause: Throwable?,</span>
+<span class="fc" id="L38">    val headers: Metadata,</span>
+<span class="fc" id="L39">    val trailers: Metadata,</span>
+<span class="fc" id="L40">  ): GrpcWebCallResponse(success = false) {</span>
     /** @inheritDoc */
     override fun fill(response: MutableHttpResponse&lt;RawRpcPayload&gt;) {
-<span class="nc" id="L43">      ResponseUtil.writeResponse(</span>
-<span class="nc" id="L44">        contentType,</span>
-<span class="nc" id="L45">        response,</span>
-<span class="nc" id="L46">        status,</span>
-<span class="nc" id="L47">        headers,</span>
-<span class="nc" id="L48">        trailers,</span>
-<span class="nc" id="L49">        ByteArray(0),</span>
+<span class="fc" id="L43">      ResponseUtil.writeResponse(</span>
+<span class="fc" id="L44">        contentType,</span>
+<span class="fc" id="L45">        response,</span>
+<span class="fc" id="L46">        status,</span>
+<span class="fc" id="L47">        headers,</span>
+<span class="fc" id="L48">        trailers,</span>
+<span class="fc" id="L49">        ByteArray(0),</span>
       )
-<span class="nc" id="L51">    }</span>
+<span class="fc" id="L51">    }</span>
   }
 
   /**
@@ -62,10 +62,10 @@ import io.micronaut.http.MutableHttpResponse
    * @param trailers Response trailers to enclose within the response payload sent to the invoking client.
    */
 <span class="fc" id="L64">  data class UnaryResponse(</span>
-<span class="pc" id="L65">    val contentType: GrpcWebContentType,</span>
-<span class="pc" id="L66">    val payload: ByteArray,</span>
-<span class="pc" id="L67">    val headers: Metadata,</span>
-<span class="pc" id="L68">    val trailers: Metadata,</span>
+<span class="fc" id="L65">    val contentType: GrpcWebContentType,</span>
+<span class="fc" id="L66">    val payload: ByteArray,</span>
+<span class="fc" id="L67">    val headers: Metadata,</span>
+<span class="fc" id="L68">    val trailers: Metadata,</span>
 <span class="fc" id="L69">  ): GrpcWebCallResponse(success = true) {</span>
     /** @inheritDoc */
     override fun fill(response: MutableHttpResponse&lt;RawRpcPayload&gt;) {

@@ -18,6 +18,7 @@ SAMPLES ?= no
 # IGNORE_ERRORS ?= no
 
 GRADLE ?= ./gradlew
+YARN ?= $(shell which yarn)
 RM ?= $(shell which rm)
 FIND ?= $(shell which find)
 MKDIR ?= $(shell which mkdir)
@@ -31,6 +32,7 @@ POSIX_FLAGS ?=
 GRADLE_ARGS ?=
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
+DEP_HASH_ALGO ?= sha256
 ARGS ?=
 
 ifeq ($(SAMPLES),yes)
@@ -117,6 +119,38 @@ reports:  ## Generate reports for tests, coverage, etc.
 	$(CMD)$(MKDIR) -p tools/reports/build/reports
 	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
 	@echo "Reports synced."
+
+update-dep-hashes:
+	@echo "- Updating dependency hashes..."
+	$(CMD)$(GRADLE) \
+		--write-verification-metadata $(DEP_HASH_ALGO)
+	@echo "Dependency hashes updated."
+
+update-dep-locks:
+	@echo "- Updating dependency locks (yarn)..."
+	$(CMD)$(YARN)
+	@echo ""
+	@echo "- Updating dependency locks (gradle)..."
+	$(CMD)$(GRADLE) resolveAndLockAll --write-locks
+	@echo "Dependency locks updated."
+
+update-deps:  ## Perform interactive dependency upgrades across Yarn and Gradle.
+	@echo "Upgrading dependencies..."
+	$(CMD)$(MAKE) update-jsdeps
+	@echo ""
+	$(CMD)$(MAKE) update-jdeps
+
+update-jsdeps:  ## Interactively update Yarn dependencies.
+	@echo "Running interactive update for Gradle..."
+	$(CMD)$(GRADLE) upgrade-gradle
+
+update-jdeps:  ## Interactively update Gradle dependencies.
+	@echo "Running interactive update for Gradle..."
+	$(CMD)$(GRADLE) upgrade-gradle
+
+relock-deps:  ## Update dependency locks and hashes across Yarn and Gradle.
+	@echo "Relocking dependencies..."
+	$(CMD)$(MAKE) update-dep-hashes update-dep-locks
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."

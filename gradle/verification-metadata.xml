@@ -4,6 +4,8 @@
       <verify-metadata>true</verify-metadata>
       <verify-signatures>true</verify-signatures>
       <ignored-keys>
+         <ignored-key id="6449005f96bc97a3" reason="Key couldn't be downloaded from any key server"/>
+         <ignored-key id="62c82e50836eb3ee" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="b16698a4adf4d638" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="379ce192d401ab61" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="59a252fb1199d873" reason="Key couldn't be downloaded from any key server"/>

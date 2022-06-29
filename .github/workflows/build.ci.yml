@@ -24,12 +24,12 @@ jobs:
           - os: ubuntu-latest
             experimental: false
             gu-binary: gu
-          - os: macos-latest
-            experimental: true
-            gu-binary: gu
-          - os: windows-latest
-            experimental: true
-            gu-binary: gu.cmd
+          # - os: macos-latest
+          #   experimental: true
+          #   gu-binary: gu
+          # - os: windows-latest
+          #   experimental: true
+          #   gu-binary: gu.cmd
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}

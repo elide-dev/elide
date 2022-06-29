@@ -99,7 +99,20 @@ consumed from Kotlin accessors generated from that catalog. Dependencies are mon
 and by [Renovate](https://github.com/renovatebot/renovate) (see
 [_Dependency Dashboard_](https://github.com/elide-dev/v3/issues/8) for more information).
 
-License checks are handled by [Licensebat](https://licensebat.com/).
+License checks are handled by [Licensebat](https://licensebat.com/). Additional OWASP security checks are performed by Snyk and OWASP's own tools.
+
+
+### Interactive upgrades
+
+Run `update-jsdeps` or `update-jdeps` to run an interactive upgrade for NPM or Maven deps, respectively.
+
+
+### Dependency locking
+
+Elide extensively locks and verifies dependencies. Gradle is configured to [verify dependency hashes and signatures][21], so please make sure to update these
+files if dependencies change, and to verify your update is legitimate to the best of your abilities.
+
+After dependency changes, locks can be updated with `make relock-deps`.
 
 
 [1]: ./base
@@ -122,3 +135,5 @@ License checks are handled by [Licensebat](https://licensebat.com/).
 [18]: https://v3.docs.elide.dev/kotlin/html/packages/rpc-jvm/index.html
 [19]: https://v3.docs.elide.dev/kotlin/html/packages/server/index.html
 [20]: https://v3.docs.elide.dev/kotlin/html/packages/test/index.html
+[21]: https://docs.gradle.org/7.4.2/userguide/dependency_verification.html#sub:enabling-verification
+

@@ -32,7 +32,7 @@ POSIX_FLAGS ?=
 GRADLE_ARGS ?=
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
-DEP_HASH_ALGO ?= sha256
+DEP_HASH_ALGO ?= pgp,sha256
 ARGS ?=
 
 ifeq ($(SAMPLES),yes)

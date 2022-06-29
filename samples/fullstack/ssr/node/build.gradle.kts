@@ -101,6 +101,14 @@ tasks {
             }
             append(".js")
           }
+          outputPrepackedName = buildString {
+            append(project.name)
+            when (mode) {
+              PRODUCTION -> append("-prod")
+              DEVELOPMENT -> append("-dev")
+            }
+            append(".pack.js")
+          }
           outputBundleFolder = file("$buildDir/distributions").absolutePath
           processShim = file("$buildDir/esbuild/process-shim.js")
           outputConfig = file("$buildDir/esbuild/esbuild.${modeName.toLowerCase()}.js")

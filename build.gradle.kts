@@ -152,6 +152,7 @@ allprojects {
     kotlinOptions {
       apiVersion = Versions.kotlinLanguage
       languageVersion = Versions.kotlinLanguage
+      target = Versions.ecmaVersion
     }
   }
 }

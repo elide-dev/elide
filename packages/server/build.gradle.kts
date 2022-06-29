@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
 
 import java.net.URI
+import com.google.protobuf.gradle.*
 
 plugins {
   java
@@ -13,6 +14,7 @@ plugins {
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
   id("com.adarshr.test-logger")
+  id("com.google.protobuf")
   id("io.micronaut.library")
   id("org.jetbrains.dokka")
   id("org.sonarqube")
@@ -20,6 +22,12 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
+  }
+}
 
 kotlin {
   jvmToolchain {
@@ -121,6 +129,14 @@ tasks.jacocoTestReport {
 
 micronaut {
   version.set(Versions.micronaut)
+}
+
+sourceSets {
+  named("main") {
+    proto {
+      srcDir("${rootProject.projectDir}/proto")
+    }
+  }
 }
 
 dependencies {

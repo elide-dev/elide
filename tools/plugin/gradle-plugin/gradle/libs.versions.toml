@@ -1,0 +1,31 @@
+[versions]
+detekt = "1.20.0"
+kotlin = "1.7.0"
+ktlintGradle = "10.3.0"
+pluginPublish = "0.21.0"
+pluginProtobuf = "0.8.18"
+versionCheck = "0.42.0"
+sonar = "3.4.0.2513"
+protobuf = "3.20.1"
+kotlinx_serialization = "1.3.3"
+truth = "1.1.3"
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
+kotlin = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
+sonar = { id = "org.sonarqube", version.ref = "sonar" }
+protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish"}
+versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}
+
+[libraries]
+junit = "junit:junit:4.13.2"
+protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
+protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+kotlinx_serialization_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx_serialization" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+truth_proto = { group = "com.google.truth.extensions", name = "truth-proto-extension", version.ref = "truth" }

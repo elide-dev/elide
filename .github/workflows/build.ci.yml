@@ -91,6 +91,15 @@ jobs:
             -x nativeCompile
             -x test
 
+      ## CI: Build
+      - name: "Failure reports"
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: failure-reports
+          path: |
+            build/reports/**/*.*
+
   ##
   ## Job: Testsuite (JVM)
   ##

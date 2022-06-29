@@ -91,20 +91,6 @@ jobs:
             -x nativeCompile
             -x test
 
-      ## CI: Failure Comment
-      - name: "Comment: Build Scan (Failure)"
-        uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && failure() && contains(matrix.os, 'ubuntu')
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '❌ ${{ github.workflow }} run failed: ${{ steps.gradlebuild.outputs.build-scan-url }}'
-            })
-
   ##
   ## Job: Testsuite (JVM)
   ##

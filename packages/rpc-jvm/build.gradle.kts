@@ -105,8 +105,10 @@ val javadocJar by tasks.registering(Jar::class) {
 }
 
 signing {
-  sign(configurations.archives.get())
-  sign(publishing.publications)
+  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
+    sign(configurations.archives.get())
+    sign(publishing.publications)
+  }
 }
 
 publishing {

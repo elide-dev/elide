@@ -94,8 +94,10 @@ tasks.jacocoTestReport {
 }
 
 signing {
-  sign(configurations.archives.get())
-  sign(publishing.publications)
+  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
+    sign(configurations.archives.get())
+    sign(publishing.publications)
+  }
 }
 
 publishing {

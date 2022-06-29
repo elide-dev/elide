@@ -45,7 +45,6 @@ kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.4.1"
 guava = "31.1-jre"
-kotlinx_nodejs = "0.0.7"
 kotlinx_wrappers = "pre.347"
 kotlinx_wrappers_css = "1.0.0-pre.347"
 kotlinx_wrappers_node = "18.0.0-pre.347"
@@ -121,7 +120,6 @@ micronaut_grpc_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-r
 micronaut_grpc_client_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-client-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_server_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-server-runtime", version.ref = "micronaut_grpc" }
 micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
-kotlinx_nodejs = { group = "org.jetbrains.kotlinx", name = "kotlinx-nodejs", version.ref = "kotlinx_nodejs" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
 kotlinx_wrappers_react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx_wrappers_react" }

@@ -88,7 +88,6 @@ dependencies {
   api(npm("buffer", libs.versions.npm.buffer.get()))
   api(npm("readable-stream", libs.versions.npm.stream.get()))
 
-  implementation(libs.kotlinx.nodejs)
   implementation(libs.kotlinx.wrappers.node)
 
   // Testing

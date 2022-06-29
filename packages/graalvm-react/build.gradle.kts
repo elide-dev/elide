@@ -90,7 +90,6 @@ dependencies {
 
   implementation(project(":packages:graalvm-js"))
 
-  implementation(libs.kotlinx.nodejs)
   implementation(libs.kotlinx.wrappers.node)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)

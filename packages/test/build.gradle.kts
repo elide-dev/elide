@@ -12,18 +12,13 @@ plugins {
   signing
   kotlin("multiplatform")
   kotlin("plugin.serialization")
+  alias(libs.plugins.testLogger)
   alias(libs.plugins.dokka)
   alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
-
-repositories {
-  google()
-  mavenCentral()
-  maven("https://maven-central.storage-download.googleapis.com/maven2/")
-  maven(project.properties["elide.publish.repo.maven"] as String)
-}
+version = rootProject.version as String
 
 val javadocJar by tasks.registering(Jar::class) {
   archiveClassifier.set("javadoc")
@@ -80,15 +75,6 @@ publishing {
 }
 
 kotlin {
-  sourceSets.all {
-    languageSettings.apply {
-      languageVersion = libs.versions.kotlin.language.get()
-      apiVersion = libs.versions.kotlin.language.get()
-      optIn("kotlin.ExperimentalUnsignedTypes")
-      progressiveMode = true
-    }
-  }
-
   jvm {
     withJava()
     testRuns["test"].executionTask.configure {
@@ -103,8 +89,18 @@ kotlin {
     }
   }
 
+  val publicationsFromMainHost =
+    listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+
   publishing {
-    publications {}
+    publications {
+      matching { it.name in publicationsFromMainHost }.all {
+        val targetPublication = this@all
+        tasks.withType<AbstractPublishToMaven>()
+          .matching { it.publication == targetPublication }
+          .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+      }
+    }
   }
 
   val hostOs = System.getProperty("os.name")
@@ -114,6 +110,15 @@ kotlin {
     hostOs == "Linux" -> linuxX64("native")
     isMingwX64 -> mingwX64("native")
     else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      languageVersion = libs.versions.kotlin.language.get()
+      apiVersion = libs.versions.kotlin.language.get()
+      optIn("kotlin.ExperimentalUnsignedTypes")
+      progressiveMode = true
+    }
   }
 
   sourceSets {

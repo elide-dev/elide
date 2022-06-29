@@ -1,4 +1,6 @@
 @file:Suppress(
+    "UnstableApiUsage",
+    "unused",
     "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
 )
@@ -18,19 +20,14 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-repositories {
-    google()
-    mavenCentral()
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
-    maven(project.properties["elide.publish.repo.maven"] as String)
-}
-
 val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
 signing {
-    sign(configurations.archives.get())
+    if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
+        sign(configurations.archives.get())
+    }
 }
 
 publishing {

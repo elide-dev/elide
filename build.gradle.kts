@@ -10,6 +10,7 @@ import java.util.Properties
 plugins {
   kotlin("plugin.allopen") version libs.versions.kotlin.sdk.get() apply false
   kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
+  id("project-report")
   alias(libs.plugins.dokka)
   alias(libs.plugins.sonar)
   alias(libs.plugins.versionCheck)
@@ -152,6 +153,13 @@ allprojects {
   }
 }
 
+tasks.register("reports") {
+  dependsOn(
+    ":dependencyReport",
+    ":htmlDependencyReport",
+  )
+}
+
 tasks.register("resolveAndLockAll") {
   doFirst {
     require(gradle.startParameter.isWriteDependencyLocks)
@@ -162,4 +170,8 @@ tasks.register("resolveAndLockAll") {
       it.isCanBeResolved
     }.forEach { it.resolve() }
   }
+}
+
+tasks.named<HtmlDependencyReportTask>("htmlDependencyReport") {
+  projects = project.allprojects
 }

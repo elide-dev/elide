@@ -109,6 +109,7 @@ docs: $(DOCS)  ## Generate docs for all library modules.
 reports:  ## Generate reports for tests, coverage, etc.
 	@echo "Generating reports..."
 	$(CMD)$(GRADLE) \
+		:reports \
 		:tools:reports:reports \
 		-x nativeCompile \
 		-x test

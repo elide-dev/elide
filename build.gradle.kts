@@ -120,10 +120,9 @@ subprojects {
 
 allprojects {
   repositories {
-    google()
-    mavenCentral()
     maven("https://maven-central.storage-download.googleapis.com/maven2/")
-    jcenter()
+    mavenCentral()
+    google()
   }
   tasks.withType<JavaCompile>().configureEach {
     sourceCompatibility = javaVersion

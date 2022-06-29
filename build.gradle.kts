@@ -1,14 +1,18 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 import java.util.Properties
 
 plugins {
-  kotlin("plugin.allopen") version "1.7.0" apply false
-  kotlin("plugin.serialization") version "1.7.0" apply false
-  id("com.google.cloud.artifactregistry.gradle-plugin")
-  id("org.jetbrains.dokka") version "1.7.0"
-  id("org.sonarqube") version "3.4.0.2513"
-  id("com.github.ben-manes.versions") version "0.42.0"
+  kotlin("plugin.allopen") version libs.versions.kotlin.sdk.get() apply false
+  kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
+  alias(libs.plugins.versionCheck)
   jacoco
 }
 
@@ -57,17 +61,8 @@ buildscript {
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {
-    classpath("com.bmuschko:gradle-docker-plugin:${Versions.dockerPlugin}")
-    classpath("com.github.node-gradle:gradle-node-plugin:${Versions.nodePlugin}")
-    classpath("gradle.plugin.com.google.cloud.artifactregistry:artifactregistry-gradle-plugin:${Versions.gauthPlugin}")
-    classpath("gradle.plugin.com.google.protobuf:protobuf-gradle-plugin:${Versions.protobufPlugin}")
-    classpath("io.micronaut.gradle:micronaut-gradle-plugin:${Versions.micronautPlugin}")
-    classpath("org.jetbrains.dokka:dokka-gradle-plugin:${Versions.kotlin}")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}")
-    classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfuPlugin}")
-    classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${Versions.benchmarkPlugin}")
-    classpath("com.adarshr:gradle-test-logger-plugin:${Versions.testLoggerPlugin}")
-    classpath("com.github.ben-manes:gradle-versions-plugin:${Versions.versionsPlugin}")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
+    classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${libs.versions.kotlinx.benchmark.plugin.get()}")
   }
   if (project.property("elide.lockDeps") == "true") {
     configurations.classpath {

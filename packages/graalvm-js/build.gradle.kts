@@ -1,3 +1,10 @@
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
+
 import java.net.URI
 
 plugins {
@@ -6,10 +13,9 @@ plugins {
   signing
   kotlin("js")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("org.sonarqube")
-  id("org.jetbrains.dokka")
+  alias(libs.plugins.sonar)
+  alias(libs.plugins.dokka)
 }
 
 group = "dev.elide"
@@ -77,12 +83,13 @@ publishing {
 }
 
 dependencies {
-  api(npm("esbuild", Versions.esbuild))
-  api(npm("esbuild-plugin-alias", Versions.esbuildPluginAlias))
-  api(npm("buffer", Versions.nodeBuffers))
-  api(npm("readable-stream", Versions.nodeStreams))
-  implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-node:${Versions.node}-${Versions.kotlinWrappers}")
+  api(npm("esbuild", libs.versions.npm.esbuild.get()))
+  api(npm("prepack", libs.versions.npm.prepack.get()))
+  api(npm("buffer", libs.versions.npm.buffer.get()))
+  api(npm("readable-stream", libs.versions.npm.stream.get()))
+
+  implementation(libs.kotlinx.nodejs)
+  implementation(libs.kotlinx.wrappers.node)
 
   // Testing
   testImplementation(project(":packages:test"))

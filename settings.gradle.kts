@@ -1,5 +1,23 @@
+@file:Suppress(
+  "UnstableApiUsage",
+)
+
 plugins {
   id("com.gradle.enterprise") version("3.10.2")
+}
+
+dependencyResolutionManagement {
+  repositories {
+    google()
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
+    mavenCentral()
+    maven("https://plugins.gradle.org/m2/")
+  }
+  versionCatalogs {
+    create("libs") {
+      from(files("./gradle/elide.versions.toml"))
+    }
+  }
 }
 
 rootProject.name = "elide"

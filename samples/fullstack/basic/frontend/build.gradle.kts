@@ -1,11 +1,16 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 plugins {
   idea
   kotlin("js")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("org.sonarqube")
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide.samples"

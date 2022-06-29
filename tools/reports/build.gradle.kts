@@ -1,9 +1,14 @@
-@file:Suppress("UnstableApiUsage", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 plugins {
   id("test-report-aggregation")
   id("jacoco-report-aggregation")
-  id("org.sonarqube")
+  alias(libs.plugins.sonar)
 }
 
 val antJUnit by configurations.creating

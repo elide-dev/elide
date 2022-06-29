@@ -1,10 +1,11 @@
-import java.net.URI
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
-val protobufVersion = project.properties["versions.protobuf"] as String
-val protobufTypesVersion = project.properties["versions.protobufTypes"] as String
-val grpcWebVersion = project.properties["versions.grpcWeb"] as String
-val kotlinxCoroutinesVersion = project.properties["versions.kotlinx.coroutines"] as String
-val kotlinxSerializationVersion = project.properties["versions.kotlinx.serialization"] as String
+import java.net.URI
 
 plugins {
   idea
@@ -12,10 +13,9 @@ plugins {
   signing
   kotlin("js")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -91,12 +91,13 @@ publishing {
 dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:frontend"))
-  implementation(npm("@types/google-protobuf", protobufTypesVersion))
-  implementation(npm("google-protobuf", protobufVersion))
-  implementation(npm("grpc-web", grpcWebVersion))
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxCoroutinesVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-js:$kotlinxSerializationVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-js:$kotlinxSerializationVersion")
+  implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
+  implementation(npm("google-protobuf", libs.versions.protobuf.get()))
+  implementation(npm("grpc-web", libs.versions.npm.grpcweb.get()))
+
+  implementation(libs.kotlinx.coroutines.core.js)
+  implementation(libs.kotlinx.serialization.json.js)
+  implementation(libs.kotlinx.serialization.protobuf.js)
 
   // Testing
   testImplementation(project(":packages:test"))

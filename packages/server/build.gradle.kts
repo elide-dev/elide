@@ -1,4 +1,9 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 import java.net.URI
 import com.google.protobuf.gradle.*
@@ -11,13 +16,12 @@ plugins {
   signing
   kotlin("jvm")
   kotlin("kapt")
-  kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
-  id("com.adarshr.test-logger")
-  id("com.google.protobuf")
-  id("io.micronaut.library")
-  id("org.jetbrains.dokka")
-  id("org.sonarqube")
+  alias(libs.plugins.testLogger)
+  alias(libs.plugins.protobuf)
+  alias(libs.plugins.micronautLibrary)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -27,11 +31,18 @@ protobuf {
   protoc {
     artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
   }
+  generateProtoTasks {
+    ofSourceSet("main").forEach {
+      it.builtins {
+        id("kotlin")
+      }
+    }
+  }
 }
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(Versions.javaLanguage))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
   publishing {
     publications {
@@ -48,7 +59,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
 }
 
@@ -128,7 +139,7 @@ tasks.jacocoTestReport {
 }
 
 micronaut {
-  version.set(Versions.micronaut)
+  version.set(libs.versions.micronaut.lib.get())
 }
 
 sourceSets {
@@ -141,55 +152,59 @@ sourceSets {
 
 dependencies {
   // API Deps
-  api("jakarta.inject:jakarta.inject-api:2.0.1")
-  api("org.slf4j:slf4j-api:${Versions.slf4j}")
-  api(platform("io.netty:netty-bom:${Versions.netty}"))
-  api(platform("io.grpc:grpc-bom:${Versions.grpc}"))
-  api(platform("io.netty:netty-bom:${Versions.netty}"))
+  api(libs.jakarta.inject)
+  api(libs.slf4j)
+  api(platform(libs.grpc.bom))
+  api(platform(libs.netty.bom))
+
+  // Protocol Buffers
+  protobuf(files("${rootProject.projectDir}/proto/deps/webutil.tar.gz"))
 
   // Modules
   implementation(project(":packages:base"))
 
   // Kotlin
-  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:${Versions.kotlinSerialization}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:${Versions.kotlinSerialization}")
+  implementation(libs.kotlinx.html.jvm)
+  implementation(libs.kotlinx.serialization.core.jvm)
+  implementation(libs.kotlinx.serialization.json.jvm)
+  implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // Kotlin Wrappers
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-${Versions.kotlinWrappers}")
-
-  // Google
-  implementation("io.grpc:grpc-core")
-  implementation("io.grpc:grpc-api")
-  implementation("io.grpc:grpc-auth")
-  implementation("io.grpc:grpc-stub")
-  implementation("io.grpc:grpc-services")
-  implementation("io.grpc:grpc-netty")
-  implementation("io.grpc:grpc-protobuf")
-  implementation("io.grpc:grpc-kotlin-stub:${Versions.grpcKotlin}")
-  implementation("com.google.guava:guava:${Versions.guava}")
+  implementation(libs.kotlinx.wrappers.css)
 
   // Protocol Buffers
-  implementation("com.google.protobuf:protobuf-java:${Versions.protobuf}")
-  implementation("com.google.protobuf:protobuf-kotlin:${Versions.protobuf}")
+  implementation(libs.protobuf.java)
+  implementation(libs.protobuf.util)
+  implementation(libs.protobuf.kotlin)
+
+  // Google
+  implementation(libs.grpc.core)
+  implementation(libs.grpc.api)
+  implementation(libs.grpc.auth)
+  implementation(libs.grpc.stub)
+  implementation(libs.grpc.services)
+  implementation(libs.grpc.netty)
+  implementation(libs.grpc.protobuf)
+  implementation(libs.grpc.kotlin.stub)
+  implementation(libs.guava)
 
   // Micronaut
-  implementation("io.micronaut:micronaut-http:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-context:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject:${Versions.micronaut}")
-  implementation("io.micronaut:micronaut-inject-java:${Versions.micronaut}")
-  implementation("io.micronaut.grpc:micronaut-grpc-runtime:${Versions.micronautGrpc}")
-  implementation("io.micronaut.grpc:micronaut-grpc-client-runtime:${Versions.micronautGrpc}")
+  implementation(libs.micronaut.http)
+  implementation(libs.micronaut.context)
+  implementation(libs.micronaut.inject)
+  implementation(libs.micronaut.inject.java)
+  implementation(libs.micronaut.grpc.runtime)
+  implementation(libs.micronaut.grpc.client.runtime)
+  implementation(libs.micronaut.grpc.server.runtime)
 
   // Coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:${Versions.coroutinesVersion}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Versions.coroutinesVersion}")
+  implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.core.jvm)
+  implementation(libs.kotlinx.coroutines.jdk8)
+  implementation(libs.kotlinx.coroutines.jdk9)
+  implementation(libs.kotlinx.coroutines.slf4j)
+  implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.coroutines.reactive)
 
   // Testing
   testImplementation(project(":packages:test"))

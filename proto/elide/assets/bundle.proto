@@ -1,0 +1,176 @@
+/*
+ * Specifies structures used to define the notion of a "asset bundle," which holds configuration and inline data that,
+ * together with server logic, enable automatic asset references and loading.
+ */
+syntax = "proto3";
+package assets;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_namespace = "Elide\\Assets";
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option ruby_package = "Elide::Assets";
+option java_package = "tools.elide.assets";
+option csharp_namespace = "Elide.Assets";
+option go_package = "github.com/elide-tools/elide/assets/bundle;bundle";
+
+import "google/protobuf/timestamp.proto";
+
+import "elide/crypto/crypto.proto";
+import "elide/data/data.proto";
+import "elide/model/model.proto";
+import "elide/struct/bloom.proto";
+import "elide/page/page.proto";
+
+
+// Defines the structure of an "asset bundle," which keeps track of frontend assets for an application. This manifest is
+// generally consumed in binary-proto form by the backend systems running the app, so it can load frontend code and map
+// module paths to annotations affixed to controllers.
+//
+// Assets enclosed in the asset manifest are referenced by their "module name," which is a dotted string path uniquely
+// scoping a given stylesheet or script. The set of sources associated with the module name are loaded in order, with
+// any applicable rewrite maps or other settings applying during output.
+message AssetBundle {
+  option (model.role) = WIRE;
+
+  // Specifies settings related to cryptographic asset digestion. This includes the algorithm in use, and the length of
+  // the hash to take for the resulting token.
+  message DigestSettings {
+    // Hash algorithm in use for asset digestion.
+    crypto.HashAlgorithm algorithm = 1;
+
+    // Number of characters to pluck from the tail of the hash.
+    uint32 tail = 2;
+
+    // Number of rounds to perform. Defaults to `1`.
+    uint32 rounds = 3;
+  }
+
+  // Specifies a map of style symbols (usually classes and/or IDs) that should be rewritten on the fly, and their target
+  // rewrite values. If a rewrite map is present and active, it is used during serving to line styles up with the DOM.
+  message RewriteMap {
+    // File this rewrite map was originally loaded from.
+    string file = 1;
+
+    // Map of symbols to their rewritten values.
+    map<string, string> map = 2;
+  }
+
+  // Specifies direct and transitive dependencies for a given asset bundle. This structure is used generically across
+  // asset types, and refers to dependencies using their asset token.
+  message AssetDependencies {
+    // Tokens for direct dependencies.
+    repeated string direct = 1;
+
+    // Tokens for transitive dependencies.
+    repeated string transitive = 2;
+
+    // Bitmask filter calculated from the full set of a given asset's dependency tokens.
+    struct.BloomFilter mask = 3;
+  }
+
+  // Specifies a bundle of CSS code, containing one or more stylesheets to be included in an HTML page, and optionally
+  // one or more style symbol rewrite maps.
+  message StyleBundle {
+    // Describes the structure of an individual style asset, which is constituent to the bundle that holds it.
+    message StyleAsset {
+      // Calculated token for this asset, including the asset's content digest.
+      string token = 1;
+
+      // Original name of the source file, if applicable.
+      string filename = 2;
+
+      // URL and DOM settings for this asset.
+      page.Context.Styles.Stylesheet stylesheet = 3;
+
+      // Whether a renaming map is available for this stylesheet.
+      bool renaming = 4;
+    }
+
+    // Style module name/path.
+    string module = 1;
+
+    // Rewrite maps associated with this bundle, if applicable.
+    RewriteMap rewrite_map = 2;
+
+    // Specifies dependencies that must be loaded before this module, if any.
+    AssetDependencies dependencies = 3;
+
+    // Stylesheet sources associated with this bundle. Always non-empty.
+    repeated StyleAsset asset = 4;
+  }
+
+  // Specifies a bundle of JavaScript code, containing one or more script assets to be included in an HTML page, and
+  // optionally settings about how to embed the script.
+  message ScriptBundle {
+    // Describes the structure of an individual script asset, which is constituent to the bundle that holds it.
+    message ScriptAsset {
+      // Calculated token for this asset, including the asset's content digest.
+      string token = 1;
+
+      // Original name of the source file, if applicable.
+      string filename = 2;
+
+      // URL and DOM settings for this asset.
+      page.Context.Scripts.JavaScript script = 3;
+    }
+
+    // Script module name/path.
+    string module = 1;
+
+    // Specifies dependencies that must be loaded before this module, if any.
+    AssetDependencies dependencies = 3;
+
+    // Script code assets associated with this bundle. Always non-empty.
+    repeated ScriptAsset asset = 2;
+  }
+
+  // Specifies full contents for assets, in pre-compressed forms, to be served directly when a compressed representation
+  // is supported by the invoking browser. These payloads duplicate the original content, which is additionally enclosed
+  // in the JAR at the path described in this structure.
+  message AssetContent {
+    // Module which this asset is a member of.
+    string module = 1;
+
+    // Original name of the source file.
+    string filename = 2;
+
+    // Hash token uniquely identifying the content in this module.
+    string token = 3;
+
+    // Specifies each variant of an asset's main content.
+    repeated data.CompressedData variant = 4;
+  }
+
+  // Version of the tool that produced this manifest. This is used by the tool to understand which asset bundle features
+  // are supported for a given tool version.
+  uint32 version = 1;
+
+  // Digest algorithm settings in use to calculate chunk tokens. These tokens are used to address pre-compressed asset
+  // content, and are used to address assets dynamically from the server and frontend.
+  DigestSettings digest = 2;
+
+  // Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+  // their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+  map<string, StyleBundle> styles = 3;
+
+  // Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+  // their script sources and settings. Generally, a Closure module name is used for scripts.
+  map<string, ScriptBundle> scripts = 4;
+
+  // Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+  // bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+  repeated AssetContent asset = 5;
+
+  // Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+  // checking for updates to the asset bundle itself.
+  google.protobuf.Timestamp generated = 6;
+
+  // Whether style-rewriting is enabled or not, which should indicate the presence of generated style symbol maps, that
+  // must be loaded by the server for SSR.
+  bool rewrite = 7;
+}

@@ -1,4 +1,9 @@
-@file:Suppress("UnstableApiUsage", "unused", "UNUSED_VARIABLE")
+@file:Suppress(
+  "UnstableApiUsage",
+  "unused",
+  "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+)
 
 import com.github.gradle.node.task.NodeTask
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
@@ -15,8 +20,8 @@ plugins {
   kotlin("js")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("com.github.node-gradle.node")
-  id("org.sonarqube")
+  alias(libs.plugins.node)
+  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide.samples"

@@ -41,6 +41,7 @@ kotlin {
 
 signing {
   sign(configurations.archives.get())
+  sign(publishing.publications)
 }
 
 publishing {

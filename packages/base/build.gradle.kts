@@ -25,7 +25,8 @@ val javadocJar by tasks.registering(Jar::class) {
 }
 
 signing {
-    sign(configurations.archives.get())
+  sign(configurations.archives.get())
+  sign(publishing.publications)
 }
 
 publishing {
@@ -96,16 +97,18 @@ kotlin {
         }
     }
 
-    val publicationsFromMainHost =
-        listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+    if (project.hasProperty("publishMainHostLock") && project.properties["publishMainHostLock"] == "true") {
+        val publicationsFromMainHost =
+            listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
 
-    publishing {
-        publications {
-            matching { it.name in publicationsFromMainHost }.all {
-                val targetPublication = this@all
-                tasks.withType<AbstractPublishToMaven>()
-                    .matching { it.publication == targetPublication }
-                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+        publishing {
+            publications {
+                matching { it.name in publicationsFromMainHost }.all {
+                    val targetPublication = this@all
+                    tasks.withType<AbstractPublishToMaven>()
+                        .matching { it.publication == targetPublication }
+                        .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+                }
             }
         }
     }

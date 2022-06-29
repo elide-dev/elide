@@ -44,6 +44,7 @@ val javadocJar by tasks.registering(Jar::class) {
 
 signing {
   sign(configurations.archives.get())
+  sign(publishing.publications)
 }
 
 publishing {

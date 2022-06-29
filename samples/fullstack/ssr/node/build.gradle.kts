@@ -27,7 +27,6 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = Versions.kotlinWrappers
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {
@@ -41,10 +40,7 @@ kotlin {
 dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm-js"))
-  implementation(npm("esbuild", Versions.esbuild))
-
-  // Kotlin Wrappers
-  implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
+  implementation(npm("esbuild", libs.versions.npm.esbuild.get()))
 }
 
 tasks.withType<Tar> {

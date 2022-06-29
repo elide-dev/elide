@@ -123,11 +123,12 @@ dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))
-  implementation("io.micronaut:micronaut-context")
-  implementation("io.micronaut:micronaut-runtime")
-  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:${Versions.kotlinxHtml}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-${Versions.kotlinWrappers}")
-  runtimeOnly("ch.qos.logback:logback-classic:${Versions.logbackClassic}")
+
+  implementation(libs.micronaut.context)
+  implementation(libs.micronaut.runtime)
+  implementation(libs.kotlinx.html.jvm)
+  implementation(libs.kotlinx.wrappers.css)
+  runtimeOnly(libs.logback)
 
   browserDist(
     project(

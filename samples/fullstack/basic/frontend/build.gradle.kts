@@ -39,7 +39,7 @@ kotlin {
 dependencies {
   implementation(project(":packages:base"))
   implementation(kotlin("stdlib-js"))
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:0.0.1-${kotlinWrapperVersion}")
+  implementation(libs.kotlinx.wrappers.browser)
 }
 
 tasks.withType<Tar> {

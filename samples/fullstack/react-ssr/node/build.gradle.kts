@@ -45,9 +45,8 @@ dependencies {
   implementation(project(":samples:fullstack:react-ssr:frontend"))
 
   // Kotlin Wrappers
-  implementation("org.jetbrains.kotlinx:kotlinx-nodejs:${Versions.nodeDeclarations}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${Versions.kotlinWrappers}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${Versions.react}-${Versions.kotlinWrappers}")
+  implementation(libs.kotlinx.wrappers.react)
+  implementation(libs.kotlinx.wrappers.react.dom)
 }
 
 tasks.withType<Tar> {

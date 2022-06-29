@@ -42,9 +42,9 @@ dependencies {
   implementation(project(":packages:graalvm-react"))
 
   implementation(kotlin("stdlib-js"))
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:0.0.1-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${Versions.react}-${kotlinWrapperVersion}")
-  implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${Versions.react}-${kotlinWrapperVersion}")
+  implementation(libs.kotlinx.wrappers.browser)
+  implementation(libs.kotlinx.wrappers.react)
+  implementation(libs.kotlinx.wrappers.react.dom)
 }
 
 tasks.withType<Tar> {

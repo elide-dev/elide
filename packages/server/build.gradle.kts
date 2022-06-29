@@ -67,6 +67,12 @@ val javadocJar by tasks.registering(Jar::class) {
   archiveClassifier.set("javadoc")
 }
 
+signing {
+  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
+    sign(configurations.archives.get())
+  }
+}
+
 publishing {
   repositories {
     maven {

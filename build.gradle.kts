@@ -14,6 +14,7 @@ plugins {
   alias(libs.plugins.sonar)
   alias(libs.plugins.versionCheck)
   jacoco
+  signing
 }
 
 group = "dev.elide"

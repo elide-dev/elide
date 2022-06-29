@@ -29,6 +29,10 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
+signing {
+    sign(configurations.archives.get())
+}
+
 publishing {
     repositories {
         maven {
@@ -99,6 +103,7 @@ kotlin {
 
     val publicationsFromMainHost =
         listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+
     publishing {
         publications {
             matching { it.name in publicationsFromMainHost }.all {

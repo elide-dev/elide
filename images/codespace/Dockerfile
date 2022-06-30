@@ -33,7 +33,7 @@ RUN apt-get update \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 \
     && curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb \
     && apt-get install ./zulu-repo_1.0.0-3_all.deb \
-    && rm -fv ./zulu-repo_1.0.0-3_all.deb \
+    && rm -fv /zulu-repo_1.0.0-3_all.deb \
     && apt-get update \
     && apt-get install -y zulu17-jdk wget tar \
     && set -eux \
@@ -283,6 +283,7 @@ RUN echo "Setting up Debian-based codespace..." \
     && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && chsh -s /bin/zsh "$DEV_USER" \
     && su "$DEV_USER" \
+    && sudo "$DEV_USER" sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
     && echo "source ~/.profile" >> ~/.zshrc \
     && go install github.com/bazelbuild/buildtools/buildifier@latest \
     && go install github.com/bazelbuild/buildtools/buildozer@latest \
@@ -300,3 +301,9 @@ RUN bash /tmp/library-scripts/docker-debian.sh
 COPY zshrc /home/$DEV_USER/.zshrc
 USER ${DEV_USER}
 WORKDIR /home/${DEV_USER}
+
+RUN BUF_PREFIX="/usr/local" && \
+    BUF_VERSION="1.6.0" && \
+      curl -sSL \
+        "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
+        tar -xvzf - -C "${BUF_PREFIX}" --strip-components 1

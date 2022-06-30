@@ -18,7 +18,7 @@ RUN apt-get update \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 \
     && curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb \
     && apt-get install ./zulu-repo_1.0.0-3_all.deb \
-    && rm -fv ./zulu-repo_1.0.0-3_all.deb \
+    && rm -fv /zulu-repo_1.0.0-3_all.deb \
     && apt-get update \
     && apt-get install -y zulu11-jdk wget tar \
     && rm -rf /var/lib/apt/lists/* \

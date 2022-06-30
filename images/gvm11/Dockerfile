@@ -1,7 +1,7 @@
 
 ARG ARCH=amd64
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:61ceda5f3a32dfa242222d48e8df6e04f95ecb5a8d07ccedfc61f6d73cde64e1"
+ARG BASE_HASH="@sha256:81f00103fe7cb5ecf6e2516a19220eaf537b78b99bdab2d50ff204fedddad899"
 
 FROM --platform=linux/${ARCH} us-docker.pkg.dev/elide-fw/tools/jdk11${BASE_VERSION}${BASE_HASH}
 

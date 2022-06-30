@@ -8,6 +8,7 @@
 import java.net.URI
 
 plugins {
+  idea
   `maven-publish`
   signing
   kotlin("multiplatform")
@@ -22,7 +23,6 @@ repositories {
   google()
   mavenCentral()
   maven("https://maven-central.storage-download.googleapis.com/maven2/")
-  maven(project.properties["elide.publish.repo.maven"] as String)
 }
 
 val javadocJar by tasks.registering(Jar::class) {
@@ -143,6 +143,10 @@ kotlin {
         implementation(libs.kotlinx.coroutines.jdk8)
         implementation(libs.kotlinx.coroutines.jdk9)
         implementation(libs.kotlinx.coroutines.guava)
+        implementation(libs.gax.java)
+        implementation(libs.gax.java.grpc)
+        implementation(libs.google.api.common)
+        implementation(libs.reactivestreams)
 
         runtimeOnly(libs.junit.jupiter.engine)
         runtimeOnly(libs.logback)
@@ -151,6 +155,7 @@ kotlin {
     val jvmTest by getting {
       dependencies {
         implementation(kotlin("test-junit5"))
+        implementation(project(":packages:server"))
         implementation(libs.truth)
         implementation(libs.truth.proto)
       }
@@ -165,6 +170,8 @@ kotlin {
       }
     }
     val jsTest by getting
+    val nativeMain by getting
+    val nativeTest by getting
   }
 }
 

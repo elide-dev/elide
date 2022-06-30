@@ -194,6 +194,9 @@ dependencies {
   implementation(libs.grpc.protobuf)
   implementation(libs.grpc.kotlin.stub)
   implementation(libs.guava)
+  implementation(libs.gax.java)
+  implementation(libs.gax.java.grpc)
+  implementation(libs.google.api.common)
 
   // Micronaut
   implementation(libs.micronaut.http)
@@ -212,6 +215,9 @@ dependencies {
   implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.coroutines.guava)
   implementation(libs.kotlinx.coroutines.reactive)
+
+  // General
+  implementation(libs.reactivestreams)
 
   // Testing
   testImplementation(project(":packages:test"))

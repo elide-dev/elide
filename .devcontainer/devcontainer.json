@@ -43,7 +43,7 @@
       "dockerDashComposeVersion": "v1"
     }
   },
-  "updateContentCommand": "./gradlew build -x test -x nativeCompile -x :graalvm:build -x :graalvm-js:build -x :graalvm-react:build && git checkout kotlin-js-store",
+  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && git checkout kotlin-js-store",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"
 }

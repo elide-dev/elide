@@ -149,7 +149,7 @@ dependencies {
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/base:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

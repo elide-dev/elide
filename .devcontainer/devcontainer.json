@@ -8,6 +8,10 @@
     "java.debug.settings.enableRunDebugCodeLens": true,
     "java.test.editor.enableShortcuts": true
   },
+  "runArgs": [
+    "--init"
+  ],
+  "overrideCommand": false,
   "extensions": [
     "asf.apache-netbeans-java",
     "bazelbuild.vscode-bazel",
@@ -32,6 +36,13 @@
     "sswg.swift-lang",
     "sourcegraph.sourcegraph"
   ],
+  "features": {
+    "docker-from-docker": {
+      "version": "latest",
+      "moby": false,
+      "dockerDashComposeVersion": "v1"
+    }
+  },
   "updateContentCommand": "./gradlew build -x test -x nativeCompile -x :graalvm:build -x :graalvm-js:build -x :graalvm-react:build && git checkout kotlin-js-store",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"

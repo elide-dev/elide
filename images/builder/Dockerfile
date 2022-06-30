@@ -1,8 +1,10 @@
 
-ARG BASE_IMAGE=":latest"
+ARG BASE_IMAGE=gvm17
+ARG BASE_VERSION=":latest"
 ARG BASE_ARCH="amd64"
+ARG BASE_HASH="@sha256:2d25a613ed3764d375557f709f5d02423eae097abae05eaeca073bedcdb49863"
 
-FROM --platform=linux/${BASE_ARCH} us-docker.pkg.dev/elide-fw/tools/base${BASE_IMAGE}
+FROM --platform=linux/${BASE_ARCH} us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
 
 ARG JDK_VERSION="17"
 ARG NODE_VERSION="17"
@@ -15,11 +17,6 @@ RUN echo "Building Elide builder image..." \
     && set -eux \
     && apt-get update \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 \
-    && echo "Installing Zulu JDK (Java $JDK_VERSION)..." \
-    && curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb \
-    && DEBIAN_FRONTEND=noninteractive apt-get install ./zulu-repo_1.0.0-3_all.deb \
-    && apt-get update \
-    && rm -fv ./zulu-repo_1.0.0-3_all.deb \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       apt-transport-https \
       autoconf \
@@ -46,7 +43,6 @@ RUN echo "Building Elide builder image..." \
       unzip \
       wget \
       zlib1g \
-      "zulu$JDK_VERSION-jdk" \
     && cd ~ \
     && echo "Installing Go..."; \
         arch="$(dpkg --print-architecture)"; arch="${arch##*-}"; \
@@ -172,6 +168,7 @@ RUN echo "Building Elide builder image..." \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt install -y ./google-chrome-stable_current_amd64.deb \
     && rm -f google-chrome-stable_current_amd64.deb \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A040830F7FAC5991 \
     && echo "Installing Bazelisk..." \
     && curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-linux-amd64" \
     && mv bazelisk-linux-amd64 "/usr/bin/bazel" \

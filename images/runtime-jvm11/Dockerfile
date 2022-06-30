@@ -1,0 +1,7 @@
+
+ARG BASE_IMAGE=gvm11
+ARG BASE_VERSION=":latest"
+ARG BASE_ARCH="amd64"
+ARG BASE_HASH="@sha256:4ad9595cf44b545c9c33d60d14152b177a2a3525c08b2ee21349b0ff2cae1770"
+
+FROM --platform=linux/${BASE_ARCH} us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}

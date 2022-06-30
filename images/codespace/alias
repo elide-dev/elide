@@ -9,6 +9,7 @@ alias gs="clear && git status -sb"
 alias gw="./gradlew"
 alias g="git"
 alias m="make"
+alias gw="clear && ./gradlew"
 alias k="clear && kubectl"
 
 gsha () {

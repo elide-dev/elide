@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 import elide.server.runtime.AppExecutor
 import elide.server.util.ServerFlag
 import elide.util.Hex
-import io.micronaut.caffeine.cache.AsyncCache
 import io.micronaut.caffeine.cache.Cache
 import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
@@ -21,7 +20,6 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.LinkedList
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -100,7 +98,7 @@ import java.util.concurrent.atomic.AtomicReference
     override val symbol: String,
     val staticValue: String,
   ): JSVMProperty {
-    override fun value(): String? = staticValue
+    override fun value(): String = staticValue
   }
 
   /**
@@ -168,8 +166,7 @@ import java.util.concurrent.atomic.AtomicReference
     }
 
     // Initialize this managed context.
-    @Synchronized
-    fun initialize() {
+    @Synchronized fun initialize() {
       initialized.compareAndSet(
         false,
         true,
@@ -181,7 +178,7 @@ import java.util.concurrent.atomic.AtomicReference
     }
 
     // Acquire this context for execution.
-    @Synchronized fun <R> exec(operation: (org.graalvm.polyglot.Context) -> R): R {
+    fun <R> exec(operation: (org.graalvm.polyglot.Context) -> R): R {
       if (!initialized.get()) throw IllegalStateException(
         "Context must be initialized to execute operations"
       )
@@ -292,7 +289,7 @@ import java.util.concurrent.atomic.AtomicReference
     private val availableContexts: LinkedList<ManagedContext> = LinkedList()
 
     // Acquire a script context (or wait for one to be ready).
-    @Synchronized internal fun <R> acquireContext(exe: (org.graalvm.polyglot.Context) -> R): Future<R> {
+    internal fun <R> acquireContext(exe: (org.graalvm.polyglot.Context) -> R): Future<R> {
       // is there an available context immediately?
       val ctx = availableContexts.poll()
       if (ctx != null) {
@@ -313,8 +310,8 @@ import java.util.concurrent.atomic.AtomicReference
         // spawn the new context
         val newCtx = ManagedContext()
         newCtx.initialize()
-        val result = newCtx.exec { ctx ->
-          val result = exe.invoke(ctx)
+        val result = newCtx.exec { inner ->
+          val result = exe.invoke(inner)
           result
         }
         availableContexts.add(

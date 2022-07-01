@@ -57,9 +57,9 @@ tasks.create("docs") {
 
 buildscript {
   repositories {
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     google()
     mavenCentral()
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {

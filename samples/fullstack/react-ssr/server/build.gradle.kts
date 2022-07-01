@@ -90,6 +90,11 @@ testing {
 
 application {
   mainClass.set("fullstack.reactssr.App")
+  if (project.hasProperty("elide.graalvm.inspect") && project.properties["elide.graalvm.inspect"] == "true") {
+    applicationDefaultJvmArgs = listOf(
+      "-Delide.vm.inspect=true",
+    )
+  }
 }
 
 micronaut {

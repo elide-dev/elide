@@ -7,7 +7,7 @@ on:
       - main
       - stable
   pull_request:
-    types: [labeled, opened, reopened, synchronize]
+    types: [synchronize]
 
 jobs:
   ##

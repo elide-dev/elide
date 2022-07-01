@@ -10,9 +10,10 @@ grpc_java = "1.46.0"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 netty = "4.1.72.Final"
-natty_tcnative = "2.0.46.Final"
+netty_tcnative = "2.0.46.Final"
 micronaut_lib = "3.5.2"
 micronaut_grpc = "3.3.1"
+micronaut_gcp = "4.2.0"
 micronaut_test = "3.4.0"
 micronaut_plugin = "3.4.1"
 kotlinx_coroutines = "1.6.3"
@@ -31,6 +32,8 @@ versionCheck = "0.42.0"
 sonar = "3.4.0.2513"
 truth = "1.1.3"
 soy = "2022-03-07"
+closure = "v20220601"
+closure_stylesheets = "20160212"
 picocli = "4.6.3"
 slf4j = "1.7.36"
 jvmbrotli = "0.2.0"
@@ -51,18 +54,53 @@ kotlinx_wrappers_browser = "0.0.1-pre.347"
 kotlinx_wrappers_css = "1.0.0-pre.347"
 kotlinx_wrappers_node = "18.0.0-pre.347"
 kotlinx_wrappers_react = "18.2.0-pre.347"
+kotlinx_wrappers_react_router_dom = "6.3.0-pre.347"
+kotlinx_wrappers_emotion = "11.9.3-pre.347"
+kotlinx_wrappers_redux = "4.1.2-pre.347"
+kotlinx_wrappers_react_redux = "7.2.6-pre.347"
+kotlinx_wrappers_mui = "5.8.5-pre.347"
+kotlinx_wrappers_styled = "5.3.5-pre.347"
+kotlinx_wrappers_history = "5.3.0-pre.347"
+kotlinx_wrappers_typescript = "4.7.3-pre.345"
 npm_esbuild = "0.14.47"
 npm_prepack = "0.2.54"
 npm_buffer = "6.0.3"
 npm_stream = "4.0.0"
 npm_types_protobuf = "3.15.6"
 npm_grpcweb = "1.3.1"
+npm_lit = "2.2.7"
+npm_litHtml = "2.2.6"
+npm_litElement = "3.2.1"
+npm_lit_localize = "0.11.3"
+npm_lit_localizeTools = "0.6.4"
+npm_lit_labs_analyzer = "0.2.1"
+npm_lit_labs_context = "0.1.2"
+npm_lit_labs_motion = "1.0.2"
+npm_lit_labs_react = "1.0.6"
+npm_lit_labs_ssr = "2.2.1"
+npm_lit_labs_ssrClient = "1.0.1"
+npm_lit_labs_virtualizer = "0.7.0"
+npm_lit_labs_task = "1.1.2"
 google_api_common = "2.2.1"
 reactivestreams = "1.0.4"
+kotlin_dataframe = "0.9.0-dev-1059"
+kotlin_knit = "0.4.0"
+shadow_plugin = "7.1.2"
+gcloud_sdk = "25.4.0"
+gcloud_native = "0.14.1"
+jib = "3.2.1"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
-kotlin = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin_sdk"}
+kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_sdk"}
+kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin_sdk"}
+kotlin_multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_sdk"}
+kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin_sdk"}
+kotlin_plugin_jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin_sdk"}
+kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin_sdk"}
+kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin_sdk" }
+kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
+kotlinx_plugin_knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin_knit" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
@@ -76,13 +114,17 @@ micronautApplication = { id = "io.micronaut.application", version.ref = "microna
 micronautAot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
 node = { id = "com.github.node-gradle.node", version.ref = "node_plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker_plugin" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
+jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
+junit_jupiter_api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit_jupiter" }
 junit_jupiter_engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit_jupiter" }
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+kotlinx_atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin_sdk" }
 kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx_coroutines" }
@@ -105,7 +147,11 @@ kotlinx_serialization_protobuf_js = { group = "org.jetbrains.kotlinx", name = "k
 kotlinx_serialization_protobuf_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx_serialization" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 truth_proto = { group = "com.google.truth.extensions", name = "truth-proto-extension", version.ref = "truth" }
-soy = { group = "com.google.template", name = "soy", version.ref = "soy" }
+truth_java8 = { group = "com.google.truth.extensions", name = "truth-java8-extension", version.ref = "truth" }
+truth_re2j = { group = "com.google.truth.extensions", name = "truth-re2j-extension", version.ref = "truth" }
+closure_templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
+closure_compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
+closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure_stylesheets" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
@@ -117,9 +163,15 @@ guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
 micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
+micronaut_http_client = { group = "io.micronaut", name = "micronaut-http-client", version.ref = "micronaut_lib" }
+micronaut_gcp_common = { group = "io.micronaut.gcp", name = "micronaut-gcp-common", version.ref = "micronaut_gcp" }
+micronaut_gcp_logging = { group = "io.micronaut.gcp", name = "micronaut-gcp-logging", version.ref = "micronaut_gcp" }
+micronaut_gcp_pubsub = { group = "io.micronaut.gcp", name = "micronaut-gcp-pubsub", version.ref = "micronaut_gcp" }
+micronaut_gcp_secretManager = { group = "io.micronaut.gcp", name = "micronaut-gcp-secret-manager", version.ref = "micronaut_gcp" }
 micronaut_inject = { group = "io.micronaut", name = "micronaut-inject", version.ref = "micronaut_lib" }
 micronaut_inject_java = { group = "io.micronaut", name = "micronaut-inject-java", version.ref = "micronaut_lib" }
 micronaut_runtime = { group = "io.micronaut", name = "micronaut-runtime", version.ref = "micronaut_lib" }
+micronaut_runtime_osx = { group = "io.micronaut", name = "micronaut-runtime-osx", version.ref = "micronaut_lib" }
 micronaut_management = { group = "io.micronaut", name = "micronaut-management", version.ref = "micronaut_lib" }
 micronaut_grpc_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_client_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-client-runtime", version.ref = "micronaut_grpc" }
@@ -130,6 +182,14 @@ kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "ko
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
 kotlinx_wrappers_react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx_wrappers_react" }
 kotlinx_wrappers_react_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-dom", version.ref = "kotlinx_wrappers_react" }
+kotlinx_wrappers_react_router_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-router-dom", version.ref = "kotlinx_wrappers_react_router_dom" }
+kotlinx_wrappers_emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx_wrappers_emotion" }
+kotlinx_wrappers_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-redux", version.ref = "kotlinx_wrappers_redux" }
+kotlinx_wrappers_react_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-redux", version.ref = "kotlinx_wrappers_react_redux" }
+kotlinx_wrappers_mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui", version.ref = "kotlinx_wrappers_mui" }
+kotlinx_wrappers_styled = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled", version.ref = "kotlinx_wrappers_styled" }
+kotlinx_wrappers_history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx_wrappers_history" }
+kotlinx_wrappers_typescript = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-typescript", version.ref = "kotlinx_wrappers_typescript" }
 grpc_api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc_java" }
 grpc_auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc_java" }
 grpc_bom = { group = "io.grpc", name = "grpc-bom", version.ref = "grpc_java" }
@@ -141,8 +201,12 @@ grpc_netty = { group = "io.grpc", name = "grpc-netty", version.ref = "grpc_java"
 grpc_protobuf = { group = "io.grpc", name = "grpc-protobuf", version.ref = "grpc_java" }
 grpc_kotlin_stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc_kotlin" }
 netty_bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
+netty_tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty_tcnative" }
+netty_tcnative_boringssl_static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty_tcnative" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 gax_java = { group = "com.google.api", name = "gax", version.ref = "gax" }
 gax_java_grpc = { group = "com.google.api", name = "gax", version.ref = "gax" }
 google_api_common = { group = "com.google.api", name = "api-common", version.ref = "google_api_common" }
 reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
+google_cloud_bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud_sdk" }
+google_cloud_nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud_native" }

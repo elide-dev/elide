@@ -153,11 +153,31 @@ tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
   baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
 }
 
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile") {
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}
+
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
   images.set(listOf(
     "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:latest"
   ))
-  this.target
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
+  images.set(listOf(
+    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/jvm:opt-latest"
+  ))
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
@@ -166,10 +186,10 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuil
   ))
 }
 
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage(project.properties["elide.samples.docker.base.native"] as String)
-  args("-H:+StaticExecutableWithDynamicLibC")
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
+  images.set(listOf(
+    "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:opt-latest"
+  ))
 }
 
 tasks.withType<Copy>().named("processResources") {

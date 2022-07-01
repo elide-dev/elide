@@ -2,6 +2,7 @@ package elide.runtime.graalvm
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
+import elide.runtime.Logging
 import com.google.common.util.concurrent.ListenableFuture as Future
 import elide.server.runtime.AppExecutor
 import elide.server.util.ServerFlag
@@ -15,6 +16,7 @@ import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
+import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -45,14 +47,17 @@ import java.util.concurrent.atomic.AtomicReference
     // Options which must be evaluated at the time a context is created.
     private val conditionalOptions = listOf(
       ConditionalProperty("vm.inspect", "inspect", { ServerFlag.inspect }),
+      ConditionalProperty("vm.inspect.path", "inspect.Path", { ServerFlag.inspect }, defaultValue = (
+        ServerFlag.inspectPath
+      )),
     )
 
     /** @return Static acquisition of the singleton JavaScript runtime. */
     @JvmStatic fun acquire(): JsRuntime = singleton
 
     /** @return Set of options to apply to a new JS VM context. */
-    @JvmStatic private fun buildOptions(builder: org.graalvm.polyglot.Context.Builder) {
-      baseOptions.plus(
+    @JvmStatic private fun buildOptions(builder: org.graalvm.polyglot.Context.Builder): Map<JSVMProperty, String?> {
+      return baseOptions.plus(
         configurableOptions
       ).plus(
         conditionalOptions
@@ -60,21 +65,29 @@ import java.util.concurrent.atomic.AtomicReference
         it to it.value()
       }.filter {
         it.second?.isNotBlank() ?: false
-      }.forEach {
-        val prop = it.first
-        builder.option(
-          prop.symbol,
-          prop.value()
-        )
-      }
+      }.toMap()
     }
 
     /** @return SDK VM context pre-built for JavaScript execution. */
     @JvmStatic @Factory private fun spawnContext(): org.graalvm.polyglot.Context {
+      val logging = LoggerFactory.getLogger(JsRuntime::class.java)
       val builder = org.graalvm.polyglot.Context.newBuilder("js")
         .allowExperimentalOptions(true)
 
-      buildOptions(builder)
+      buildOptions(builder).forEach {
+        val prop = it.key
+        val value = prop.value()
+        if (value != null) {
+          logging.debug(
+            "Setting JS VM property: '$prop': '$value'"
+          )
+          builder.option(
+            prop.symbol,
+            value
+          )
+          // special case: handle inspection
+        }
+      }
       return builder.build()
     }
   }
@@ -138,7 +151,7 @@ import java.util.concurrent.atomic.AtomicReference
     override fun value(): String? = if (condition.invoke()) {
       value?.value() ?: defaultValue
     } else {
-      defaultValue
+      defaultValue ?: "true"
     }
   }
 

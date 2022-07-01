@@ -95,11 +95,23 @@ val mainEntry = "$mainPackage.App"
 
 application {
   mainClass.set(mainEntry)
-  if (project.hasProperty("elide.graalvm.inspect") && project.properties["elide.graalvm.inspect"] == "true") {
+  if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
     applicationDefaultJvmArgs = listOf(
       "-Delide.vm.inspect=true",
     )
   }
+}
+
+tasks.named<JavaExec>("run") {
+  val argsList = ArrayList<String>()
+  if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
+    argsList.add("--elide.vm.inspect=true")
+  } else {
+    argsList.add("--elide.vm.inspect=false")
+  }
+  args(
+    *argsList.toTypedArray()
+  )
 }
 
 micronaut {

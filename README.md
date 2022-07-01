@@ -1,4 +1,3 @@
-
 # `elide` (v3)
 
 _elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge._
@@ -10,6 +9,7 @@ _elide: verb. to omit (a sound or syllable) when speaking. to join together; to 
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
 
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.7.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
@@ -411,3 +411,7 @@ organizations (newest first):
 [11]: https://github.com/sgammon/elide/tree/master
 [12]: https://github.com/sgammon/elide
 [13]: https://buf.build
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_large)

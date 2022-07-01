@@ -15,6 +15,7 @@ plugins {
   alias(libs.plugins.micronautApplication)
   alias(libs.plugins.micronautAot)
   alias(libs.plugins.sonar)
+  alias(libs.plugins.jib)
 }
 
 group = "dev.elide.samples"

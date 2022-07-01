@@ -61,6 +61,27 @@ RUN apt-get update \
       software-properties-common \
       tar \
       time \
+      cron \
+      htop \
+      jq \
+      lcov \
+      logrotate \
+      lsb-release \
+      sudo \
+      fakeroot \
+      multitail \
+      python2 \
+      python2-dev \
+      python3 \
+      python3-dev \
+      python3-pip \
+      python3-wheel \
+      python3-venv \
+      python3-setuptools \
+      rsyslog \
+      tree \
+      tmux \
+      vim \
       unzip \
       wget \
       zlib1g \
@@ -219,6 +240,19 @@ RUN apt-get update \
     && echo "Installing GraalVM modules..." \
     && $GRAALVM_HOME/bin/gu install native-image espresso \
     && rm -rf /var/lib/apt/lists/* \
+    && echo "Setting up Debian-based codespace..." \
+    && yes | unminimize 2>&1 \
+    && echo "Installing updates and dev packages..." \
+    && groupadd engineering \
+    && useradd -g engineering -m dev \
+    && usermod -aG sudo dev \
+    && mkdir -p /home/dev \
+    && chown dev:engineering /home/dev \
+    && echo "dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && echo "%engineering  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && echo "$DEV_USER  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && chsh -s /bin/zsh "$DEV_USER" \
     && echo "Build tools ready.";
 
 ENV GRADLE_HOME="/opt/gradle" \
@@ -237,53 +271,9 @@ ENV GRADLE_HOME="/opt/gradle" \
     DOCKER_BUILDKIT=1 \
     ELIDE_TEST_LOCAL=true
 
-COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
 COPY alias /home/$DEV_USER/.alias
 
-RUN echo "Setting up Debian-based codespace..." \
-    && yes | unminimize 2>&1 \
-    && echo "Installing updates and dev packages..." \
-    && apt-get update \
-    && apt-get -y install \
-        apt-transport-https \
-        bash \
-        ca-certificates \
-        cron \
-        htop \
-        jq \
-        lcov \
-        logrotate \
-        lsb-release \
-        maven \
-        sudo \
-        fakeroot \
-        multitail \
-        python2 \
-        python2-dev \
-        python3 \
-        python3-dev \
-        python3-pip \
-        python3-wheel \
-        python3-venv \
-        python3-setuptools \
-        rsyslog \
-        software-properties-common \
-        tree \
-        tmux \
-        vim \
-        zsh \
-    && groupadd engineering \
-    && useradd -g engineering -m dev \
-    && usermod -aG sudo dev \
-    && mkdir -p /home/dev \
-    && chown dev:engineering /home/dev \
-    && echo "dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && echo "%engineering  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && echo "$DEV_USER  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && chsh -s /bin/zsh "$DEV_USER" \
-    && su "$DEV_USER" \
-    && sudo "$DEV_USER" sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
     && echo "source ~/.profile" >> ~/.zshrc \
     && go install github.com/bazelbuild/buildtools/buildifier@latest \
     && go install github.com/bazelbuild/buildtools/buildozer@latest \
@@ -295,8 +285,6 @@ RUN echo "Setting up Debian-based codespace..." \
     && curl -o /home/dev/bin/ibazel "https://github.com/bazelbuild/bazel-watcher/releases/download/$IBAZEL_VERSION/ibazel_linux_amd64" \
     && yes Y | gcloud components install kubectl \
     && echo "Codespace image ready."
-
-RUN bash /tmp/library-scripts/docker-debian.sh
 
 COPY zshrc /home/$DEV_USER/.zshrc
 USER ${DEV_USER}

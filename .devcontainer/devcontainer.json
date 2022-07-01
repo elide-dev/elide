@@ -34,7 +34,11 @@
     "bufbuild.vscode-buf",
     "googlecloudtools.cloudcode",
     "sswg.swift-lang",
-    "sourcegraph.sourcegraph"
+    "fwcd.kotlin",
+    "sourcegraph.sourcegraph",
+    "oracle-labs-graalvm.graalvm",
+    "oracle-labs-graalvm.graalvm-pack",
+    "oracle-labs-graalvm.micronaut"
   ],
   "features": {
     "docker-from-docker": {
@@ -43,7 +47,7 @@
       "dockerDashComposeVersion": "v1"
     }
   },
-  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && git checkout kotlin-js-store",
+  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && git checkout kotlin-js-store || exit 0",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"
 }

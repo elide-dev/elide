@@ -16,6 +16,8 @@ micronaut_grpc = "3.3.1"
 micronaut_gcp = "4.2.0"
 micronaut_test = "3.4.0"
 micronaut_plugin = "3.4.1"
+micronaut_redis = "5.2.0"
+micronaut_cache = "3.4.1"
 kotlinx_coroutines = "1.6.3"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.3.3"
@@ -176,6 +178,9 @@ micronaut_management = { group = "io.micronaut", name = "micronaut-management", 
 micronaut_grpc_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_client_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-client-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_server_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-server-runtime", version.ref = "micronaut_grpc" }
+micronaut_cache_core = { group = "io.micronaut.cache", name = "micronaut-cache-core", version.ref = "micronaut_cache" }
+micronaut_cache_caffeine = { group = "io.micronaut.cache", name = "micronaut-cache-caffeine", version.ref = "micronaut_cache" }
+micronaut_redis = { group = "io.micronaut.redis", name = "micronaut-redis-lettuce", version.ref = "micronaut_redis" }
 micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }

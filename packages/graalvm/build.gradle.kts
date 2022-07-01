@@ -170,6 +170,8 @@ dependencies {
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
   implementation(libs.micronaut.inject.java)
+  implementation(libs.micronaut.cache.core)
+  implementation(libs.micronaut.cache.caffeine)
 
   // GraalVM SDK
   implementation(libs.graalvm.sdk)

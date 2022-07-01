@@ -44,12 +44,14 @@ java {
 }
 
 graalvmNative {
+  metadataRepository {
+    enabled.set(true)
+  }
   binaries {
     named("main") {
       fallback.set(false)
       buildArgs.addAll(listOf(
         "--language:js",
-        "--language:java",
         "--language:regex",
         "--enable-all-security-services",
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
@@ -88,8 +90,11 @@ testing {
   }
 }
 
+val mainPackage = "fullstack.reactssr"
+val mainEntry = "$mainPackage.App"
+
 application {
-  mainClass.set("fullstack.reactssr.App")
+  mainClass.set(mainEntry)
   if (project.hasProperty("elide.graalvm.inspect") && project.properties["elide.graalvm.inspect"] == "true") {
     applicationDefaultJvmArgs = listOf(
       "-Delide.vm.inspect=true",
@@ -102,7 +107,7 @@ micronaut {
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
   processing {
     incremental.set(true)
-    annotations.add("fullstack.reactssr.*")
+    annotations.add("$mainPackage.*")
   }
   aot {
     optimizeServiceLoading.set(true)
@@ -216,4 +221,22 @@ tasks.register<Copy>("copyStatic") {
 tasks.register<Copy>("copyEmbedded") {
   from(nodeDist)
   into("$buildDir/resources/main/embedded")
+}
+
+tasks {
+  jib {
+    from {
+      image = "us-docker.pkg.dev/elide-fw/tools/runtime/jvm17:latest"
+    }
+    to {
+      image = "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/jvm"
+      tags = setOf("latest", "jib")
+    }
+    container {
+      jvmFlags = listOf("-Ddyme.runtime=JVM", "-Xms512m", "-Xdebug")
+      mainClass = mainEntry
+      ports = listOf("8080", "50051")
+      format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
+    }
+  }
 }

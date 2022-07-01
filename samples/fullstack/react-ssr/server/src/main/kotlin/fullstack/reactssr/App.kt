@@ -18,7 +18,7 @@ object App {
   /** GET `/`: Controller for index page. */
   @Controller class Index {
     // Serve the page itself.
-    @Get("/") fun index() = ssr {
+    @Get("/") suspend fun index() = ssr {
       head {
         title { +"Hello, Elide!" }
         stylesheet("/styles/main.css")

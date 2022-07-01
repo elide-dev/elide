@@ -8,6 +8,7 @@ import elide.server.ssr.ServerSSRRenderer
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
+import kotlinx.coroutines.runBlocking
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayOutputStream
@@ -123,10 +124,10 @@ fun BODY.injectSSR(
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-fun ssr(
+suspend fun ssr(
   path: String = nodeSsrDefaultPath,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
-  block: HTML.() -> Unit
+  block: suspend HTML.() -> Unit
 ): MutableHttpResponse<ByteArrayOutputStream> {
   return if (path.isBlank()) {
     HttpResponse.notFound()
@@ -142,7 +143,7 @@ fun ssr(
 // SSR content rendering and container utility.
 class SSRContent (
   private val prettyhtml: Boolean = false,
-  private val builder: HTML.() -> Unit
+  private val builder: suspend HTML.() -> Unit
 ): ServerRenderer {
   override fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
@@ -150,7 +151,11 @@ class SSRContent (
       it.appendHTML(
         prettyPrint = prettyhtml,
       ).html(
-        block = builder
+        block = {
+          runBlocking {
+            builder()
+          }
+        }
       )
     }
     return baos

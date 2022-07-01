@@ -14,7 +14,7 @@ import kotlinx.html.title
 object App {
   /** GET `/`: Controller for index page. */
   @Controller class Index {
-    @Get("/") fun index() = html {
+    @Get("/") suspend fun index() = html {
       head {
         title { +"Hello, Elide!" }
       }

@@ -8,7 +8,7 @@ import jakarta.inject.Singleton
 /**
  *
  */
-@Singleton open class UncaughtExceptionHandler: Thread.UncaughtExceptionHandler {
+@Singleton public open class UncaughtExceptionHandler: Thread.UncaughtExceptionHandler {
   // Root logger.
   private val logging: Logger = Logging.root()
 

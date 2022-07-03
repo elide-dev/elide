@@ -6,7 +6,6 @@
 )
 
 import java.net.URI
-import com.google.protobuf.gradle.*
 
 plugins {
   java
@@ -18,7 +17,6 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   alias(libs.plugins.testLogger)
-  alias(libs.plugins.protobuf)
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.dokka)
   alias(libs.plugins.sonar)
@@ -27,20 +25,9 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-protobuf {
-  protoc {
-    artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
-  }
-  generateProtoTasks {
-    ofSourceSet("main").forEach {
-      it.builtins {
-        id("kotlin")
-      }
-    }
-  }
-}
-
 kotlin {
+  explicitApi()
+
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }
@@ -149,14 +136,6 @@ micronaut {
   version.set(libs.versions.micronaut.lib.get())
 }
 
-sourceSets {
-  named("main") {
-    proto {
-      srcDir("${rootProject.projectDir}/proto")
-    }
-  }
-}
-
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
@@ -164,11 +143,9 @@ dependencies {
   api(platform(libs.grpc.bom))
   api(platform(libs.netty.bom))
 
-  // Protocol Buffers
-  protobuf(files("${rootProject.projectDir}/proto/deps/webutil.tar.gz"))
-
   // Modules
   implementation(project(":packages:base"))
+  implementation(project(":packages:proto"))
 
   // Kotlin
   implementation(libs.kotlinx.html.jvm)

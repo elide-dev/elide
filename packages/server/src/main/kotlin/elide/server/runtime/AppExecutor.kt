@@ -29,17 +29,17 @@ import java.util.concurrent.ScheduledThreadPoolExecutor
  * @see DefaultExecutor for the default [AppExecutor] implementation.
  */
 @Suppress("unused")
-interface AppExecutor {
+public interface AppExecutor {
   /** Default settings applied to an application executor. */
-  object DefaultSettings {
+  public object DefaultSettings {
     /** Default size of threads available for background execution. */
-    val poolSize = (Runtime.getRuntime().availableProcessors() * 2) - 1
+    public val poolSize: Int = (Runtime.getRuntime().availableProcessors() * 2) - 1
 
     /** Default priority assigned to threads for background execution. */
-    const val priority = Thread.NORM_PRIORITY
+    public const val priority: Int = Thread.NORM_PRIORITY
   }
 
-  companion object {
+  public companion object {
     /**
      * Run the provided [operation] asynchronously, returning whatever result is returned by the [operation].
      *
@@ -49,7 +49,7 @@ interface AppExecutor {
      * @param operation Operation to run. Can suspend.
      * @return Deferred task providing the result of the [operation].
      */
-    @JvmStatic suspend fun <R> async(operation: suspend () -> R): Deferred<R> {
+    @JvmStatic public suspend fun <R> async(operation: suspend () -> R): Deferred<R> {
       return withContext(DefaultExecutor.backgroundDispatcher) {
         async {
           operation.invoke()
@@ -66,7 +66,7 @@ interface AppExecutor {
      * @param operation Operation to run. Can suspend.
      * @return Deferred task providing the result of the [operation].
      */
-    @JvmStatic suspend fun <R> io(operation: suspend () -> R): R {
+    @JvmStatic public suspend fun <R> io(operation: suspend () -> R): R {
       return withContext(DefaultExecutor.ioDispatcher) {
         operation.invoke()
       }
@@ -81,7 +81,7 @@ interface AppExecutor {
      * @param operation Operation to run. Can suspend.
      * @return Deferred task providing the result of the [operation].
      */
-    @JvmStatic suspend fun <R> main(operation: suspend () -> R): R {
+    @JvmStatic public suspend fun <R> main(operation: suspend () -> R): R {
       return withContext(DefaultExecutor.mainDispatcher) {
         operation.invoke()
       }
@@ -100,7 +100,7 @@ interface AppExecutor {
      * @param operation Operation to run. Can suspend.
      * @return Deferred task providing the result of the [operation].
      */
-    @JvmStatic suspend fun <R> unconfined(operation: suspend () -> R): R {
+    @JvmStatic public suspend fun <R> unconfined(operation: suspend () -> R): R {
       return withContext(DefaultExecutor.mainDispatcher) {
         operation.invoke()
       }
@@ -108,19 +108,19 @@ interface AppExecutor {
   }
 
   /** @return Instance of the main [Executor] held by this [AppExecutor]. */
-  fun executor(): Executor = service()
+  public fun executor(): Executor = service()
 
   /** @return Service-oriented instance of the main [Executor] held by this [AppExecutor]. */
-  fun service(): ListeningExecutorService
+  public fun service(): ListeningExecutorService
 
   /** Implements the application-default-executor, as a bridge to Micronaut. */
   @Context
   @Singleton
   @Suppress("unused")
-  class DefaultExecutor @Inject constructor (
+  public class DefaultExecutor @Inject constructor (
     uncaughtHandler: Thread.UncaughtExceptionHandler
   ): AppExecutor {
-    companion object {
+    public companion object {
       /** Uncaught exception handler (global). */
       private val errHandler = UncaughtExceptionHandler()
 
@@ -140,7 +140,7 @@ interface AppExecutor {
       internal val mainDispatcher = Dispatchers.Main
 
       /** Acquire the main application executor. */
-      @JvmStatic fun acquire(): AppExecutor = mainExec
+      @JvmStatic public fun acquire(): AppExecutor = mainExec
     }
 
     /** Base factory for acquiring threads. */
@@ -163,7 +163,7 @@ interface AppExecutor {
     /**
      * Override the active main application executor with the provided [exec] service.
      */
-    fun overrideExecutor(exec: ListeningScheduledExecutorService) {
+    public fun overrideExecutor(exec: ListeningScheduledExecutorService) {
       this.runner = exec
     }
 

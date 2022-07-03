@@ -14,16 +14,16 @@ import java.nio.charset.StandardCharsets
 
 
 /** Describes the expected interface for a response rendering object. */
-interface ResponseRenderer<R> {
+public interface ResponseRenderer<R> {
   /** @return Rendered result. */
-  fun render(): R
+  public fun render(): R
 }
 
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
-interface SuspensionRenderer<R> {
+public interface SuspensionRenderer<R> {
   /** @return Rendered result. */
-  suspend fun render(): R
+  public suspend fun render(): R
 }
 
 
@@ -35,7 +35,7 @@ interface SuspensionRenderer<R> {
  * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
  *    located at the specified path.
  */
-fun staticFile(file: String, contentType: String): HttpResponse<*> {
+public fun staticFile(file: String, contentType: String): HttpResponse<*> {
   val target = HtmlContent::class.java.getResourceAsStream("/static/$file")
   return if (target != null) {
     HttpResponse.ok(
@@ -58,7 +58,7 @@ fun staticFile(file: String, contentType: String): HttpResponse<*> {
  * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
  *    located at the specified path.
  */
-fun asset(path: String, type: String, contentType: MediaType?): HttpResponse<*> {
+public fun asset(path: String, type: String, contentType: MediaType?): HttpResponse<*> {
   return if (path.isBlank() || type.isBlank() || contentType == null) {
     HttpResponse.notFound<Any>()
   } else {
@@ -84,7 +84,7 @@ fun asset(path: String, type: String, contentType: MediaType?): HttpResponse<*> 
  * @param block Block to execute to build the HTML page.
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
-suspend fun html(block: suspend HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
+public suspend fun html(block: suspend HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
   return HttpResponse.ok(
     HtmlContent(builder = block).render()
   ).characterEncoding(StandardCharsets.UTF_8).contentType(
@@ -121,7 +121,7 @@ internal class HtmlContent (
  * @param block Block to execute to build the CSS document.
  * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
  */
-fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
+public fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
   return HttpResponse.ok(
     CssContent(block).render()
   ).characterEncoding(
@@ -132,7 +132,7 @@ fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
 }
 
 // HTML content rendering and container utility.
-class CssContent (
+internal class CssContent (
   private val builder: CssBuilder.() -> Unit
 ): ResponseRenderer<ByteArray> {
   override fun render(): ByteArray {

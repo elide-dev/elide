@@ -4,7 +4,7 @@ package kotlinx.html
 /**
  * TBD
  */
-suspend inline fun <T : Tag> T.visitSuspend(crossinline block: suspend T.() -> Unit) = visitTagSuspend {
+public suspend inline fun <T : Tag> T.visitSuspend(crossinline block: suspend T.() -> Unit): Unit = visitTagSuspend {
   block()
 }
 
@@ -12,7 +12,7 @@ suspend inline fun <T : Tag> T.visitSuspend(crossinline block: suspend T.() -> U
 /**
  * TBD
  */
-suspend inline fun <T : Tag> T.visitTagSuspend(block: T.() -> Unit) {
+public suspend inline fun <T : Tag> T.visitTagSuspend(block: T.() -> Unit): Unit {
   consumer.onTagStart(this)
   try {
     this.block()

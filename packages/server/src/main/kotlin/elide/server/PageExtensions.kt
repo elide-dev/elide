@@ -6,7 +6,7 @@ import kotlinx.html.*
 
 
 /** Generates a CSS link from the provided handler [uri], optionally including the specified [attrs]. */
-inline fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String, String>? = null): Unit = LINK(
+public inline fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String, String>? = null): Unit = LINK(
   attributesMapOf(
     "rel",
     "stylesheet",
@@ -23,7 +23,7 @@ inline fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String
 }
 
 /** Generates a `<head>` script link from the provided handler [uri], optionally including the specified [attrs]. */
-inline fun HEAD.script(
+public inline fun HEAD.script(
   uri: String,
   defer: Boolean = false,
   async: Boolean = false,
@@ -46,7 +46,7 @@ inline fun HEAD.script(
 
 
 /** Generates a `<body>` script link from the provided handler [uri], optionally including the specified [attrs]. */
-inline fun BODY.script(
+public inline fun BODY.script(
   uri: String,
   defer: Boolean = false,
   async: Boolean = false,

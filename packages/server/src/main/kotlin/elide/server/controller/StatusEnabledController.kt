@@ -4,6 +4,6 @@ package elide.server.controller
 /**
  *
  */
-interface StatusEnabledController {
+public interface StatusEnabledController {
   // Nothing yet.
 }

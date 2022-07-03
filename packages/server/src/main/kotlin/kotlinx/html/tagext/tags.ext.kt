@@ -6,7 +6,10 @@ import kotlinx.html.*
  * TBD
  */
 @HtmlTagMarker
-suspend inline fun HTML.body(classes : String? = null, crossinline block : suspend BODY.() -> Unit) : Unit = BODY(
+public suspend inline fun HTML.body(
+  classes : String? = null,
+  crossinline block : suspend BODY.() -> Unit
+) : Unit = BODY(
   attributesMapOf("class", classes),
   consumer
 ).visitSuspend(block)
@@ -16,7 +19,7 @@ suspend inline fun HTML.body(classes : String? = null, crossinline block : suspe
  * Document head
  */
 @HtmlTagMarker
-suspend inline fun HTML.head(
+public suspend inline fun HTML.head(
   crossinline block : suspend HEAD.() -> Unit
 ) : Unit = HEAD(emptyMap, consumer).visitSuspend(
   block

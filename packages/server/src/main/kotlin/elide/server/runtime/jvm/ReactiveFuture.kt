@@ -274,7 +274,7 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
   </T> */
   @Immutable
   @ThreadSafe
-  class PublisherListenableFuture<T> internal constructor(publisher: Publisher<T>) :
+  public class PublisherListenableFuture<T> internal constructor(publisher: Publisher<T>) :
     ListenableFuture<T>, Publisher<T> {
     /** Whether we have received a value.  */
     private val received = AtomicBoolean(false)
@@ -434,7 +434,7 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
    *
    * @param <T> Emit type for this adapter. Matches the future it wraps.
   </T> */
-  class CompletableFuturePublisher<T> internal constructor(
+  public class CompletableFuturePublisher<T> internal constructor(
     @field:Nonnull @param:Nonnull private val future: CompletableFuture<T>,
     callbackExecutor: Executor
   ) : Publisher<T>, ListenableFuture<T>, CompletionStage<T> {
@@ -785,7 +785,7 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      */
     @Immutable
     @ThreadSafe
-    inner class CompletableFutureSubscription internal constructor(
+    public inner class CompletableFutureSubscription internal constructor(
       future: CompletableFuture<T>,
       subscriber: Subscriber<in T>?,
       executor: Executor
@@ -871,7 +871,7 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
    *
    * @param <T> Emit type for this adapter. Matches the publisher it wraps.
   </T> */
-  class ListenableFuturePublisher<T>
+  public class ListenableFuturePublisher<T>
   /**
    * Wrap a [ListenableFuture]. Private constructor for use by [ReactiveFuture] only.
    *
@@ -903,7 +903,7 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      */
     @Immutable
     @ThreadSafe
-    inner class ListenableFutureSubscription internal constructor(
+    public inner class ListenableFutureSubscription internal constructor(
       future: ListenableFuture<T>,
       subscriber: Subscriber<in T>?,
       executor: Executor
@@ -979,28 +979,25 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
     }
   }
 
-  companion object {
+  public companion object {
     // -- Public API -- //
     /**
      * Wrap a Reactive Java [Publisher] in a universal [ReactiveFuture], such that it may be used with any
      * interface requiring a supported async or future value.
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
      *
-     * @see .wrap
      * @param publisher Reactive publisher to wrap.
-     * @param <R> Return or emission type of the publisher.
+     * @param R Return or emission type of the publisher.
      * @return Wrapped reactive future object.
      * @throws IllegalArgumentException If the passed `publisher` is `null`.
-    </R> */
-    fun <R> wrap(publisher: Publisher<R>?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(publisher: Publisher<R>?): ReactiveFuture<R> {
       requireNotNull(publisher) { "Cannot wrap `null` publisher." }
       return ReactiveFuture(publisher)
     }
@@ -1009,15 +1006,12 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a regular Java [CompletableFuture] in a universal [ReactiveFuture], such that it may be used with
      * any interface requiring support for that class.
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
-     *
      *
      * **Warning:** this method uses [MoreExecutors.directExecutor] for callback execution. You should only
      * do this if the callbacks associated with your future are lightweight and exit quickly. Otherwise, it is heavily
@@ -1025,10 +1019,10 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * method to this one is [.wrap].
      *
      * @param future Completable future to wrap.
-     * @param <R> Return or emission type of the future.
+     * @param R Return or emission type of the future.
      * @return Wrapped reactive future object.
-    </R> */
-    fun <R> wrap(future: CompletableFuture<R>?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(future: CompletableFuture<R>?): ReactiveFuture<R> {
       requireNotNull(future) { "Cannot wrap `null` publisher." }
       return wrap(future, MoreExecutors.directExecutor())
     }
@@ -1037,10 +1031,8 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a regular Java [CompletableFuture] in a universal [ReactiveFuture], such that it may be used with
      * any interface requiring support for that class.
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
@@ -1048,10 +1040,10 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      *
      * @param future Completable future to wrap.
      * @param executor Executor to use.
-     * @param <R> Return or emission type of the future.
+     * @param R Return or emission type of the future.
      * @return Wrapped reactive future object.
-    </R> */
-    fun <R> wrap(future: CompletableFuture<R>?, executor: Executor?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(future: CompletableFuture<R>?, executor: Executor?): ReactiveFuture<R> {
       requireNotNull(future) { "Cannot wrap `null` future." }
       requireNotNull(executor) { "Cannot wrap future with `null` executor." }
       return ReactiveFuture(future, executor)
@@ -1061,28 +1053,24 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a Guava [ListenableFuture] in a universal [ReactiveFuture], such that it may be used with any
      * interface requiring a supported async or future value.
      *
-     *
      * **Warning:** this method uses [MoreExecutors.directExecutor] for callback execution. You should only
      * do this if the callbacks associated with your future are lightweight and exit quickly. Otherwise, it is heavily
      * recommended to use the variants of `wrap` that accept an [Executor]. For instance, the corresponding
      * method to this one is [.wrap].
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
      *
-     * @see .wrap
      * @param future Future value to wrap.
-     * @param <R> Return value type for the future.
+     * @param R Return value type for the future.
      * @return Wrapped reactive future object.
      * @throws IllegalArgumentException If the passed `future` is `null`.
-    </R> */
-    fun <R> wrap(future: ListenableFuture<R>?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(future: ListenableFuture<R>?): ReactiveFuture<R> {
       return wrap(future, MoreExecutors.directExecutor())
     }
 
@@ -1090,23 +1078,20 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a Guava [ListenableFuture] in a universal [ReactiveFuture], such that it may be used with any
      * interface requiring a supported async or future value.
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
      *
-     * @see .wrap
      * @param future Future value to wrap.
      * @param executor Executor to dispatch callbacks with.
-     * @param <R> Return value type for the future.
+     * @param R Return value type for the future.
      * @return Wrapped reactive future object.
      * @throws IllegalArgumentException If the passed `future` is `null`.
-    </R> */
-    fun <R> wrap(future: ListenableFuture<R>?, executor: Executor?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(future: ListenableFuture<R>?, executor: Executor?): ReactiveFuture<R> {
       requireNotNull(future) { "Cannot wrap `null` future." }
       requireNotNull(executor) { "Cannot wrap future with `null` executor." }
       return ReactiveFuture(future, executor)
@@ -1116,24 +1101,20 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a Google APIs [ApiFuture] in a universal [ReactiveFuture], such that it may be used with any
      * interface requiring a supported async or future value.
      *
-     *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
      *
-     * @see .wrap
-     * @see .wrap
      * @param apiFuture API future to wrap.
      * @param executor Executor to run callbacks with.
-     * @param <R> Return value type for the future.
+     * @param R Return value type for the future.
      * @return Wrapped reactive future object.
      * @throws IllegalArgumentException If the passed `apiFuture` is `null`.
-    </R> */
-    fun <R> wrap(apiFuture: ApiFuture<R>?, executor: Executor?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(apiFuture: ApiFuture<R>?, executor: Executor?): ReactiveFuture<R> {
       requireNotNull(apiFuture) { "Cannot wrap `null` API future." }
       return wrap(ApiFutureToListenableFuture(apiFuture), executor)
     }
@@ -1142,29 +1123,24 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Wrap a Google APIs [ApiFuture] in a universal [ReactiveFuture], such that it may be used with any
      * interface requiring a supported async or future value.
      *
-     *
      * **Warning:** this method uses [MoreExecutors.directExecutor] for callback execution. You should only
      * do this if the callbacks associated with your future are lightweight and exit quickly. Otherwise, it is heavily
      * recommended to use the variants of `wrap` that accept an [Executor]. For instance, the corresponding
-     * method to this one is [.wrap].
-     *
+     * method to this one is [wrap].
      *
      * The resulting object is usable as any of [ListenableFuture], [Publisher], or [ApiFuture]. See
      * class docs for more information.
-     *
      *
      * **Note:** to use a [Publisher] as a [Future] (or any descendent thereof), the [Publisher]
      * may only emit one value, and no more. Emitting multiple items is considered an error when wrapped in this class
      * and accessed as a [Future], to prevent silently dropping intermediate values on the floor.
      *
-     * @see .wrap
-     * @see .wrap
      * @param apiFuture API future to wrap.
-     * @param <R> Return value type for the future.
+     * @param R Return value type for the future.
      * @return Wrapped reactive future object.
      * @throws IllegalArgumentException If the passed `apiFuture` is `null`.
-    </R> */
-    fun <R> wrap(apiFuture: ApiFuture<R>?): ReactiveFuture<R> {
+     */
+    public fun <R> wrap(apiFuture: ApiFuture<R>?): ReactiveFuture<R> {
       return wrap(apiFuture, MoreExecutors.directExecutor())
     }
 
@@ -1172,15 +1148,14 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Create an already-resolved future, wrapping the provided value. The future will present as done as soon as it is
      * returned from this method.
      *
-     *
      * Under the hood, this is simply a [ReactiveFuture] wrapping a call to
      * [Futures.immediateFuture].
      *
      * @param value Value to wrap in an already-completed future.
-     * @param <R> Return value generic type.
+     * @param R Return value generic type.
      * @return Reactive future wrapping a finished value.
-     **/
-    fun <R> done(value: R): ReactiveFuture<R> {
+     */
+    public fun <R> done(value: R): ReactiveFuture<R> {
       return wrap(Futures.immediateFuture(value))
     }
 
@@ -1194,10 +1169,10 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * call to [Futures.immediateFailedFuture].
      *
      * @param error Error to wrap in an already-failed future.
-     * @param <R> Return value generic type.
+     * @param R Return value generic type.
      * @return Reactive future wrapping a finished value.
-     **/
-    fun <R> failed(error: Throwable): ReactiveFuture<R> {
+     */
+    public fun <R> failed(error: Throwable): ReactiveFuture<R> {
       return wrap(Futures.immediateFailedFuture(error))
     }
 
@@ -1205,14 +1180,12 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
      * Create an already-cancelled future. The future will present as both done and cancelled as soon as it is returned
      * from this method.
      *
+     * Under the hood, this is simply a [ReactiveFuture] wrapping a call to [Futures.immediateCancelledFuture].
      *
-     * Under the hood, this is simply a [ReactiveFuture] wrapping a call to
-     * [Futures.immediateCancelledFuture].
-     *
-     * @param <R> Return value generic type.
+     * @param R Return value generic type.
      * @return Reactive future wrapping a cancelled operation.
-    </R> */
-    fun <R> cancelled(): ReactiveFuture<R> {
+     */
+    public fun <R> cancelled(): ReactiveFuture<R> {
       return wrap(Futures.immediateCancelledFuture())
     }
   }

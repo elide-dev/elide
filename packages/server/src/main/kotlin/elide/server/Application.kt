@@ -8,7 +8,7 @@ import io.micronaut.runtime.Micronaut
  * Static class interface which equips a Micronaut application with extra initialization features powered by Elide; to
  * use, simply enforce that your entrypoint object complies with this interface.
  */
-interface Application {
+public interface Application {
   /**
    * Boot an Elide application with the provided [args], if any.
    *
@@ -20,7 +20,7 @@ interface Application {
    *
    * @param args Arguments passed to the application.
    */
-  fun boot(args: Array<String>) {
+  public fun boot(args: Array<String>) {
     ServerFlag.setArgs(args)
     Micronaut.build().args(*args).start()
   }

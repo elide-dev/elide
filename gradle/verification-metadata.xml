@@ -8,6 +8,7 @@
          <trust group="gradle" name="gradle"/>
          <trust group="io.ktor"/>
          <trust group="org.codehaus.groovy"/>
+         <trust group="org.checkerframework"/>
          <trust file=".*-javadoc[.]jar" regex="true"/>
          <trust file=".*-sources[.]jar" regex="true"/>
       </trusted-artifacts>
@@ -39,6 +40,7 @@
          <trusted-key id="12d16069219c90212a974d119ae296fd02e9f65b" group="org.apache.commons" name="commons-math3" version="3.2"/>
          <trusted-key id="13ac2213964abe1d1c147c0e1939a2520bab1d90" group="org.freemarker" name="freemarker" version="2.3.31"/>
          <trusted-key id="19beab2d799c020f17c69126b16698a4adf4d638">
+            <trusting group="org.checkerframework" name="checker-compat-qual" version="2.5.5"/>
             <trusting group="org.checkerframework" name="checker-qual"/>
             <trusting group="org.checkerframework" name="checker-qual" version="2.11.1"/>
          </trusted-key>

@@ -26,6 +26,8 @@ group = "dev.elide"
 version = rootProject.version as String
 
 kotlin {
+  explicitApi()
+
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
   }

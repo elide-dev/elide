@@ -30,8 +30,8 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
 @Suppress("MemberVisibilityCanBePrivate")
-@Context class JsRuntime {
-  companion object {
+@Context public class JsRuntime {
+  public companion object {
     // Singleton instance.
     private val singleton = JsRuntime()
 
@@ -71,7 +71,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
 
     /** Dedicated executor for the JS Runtime. */
-    class RuntimeExecutor {
+    internal class RuntimeExecutor {
       // Dedicated thread executor backing the runtime.
       private val threadPool: Executor = Executors.newSingleThreadExecutor()
 
@@ -84,7 +84,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
 
     /** @return Static acquisition of the singleton JavaScript runtime. */
-    @JvmStatic fun acquire(): JsRuntime = singleton
+    @JvmStatic public fun acquire(): JsRuntime = singleton
 
     /** @return Set of options to apply to a new JS VM context. */
     @JvmStatic private fun buildRuntimeOptions(): Map<JSVMProperty, String?> {
@@ -138,7 +138,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
    * @param symbol Symbol to use for the VM property when passing it to a new context.
    * @param staticValue Value for this property.
    */
-  data class StaticProperty(
+  internal data class StaticProperty(
     override val symbol: String,
     val staticValue: String,
   ): JSVMProperty {
@@ -187,21 +187,24 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   }
 
   /** Shortcuts for creating script descriptors. */
-  @Suppress("unused") object Script {
+  @Suppress("unused") public object Script {
     /** @return Embedded script container for the provided [path] (and [charset], defaulting to `UTF-8`). */
-    @JvmStatic fun embedded(path: String, charset: Charset = StandardCharsets.UTF_8): EmbeddedScript = EmbeddedScript(
+    @JvmStatic public fun embedded(
+      path: String,
+      charset: Charset = StandardCharsets.UTF_8
+    ): EmbeddedScript = EmbeddedScript(
       path = path,
       charset = charset,
     )
 
     /** @return Literal script container for the provided [script]. */
-    @JvmStatic fun literal(script: String, id: String): ExecutableScript = LiteralScript(id, script)
+    @JvmStatic public fun literal(script: String, id: String): ExecutableScript = LiteralScript(id, script)
   }
 
   /** Managed GraalVM execution context, with thread guards. */
   private class ManagedContext {
-    companion object {
-      @JvmStatic fun acquire(): ManagedContext {
+    internal companion object {
+      @JvmStatic internal fun acquire(): ManagedContext {
         return context.get()
       }
 
@@ -218,7 +221,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     private val locked: AtomicBoolean = AtomicBoolean(false)
     private val vmContext: AtomicReference<VMContext?> = AtomicReference(null)
 
-    fun initialize() {
+    private fun initialize() {
       initialized.compareAndSet(
         false,
         true,
@@ -230,7 +233,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
 
     // Acquire this context for execution.
-    fun <R> exec(operation: (VMContext) -> R): R {
+    internal fun <R> exec(operation: (VMContext) -> R): R {
       locked.compareAndSet(
         false,
         true,
@@ -250,8 +253,8 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   }
 
   /** Script runtime manager. */
-  class ScriptRuntime {
-    companion object {
+  internal class ScriptRuntime {
+    internal companion object {
       private const val embeddedRoot = "embedded"
       private const val manifest = "/$embeddedRoot/runtime/runtime-js.json"
       private val initialized: AtomicBoolean = AtomicBoolean(false)
@@ -373,21 +376,21 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   }
 
   /** Embedded script descriptor object. */
-  sealed class ExecutableScript(
+  public sealed class ExecutableScript(
     internal val installShims: Boolean = true,
     internal val installEntry: Boolean = true,
-    val invocationBase: String? = null,
-    val invocationTarget: String? = null,
+    internal val invocationBase: String? = null,
+    internal val invocationTarget: String? = null,
     private val fingerprint: ScriptID,
   ) {
     private var renderedContent: StringBuilder? = null
     private var interpreted: AtomicReference<Source> = AtomicReference(null)
 
     /** @return The path or some module ID for the embedded script. */
-    abstract fun getId(): String
+    internal abstract fun getId(): String
 
     /** @return Script content, loaded synchronously. */
-    abstract fun load(): String
+    internal abstract fun load(): String
 
     // Assign rendered preamble+script content before execution.
     internal fun assignRendered(builder: StringBuilder) {
@@ -429,8 +432,8 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   }
 
   /** Embedded script implementation which pulls from local JAR resources. */
-  class EmbeddedScript(
-    val path: String,
+  public class EmbeddedScript(
+    public val path: String,
     private val charset: Charset = StandardCharsets.UTF_8,
     invocationBase: String? = null,
     invocationTarget: String? = null,
@@ -439,7 +442,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     invocationTarget = invocationTarget,
     fingerprint = fingerprintScriptPath(path),
   ) {
-    companion object {
+    public companion object {
       private const val hashAlgo = "SHA-256"
 
       // Hash an embedded script path to determine a stable fingerprint value.
@@ -468,13 +471,13 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   }
 
   /** Embedded script implementation which pulls from a string literal. */
-  class LiteralScript(
+  public class LiteralScript(
     private val moduleId: String,
     private val script: String
   ): ExecutableScript(
     fingerprint = fingerprintScriptContent(moduleId, script)
   ) {
-    companion object {
+    public companion object {
       private const val hashAlgorithm = "SHA-256"
 
       // Hash a script to determine a stable fingerprint value.
@@ -591,7 +594,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
    * @param script Executable script spec to execute within the embedded JS VM.
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
-  fun <R> executeAsync(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): Deferred<R?> {
+  public fun <R> executeAsync(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): Deferred<R?> {
     // interpret the script
     return executeBackground(
       script,
@@ -607,7 +610,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
    * @param script Executable script spec to execute within the embedded JS VM.
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
-  suspend fun <R> execute(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): R? {
+  public suspend fun <R> execute(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): R? {
     // interpret the script
     return executeAsync(
       script,
@@ -623,7 +626,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
    * @param script Executable script spec to execute within the embedded JS VM.
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
-  fun <R> executeBlocking(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): R? {
+  public fun <R> executeBlocking(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): R? {
     // interpret the script
     return executeBackground(
       script,

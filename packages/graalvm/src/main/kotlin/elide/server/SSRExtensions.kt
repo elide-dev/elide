@@ -16,19 +16,19 @@ import java.nio.charset.StandardCharsets
 
 
 // Path within app JARs for embedded script assets.
-private const val embeddedRoot = "embedded"
+private const val embeddedRoot: String = "embedded"
 
 // Production script name default.
-private const val nodeProdDefault = "node-prod.pack.js"
+private const val nodeProdDefault: String = "node-prod.pack.js"
 
 // Development script name default.
-private const val nodeDevDefault = "node-dev.pack.js"
+private const val nodeDevDefault: String = "node-dev.pack.js"
 
 // Default name if no mode is specified or resolvable.
-const val nodeSsrDefaultPath = nodeDevDefault
+public const val nodeSsrDefaultPath: String = nodeDevDefault
 
 // Default ID to use in the DOM.
-const val defaultSsrDomId = "root"
+public const val defaultSsrDomId: String = "root"
 
 
 /**
@@ -43,7 +43,7 @@ const val defaultSsrDomId = "root"
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-suspend fun ssr(
+public suspend fun ssr(
   path: String = nodeSsrDefaultPath,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
 ): MutableHttpResponse<ByteArrayOutputStream> {
@@ -77,7 +77,7 @@ suspend fun ssr(
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
  */
-suspend fun BODY.injectSSR(
+public suspend fun BODY.injectSSR(
   domId: String = defaultSsrDomId,
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
@@ -124,7 +124,7 @@ suspend fun BODY.injectSSR(
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-suspend fun ssr(
+public suspend fun ssr(
   path: String = nodeSsrDefaultPath,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
   block: suspend HTML.() -> Unit
@@ -141,7 +141,7 @@ suspend fun ssr(
 }
 
 // SSR content rendering and container utility.
-class SSRContent (
+internal class SSRContent (
   private val prettyhtml: Boolean = false,
   private val builder: suspend HTML.() -> Unit
 ): ServerRenderer {

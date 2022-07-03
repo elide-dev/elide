@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @param entry Entrypoint file which should cap the rendered script.
  * @param artifacts Artifacts to load for runtime use.
  */
-@Serializable data class JsRuntimeConfig(
+@Serializable internal data class JsRuntimeConfig(
   val entry: String,
   val artifacts: List<JsRuntimeArtifact>,
 ) {

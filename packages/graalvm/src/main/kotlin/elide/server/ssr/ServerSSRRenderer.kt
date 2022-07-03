@@ -27,6 +27,18 @@ class ServerSSRRenderer constructor (private val script: JsRuntime.ExecutableScr
   }
 
   /**
+   * Render the attached [script] with suspension support, and return the resulting content as a regular [String].
+   *
+   * @return String render result from [script].
+   */
+  suspend fun renderSuspend(): String? {
+    return JsRuntime.acquire().executeAsync(
+      script,
+      String::class.java,
+    ).await()
+  }
+
+  /**
    * Render the attached [script] and return the resulting content as a [ByteArrayOutputStream], built from the result
    * of [renderInline].
    *

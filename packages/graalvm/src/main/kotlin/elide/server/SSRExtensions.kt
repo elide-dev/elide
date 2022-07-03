@@ -77,7 +77,7 @@ suspend fun ssr(
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
  */
-fun BODY.injectSSR(
+suspend fun BODY.injectSSR(
   domId: String = defaultSsrDomId,
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
@@ -94,11 +94,11 @@ fun BODY.injectSSR(
     attrs
   ),
   consumer
-).visit {
+).visitSuspend {
   // @TODO(sgammon): avoid blocking call here
   val content = ServerSSRRenderer(JsRuntime.Script.embedded(
     path = "/$embeddedRoot/$path",
-  )).renderInline()
+  )).renderSuspend()
 
   unsafe {
     if (content != null) {

@@ -7,8 +7,8 @@ import io.micronaut.http.annotation.Get
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
 import kotlinx.css.fontFamily
-import kotlinx.html.body
-import kotlinx.html.head
+import kotlinx.html.tagext.body
+import kotlinx.html.tagext.head
 import kotlinx.html.title
 
 

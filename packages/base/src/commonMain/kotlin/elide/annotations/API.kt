@@ -9,6 +9,6 @@ package elide.annotations
  * style configurations are possible based on this annotation.
  */
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 @MustBeDocumented
 public annotation class API

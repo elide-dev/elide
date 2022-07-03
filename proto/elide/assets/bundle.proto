@@ -129,6 +129,28 @@ message AssetBundle {
     repeated ScriptAsset asset = 2;
   }
 
+  // Describes a generic asset bundle relating to a text asset, or some other generic asset which is otherwise not
+  // modeled by other available descriptors.
+  message GenericBundle {
+    // Generic asset name/path.
+    string module = 1;
+
+    // Original name of the source file, as applicable.
+    string filename = 2;
+
+    // Hash token uniquely identifying the content in this module.
+    string token = 3;
+
+    // Specifies each variant of an asset's main content.
+    repeated data.CompressedData variant = 4;
+
+    // Whether this asset should be compressed when serving to end-users.
+    bool compressable = 5;
+
+    // Whether this asset should be considered cacheable.
+    bool cacheable = 6;
+  }
+
   // Specifies full contents for assets, in pre-compressed forms, to be served directly when a compressed representation
   // is supported by the invoking browser. These payloads duplicate the original content, which is additionally enclosed
   // in the JAR at the path described in this structure.
@@ -173,4 +195,7 @@ message AssetBundle {
   // Whether style-rewriting is enabled or not, which should indicate the presence of generated style symbol maps, that
   // must be loaded by the server for SSR.
   bool rewrite = 7;
+
+  // Generic assets which are mapped within this bundle.
+  map<string, GenericBundle> generic = 8;
 }

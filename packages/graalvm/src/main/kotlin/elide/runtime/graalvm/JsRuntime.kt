@@ -2,9 +2,7 @@ package elide.runtime.graalvm
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
-import elide.runtime.Logging
-import com.google.common.util.concurrent.ListenableFuture as Future
-import elide.server.runtime.AppExecutor
+import com.google.common.util.concurrent.MoreExecutors
 import elide.server.util.ServerFlag
 import elide.util.Hex
 import io.micronaut.caffeine.cache.Cache
@@ -14,6 +12,7 @@ import io.micronaut.context.annotation.Factory
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
+import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.slf4j.LoggerFactory
@@ -21,10 +20,12 @@ import java.io.FileNotFoundException
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.util.LinkedList
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import com.google.common.util.concurrent.ListenableFuture as Future
 
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
@@ -46,17 +47,47 @@ import java.util.concurrent.atomic.AtomicReference
 
     // Options which must be evaluated at the time a context is created.
     private val conditionalOptions = listOf(
-      ConditionalProperty("vm.inspect", "inspect", { ServerFlag.inspect }),
-      ConditionalProperty("vm.inspect.path", "inspect.Path", { ServerFlag.inspect }, defaultValue = (
-        ServerFlag.inspectPath
-      )),
+      ConditionalProperty(
+        "vm.inspect", "inspect", { ServerFlag.inspect }, defaultValue = "false"),
     )
+
+    /** Runnable task within a JS VM context. */
+    private class VMExecution<R> constructor (
+      val op: (VMContext) -> R,
+      val result: AtomicReference<R?> = AtomicReference(null),
+    ): Runnable, Callable<R> {
+      override fun run() {
+        result.set(
+          ManagedContext.acquire().exec(op)
+        )
+      }
+
+      override fun call(): R? {
+        result.set(
+          ManagedContext.acquire().exec(op)
+        )
+        return result.get()
+      }
+    }
+
+    /** Dedicated executor for the JS Runtime. */
+    class RuntimeExecutor {
+      // Dedicated thread executor backing the runtime.
+      private val threadPool: Executor = Executors.newSingleThreadExecutor()
+
+      internal fun <R> submit(runnable: (VMContext) -> R): Future<R> {
+        val task = VMExecution(runnable)
+        return Futures.submit<R>(task) {
+          threadPool.execute(it)
+        }
+      }
+    }
 
     /** @return Static acquisition of the singleton JavaScript runtime. */
     @JvmStatic fun acquire(): JsRuntime = singleton
 
     /** @return Set of options to apply to a new JS VM context. */
-    @JvmStatic private fun buildOptions(builder: org.graalvm.polyglot.Context.Builder): Map<JSVMProperty, String?> {
+    @JvmStatic private fun buildRuntimeOptions(): Map<JSVMProperty, String?> {
       return baseOptions.plus(
         configurableOptions
       ).plus(
@@ -69,15 +100,15 @@ import java.util.concurrent.atomic.AtomicReference
     }
 
     /** @return SDK VM context pre-built for JavaScript execution. */
-    @JvmStatic @Factory private fun spawnContext(): org.graalvm.polyglot.Context {
+    @JvmStatic @Factory private fun spawnContext(): VMContext {
       val logging = LoggerFactory.getLogger(JsRuntime::class.java)
-      val builder = org.graalvm.polyglot.Context.newBuilder("js")
+      val builder = VMContext.newBuilder("js")
         .allowExperimentalOptions(true)
 
-      buildOptions(builder).forEach {
+      buildRuntimeOptions().forEach {
         val prop = it.key
         val value = prop.value()
-        if (value != null) {
+        if (value != null && value != "false") {
           logging.debug(
             "Setting JS VM property: '$prop': '$value'"
           )
@@ -122,7 +153,7 @@ import java.util.concurrent.atomic.AtomicReference
    * @param defaultValue If no configured value is available, this value should be passed instead. If null, pass no
    *   value at all.
    */
-  data class RuntimeProperty(
+  internal data class RuntimeProperty(
     private val name: String,
     override val symbol: String,
     private val defaultValue: String? = null,
@@ -141,7 +172,7 @@ import java.util.concurrent.atomic.AtomicReference
    * @param value Runtime value bound to this property, if applicable; otherwise, just pass a [defaultValue].
    * @param defaultValue If the value is disabled, this value should be passed instead. If null, pass no value at all.
    */
-  data class ConditionalProperty(
+  internal data class ConditionalProperty(
     private val name: String,
     override val symbol: String,
     private val condition: () -> Boolean,
@@ -169,37 +200,44 @@ import java.util.concurrent.atomic.AtomicReference
 
   /** Managed GraalVM execution context, with thread guards. */
   private class ManagedContext {
-    private val initialized: AtomicBoolean = AtomicBoolean(false)
-    private val context: AtomicReference<org.graalvm.polyglot.Context> = AtomicReference()
-    private val locked: AtomicBoolean = AtomicBoolean(false)
+    companion object {
+      @JvmStatic fun acquire(): ManagedContext {
+        return context.get()
+      }
 
-    // Indicate whether this context is busy.
-    fun busy(): Boolean {
-      return locked.get()
+      private val context: ThreadLocal<ManagedContext> = object: ThreadLocal<ManagedContext>() {
+        override fun initialValue(): ManagedContext {
+          val ctx = ManagedContext()
+          ctx.initialize()
+          return ctx
+        }
+      }
     }
 
-    // Initialize this managed context.
-    @Synchronized fun initialize() {
+    private val initialized: AtomicBoolean = AtomicBoolean(false)
+    private val locked: AtomicBoolean = AtomicBoolean(false)
+    private val vmContext: AtomicReference<VMContext?> = AtomicReference(null)
+
+    fun initialize() {
       initialized.compareAndSet(
         false,
         true,
       )
-      context.compareAndSet(
+      vmContext.compareAndSet(
         null,
-        spawnContext()
+        spawnContext(),
       )
     }
 
     // Acquire this context for execution.
-    fun <R> exec(operation: (org.graalvm.polyglot.Context) -> R): R {
-      if (!initialized.get()) throw IllegalStateException(
-        "Context must be initialized to execute operations"
-      )
+    fun <R> exec(operation: (VMContext) -> R): R {
       locked.compareAndSet(
         false,
         true,
       )
-      val ctx = context.get()
+      val ctx = vmContext.get() ?: throw IllegalStateException(
+        "Context not initialized, cannot execute on VM"
+      )
       ctx.enter()
       val result = operation.invoke(ctx)
       ctx.leave()
@@ -216,7 +254,6 @@ import java.util.concurrent.atomic.AtomicReference
     companion object {
       private const val embeddedRoot = "embedded"
       private const val manifest = "/$embeddedRoot/runtime/runtime-js.json"
-      private const val contextLimit: Int = 25
       private val initialized: AtomicBoolean = AtomicBoolean(false)
 
       // Runtime pre-amble from which to clone and splice executable scripts.
@@ -290,71 +327,14 @@ import java.util.concurrent.atomic.AtomicReference
     }
 
     // Thread-pool executor where we should acquire execution contexts.
-    internal val executor: AppExecutor = AppExecutor.DefaultExecutor.acquire()
+    internal val executor: RuntimeExecutor by lazy {
+      RuntimeExecutor()
+    }
 
     // Private cache of warmed sources.
     private val sourceCache: Cache<ScriptID, Value> = Caffeine.newBuilder()
-      .executor(executor.executor())
+      .executor(MoreExecutors.directExecutor())
       .build()
-
-    // Available contexts.
-    private val contextCount: AtomicInteger = AtomicInteger()
-    private val availableContexts: LinkedList<ManagedContext> = LinkedList()
-
-    // Acquire a script context (or wait for one to be ready).
-    internal fun <R> acquireContext(exe: (org.graalvm.polyglot.Context) -> R): Future<R> {
-      // is there an available context immediately?
-      val ctx = availableContexts.poll()
-      if (ctx != null) {
-        if (ctx.busy()) {
-          // we'll have to use a different one or wait
-          availableContexts.add(ctx)
-        } else {
-          // if so, claim it and return
-          val result = ctx.exec(exe)
-          availableContexts.add(ctx)
-          return Futures.immediateFuture(result)
-        }
-      }
-
-      // okay, maybe we have room to spawn one?
-      val currentCount = contextCount.get()
-      return if (currentCount < contextLimit) {
-        // spawn the new context
-        val newCtx = ManagedContext()
-        newCtx.initialize()
-        val result = newCtx.exec { inner ->
-          val result = exe.invoke(inner)
-          result
-        }
-        availableContexts.add(
-          newCtx
-        )
-        Futures.immediateFuture(result)
-      } else {
-        return executor.service().submit<R> {
-          // otherwise, wait for one to become available
-          val resolved: ManagedContext
-          while (true) {
-            val found = availableContexts.poll() ?: continue
-            if (!found.busy()) {
-              resolved = found
-              break
-            } else {
-              availableContexts.add(found)
-            }
-          }
-          val result = resolved.exec { inner ->
-            val result = exe.invoke(inner)
-            result
-          }
-          availableContexts.add(
-            resolved
-          )
-          result
-        }
-      }
-    }
 
     /** @return Executable [script] prepared with an entrypoint and runtime glue code. */
     private fun prepare(script: ExecutableScript): ExecutableScript {
@@ -383,10 +363,10 @@ import java.util.concurrent.atomic.AtomicReference
     internal fun resolve(script: ExecutableScript): Value {
       return sourceCache.get(script.fingerprint()) { _ ->
         val prepped = prepare(script)
-        acquireContext {
+        ManagedContext.acquire().exec {
           it.eval(prepped.interpret())
-        }.get() ?: throw IllegalStateException(
-          "Failed to resolve script entrypoint: got `null`"
+        } ?: throw IllegalStateException(
+          "Failed to resolve value from VM execution: got `null`"
         )
       }!!
     }
@@ -595,7 +575,7 @@ import java.util.concurrent.atomic.AtomicReference
     arguments: Array<out Any?>,
   ): Future<R?> {
     // interpret the script
-    return runtime.executor.service().submit<R?> {
+    return runtime.executor.submit {
       evalExecuteScript(
         script,
         returnType,

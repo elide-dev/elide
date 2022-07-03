@@ -2,6 +2,7 @@
 
 package elide.server.runtime
 
+import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.ListeningScheduledExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
@@ -110,7 +111,7 @@ interface AppExecutor {
   fun executor(): Executor = service()
 
   /** @return Service-oriented instance of the main [Executor] held by this [AppExecutor]. */
-  fun service(): ListeningScheduledExecutorService
+  fun service(): ListeningExecutorService
 
   /** Implements the application-default-executor, as a bridge to Micronaut. */
   @Context
@@ -139,7 +140,7 @@ interface AppExecutor {
       internal val mainDispatcher = Dispatchers.Main
 
       /** Acquire the main application executor. */
-      @JvmStatic public fun acquire(): AppExecutor = mainExec
+      @JvmStatic fun acquire(): AppExecutor = mainExec
     }
 
     /** Base factory for acquiring threads. */

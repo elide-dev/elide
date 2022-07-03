@@ -39,6 +39,11 @@ import java.util.concurrent.atomic.AtomicReference
     }
   }
 
+  /** Whether to enable VM inspection secure mode (TLS). */
+  public val inspectSecure: Boolean get() = resolve("elide.vm.inspect.secure", "false") {
+    it.trim().toBoolean()
+  }
+
   // Resolve an enumerated flag value.
   public fun <R> resolve(name: String, defaultValue: String, then: (String) -> R): R {
     val value = System.getProperty(name, System.getenv(name) ?: resolveArg(name))

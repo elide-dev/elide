@@ -4,6 +4,7 @@ package elide.server
 
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import kotlinx.coroutines.runBlocking
 import kotlinx.css.CssBuilder
 import kotlinx.html.HTML
 import kotlinx.html.html
@@ -83,7 +84,7 @@ fun asset(path: String, type: String, contentType: MediaType?): HttpResponse<*> 
  * @param block Block to execute to build the HTML page.
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
-fun html(block: HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
+suspend fun html(block: suspend HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
   return HttpResponse.ok(
     HtmlContent(builder = block).render()
   ).characterEncoding(StandardCharsets.UTF_8).contentType(
@@ -94,7 +95,7 @@ fun html(block: HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
 // HTML content rendering and container utility.
 internal class HtmlContent (
   private val prettyhtml: Boolean = false,
-  private val builder: HTML.() -> Unit
+  private val builder: suspend HTML.() -> Unit
 ): ResponseRenderer<ByteArrayOutputStream> {
   override fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
@@ -102,7 +103,11 @@ internal class HtmlContent (
       it.appendHTML(
         prettyPrint = prettyhtml,
       ).html(
-        block = builder
+        block = {
+          runBlocking {
+            builder()
+          }
+        }
       )
     }
     return baos

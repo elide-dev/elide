@@ -19,12 +19,6 @@ plugins {
 
 group = "dev.elide"
 
-repositories {
-  google()
-  mavenCentral()
-  maven("https://maven-central.storage-download.googleapis.com/maven2/")
-}
-
 val javadocJar by tasks.registering(Jar::class) {
   archiveClassifier.set("javadoc")
 }

@@ -20,10 +20,22 @@ class ServerSSRRenderer constructor (private val script: JsRuntime.ExecutableScr
    */
   fun renderInline(): String?  {
     // acquire script runtime, execute the script, decode as string
-    return JsRuntime.acquire().execute(
+    return JsRuntime.acquire().executeBlocking(
       script,
       String::class.java
     )
+  }
+
+  /**
+   * Render the attached [script] with suspension support, and return the resulting content as a regular [String].
+   *
+   * @return String render result from [script].
+   */
+  suspend fun renderSuspend(): String? {
+    return JsRuntime.acquire().executeAsync(
+      script,
+      String::class.java,
+    ).await()
   }
 
   /**

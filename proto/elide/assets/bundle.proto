@@ -16,7 +16,6 @@ option objc_class_prefix = "ELD";
 option ruby_package = "Elide::Assets";
 option java_package = "tools.elide.assets";
 option csharp_namespace = "Elide.Assets";
-option go_package = "github.com/elide-tools/elide/assets/bundle;bundle";
 
 import "google/protobuf/timestamp.proto";
 

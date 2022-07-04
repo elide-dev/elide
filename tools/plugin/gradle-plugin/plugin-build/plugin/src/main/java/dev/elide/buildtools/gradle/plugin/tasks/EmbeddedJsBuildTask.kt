@@ -20,6 +20,7 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.options.Option
 import org.gradle.configurationcache.extensions.capitalized
@@ -382,12 +383,6 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             processShim.set(file(
                 "$buildDir/$defaultProcessShim"
             ))
-
-            // set the default entrypoint
-            val defaultEntrypoint = "$projectDir/src/main/embedded/$defaultEntrypointName"
-            entryFile.set(file(
-                entryFileName?.ifBlank { defaultEntrypoint } ?: defaultEntrypoint
-            ))
         }
     }
 
@@ -532,12 +527,13 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
     var bundle: Boolean = true
 
     /** Entrypoint file to begin the compilation from. */
+    @Optional
     @get:InputFile
     @get:Option(
         option = "entryFileName",
         description = "Name of the source file which should serve as the entrypoint for this build.",
     )
-    var entryFileName: String? = "src/main/embedded/$defaultEntrypointName"
+    var entryFileName: String? = null
 
     /** Entrypoint file to begin the compilation from. */
     @get:InputFile

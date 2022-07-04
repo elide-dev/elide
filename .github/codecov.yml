@@ -30,3 +30,6 @@ parsers:
 
 github_checks:
   annotations: true
+
+ignore:
+  - "tools/plugin/gradle-plugin"

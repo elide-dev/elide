@@ -1,0 +1,802 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/**
+ * Defines structures related to "page context" - i.e. the typed base context for rendering pages server-side. These
+ * structures provide definitions for the page head, scripts appended to the body, and other page metadata.
+ */
+syntax = "proto3";
+package page;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option java_outer_classname = "WebContext";
+option php_namespace = "Elide";
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option ruby_package = "Elide::Page";
+option java_package = "tools.elide.page";
+option csharp_namespace = "Elide.Page";
+option go_package = "github.com/elide-tools/elide/page";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+import "webutil/html/types/html.proto";
+
+import "elide/data/data.proto";
+import "elide/model/model.proto";
+
+import "elide/base/language.proto";
+import "elide/page/semantic.proto";
+
+
+// Defines the notion of a *Render Context* for server-side pages in Gust. This protocol message is filled out with data
+// as configured by the developer (from `application.yml` and the active controller, as applicable) and provided as an
+// injected value to all server-side render operations.
+//
+// When preparing context in Gust, adding a static script or stylesheet is done through `Context`. Setting page metadata
+// like the title, keywords, and manifest - also all done through `Context`. This of course has the added benefit of
+// being completely serializable, repeatable, and so on (i.e. all the benefits Protobuf brings).
+//
+// Major context modules include:
+// - *Metadata*: Page-level metadata.
+//    - *OpenGraph*: Properties for OG tags.
+//    - *Twitter*: Properties for Twitter cards.
+// - *AppManifest*: Information to link or derive a web application manifest.
+// - *Styles*: Stylesheets and inline head-injected styles ("lifted styles").
+// - *Scripts*: Scripts to include, and inline head-injected logic ("lifted JS").
+message Context {
+  option (core.role) = WIRE;
+
+  // Defines the structure of well-known page-level metadata, including the page title, description,
+  // keywords, and so on.
+  message Metadata {
+    // Tags for the Facebook Crawler.
+    message OpenGraph {
+      // OpenGraph image asset.
+      message OpenGraphImage {
+        // Thumbnail to display when page is shared.
+        string uri = 1;
+
+        // Width of the sharing image, if known.
+        uint32 width = 2;
+
+        // Height of the sharing image, if known.
+        uint32 height = 3;
+
+        // Type of image, if known.
+        string type = 4;
+      }
+
+      // OpenGraph video asset.
+      message OpenGraphVideo {
+        // Reference to the page's main video, as applicable.
+        string uri = 1;
+
+        // Width of the main video on the page.
+        uint32 width = 2;
+
+        // Height of the main video on the page.
+        uint32 height = 3;
+
+        // Type of video, if known.
+        string type = 4;
+      }
+
+      // Name of the website.
+      string site_name = 1;
+
+      // Title of the page.
+      string title = 2;
+
+      // Description of the page.
+      string description = 3;
+
+      // The language the page is written in.
+      base.LanguageSpec locale = 4;
+
+      // The type of page - i.e. article, website, video.
+      string type = 5;
+
+      // Directs facebook to scrape another url instead of the url the page was served from.
+      string url = 6;
+
+      // Information for Twitter's crawler.
+      Twitter twitter = 8;
+
+      // Canonical URL for this page.
+      string canonical = 12;
+
+      // FB application ID for this web application.
+      string fb_app = 13;
+
+      // OpenGraph image assets.
+      repeated OpenGraphImage image = 14;
+
+      // OpenGraph video assets.
+      repeated OpenGraphVideo video = 15;
+    }
+
+    // Tags for the Twitter Crawler.
+    message Twitter {
+      // Name of the website.
+      string site_name = 1;
+
+      // Title of the page.
+      string title = 2;
+
+      // Description of the page.
+      string description = 3;
+
+      // The language the page is written in.
+      base.LanguageSpec locale = 4;
+
+      // The type of card to display on Twitter.
+      string card = 5;
+
+      // Thumbnail to display when page is shared.
+      string image = 6;
+
+      // Directs Twitter to scrape another url instead of the url the page was served from.
+      string url = 7;
+
+      // Twitter account considered the "creator" of this content.
+      string creator = 8;
+    }
+
+    // Defines the HTML title for the page, emitted in the <head>.
+    string title = 1;
+
+    // Defines the meta description content for the page.
+    string description = 2;
+
+    // Defines meta tag keywords, to be included in the page.
+    repeated string keyword = 3;
+
+    // Defines semantic content structure and binding content.
+    page.SemanticMetadata semantic = 4;
+
+    // Defines the viewport settings that should be used by the rendered page.
+    string viewport = 5;
+
+    // Defines a link to a web application manifest, if applicable.
+    webutil.html.types.TrustedResourceUrlProto manifest = 6;
+
+    // Defines a hex code to use as the primary theme color for the application.
+    string theme = 7;
+
+    // Defines an icon to use in iOS circumstances, when used as an app shortcut.
+    string touch_icon = 8;
+
+    // Defines an image to use in iOS circumstances, when launching as an app shortcut.
+    string startup_image = 9;
+
+    // Defines a favicon image link to apply to the browser tab.
+    repeated PageLink link = 10;
+
+    // Defines the language we are rendering the page for.
+    base.LanguageSpec language = 11;
+
+    // Identifier for Google Tag Manager.
+    string gtm_id = 12;
+
+    // Facebook application identifier.
+    string fb_app_id = 13;
+
+    // Describes OpenGraph data for a given page.
+    OpenGraph open_graph = 14;
+
+    // Directive for indexers/robots.
+    string robots = 15;
+
+    // Directive for color scheme compatibility.
+    string color_scheme = 16;
+
+    // RDFa prefixes to add. If left unset, the default OpenGraph prefix will be used.
+    repeated RDFPrefix prefix = 17;
+
+    // Googlebot-specific directives.
+    string googlebot = 18;
+
+    // Set the rating for this page (see: SafeSearch ratings).
+    string rating = 19;
+
+    // Delegate package for use with Soy rendering, if applicable.
+    string delegate_package = 20;
+  }
+
+  // Specifies information about an asset or foreign page linked to this page. Stylesheets, favorite icons ("favicons"),
+  // HTTP preloading, and other features are implemented via HTML links.
+  message PageLink {
+    // Relevance of this link to the rest of the page.
+    string relevance = 1;
+
+    // Specifies the mime-type of this link, if applicable.
+    string type = 2;
+
+    // Specifies the URL target for this link.
+    webutil.html.types.TrustedResourceUrlProto href = 3;
+  }
+
+  // Specifies details about an application manifest, which should be or is linked to a given web
+  // page, that is being rendered by the render engine.
+  message AppManifest {
+    // Specifies the structure of an icon graphic linked to this web page via an application manifest.
+    // Icons can be specified in multiple formats and sizes.
+    message Icon {
+      // Specifies the URI for a given icon.
+      webutil.html.types.TrustedResourceUrlProto src = 1;
+
+      // Specifies the sizes that a given icon is available in.
+      repeated uint32 size = 2;
+
+      // Specifies the content type of a given icon.
+      string mime_type = 3;
+    }
+
+    // Enumerates display modes which are available for selection in the web application manifest
+    // spec. Each display mode is described herein.
+    enum DisplayMode {
+      // Regular browser UI. Default value if left unspecified.
+      BROWSER = 0;
+
+      // All of the available display area is used and no user agent chrome is shown.
+      FULLSCREEN = 1;
+
+      // The application will look and feel like a standalone application. This can include the application
+      // having a different window, its own icon in the application launcher, etc. In this mode, the user
+      // agent will exclude UI elements for controlling navigation, but can include other UI elements such
+      // as a status bar.
+      STANDALONE = 2;
+
+      // The application will look and feel like a standalone application, but will have a minimal set of UI
+      // elements for controlling navigation. The elements will vary by browser.
+      MINIMAL_UI = 3;
+    }
+
+    // Describes available orientation modes, for specifying the default orientation mode for an application
+    // within a web app manifest.
+    enum OrientationMode {
+      // Unspecified, or default, orientation mode/settings.
+      UNSPECIFIED_ORIENTATION = 0;
+
+      // Any orientation mode is supported.
+      ANY = 1;
+
+      // Use the natural orientation mode for the device.
+      NATURAL = 2;
+
+      // Use landscape mode by default.
+      LANDSCAPE = 3;
+
+      // Use portrait mode by default.
+      PORTRAIT = 4;
+    }
+
+    // Specifies details about a related application, which should be considered canonically the same
+    // as this application, but for a different platform.
+    message RelatedApplication {
+      // Enumerates known platforms where related applications might reside.
+      enum AppPlatform {
+        // Unspecified application platform.
+        UNSPECIFIED_APP_PLATFORM = 0;
+
+        // Apple App Store.
+        APPSTORE = 1;
+
+        // Google Play Store.
+        PLAYSTORE = 2;
+
+        // Additional web application.
+        WEB = 3;
+      }
+
+      // ID for this alternative application option.
+      string id = 1;
+
+      // Platform that the related app is listed on.
+      AppPlatform platform = 2;
+
+      // URI where the alternative application can be downloaded.
+      webutil.html.types.TrustedResourceUrlProto uri = 3;
+    }
+
+    // Full name for this application.
+    string name = 1;
+
+    // Short name for this application.
+    string short_name = 2;
+
+    // Starting URL where this application can be entered.
+    string start_url = 3;
+
+    // Defines the developers' preferred display mode for this application.
+    DisplayMode display = 4;
+
+    // Defines the expected application background color.
+    string background_color = 5;
+
+    // Specifies a narrative description about this application.
+    string description = 6;
+
+    // Specifies the language direction - RTL or LTR, for this application.
+    string direction = 7;
+
+    // Specifies the language this application is being served in.
+    base.LanguageSpec language = 8;
+
+    // Specifies expected screen orientation for this application.
+    OrientationMode orientation = 9;
+
+    // Defines the navigation scope for this web application's context.
+    string scope = 11;
+
+    // Flag indicating whether we want to prefer native apps for the user's experience.
+    bool prefer_related_applications = 12;
+
+    // Related native applications that should be considered along with this web application.
+    repeated RelatedApplication related_application = 13;
+
+    // Application icons listed with this manifest.
+    repeated Icon app_icon = 14;
+  }
+
+  // Defines page-level style settings (CSS), including external stylesheets, lifted CSS that should
+  // be rendered in the <head>, and more.
+  message Styles {
+    // Defines the notion of an external stylesheet document, written in CSS, which should be included
+    // via reference rather than inline.
+    message Stylesheet {
+      // URI to a given stylesheet asset.
+      webutil.html.types.TrustedResourceUrlProto uri = 1;
+
+      // ID at which to attach the script tag in the DOM.
+      string id = 2;
+
+      // Media setting to apply to the style sheet.
+      string media = 3;
+
+      // Whether to pre-fetch this asset, as applicable.
+      bool prefetch = 7;
+
+      // Whether to pre-load this asset, as applicable.
+      bool preload = 8;
+
+      // Whether to proactively push this asset, as applicable.
+      bool push = 9;
+    }
+
+    // CSS code that should be emitted early in the <head>.
+    webutil.html.types.SafeStyleProto lifted = 1;
+
+    // External CSS code to be included in <link> tags.
+    repeated Stylesheet link = 2;
+  }
+
+  // Specifies information about sets of fonts to include in the page via CSS declarations, or imports/link
+  // references. Fonts are considered part of the stylesheet set of a page.
+  message Fonts {
+    // Specifies types of references to font assets that are understood by the rendering system.
+    enum FontReferenceType {
+      // Specifies an internal font, or an explicit set of font assets.
+      INTERNAL = 0;
+
+      // Specifies a font hosted on Google Fonts.
+      GOOGLE_FONTS = 1;
+    }
+
+    // Specifies types of font formats supported for serving by the system.
+    enum FontFormat {
+      // Unspecified font format.
+      UNSPECIFIED_FORMAT = 0;
+
+      // OpenType Format (OTF).
+      OPENTYPE = 1;
+
+      // TrueType Format (TTF).
+      TRUETYPE = 2;
+
+      // Scalable Vector Graphics (SVG).
+      VECTOR = 3;
+
+      // Web Open Font Format (WOFF).
+      WEBFONT = 4;
+
+      // Web Open Font Format 2 (WOFF2).
+      WEBFONT2 = 5;
+
+      // Embedded OpenType (EOT).
+      EMBEDDED_OPENTYPE = 6;
+    }
+
+    // Specifies information about an individual reference to a font file.
+    message FontReference {
+      // Specifies the type of reference being made.
+      FontReferenceType type = 1;
+
+      // Specifies the format of the font reference being made.
+      FontFormat format = 2;
+
+      // Name of the font reference.
+      string name = 3;
+
+      // Weight of the font reference.
+      string weight = 4;
+
+      // Variant of the font reference.
+      string variant = 5;
+
+      // URI reference to this font asset.
+      webutil.html.types.TrustedResourceUrlProto uri = 6;
+
+      // Whether to pre-fetch this asset, as applicable.
+      bool prefetch = 7;
+
+      // Whether to pre-load this asset, as applicable.
+      bool preload = 8;
+
+      // Whether to proactively push this asset, as applicable.
+      bool push = 9;
+    }
+
+    // Specifies a package of fonts included for reference in a given web page.
+    message FontPackage {
+      // Specifies the CSS name used for this font package/family.
+      string name = 1;
+
+      // References to individual constituent font assets.
+      repeated FontReference reference = 2;
+    }
+
+    // Specifies packages of fonts included for reference.
+    repeated FontPackage package = 1;
+  }
+
+  // Specifies information about JavaScript code that should be included with a given page render. Scripts
+  // included in this manner may be emitted inline or by reference (URI).
+  message Scripts {
+    // Defines the notion of an external script document, written in JavaScript, which should be included
+    // via reference rather than inline.
+    message JavaScript {
+      // URI to a given script asset.
+      webutil.html.types.TrustedResourceUrlProto uri = 1;
+
+      // ID at which to attach the script tag in the DOM.
+      string id = 2;
+
+      // Whether to add the `defer` flag to a script.
+      bool defer = 3;
+
+      // Whether to add the `async` flag to a script.
+      bool async = 4;
+
+      // Whether to add the `module` flag to a script.
+      bool module = 5;
+
+      // Whether to add the `nomodule` flag to a script.
+      bool no_module = 6;
+
+      // Whether to pre-fetch this asset, as applicable.
+      bool prefetch = 7;
+
+      // Whether to pre-load this asset, as applicable.
+      bool preload = 8;
+
+      // Whether to proactively push this asset, as applicable.
+      bool push = 9;
+    }
+
+    // JavaScript code that should be emitted early in the <head>.
+    webutil.html.types.SafeScriptProto lifted = 1;
+
+    // External JavaScript code to be included in <link> tags.
+    repeated JavaScript link = 2;
+  }
+
+  // Defines the notion of a dynamically-served-page `ETag`, which is calculated either from weak parameters (the date/
+  // time it was served and a simple hash of the request) or strong parameters (full hash of the response).
+  message DynamicETag {
+    // Whether to enable dynamic `ETag`s.
+    bool enabled = 1;
+
+    // Flipped to `true` if the `ETag` was generated from a full response pre-image.
+    bool strong = 2;
+
+    // Raw `ETag` component describing the request/operation pre-image.
+    data.DataFingerprint preimage = 3;
+
+    // Raw `ETag` component describing the response. Leave unset to calculate dynamically.
+    data.DataFingerprint response = 4;
+  }
+
+  // Specifies an individual RDF prefix block to include in the HTML tag.
+  message RDFPrefix {
+    // Prefix value to apply.
+    string prefix = 1;
+
+    // Target value to apply.
+    string target = 2;
+  }
+
+  // HTTP cookies to set on the response, including the content of each cookie, name, and any flags.
+  message Cookie {
+    // Enumerates options for same-site cookie policies.
+    enum SameSitePolicy {
+      // No policy.
+      NO_SAME_SITE_POLICY = 0;
+
+      // `Lax` policy for `SameSite`.
+      LAX = 1;
+
+      // `Strict` policy for `SameSite`.
+      STRICT = 2;
+    }
+
+    // Name of the cookie to set.
+    string name = 1;
+
+    // Value of the cookie to set. Optional. If left empty, the specified cookie will be cleared.
+    string value = 2;
+
+    // Domain value of the cookie to set. Optional.
+    string domain = 3;
+
+    // Path value of the cookie to set. Optional.
+    string path = 4;
+
+    // Specifies the strategy to employ for cookie expiration.
+    oneof expiration_strategy {
+      // Immediately expire the cookie.
+      bool immediate_expire = 5;
+
+      // Sets an absolute time-point value for cookie expiration.
+      google.protobuf.Timestamp absolute_expire = 6;
+
+      // Sets a relative time-period value for cookie expiration.
+      google.protobuf.Duration relative_expire = 7;
+
+      // Set a far-future expiration.
+      bool no_expire = 8;
+    }
+
+    // `HttpOnly` flag for the cookie.
+    bool http_only = 9;
+
+    // `Secure` flag for the cookie.
+    bool secure = 10;
+
+    // `SameSite` policy flag for the cookie.
+    SameSitePolicy same_site = 11;
+  }
+
+  // Specifies supported client hints.
+  enum ClientHint {
+    // An unknown client hint type.
+    UNKNOWN_CLIENT_HINT = 0;
+
+    // Device Pixel Ratio.
+    DPR = 1;
+
+    // Effective Connection Type.
+    ECT = 2;
+
+    // Round Trip Time.
+    RTT = 3;
+
+    // Down-link speed estimate.
+    DOWNLINK = 4;
+
+    // `Device-Memory` rating/estimate.
+    DEVICE_MEMORY = 5;
+
+    // `Save-Data` flag/feature.
+    SAVE_DATA = 6;
+
+    // Describes the width of a requested resource.
+    WIDTH = 7;
+
+    // Describes the width of the browser viewport.
+    VIEWPORT_WIDTH = 8;
+  }
+
+  // Specifies estimated connection speed levels.
+  enum ConnectionHint {
+    // An unknown or unrecognized connection hint type.
+    UNKNOWN_CONNECTION_HINT = 0;
+
+    // Slow connections, like 2G.
+    SLOW_TWO = 1;
+
+    // Connections approximating 2G.
+    SLOW = 2;
+
+    // Connections approximating 3G.
+    TYPICAL = 3;
+
+    // Connections approximating 4G.
+    FAST = 4;
+  }
+
+  // Specifies client hints context information.
+  message ClientHints {
+    // Client hints supported by the server for this HTTP cycle.
+    repeated ClientHint supported = 1;
+
+    // Client hints indicated by the client for this HTTP cycle.
+    repeated ClientHint indicated = 2;
+
+    // Time-to-live for Client Hints configuration, in seconds.
+    uint64 lifetime = 3;
+
+    // Viewport width reported by the client.
+    uint32 width = 4;
+
+    // Viewport width reported by the client.
+    uint32 viewport_width = 5;
+
+    // Pixel ratio value reported by the client.
+    uint32 device_pixel_ratio = 6;
+
+    // Latency reported by the client. Includes server latency.
+    uint32 round_trip_time = 7;
+
+    // Estimated/reported down-link speed for the client.
+    float downlink = 8;
+
+    // Reported effective-connection-type for the client.
+    ConnectionHint effective_connection_type = 9;
+
+    // Flag indicating whether the `Save-Data` token was passed by the client.
+    bool save_data = 10;
+
+    // Memory estimate rating assigned to the device.
+    float device_memory = 11;
+  }
+
+  // Enumerates `Cross-Origin-Resource-Policy` settings.
+  enum CrossOriginResourcePolicy {
+    // Unknown or unrecognized cross-origin resource policy.
+    DEFAULT_CROSS_ORIGIN_RESOURCE_POLICY = 0;
+
+    // `same-site` resource policy.
+    SAME_SITE = 1;
+
+    // `same-origin` resource policy.
+    SAME_ORIGIN = 2;
+
+    // `cross-origin` resource policy.
+    CROSS_ORIGIN = 3;
+  }
+
+  // Specifies a policy to apply via the `X-Frame-Options` header.
+  enum FramingPolicy {
+    // Unknown, or default, framing policy.
+    DEFAULT_FRAMING_POLICY = 0;
+
+    // Allow frames from the same origin.
+    SAMEORIGIN = 1;
+
+    // Deny all frames.
+    DENY = 2;
+  }
+
+  // Specifies a policy to apply via the `Referrer-Policy` header. All policy docs come from MDN.
+  enum ReferrerPolicy {
+    // Default referrer policy - i.e. empty.
+    DEFAULT_REFERRER_POLICY = 0;
+
+    // The Referer header will be omitted entirely. No referrer information is sent along with requests.
+    NO_REFERRER = 1;
+
+    // This is the default behavior if no policy is specified, or if the provided value is invalid. The origin, path,
+    // and querystring of the URL are sent as a referrer when the protocol security level stays the same (HTTP→HTTP,
+    // HTTPS→HTTPS) or improves (HTTP→HTTPS), but isn't sent to less secure destinations (HTTPS→HTTP).
+    NO_REFERRER_WHEN_DOWNGRADE = 2;
+
+    // Only send the origin of the document as the referrer. For example, a document at https://example.com/page.html
+    // will send the referrer https://example.com/.
+    ORIGIN = 3;
+
+    // Send the origin, path, and query string when performing a same-origin request, but only send the origin of the
+    // document for other cases.
+    ORIGIN_WHEN_CROSS_ORIGIN = 4;
+
+    // A referrer will be sent for same-site origins, but cross-origin requests will send no referrer information.
+    SAME = 5;
+
+    // Only send the origin of the document as the referrer when the protocol security level stays the same
+    // (HTTPS→HTTPS), but don't send it to a less secure destination (HTTPS→HTTP).
+    STRICT_ORIGIN = 7;
+
+    // Send the origin, path, and querystring when performing a same-origin request, only send the origin when the
+    // protocol security level stays the same while performing a cross-origin request (HTTPS→HTTPS), and send no header
+    // to any less-secure destinations (HTTPS→HTTP).
+    STRICT_ORIGIN_WHEN_CROSS_ORIGIN = 8;
+
+    // Send the origin, path, and query string when performing any request, regardless of security.
+    UNSAFE_URL = 9;
+  }
+
+  // Specifies custom response headers to affix to the request.
+  message ResponseHeader {
+    // Custom header name.
+    string name = 1;
+
+    // Custom header value.
+    string value = 3;
+
+    // Force-apply the header, even if an error page is served, or duplicates exist.
+    bool force = 4;
+  }
+
+  // Metadata definitions for this web page render context.
+  Metadata meta = 1;
+
+  // CSS definitions and lifted code for the page head.
+  Styles styles = 2;
+
+  // Fonts to include/load on the page.
+  Fonts fonts = 3;
+
+  // Scripts to include on the page or lift into the head.
+  Scripts scripts = 4;
+
+  // Application manifest for a given page or web app.
+  AppManifest manifest = 5;
+
+  // `ETag` information to enclose with this page, when rendered.
+  DynamicETag etag = 6;
+
+  // Specifies HTTP cookies to affix to the response associated with this context.
+  repeated Cookie cookie = 8;
+
+  // Custom headers to affix to the response associated with this context.
+  repeated ResponseHeader header = 9;
+
+  // Set of HTTP request headers which cause this response to vary.
+  repeated string vary = 10;
+
+  // Language to send in the `Content-Language` header.
+  string language = 11;
+
+  // Information provided by client-indicated hints.
+  ClientHints hints = 12;
+
+  // Specifies feature policies for this HTTP cycle.
+  repeated string feature_policy = 13;
+
+  // Specifies options when a page is referenced as a frame.
+  FramingPolicy framing_policy = 15;
+
+  // Specifies that the `nosniff` flag should be included in a `X-Content-Type-Options` header.
+  bool content_type_nosniff = 16;
+
+  // Specifies the selected CDN prefix to use.
+  webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;
+
+  // Specifies hostnames to pre-load DNS records for.
+  repeated string dns_prefetch = 18;
+
+  // Specifies hostnames to pre-connect to.
+  repeated string preconnect = 19;
+
+  // Old-style Cross-Site Scripting vulnerability protection policy.
+  string xss_protection = 20;
+
+  // Specifies the `Referrer-Policy` to apply to this HTTP cycle, as applicable.
+  ReferrerPolicy referrer_policy = 21;
+}

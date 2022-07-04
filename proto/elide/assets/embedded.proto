@@ -1,0 +1,136 @@
+/*
+ * Specifies structures used to define the notion of an "embedded" script asset in some foreign language, which can be
+ * executed at runtime by Elide to fulfill user requests.
+ */
+syntax = "proto3";
+package assets;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_namespace = "Elide\\Assets";
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option ruby_package = "Elide::Assets";
+option java_package = "tools.elide.assets";
+option csharp_namespace = "Elide.Assets";
+option go_package = "github.com/elide-tools/elide/assets/embedded;embedded";
+
+import "google/protobuf/timestamp.proto";
+
+import "elide/crypto/crypto.proto";
+import "elide/data/data.proto";
+
+
+// Enumerates languages which are supported for embedded scripting in Elide.
+enum EmbeddedScriptLanguage {
+  // The language is unknown or unspecified; regular code should not use this value.
+  LANGUAGE_UNSPECIFIED = 0;
+
+  // The language is a dialect of JavaScript.
+  JS = 1;
+}
+
+
+// Describes embedded script-level metadata which is enclosed with the asset spec for an embedded script.
+message EmbeddedScriptMetadata {
+  // Specifies JavaScript-specific script metadata.
+  message JsScriptMetadata {
+    // Enumerates supported JavaScript language levels.
+    enum JsLanguageLevel {
+      // The language level is unknown or unspecified; regular code should not use this value.
+      JS_LANGUAGE_LEVEL_DEFAULT = 0;
+
+      // The language level is ES5.
+      ES5 = 1;
+
+      // The language level is ES6.
+      ES6 = 2;
+
+      // The language level is ES2017.
+      ES2017 = 3;
+
+      // The language level is ES2018.
+      ES2018 = 4;
+
+      // The language level is ES2019.
+      ES2019 = 5;
+
+      // The language level is ES2020.
+      ES2020 = 6;
+    }
+
+    // Describes the JavaScript language level for the embedded script.
+    JsLanguageLevel level = 1;
+  }
+
+  // Language-specific script metadata.
+  oneof metadata {
+    // JavaScript-related metadata.
+    JsScriptMetadata javascript = 1;
+  }
+}
+
+
+// Specifies the structure of a data container which can also be a reference to a different resource or file-system
+// asset. Only one reference value may be filled in.
+message DataContainerRef {
+  // Specifies a fingerprint and path pair.
+  message FingerprintPathPair {
+    // Specifies the fingerprint information associated with, or calculated for, the subject info.
+    data.DataFingerprint fingerprint = 1;
+
+    // Specifies the path for this data container reference.
+    string path = 2;
+  }
+
+  // Specifies the reference subject for this record.
+  oneof reference {
+    // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
+    // are enclosed inline within the protocol buffer.
+    data.DataContainer data = 1;
+
+    // Specifies a reference to a file resident in the application JAR or native image.
+    FingerprintPathPair resource = 2;
+
+    // Specifies a reference to a file resident on the filesystem outside of the built application.
+    FingerprintPathPair filesystem = 3;
+  }
+}
+
+
+// Describes a single embedded script asset, which is embedded within an Elide application. The script is enclosed
+// within the protocol buffer record, along with a digest and various metadata.
+message EmbeddedScript {
+  // Module name / ID for this embedded script. Set at build time.
+  string module = 1;
+
+  // Filename, or some synthesized filename, for this script.
+  string filename = 2;
+
+  // Language of the embedded script, and expected interpreted language.
+  EmbeddedScriptLanguage language = 3;
+
+  // Embedded script-level metadata, including language-specific metadata.
+  EmbeddedScriptMetadata metadata = 4;
+
+  // Last-modified timestamp for the assets underlying this script.
+  google.protobuf.Timestamp last_modified = 5;
+
+  // Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+  // digest payload additionally specifies the algorithm used.
+  DataContainerRef script = 6;
+
+  // Source-map file path for the embedded script, if generated as an external file.
+  DataContainerRef sourcemap = 7;
+
+  // Unique set of direct dependencies for this embedded script asset; expected to be other, compatible embedded
+  // scripts (same language, same runtime level). Expressed as a `module` ID.
+  repeated string direct_dependency = 8;
+
+  // Unique transitive closure of all dependencies this module relies upon; expected to be other, compatible embedded
+  // scripts (same language, same runtime level). Expressed as a `module` ID.
+  repeated string transitive_dependency = 9;
+}

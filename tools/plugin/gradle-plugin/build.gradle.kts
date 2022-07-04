@@ -1,8 +1,17 @@
+@file:Suppress(
+    "UnstableApiUsage",
+    "unused",
+    "UNUSED_VARIABLE",
+    "DSL_SCOPE_VIOLATION",
+)
+
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
+import java.util.Properties
 
 plugins {
-    alias(libs.plugins.kotlin) apply false
+    java
+    alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar)
@@ -18,7 +27,12 @@ version = if (project.hasProperty("elide.stamp") && project.properties["elide.st
     "1.0-SNAPSHOT"
 }
 
-val props = java.util.Properties()
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+val props = Properties()
 val overlay = file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
     "gradle-ci.properties"
 } else {
@@ -96,10 +110,6 @@ tasks.withType<DependencyUpdatesTask> {
 
 fun String.isNonStable() = "^[0-9,.v-]+(-r)?$".toRegex().matches(this).not()
 
-tasks.register("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
-}
-
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
 
@@ -117,4 +127,26 @@ tasks.register("preMerge") {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
+}
+
+if (tasks.findByName("resolveAllDependencies") == null) {
+    tasks.register("resolveAllDependencies") {
+        val npmInstall = tasks.findByName("kotlinNpmInstall")
+        if (npmInstall != null) {
+            dependsOn(npmInstall)
+        }
+        doLast {
+            allprojects {
+                configurations.forEach { c ->
+                    if (c.isCanBeResolved) {
+                        println("Downloading dependencies for '$path' - ${c.name}")
+                        val result = c.incoming.artifactView { lenient(true) }.artifacts
+                        result.failures.forEach {
+                            println("- Ignoring Error: ${it.message}")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -11,8 +11,10 @@ plugins {
 
 dependencyResolutionManagement {
     repositories {
-        mavenCentral()
         google()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
+        mavenCentral()
+        maven("https://plugins.gradle.org/m2/")
     }
 }
 

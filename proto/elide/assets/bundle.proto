@@ -174,28 +174,32 @@ message AssetBundle {
 
   // Digest algorithm settings in use to calculate chunk tokens. These tokens are used to address pre-compressed asset
   // content, and are used to address assets dynamically from the server and frontend.
-  DigestSettings digest = 2;
+  DigestSettings digest_settings = 2;
+
+  // Raw bytes of a digest matching the algorithm for digests in file names, which represents a unique fingerprint of
+  // the full asset bundle.
+  bytes digest = 3;
 
   // Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
   // their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-  map<string, StyleBundle> styles = 3;
+  map<string, StyleBundle> styles = 4;
 
   // Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
   // their script sources and settings. Generally, a Closure module name is used for scripts.
-  map<string, ScriptBundle> scripts = 4;
+  map<string, ScriptBundle> scripts = 5;
+
+  // Generic assets which are mapped within this bundle.
+  map<string, GenericBundle> generic = 6;
 
   // Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
   // bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-  repeated AssetContent asset = 5;
+  repeated AssetContent asset = 7;
 
   // Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
   // checking for updates to the asset bundle itself.
-  google.protobuf.Timestamp generated = 6;
+  google.protobuf.Timestamp generated = 8;
 
   // Whether style-rewriting is enabled or not, which should indicate the presence of generated style symbol maps, that
   // must be loaded by the server for SSR.
-  bool rewrite = 7;
-
-  // Generic assets which are mapped within this bundle.
-  map<string, GenericBundle> generic = 8;
+  bool style_rewrite = 9;
 }

@@ -67,6 +67,8 @@ if (buildPlugins == "true") {
   includeBuild(
     "tools/plugin/gradle-plugin",
   )
+} else {
+  enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 }
 
 gradleEnterprise {

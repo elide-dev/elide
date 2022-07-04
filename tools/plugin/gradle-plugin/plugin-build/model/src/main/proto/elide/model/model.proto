@@ -1,0 +1,481 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/**
+ * Specifies structures that relate to data modeling and the structure of the data. Enumerates collection mode and field
+ * type, required status, and so on. Also includes field metadata (like summaries, descriptions, and so on).
+ */
+syntax = "proto3";
+package model;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option java_outer_classname = "Datamodel";
+option php_namespace = "Elide";
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option ruby_package = "Elide::Model";
+option java_package = "tools.elide.model";
+option csharp_namespace = "Elide.Model";
+option go_package = "github.com/elide-tools/elide/model/datamodel;datamodel";
+
+import "google/protobuf/descriptor.proto";
+
+
+// Sets the visibility of a given object and its constituent properties, in circumstances where the object is served to
+// a frontend client/agent. Depending on the visibility of a given property, it may or may not be emitted by an API
+// service, or made available (or not) in the JS context.
+enum Visibility {
+  // Default visibility: the property or item is public.
+  PUBLIC = 0;
+
+  // Private visibility: only usable and addressable by itself, or associated items.
+  PRIVATE = 1;
+
+  // Protected visibility: children and other associated objects can access or address this item.
+  PROTECTED = 2;
+
+  // Package visibility: items or objects in the same package can access and address this item.
+  PACKAGE = 3;
+
+  // Export visibility: expose this item to the outer invoking context.
+  EXPORT = 4;
+}
+
+
+// Specifies how a sub-object in a particular message should be persisted.
+enum CollectionMode {
+  // `NESTED` mode stores the specified collection within the parent document.
+  NESTED = 0;
+
+  // `COLLECTION` mode stores the specified collection as a sub-collection under the parent document.
+  COLLECTION = 1;
+
+  // `GROUP` mode stores the specified collection at the root of the data system.
+  GROUP = 2;
+}
+
+
+// Enumerates field handling special-cases. Fields may be annotated with these special types to change the way they are
+// handled by the model mapping layer.
+enum FieldType {
+  // This is a standard field (default value).
+  STANDARD = 0;
+
+  // This is a key field (a primary key sub-message) for a GROUP or COLLECTION-mode message.
+  KEY = 1;
+
+  // This is an ID field that should be used as the final name of this document.
+  ID = 2;
+
+  // This is a tags-style field.
+  TAGS = 3;
+
+  // Store this object as a special flags-style mapping.
+  FLAGS = 4;
+
+  // This key is a foreign reference.
+  REFERENCE = 5;
+
+  // This item is a timestamp.
+  TIMESTAMP = 6;
+
+  // This field represents a key for this item's parent.
+  PARENT = 7;
+
+  // This field represents a full key path in hierarchical storage.
+  PATH = 8;
+}
+
+
+// Specifies the types an object may use when defining special objects. These types govern how an object is treated,
+// listed, and adapted throughout its lifecycle.
+enum DatapointType {
+  // The datamodel represents an object record.
+  OBJECT = 0;
+
+  // Specifies that this datapoint type is a record key.
+  OBJECT_KEY = 1;
+
+  // The datamodel represents an event type.
+  EVENT = 2;
+
+  // The datamodel represents a table.
+  TABLE = 3;
+
+  // The datamodel represents a wire object.
+  WIRE = 4;
+
+  // The datamodel represents a hash pre-image.
+  HASH = 5;
+}
+
+
+// Specifies a special role, if applicable, for a given enumerated type. Each selection governs some special behavior
+// related to defined enums with APIs, databases, and so on.
+enum EnumeratedType {
+  // Specifies a generic enumeration structure.
+  GENERIC_ENUMERATION = 0;
+
+  // Specifies a structure which enumerates error states.
+  ERRORS = 1;
+}
+
+
+// Options specified for a given datamodel point (which can be a message, a field, an enum, and so on), which describe
+// how the object or field may be validated in various circumstances, and how it should be handled with regard to
+// exposure visibility to invoking code.
+message DatapointOptions {
+  // Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+  // invoking code, protected from rewriting, and so on.
+  Visibility visibility = 1;
+
+  // Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
+  // This setting is applied in various circumstances, usually when data crosses API boundaries.
+  bool required = 2;
+
+  // Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
+  // entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
+  // generic types in a one-of field, for instance, in `MenuProduct`.
+  bool concrete = 3;
+
+  // Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
+  // a calculated value for use in systems upstream from the data storage layer.
+  bool ephemeral = 4;
+}
+
+
+// Specifies options related to persistence of underlying model data associated with this particular message type. This
+// includes settings related to Firestore and other data engines.
+message PersistenceOptions {
+  // Specifies the storage mode for this entity.
+  CollectionMode mode = 1;
+
+  // Data path for a given message, with items in the URL corresponding to parameters in the item's key path.
+  string path = 2;
+
+  // Name of this item's parent collection, if applicable.
+  string parent = 3;
+}
+
+
+// Options specific to model integration with table-style engines, where there can be a table name and/or description
+// that should be mapped to a particular message structure.
+message TableOptions {
+  // Name of the table bound to this model.
+  string name = 1;
+
+  // Description for the table bound to this model.
+  string description = 2;
+}
+
+
+// Specifies options related to storing a sub-message.
+message SubmessageOptions {
+  // Collection storage mode for the given sub-message field.
+  CollectionMode mode = 1;
+
+  // Concrete type name for this sub-message type.
+  string concrete = 2;
+
+  // Data path for the given sub-message field.
+  string path = 3;
+
+  // If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
+  // some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
+  bool embed = 4;
+}
+
+
+// Describes the visibility options for a given field.
+enum FieldVisibility {
+  // Default visibility level. No change to default behavior.
+  DEFAULT_VISIBILITY = 0;
+
+  // Denotes data that is fine to expose publicly.
+  OPEN = 1;
+
+  // Denotes data that should only be exposed to authorized users.
+  AUTHORIZED = 2;
+
+  // Denotes data that should only be exposed to users authorized by the owner.
+  OWNER = 3;
+
+  // Denotes data that should only be exposed internally.
+  INTERNAL = 4;
+}
+
+
+// Persistence/data engine options specific to an individual message field.
+message FieldPersistenceOptions {
+  // Field type, for special-case fields.
+  FieldType type = 1;
+
+  // Summary for this field, which provides a narrative description. It should be suitable for use in external
+  // circumstances, like documentation.
+  string summary = 2;
+
+  // This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
+  // modified in underlying storage. The field should be read-only.
+  bool stamp_update = 3;
+
+  // This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
+  // we would like this field to be read-only.
+  bool stamp_create = 4;
+
+  // This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
+  // be set by external code at any point in time.
+  bool read_only = 5;
+
+  // This field should allow writes when the model that contains it is written, but then, henceforth, the model should
+  // not allow this field to be mutated.
+  bool immutable = 6;
+
+  // This field should always be explicitly listed with a value, even if it is set to the default value. This function
+  // is especially useful for enums with default values, when there is a desire to have consistent indexes.
+  bool explicit = 7;
+
+  // Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+  // fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+  // certain data may be withheld corresponding to the invoking user or system's access level.
+  FieldVisibility visibility = 8;
+
+  // Provided for backwards compatibility. Do not use.
+  string description = 9 [deprecated = true];
+}
+
+
+// Defines options structures that relate to Google BigQuery.
+message BigQueryOptions {
+  // Specifies types applicable to BigQuery property translation.
+  enum BigQueryType {
+    // Unspecified type for Spanner fields.
+    UNSPECIFIED_TYPE = 0 [deprecated = true];
+
+    // Default concrete type for BigQuery columns: `STRING`.
+    STRING = 1;
+
+    // `NUMERIC` type.
+    NUMERIC = 2;
+
+    // `FLOAT` type.
+    FLOAT = 3;
+
+    // `FLOAT64` type.
+    FLOAT64 = 4;
+
+    // `INTEGER` type.
+    INTEGER = 5;
+
+    // `INT64` type.
+    INT64 = 6;
+
+    // `BYTES` type.
+    BYTES = 7;
+
+    // `RECORD` type.
+    RECORD = 8;
+
+    // `BOOLEAN` type.
+    BOOLEAN = 9;
+
+    // `GEOGRAPHY` type.
+    GEOGRAPHY = 10;
+
+    // `TIME` type.
+    TIME = 11;
+
+    // `DATE` type.
+    DATE = 12;
+
+    // `DATETIME` type.
+    DATETIME = 13;
+
+    // `TIMESTAMP` type.
+    TIMESTAMP = 14;
+
+    // `JSON` (special type).
+    JSON = 99;
+  }
+}
+
+
+// Defines options structures that relate to Google Cloud Spanner.
+message SpannerOptions {
+  // Specifies types applicable to Spanner property translation.
+  enum SpannerType {
+    // Unspecified type for Spanner fields.
+    UNSPECIFIED_TYPE = 0 [deprecated = true];
+
+    // `STRING` type.
+    STRING = 1;
+
+    // `NUMERIC` type.
+    NUMERIC = 2;
+
+    // `FLOAT64` type.
+    FLOAT64 = 3;
+
+    // `INT64` type.
+    INT64 = 4;
+
+    // `BYTES` type.
+    BYTES = 5;
+
+    // `BOOL` type.
+    BOOL = 6;
+
+    // `DATE` type.
+    DATE = 7;
+
+    // `TIMESTAMP` type.
+    TIMESTAMP = 8;
+
+    // `JSON` (special type).
+    JSON = 9;
+  }
+}
+
+
+// Specifies options specific to storing this field in a tabular-style data engine.
+message TableFieldOptions {
+  // Marks this field as `REQUIRED` in tabular schemas.
+  bool require = 1;
+
+  // Marks this field as ignored for serialization in tabular circumstances.
+  bool ignore = 2;
+
+  // Overrides the BigQuery type associated with the exported form of this message field.
+  BigQueryOptions.BigQueryType bqtype = 3;
+
+  // Overrides the Spanner type associated with the exported form of this message field.
+  SpannerOptions.SpannerType sptype = 4;
+
+  // Converts this field into a `REPEATED`-mode field in BigQuery.
+  bool repeated = 5;
+
+  // Size of the field. Pass `0` (the default) for maximum width.
+  uint32 size = 6;
+
+  // Name of the field in columnar circumstances.
+  string name = 7;
+
+  // Unique ID or path assigned to this field in a universally specified data model.
+  string id = 8;
+}
+
+
+// Extended options for use with Cloud Spanner, which may be affixed to an individual model field.
+message SpannerFieldOptions {
+  // Override column name in Spanner only.
+  string column = 1;
+
+  // Whether to ignore this column in Spanner specifically.
+  bool ignore = 2;
+
+  // Override the field type in Spanner only.
+  SpannerOptions.SpannerType type = 3;
+
+  // Override the field to store STRUCT objects as JSON.
+  bool json = 4;
+
+  // Length of this field in the database, when expressed as a string.
+  uint32 size = 5;
+
+  // Specifies this column as `NONNULL`, in which case you cannot store `NULL` values in this field.
+  bool nonnull = 6;
+
+  // Expression value for this field. Converts this field into a calculated value.
+  string expression = 7;
+
+  // Specifies the `STORED` option for this field. Only applicable if an `expression` is present.
+  bool stored = 8;
+
+  // Marks a field as a member of a Spanner row's primary key.
+  bool primary_key = 9;
+}
+
+
+// Specifies mappings for an arbitrary protobuf message object.
+message ObjectMapping {
+  // Maps an enumeration instance to this object. Enumeration membership is contextual.
+  repeated string instance = 1;
+}
+
+
+extend google.protobuf.MessageOptions {
+  // Specifies the type of datapoint represented by a given message entity. This can be `RECORD` (generally used for
+  // arbitrary datamodel objects), `EVENT` (specialized telemetry event records), `TABLE` (tabular data, generally used
+  // for analytics events / BigQuery).
+  DatapointType role = 6000;
+
+  // Settings specific to how a particular message entity is stored in the underlying persistence engine.
+  PersistenceOptions db = 6001;
+
+  // Table-specific configuration for this message. Kicks in when engines are in play that observe or couch data in a
+  // table/row-style pattern. Usually used for integration with BigQuery.
+  TableOptions table = 6002;
+
+  // Settings that determine meta-mappings between this message object and enumerated states, declared in a foreign
+  // structure. Foreign structure mappings are contextually defined by the invoking application.
+  ObjectMapping map = 6003;
+
+  // Settings that specify state for this message, which may include settings related to visibility or handling, and
+  // validation of this object in various circumstances.
+  DatapointOptions msg = 6004;
+}
+
+
+extend google.protobuf.FieldOptions {
+  // Database engine persistence options specific to an individual document field.
+  FieldPersistenceOptions field = 7000;
+
+  // Specifies options related to storage of this field in a tabular-style data engine.
+  TableFieldOptions column = 7001;
+
+  // Specifies options related to storage of a sub-message-typed field.
+  SubmessageOptions collection = 7002;
+
+  // Settings that specify state for this field, including validation settings, as applicable.
+  DatapointOptions opts = 7003;
+
+  // Unique ID or path assigned to this field in a universally specified data model.
+  string id = 7004;
+
+  // Specifies extended options related specifically to use with Cloud Spanner.
+  SpannerFieldOptions spanner = 7005;
+}
+
+
+extend google.protobuf.EnumValueOptions {
+  // Human-readable label for a given enumeration value state. Optional, can be used by invoking code to generate labels
+  // for states in forms or other UI.
+  string label = 8003;
+
+  // Aliases when decoding values of this type.
+  repeated string alias = 8005;
+
+  // Settings that specify state for this enum value, including validation settings, as applicable.
+  DatapointOptions value = 8007;
+}
+
+extend google.protobuf.EnumOptions {
+  // Specifies a special role, if applicable, for a given enumerated type.
+  EnumeratedType enum_role = 9000;
+
+  // Settings that specify state for this enum value, including validation settings, as applicable.
+  DatapointOptions enumeration = 9001;
+}

@@ -12,6 +12,7 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
+  id("dev.elide.buildtools.plugin")
   alias(libs.plugins.micronautApplication)
   alias(libs.plugins.micronautAot)
   alias(libs.plugins.sonar)

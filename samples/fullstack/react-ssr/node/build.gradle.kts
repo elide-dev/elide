@@ -8,7 +8,6 @@
 import dev.elide.buildtools.gradle.plugin.BuildMode
 import dev.elide.buildtools.gradle.plugin.js.BundleTarget
 import dev.elide.buildtools.gradle.plugin.js.BundleTool
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
@@ -17,14 +16,12 @@ plugins {
   kotlin("js")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("dev.elide.buildtools.plugin")
-  alias(libs.plugins.node)
   alias(libs.plugins.sonar)
+  id("dev.elide.buildtools.plugin")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
-val rootPackageJson by rootProject.tasks.getting(RootPackageJsonTask::class)
 
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
@@ -55,9 +52,4 @@ dependencies {
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
-}
-
-node {
-  download.set(false)
-  nodeProjectDir.set(rootPackageJson.rootPackageJson.parentFile.normalize())
 }

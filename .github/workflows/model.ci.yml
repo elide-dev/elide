@@ -55,7 +55,8 @@ jobs:
       # Job: Breaking
       - uses: bufbuild/buf-breaking-action@v1
         with:
-          against: 'https://github.com/elide-dev/v3.git#branch=v3'
+          against: |
+            ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') ? `https://github.com/elide-dev/v3.git#ref=${GITHUB_REF}` : 'https://github.com/elide-dev/v3.git#branch=v3' }}
 
   ##
   ## Job: Buf Push

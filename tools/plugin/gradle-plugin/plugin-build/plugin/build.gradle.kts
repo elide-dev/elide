@@ -13,22 +13,57 @@ dependencies {
     api(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib-jdk7"))
     implementation(gradleApi())
-    implementation(project(":model"))
     implementation("com.github.node-gradle:gradle-node-plugin:3.4.0")
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:2.4.0")
+
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
+
+    implementation(libs.soy)
+    implementation(libs.slf4j)
+    implementation(libs.brotli)
+    implementation(libs.picocli)
+    implementation(libs.picocli.codegen)
 
     // Protocol Buffers
     implementation(libs.protobuf.java)
     implementation(libs.protobuf.util)
     implementation(libs.protobuf.kotlin)
+
+    implementation(libs.gson)
+    implementation(libs.checker)
     implementation(libs.commons.compress)
 
     testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.truth.proto)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_9
-    targetCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_9
+}
+
+kotlin {
+    // Nothing at this time.
+}
+
+sourceSets.getByName("main").java {
+    srcDir("src/model/java")
+    srcDir("src/model/kotlin")
+}
+
+detekt {
+    source = files(
+        "src/main/java",
+    )
+}
+
+ktlint {
+    filter {
+        exclude("**/model/**")
+    }
 }
 
 gradlePlugin {

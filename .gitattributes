@@ -12,7 +12,6 @@ packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-
 packages/graalvm-react/src/main/node/** -linguist-detectable linguist-generated
 packages/graalvm-react/src/main/node/*.js -linguist-detectable linguist-generated
 docs/* linguist-documentation
-tools/plugins/gradle-plugin/plugin-build/model/src/main/java -linguist-detectable linguist-generated
-tools/plugins/gradle-plugin/plugin-build/model/src/main/kotlin -linguist-detectable linguist-generated
-tools/plugin/gradle-plugin/plugin-build/model/src/main/proto -linguist-detectable linguist-generated
-tools/plugins/gradle-plugin/plugin-build/model/src/main/java/tools/elide/builder linguist-detectable
+tools/plugin/gradle-plugin/plugin-build/plugin/src/model/java -linguist-detectable linguist-generated
+tools/plugin/gradle-plugin/plugin-build/plugin/src/model/kotlin -linguist-detectable linguist-generated
+tools/plugin/gradle-plugin/plugin-build/plugin/src/main/proto -linguist-detectable linguist-generated

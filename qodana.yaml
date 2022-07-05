@@ -1,0 +1,2 @@
+version: "1.0"
+linter: us-docker.pkg.dev/elide-fw/tools/qodana:jvm17-2022.1-eap@sha256:872dd5fcd0d6cd4d3bd35f42400dbe5fdba50967e444d10c8b9e9ced4ac0640f

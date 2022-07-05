@@ -5,7 +5,6 @@ object Versions {
   const val kotlinLanguage = "1.7"
   const val kotlinSerialization = "1.3.3"
   const val kotlinxHtml = "0.7.5"
-  const val javaLanguage = "17"
   const val kotest = "5.3.2"
   const val micronaut = "3.5.2"
   const val micronautPlugin = "3.4.1"

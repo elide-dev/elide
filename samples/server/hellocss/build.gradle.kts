@@ -21,13 +21,13 @@ version = rootProject.version as String
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 

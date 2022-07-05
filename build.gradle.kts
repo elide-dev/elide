@@ -41,7 +41,8 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
-val javaVersion = Versions.javaLanguage
+val javaLanguageVersion = project.properties["versions.java.language"] as String
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 
 tasks.dokkaHtmlMultiModule.configure {
   outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
@@ -142,6 +143,22 @@ subprojects {
     config = rootProject.files("config/detekt/detekt.yml")
   }
 
+  afterEvaluate {
+    if (tasks.findByName("check") != null) {
+      tasks.getByName("check") {
+        setDependsOn(dependsOn.filterNot {
+          it is TaskProvider<*> && it.name == "detekt"
+        })
+      }
+
+      tasks.getByName("build") {
+        setDependsOn(dependsOn.filterNot {
+          it is TaskProvider<*> && it.name == "check"
+        })
+      }
+    }
+  }
+
   if (project.property("elide.lockDeps") == "true") {
     dependencyLocking {
       lockAllConfigurations()
@@ -156,27 +173,27 @@ allprojects {
     google()
   }
   tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
+    sourceCompatibility = javaLanguageVersion
+    targetCompatibility = javaLanguageVersion
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
     }
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
-      jvmTarget = Versions.javaLanguage
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
+      jvmTarget = javaLanguageVersion
       javaParameters = true
     }
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
       target = Versions.ecmaVersion
     }
   }

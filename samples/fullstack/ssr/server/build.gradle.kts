@@ -22,13 +22,13 @@ version = rootProject.version as String
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
@@ -94,7 +94,7 @@ graalvmNative {
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {

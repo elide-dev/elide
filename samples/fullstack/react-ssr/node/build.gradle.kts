@@ -5,7 +5,11 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import dev.elide.buildtools.gradle.plugin.BuildMode
+import dev.elide.buildtools.gradle.plugin.js.BundleTarget
+import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask
+import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
   idea
@@ -20,15 +24,25 @@ plugins {
 
 group = "dev.elide.samples"
 version = rootProject.version as String
+val rootPackageJson by rootProject.tasks.getting(RootPackageJsonTask::class)
 
-val kotlinWrapperVersion = Versions.kotlinWrappers
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 elide {
-  if (devMode) {
-    mode.set(dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT)
+  mode = if (devMode) {
+    BuildMode.DEVELOPMENT
   } else {
-    mode.set(dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION)
+    BuildMode.PRODUCTION
+  }
+
+  js {
+    tool(BundleTool.ESBUILD)
+    target(BundleTarget.EMBEDDED)
+
+    runtime {
+      inject(true)
+      languageLevel(JsLanguageLevel.ES2020)
+    }
   }
 }
 
@@ -42,16 +56,6 @@ dependencies {
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
 }
-
-tasks.withType<Tar> {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<Zip>{
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-val rootPackageJson by rootProject.tasks.getting(RootPackageJsonTask::class)
 
 node {
   download.set(false)

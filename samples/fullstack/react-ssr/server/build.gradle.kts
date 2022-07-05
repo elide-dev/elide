@@ -5,6 +5,12 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import dev.elide.buildtools.gradle.plugin.BuildMode
+import tools.elide.assets.EmbeddedScriptLanguage
+import tools.elide.assets.ManifestFormat
+import tools.elide.crypto.HashAlgorithm
+import tools.elide.data.CompressionMode
+
 plugins {
   java
   jacoco
@@ -75,14 +81,6 @@ graalvmNative {
   }
 }
 
-tasks.withType<Tar> {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<Zip>{
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 testing {
   suites {
     val test by getting(JvmTestSuite::class) {
@@ -93,6 +91,7 @@ testing {
 
 val mainPackage = "fullstack.reactssr"
 val mainEntry = "$mainPackage.App"
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 application {
   mainClass.set(mainEntry)
@@ -133,14 +132,46 @@ micronaut {
   }
 }
 
-val browserDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
+elide {
+  mode = if (devMode) {
+    BuildMode.DEVELOPMENT
+  } else {
+    BuildMode.PRODUCTION
+  }
 
-val nodeDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
+  server {
+    ssr(EmbeddedScriptLanguage.JS) {
+      bundle(project(":samples:fullstack:react-ssr:node"))
+    }
+    assets {
+      bundler {
+        compression {
+          modes(CompressionMode.GZIP)
+        }
+      }
+
+//      // stylesheet: `main.base`
+//      stylesheet("main.base") {
+//        sourceFile("src/main/assets/basestyles.css")
+//      }
+//
+//      // stylesheet: `main.styles`
+//      stylesheet("main.styles") {
+//        sourceFile("src/main/assets/coolstyles.css")
+//        dependsOn("main.base")
+//      }
+//
+//      // script: `main.js`
+//      script("main.js") {
+//        sourceFile("src/main/assets/some-script.js")
+//      }
+//
+//      // text: `util.humans`
+//      text("util.humans") {
+//        sourceFile("src/main/assets/humans.txt")
+//      }
+    }
+  }
 }
 
 dependencies {
@@ -153,23 +184,14 @@ dependencies {
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+}
 
-  browserDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:react-ssr:frontend",
-        "configuration" to "browserDist",
-      )
-    )
-  )
-  nodeDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:react-ssr:node",
-        "configuration" to "nodeDist",
-      )
-    )
-  )
+tasks.withType<Tar> {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType<Zip> {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
@@ -213,27 +235,6 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   images.set(listOf(
     "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:opt-latest"
   ))
-}
-
-tasks.withType<Copy>().named("processResources") {
-  dependsOn("copyJs")
-  dependsOn("copyStatic")
-  dependsOn("copyEmbedded")
-}
-
-tasks.register<Copy>("copyJs") {
-  from(browserDist)
-  into("$buildDir/resources/main/assets/js")
-}
-
-tasks.register<Copy>("copyStatic") {
-  from("src/main/resources/static/**/*.*")
-  into("$buildDir/resources/main/static")
-}
-
-tasks.register<Copy>("copyEmbedded") {
-  from(nodeDist)
-  into("$buildDir/resources/main/embedded")
 }
 
 tasks {

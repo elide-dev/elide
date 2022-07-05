@@ -2,35 +2,17 @@ package dev.elide.buildtools.gradle.plugin.tasks
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.protobuf.Message
-import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import tools.elide.bundler.AssetBundler
+import tools.elide.assets.ManifestFormat
 import java.nio.charset.StandardCharsets
 
 /** Writes a pre-built asset bundle to the specified location, in the specified format. */
-abstract class BundleWriteTask : DefaultTask() {
+abstract class BundleWriteTask : BundleBaseTask() {
     /** Built asset spec record to write. */
     @get:Input
     abstract val sourceTaskName: Property<String>
-
-    /** Folder in which to put built bundle targets. */
-    @get:Input
-    @get:Option(
-        option = "bundleEncoding",
-        description = "Mode to use for encoding the asset bundle. Typically managed by the plugin.",
-    )
-    abstract val bundleEncoding: Property<AssetBundler.ManifestFormat>
-
-    /** Folder in which to put built bundle targets. */
-    @get:Input
-    @get:Option(
-        option = "outputBundleFolder",
-        description = "Where to put compiled asset catalogs on the filesystem. Typically managed by the plugin.",
-    )
-    abstract val outputBundleFolder: Property<String>
 
     /** Name to give the asset catalog being affixed by this task. */
     @get:Input
@@ -47,9 +29,9 @@ abstract class BundleWriteTask : DefaultTask() {
     @Suppress("SENSELESS_NULL_IN_WHEN")
     @VisibleForTesting
     internal fun writeBundle(bundle: Message) {
-        when (bundleEncoding.getOrElse(AssetBundler.ManifestFormat.BINARY)) {
+        when (bundleEncoding.getOrElse(ManifestFormat.BINARY)) {
             // for binary, use a raw byte writer
-            null, AssetBundler.ManifestFormat.BINARY -> {
+            null, ManifestFormat.BINARY -> {
                 val outstream = outputAssetSpecFile
                     .outputStream()
                     .buffered()
@@ -60,16 +42,16 @@ abstract class BundleWriteTask : DefaultTask() {
             }
 
             // for JSON or TEXT, write in UTF-8
-            AssetBundler.ManifestFormat.JSON, AssetBundler.ManifestFormat.TEXT -> {
+            ManifestFormat.JSON, ManifestFormat.TEXT -> {
                 val writer = outputAssetSpecFile
                     .outputStream()
                     .bufferedWriter(StandardCharsets.UTF_8)
 
                 writer.use { buf ->
-                    if (bundleEncoding.get() == AssetBundler.ManifestFormat.JSON) {
+                    if (bundleEncoding.get() == ManifestFormat.JSON) {
                         // JSON format is requested
                         buf.write(
-                            BundleSpecTask.jsonPrinter.print(bundle)
+                            jsonPrinter.print(bundle)
                         )
                     } else {
                         // normal TEXT format is requested
@@ -77,10 +59,15 @@ abstract class BundleWriteTask : DefaultTask() {
                     }
                 }
             }
+
+            else -> throw IllegalStateException(
+                "Unrecognized bundle format: '${this.name}'"
+            )
         }
     }
 
-    @TaskAction fun writeBundle() {
+    /** @inheritDoc */
+    override fun runAction() {
         val sourceTask = project.tasks.named(sourceTaskName.get(), BundleSpecTask::class.java).get()
         val assetSpec = sourceTask.assetSpec.get()
 
@@ -88,7 +75,7 @@ abstract class BundleWriteTask : DefaultTask() {
             throw IllegalStateException("Failed to resolve built asset spec: could not write.")
         } else {
             project.logger.lifecycle(
-                "Writing asset bundle '${outputSpecName.get()}'..."
+                "Writing asset bundle '${outputSpecName.get()}'"
             )
             writeBundle(assetSpec)
         }

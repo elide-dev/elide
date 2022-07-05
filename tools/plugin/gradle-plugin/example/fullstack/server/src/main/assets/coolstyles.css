@@ -1,0 +1,4 @@
+
+body {
+    background: var(--some-var, green);
+}

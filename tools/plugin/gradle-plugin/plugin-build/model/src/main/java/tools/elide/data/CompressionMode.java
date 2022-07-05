@@ -23,7 +23,7 @@ public enum CompressionMode
   IDENTITY(0),
   /**
    * <pre>
-   * Standard gzip-based pre-compression.
+   * Standard gzip-based compression.
    * </pre>
    *
    * <code>GZIP = 1;</code>
@@ -31,12 +31,20 @@ public enum CompressionMode
   GZIP(1),
   /**
    * <pre>
-   * Brotli-based pre-compression.
+   * Brotli-based compression.
    * </pre>
    *
    * <code>BROTLI = 2;</code>
    */
   BROTLI(2),
+  /**
+   * <pre>
+   * Snappy-based compression.
+   * </pre>
+   *
+   * <code>SNAPPY = 3;</code>
+   */
+  SNAPPY(3),
   UNRECOGNIZED(-1),
   ;
 
@@ -50,7 +58,7 @@ public enum CompressionMode
   public static final int IDENTITY_VALUE = 0;
   /**
    * <pre>
-   * Standard gzip-based pre-compression.
+   * Standard gzip-based compression.
    * </pre>
    *
    * <code>GZIP = 1;</code>
@@ -58,12 +66,20 @@ public enum CompressionMode
   public static final int GZIP_VALUE = 1;
   /**
    * <pre>
-   * Brotli-based pre-compression.
+   * Brotli-based compression.
    * </pre>
    *
    * <code>BROTLI = 2;</code>
    */
   public static final int BROTLI_VALUE = 2;
+  /**
+   * <pre>
+   * Snappy-based compression.
+   * </pre>
+   *
+   * <code>SNAPPY = 3;</code>
+   */
+  public static final int SNAPPY_VALUE = 3;
 
 
   public final int getNumber() {
@@ -93,6 +109,7 @@ public enum CompressionMode
       case 0: return IDENTITY;
       case 1: return GZIP;
       case 2: return BROTLI;
+      case 3: return SNAPPY;
       default: return null;
     }
   }

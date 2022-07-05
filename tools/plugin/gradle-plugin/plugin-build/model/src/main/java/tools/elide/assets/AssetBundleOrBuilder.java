@@ -20,33 +20,63 @@ public interface AssetBundleOrBuilder extends
 
   /**
    * <pre>
-   * Digest algorithm settings in use to calculate chunk tokens. These tokens are used to address pre-compressed asset
-   * content, and are used to address assets dynamically from the server and frontend.
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
    * </pre>
    *
-   * <code>.assets.AssetBundle.DigestSettings digest_settings = 2;</code>
-   * @return Whether the digestSettings field is set.
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
+   * @return Whether the settings field is set.
    */
-  boolean hasDigestSettings();
+  boolean hasSettings();
   /**
    * <pre>
-   * Digest algorithm settings in use to calculate chunk tokens. These tokens are used to address pre-compressed asset
-   * content, and are used to address assets dynamically from the server and frontend.
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
    * </pre>
    *
-   * <code>.assets.AssetBundle.DigestSettings digest_settings = 2;</code>
-   * @return The digestSettings.
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
+   * @return The settings.
    */
-  tools.elide.assets.AssetBundle.DigestSettings getDigestSettings();
+  tools.elide.assets.AssetBundle.BundlerSettings getSettings();
   /**
    * <pre>
-   * Digest algorithm settings in use to calculate chunk tokens. These tokens are used to address pre-compressed asset
-   * content, and are used to address assets dynamically from the server and frontend.
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
    * </pre>
    *
-   * <code>.assets.AssetBundle.DigestSettings digest_settings = 2;</code>
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
    */
-  tools.elide.assets.AssetBundle.DigestSettingsOrBuilder getDigestSettingsOrBuilder();
+  tools.elide.assets.AssetBundle.BundlerSettingsOrBuilder getSettingsOrBuilder();
+
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   * @return Whether the generated field is set.
+   */
+  boolean hasGenerated();
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   * @return The generated.
+   */
+  com.google.protobuf.Timestamp getGenerated();
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   */
+  com.google.protobuf.TimestampOrBuilder getGeneratedOrBuilder();
 
   /**
    * <pre>
@@ -54,7 +84,7 @@ public interface AssetBundleOrBuilder extends
    * the full asset bundle.
    * </pre>
    *
-   * <code>bytes digest = 3;</code>
+   * <code>bytes digest = 4;</code>
    * @return The digest.
    */
   com.google.protobuf.ByteString getDigest();
@@ -65,7 +95,7 @@ public interface AssetBundleOrBuilder extends
    * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 4;</code>
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
    */
   int getStylesCount();
   /**
@@ -74,7 +104,7 @@ public interface AssetBundleOrBuilder extends
    * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 4;</code>
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
    */
   boolean containsStyles(
       java.lang.String key);
@@ -90,7 +120,7 @@ public interface AssetBundleOrBuilder extends
    * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 4;</code>
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
    */
   java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.StyleBundle>
   getStylesMap();
@@ -100,7 +130,7 @@ public interface AssetBundleOrBuilder extends
    * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 4;</code>
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
    */
 
   /* nullable */
@@ -114,7 +144,7 @@ tools.elide.assets.AssetBundle.StyleBundle defaultValue);
    * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 4;</code>
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
    */
 
   tools.elide.assets.AssetBundle.StyleBundle getStylesOrThrow(
@@ -126,7 +156,7 @@ tools.elide.assets.AssetBundle.StyleBundle defaultValue);
    * their script sources and settings. Generally, a Closure module name is used for scripts.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 5;</code>
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
    */
   int getScriptsCount();
   /**
@@ -135,7 +165,7 @@ tools.elide.assets.AssetBundle.StyleBundle defaultValue);
    * their script sources and settings. Generally, a Closure module name is used for scripts.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 5;</code>
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
    */
   boolean containsScripts(
       java.lang.String key);
@@ -151,7 +181,7 @@ tools.elide.assets.AssetBundle.StyleBundle defaultValue);
    * their script sources and settings. Generally, a Closure module name is used for scripts.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 5;</code>
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
    */
   java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.ScriptBundle>
   getScriptsMap();
@@ -161,7 +191,7 @@ tools.elide.assets.AssetBundle.StyleBundle defaultValue);
    * their script sources and settings. Generally, a Closure module name is used for scripts.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 5;</code>
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
    */
 
   /* nullable */
@@ -175,7 +205,7 @@ tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
    * their script sources and settings. Generally, a Closure module name is used for scripts.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 5;</code>
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
    */
 
   tools.elide.assets.AssetBundle.ScriptBundle getScriptsOrThrow(
@@ -186,7 +216,7 @@ tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
    * Generic assets which are mapped within this bundle.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 6;</code>
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
    */
   int getGenericCount();
   /**
@@ -194,7 +224,7 @@ tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
    * Generic assets which are mapped within this bundle.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 6;</code>
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
    */
   boolean containsGeneric(
       java.lang.String key);
@@ -209,7 +239,7 @@ tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
    * Generic assets which are mapped within this bundle.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 6;</code>
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
    */
   java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.GenericBundle>
   getGenericMap();
@@ -218,7 +248,7 @@ tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
    * Generic assets which are mapped within this bundle.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 6;</code>
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
    */
 
   /* nullable */
@@ -231,7 +261,7 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * Generic assets which are mapped within this bundle.
    * </pre>
    *
-   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 6;</code>
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
    */
 
   tools.elide.assets.AssetBundle.GenericBundle getGenericOrThrow(
@@ -243,7 +273,7 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
    * </pre>
    *
-   * <code>repeated .assets.AssetBundle.AssetContent asset = 7;</code>
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
    */
   java.util.List<tools.elide.assets.AssetBundle.AssetContent> 
       getAssetList();
@@ -253,7 +283,7 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
    * </pre>
    *
-   * <code>repeated .assets.AssetBundle.AssetContent asset = 7;</code>
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
    */
   tools.elide.assets.AssetBundle.AssetContent getAsset(int index);
   /**
@@ -262,7 +292,7 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
    * </pre>
    *
-   * <code>repeated .assets.AssetBundle.AssetContent asset = 7;</code>
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
    */
   int getAssetCount();
   /**
@@ -271,7 +301,7 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
    * </pre>
    *
-   * <code>repeated .assets.AssetBundle.AssetContent asset = 7;</code>
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
    */
   java.util.List<? extends tools.elide.assets.AssetBundle.AssetContentOrBuilder> 
       getAssetOrBuilderList();
@@ -281,49 +311,8 @@ tools.elide.assets.AssetBundle.GenericBundle defaultValue);
    * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
    * </pre>
    *
-   * <code>repeated .assets.AssetBundle.AssetContent asset = 7;</code>
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
    */
   tools.elide.assets.AssetBundle.AssetContentOrBuilder getAssetOrBuilder(
       int index);
-
-  /**
-   * <pre>
-   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-   * checking for updates to the asset bundle itself.
-   * </pre>
-   *
-   * <code>.google.protobuf.Timestamp generated = 8;</code>
-   * @return Whether the generated field is set.
-   */
-  boolean hasGenerated();
-  /**
-   * <pre>
-   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-   * checking for updates to the asset bundle itself.
-   * </pre>
-   *
-   * <code>.google.protobuf.Timestamp generated = 8;</code>
-   * @return The generated.
-   */
-  com.google.protobuf.Timestamp getGenerated();
-  /**
-   * <pre>
-   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-   * checking for updates to the asset bundle itself.
-   * </pre>
-   *
-   * <code>.google.protobuf.Timestamp generated = 8;</code>
-   */
-  com.google.protobuf.TimestampOrBuilder getGeneratedOrBuilder();
-
-  /**
-   * <pre>
-   * Whether style-rewriting is enabled or not, which should indicate the presence of generated style symbol maps, that
-   * must be loaded by the server for SSR.
-   * </pre>
-   *
-   * <code>bool style_rewrite = 9;</code>
-   * @return The styleRewrite.
-   */
-  boolean getStyleRewrite();
 }

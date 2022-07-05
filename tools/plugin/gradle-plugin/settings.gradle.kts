@@ -21,6 +21,11 @@ dependencyResolutionManagement {
 rootProject.name = "elide-gradle-plugin"
 
 include(":example")
+include(
+    ":example:fullstack:node",
+    ":example:fullstack:server",
+    ":example:mixed",
+)
 includeBuild("plugin-build")
 
 gradleEnterprise {

@@ -170,81 +170,6 @@ public object EmbeddedScriptKt {
     }
 
     /**
-     * <pre>
-     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-     * digest payload additionally specifies the algorithm used.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef script = 6;</code>
-     */
-    public var script: tools.elide.assets.DataContainerRef
-      @JvmName("getScript")
-      get() = _builder.getScript()
-      @JvmName("setScript")
-      set(value) {
-        _builder.setScript(value)
-      }
-    /**
-     * <pre>
-     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-     * digest payload additionally specifies the algorithm used.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef script = 6;</code>
-     */
-    public fun clearScript() {
-      _builder.clearScript()
-    }
-    /**
-     * <pre>
-     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-     * digest payload additionally specifies the algorithm used.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef script = 6;</code>
-     * @return Whether the script field is set.
-     */
-    public fun hasScript(): kotlin.Boolean {
-      return _builder.hasScript()
-    }
-
-    /**
-     * <pre>
-     * Source-map file path for the embedded script, if generated as an external file.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef sourcemap = 7;</code>
-     */
-    public var sourcemap: tools.elide.assets.DataContainerRef
-      @JvmName("getSourcemap")
-      get() = _builder.getSourcemap()
-      @JvmName("setSourcemap")
-      set(value) {
-        _builder.setSourcemap(value)
-      }
-    /**
-     * <pre>
-     * Source-map file path for the embedded script, if generated as an external file.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef sourcemap = 7;</code>
-     */
-    public fun clearSourcemap() {
-      _builder.clearSourcemap()
-    }
-    /**
-     * <pre>
-     * Source-map file path for the embedded script, if generated as an external file.
-     * </pre>
-     *
-     * <code>.assets.DataContainerRef sourcemap = 7;</code>
-     * @return Whether the sourcemap field is set.
-     */
-    public fun hasSourcemap(): kotlin.Boolean {
-      return _builder.hasSourcemap()
-    }
-
-    /**
      * An uninstantiable, behaviorless type to represent the field in
      * generics.
      */
@@ -256,7 +181,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @return A list containing the directDependency.
      */
     public val directDependency: com.google.protobuf.kotlin.DslList<kotlin.String, DirectDependencyProxy>
@@ -270,7 +195,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @param value The directDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -284,7 +209,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @param value The directDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -299,7 +224,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @param values The directDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -313,7 +238,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @param values The directDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -328,7 +253,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      * @param index The index to set the value at.
      * @param value The directDependency to set.
      */
@@ -342,7 +267,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string direct_dependency = 8;</code>
+     * <code>repeated string direct_dependency = 6;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearDirectDependency")
@@ -361,7 +286,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @return A list containing the transitiveDependency.
      */
     public val transitiveDependency: com.google.protobuf.kotlin.DslList<kotlin.String, TransitiveDependencyProxy>
@@ -375,7 +300,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @param value The transitiveDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -389,7 +314,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @param value The transitiveDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -404,7 +329,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @param values The transitiveDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -418,7 +343,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @param values The transitiveDependency to add.
      */
     @kotlin.jvm.JvmSynthetic
@@ -433,7 +358,7 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      * @param index The index to set the value at.
      * @param value The transitiveDependency to set.
      */
@@ -447,13 +372,88 @@ public object EmbeddedScriptKt {
      * scripts (same language, same runtime level). Expressed as a `module` ID.
      * </pre>
      *
-     * <code>repeated string transitive_dependency = 9;</code>
+     * <code>repeated string transitive_dependency = 7;</code>
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearTransitiveDependency")
     public fun com.google.protobuf.kotlin.DslList<kotlin.String, TransitiveDependencyProxy>.clear() {
       _builder.clearTransitiveDependency()
-    }}
+    }
+    /**
+     * <pre>
+     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+     * digest payload additionally specifies the algorithm used.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef script = 8;</code>
+     */
+    public var script: tools.elide.data.DataContainerRef
+      @JvmName("getScript")
+      get() = _builder.getScript()
+      @JvmName("setScript")
+      set(value) {
+        _builder.setScript(value)
+      }
+    /**
+     * <pre>
+     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+     * digest payload additionally specifies the algorithm used.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef script = 8;</code>
+     */
+    public fun clearScript() {
+      _builder.clearScript()
+    }
+    /**
+     * <pre>
+     * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+     * digest payload additionally specifies the algorithm used.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef script = 8;</code>
+     * @return Whether the script field is set.
+     */
+    public fun hasScript(): kotlin.Boolean {
+      return _builder.hasScript()
+    }
+
+    /**
+     * <pre>
+     * Source-map file path for the embedded script, if generated as an external file.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef sourcemap = 9;</code>
+     */
+    public var sourcemap: tools.elide.data.DataContainerRef
+      @JvmName("getSourcemap")
+      get() = _builder.getSourcemap()
+      @JvmName("setSourcemap")
+      set(value) {
+        _builder.setSourcemap(value)
+      }
+    /**
+     * <pre>
+     * Source-map file path for the embedded script, if generated as an external file.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef sourcemap = 9;</code>
+     */
+    public fun clearSourcemap() {
+      _builder.clearSourcemap()
+    }
+    /**
+     * <pre>
+     * Source-map file path for the embedded script, if generated as an external file.
+     * </pre>
+     *
+     * <code>.data.DataContainerRef sourcemap = 9;</code>
+     * @return Whether the sourcemap field is set.
+     */
+    public fun hasSourcemap(): kotlin.Boolean {
+      return _builder.hasSourcemap()
+    }
+  }
 }
 @kotlin.jvm.JvmSynthetic
 public inline fun tools.elide.assets.EmbeddedScript.copy(block: tools.elide.assets.EmbeddedScriptKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScript =
@@ -465,9 +465,9 @@ val tools.elide.assets.EmbeddedScriptOrBuilder.metadataOrNull: tools.elide.asset
 val tools.elide.assets.EmbeddedScriptOrBuilder.lastModifiedOrNull: com.google.protobuf.Timestamp?
   get() = if (hasLastModified()) getLastModified() else null
 
-val tools.elide.assets.EmbeddedScriptOrBuilder.scriptOrNull: tools.elide.assets.DataContainerRef?
+val tools.elide.assets.EmbeddedScriptOrBuilder.scriptOrNull: tools.elide.data.DataContainerRef?
   get() = if (hasScript()) getScript() else null
 
-val tools.elide.assets.EmbeddedScriptOrBuilder.sourcemapOrNull: tools.elide.assets.DataContainerRef?
+val tools.elide.assets.EmbeddedScriptOrBuilder.sourcemapOrNull: tools.elide.data.DataContainerRef?
   get() = if (hasSourcemap()) getSourcemap() else null
 

@@ -1,5 +1,6 @@
 package dev.elide.buildtools.gradle.plugin
 
+import dev.elide.buildtools.gradle.plugin.ElideExtension.Companion.elide
 import dev.elide.buildtools.gradle.plugin.tasks.BundleAssetsBuildTask
 import dev.elide.buildtools.gradle.plugin.tasks.EmbeddedJsBuildTask
 import org.gradle.api.Plugin
@@ -12,25 +13,24 @@ abstract class ElidePlugin : Plugin<Project> {
         const val EXTENSION_NAME = "elide"
     }
 
-    override fun apply(project: Project) {
-        // Add the 'template' extension object
+    override fun apply(project: Project) = project.run {
         var kotlinPluginFound = false
-        val extension = project.extensions.create(EXTENSION_NAME, ElideExtension::class.java, project)
+        val elide = elide()
 
         // if the embedded JS plugin can be applied (node context, kotlin JS, etc), then do that
-        if (EmbeddedJsBuildTask.isEligible(project)) {
+        if (EmbeddedJsBuildTask.isEligible(elide, project)) {
             kotlinPluginFound = true
             EmbeddedJsBuildTask.install(
-                extension,
+                elide,
                 project
             )
         }
 
         // if the server-side JVM plugin can be applied (asset context) then do that
-        if (BundleAssetsBuildTask.isEligible(project)) {
+        if (BundleAssetsBuildTask.isEligible(elide, project)) {
             kotlinPluginFound = true
             BundleAssetsBuildTask.install(
-                extension,
+                elide,
                 project
             )
         }
@@ -39,7 +39,7 @@ abstract class ElidePlugin : Plugin<Project> {
         if (project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")) {
             kotlinPluginFound = true
             project.logger.warn(
-                "Elide doesn't yet support JS targets in Kotlin MPP modules. Build plugin will have no effect."
+                "Elide doesn't support JS targets in Kotlin MPP modules. Build plugin will have no effect."
             )
         }
 

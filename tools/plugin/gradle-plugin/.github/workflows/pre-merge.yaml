@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  gradle:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        experimental: [false]
+        include:
+          - os: ubuntu-latest
+            experimental: false
+          - os: macos-latest
+            experimental: true
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    env:
+      GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
+      GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+    steps:
+      ## Setup: Repo
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      ## Setup: Java
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      ## Setup: GraalVM
+      - uses: elide-tools/setup-graalvm@5.0
+        with:
+          graalvm: '21.0.0.2'
+          java: 'java11'
+          arch: 'amd64'
+
+      ## Setup: Gradle Caches
+      - name: Cache Gradle Caches
+        uses: gradle/gradle-build-action@v2
+
+      ## Prep: Download Caches
+      - name: Cache build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./build
+            ./*/build
+            ./*/*/build
+          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            elide-gradle-${{ runner.os }}
+            elide-gradle-
+
+      ## Job: Run build
+      - name: Run Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            preMerge
+            -Pelide.ci=true
+            --scan
+            --continue
+
+      ## Job: Run plugin
+      - name: Run the plugin
+        uses: gradle/gradle-build-action@v2
+        if: success()
+        with:
+          arguments: |
+            example:build
+            -Pelide.ci=true
+            --scan
+            --continue
+
+      ## CI: Build
+      - name: "Failure reports"
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: failure-reports
+          path: |
+            build/reports/**/*.*
+
+      ## Job: Verify plugin output (JS)
+      - name: Verify plugin output (JS)
+        if: success()
+        run: |
+          file ./example/fullstack/node/build/distributions/*.js
+          grep -Fq "esbuild" ./example/fullstack/node/build/esbuild/esbuild.*.js
+
+      ## Job: Verify plugin output (JVM)
+      - name: Verify plugin output (JVM)
+        if: success()
+        run: |
+          file ./example/fullstack/server/build/resources/main/embedded/embedded.assets*
+          file ./example/fullstack/server/build/resources/main/embedded/*.js
+          file ./example/fullstack/server/build/resources/main/assets/*.txt
+          file ./example/fullstack/server/build/resources/main/assets/*.css
+          file ./example/fullstack/server/build/resources/main/assets/*.js

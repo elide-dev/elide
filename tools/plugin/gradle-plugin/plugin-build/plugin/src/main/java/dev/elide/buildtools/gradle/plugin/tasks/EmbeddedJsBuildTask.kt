@@ -3,8 +3,8 @@ package dev.elide.buildtools.gradle.plugin.tasks
 import com.github.gradle.node.task.NodeTask
 import com.google.protobuf.Timestamp
 import dev.elide.buildtools.gradle.plugin.BuildMode
-import dev.elide.buildtools.gradle.plugin.ElideEmbeddedJsExtension
 import dev.elide.buildtools.gradle.plugin.ElideExtension
+import dev.elide.buildtools.gradle.plugin.cfg.ElideJsHandler
 import dev.elide.buildtools.gradle.plugin.js.BundleTarget
 import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import dev.elide.buildtools.gradle.plugin.js.BundleType
@@ -51,87 +51,113 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         private const val defaultEntrypointName: String = "main.js"
         private const val defaultOutputConfig: String = "embedded-js/compile.js"
         private const val defaultProcessShim: String = "embedded-js/shim.process.js"
-        const val defaultOutputBundleFolder = "bundle"
-        const val defaultOutputBundleName = "bundle.js"
-        const val defaultOutputOptimizedName = "bundle.opt.js"
         const val esbuildConfigTemplatePath = "/dev/elide/buildtools/js/esbuild-wrapper.js.hbs"
         const val processShimTemplatePath = "/dev/elide/buildtools/js/process-wrapper.js.hbs"
 
-        @JvmStatic fun isEligible(project: Project): Boolean {
-            return project.plugins.hasPlugin("org.jetbrains.kotlin.js")
+        // Determine whether the JS bundle task is eligible to run for the given project / extension pair.
+        @JvmStatic fun isEligible(extension: ElideExtension, project: Project): Boolean {
+            // we enable the JS build extension in two cases:
+            //
+            // 1) the user has installed the KotlinJS plugin and the Elide plugin. based on whether KotlinJS is
+            //    configured for Node or Browser targets, and the presence of the NodeJS plugin, it either builds in
+            //    `EMBEDDED` or `WEB` mode.
+            // 2) the user has installed the Elide plugin, and configured a JS block. in this case, the JS block will
+            //    tell us the intended target and tool. based on these values, the NodeJS or KotlinJS plugins may be
+            //    applied on behalf of the user.
+            return (
+              project.plugins.hasPlugin("org.jetbrains.kotlin.js") ||
+              extension.hasJsTarget()
+            )
         }
 
+        // Apply plugins which are required to run before the JS bundle task.
+        @JvmStatic fun applyPlugins(node: Boolean, project: Project, cbk: () -> Unit) {
+            applyPlugin(project, "org.jetbrains.kotlin.js") {
+                if (node) {
+                    applyPlugin(project, "com.github.node-gradle.node") {
+                        cbk.invoke()
+                    }
+                } else {
+                    cbk.invoke()
+                }
+            }
+        }
+
+        // After determining the task is eligible, install it in the given project with the provided extension settings.
         @JvmStatic fun install(extension: ElideExtension, project: Project) {
             // apply NPM deps for tooling
             injectDeps(project)
 
+            // determine whether we're running an embedded build, in which case the Node plugin is applied as well.
+            val isEmbedded = (
+                extension.js.bundleTarget.get() == BundleTarget.EMBEDDED
+            )
+
+            // apply requisite plugins
+            applyPlugins(isEmbedded, project) {
+                installTasks(
+                    extension,
+                    project,
+                )
+            }
+        }
+
+        // Build and install tasks within the scope of applied required plugins.
+        @JvmStatic fun installTasks(extension: ElideExtension, project: Project) {
             // resolve the inflate-runtime task installed on the root project, or if there is not one, create it.
             val inflateRuntime = resolveInflateRuntimeTask(project, extension)
 
             // load JS plugin, configure with output, connect outputs to embedded build
-            project.plugins.withId("org.jetbrains.kotlin.js") { _ ->
-                project.extensions.configure(KotlinJsProjectExtension::class.java) { jsExt ->
-                    val elideJsExt = project.extensions.create(
-                        ElideEmbeddedJsExtension.EXTENSION_NAME,
-                        ElideEmbeddedJsExtension::class.java,
-                        project,
-                    )
-                    val hasNode = project.plugins.hasPlugin(
-                        "com.github.node-gradle.node"
-                    )
+            project.extensions.configure(KotlinJsProjectExtension::class.java) { jsExt ->
+                val elideJsExt = extension.js
+                val hasNode = project.plugins.hasPlugin(
+                    "com.github.node-gradle.node"
+                )
 
-                    jsExt.js(KotlinJsCompilerType.IR) {
-                        if (hasNode || elideJsExt.target.getOrElse(BundleTarget.EMBEDDED) == BundleTarget.EMBEDDED) {
-                            nodejs {
-                                binaries.executable()
-                            }
-                        } else {
-                            browser {
-                                binaries.executable()
-                            }
+                jsExt.js(KotlinJsCompilerType.IR) {
+                    if (hasNode || elideJsExt.bundleTarget.get() == BundleTarget.EMBEDDED) {
+                        nodejs {
+                            binaries.executable()
+                        }
+                    } else {
+                        browser {
+                            binaries.executable()
                         }
                     }
+                }
 
-                    // resolve JS IR link task that we just set up
-                    val compileProdKotlinJs = resolveJsIrLinkTask(
-                        project
-                    )
+                // resolve JS IR link task that we just set up
+                val compileProdKotlinJs = resolveJsIrLinkTask(
+                    project
+                )
 
-                    // resolve embedded sources at `ssr/ssr.js`
-                    val fetchBuildSources = project.tasks.create("prepareEmbeddedJsBuild", Copy::class.java) {
-                        it.dependsOn(compileProdKotlinJs)
-                        it.from(compileProdKotlinJs.outputs.files.files) { copySpec ->
-                            copySpec.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-                        }
-                        it.from(compileProdKotlinJs.outputFileProperty) { copySpec ->
-                            copySpec.rename { "ssr.js" }
-                        }
-                        it.into(
-                            "${project.buildDir}/ssr"
-                        )
+                // resolve embedded sources at `ssr/ssr.js`
+                val fetchBuildSources = project.tasks.create("prepareEmbeddedJsBuild", Copy::class.java) {
+                    it.dependsOn(compileProdKotlinJs)
+                    it.from(compileProdKotlinJs.outputs.files.files) { copySpec ->
+                        copySpec.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     }
-
-                    val target = elideJsExt.target.getOrElse(
-                        BundleTarget.EMBEDDED
-                    )
-                    val tool = elideJsExt.tool.getOrElse(
-                        if (hasNode || elideJsExt.target.getOrElse(BundleTarget.EMBEDDED) == BundleTarget.EMBEDDED) {
-                            BundleTool.ESBUILD
-                        } else {
-                            BundleTool.WEBPACK
-                        }
-                    )
-                    setup(
-                        project,
-                        fetchBuildSources,
-                        compileProdKotlinJs,
-                        tool,
-                        target,
-                        extension,
-                        elideJsExt,
-                        inflateRuntime,
+                    it.from(compileProdKotlinJs.outputFileProperty) { copySpec ->
+                        copySpec.rename { "ssr.js" }
+                    }
+                    it.into(
+                        "${project.buildDir}/ssr"
                     )
                 }
+
+                val target = elideJsExt.bundleTarget.get()
+                val tool = elideJsExt.bundleTool.get()
+
+                setup(
+                    project,
+                    fetchBuildSources,
+                    compileProdKotlinJs,
+                    tool,
+                    target,
+                    extension,
+                    elideJsExt,
+                    inflateRuntime,
+                )
             }
         }
 
@@ -165,7 +191,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             tool: BundleTool,
             target: BundleTarget,
             extension: ElideExtension,
-            jsExtension: ElideEmbeddedJsExtension,
+            jsExtension: ElideJsHandler,
             inflateRuntime: InflateRuntimeTask,
         ) {
             if (tool == BundleTool.ESBUILD && target == BundleTarget.EMBEDDED) {
@@ -203,18 +229,40 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             project: Project,
             extension: ElideExtension,
         ) {
-            val activeMode = extension.mode.getOrElse(BuildMode.PRODUCTION)
-            val targetBundleTask = "generate${activeMode.name.lowercase().capitalized()}EsBuildConfig"
-            val genSpecTaskName = "generate${activeMode.name.lowercase().capitalized()}EmbeddedJsSpec"
-            val targetEmbeddedTask = "${activeMode.name.lowercase()}EmbeddedExecutable"
+            project.afterEvaluate {
+                val activeMode = extension.mode
+                val targetBundleTask = "generate${activeMode.name.lowercase().capitalized()}EsBuildConfig"
+                val genSpecTaskName = "generate${activeMode.name.lowercase().capitalized()}EmbeddedJsSpec"
+                val targetEmbeddedTask = "${activeMode.name.lowercase()}EmbeddedExecutable"
 
-            project.tasks.create(TASK_NAME) {
-                it.dependsOn(genSpecTaskName)
-                it.dependsOn(targetBundleTask)
-                it.dependsOn(targetEmbeddedTask)
-            }
-            project.tasks.named("build") {
-                it.dependsOn(TASK_NAME)
+                // create a synthesized distribution as an output
+                val mainDist = project.configurations.create("nodeSsrDist") {
+                    it.isCanBeConsumed = true
+                    it.isCanBeResolved = false
+                }
+                project.artifacts.apply {
+                    add(
+                        mainDist.name,
+                        project.tasks.named(targetEmbeddedTask).map {
+                            it.outputs.files.files.single()
+                        },
+                    )
+                    add(
+                        mainDist.name,
+                        project.tasks.named(genSpecTaskName).map {
+                            it.outputs.files.files.single()
+                        },
+                    )
+                }
+
+                project.tasks.create(TASK_NAME) {
+                    it.dependsOn(genSpecTaskName)
+                    it.dependsOn(targetBundleTask)
+                    it.dependsOn(targetEmbeddedTask)
+                }
+                project.tasks.named("build") {
+                    it.dependsOn(TASK_NAME)
+                }
             }
         }
 
@@ -223,7 +271,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             project: Project,
             fetchSources: Copy,
             kotlinJsLink: Task,
-            jsExtension: ElideEmbeddedJsExtension,
+            jsExtension: ElideJsHandler,
             inflateRuntime: InflateRuntimeTask,
         ) {
             // resolve root-package-json task
@@ -238,14 +286,15 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 it.dependsOn(project.tasks.named("productionExecutableCompileSync"))
                 it.dependsOn(kotlinJsLink)
                 it.dependsOn(fetchSources)
+                it.dependsOn(inflateRuntime)
 
                 // setup attrs
                 it.group = "other"
                 it.mode = mode
-                it.tool = jsExtension.tool.getOrElse(BundleTool.ESBUILD)
-                it.target = jsExtension.target.getOrElse(BundleTarget.EMBEDDED)
+                it.tool = jsExtension.bundleTool.get()
+                it.target = jsExtension.bundleTarget.get()
                 it.entryFile.set(fetchSources.destinationDir / "ssr.js")
-                it.libraryName = jsExtension.libraryName.getOrElse("embedded")
+                it.libraryName = jsExtension.libraryName.get()
 
                 // setup properties
                 it.outputBundleName.set(buildString {
@@ -274,14 +323,20 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 it.outputConfig.set(
                     File("${project.buildDir}/esbuild/esbuild.${modeName.lowercase()}.js")
                 )
-                if (mode == BuildMode.PRODUCTION) {
-                    it.minify = true
-                    it.prepack = true
-                }
+                it.modulesFolders.set(listOf(
+                    File(inflateRuntime.modulesPath.get().absolutePath),
+                    File("${project.buildDir}/js/node_modules"),
+                    File("${project.projectDir}/node_modules"),
+                    File("${project.rootProject.buildDir}/js/node_modules"),
+                    File("${project.rootProject.projectDir}/node_modules"),
+                ))
+                val defaultOptimize = mode == BuildMode.PRODUCTION
+                it.minify = jsExtension.minify.get() ?: defaultOptimize
+                it.prepack = jsExtension.prepack.get() ?: defaultOptimize
             }
 
             val targetEmbeddedTask = "${modeName.lowercase()}EmbeddedExecutable"
-            project.tasks.create(
+            val nodeBuildTask = project.tasks.create(
                 targetEmbeddedTask,
                 NodeTask::class.java
             ) {
@@ -321,12 +376,16 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             )
 
             // create a distribution for the bundle
-            val nodeDist = project.configurations.create("nodeSsrDist${mode.name.capitalized()}") {
+            val nodeDist = project.configurations.create("nodeSsrDist${mode.name.lowercase().capitalized()}") {
                 it.isCanBeConsumed = true
                 it.isCanBeResolved = false
             }
 
             // add to project artifacts
+            project.artifacts.add(
+                nodeDist.name,
+                nodeBuildTask.outputs.files.files.single()
+            )
             project.artifacts.add(
                 nodeDist.name,
                 catalogGenTask.outputs.files.files.single()
@@ -341,7 +400,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             fetchSources: Copy,
             kotlinJsLink: Task,
             extension: ElideExtension,
-            jsExtension: ElideEmbeddedJsExtension,
+            jsExtension: ElideJsHandler,
         ) {
             project.logger.lifecycle("Configuring embedded 'webpack' task for CSR...")
         }
@@ -392,8 +451,8 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "mode",
         description = (
             "Build mode: `${BuildMode.DEVELOPMENT_NAME}` or `${BuildMode.PRODUCTION_NAME}`. Passed to Node. " +
-            "Defaults to `$defaultTargetModeName`."
-        ),
+                "Defaults to `$defaultTargetModeName`."
+            ),
     )
     var mode: BuildMode = defaultTargetMode
 
@@ -403,8 +462,8 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "target",
         description = (
             "Type of target to build: `${BundleTarget.EMBEDDED_NAME}`, `${BundleTarget.NODE_NAME}`, or " +
-            "`${BundleTarget.WEB_NAME}`. Defaults to `$defaultTargetTypeName`."
-        ),
+                "`${BundleTarget.WEB_NAME}`. Defaults to `$defaultTargetTypeName`."
+            ),
     )
     var target: BundleTarget = defaultTargetType
 
@@ -414,8 +473,8 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "format",
         description = (
             "Format of the bundle to build: `${BundleType.IIFE_NAME}`, `${BundleType.COMMON_JS_NAME}`, or " +
-            "`${BundleType.ESM_NAME}`. Defaults to the value stipulated by `target`."
-        ),
+                "`${BundleType.ESM_NAME}`. Defaults to the value stipulated by `target`."
+            ),
     )
     var format: BundleType = target.bundleType
 
@@ -425,8 +484,8 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "tool",
         description = (
             "Tool to use for JS bundling. Supported values are `${BundleTool.ESBUILD_NAME}` or " +
-            "`${BundleTool.WEBPACK_NAME}`. Defaults to the value stipulated by `target`."
-        ),
+                "`${BundleTool.WEBPACK_NAME}`. Defaults to the value stipulated by `target`."
+            ),
     )
     var tool: BundleTool = target.bundleTool
 

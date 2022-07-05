@@ -1,22 +1,50 @@
 package dev.elide.buildtools.gradle.plugin
 
-import dev.elide.buildtools.gradle.plugin.cfg.JsRuntimeConfig
+import dev.elide.buildtools.gradle.plugin.cfg.ElideJsHandler
+import dev.elide.buildtools.gradle.plugin.cfg.ElideServerHandler
+import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Optional
 import javax.inject.Inject
 
-@Suppress("UnnecessaryAbstractClass", "unused", "RedundantVisibilityModifier")
-public abstract class ElideExtension @Inject constructor(project: Project) {
+@Suppress("UnnecessaryAbstractClass", "unused", "RedundantVisibilityModifier", "MemberVisibilityCanBePrivate")
+public open class ElideExtension @Inject constructor(project: Project) {
     private val objects = project.objects
 
-    /** Operating build mode for a given plugin run. */
-    @get:Optional public val mode: Property<BuildMode> = objects.property(BuildMode::class.java).value(
-        BuildMode.PRODUCTION
-    )
+    /** Configuration for JS runtime settings. */
+    internal val js: ElideJsHandler = objects.newInstance(ElideJsHandler::class.java)
 
-    /** JavaScript runtime configuration. */
-    @get:Optional public val jsRuntime: Property<JsRuntimeConfig> = objects.property(JsRuntimeConfig::class.java).value(
-        JsRuntimeConfig()
-    )
+    /** Configuration for server targets. */
+    internal val server: ElideServerHandler = objects.newInstance(ElideServerHandler::class.java)
+
+    companion object {
+        fun Project.elide(): ElideExtension {
+            return extensions.create("elide", ElideExtension::class.java)
+        }
+    }
+
+    /** Indicate whether a JS target was configured. */
+    public fun hasJsTarget(): Boolean {
+        return js.active.get()
+    }
+
+    /** Indicate whether a server target was configured. */
+    public fun hasServerTarget(): Boolean {
+        return server.active.get()
+    }
+
+    /** Closure to configure [ElideJsHandler] settings. */
+    fun js(action: Action<ElideJsHandler>) {
+        js.active.set(true)
+        action.execute(js)
+    }
+
+    /** Closure to configure [ElideServerHandler] settings. */
+    fun server(action: Action<ElideServerHandler>) {
+        server.active.set(true)
+        action.execute(server)
+    }
+
+    /** Operating build mode for a given plugin run. */
+    @get:Optional public var mode: BuildMode = BuildMode.PRODUCTION
 }

@@ -122,68 +122,11 @@ public interface EmbeddedScriptOrBuilder extends
 
   /**
    * <pre>
-   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-   * digest payload additionally specifies the algorithm used.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef script = 6;</code>
-   * @return Whether the script field is set.
-   */
-  boolean hasScript();
-  /**
-   * <pre>
-   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-   * digest payload additionally specifies the algorithm used.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef script = 6;</code>
-   * @return The script.
-   */
-  tools.elide.assets.DataContainerRef getScript();
-  /**
-   * <pre>
-   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-   * digest payload additionally specifies the algorithm used.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef script = 6;</code>
-   */
-  tools.elide.assets.DataContainerRefOrBuilder getScriptOrBuilder();
-
-  /**
-   * <pre>
-   * Source-map file path for the embedded script, if generated as an external file.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef sourcemap = 7;</code>
-   * @return Whether the sourcemap field is set.
-   */
-  boolean hasSourcemap();
-  /**
-   * <pre>
-   * Source-map file path for the embedded script, if generated as an external file.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef sourcemap = 7;</code>
-   * @return The sourcemap.
-   */
-  tools.elide.assets.DataContainerRef getSourcemap();
-  /**
-   * <pre>
-   * Source-map file path for the embedded script, if generated as an external file.
-   * </pre>
-   *
-   * <code>.assets.DataContainerRef sourcemap = 7;</code>
-   */
-  tools.elide.assets.DataContainerRefOrBuilder getSourcemapOrBuilder();
-
-  /**
-   * <pre>
    * Unique set of direct dependencies for this embedded script asset; expected to be other, compatible embedded
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string direct_dependency = 8;</code>
+   * <code>repeated string direct_dependency = 6;</code>
    * @return A list containing the directDependency.
    */
   java.util.List<java.lang.String>
@@ -194,7 +137,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string direct_dependency = 8;</code>
+   * <code>repeated string direct_dependency = 6;</code>
    * @return The count of directDependency.
    */
   int getDirectDependencyCount();
@@ -204,7 +147,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string direct_dependency = 8;</code>
+   * <code>repeated string direct_dependency = 6;</code>
    * @param index The index of the element to return.
    * @return The directDependency at the given index.
    */
@@ -215,7 +158,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string direct_dependency = 8;</code>
+   * <code>repeated string direct_dependency = 6;</code>
    * @param index The index of the value to return.
    * @return The bytes of the directDependency at the given index.
    */
@@ -228,7 +171,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string transitive_dependency = 9;</code>
+   * <code>repeated string transitive_dependency = 7;</code>
    * @return A list containing the transitiveDependency.
    */
   java.util.List<java.lang.String>
@@ -239,7 +182,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string transitive_dependency = 9;</code>
+   * <code>repeated string transitive_dependency = 7;</code>
    * @return The count of transitiveDependency.
    */
   int getTransitiveDependencyCount();
@@ -249,7 +192,7 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string transitive_dependency = 9;</code>
+   * <code>repeated string transitive_dependency = 7;</code>
    * @param index The index of the element to return.
    * @return The transitiveDependency at the given index.
    */
@@ -260,10 +203,67 @@ public interface EmbeddedScriptOrBuilder extends
    * scripts (same language, same runtime level). Expressed as a `module` ID.
    * </pre>
    *
-   * <code>repeated string transitive_dependency = 9;</code>
+   * <code>repeated string transitive_dependency = 7;</code>
    * @param index The index of the value to return.
    * @return The bytes of the transitiveDependency at the given index.
    */
   com.google.protobuf.ByteString
       getTransitiveDependencyBytes(int index);
+
+  /**
+   * <pre>
+   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+   * digest payload additionally specifies the algorithm used.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef script = 8;</code>
+   * @return Whether the script field is set.
+   */
+  boolean hasScript();
+  /**
+   * <pre>
+   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+   * digest payload additionally specifies the algorithm used.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef script = 8;</code>
+   * @return The script.
+   */
+  tools.elide.data.DataContainerRef getScript();
+  /**
+   * <pre>
+   * Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+   * digest payload additionally specifies the algorithm used.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef script = 8;</code>
+   */
+  tools.elide.data.DataContainerRefOrBuilder getScriptOrBuilder();
+
+  /**
+   * <pre>
+   * Source-map file path for the embedded script, if generated as an external file.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef sourcemap = 9;</code>
+   * @return Whether the sourcemap field is set.
+   */
+  boolean hasSourcemap();
+  /**
+   * <pre>
+   * Source-map file path for the embedded script, if generated as an external file.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef sourcemap = 9;</code>
+   * @return The sourcemap.
+   */
+  tools.elide.data.DataContainerRef getSourcemap();
+  /**
+   * <pre>
+   * Source-map file path for the embedded script, if generated as an external file.
+   * </pre>
+   *
+   * <code>.data.DataContainerRef sourcemap = 9;</code>
+   */
+  tools.elide.data.DataContainerRefOrBuilder getSourcemapOrBuilder();
 }

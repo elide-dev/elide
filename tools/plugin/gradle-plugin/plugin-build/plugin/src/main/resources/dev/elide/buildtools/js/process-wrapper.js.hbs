@@ -1,4 +1,4 @@
-export let process = {
+const process = {
     pid: -1,
     cwd: () => '',
     env: {},
@@ -6,3 +6,7 @@ export let process = {
     NODE_ENV: 'production',
     noDeprecation: false
 };
+const window = globalThis || this;
+const global = globalThis || this;
+const self = globalThis || this;
+let gc = null;

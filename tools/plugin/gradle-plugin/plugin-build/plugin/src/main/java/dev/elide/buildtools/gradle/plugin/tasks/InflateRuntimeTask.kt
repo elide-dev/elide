@@ -24,7 +24,7 @@ abstract class InflateRuntimeTask : DefaultTask() {
 
         @JvmStatic fun install(extension: ElideExtension, project: Project): InflateRuntimeTask {
             return project.tasks.create(TASK_NAME, InflateRuntimeTask::class.java) {
-                it.enableRuntime.set(extension.jsRuntime.get().enabled)
+                it.enableRuntime.set(extension.js.runtime.inject.get())
             }
         }
     }

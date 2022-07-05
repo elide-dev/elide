@@ -1,23 +1,12 @@
 package dev.elide.buildtools.gradle.plugin.tasks
 
-import com.google.protobuf.ByteString
 import com.google.protobuf.Message
-import com.google.protobuf.util.JsonFormat
 import dev.elide.buildtools.gradle.plugin.BuildMode
-import dev.elide.buildtools.gradle.plugin.ElideExtension
-import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.UnknownTaskException
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import org.gradle.configurationcache.extensions.capitalized
-import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
-import tools.elide.bundler.AssetBundler
-import tools.elide.bundler.AssetBundler.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
-import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -27,76 +16,8 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * @see BundleWriteTask which is responsible for ultimately writing the bundle created by an implementation of this task
  */
-abstract class BundleSpecTask<M : Message, Spec> : DefaultTask() {
+abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
     companion object {
-        /** Asset bundler tool. */
-        @Suppress("unused")
-        internal val bundler: AssetBundler = AssetBundler.create()
-
-        /** Proto-JSON printer. */
-        internal val jsonPrinter = JsonFormat
-            .printer()
-            .omittingInsignificantWhitespace()
-            .includingDefaultValueFields()
-
-        /** @return Digester for the provided algorithm. */
-        @JvmStatic internal fun HashAlgorithm.digester(): MessageDigest? = when (this) {
-            HashAlgorithm.MD5 -> MessageDigest.getInstance("MD5")
-            HashAlgorithm.SHA1 -> MessageDigest.getInstance("SHA-1")
-            HashAlgorithm.SHA256 -> MessageDigest.getInstance("SHA-256")
-            HashAlgorithm.SHA512 -> MessageDigest.getInstance("SHA-512")
-            HashAlgorithm.IDENTITY -> null
-            else -> throw IllegalArgumentException("Unrecognized hash algorithm: $name")
-        }
-
-        @JvmStatic internal fun ManifestFormat.fileNamed(name: String): String = when (this) {
-            ManifestFormat.BINARY -> "$name.assets.pb"
-            ManifestFormat.TEXT -> "$name.assets.pb.txt"
-            ManifestFormat.JSON -> "$name.assets.pb.json"
-        }
-
-        @JvmStatic
-        internal fun resolveJsIrLinkTask(project: Project): KotlinJsIrLink {
-            // resolve the Kotlin JS compile task (IR only)
-            return try {
-                project.tasks.named(
-                    "compileProductionExecutableKotlinJs",
-                    KotlinJsIrLink::class.java
-                ).get()
-            } catch (noSuchTask: UnknownTaskException) {
-                throw IllegalStateException(
-                    "Failed to resolve Kotlin JS IR link task: please ensure the Kotlin JS plugin is applied " +
-                    "to the project and configured to use the IR compiler.",
-                    noSuchTask
-                )
-            }
-        }
-
-        @JvmStatic
-        @Suppress("SwallowedException")
-        protected fun resolveInflateRuntimeTask(project: Project, extension: ElideExtension): InflateRuntimeTask {
-            // resolve the inflate-runtime task installed on the root project, or if there is not one, create it.
-            return try {
-                if (
-                    project.rootProject.tasks.findByPath(":${InflateRuntimeTask.TASK_NAME}") != null
-                ) {
-                    project.rootProject.tasks.named(InflateRuntimeTask.TASK_NAME, InflateRuntimeTask::class.java)
-                        .get()
-                } else {
-                    InflateRuntimeTask.install(
-                        extension,
-                        project.rootProject,
-                    )
-                }
-            } catch (noSuchTask: UnknownTaskException) {
-                // install it
-                InflateRuntimeTask.install(
-                    extension,
-                    project.rootProject,
-                )
-            }
-        }
-
         /**
          * Install a task in the [project] task set which writes the compiled asset catalog provided by [sourceTaskName]
          * from the provided set of [deps] to the [sourceTaskName]'s spec name and output directory properties.
@@ -133,32 +54,9 @@ abstract class BundleSpecTask<M : Message, Spec> : DefaultTask() {
         }
     }
 
-    // Hard-coded or constant values that relate to asset bundles.
-    internal object StaticValues {
-        const val currentVersion: Int = 2
-        val defaultEncoding: ManifestFormat = ManifestFormat.TEXT
-        val assetHashAlgo: HashAlgorithm = HashAlgorithm.SHA256
-    }
-
     // Assembled spec which should be written.
     @get:Input
     internal val assetSpec: AtomicReference<M?> = AtomicReference(null)
-
-    /** Folder in which to put built bundle targets. */
-    @get:Input
-    @get:Option(
-        option = "bundleEncoding",
-        description = "Mode to use for encoding the asset bundle. Typically managed by the plugin.",
-    )
-    abstract val bundleEncoding: Property<ManifestFormat>
-
-    /** Folder in which to put built bundle targets. */
-    @get:Input
-    @get:Option(
-        option = "outputBundleFolder",
-        description = "Where to put compiled asset catalogs on the filesystem. Typically managed by the plugin.",
-    )
-    abstract val outputBundleFolder: Property<String>
 
     /** Name to give the asset catalog being affixed by this task. */
     @get:Input
@@ -167,20 +65,6 @@ abstract class BundleSpecTask<M : Message, Spec> : DefaultTask() {
         description = "Name to give the asset catalog built by this task. Typically managed by the plugin.",
     )
     abstract val outputSpecName: Property<String>
-
-    protected fun fingerprintMessage(catalog: Message): ByteString? {
-        val bytes = catalog.toByteArray()
-        val digest = StaticValues.assetHashAlgo.digester().let { digester ->
-            digester?.digest(bytes)
-        }
-        return if (digest != null) {
-            ByteString.copyFrom(
-                digest
-            )
-        } else {
-            null
-        }
-    }
 
     /**
      * Utility function which enters a DSL for building an asset bundle, which is assigned to the local task state and
@@ -199,20 +83,13 @@ abstract class BundleSpecTask<M : Message, Spec> : DefaultTask() {
     abstract fun assetCatalog(): (Spec.() -> Unit)
 
     /**
-     * Run the action defined by this [BundleSpecTask], which should generate source files, or compile source files, as
-     * applicable; after running this step, the asset catalog is built via [assetCatalog].
-     */
-    abstract fun runAction()
-
-    /**
-     * Entrypoint for a standard [BundleSpecTask] implementation; first, the action itself is run, and then an asset
-     * catalog payload is built by interrogating the task.
+     * Post-action entrypoint for a standard [BundleSpecTask] implementation; first, the action itself is run, and then
+     * an asset catalog payload is built by interrogating the task.
      *
      * The resulting asset catalog bundle is later written by the [BundleWriteTask], configuration and unexpected errors
      * permitting.
      */
-    @TaskAction fun execBundledTask() {
-        runAction()
+    override fun postAction() {
         assetSpec.set(
             buildAssetCatalog(assetCatalog())
         )

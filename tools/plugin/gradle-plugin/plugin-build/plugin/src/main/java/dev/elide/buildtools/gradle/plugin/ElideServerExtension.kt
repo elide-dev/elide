@@ -18,4 +18,7 @@ abstract class ElideServerExtension @Inject constructor(project: Project) {
     @get:Optional val inspect: Property<Boolean> = objects.property(Boolean::class.java).value(
         false
     )
+
+    /** Project to inject as an SSR application. */
+    @get:Optional val ssrProject: Property<String> = objects.property(String::class.java)
 }

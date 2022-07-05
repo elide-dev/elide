@@ -29,6 +29,16 @@ public final class Data {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_data_CompressedData_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_data_DataContainerRef_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_data_DataContainerRef_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_data_DataContainerRef_FingerprintPathPair_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_data_DataContainerRef_FingerprintPathPair_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -47,12 +57,19 @@ public final class Data {
       "\n\013compression\030\001 \001(\0162\025.data.CompressionMo" +
       "de\022!\n\004data\030\002 \001(\0132\023.data.DataContainer\022\014\n" +
       "\004size\030\003 \001(\004\022(\n\tintegrity\030\004 \003(\0132\025.data.Da" +
-      "taFingerprint*5\n\017CompressionMode\022\014\n\010IDEN" +
-      "TITY\020\000\022\010\n\004GZIP\020\001\022\n\n\006BROTLI\020\002B\200\001\n\020tools.e" +
-      "lide.dataH\001P\001Z&github.com/elide-tools/el" +
-      "ide/data;data\330\001\001\370\001\001\242\002\003ELD\252\002\nElide.Data\272\002" +
-      "\005Elide\302\002\003ELD\312\002\nElide\\Data\352\002\013Elide::Datab" +
-      "\006proto3"
+      "taFingerprint\"\230\002\n\020DataContainerRef\022$\n\004da" +
+      "ta\030\001 \001(\0132\024.data.CompressedDataH\000\022>\n\010reso" +
+      "urce\030\002 \001(\0132*.data.DataContainerRef.Finge" +
+      "rprintPathPairH\000\022@\n\nfilesystem\030\003 \001(\0132*.d" +
+      "ata.DataContainerRef.FingerprintPathPair" +
+      "H\000\032O\n\023FingerprintPathPair\022*\n\013fingerprint" +
+      "\030\001 \001(\0132\025.data.DataFingerprint\022\014\n\004path\030\002 " +
+      "\001(\tB\013\n\treference*A\n\017CompressionMode\022\014\n\010I" +
+      "DENTITY\020\000\022\010\n\004GZIP\020\001\022\n\n\006BROTLI\020\002\022\n\n\006SNAPP" +
+      "Y\020\003B\200\001\n\020tools.elide.dataH\001P\001Z&github.com" +
+      "/elide-tools/elide/data;data\330\001\001\370\001\001\242\002\003ELD" +
+      "\252\002\nElide.Data\272\002\005Elide\302\002\003ELD\312\002\nElide\\Data" +
+      "\352\002\013Elide::Datab\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -77,6 +94,18 @@ public final class Data {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_data_CompressedData_descriptor,
         new java.lang.String[] { "Compression", "Data", "Size", "Integrity", });
+    internal_static_data_DataContainerRef_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_data_DataContainerRef_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_data_DataContainerRef_descriptor,
+        new java.lang.String[] { "Data", "Resource", "Filesystem", "Reference", });
+    internal_static_data_DataContainerRef_FingerprintPathPair_descriptor =
+      internal_static_data_DataContainerRef_descriptor.getNestedTypes().get(0);
+    internal_static_data_DataContainerRef_FingerprintPathPair_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_data_DataContainerRef_FingerprintPathPair_descriptor,
+        new java.lang.String[] { "Fingerprint", "Path", });
     tools.elide.crypto.Crypto.getDescriptor();
   }
 

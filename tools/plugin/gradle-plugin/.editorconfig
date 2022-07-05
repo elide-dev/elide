@@ -11,4 +11,4 @@ indent_style = space
 indent_size = 2
 
 [*.{kt,kts}]
-disabled_rules = indent,experimental:argument-list-wrapping
+disabled_rules = indent,experimental:argument-list-wrapping,no-wildcard-imports

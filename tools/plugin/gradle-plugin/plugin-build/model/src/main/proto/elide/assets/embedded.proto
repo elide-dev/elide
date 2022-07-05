@@ -18,8 +18,6 @@ option java_package = "tools.elide.assets";
 option csharp_namespace = "Elide.Assets";
 
 import "google/protobuf/timestamp.proto";
-
-import "elide/crypto/crypto.proto";
 import "elide/data/data.proto";
 
 
@@ -73,33 +71,6 @@ message EmbeddedScriptMetadata {
 }
 
 
-// Specifies the structure of a data container which can also be a reference to a different resource or file-system
-// asset. Only one reference value may be filled in.
-message DataContainerRef {
-    // Specifies a fingerprint and path pair.
-    message FingerprintPathPair {
-        // Specifies the fingerprint information associated with, or calculated for, the subject info.
-        data.DataFingerprint fingerprint = 1;
-
-        // Specifies the path for this data container reference.
-        string path = 2;
-    }
-
-    // Specifies the reference subject for this record.
-    oneof reference {
-        // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
-        // are enclosed inline within the protocol buffer.
-        data.DataContainer data = 1;
-
-        // Specifies a reference to a file resident in the application JAR or native image.
-        FingerprintPathPair resource = 2;
-
-        // Specifies a reference to a file resident on the filesystem outside of the built application.
-        FingerprintPathPair filesystem = 3;
-    }
-}
-
-
 // Describes a single embedded script asset, which is embedded within an Elide application. The script is enclosed
 // within the protocol buffer record, along with a digest and various metadata.
 message EmbeddedScript {
@@ -118,18 +89,18 @@ message EmbeddedScript {
     // Last-modified timestamp for the assets underlying this script.
     google.protobuf.Timestamp last_modified = 5;
 
-    // Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
-    // digest payload additionally specifies the algorithm used.
-    DataContainerRef script = 6;
-
-    // Source-map file path for the embedded script, if generated as an external file.
-    DataContainerRef sourcemap = 7;
-
     // Unique set of direct dependencies for this embedded script asset; expected to be other, compatible embedded
     // scripts (same language, same runtime level). Expressed as a `module` ID.
-    repeated string direct_dependency = 8;
+    repeated string direct_dependency = 6;
 
     // Unique transitive closure of all dependencies this module relies upon; expected to be other, compatible embedded
     // scripts (same language, same runtime level). Expressed as a `module` ID.
-    repeated string transitive_dependency = 9;
+    repeated string transitive_dependency = 7;
+
+    // Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
+    // digest payload additionally specifies the algorithm used.
+    data.DataContainerRef script = 8;
+
+    // Source-map file path for the embedded script, if generated as an external file.
+    data.DataContainerRef sourcemap = 9;
 }

@@ -93,7 +93,7 @@ complexity:
     includePrivateDeclarations: false
   ComplexMethod:
     active: true
-    threshold: 15
+    threshold: 20
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
@@ -115,7 +115,7 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    threshold: 120
+    threshold: 150
   LongParameterList:
     active: true
     functionThreshold: 10
@@ -611,7 +611,7 @@ style:
     active: false
   ThrowsCount:
     active: true
-    max: 2
+    max: 3
     excludeGuardClauses: false
   TrailingWhitespace:
     active: false

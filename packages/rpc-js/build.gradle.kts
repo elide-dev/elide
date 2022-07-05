@@ -15,7 +15,6 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"

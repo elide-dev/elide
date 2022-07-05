@@ -14,7 +14,6 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"

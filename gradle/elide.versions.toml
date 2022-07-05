@@ -28,6 +28,7 @@ kotlinx_benchmark_plugin = "0.4.2"
 detekt = "1.20.0"
 dokka = "1.7.0"
 ktlintGradle = "10.3.0"
+qodanaGradle = "0.1.13"
 pluginPublish = "0.21.0"
 pluginProtobuf = "0.8.18"
 versionCheck = "0.42.0"
@@ -94,6 +95,8 @@ jib = "3.2.1"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_sdk"}
 kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin_sdk"}
 kotlin_multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_sdk"}
@@ -103,7 +106,6 @@ kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = 
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin_sdk" }
 kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
 kotlinx_plugin_knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin_knit" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }

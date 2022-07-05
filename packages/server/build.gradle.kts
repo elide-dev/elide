@@ -19,7 +19,6 @@ plugins {
   alias(libs.plugins.testLogger)
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"

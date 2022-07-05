@@ -12,6 +12,9 @@ plugins {
   kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
   id("project-report")
   alias(libs.plugins.dokka)
+  alias(libs.plugins.detekt)
+  alias(libs.plugins.qodana)
+  alias(libs.plugins.ktlint)
   alias(libs.plugins.sonar)
   alias(libs.plugins.versionCheck)
   jacoco
@@ -84,14 +87,6 @@ tasks.register("relock") {
   )
 }
 
-if (project.property("elide.lockDeps") == "true") {
-  subprojects {
-    dependencyLocking {
-      lockAllConfigurations()
-    }
-  }
-}
-
 sonarqube {
   properties {
     property("sonar.projectKey", "elide-dev_v3")
@@ -108,6 +103,12 @@ sonarqube {
 subprojects {
   val name = this.name
 
+  apply {
+    plugin("io.gitlab.arturbosch.detekt")
+    plugin("org.jlleitschuh.gradle.ktlint")
+    plugin("org.sonarqube")
+  }
+
   sonarqube {
     if (name != "base" && name != "test" && name != "model") {
       properties {
@@ -119,6 +120,31 @@ subprojects {
         property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
         property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
       }
+    }
+  }
+
+  ktlint {
+    debug.set(false)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(true)
+    enableExperimentalRules.set(true)
+    filter {
+      exclude("**/generated/**")
+      exclude("**/tools/plugin/gradle-plugin/**")
+      include("**/kotlin/**")
+    }
+  }
+
+  detekt {
+    ignoreFailures = true
+    config = rootProject.files("config/detekt/detekt.yml")
+  }
+
+  if (project.property("elide.lockDeps") == "true") {
+    dependencyLocking {
+      lockAllConfigurations()
     }
   }
 }
@@ -154,13 +180,6 @@ allprojects {
       target = Versions.ecmaVersion
     }
   }
-}
-
-tasks.register("reports") {
-  dependsOn(
-    ":dependencyReport",
-    ":htmlDependencyReport",
-  )
 }
 
 tasks.register("resolveAndLockAll") {
@@ -199,4 +218,22 @@ if (tasks.findByName("resolveAllDependencies") == null) {
       }
     }
   }
+}
+
+tasks.register("reports") {
+  dependsOn(
+    ":dependencyReport",
+    ":htmlDependencyReport",
+  )
+}
+
+tasks.register("preMerge") {
+  description = "Runs all the tests/verification tasks"
+
+  dependsOn(
+    ":reports",
+    ":detekt",
+    ":ktlintCheck",
+    ":check",
+  )
 }

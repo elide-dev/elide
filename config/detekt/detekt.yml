@@ -676,8 +676,4 @@ style:
   VarCouldBeVal:
     active: true
   WildcardImport:
-    active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    excludeImports:
-      - 'java.util.*'
-      - 'tools.elide.assets.*'
+    active: false

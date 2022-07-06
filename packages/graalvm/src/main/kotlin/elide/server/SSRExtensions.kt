@@ -14,7 +14,6 @@ import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
-
 // Path within app JARs for embedded script assets.
 private const val embeddedRoot: String = "embedded"
 
@@ -29,7 +28,6 @@ public const val nodeSsrDefaultPath: String = nodeDevDefault
 
 // Default ID to use in the DOM.
 public const val defaultSsrDomId: String = "root"
-
 
 /**
  * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript

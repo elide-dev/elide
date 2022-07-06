@@ -2,6 +2,7 @@
 
 package elide.server
 
+import elide.server.assets.AssetType
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import kotlinx.coroutines.runBlocking

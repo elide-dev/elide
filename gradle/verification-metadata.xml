@@ -6,6 +6,7 @@
       <key-servers enabled="false"/>
       <trusted-artifacts>
          <trust group="gradle" name="gradle"/>
+         <trust group="info.picocli"/>
          <trust group="io.gitlab.arturbosch.detekt" name="detekt-gradle-plugin"/>
          <trust group="io.ktor"/>
          <trust group="org.checkerframework"/>

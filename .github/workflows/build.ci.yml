@@ -144,14 +144,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
           components: 'native-image'
-          version: ${{ matrix.gvm }}
-          java-version: ${{ matrix.java }}
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Prep: Download Caches
@@ -176,7 +176,7 @@ jobs:
             test
             :tools:reports:reports
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
+            -Pversions.java.language=17
             -x nativeCompile
             -x :packages:graalvm:test
             -x :packages:graalvm-js:test
@@ -222,14 +222,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
           components: 'native-image'
-          version: ${{ matrix.gvm }}
-          java-version: ${{ matrix.java }}
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: `gu` components
@@ -262,7 +262,7 @@ jobs:
             graalvm-react:test
             :tools:reports:reports
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
+            -Pversions.java.language=17
 
       ## Collect Reports
       - uses: actions/upload-artifact@v3
@@ -308,14 +308,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
           components: 'native-image'
-          version: ${{ matrix.gvm }}
-          java-version: ${{ matrix.java }}
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
@@ -362,7 +362,7 @@ jobs:
             --scan
             -Pelide.ci=true
             -PbuildSamples=false
-            -Pversions.java.language=${{ matrix.java }}
+            -Pversions.java.language=17
             -x nativeCompile
             -x test
 
@@ -416,14 +416,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
           components: 'native-image'
-          version: ${{ matrix.gvm }}
-          java-version: ${{ matrix.java }}
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
@@ -491,7 +491,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:server:helloworld:dockerBuild
@@ -503,7 +502,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:server:hellocss:dockerBuild
@@ -515,7 +513,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:basic:server:dockerBuild
@@ -527,7 +524,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:react:server:dockerBuild
@@ -539,7 +535,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:ssr:server:dockerBuild
@@ -551,7 +546,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:react-ssr:server:dockerBuild
@@ -582,14 +576,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.java }}
+          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
           components: 'native-image'
-          version: ${{ matrix.gvm }}
-          java-version: ${{ matrix.java }}
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
@@ -663,7 +657,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:server:helloworld:dockerBuildNative
             :samples:server:helloworld:dockerPushNative
@@ -674,7 +667,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:server:hellocss:dockerBuildNative
             :samples:server:hellocss:dockerPushNative
@@ -685,7 +677,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:basic:server:dockerBuildNative
             :samples:fullstack:basic:server:dockerPushNative
@@ -696,7 +687,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:react:server:dockerBuildNative
             :samples:fullstack:react:server:dockerPushNative
@@ -707,7 +697,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:ssr:server:dockerBuildNative
             :samples:fullstack:ssr:server:dockerPushNative
@@ -718,7 +707,6 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
-            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:react-ssr:server:dockerBuildNative
             :samples:fullstack:react-ssr:server:dockerPushNative

@@ -20,16 +20,39 @@ jobs:
         os: [ubuntu-latest]
         experimental: [false]
         gu-binary: [gu]
+        java: [11, 17]
+        gvm: [latest]
         include:
           - os: ubuntu-latest
             experimental: false
             gu-binary: gu
+            java: 17
+            gvm: latest
+          - os: ubuntu-latest
+            experimental: false
+            gu-binary: gu
+            java: 11
+            gvm: latest
           # - os: macos-latest
           #   experimental: true
           #   gu-binary: gu
+          #   java: 11
+          #   gvm: latest
+          # - os: macos-latest
+          #   experimental: true
+          #   gu-binary: gu
+          #   java: 17
+          #   gvm: latest
           # - os: windows-latest
           #   experimental: true
           #   gu-binary: gu.cmd
+          #   java: 11
+          #   gvm: latest
+          # - os: windows-latest
+          #   experimental: true
+          #   gu-binary: gu.cmd
+          #   java: 17
+          #   gvm: latest
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -49,14 +72,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
@@ -120,14 +143,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Prep: Download Caches
@@ -197,14 +220,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: `gu` components
@@ -282,14 +305,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
@@ -389,14 +412,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
@@ -549,14 +572,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: ${{ matrix.java }}
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU

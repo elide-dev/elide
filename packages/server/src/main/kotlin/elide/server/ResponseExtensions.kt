@@ -12,7 +12,18 @@ import kotlinx.html.html
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
+/**
+ * Raw bytes body type used internally by Elide.
+ */
+public typealias RawPayload = ByteArrayOutputStream
+
+/**
+ * Raw bytes response typealias used internally by Elide.
+ */
+public typealias RawResponse = HttpResponse<RawPayload>
 
 /** Describes the expected interface for a response rendering object. */
 public interface ResponseRenderer<R> {

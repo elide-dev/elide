@@ -29,7 +29,7 @@ jobs:
             java: 17
             gvm: latest
           - os: ubuntu-latest
-            experimental: false
+            experimental: true
             gu-binary: gu
             java: 11
             gvm: latest
@@ -111,6 +111,7 @@ jobs:
             --scan
             -Pelide.ci=true
             -PbuildSamples=false
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
 
@@ -175,6 +176,7 @@ jobs:
             test
             :tools:reports:reports
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x :packages:graalvm:test
             -x :packages:graalvm-js:test
@@ -260,6 +262,7 @@ jobs:
             graalvm-react:test
             :tools:reports:reports
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
 
       ## Collect Reports
       - uses: actions/upload-artifact@v3
@@ -359,6 +362,7 @@ jobs:
             --scan
             -Pelide.ci=true
             -PbuildSamples=false
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
 
@@ -487,6 +491,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:server:helloworld:dockerBuild
@@ -498,6 +503,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:server:hellocss:dockerBuild
@@ -509,6 +515,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:basic:server:dockerBuild
@@ -520,6 +527,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:react:server:dockerBuild
@@ -531,6 +539,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:ssr:server:dockerBuild
@@ -542,6 +551,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
             -x test
             :samples:fullstack:react-ssr:server:dockerBuild
@@ -653,6 +663,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:server:helloworld:dockerBuildNative
             :samples:server:helloworld:dockerPushNative
@@ -663,6 +674,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:server:hellocss:dockerBuildNative
             :samples:server:hellocss:dockerPushNative
@@ -673,6 +685,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:basic:server:dockerBuildNative
             :samples:fullstack:basic:server:dockerPushNative
@@ -683,6 +696,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:react:server:dockerBuildNative
             :samples:fullstack:react:server:dockerPushNative
@@ -693,6 +707,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:ssr:server:dockerBuildNative
             :samples:fullstack:ssr:server:dockerPushNative
@@ -703,6 +718,7 @@ jobs:
         with:
           arguments: |
             -Pelide.ci=true
+            -Pversions.java.language=${{ matrix.java }}
             -x test
             :samples:fullstack:react-ssr:server:dockerBuildNative
             :samples:fullstack:react-ssr:server:dockerPushNative

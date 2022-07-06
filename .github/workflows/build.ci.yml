@@ -20,7 +20,7 @@ jobs:
         os: [ubuntu-latest]
         experimental: [false]
         gu-binary: [gu]
-        java: [11, 17]
+        java: [17]
         gvm: [latest]
         include:
           - os: ubuntu-latest

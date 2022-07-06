@@ -16,7 +16,7 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = Versions.kotlinWrappers
+val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {

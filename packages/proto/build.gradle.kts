@@ -24,7 +24,7 @@ version = rootProject.version as String
 
 protobuf {
   protoc {
-    artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
+    artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
   }
   generateProtoTasks {
     ofSourceSet("main").forEach {

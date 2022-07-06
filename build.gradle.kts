@@ -43,6 +43,7 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+val ecmaVersion = project.properties["versions.ecma.language"] as String
 
 tasks.dokkaHtmlMultiModule.configure {
   outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
@@ -194,7 +195,7 @@ allprojects {
     kotlinOptions {
       apiVersion = kotlinLanguageVersion
       languageVersion = kotlinLanguageVersion
-      target = Versions.ecmaVersion
+      target = ecmaVersion
     }
   }
 }

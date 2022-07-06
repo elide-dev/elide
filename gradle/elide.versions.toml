@@ -2,7 +2,8 @@
 kotlin_sdk = "1.7.0"
 kotlin_language = "1.7"
 graalvm = "22.1.0"
-node = "18.0.0"
+graalvm_sdk = "22.1.0.1"
+node = "18.0.1"
 react = "18.2.0"
 protobuf = "3.20.1"
 grpc_java = "1.46.0"
@@ -19,17 +20,18 @@ micronaut_redis = "5.2.0"
 micronaut_cache = "3.4.1"
 kotlinx_coroutines = "1.6.3"
 kotlinx_collections = "0.3.5"
-kotlinx_datetime = "0.3.3"
+kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.7.5"
 kotlinx_serialization = "1.3.3"
 kotlinx_atomicfu_plugin = "0.18.0"
-kotlinx_benchmark_plugin = "0.4.2"
+kotlinx_benchmark_plugin = "0.4.4"
 detekt = "1.20.0"
 dokka = "1.7.0"
+ktlint = "0.46.1"
 ktlintGradle = "10.3.0"
 qodanaGradle = "0.1.13"
 pluginPublish = "0.21.0"
-pluginProtobuf = "0.8.18"
+pluginProtobuf = "0.8.19"
 versionCheck = "0.42.0"
 sonar = "3.4.0.2513"
 truth = "1.1.3"
@@ -50,20 +52,20 @@ kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.4.1"
 guava = "31.1-jre"
-gax = "2.18.1"
-kotlinxWrappers = "pre.347"
-kotlinx_wrappers_browser = "0.0.1-pre.347"
-kotlinx_wrappers_css = "1.0.0-pre.347"
-kotlinx_wrappers_node = "18.0.0-pre.347"
-kotlinx_wrappers_react = "18.2.0-pre.347"
-kotlinx_wrappers_react_router_dom = "6.3.0-pre.347"
-kotlinx_wrappers_emotion = "11.9.3-pre.347"
-kotlinx_wrappers_redux = "4.1.2-pre.347"
-kotlinx_wrappers_react_redux = "7.2.6-pre.347"
-kotlinx_wrappers_mui = "5.8.5-pre.347"
-kotlinx_wrappers_styled = "5.3.5-pre.347"
-kotlinx_wrappers_history = "5.3.0-pre.347"
-kotlinx_wrappers_typescript = "4.7.3-pre.345"
+gax = "2.18.3"
+kotlinxWrappers = "pre.351"
+kotlinx_wrappers_browser = "0.0.1-pre.351"
+kotlinx_wrappers_css = "1.0.0-pre.351"
+kotlinx_wrappers_node = "18.0.1-pre.351"
+kotlinx_wrappers_react = "18.2.0-pre.351"
+kotlinx_wrappers_react_router_dom = "6.3.0-pre.351"
+kotlinx_wrappers_emotion = "11.9.3-pre.351"
+kotlinx_wrappers_redux = "4.1.2-pre.351"
+kotlinx_wrappers_react_redux = "7.2.6-pre.351"
+kotlinx_wrappers_mui = "5.8.7-pre.351"
+kotlinx_wrappers_styled = "5.3.5-pre.351"
+kotlinx_wrappers_history = "5.3.0-pre.351"
+kotlinx_wrappers_typescript = "4.7.4-pre.351"
 npm_esbuild = "0.14.48"
 npm_prepack = "0.2.54"
 npm_buffer = "6.0.3"
@@ -122,6 +124,7 @@ jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
+junit_jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit_jupiter" }
 junit_jupiter_api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit_jupiter" }
 junit_jupiter_engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit_jupiter" }
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
@@ -163,7 +166,7 @@ jakarta_inject = { group = "jakarta.inject", name = "jakarta.inject-api", versio
 uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
-graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm" }
+graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
 micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
 micronaut_http_client = { group = "io.micronaut", name = "micronaut-http-client", version.ref = "micronaut_lib" }

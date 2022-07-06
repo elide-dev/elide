@@ -171,6 +171,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test-junit5"))
+                implementation(libs.junit.jupiter)
                 runtimeOnly(libs.junit.jupiter.engine)
                 runtimeOnly(libs.logback)
             }

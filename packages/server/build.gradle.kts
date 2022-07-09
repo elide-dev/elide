@@ -176,12 +176,21 @@ dependencies {
 
   // Micronaut
   implementation(libs.micronaut.http)
+  implementation(libs.micronaut.http.server)
+  implementation(libs.micronaut.http.server.netty)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.grpc.runtime)
   implementation(libs.micronaut.grpc.client.runtime)
   implementation(libs.micronaut.grpc.server.runtime)
+
+  // Netty: Native
+  implementation(libs.netty.tcnative)
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(libs.netty.transport.native.unixCommon)
+  implementation(libs.netty.transport.native.epoll)
+  implementation(libs.netty.transport.native.kqueue)
 
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)

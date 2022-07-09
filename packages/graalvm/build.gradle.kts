@@ -167,6 +167,7 @@ dependencies {
   implementation(libs.guava)
 
   // Micronaut
+  implementation(libs.micronaut.graal)
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)

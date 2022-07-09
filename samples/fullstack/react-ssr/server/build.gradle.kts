@@ -7,8 +7,6 @@
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
-import tools.elide.assets.ManifestFormat
-import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressionMode
 
 plugins {
@@ -17,6 +15,7 @@ plugins {
   idea
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
   id("dev.elide.buildtools.plugin")
   alias(libs.plugins.micronautApplication)
@@ -27,6 +26,50 @@ plugins {
 
 group = "dev.elide.samples"
 version = rootProject.version as String
+
+elide {
+  mode = if (devMode) {
+    BuildMode.DEVELOPMENT
+  } else {
+    BuildMode.PRODUCTION
+  }
+
+  server {
+    ssr(EmbeddedScriptLanguage.JS) {
+      bundle(project(":samples:fullstack:react-ssr:node"))
+    }
+    assets {
+      bundler {
+        compression {
+          modes(CompressionMode.GZIP)
+        }
+      }
+
+      // stylesheet: `styles.base`
+      stylesheet("styles.base") {
+        sourceFile("src/main/assets/basestyles.css")
+      }
+    }
+  }
+}
+
+micronaut {
+  version.set(libs.versions.micronaut.lib.get())
+  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  processing {
+    incremental.set(true)
+    annotations.add("$mainPackage.*")
+  }
+  aot {
+    optimizeServiceLoading.set(true)
+    convertYamlToJava.set(true)
+    precomputeOperations.set(true)
+    cacheEnvironment.set(true)
+    netty {
+      enabled.set(true)
+    }
+  }
+}
 
 kotlin {
   jvmToolchain {
@@ -109,69 +152,10 @@ tasks.named<JavaExec>("run") {
   } else {
     argsList.add("--elide.vm.inspect=false")
   }
+  @Suppress("SpreadOperator")
   args(
     *argsList.toTypedArray()
   )
-}
-
-micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
-  processing {
-    incremental.set(true)
-    annotations.add("$mainPackage.*")
-  }
-  aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    netty {
-      enabled.set(true)
-    }
-  }
-}
-
-elide {
-  mode = if (devMode) {
-    BuildMode.DEVELOPMENT
-  } else {
-    BuildMode.PRODUCTION
-  }
-
-  server {
-    ssr(EmbeddedScriptLanguage.JS) {
-      bundle(project(":samples:fullstack:react-ssr:node"))
-    }
-    assets {
-      bundler {
-        compression {
-          modes(CompressionMode.GZIP)
-        }
-      }
-
-//      // stylesheet: `main.base`
-//      stylesheet("main.base") {
-//        sourceFile("src/main/assets/basestyles.css")
-//      }
-//
-//      // stylesheet: `main.styles`
-//      stylesheet("main.styles") {
-//        sourceFile("src/main/assets/coolstyles.css")
-//        dependsOn("main.base")
-//      }
-//
-//      // script: `main.js`
-//      script("main.js") {
-//        sourceFile("src/main/assets/some-script.js")
-//      }
-//
-//      // text: `util.humans`
-//      text("util.humans") {
-//        sourceFile("src/main/assets/humans.txt")
-//      }
-    }
-  }
 }
 
 dependencies {

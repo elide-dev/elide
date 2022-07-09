@@ -5,6 +5,7 @@ package elide.server
 import elide.server.assets.AssetType
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
+import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import kotlinx.coroutines.runBlocking
 import kotlinx.css.CssBuilder
 import kotlinx.html.HTML
@@ -25,12 +26,21 @@ public typealias RawPayload = ByteArrayOutputStream
  */
 public typealias RawResponse = HttpResponse<RawPayload>
 
+/**
+ * Raw streamed file alias, used internally for assets.
+ */
+public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
+
+/**
+ * Raw streamed file response, used internally for assets.
+ */
+public typealias StreamedAssetResponse = HttpResponse<StreamedAsset>
+
 /** Describes the expected interface for a response rendering object. */
 public interface ResponseRenderer<R> {
   /** @return Rendered result. */
   public fun render(): R
 }
-
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {

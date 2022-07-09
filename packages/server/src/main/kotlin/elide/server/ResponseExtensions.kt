@@ -3,6 +3,9 @@
 package elide.server
 
 import elide.server.assets.AssetType
+import elide.server.controller.ElideController
+import elide.server.controller.PageController
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
@@ -67,7 +70,7 @@ public interface ResponseHandler<ResponseBody> {
 }
 
 // Shared logic for response handler contexts internal to Elide.
-public abstract class BaseResponseHandler<ResponseBody>: ResponseHandler<ResponseBody> {
+public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<ResponseBody> {
   private val acquired: AtomicBoolean = AtomicBoolean(false)
   private val response: AtomicReference<HttpResponse<ResponseBody>?> = AtomicReference(null)
 
@@ -154,29 +157,75 @@ public typealias AssetTag = String
  * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
  *    located at the specified path.
  */
-public suspend fun asset(moduleId: AssetModuleId, type: AssetType? = null): StreamedAssetResponse {
-  TODO("not yet implemented")
+public suspend fun PageController.asset(
+  request: HttpRequest<*>,
+  moduleId: AssetModuleId,
+  type: AssetType? = null
+): StreamedAssetResponse {
+  val handler = AssetHandler(type, this, request)
+  handler.module(moduleId)
+  return handler.finalize()
 }
 
 /**
  *
  */
-public suspend fun stylesheet(moduleId: AssetModuleId, type: AssetType? = null): StreamedAssetResponse {
-  TODO("not yet implemented")
+public suspend fun PageController.script(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
+  return asset(
+    request,
+    moduleId,
+    AssetType.SCRIPT,
+  )
 }
 
 /**
  *
  */
-public suspend fun stylesheet(block: AssetHandler.() -> Unit): StreamedAssetResponse {
-  TODO("not yet implemented")
+public suspend fun PageController.script(
+  request: HttpRequest<*>,
+  block: AssetHandler.() -> Unit
+): StreamedAssetResponse {
+  return asset(
+    request,
+    AssetType.SCRIPT,
+    block,
+  )
 }
 
 /**
  *
  */
-public suspend fun asset(type: AssetType? = null, block: suspend AssetHandler.() -> Unit): RawResponse {
-  val handler = AssetHandler(type)
+public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
+  return asset(
+    request,
+    moduleId,
+    AssetType.STYLESHEET,
+  )
+}
+
+/**
+ *
+ */
+public suspend fun PageController.stylesheet(
+  request: HttpRequest<*>,
+  block: AssetHandler.() -> Unit
+): StreamedAssetResponse {
+  return asset(
+    request,
+    AssetType.STYLESHEET,
+    block,
+  )
+}
+
+/**
+ *
+ */
+public suspend fun PageController.asset(
+  request: HttpRequest<*>,
+  type: AssetType? = null,
+  block: suspend AssetHandler.() -> Unit
+): StreamedAssetResponse {
+  val handler = AssetHandler(type, this, request)
   block.invoke(handler)
   return handler.finalize()
 }
@@ -184,9 +233,11 @@ public suspend fun asset(type: AssetType? = null, block: suspend AssetHandler.()
 // Handler context for an asset serving cycle.
 public class AssetHandler(
   initialExpectedType: AssetType? = null,
+  private val handler: ElideController,
+  private val request: HttpRequest<*>,
   private val moduleId: AtomicReference<AssetModuleId?> = AtomicReference(null),
   private val expectedType: AtomicReference<AssetType?> = AtomicReference(initialExpectedType),
-) : BaseResponseHandler<RawPayload>() {
+) : BaseResponseHandler<StreamedAsset>() {
   /** Bind an asset handler to an asset module ID. */
   public fun module(id: AssetModuleId, type: AssetType? = null) {
     moduleId.set(id)
@@ -199,8 +250,10 @@ public class AssetHandler(
   }
 
   /** @inheritDoc */
-  override suspend fun finalize(): HttpResponse<RawPayload> {
-    TODO("Not yet implemented")
+  override suspend fun finalize(): HttpResponse<StreamedAsset> {
+    return handler.assets().serveAsync(
+      request
+    ).await()
   }
 }
 

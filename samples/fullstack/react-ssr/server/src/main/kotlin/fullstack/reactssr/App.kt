@@ -1,8 +1,10 @@
 package fullstack.reactssr
 
 import elide.server.*
+import elide.server.annotations.Page
+import elide.server.controller.PageController
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
 import kotlinx.html.tagext.body
@@ -12,9 +14,9 @@ import kotlinx.html.title
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App : Application {
   /** GET `/`: Controller for index page. */
-  @Controller class Index {
+  @Page class Index : PageController() {
     // Serve the page itself.
-    @Get("/") suspend fun indexPage() = ssr {
+    @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
       head {
         title { +"Hello, Elide!" }
         stylesheet("/styles/base.css")
@@ -22,12 +24,12 @@ object App : Application {
         script("/scripts/ui.js", defer = true)
       }
       body {
-        injectSSR()
+        injectSSR(this@Index, request)
       }
     }
 
     // Serve an embedded asset.
-    @Get("/styles/base.css") suspend fun baseStyles() = stylesheet {
+    @Get("/styles/base.css") suspend fun baseStyles(request: HttpRequest<*>) = stylesheet(request) {
       module("styles.base")
     }
 

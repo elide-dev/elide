@@ -68,12 +68,6 @@ import org.slf4j.Logger
  */
 @API public interface AssetManager {
   /**
-   * Asset resolver which is in use for this asset manager; responsible for resolving relative paths and HTTP requests
-   * to absolute asset resource paths.
-   */
-  public val resolver: AssetResolver
-
-  /**
    * Asset reader which is in use for this asset manager; responsible for translating an absolute asset resource path
    * into a stream of actual resource content.
    */
@@ -99,7 +93,7 @@ import org.slf4j.Logger
    * @return Resolved server asset, or `null` if one could not be located at the provided [path].
    */
   public fun resolve(path: String): ServerAsset? {
-    return resolver.resolve(path)
+    return reader.resolve(path)
   }
 
   /**
@@ -110,7 +104,7 @@ import org.slf4j.Logger
    * @return Resolved server asset, or `null` if one could not be located at the calculated path provided by [request].
    */
   public fun resolve(request: HttpRequest<*>): ServerAsset? {
-    return resolver.resolve(request)
+    return reader.resolve(request)
   }
 
   /**

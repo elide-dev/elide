@@ -3,8 +3,11 @@
 package elide.server
 
 import elide.runtime.graalvm.JsRuntime
+import elide.server.controller.ElideController
+import elide.server.controller.PageController
 import elide.server.ssr.ServerRenderer
 import elide.server.ssr.ServerSSRRenderer
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
@@ -15,19 +18,19 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 // Path within app JARs for embedded script assets.
-private const val embeddedRoot: String = "embedded"
+private const val EMBEDDED_ROOT: String = "embedded"
 
 // Production script name default.
-private const val nodeProdDefault: String = "node-prod.pack.js"
+private const val NODE_PROD_DEFAULT: String = "node-prod.pack.js"
 
 // Development script name default.
-private const val nodeDevDefault: String = "node-dev.opt.js"
+private const val NODE_DEV_DEFAULT: String = "node-dev.opt.js"
 
 // Default name if no mode is specified or resolvable.
-public const val nodeSsrDefaultPath: String = nodeDevDefault
+public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
 
 // Default ID to use in the DOM.
-public const val defaultSsrDomId: String = "root"
+public const val DEFAULT_SSR_DOM_ID: String = "root"
 
 /**
  * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript
@@ -41,16 +44,21 @@ public const val defaultSsrDomId: String = "root"
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-public suspend fun ssr(
-  path: String = nodeSsrDefaultPath,
+public suspend fun PageController.ssr(
+  request: HttpRequest<*>,
+  path: String = NODE_SSR_DEFAULT_PATH,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
 ): MutableHttpResponse<ByteArrayOutputStream> {
   return if (path.isBlank()) {
     HttpResponse.notFound()
   } else {
-    val renderer = ServerSSRRenderer(JsRuntime.EmbeddedScript(
-      path = "/$embeddedRoot/$path",
-    ))
+    val renderer = ServerSSRRenderer(
+      this,
+      request,
+      JsRuntime.EmbeddedScript(
+        path = "/$EMBEDDED_ROOT/$path",
+      )
+    )
     renderer.renderResponse(
       response
     ).characterEncoding(
@@ -60,7 +68,6 @@ public suspend fun ssr(
     )
   }
 }
-
 
 /**
  * Evaluate and inject SSR content into a larger HTML page, using a `<main>` tag as the root element in the dom; apply
@@ -76,10 +83,12 @@ public suspend fun ssr(
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
  */
 public suspend fun BODY.injectSSR(
-  domId: String = defaultSsrDomId,
+  handler: ElideController,
+  request: HttpRequest<*>,
+  domId: String = DEFAULT_SSR_DOM_ID,
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
-  path: String = nodeSsrDefaultPath,
+  path: String = NODE_SSR_DEFAULT_PATH,
 ): Unit = MAIN(
   attributesMapOf(
     "id",
@@ -94,9 +103,13 @@ public suspend fun BODY.injectSSR(
   consumer
 ).visitSuspend {
   // @TODO(sgammon): avoid blocking call here
-  val content = ServerSSRRenderer(JsRuntime.Script.embedded(
-    path = "/$embeddedRoot/$path",
-  )).renderSuspend()
+  val content = ServerSSRRenderer(
+    handler,
+    request,
+    JsRuntime.Script.embedded(
+      path = "/$EMBEDDED_ROOT/$path",
+    )
+  ).renderSuspend()
 
   unsafe {
     if (content != null) {
@@ -107,7 +120,6 @@ public suspend fun BODY.injectSSR(
   }
 }
 
-
 /**
  * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript
  * runtime; then, collect the output and return it as an HTTP response, within the provided HTML builder, which will be
@@ -116,6 +128,7 @@ public suspend fun BODY.injectSSR(
  * Additional response properties, such as headers, may be set on the return result, as it is kept mutable. To change
  * initial parameters like the HTTP status, use the [response] parameter via constructors like [HttpResponse.notFound].
  *
+ * @param request Request we are responding to.
  * @param path Path to the React SSR entrypoint script, which should be embedded within the asset section of the JAR.
  * @param response Mutable HTTP response to fill with the resulting SSR content. Sets the status and headers.
  * @param block
@@ -123,7 +136,8 @@ public suspend fun BODY.injectSSR(
  *    could not be located at the specified path.
  */
 public suspend fun ssr(
-  path: String = nodeSsrDefaultPath,
+  request: HttpRequest<*>,
+  path: String = NODE_SSR_DEFAULT_PATH,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
   block: suspend HTML.() -> Unit
 ): MutableHttpResponse<ByteArrayOutputStream> {
@@ -139,10 +153,10 @@ public suspend fun ssr(
 }
 
 // SSR content rendering and container utility.
-internal class SSRContent (
+internal class SSRContent(
   private val prettyhtml: Boolean = false,
   private val builder: suspend HTML.() -> Unit
-): ServerRenderer {
+) : ServerRenderer {
   override fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {

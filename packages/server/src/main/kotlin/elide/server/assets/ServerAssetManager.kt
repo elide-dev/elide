@@ -1,15 +1,11 @@
 package elide.server.assets
 
-import com.google.common.annotations.VisibleForTesting
 import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
 import com.google.common.util.concurrent.Futures
-import com.google.protobuf.util.JsonFormat
-import elide.annotations.API
 import elide.server.AssetModuleId
-import elide.server.AssetTag
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import elide.server.cfg.ServerConfig
@@ -22,17 +18,11 @@ import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.http.HttpResponse
 import io.micronaut.runtime.server.event.ServerStartupEvent
 import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import tools.elide.assets.AssetBundle
-import tools.elide.assets.ManifestFormat
-import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import java.util.Base64
-import java.util.SortedMap
 import java.util.TreeMap
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
@@ -49,160 +39,28 @@ import java.util.stream.IntStream
  *
  * @param exec Application executor that should be used for asset-related background work.
  * @param reader Active asset reader implementation for this server run.
- * @param resolver Active asset resolver implementation for this server run.
  */
 @Suppress("UnstableApiUsage")
 @Context
-@Singleton
 public class ServerAssetManager @Inject constructor(
   private val manifestLoader: AssetManifestLoader,
   private val exec: AppExecutor,
   override val reader: AssetReader,
-  override val resolver: AssetResolver,
   private val config: ServerConfig,
 ) : AssetManager {
   public companion object {
     // Wait timeout in seconds for initialization.
     public const val waitTimeout: Long = 10L
-    private const val assetRoot = "/assets"
-    private val assetManifestCandidates = listOf(
-      ManifestFormat.BINARY to "$assetRoot/assets.assets.pb",
-      ManifestFormat.JSON to "$assetRoot/assets.assets.pb.json",
-    )
   }
 
   /** Listens for server startup and runs hooks. */
-  @Singleton public class AssetStartupListener : ApplicationEventListener<ServerStartupEvent> {
+  @Context public class AssetStartupListener : ApplicationEventListener<ServerStartupEvent> {
     @Inject private lateinit var beanContext: BeanContext
 
     /** @inheritDoc */
     override fun onApplicationEvent(event: ServerStartupEvent) {
       // initialize the asset manager
       beanContext.getBean(AssetManager::class.java).initialize()
-    }
-  }
-
-  // Pointer to a specific asset within the live asset bundle.
-  internal data class AssetPointer(
-    val moduleId: AssetModuleId,
-    val type: AssetType,
-    val index: Int?,
-  )
-
-  // Dependency info for a relationship between artifacts.
-  internal data class AssetDependency(
-    val optional: Boolean = false,
-  )
-
-  // Loaded and interpreted manifest structure.
-  internal class InterpretedAssetManifest(
-    internal val bundle: AssetBundle,
-    internal val moduleIndex: SortedMap<AssetModuleId, AssetPointer>,
-    internal val tagIndex: SortedMap<AssetTag, Int>,
-  )
-
-  // Swappable manifest loader.
-  @API public interface AssetManifestLoader {
-    /**
-     * Find and load an asset manifest embedded within the scope of the current application;
-     */
-    public fun findLoadManifest(): AssetBundle?
-
-    /**
-     *
-     */
-    public fun findManifest(): Pair<ManifestFormat, InputStream>?
-  }
-
-  @Singleton internal class ServerManifestLoader : AssetManifestLoader {
-    private val logging: Logger = LoggerFactory.getLogger(ServerManifestLoader::class.java)
-
-    @VisibleForTesting
-    @Suppress("TooGenericExceptionCaught")
-    internal fun deserializeLoadManifest(subject: Pair<ManifestFormat, InputStream>): AssetBundle? {
-      val (format, stream) = subject
-      logging.debug(
-        "Decoding manifest from detected format '${format.name}'"
-      )
-      val result = try {
-        when (format) {
-          ManifestFormat.BINARY -> stream.buffered().use {
-            AssetBundle.parseFrom(it)
-          }
-
-          ManifestFormat.JSON -> stream.bufferedReader(StandardCharsets.UTF_8).use { buf ->
-            val builder = AssetBundle.newBuilder()
-            JsonFormat.parser().ignoringUnknownFields().merge(
-              buf,
-              builder,
-            )
-            builder.build()
-          }
-
-          else -> {
-            logging.warn(
-              "Cannot de-serialize asset manifest with format: '${format.name}'. Asset loading disabled."
-            )
-            null
-          }
-        }
-      } catch (thr: Throwable) {
-        logging.error("Failed to load asset manifest", thr)
-        null
-      }
-      return if (result == null) {
-        null
-      } else {
-        val algo = result.settings.digestSettings.algorithm
-        val encoded = Base64.getEncoder().withoutPadding()
-          .encodeToString(result.digest.toByteArray())
-        logging.debug(
-          "Resolved asset manifest with fingerprint ${algo.name}($encoded)"
-        )
-        result
-      }
-    }
-
-    /** @inheritDoc */
-    override fun findLoadManifest(): AssetBundle? {
-      val found = findManifest()
-      logging.debug(
-        if (found != null) {
-          "Located asset manifest: loading"
-        } else {
-          "No asset manifest located. Asset loading will be disabled."
-        }
-      )
-      return if (found == null) {
-        // we couldn't locate a manifest.
-        null
-      } else deserializeLoadManifest(
-        found
-      )
-    }
-
-    /** @inheritDoc */
-    override fun findManifest(): Pair<ManifestFormat, InputStream>? {
-      // find the first manifest that exists
-      return assetManifestCandidates.firstNotNullOfOrNull {
-        val (format, path) = it
-        logging.trace(
-          "Checking for manifest at resource location '$path'"
-        )
-        val result = ServerAssetManager::class.java.getResourceAsStream(path)
-        logging.trace(
-          if (result != null) {
-            "Found manifest at resource location '$path'"
-          } else {
-            "No manifest found at resource location '$path'"
-          }
-        )
-        if (result == null) {
-          null
-        } else {
-          format to result
-        }
-      }
     }
   }
 
@@ -224,7 +82,7 @@ public class ServerAssetManager @Inject constructor(
     AtomicReference(null)
 
   // Interpreted manifest structure loaded from the embedded proto document.
-  private val assetManifest: AtomicReference<InterpretedAssetManifest?> = AtomicReference(null)
+  private val assetManifest: AtomicReference<ServerAssetManifest?> = AtomicReference(null)
 
   /** @inheritDoc */
   override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)
@@ -315,7 +173,7 @@ public class ServerAssetManager @Inject constructor(
 
   private fun buildAssetIndexes(
     bundle: AssetBundle
-  ): Pair<Network<AssetModuleId, AssetDependency>, InterpretedAssetManifest> {
+  ): Pair<Network<AssetModuleId, AssetDependency>, ServerAssetManifest> {
     // create a builder for the asset graph
     val builder: ImmutableNetwork.Builder<AssetModuleId, AssetDependency> = NetworkBuilder
       .directed()
@@ -377,7 +235,7 @@ public class ServerAssetManager @Inject constructor(
         { ConcurrentSkipListMap() }
       )
     )
-    return builder.build() to InterpretedAssetManifest(
+    return builder.build() to ServerAssetManifest(
       bundle = bundle,
       moduleIndex = moduleIndex,
       tagIndex = tagIndex,

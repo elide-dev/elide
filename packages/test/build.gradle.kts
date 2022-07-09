@@ -153,6 +153,10 @@ kotlin {
         implementation(kotlin("test-junit5"))
         implementation(libs.jsoup)
 
+        implementation(libs.truth)
+        implementation(libs.truth.java8)
+        implementation(libs.truth.proto)
+
         runtimeOnly(libs.junit.jupiter.engine)
         runtimeOnly(libs.logback)
       }

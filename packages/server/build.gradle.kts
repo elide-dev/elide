@@ -205,5 +205,9 @@ dependencies {
   implementation(libs.reactivestreams)
 
   // Testing
+  testImplementation(libs.truth)
+  testImplementation(libs.truth.java8)
+  testImplementation(libs.truth.proto)
+  testImplementation(kotlin("test"))
   testImplementation(project(":packages:test"))
 }

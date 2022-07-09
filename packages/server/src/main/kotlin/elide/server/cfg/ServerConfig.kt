@@ -8,5 +8,5 @@ import io.micronaut.context.annotation.ConfigurationProperties
  */
 @ConfigurationProperties("elide.server")
 public data class ServerConfig(
-  public var assets: AssetConfig,
+  public var assets: AssetConfig = AssetConfig(),
 )

@@ -42,7 +42,7 @@ import java.io.FileNotFoundException
  * @see RenderedAsset for the generic return value model leveraged by [AssetManager].
  * @see ServerAsset for the symbolic asset reference model leveraged by [AssetManager].
  */
-@API public interface AssetReader {
+@API public interface AssetReader : AssetResolver {
   /**
    * Given a resolved asset [descriptor] which should be known to exist, read the associated asset content, and return
    * it as an async [Deferred] task which can be awaited, and then consumed.

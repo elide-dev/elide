@@ -20,7 +20,7 @@ public sealed class ServerAsset private constructor (
    */
   public class Script(
     private val descriptor: AssetBundle.ScriptBundle
-  ): ServerAsset(
+  ) : ServerAsset(
     mediaType = MediaType("application/javascript", "js"),
     dynamicEligible = true,
   )
@@ -31,7 +31,7 @@ public sealed class ServerAsset private constructor (
    */
   public class Stylesheet(
     private val descriptor: AssetBundle.StyleBundle
-  ): ServerAsset(
+  ) : ServerAsset(
     mediaType = MediaType("text/css", "css"),
     dynamicEligible = true,
   )
@@ -42,7 +42,7 @@ public sealed class ServerAsset private constructor (
    */
   public class Text(
     private val descriptor: AssetBundle.GenericBundle
-  ): ServerAsset(
+  ) : ServerAsset(
     mediaType = MediaType("text/plain", "txt"),
     dynamicEligible = false,
   )

@@ -2,11 +2,13 @@ package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
 import elide.annotations.API
-import elide.runtime.Logger
+import elide.server.StreamedAsset
+import elide.server.StreamedAssetResponse
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
+import org.slf4j.Logger
 
 /**
  * Describes the API surface of an *Asset Manager*, which controls access to embedded server-side assets such as CSS and
@@ -84,6 +86,12 @@ import kotlinx.coroutines.guava.asDeferred
   public val logging: Logger
 
   /**
+   * Initialize the asset manager by loading embedded asset data, and mapping it in-memory for hot serving; other tasks
+   * may be performed to prep for asset serving via this method.
+   */
+  public fun initialize()
+
+  /**
    * Resolve the provided asset [path] to a [ServerAsset] descriptor; if the file cannot be found, return `null`, and
    * otherwise, throw an error.
    *
@@ -108,19 +116,19 @@ import kotlinx.coroutines.guava.asDeferred
   /**
    *
    */
-  public suspend fun renderAssetAsync(asset: ServerAsset): Deferred<HttpResponse<ByteArray>>
+  public suspend fun renderAssetAsync(asset: ServerAsset): Deferred<StreamedAssetResponse>
 
   /**
    *
    */
-  public fun serveNotFoundAsync(request: HttpRequest<*>): Deferred<HttpResponse<ByteArray>> {
-    return Futures.immediateFuture(HttpResponse.notFound<ByteArray>()).asDeferred()
+  public fun serveNotFoundAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
+    return Futures.immediateFuture(HttpResponse.notFound<StreamedAsset>()).asDeferred()
   }
 
   /**
    *
    */
-  public suspend fun renderAsset(asset: ServerAsset): HttpResponse<ByteArray> {
+  public suspend fun renderAsset(asset: ServerAsset): StreamedAssetResponse {
     return renderAssetAsync(asset).await()
   }
 
@@ -132,7 +140,7 @@ import kotlinx.coroutines.guava.asDeferred
    * @param request HTTP request which should be translated into an asset path and served.
    * @return Deferred task which resolves to an HTTP response serving the requested asset.
    */
-  public suspend fun serveAsync(request: HttpRequest<*>): Deferred<HttpResponse<ByteArray>> {
+  public suspend fun serveAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
     return renderAssetAsync(
       resolve(request) ?: return (
         serveNotFoundAsync(request)
@@ -148,7 +156,7 @@ import kotlinx.coroutines.guava.asDeferred
    * @param request HTTP request which should be translated into an asset path and served.
    * @return HTTP response serving the requested asset.
    */
-  public suspend fun serve(request: HttpRequest<*>): HttpResponse<ByteArray> {
+  public suspend fun serve(request: HttpRequest<*>): StreamedAssetResponse {
     return serveAsync(request).await()
   }
 }

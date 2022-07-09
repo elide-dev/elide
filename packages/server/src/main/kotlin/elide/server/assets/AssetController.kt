@@ -1,5 +1,6 @@
 package elide.server.assets
 
+import elide.server.StreamedAssetResponse
 import elide.server.controller.StatusEnabledController
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
@@ -17,13 +18,13 @@ import jakarta.inject.Inject
  * asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
  */
 @Requires(property = "elide.assets.enabled", value = "true")
-@Controller("\${elide.assets.prefix}") public class AssetController: StatusEnabledController {
+@Controller("\${elide.assets.prefix}") public class AssetController : StatusEnabledController {
   @Inject internal lateinit var assetManager: AssetManager
 
   /**
    * TBD
    */
-  @Get public suspend fun assetGet(request: HttpRequest<*>): HttpResponse<ByteArray> {
+  @Get public suspend fun assetGet(request: HttpRequest<*>): StreamedAssetResponse {
     return assetManager.serveAsync(
       request
     ).await()
@@ -32,7 +33,7 @@ import jakarta.inject.Inject
   /**
    * TBD
    */
-  @Options public suspend fun assetOptions(request: HttpRequest<*>): HttpResponse<ByteArray> {
+  @Options public suspend fun assetOptions(request: HttpRequest<*>): HttpResponse<*> {
     TODO("not yet implemented")
   }
 }

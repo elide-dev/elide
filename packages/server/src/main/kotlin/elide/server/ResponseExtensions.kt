@@ -48,6 +48,40 @@ public interface SuspensionRenderer<R> {
   public suspend fun render(): R
 }
 
+/** */
+public fun interface ResponseConfigurator<Context : ResponseHandler<ResponseBody>, RequestBody, ResponseBody> {
+  /**
+   *
+   */
+  public fun respond(handler: Context.() -> Unit)
+}
+
+/**
+ *
+ */
+public interface ResponseHandler<ResponseBody> {
+  /**
+   *
+   */
+  public suspend fun respond(response: HttpResponse<ResponseBody>)
+}
+
+// Shared logic for response handler contexts internal to Elide.
+public abstract class BaseResponseHandler<ResponseBody>: ResponseHandler<ResponseBody> {
+  private val acquired: AtomicBoolean = AtomicBoolean(false)
+  private val response: AtomicReference<HttpResponse<ResponseBody>?> = AtomicReference(null)
+
+  /** @inheritDoc */
+  override suspend fun respond(response: HttpResponse<ResponseBody>) {
+    this.acquired.compareAndSet(false, true)
+    this.response.set(response)
+  }
+
+  /**
+   *
+   */
+  internal abstract suspend fun finalize(): HttpResponse<ResponseBody>
+}
 
 /**
  * Serve a static file which is embedded in the application JAR, at the path `/static/[file]`.
@@ -69,7 +103,6 @@ public fun staticFile(file: String, contentType: String): HttpResponse<*> {
     HttpResponse.notFound<Any>()
   }
 }
-
 
 /**
  * Serve an application asset file which is embedded in the application JAR, from the path `/assets/[type]/[path]`.
@@ -99,6 +132,77 @@ public fun asset(path: String, type: String, contentType: MediaType?): HttpRespo
   }
 }
 
+/**
+ * Typealias for a registered string which is used as an Asset Module ID.
+ */
+public typealias AssetModuleId = String
+
+/**
+ * Typealias for a registered string which is used as an Asset Tag.
+ */
+public typealias AssetTag = String
+
+/**
+ * Serve an application asset file which is embedded in the application JAR as a registered server asset, from the
+ * application resource path `/assets`.
+ *
+ * To use module ID-based assets, files must be registered at build time through the Elide Plugin for Gradle, or must
+ * produce an equivalent protocol buffer manifest.
+ *
+ * @param moduleId ID of the asset module we wish to serve.
+ * @param type Specifies the asset type expected to be served by this call, if known.
+ * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
+ *    located at the specified path.
+ */
+public suspend fun asset(moduleId: AssetModuleId, type: AssetType? = null): StreamedAssetResponse {
+  TODO("not yet implemented")
+}
+
+/**
+ *
+ */
+public suspend fun stylesheet(moduleId: AssetModuleId, type: AssetType? = null): StreamedAssetResponse {
+  TODO("not yet implemented")
+}
+
+/**
+ *
+ */
+public suspend fun stylesheet(block: AssetHandler.() -> Unit): StreamedAssetResponse {
+  TODO("not yet implemented")
+}
+
+/**
+ *
+ */
+public suspend fun asset(type: AssetType? = null, block: suspend AssetHandler.() -> Unit): RawResponse {
+  val handler = AssetHandler(type)
+  block.invoke(handler)
+  return handler.finalize()
+}
+
+// Handler context for an asset serving cycle.
+public class AssetHandler(
+  initialExpectedType: AssetType? = null,
+  private val moduleId: AtomicReference<AssetModuleId?> = AtomicReference(null),
+  private val expectedType: AtomicReference<AssetType?> = AtomicReference(initialExpectedType),
+) : BaseResponseHandler<RawPayload>() {
+  /** Bind an asset handler to an asset module ID. */
+  public fun module(id: AssetModuleId, type: AssetType? = null) {
+    moduleId.set(id)
+    if (type != null) expectedType.set(type)
+  }
+
+  /** Declare the expected asset type for this handler. Optional. */
+  public fun assetType(type: AssetType) {
+    expectedType.set(type)
+  }
+
+  /** @inheritDoc */
+  override suspend fun finalize(): HttpResponse<RawPayload> {
+    TODO("Not yet implemented")
+  }
+}
 
 /**
  * Responds to a client with an HTML response, using specified [block] to build an HTML page via Kotlin's HTML DSL.
@@ -106,7 +210,7 @@ public fun asset(path: String, type: String, contentType: MediaType?): HttpRespo
  * @param block Block to execute to build the HTML page.
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
-public suspend fun html(block: suspend HTML.() -> Unit): HttpResponse<ByteArrayOutputStream> {
+public suspend fun html(block: suspend HTML.() -> Unit): RawResponse {
   return HttpResponse.ok(
     HtmlContent(builder = block).render()
   ).characterEncoding(StandardCharsets.UTF_8).contentType(
@@ -115,10 +219,10 @@ public suspend fun html(block: suspend HTML.() -> Unit): HttpResponse<ByteArrayO
 }
 
 // HTML content rendering and container utility.
-internal class HtmlContent (
+internal class HtmlContent(
   private val prettyhtml: Boolean = false,
   private val builder: suspend HTML.() -> Unit
-): ResponseRenderer<ByteArrayOutputStream> {
+) : ResponseRenderer<ByteArrayOutputStream> {
   override fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {
@@ -136,14 +240,13 @@ internal class HtmlContent (
   }
 }
 
-
 /**
  * Responds to a client with an HTML response, using specified [block] to build the CSS document via Kotlin's CSS DSL.
  *
  * @param block Block to execute to build the CSS document.
  * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
  */
-public fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
+public fun css(block: CssBuilder.() -> Unit): StreamedAssetResponse {
   return HttpResponse.ok(
     CssContent(block).render()
   ).characterEncoding(
@@ -154,12 +257,13 @@ public fun css(block: CssBuilder.() -> Unit): HttpResponse<ByteArray> {
 }
 
 // HTML content rendering and container utility.
-internal class CssContent (
+internal class CssContent(
   private val builder: CssBuilder.() -> Unit
-): ResponseRenderer<ByteArray> {
-  override fun render(): ByteArray {
-    return CssBuilder().apply(builder).toString().toByteArray(
-      StandardCharsets.UTF_8
-    )
+) : ResponseRenderer<StreamedAsset> {
+  override fun render(): StreamedAsset {
+    TODO("not yet implemented")
+//    return CssBuilder().apply(builder).toString().toByteArray(
+//      StandardCharsets.UTF_8
+//    )
   }
 }

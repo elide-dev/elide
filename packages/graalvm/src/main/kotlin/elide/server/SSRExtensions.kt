@@ -21,7 +21,7 @@ private const val embeddedRoot: String = "embedded"
 private const val nodeProdDefault: String = "node-prod.pack.js"
 
 // Development script name default.
-private const val nodeDevDefault: String = "node-dev.pack.js"
+private const val nodeDevDefault: String = "node-dev.opt.js"
 
 // Default name if no mode is specified or resolvable.
 public const val nodeSsrDefaultPath: String = nodeDevDefault

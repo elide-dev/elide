@@ -168,8 +168,11 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
+micronaut_graal = { group = "io.micronaut", name = "micronaut-graal", version.ref = "micronaut_lib" }
 micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
 micronaut_http_client = { group = "io.micronaut", name = "micronaut-http-client", version.ref = "micronaut_lib" }
+micronaut_http_server = { group = "io.micronaut", name = "micronaut-http-server", version.ref = "micronaut_lib" }
+micronaut_http_server_netty = { group = "io.micronaut", name = "micronaut-http-server-netty", version.ref = "micronaut_lib" }
 micronaut_gcp_common = { group = "io.micronaut.gcp", name = "micronaut-gcp-common", version.ref = "micronaut_gcp" }
 micronaut_gcp_logging = { group = "io.micronaut.gcp", name = "micronaut-gcp-logging", version.ref = "micronaut_gcp" }
 micronaut_gcp_pubsub = { group = "io.micronaut.gcp", name = "micronaut-gcp-pubsub", version.ref = "micronaut_gcp" }
@@ -210,6 +213,9 @@ grpc_netty = { group = "io.grpc", name = "grpc-netty", version.ref = "grpc_java"
 grpc_protobuf = { group = "io.grpc", name = "grpc-protobuf", version.ref = "grpc_java" }
 grpc_kotlin_stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc_kotlin" }
 netty_bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
+netty_transport_native_unixCommon = { group = "io.netty", name = "netty-transport-native-unix-common", version.ref = "netty" }
+netty_transport_native_epoll = { group = "io.netty", name = "netty-transport-native-epoll", version.ref = "netty" }
+netty_transport_native_kqueue = { group = "io.netty", name = "netty-transport-native-kqueue", version.ref = "netty" }
 netty_tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty_tcnative" }
 netty_tcnative_boringssl_static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty_tcnative" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }

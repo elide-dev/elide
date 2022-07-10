@@ -14,7 +14,6 @@ plugins {
     kotlin("plugin.serialization")
     alias(libs.plugins.testLogger)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -172,6 +171,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test-junit5"))
+                implementation(libs.junit.jupiter)
                 runtimeOnly(libs.junit.jupiter.engine)
                 runtimeOnly(libs.logback)
             }
@@ -201,7 +201,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions {
         apiVersion = libs.versions.kotlin.language.get()
         languageVersion = libs.versions.kotlin.language.get()
-        jvmTarget = libs.versions.java.get()
+        jvmTarget = (project.properties["versions.java.language"] as String)
         javaParameters = true
     }
 }

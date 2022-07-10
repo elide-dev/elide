@@ -1,0 +1,5 @@
+
+elide:
+  assets:
+    enabled: true
+    prefix: /_/assets

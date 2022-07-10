@@ -11,14 +11,20 @@ plugins {
 
 dependencyResolutionManagement {
     repositories {
-        mavenCentral()
         google()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
+        mavenCentral()
+        maven("https://plugins.gradle.org/m2/")
     }
 }
 
 rootProject.name = "elide-gradle-plugin"
 
-include(":example")
+include(
+    ":example:fullstack:node",
+    ":example:fullstack:server",
+    ":example:mixed",
+)
 includeBuild("plugin-build")
 
 gradleEnterprise {

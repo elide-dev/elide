@@ -12,9 +12,3 @@ Describes the expected interface for a response rendering object.
 | Name | Summary |
 |---|---|
 | [render](render.md) | [jvm]<br>abstract fun [render](render.md)(): [R](index.md) |
-
-## Inheritors
-
-| Name |
-|---|
-| [CssContent](../-css-content/index.md) |

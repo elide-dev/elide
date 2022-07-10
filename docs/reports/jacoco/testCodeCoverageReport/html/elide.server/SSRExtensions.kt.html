@@ -3,32 +3,34 @@
 package elide.server
 
 import elide.runtime.graalvm.JsRuntime
+import elide.server.controller.ElideController
+import elide.server.controller.PageController
 import elide.server.ssr.ServerRenderer
 import elide.server.ssr.ServerSSRRenderer
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
+import kotlinx.coroutines.runBlocking
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
-
 // Path within app JARs for embedded script assets.
-private const val embeddedRoot = &quot;embedded&quot;
+private const val EMBEDDED_ROOT: String = &quot;embedded&quot;
 
 // Production script name default.
-private const val nodeProdDefault = &quot;node-prod.pack.js&quot;
+private const val NODE_PROD_DEFAULT: String = &quot;node-prod.pack.js&quot;
 
 // Development script name default.
-private const val nodeDevDefault = &quot;node-dev.pack.js&quot;
+private const val NODE_DEV_DEFAULT: String = &quot;node-dev.opt.js&quot;
 
 // Default name if no mode is specified or resolvable.
-const val nodeSsrDefaultPath = nodeDevDefault
+public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
 
 // Default ID to use in the DOM.
-const val defaultSsrDomId = &quot;root&quot;
-
+public const val DEFAULT_SSR_DOM_ID: String = &quot;root&quot;
 
 /**
  * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript
@@ -42,26 +44,30 @@ const val defaultSsrDomId = &quot;root&quot;
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-<span class="nc" id="L45">suspend fun ssr(</span>
-<span class="nc" id="L46">  path: String = nodeSsrDefaultPath,</span>
-<span class="nc" id="L47">  response: MutableHttpResponse&lt;ByteArrayOutputStream&gt; = HttpResponse.ok(),</span>
+<span class="nc" id="L47">public suspend fun PageController.ssr(</span>
+  request: HttpRequest&lt;*&gt;,
+<span class="nc" id="L49">  path: String = NODE_SSR_DEFAULT_PATH,</span>
+<span class="nc" id="L50">  response: MutableHttpResponse&lt;ByteArrayOutputStream&gt; = HttpResponse.ok(),</span>
 ): MutableHttpResponse&lt;ByteArrayOutputStream&gt; {
-<span class="nc bnc" id="L49" title="All 2 branches missed.">  return if (path.isBlank()) {</span>
-<span class="nc" id="L50">    HttpResponse.notFound()</span>
-<span class="nc" id="L51">  } else {</span>
-<span class="nc" id="L52">    val renderer = ServerSSRRenderer(JsRuntime.EmbeddedScript(</span>
-<span class="nc" id="L53">      path = &quot;/$embeddedRoot/$path&quot;,</span>
-    ))
-<span class="nc" id="L55">    renderer.renderResponse(</span>
-<span class="nc" id="L56">      response</span>
-<span class="nc" id="L57">    ).characterEncoding(</span>
-<span class="nc" id="L58">      StandardCharsets.UTF_8</span>
-<span class="nc" id="L59">    ).contentType(</span>
-<span class="nc" id="L60">      MediaType(&quot;text/html; charset=utf-8&quot;, &quot;html&quot;)</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">  return if (path.isBlank()) {</span>
+<span class="nc" id="L53">    HttpResponse.notFound()</span>
+<span class="nc" id="L54">  } else {</span>
+<span class="nc" id="L55">    val renderer = ServerSSRRenderer(</span>
+<span class="nc" id="L56">      this,</span>
+<span class="nc" id="L57">      request,</span>
+<span class="nc" id="L58">      JsRuntime.EmbeddedScript(</span>
+<span class="nc" id="L59">        path = &quot;/$EMBEDDED_ROOT/$path&quot;,</span>
+      )
+    )
+<span class="nc" id="L62">    renderer.renderResponse(</span>
+<span class="nc" id="L63">      response</span>
+<span class="nc" id="L64">    ).characterEncoding(</span>
+<span class="nc" id="L65">      StandardCharsets.UTF_8</span>
+<span class="nc" id="L66">    ).contentType(</span>
+<span class="nc" id="L67">      MediaType(&quot;text/html; charset=utf-8&quot;, &quot;html&quot;)</span>
     )
   }
 }
-
 
 /**
  * Evaluate and inject SSR content into a larger HTML page, using a `&lt;main&gt;` tag as the root element in the dom; apply
@@ -76,38 +82,43 @@ const val defaultSsrDomId = &quot;root&quot;
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
  */
-<span class="nc" id="L79">fun BODY.injectSSR(</span>
-<span class="nc" id="L80">  domId: String = defaultSsrDomId,</span>
-<span class="nc" id="L81">  classes: Set&lt;String&gt; = emptySet(),</span>
-<span class="nc" id="L82">  attrs: List&lt;Pair&lt;String, String&gt;&gt; = emptyList(),</span>
-<span class="nc" id="L83">  path: String = nodeSsrDefaultPath,</span>
-<span class="nc" id="L84">): Unit = MAIN(</span>
-<span class="nc" id="L85">  attributesMapOf(</span>
-<span class="nc" id="L86">    &quot;id&quot;,</span>
-<span class="nc" id="L87">    domId,</span>
-<span class="nc" id="L88">    &quot;class&quot;,</span>
-<span class="nc" id="L89">    classes.joinToString(&quot; &quot;),</span>
-<span class="nc" id="L90">    &quot;data-serving-mode&quot;,</span>
-<span class="nc" id="L91">    &quot;ssr&quot;</span>
-<span class="nc" id="L92">  ).plus(</span>
-<span class="nc" id="L93">    attrs</span>
+<span class="nc" id="L85">public suspend fun BODY.injectSSR(</span>
+  handler: ElideController,
+  request: HttpRequest&lt;*&gt;,
+<span class="nc" id="L88">  domId: String = DEFAULT_SSR_DOM_ID,</span>
+<span class="nc" id="L89">  classes: Set&lt;String&gt; = emptySet(),</span>
+<span class="nc" id="L90">  attrs: List&lt;Pair&lt;String, String&gt;&gt; = emptyList(),</span>
+<span class="nc" id="L91">  path: String = NODE_SSR_DEFAULT_PATH,</span>
+<span class="nc" id="L92">): Unit = MAIN(</span>
+<span class="nc" id="L93">  attributesMapOf(</span>
+<span class="nc" id="L94">    &quot;id&quot;,</span>
+<span class="nc" id="L95">    domId,</span>
+<span class="nc" id="L96">    &quot;class&quot;,</span>
+<span class="nc" id="L97">    classes.joinToString(&quot; &quot;),</span>
+<span class="nc" id="L98">    &quot;data-serving-mode&quot;,</span>
+<span class="nc" id="L99">    &quot;ssr&quot;</span>
+<span class="nc" id="L100">  ).plus(</span>
+<span class="nc" id="L101">    attrs</span>
   ),
-<span class="nc" id="L95">  consumer</span>
-<span class="nc" id="L96">).visit {</span>
+<span class="nc" id="L103">  consumer</span>
+<span class="nc" id="L104">).visitSuspend {</span>
   // @TODO(sgammon): avoid blocking call here
-<span class="nc" id="L98">  val content = ServerSSRRenderer(JsRuntime.Script.embedded(</span>
-<span class="nc" id="L99">    path = &quot;/$embeddedRoot/$path&quot;,</span>
-<span class="nc" id="L100">  )).renderInline()</span>
+<span class="nc" id="L106">  val content = ServerSSRRenderer(</span>
+<span class="nc" id="L107">    handler,</span>
+<span class="nc" id="L108">    request,</span>
+<span class="nc" id="L109">    JsRuntime.Script.embedded(</span>
+<span class="nc" id="L110">      path = &quot;/$EMBEDDED_ROOT/$path&quot;,</span>
+    )
+<span class="nc" id="L112">  ).renderSuspend()</span>
 
-<span class="nc" id="L102">  unsafe {</span>
-<span class="nc bnc" id="L103" title="All 2 branches missed.">    if (content != null) {</span>
-<span class="nc" id="L104">      +content</span>
+<span class="nc" id="L114">  unsafe {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    if (content != null) {</span>
+<span class="nc" id="L116">      +content</span>
     } else {
-<span class="nc" id="L106">      +&quot;&lt;!-- // --&gt;&quot;</span>
+<span class="nc" id="L118">      +&quot;&lt;!-- // --&gt;&quot;</span>
     }
-<span class="nc" id="L108">  }</span>
-<span class="nc" id="L109">}</span>
-
+<span class="nc" id="L120">  }</span>
+<span class="nc" id="L121">}</span>
 
 /**
  * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript
@@ -117,43 +128,49 @@ const val defaultSsrDomId = &quot;root&quot;
  * Additional response properties, such as headers, may be set on the return result, as it is kept mutable. To change
  * initial parameters like the HTTP status, use the [response] parameter via constructors like [HttpResponse.notFound].
  *
+ * @param request Request we are responding to.
  * @param path Path to the React SSR entrypoint script, which should be embedded within the asset section of the JAR.
  * @param response Mutable HTTP response to fill with the resulting SSR content. Sets the status and headers.
  * @param block
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-<span class="nc" id="L126">fun ssr(</span>
-<span class="nc" id="L127">  path: String = nodeSsrDefaultPath,</span>
-<span class="nc" id="L128">  response: MutableHttpResponse&lt;ByteArrayOutputStream&gt; = HttpResponse.ok(),</span>
-  block: HTML.() -&gt; Unit
+<span class="nc" id="L138">public suspend fun ssr(</span>
+  request: HttpRequest&lt;*&gt;,
+<span class="nc" id="L140">  path: String = NODE_SSR_DEFAULT_PATH,</span>
+<span class="nc" id="L141">  response: MutableHttpResponse&lt;ByteArrayOutputStream&gt; = HttpResponse.ok(),</span>
+  block: suspend HTML.() -&gt; Unit
 ): MutableHttpResponse&lt;ByteArrayOutputStream&gt; {
-<span class="nc bnc" id="L131" title="All 2 branches missed.">  return if (path.isBlank()) {</span>
-<span class="nc" id="L132">    HttpResponse.notFound()</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">  return if (path.isBlank()) {</span>
+<span class="nc" id="L145">    HttpResponse.notFound()</span>
   } else {
-<span class="nc" id="L134">    return response.body(</span>
-<span class="nc" id="L135">      SSRContent(builder = block).render()</span>
-<span class="nc" id="L136">    ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
-<span class="nc" id="L137">      &quot;text/html; charset=utf-8&quot;</span>
+<span class="nc" id="L147">    return response.body(</span>
+<span class="nc" id="L148">      SSRContent(builder = block).render()</span>
+<span class="nc" id="L149">    ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
+<span class="nc" id="L150">      &quot;text/html; charset=utf-8&quot;</span>
     )
   }
 }
 
 // SSR content rendering and container utility.
-<span class="nc" id="L143">class SSRContent (</span>
-<span class="nc" id="L144">  private val prettyhtml: Boolean = false,</span>
-<span class="nc" id="L145">  private val builder: HTML.() -&gt; Unit</span>
-): ServerRenderer {
+<span class="nc" id="L156">internal class SSRContent(</span>
+<span class="nc" id="L157">  private val prettyhtml: Boolean = false,</span>
+<span class="nc" id="L158">  private val builder: suspend HTML.() -&gt; Unit</span>
+) : ServerRenderer {
   override fun render(): ByteArrayOutputStream {
-<span class="nc" id="L148">    val baos = ByteArrayOutputStream()</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
-<span class="nc" id="L150">      it.appendHTML(</span>
-<span class="nc" id="L151">        prettyPrint = prettyhtml,</span>
-<span class="nc" id="L152">      ).html(</span>
-<span class="nc" id="L153">        block = builder</span>
+<span class="nc" id="L161">    val baos = ByteArrayOutputStream()</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
+<span class="nc" id="L163">      it.appendHTML(</span>
+<span class="nc" id="L164">        prettyPrint = prettyhtml,</span>
+<span class="nc" id="L165">      ).html(</span>
+        block = {
+<span class="nc" id="L167">          runBlocking {</span>
+<span class="nc" id="L168">            builder()</span>
+<span class="nc" id="L169">          }</span>
+<span class="nc" id="L170">        }</span>
       )
     }
-<span class="nc" id="L156">    return baos</span>
+<span class="nc" id="L173">    return baos</span>
   }
-<span class="nc" id="L158">}</span>
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+<span class="nc" id="L175">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

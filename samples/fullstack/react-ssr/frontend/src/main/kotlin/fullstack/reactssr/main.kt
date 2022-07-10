@@ -7,8 +7,7 @@ import react.dom.client.createRoot
 import react.dom.client.hydrateRoot
 import fullstack.react.ui.SampleApp
 
-
-const val ssrFlag = "data-serving-mode"
+const val SSR_FLAG = "data-serving-mode"
 
 fun main() {
   val target = document.getElementById("root")
@@ -22,10 +21,10 @@ fun main() {
 
   val application = Fragment.create() {
     SampleApp {
-      message = "Hello, React SSR!"
+      message = "Hello, Elide! This page was served over Hybrid SSR."
     }
   }
-  if (container.hasAttribute(ssrFlag) && container.getAttribute(ssrFlag) == "ssr") {
+  if (container.hasAttribute(SSR_FLAG) && container.getAttribute(SSR_FLAG) == "ssr") {
     console.log("Hydrating client-side (SSR flag found)")
     hydrateRoot(
       container,

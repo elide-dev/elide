@@ -12,6 +12,9 @@ plugins {
   kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
   id("project-report")
   alias(libs.plugins.dokka)
+  alias(libs.plugins.detekt)
+  alias(libs.plugins.qodana)
+  alias(libs.plugins.ktlint)
   alias(libs.plugins.sonar)
   alias(libs.plugins.versionCheck)
   jacoco
@@ -38,7 +41,9 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
-val javaVersion = Versions.javaLanguage
+val javaLanguageVersion = project.properties["versions.java.language"] as String
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+val ecmaVersion = project.properties["versions.ecma.language"] as String
 
 tasks.dokkaHtmlMultiModule.configure {
   outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
@@ -65,6 +70,9 @@ buildscript {
   dependencies {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
     classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${libs.versions.kotlinx.benchmark.plugin.get()}")
+    if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
+      classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
+    }
   }
   if (project.property("elide.lockDeps") == "true") {
     configurations.classpath {
@@ -79,14 +87,6 @@ tasks.register("relock") {
       it.tasks.named("dependencies")
     }.toTypedArray())
   )
-}
-
-if (project.property("elide.lockDeps") == "true") {
-  subprojects {
-    dependencyLocking {
-      lockAllConfigurations()
-    }
-  }
 }
 
 sonarqube {
@@ -105,6 +105,12 @@ sonarqube {
 subprojects {
   val name = this.name
 
+  apply {
+    plugin("io.gitlab.arturbosch.detekt")
+    plugin("org.jlleitschuh.gradle.ktlint")
+    plugin("org.sonarqube")
+  }
+
   sonarqube {
     if (name != "base" && name != "test" && name != "model") {
       properties {
@@ -118,6 +124,47 @@ subprojects {
       }
     }
   }
+
+  ktlint {
+    debug.set(false)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(true)
+    enableExperimentalRules.set(true)
+    filter {
+      exclude("**/generated/**")
+      exclude("**/tools/plugin/gradle-plugin/**")
+      include("**/kotlin/**")
+    }
+  }
+
+  detekt {
+    ignoreFailures = true
+    config = rootProject.files("config/detekt/detekt.yml")
+  }
+
+  afterEvaluate {
+    if (tasks.findByName("check") != null) {
+      tasks.getByName("check") {
+        setDependsOn(dependsOn.filterNot {
+          it is TaskProvider<*> && it.name == "detekt"
+        })
+      }
+
+      tasks.getByName("build") {
+        setDependsOn(dependsOn.filterNot {
+          it is TaskProvider<*> && it.name == "check"
+        })
+      }
+    }
+  }
+
+  if (project.property("elide.lockDeps") == "true") {
+    dependencyLocking {
+      lockAllConfigurations()
+    }
+  }
 }
 
 allprojects {
@@ -127,37 +174,30 @@ allprojects {
     google()
   }
   tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
+    sourceCompatibility = javaLanguageVersion
+    targetCompatibility = javaLanguageVersion
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
     }
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
-      jvmTarget = Versions.javaLanguage
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
+      jvmTarget = javaLanguageVersion
       javaParameters = true
     }
   }
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile>().configureEach {
     kotlinOptions {
-      apiVersion = Versions.kotlinLanguage
-      languageVersion = Versions.kotlinLanguage
-      target = Versions.ecmaVersion
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
+      target = ecmaVersion
     }
   }
-}
-
-tasks.register("reports") {
-  dependsOn(
-    ":dependencyReport",
-    ":htmlDependencyReport",
-  )
 }
 
 tasks.register("resolveAndLockAll") {
@@ -196,4 +236,22 @@ if (tasks.findByName("resolveAllDependencies") == null) {
       }
     }
   }
+}
+
+tasks.register("reports") {
+  dependsOn(
+    ":dependencyReport",
+    ":htmlDependencyReport",
+  )
+}
+
+tasks.register("preMerge") {
+  description = "Runs all the tests/verification tasks"
+
+  dependsOn(
+    ":reports",
+    ":detekt",
+    ":ktlintCheck",
+    ":check",
+  )
 }

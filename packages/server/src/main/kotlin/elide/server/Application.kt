@@ -3,7 +3,6 @@ package elide.server
 import elide.server.util.ServerFlag
 import io.micronaut.runtime.Micronaut
 
-
 /**
  * Static class interface which equips a Micronaut application with extra initialization features powered by Elide; to
  * use, simply enforce that your entrypoint object complies with this interface.

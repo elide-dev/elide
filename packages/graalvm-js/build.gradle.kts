@@ -14,7 +14,6 @@ plugins {
   kotlin("js")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  alias(libs.plugins.sonar)
   alias(libs.plugins.dokka)
 }
 

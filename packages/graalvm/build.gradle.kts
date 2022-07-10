@@ -19,7 +19,6 @@ plugins {
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.testLogger)
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -29,7 +28,7 @@ kotlin {
   explicitApi()
 
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
   publishing {
     publications {
@@ -46,7 +45,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
     vendor.set(JvmVendorSpec.GRAAL_VM)
     if (project.hasProperty("elide.graalvm.variant")) {
       val variant = project.property("elide.graalvm.variant") as String
@@ -168,6 +167,7 @@ dependencies {
   implementation(libs.guava)
 
   // Micronaut
+  implementation(libs.micronaut.graal)
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)

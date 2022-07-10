@@ -24,7 +24,7 @@ version = rootProject.version as String
 
 protobuf {
   protoc {
-    artifact = "com.google.protobuf:protoc:${Versions.protobuf}"
+    artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
   }
   generateProtoTasks {
     ofSourceSet("main").forEach {
@@ -37,7 +37,7 @@ protobuf {
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
   publishing {
     publications {
@@ -54,7 +54,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 

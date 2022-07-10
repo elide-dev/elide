@@ -22,13 +22,13 @@ version = rootProject.version as String
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
@@ -70,11 +70,6 @@ micronaut {
   }
 }
 
-val nodeDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-
 dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
@@ -84,15 +79,6 @@ dependencies {
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
-
-  nodeDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:ssr:node",
-        "configuration" to "nodeDist",
-      )
-    )
-  )
 }
 
 graalvmNative {
@@ -108,7 +94,7 @@ graalvmNative {
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
@@ -122,21 +108,6 @@ graalvmNative {
       })
     }
   }
-}
-
-tasks.withType<Copy>().named("processResources") {
-  dependsOn("copyStatic")
-  dependsOn("copyEmbedded")
-}
-
-tasks.register<Copy>("copyStatic") {
-  from("src/main/resources/static/**/*.*")
-  into("$buildDir/resources/main/static")
-}
-
-tasks.register<Copy>("copyEmbedded") {
-  from(nodeDist)
-  into("$buildDir/resources/main/embedded")
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {

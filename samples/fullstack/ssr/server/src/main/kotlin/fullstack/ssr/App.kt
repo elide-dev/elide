@@ -1,7 +1,9 @@
 package fullstack.ssr
 
 import elide.server.*
-import io.micronaut.http.annotation.Controller
+import elide.server.annotations.Page
+import elide.server.controller.PageController
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 import io.micronaut.runtime.Micronaut.build
 import kotlinx.css.Color
@@ -11,19 +13,18 @@ import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
 
-
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */
-  @Controller class Index {
+  @Page class Index : PageController() {
     // Serve the page itself.
-    @Get("/") suspend fun index() = ssr {
+    @Get("/") suspend fun index(request: HttpRequest<*>) = ssr(request) {
       head {
         title { +"Hello, Elide!" }
         stylesheet("/styles/main.css")
       }
       body {
-        injectSSR()
+        injectSSR(this@Index, request)
       }
     }
 

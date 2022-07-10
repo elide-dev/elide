@@ -20,16 +20,34 @@ jobs:
         os: [ubuntu-latest]
         experimental: [false]
         gu-binary: [gu]
+        java: [17]
+        gvm: [latest]
         include:
           - os: ubuntu-latest
             experimental: false
             gu-binary: gu
-          # - os: macos-latest
-          #   experimental: true
-          #   gu-binary: gu
-          # - os: windows-latest
-          #   experimental: true
-          #   gu-binary: gu.cmd
+            java: 11
+            gvm: latest
+          - os: macos-latest
+            experimental: true
+            gu-binary: gu
+            java: 17
+            gvm: latest
+          - os: macos-latest
+            experimental: true
+            gu-binary: gu
+            java: 11
+            gvm: latest
+          - os: windows-latest
+            experimental: true
+            gu-binary: gu.cmd
+            java: 17
+            gvm: latest
+          - os: windows-latest
+            experimental: true
+            gu-binary: gu.cmd
+            java: 11
+            gvm: latest
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -45,58 +63,40 @@ jobs:
         shell: bash
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: ${{ matrix.gvm }}
+          java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
       ## CI: Build
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2
         id: gradlebuild
+        continue-on-error: ${{ matrix.experimental }}
         env:
           CI: true
         with:
+          cache-read-only: ${{ matrix.os != 'ubuntu-latest' }}
           arguments: |
-            build
+            assemble
             --scan
+            --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=false
-            -x nativeCompile
-            -x test
+            -Pversions.java.language=${{ matrix.java }}
 
       ## CI: Build
-      - name: "Failure reports"
+      - name: "Build reports"
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: failure-reports
+          name: build-reports-${{ matrix.os }}-java${{ matrix.java }}-gvm-${{ matrix.gvm }}
           path: |
             build/reports/**/*.*
 
@@ -104,8 +104,7 @@ jobs:
   ## Job: Testsuite (JVM)
   ##
   tests-jvm:
-    runs-on: ubuntu-latest
-    needs: [gradle]
+    runs-on: buildjet-4vcpu-ubuntu-2004
     continue-on-error: true
     permissions:
       contents: 'read'
@@ -116,42 +115,26 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
 
       ## Run JVM Tests
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@v2
         with:
+          cache-read-only: false
           arguments: |
             test
+            --scan
+            --dependency-verification=strict
             :tools:reports:reports
             -Pelide.ci=true
+            -Pversions.java.language=17
             -x nativeCompile
             -x :packages:graalvm:test
             -x :packages:graalvm-js:test
@@ -175,12 +158,44 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
 
+      ## Inflate missing git history
+      - name: "Inflate Git history"
+        run: git fetch --unshallow
+
+      ## Upload to Codecov (JVM)
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          name: jvm
+          fail_ci_if_error: false
+          verbose: true
+
+      ## Run Sonar
+      - name: "Run Sonar"
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          cache-read-only: false
+          arguments: |
+            sonarqube
+            --scan
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -Pversions.java.language=17
+            -x test
+            -x jvmTest
+            -x nativeCompile
+            -x test
+
   ##
   ## Job: Testsuite (Native)
   ##
   tests-native:
-    runs-on: ubuntu-latest
-    needs: [gradle]
+    runs-on: buildjet-16vcpu-ubuntu-2004
+    needs: [tests-jvm]
     continue-on-error: true  # temporary
     if: |
       (
@@ -193,18 +208,12 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: `gu` components
@@ -213,30 +222,18 @@ jobs:
           gu install native-image espresso
           gu rebuild-images
 
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
       ## Run Native Tests
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2
         with:
+          cache-read-only: false
           arguments: |
             graalvm:test
             graalvm-js:test
             graalvm-react:test
             :tools:reports:reports
             -Pelide.ci=true
+            -Pversions.java.language=17
 
       ## Collect Reports
       - uses: actions/upload-artifact@v3
@@ -249,110 +246,11 @@ jobs:
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
 
-
-  ##
-  ## Job: Sonar
-  ##
-  tools-sonar:
-    runs-on: ubuntu-latest
-    needs: [gradle, tests-jvm]
-    steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      ## Setup: GraalVM
-      - uses: graalvm/setup-graalvm@v1
-        with:
-          version: 'latest'
-          java-version: '17'
-          components: 'native-image'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: Checkout Code
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
-      ## Download JVM reports
-      - name: Download JVM test reports
-        uses: actions/download-artifact@v3
-        with:
-          name: test-reports-jvm
-
-      ## Inflate missing git history
-      - name: "Inflate Git history"
-        run: git fetch --unshallow
-
-      ## Run Sonar
-      - name: "Run Sonar"
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: |
-            sonarqube
-            --scan
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -x nativeCompile
-            -x test
-
-
-  ##
-  ## Job: Report Coverage
-  ##
-  tools-codecov:
-    runs-on: ubuntu-latest
-    needs: [tests-jvm]
-    continue-on-error: true
-    steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      ## Download JVM reports
-      - name: Download JVM test reports
-        uses: actions/download-artifact@v3
-        with:
-          name: test-reports-jvm
-
-      ## Upload to Codecov (JVM)
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
-          name: jvm
-          fail_ci_if_error: false
-          verbose: true
-
   ##
   ## Job: Docker Samples (JVM)
   ##
   docker-jvm:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2004
     needs: [gradle]
     if: |
       (
@@ -367,18 +265,12 @@ jobs:
       id-token: 'write'
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
@@ -423,20 +315,6 @@ jobs:
           registry: ghcr.io
           username: elidebot
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
 
       ## -- Samples -- ##
 
@@ -512,7 +390,7 @@ jobs:
   ##
 
   docker-native:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-16vcpu-ubuntu-2004
     needs: [gradle]
     if: |
       (
@@ -527,18 +405,12 @@ jobs:
       id-token: 'write'
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
-          version: 'latest'
-          java-version: '17'
           components: 'native-image'
+          version: latest
+          java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: QEMU
@@ -589,20 +461,6 @@ jobs:
           registry: ghcr.io
           username: elidebot
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
 
       ## -- Samples -- ##
 

@@ -17,5 +17,4 @@ Describes supported server-renderer API methods, which are used by the framework
 
 | Name |
 |---|
-| [SSRContent](../../elide.server/-s-s-r-content/index.md) |
 | [ServerSSRRenderer](../-server-s-s-r-renderer/index.md) |

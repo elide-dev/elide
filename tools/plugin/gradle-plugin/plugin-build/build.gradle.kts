@@ -1,7 +1,14 @@
+@file:Suppress(
+    "UnstableApiUsage",
+    "unused",
+    "UNUSED_VARIABLE",
+    "DSL_SCOPE_VIOLATION",
+)
+
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.pluginPublish) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -13,9 +20,10 @@ allprojects {
     version = PluginCoordinates.VERSION
 
     repositories {
-        google()
-        mavenCentral()
         gradlePluginPortal()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
+        mavenCentral()
+        google()
     }
 
     apply {
@@ -54,4 +62,26 @@ tasks.register("clean", Delete::class.java) {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
+}
+
+if (tasks.findByName("resolveAllDependencies") == null) {
+    tasks.register("resolveAllDependencies") {
+        val npmInstall = tasks.findByName("kotlinNpmInstall")
+        if (npmInstall != null) {
+            dependsOn(npmInstall)
+        }
+        doLast {
+            allprojects {
+                configurations.forEach { c ->
+                    if (c.isCanBeResolved) {
+                        println("Downloading dependencies for '$path' - ${c.name}")
+                        val result = c.incoming.artifactView { lenient(true) }.artifacts
+                        result.failures.forEach {
+                            println("- Ignoring Error: ${it.message}")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>subscribe</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../../index.html">
+<span>elide</span>            </a>    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageids="server::elide.server.runtime.jvm/ReactiveFuture/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])?]/PointingToDeclaration//-1592384214">
+  <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.runtime.jvm</a><span class="delimiter">/</span><a href="index.html">ReactiveFuture</a><span class="delimiter">/</span><a href="subscribe.html">subscribe</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>subscribe</span></span></h1>
+  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="subscribe.html"><span class="token function">subscribe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">subscriber<span class="token operator">: </span><span data-unresolved-link="org.reactivestreams/Subscriber///PointingToDeclaration/">Subscriber</span><span class="token operator">&lt;</span><span class="token keyword">in </span><a href="index.html">R</a><span class="token operator">?</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Request <span data-unresolved-link="org.reactivestreams/Publisher///PointingToDeclaration/">Publisher</span> to start streaming data.</p><p class="paragraph">This is a "factory method" and can be called multiple times, each time starting a new <span data-unresolved-link="org.reactivestreams/Subscription///PointingToDeclaration/">Subscription</span>. Each <span data-unresolved-link="org.reactivestreams/Subscription///PointingToDeclaration/">Subscription</span> will work for only a single <span data-unresolved-link="org.reactivestreams/Subscriber///PointingToDeclaration/">Subscriber</span>. A <span data-unresolved-link="org.reactivestreams/Subscriber///PointingToDeclaration/">Subscriber</span> should only subscribe once to a single <span data-unresolved-link="org.reactivestreams/Publisher///PointingToDeclaration/">Publisher</span>. If the <span data-unresolved-link="org.reactivestreams/Publisher///PointingToDeclaration/">Publisher</span> rejects the subscription attempt or otherwise fails it will signal the error via <span data-unresolved-link="org.reactivestreams/Subscriber/onError/#kotlin.Throwable/PointingToDeclaration/">Subscriber.onError</span>.</p><h2 class="">Parameters</h2><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>subscriber</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">the <span data-unresolved-link="org.reactivestreams/Subscriber///PointingToDeclaration/">Subscriber</span> that will consume signals from this <span data-unresolved-link="org.reactivestreams/Publisher///PointingToDeclaration/">Publisher</span>.</p></div></div></div></div></div></div></div></div></div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+
+</body></html>
+

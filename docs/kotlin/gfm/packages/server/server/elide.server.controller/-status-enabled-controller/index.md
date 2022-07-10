@@ -4,3 +4,9 @@
 
 [jvm]\
 interface [StatusEnabledController](index.md)
+
+## Inheritors
+
+| Name |
+|---|
+| [AssetController](../../elide.server.assets/-asset-controller/index.md) |

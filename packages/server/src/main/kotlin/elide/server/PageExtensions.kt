@@ -2,8 +2,12 @@
 
 package elide.server
 
-import kotlinx.html.*
-
+import kotlinx.html.BODY
+import kotlinx.html.HEAD
+import kotlinx.html.LINK
+import kotlinx.html.SCRIPT
+import kotlinx.html.attributesMapOf
+import kotlinx.html.visit
 
 /** Generates a CSS link from the provided handler [uri], optionally including the specified [attrs]. */
 public inline fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String, String>? = null): Unit = LINK(

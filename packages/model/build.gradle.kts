@@ -14,7 +14,6 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -179,7 +178,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = libs.versions.kotlin.language.get()
     languageVersion = libs.versions.kotlin.language.get()
-    jvmTarget = libs.versions.java.get()
+    jvmTarget = (project.properties["versions.java.language"] as String)
     javaParameters = true
   }
 }

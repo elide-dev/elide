@@ -1,0 +1,6 @@
+version: v1.22.1
+exclude:
+  global:
+    - docs
+    - vendor
+    - third_party

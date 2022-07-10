@@ -1,5 +1,6 @@
 package fullstack.react.ui
 
+import csstype.ClassName
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
@@ -12,6 +13,7 @@ external interface SampleProps: Props {
 
 val SampleApp = FC<SampleProps> { props ->
   div {
+    className = ClassName("sample-app-container")
     strong {
       +props.message
     }

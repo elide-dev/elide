@@ -42,6 +42,7 @@ jobs:
         shell: bash
     permissions:
       contents: 'read'
+    continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
     steps:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
@@ -54,7 +55,8 @@ jobs:
       # Job: Breaking
       - uses: bufbuild/buf-breaking-action@v1
         with:
-          against: 'https://github.com/elide-dev/v3.git#branch=v3'
+          against: |
+            ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') ? `https://github.com/elide-dev/v3.git#ref=${GITHUB_REF}` : 'https://github.com/elide-dev/v3.git#branch=v3' }}
 
   ##
   ## Job: Buf Push
@@ -68,8 +70,6 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
-        contains(github.event.head_commit.message, 'ci:build-img-jvm') ||
         startsWith(github.ref, 'refs/tags/v')
       )
     permissions:

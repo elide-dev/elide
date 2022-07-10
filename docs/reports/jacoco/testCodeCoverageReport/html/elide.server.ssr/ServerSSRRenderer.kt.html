@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerSSRRenderer.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.ssr</a> &gt; <span class="el_source">ServerSSRRenderer.kt</span></div><h1>ServerSSRRenderer.kt</h1><pre class="source lang-java linenums">package elide.server.ssr
 
 import elide.runtime.graalvm.JsRuntime
-import elide.server.SuspensionRenderer
+import elide.server.controller.ElideController
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
-
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
-<span class="nc" id="L15">class ServerSSRRenderer constructor (private val script: JsRuntime.ExecutableScript): ServerRenderer {</span>
+<span class="nc" id="L11">@Suppress(&quot;MemberVisibilityCanBePrivate&quot;, &quot;unused&quot;)</span>
+<span class="nc" id="L12">public class ServerSSRRenderer constructor(</span>
+<span class="nc" id="L13">  private val handler: ElideController,</span>
+<span class="nc" id="L14">  private val request: HttpRequest&lt;*&gt;,</span>
+<span class="nc" id="L15">  private val script: JsRuntime.ExecutableScript</span>
+) : ServerRenderer {
   /**
    * Render the attached [script] and return the resulting content as a regular [String].
    *
    * @return String render result from [script].
    */
-  fun renderInline(): String?  {
+  public fun renderInline(): String? {
     // acquire script runtime, execute the script, decode as string
-<span class="nc" id="L23">    return JsRuntime.acquire().execute(</span>
-<span class="nc" id="L24">      script,</span>
+<span class="nc" id="L24">    return JsRuntime.acquire().executeBlocking(</span>
+<span class="nc" id="L25">      script,</span>
       String::class.java
     )
+  }
+
+  /**
+   * Render the attached [script] with suspension support, and return the resulting content as a regular [String].
+   *
+   * @return String render result from [script].
+   */
+  public suspend fun renderSuspend(): String? {
+<span class="nc" id="L36">    return JsRuntime.acquire().executeAsync(</span>
+<span class="nc" id="L37">      script,</span>
+      String::class.java,
+<span class="nc" id="L39">    ).await()</span>
   }
 
   /**
@@ -33,14 +46,13 @@ import java.nio.charset.StandardCharsets
    * @return Byte stream of resulting content.
    */
   override fun render(): ByteArrayOutputStream {
-<span class="nc" id="L36">    val byteStream = ByteArrayOutputStream()</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">    byteStream.bufferedWriter(StandardCharsets.UTF_8).use {</span>
-<span class="nc" id="L38">      it.write(</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        renderInline() ?:</span>
-<span class="nc" id="L40">        throw IllegalStateException(&quot;Failed to render JavaScript content from bundle '${script.getId()}'&quot;)</span>
+<span class="nc" id="L49">    val byteStream = ByteArrayOutputStream()</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">    byteStream.bufferedWriter(StandardCharsets.UTF_8).use {</span>
+<span class="nc" id="L51">      it.write(</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        renderInline() ?: error(&quot;Failed to render JavaScript content from bundle '${script.getId()}'&quot;)</span>
       )
-<span class="nc" id="L42">    }</span>
-<span class="nc" id="L43">    return byteStream</span>
+<span class="nc" id="L54">    }</span>
+<span class="nc" id="L55">    return byteStream</span>
   }
 
   /**
@@ -50,12 +62,12 @@ import java.nio.charset.StandardCharsets
    * @param response Base mutable response to fill body data for.
    * @return Mutable [response] with body data filled in from the execution result of [script].
    */
-  fun renderResponse(
+  public fun renderResponse(
     response: MutableHttpResponse&lt;ByteArrayOutputStream&gt;,
   ): MutableHttpResponse&lt;ByteArrayOutputStream&gt; {
-<span class="nc" id="L56">    return response.body(</span>
-<span class="nc" id="L57">      render()</span>
+<span class="nc" id="L68">    return response.body(</span>
+<span class="nc" id="L69">      render()</span>
     )
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

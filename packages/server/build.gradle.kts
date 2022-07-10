@@ -19,7 +19,6 @@ plugins {
   alias(libs.plugins.testLogger)
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -29,7 +28,7 @@ kotlin {
   explicitApi()
 
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
   publishing {
     publications {
@@ -46,7 +45,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
@@ -177,12 +176,21 @@ dependencies {
 
   // Micronaut
   implementation(libs.micronaut.http)
+  implementation(libs.micronaut.http.server)
+  implementation(libs.micronaut.http.server.netty)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.grpc.runtime)
   implementation(libs.micronaut.grpc.client.runtime)
   implementation(libs.micronaut.grpc.server.runtime)
+
+  // Netty: Native
+  implementation(libs.netty.tcnative)
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(libs.netty.transport.native.unixCommon)
+  implementation(libs.netty.transport.native.epoll)
+  implementation(libs.netty.transport.native.kqueue)
 
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)
@@ -197,5 +205,10 @@ dependencies {
   implementation(libs.reactivestreams)
 
   // Testing
+  testImplementation(libs.truth)
+  testImplementation(libs.truth.java8)
+  testImplementation(libs.truth.proto)
+  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(kotlin("test"))
   testImplementation(project(":packages:test"))
 }

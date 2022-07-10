@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetReader.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetReader.kt</span></div><h1>AssetReader.kt</h1><pre class="source lang-java linenums">package elide.server.assets
+
+import elide.annotations.API
+import io.micronaut.http.HttpRequest
+import kotlinx.coroutines.Deferred
+import java.io.FileNotFoundException
+
+/**
+ * Describes the API surface expected for a reader of static assets from some data source; responsible for efficiently
+ * reading assets from a resource path and producing resulting content.
+ *
+ * Asset readers can cache the results of their reads, if desired, and may base caching decisions on the asset
+ * descriptors provided when resolving assets.
+ *
+ * ### Resource assets
+ *
+ * Typically, resources are embedded in the application JAR or native image, in zipped form, alongside embedded SSR
+ * assets and compiled JVM or native classes. The main [AssetReader] implementation knows how to interpret these assets
+ * based on a binary-encoded protocol buffer message *also* embedded within the application.
+ *
+ * ### Replacing the main reader
+ *
+ * The developer may find it desirable to write and provide their own [AssetReader] implementation, which can be
+ * accomplished via Micronaut's DI system (read on below). In particular, this may be a requirement for stable testing
+ * of a broader [AssetManager] implementation.
+ *
+ * #### Replacing components of the [AssetManager]
+ *
+ * To replace the stock [AssetReader] implementation, Micronaut's `Replaces` annotation can be used:
+ * ```kotlin
+ * package your.package.here;
+ *
+ * import elide.server.assets.AssetReader;
+ * import io.micronaut.context.annotation.Replaces;
+ *
+ * @Replaces(ServerAssetReader::class)
+ * public class MyCoolAssetReader: AssetReader {
+ *   // (impl here)
+ * }
+ * ```
+ *
+ * @see AssetManager which coordinates between the [AssetReader] and [AssetResolver].
+ * @see RenderedAsset for the generic return value model leveraged by [AssetManager].
+ * @see ServerAsset for the symbolic asset reference model leveraged by [AssetManager].
+ */
+<span class="fc" id="L46">@API public interface AssetReader : AssetResolver {</span>
+  /**
+   * Given a resolved asset [descriptor] which should be known to exist, read the associated asset content, and return
+   * it as an async [Deferred] task which can be awaited, and then consumed.
+   *
+   * If the asset underlying the provided asset descriptor is found not to exist, a [FileNotFoundException] is raised.
+   *
+   * @throws FileNotFoundException if the provided asset cannot be located.
+   * @param descriptor Resolved asset descriptor, which is expected to exist.
+   * @param request HTTP request which is asking to be served this asset.
+   * @return Deferred task which resolves to a rendered asset which may be consumed, corresponding to [descriptor].
+   */
+  @Throws(FileNotFoundException::class)
+  public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest&lt;*&gt;): Deferred&lt;RenderedAsset&gt;
+<span class="fc" id="L60">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

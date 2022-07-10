@@ -22,7 +22,6 @@ plugins {
   alias(libs.plugins.protobuf)
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.dokka)
-  alias(libs.plugins.sonar)
 }
 
 group = "dev.elide"
@@ -71,7 +70,7 @@ protobuf {
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
   publishing {
     publications {
@@ -88,7 +87,7 @@ kotlin {
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 

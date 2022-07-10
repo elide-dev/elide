@@ -40,11 +40,14 @@ enum CompressionMode {
   // No compression.
   IDENTITY = 0;
 
-  // Standard gzip-based pre-compression.
+  // Standard gzip-based compression.
   GZIP = 1;
 
-  // Brotli-based pre-compression.
+  // Brotli-based compression.
   BROTLI = 2;
+
+  // Snappy-based compression.
+  SNAPPY = 3;
 }
 
 
@@ -92,4 +95,30 @@ message CompressedData {
   // Holds an (optional) integrity fingerprint, calculated from the held data *before* compression, which maybe used to
   // verify the consistency of the data held by this container after de-compression.
   repeated DataFingerprint integrity = 4;
+}
+
+// Specifies the structure of a data container which can also be a reference to a different resource or file-system
+// style-asset. Only one reference value may be filled in.
+message DataContainerRef {
+  // Specifies a fingerprint and path pair.
+  message FingerprintPathPair {
+    // Specifies the fingerprint information associated with, or calculated for, the subject info.
+    DataFingerprint fingerprint = 1;
+
+    // Specifies the path for this data container reference.
+    string path = 2;
+  }
+
+  // Specifies the reference subject for this record.
+  oneof reference {
+    // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
+    // are enclosed inline within the protocol buffer.
+    CompressedData data = 1;
+
+    // Specifies a reference to a file resident in the application JAR or native image.
+    FingerprintPathPair resource = 2;
+
+    // Specifies a reference to a file resident on the filesystem outside of the built application.
+    FingerprintPathPair filesystem = 3;
+  }
 }

@@ -5,13 +5,19 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import dev.elide.buildtools.gradle.plugin.BuildMode
+import tools.elide.assets.EmbeddedScriptLanguage
+import tools.elide.data.CompressionMode
+
 plugins {
   java
   jacoco
   idea
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
+  id("dev.elide.buildtools.plugin")
   alias(libs.plugins.micronautApplication)
   alias(libs.plugins.micronautAot)
   alias(libs.plugins.sonar)
@@ -21,15 +27,61 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
+elide {
+  mode = if (devMode) {
+    BuildMode.DEVELOPMENT
+  } else {
+    BuildMode.PRODUCTION
+  }
+
+  server {
+    ssr(EmbeddedScriptLanguage.JS) {
+      bundle(project(":samples:fullstack:react-ssr:node"))
+    }
+    assets {
+      bundler {
+        compression {
+          modes(CompressionMode.GZIP)
+        }
+      }
+
+      // stylesheet: `styles.base`
+      stylesheet("styles.base") {
+        sourceFile("src/main/assets/basestyles.css")
+      }
+    }
+  }
+}
+
+micronaut {
+  version.set(libs.versions.micronaut.lib.get())
+  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  processing {
+    incremental.set(true)
+    annotations.addAll(listOf(
+      "$mainPackage.*",
+    ))
+  }
+  aot {
+    optimizeServiceLoading.set(true)
+    convertYamlToJava.set(true)
+    precomputeOperations.set(true)
+    cacheEnvironment.set(true)
+    netty {
+      enabled.set(true)
+    }
+  }
+}
+
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
   }
 }
 
 java {
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
     vendor.set(JvmVendorSpec.GRAAL_VM)
     if (project.hasProperty("elide.graalvm.variant")) {
       val variant = project.property("elide.graalvm.variant") as String
@@ -58,7 +110,7 @@ graalvmNative {
       ))
 
       javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
@@ -74,14 +126,6 @@ graalvmNative {
   }
 }
 
-tasks.withType<Tar> {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<Zip>{
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
 testing {
   suites {
     val test by getting(JvmTestSuite::class) {
@@ -92,6 +136,7 @@ testing {
 
 val mainPackage = "fullstack.reactssr"
 val mainEntry = "$mainPackage.App"
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 application {
   mainClass.set(mainEntry)
@@ -109,37 +154,10 @@ tasks.named<JavaExec>("run") {
   } else {
     argsList.add("--elide.vm.inspect=false")
   }
+  @Suppress("SpreadOperator")
   args(
     *argsList.toTypedArray()
   )
-}
-
-micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
-  processing {
-    incremental.set(true)
-    annotations.add("$mainPackage.*")
-  }
-  aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    netty {
-      enabled.set(true)
-    }
-  }
-}
-
-val browserDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-
-val nodeDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
 }
 
 dependencies {
@@ -152,23 +170,14 @@ dependencies {
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+}
 
-  browserDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:react-ssr:frontend",
-        "configuration" to "browserDist",
-      )
-    )
-  )
-  nodeDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:react-ssr:node",
-        "configuration" to "nodeDist",
-      )
-    )
-  )
+tasks.withType<Tar> {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType<Zip> {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
@@ -212,27 +221,6 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   images.set(listOf(
     "${project.properties["elide.publish.repo.docker.samples"]}/fullstack/react-ssr/native:opt-latest"
   ))
-}
-
-tasks.withType<Copy>().named("processResources") {
-  dependsOn("copyJs")
-  dependsOn("copyStatic")
-  dependsOn("copyEmbedded")
-}
-
-tasks.register<Copy>("copyJs") {
-  from(browserDist)
-  into("$buildDir/resources/main/assets/js")
-}
-
-tasks.register<Copy>("copyStatic") {
-  from("src/main/resources/static/**/*.*")
-  into("$buildDir/resources/main/static")
-}
-
-tasks.register<Copy>("copyEmbedded") {
-  from(nodeDist)
-  into("$buildDir/resources/main/embedded")
 }
 
 tasks {

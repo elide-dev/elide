@@ -6,6 +6,8 @@
         </encoder>
     </appender>
 
+    <logger name="elide.server.assets.AssetController" level="TRACE" />
+
     <!-- Root Logger -->
     <root level="trace">
         <appender-ref ref="STDOUT" />

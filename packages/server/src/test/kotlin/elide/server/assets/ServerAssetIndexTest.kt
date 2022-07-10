@@ -4,11 +4,8 @@ import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.NetworkBuilder
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
-import com.google.common.util.concurrent.ListeningExecutorService
-import com.google.common.util.concurrent.MoreExecutors
 import elide.server.AssetModuleId
 import elide.server.TestUtil
-import elide.server.runtime.AppExecutor
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -21,7 +18,6 @@ import tools.elide.assets.AssetBundle.StyleBundle
 import tools.elide.assets.ManifestFormat
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.*
 
@@ -40,15 +36,7 @@ class ServerAssetIndexTest {
 
   private fun createIndexer(assetBundle: AssetBundle? = null): Pair<AssetBundle, ServerAssetIndex> {
     val sample = assetBundle ?: assertNotNull(loadSampleManifest())
-    val exec = object : AppExecutor {
-      override fun service(): ListeningExecutorService {
-        return MoreExecutors.listeningDecorator(
-          Executors.newSingleThreadExecutor()
-        )
-      }
-    }
     return sample to ServerAssetIndex(
-      exec,
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle {
           return sample
@@ -302,15 +290,7 @@ class ServerAssetIndexTest {
 
   @Test fun testAssetIndexerDoesNotInitializeMoreThanOnce() {
     val firstCall = AtomicBoolean(true)
-    val exec = object : AppExecutor {
-      override fun service(): ListeningExecutorService {
-        return MoreExecutors.listeningDecorator(
-          Executors.newSingleThreadExecutor()
-        )
-      }
-    }
     val indexer = ServerAssetIndex(
-      exec,
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           if (firstCall.get()) {
@@ -339,15 +319,7 @@ class ServerAssetIndexTest {
   }
 
   @Test fun testAssetIndexBootNoManifest() {
-    val exec = object : AppExecutor {
-      override fun service(): ListeningExecutorService {
-        return MoreExecutors.listeningDecorator(
-          Executors.newSingleThreadExecutor()
-        )
-      }
-    }
     val indexer = ServerAssetIndex(
-      exec,
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           return null

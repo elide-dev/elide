@@ -28,7 +28,7 @@ jobs:
             gu-binary: gu
             java: 11
             gvm: latest
-          - os: ubuntu-latest
+          - os: macos-latest
             experimental: true
             gu-binary: gu
             java: 17
@@ -38,20 +38,15 @@ jobs:
             gu-binary: gu
             java: 11
             gvm: latest
-          - os: macos-latest
+          - os: windows-latest
             experimental: true
-            gu-binary: gu
+            gu-binary: gu.cmd
             java: 17
             gvm: latest
           - os: windows-latest
             experimental: true
             gu-binary: gu.cmd
             java: 11
-            gvm: latest
-          - os: windows-latest
-            experimental: true
-            gu-binary: gu.cmd
-            java: 17
             gvm: latest
 
     runs-on: ${{ matrix.os }}
@@ -89,22 +84,12 @@ jobs:
         with:
           cache-read-only: ${{ matrix.os != 'ubuntu-latest' }}
           arguments: |
-            build
+            assemble
             --scan
             --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=false
             -Pversions.java.language=${{ matrix.java }}
-            -x nativeCompile
-            -x linkDebugTestNative
-            -x jvmTest
-            -x nativeTest
-            -x irBrowserTest
-            -x irNodeTest
-            -x legacyBrowserTest
-            -x legacyNodeTest
-            -x jsLegacyBrowserTest
-            -x test
 
       ## CI: Build
       - name: "Build reports"

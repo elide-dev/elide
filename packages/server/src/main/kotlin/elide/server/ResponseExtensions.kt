@@ -14,6 +14,7 @@ import kotlinx.css.CssBuilder
 import kotlinx.html.HTML
 import kotlinx.html.html
 import kotlinx.html.stream.appendHTML
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
@@ -275,7 +276,8 @@ public class AssetHandler(
   /** @inheritDoc */
   override suspend fun finalize(): HttpResponse<StreamedAsset> {
     return handler.assets().serveAsync(
-      request
+      request,
+      moduleId.get(),
     ).await()
   }
 }
@@ -337,9 +339,12 @@ internal class CssContent(
   private val builder: CssBuilder.() -> Unit
 ) : ResponseRenderer<StreamedAsset> {
   override fun render(): StreamedAsset {
-    TODO("not yet implemented")
-//    return CssBuilder().apply(builder).toString().toByteArray(
-//      StandardCharsets.UTF_8
-//    )
+    val contentBytes = CssBuilder().apply(builder).toString().toByteArray(
+      StandardCharsets.UTF_8
+    )
+    return NettyStreamedFileCustomizableResponseType(
+      ByteArrayInputStream(contentBytes),
+      AssetType.STYLESHEET.mediaType,
+    )
   }
 }

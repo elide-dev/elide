@@ -2,6 +2,7 @@ package elide.server.assets
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
+import elide.server.AssetModuleId
 import elide.server.cfg.AssetConfig
 import elide.util.Base64
 import io.micronaut.context.annotation.Context
@@ -58,7 +59,6 @@ public class ServerAssetReader @Inject internal constructor(
 
     // if we have a digest for this asset, we should affix it as the `ETag` for the response.
     if (assetConfig.etags) {
-      val identityVariant = entry.getVariant(0)
       headerMap[HttpHeaders.ETAG] = buildETagForAsset(entry)
     }
     return headerMap
@@ -99,6 +99,26 @@ public class ServerAssetReader @Inject internal constructor(
 
     // fallback to serve the non-compressed version of the asset.
     return baselineHeaders(content, identity) to identity
+  }
+
+  /** @inheritDoc */
+  override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+    return if (assetIndex.initialized.get()) {
+      val manifest = assetIndex.activeManifest()
+      val asset = manifest.moduleIndex[moduleId]
+      if (asset != null) {
+        assetIndex.buildConcreteAsset(
+          asset.type,
+          asset.moduleId,
+          manifest.bundle,
+          asset.index,
+        )
+      } else {
+        null
+      }
+    } else {
+      null
+    }
   }
 
   /** @inheritDoc */

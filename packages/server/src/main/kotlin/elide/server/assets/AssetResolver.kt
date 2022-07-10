@@ -1,6 +1,7 @@
 package elide.server.assets
 
 import elide.annotations.API
+import elide.server.AssetModuleId
 import io.micronaut.http.HttpRequest
 
 /**
@@ -22,6 +23,15 @@ import io.micronaut.http.HttpRequest
  * @see ServerAsset for the symbolic asset reference model leveraged by [AssetManager].
  */
 @API public interface AssetResolver {
+  /**
+   * Return the asset module corresponding to the provided [moduleId], if possible, or return `null` to indicate that
+   * the asset could not be located.
+   *
+   * @param moduleId ID for the asset module, assigned by the developer.
+   * @return Resolved server asset, or `null`, indicating that the asset could not be located.
+   */
+  public fun findByModuleId(moduleId: AssetModuleId): ServerAsset?
+
   /**
    * Resolve the provided [path] to a server asset, if possible, or return `null` to indicate that the asset could not
    * be located; the given [path] value can be prefixed with the asset serving prefix (`/_/asset` by default) or not

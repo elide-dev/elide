@@ -42,6 +42,9 @@ elide {
       bundler {
         compression {
           modes(CompressionMode.GZIP)
+          minimumSizeBytes(400)
+          keepAllVariants()
+          forceVariants()
         }
       }
 

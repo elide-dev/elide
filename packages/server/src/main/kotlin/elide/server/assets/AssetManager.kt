@@ -84,10 +84,15 @@ import org.slf4j.Logger
    * `null`, and otherwise, throw an error.
    *
    * @param request HTTP request to interpret into a relative asset path and return a descriptor for.
+   * @param moduleId Resolved asset module ID to serve, if known; if `null`, one will be resolved from the [request].
    * @return Resolved server asset, or `null` if one could not be located at the calculated path provided by [request].
    */
-  public fun resolve(request: HttpRequest<*>): ServerAsset? {
-    return reader.resolve(request)
+  public fun resolve(request: HttpRequest<*>, moduleId: String? = null): ServerAsset? {
+    return if (moduleId != null) {
+      reader.findByModuleId(moduleId)
+    } else {
+      reader.resolve(request)
+    }
   }
 
   /**
@@ -135,12 +140,13 @@ import org.slf4j.Logger
    * question cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`.
    *
    * @param request HTTP request which should be translated into an asset path and served.
+   * @param moduleId Resolved asset module ID to serve, if known; if `null`, one will be resolved from the [request].
    * @return Deferred task which resolves to an HTTP response serving the requested asset.
    */
-  public suspend fun serveAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
+  public suspend fun serveAsync(request: HttpRequest<*>, moduleId: String? = null): Deferred<StreamedAssetResponse> {
     return renderAssetAsync(
       request,
-      resolve(request) ?: return (
+      resolve(request, moduleId) ?: return (
         serveNotFoundAsync(request)
       )
     )

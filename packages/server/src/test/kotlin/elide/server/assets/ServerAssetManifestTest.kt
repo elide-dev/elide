@@ -189,11 +189,9 @@ class ServerAssetManifestTest {
   }
 
   @Test fun testFindManifestDefault() {
-    assertNull(
-      assertDoesNotThrow {
-        ServerAssetManifestProvider().findManifest()
-      }
-    )
+    assertDoesNotThrow {
+      ServerAssetManifestProvider().findManifest()
+    }
   }
 
   @Test fun testFindLoadManifestFound() {
@@ -233,10 +231,8 @@ class ServerAssetManifestTest {
   }
 
   @Test fun testFindLoadManifestDefault() {
-    assertNull(
-      assertDoesNotThrow {
-        ServerAssetManifestProvider().findLoadManifest()
-      }
-    )
+    assertDoesNotThrow {
+      ServerAssetManifestProvider().findLoadManifest()
+    }
   }
 }

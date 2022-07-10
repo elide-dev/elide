@@ -464,6 +464,9 @@ class ServerAssetIndexTest {
       indexer.activeManifest()
     }
     assertDoesNotThrow {
+      assertNull(indexer.resolveByTag("sample-tag", timeoutSeconds = 1L))
+    }
+    assertDoesNotThrow {
       indexer.initialize()
     }
     assertDoesNotThrow {

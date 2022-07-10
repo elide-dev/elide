@@ -292,11 +292,12 @@ internal class ServerAssetIndex @Inject constructor(
    * matching asset.
    *
    * @param tag Tag for the asset to resolve.
+   * @param timeoutSeconds Max time to wait for the asset engine.
    * @return Resolved and interpreted asset, or `null`.
    */
-  internal fun resolveByTag(tag: String): ServerAsset? {
+  internal fun resolveByTag(tag: String, timeoutSeconds: Long = WAIT_TIMEOUT): ServerAsset? {
     if (!initialized.get()) {
-      latch.await(WAIT_TIMEOUT, TimeUnit.SECONDS)
+      latch.await(timeoutSeconds, TimeUnit.SECONDS)
       if (!initialized.get()) {
         return null
       }

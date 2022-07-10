@@ -89,7 +89,7 @@ public class ServerAssetReader : AssetReader {
   override fun resolve(path: String): ServerAsset? {
     val unprefixed = if (path.startsWith(assetConfig.prefix)) {
       // if the asset is prefixed, trim it first
-      path.substring(assetConfig.prefix.length + 1)
+      path.substring(assetConfig.prefix.length)
     } else {
       path
     }
@@ -99,7 +99,11 @@ public class ServerAssetReader : AssetReader {
       unprefixed
     }
     return assetIndex.resolveByTag(
-      unextensioned
+      if (unextensioned.startsWith("/")) {
+        unextensioned.drop(1)
+      } else {
+        unextensioned
+      }
     )
   }
 }

@@ -69,6 +69,9 @@ public class ServerAssetManager @Inject constructor(
         HttpResponse.notFound<StreamedAsset>()
       ).asDeferred()
     }
+    logging.debug(
+      "Serving asset with module ID '${asset.module}'"
+    )
     return withContext(Dispatchers.IO) {
       async {
         // pass off to the reader to read the asset

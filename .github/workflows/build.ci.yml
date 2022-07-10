@@ -33,26 +33,26 @@ jobs:
             gu-binary: gu
             java: 11
             gvm: latest
-         - os: macos-latest
-           experimental: true
-           gu-binary: gu
-           java: 11
-           gvm: latest
-         - os: macos-latest
-           experimental: true
-           gu-binary: gu
-           java: 17
-           gvm: latest
-         - os: windows-latest
-           experimental: true
-           gu-binary: gu.cmd
-           java: 11
-           gvm: latest
-         - os: windows-latest
-           experimental: true
-           gu-binary: gu.cmd
-           java: 17
-           gvm: latest
+          - os: macos-latest
+            experimental: true
+            gu-binary: gu
+            java: 11
+            gvm: latest
+          - os: macos-latest
+            experimental: true
+            gu-binary: gu
+            java: 17
+            gvm: latest
+          - os: windows-latest
+            experimental: true
+            gu-binary: gu.cmd
+            java: 11
+            gvm: latest
+          - os: windows-latest
+            experimental: true
+            gu-binary: gu.cmd
+            java: 17
+            gvm: latest
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}

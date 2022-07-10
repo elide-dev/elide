@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -16,17 +17,27 @@ import tools.elide.data.CompressionMode
 /**
  * Default implementation of an [AssetReader]; used in concert with the default [AssetManager] to fulfill HTTP requests
  * for static assets embedded within the application.
+ *
+ * @param assetConfig Server-side asset configuration.
+ * @Param assetIndex Live index of asset data.
  */
 @Context @Singleton
-public class ServerAssetReader : AssetReader {
-  // Server-side asset configuration.
-  @Inject internal lateinit var assetConfig: AssetConfig
-
-  // Live index of asset data.
-  @Inject internal lateinit var assetIndex: ServerAssetIndex
-
+public class ServerAssetReader @Inject internal constructor(
+  private val assetConfig: AssetConfig,
+  private val assetIndex: ServerAssetIndex,
+) : AssetReader {
   @VisibleForTesting
   internal fun baselineHeaders(asset: ServerAsset, variant: CompressedData): Map<String, String> {
+    val headerMap = HashMap<String, String>()
+
+    // apply content encoding header
+    val contentEncoding = when (variant.compression) {
+      CompressionMode.IDENTITY -> "identity"
+      CompressionMode.GZIP -> "gzip"
+      CompressionMode.BROTLI -> "br"
+      else -> null
+    }
+    if (contentEncoding != null) headerMap[HttpHeaders.CONTENT_ENCODING] = contentEncoding
     return emptyMap()
   }
 
@@ -42,31 +53,20 @@ public class ServerAssetReader : AssetReader {
   }
 
   /** @inheritDoc */
-  override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>?): Deferred<RenderedAsset> {
+  override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
     val module = descriptor.module
-    require(descriptor.index != null) {
-      "Asset index required to serve local asset"
-    }
     val content = assetIndex.readByModuleIndex(
-      descriptor.index
+      descriptor.index!!
     )
-    val (headers, selectedVariant) = if (request != null) {
-      // select the best content variant to use based on the input request, which may specify supported compression
-      // schemes, or may be expressing if-not-modified or if-modified-since conditions.
-      selectBestVariant(
-        descriptor,
-        content,
-        request,
-      )
-    } else {
-      // because we don't have a request, we should always serve the `IDENTITY` variant, which doesn't implement any
-      // compression at all.
-      val identityData = content.getVariant(0)
-      require(identityData.compression == CompressionMode.IDENTITY) {
-        "First variant stanza for an asset should always be `IDENTITY` (module: '$module')"
-      }
-      baselineHeaders(descriptor, identityData) to identityData
-    }
+
+    // select the best content variant to use based on the input request, which may specify supported compression
+    // schemes, or may be expressing if-not-modified or if-modified-since conditions.
+    val (headers, selectedVariant) = selectBestVariant(
+      descriptor,
+      content,
+      request,
+    )
+
     return Futures.immediateFuture(
       RenderedAsset(
         module = module,

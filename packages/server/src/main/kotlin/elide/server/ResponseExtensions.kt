@@ -51,20 +51,15 @@ public interface SuspensionRenderer<R> {
   public suspend fun render(): R
 }
 
-/** */
-public fun interface ResponseConfigurator<Context : ResponseHandler<ResponseBody>, RequestBody, ResponseBody> {
-  /**
-   *
-   */
-  public fun respond(handler: Context.() -> Unit)
-}
-
 /**
- *
+ * Describes a handler object which can respond to a request with a given [ResponseBody] type; these throw-away handlers
+ * are typically spawned by utility functions to create a context where rendering can take place.
  */
 public interface ResponseHandler<ResponseBody> {
   /**
+   * Respond to the request with the provided [response].
    *
+   * @param response Response to provide.
    */
   public suspend fun respond(response: HttpResponse<ResponseBody>)
 }
@@ -81,7 +76,9 @@ public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<Respon
   }
 
   /**
+   * Finalize the request being handled by this [ResponseHandler], by producing a terminal [HttpResponse].
    *
+   * @return Finalized HTTP response.
    */
   internal abstract suspend fun finalize(): HttpResponse<ResponseBody>
 }
@@ -168,7 +165,12 @@ public suspend fun PageController.asset(
 }
 
 /**
+ * Serve a static script asset embedded within the application, based on the provided [moduleId], and customizing the
+ * response based on the provided [request].
  *
+ * @param request Request to consider when creating the asset response.
+ * @param moduleId Module ID for the asset which we wish to serve.
+ * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.script(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
   return asset(
@@ -179,7 +181,12 @@ public suspend fun PageController.script(request: HttpRequest<*>, moduleId: Asse
 }
 
 /**
+ * Serve a static script asset embedded within the application, based on the provided [block], which should customize
+ * the serving of the script and declare a module ID.
  *
+ * @param request Request to consider when creating the asset response.
+ * @param block Block which, when executed, will configure the script for a response.
+ * @return Streamed asset response generated from the configuration provided by [block].
  */
 public suspend fun PageController.script(
   request: HttpRequest<*>,
@@ -193,7 +200,12 @@ public suspend fun PageController.script(
 }
 
 /**
+ * Serve a static stylesheet asset embedded within the application, based on the provided [moduleId], and customizing
+ * the response based on the provided [request].
  *
+ * @param request Request to consider when creating the asset response.
+ * @param moduleId Module ID for the asset which we wish to serve.
+ * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: AssetModuleId): StreamedAssetResponse {
   return asset(
@@ -204,7 +216,12 @@ public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: 
 }
 
 /**
+ * Serve a static stylesheet asset embedded within the application, based on the provided [block], which should
+ * customize the serving of the document and declare a module ID.
  *
+ * @param request Request to consider when creating the asset response.
+ * @param block Block which, when executed, will configure the stylesheet for a response.
+ * @return Streamed asset response generated from the configuration provided by [block].
  */
 public suspend fun PageController.stylesheet(
   request: HttpRequest<*>,
@@ -218,7 +235,13 @@ public suspend fun PageController.stylesheet(
 }
 
 /**
+ * Generate a [StreamedAssetResponse] which serves an asset embedded within the application, and specified by the
+ * provided [block]; [request] will be considered when producing the response.
  *
+ * @param request HTTP request to consider when producing the desired asset response.
+ * @param type Type of asset expected to be returned with this response.
+ * @param block Block to customize the serving of this asset and declare a module ID.
+ * @return Structure which streams the resolved asset content as the response.
  */
 public suspend fun PageController.asset(
   request: HttpRequest<*>,

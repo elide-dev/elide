@@ -56,5 +56,5 @@ import java.io.FileNotFoundException
    * @return Deferred task which resolves to a rendered asset which may be consumed, corresponding to [descriptor].
    */
   @Throws(FileNotFoundException::class)
-  public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>? = null): Deferred<RenderedAsset>
+  public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset>
 }

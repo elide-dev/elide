@@ -96,6 +96,14 @@ jobs:
             -PbuildSamples=false
             -Pversions.java.language=${{ matrix.java }}
             -x nativeCompile
+            -x linkDebugTestNative
+            -x jvmTest
+            -x nativeTest
+            -x irBrowserTest
+            -x irNodeTest
+            -x legacyBrowserTest
+            -x legacyNodeTest
+            -x jsLegacyBrowserTest
             -x test
 
       ## CI: Build

@@ -114,11 +114,9 @@ $dokka.location:elide.server.assets/AssetController/assetGet/#io.micronaut.http.
 $dokka.location:elide.server.assets/AssetManager///PointingToDeclaration/server/server/elide.server.assets/-asset-manager/index.md
 $dokka.location:elide.server.assets/AssetManager/logging/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/logging.md
 $dokka.location:elide.server.assets/AssetManager/reader/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/reader.md
-$dokka.location:elide.server.assets/AssetManager/renderAsset/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/render-asset.md
 $dokka.location:elide.server.assets/AssetManager/renderAssetAsync/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/render-asset-async.md
 $dokka.location:elide.server.assets/AssetManager/resolve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/resolve.md
 $dokka.location:elide.server.assets/AssetManager/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/resolve.md
-$dokka.location:elide.server.assets/AssetManager/serve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve.md
 $dokka.location:elide.server.assets/AssetManager/serveAsync/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve-async.md
 $dokka.location:elide.server.assets/AssetManager/serveNotFoundAsync/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve-not-found-async.md
 $dokka.location:elide.server.assets/AssetManifestLoader.Companion///PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/-companion/index.md
@@ -128,7 +126,7 @@ $dokka.location:elide.server.assets/AssetManifestLoader/findLoadManifest/#kotlin
 $dokka.location:elide.server.assets/AssetManifestLoader/findManifest/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-manifest.md
 $dokka.location:elide.server.assets/AssetManifestLoader/findManifest/#kotlin.collections.List[kotlin.Pair[tools.elide.assets.ManifestFormat,kotlin.String]]/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-manifest.md
 $dokka.location:elide.server.assets/AssetReader///PointingToDeclaration/server/server/elide.server.assets/-asset-reader/index.md
-$dokka.location:elide.server.assets/AssetReader/readAsync/#elide.server.assets.ServerAsset#io.micronaut.http.HttpRequest[*]?/PointingToDeclaration/server/server/elide.server.assets/-asset-reader/read-async.md
+$dokka.location:elide.server.assets/AssetReader/readAsync/#elide.server.assets.ServerAsset#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-reader/read-async.md
 $dokka.location:elide.server.assets/AssetResolver///PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/index.md
 $dokka.location:elide.server.assets/AssetResolver/resolve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/resolve.md
 $dokka.location:elide.server.assets/AssetResolver/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/resolve.md
@@ -157,13 +155,12 @@ $dokka.location:elide.server.assets/ServerAsset///PointingToDeclaration/server/
 $dokka.location:elide.server.assets/ServerAssetManager.Companion///PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-companion/index.md
 $dokka.location:elide.server.assets/ServerAssetManager.Companion/waitTimeout/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-companion/wait-timeout.md
 $dokka.location:elide.server.assets/ServerAssetManager///PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/index.md
-$dokka.location:elide.server.assets/ServerAssetManager/ServerAssetManager/#elide.server.assets.AssetReader#elide.server.cfg.ServerConfig/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-server-asset-manager.md
+$dokka.location:elide.server.assets/ServerAssetManager/ServerAssetManager/#elide.server.assets.AssetReader/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-server-asset-manager.md
 $dokka.location:elide.server.assets/ServerAssetManager/logging/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/logging.md
 $dokka.location:elide.server.assets/ServerAssetManager/reader/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/reader.md
 $dokka.location:elide.server.assets/ServerAssetManager/renderAssetAsync/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/render-asset-async.md
 $dokka.location:elide.server.assets/ServerAssetReader///PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/index.md
-$dokka.location:elide.server.assets/ServerAssetReader/ServerAssetReader/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/-server-asset-reader.md
-$dokka.location:elide.server.assets/ServerAssetReader/readAsync/#elide.server.assets.ServerAsset#io.micronaut.http.HttpRequest[*]?/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/read-async.md
+$dokka.location:elide.server.assets/ServerAssetReader/readAsync/#elide.server.assets.ServerAsset#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/read-async.md
 $dokka.location:elide.server.assets/ServerAssetReader/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/resolve.md
 $dokka.location:elide.server.cfg////PointingToDeclaration/server/server/elide.server.cfg/index.md
 $dokka.location:elide.server.cfg/AssetConfig///PointingToDeclaration/server/server/elide.server.cfg/-asset-config/index.md
@@ -410,8 +407,6 @@ $dokka.location:elide.server/AssetHandler/module/#kotlin.String#elide.server.ass
 $dokka.location:elide.server/BaseResponseHandler///PointingToDeclaration/server/server/elide.server/-base-response-handler/index.md
 $dokka.location:elide.server/BaseResponseHandler/BaseResponseHandler/#/PointingToDeclaration/server/server/elide.server/-base-response-handler/-base-response-handler.md
 $dokka.location:elide.server/BaseResponseHandler/respond/#io.micronaut.http.HttpResponse[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server/-base-response-handler/respond.md
-$dokka.location:elide.server/ResponseConfigurator///PointingToDeclaration/server/server/elide.server/-response-configurator/index.md
-$dokka.location:elide.server/ResponseConfigurator/respond/#kotlin.Function1[TypeParam(bounds=[elide.server.ResponseHandler[TypeParam(bounds=[kotlin.Any?])]]),kotlin.Unit]/PointingToDeclaration/server/server/elide.server/-response-configurator/respond.md
 $dokka.location:elide.server/ResponseHandler///PointingToDeclaration/server/server/elide.server/-response-handler/index.md
 $dokka.location:elide.server/ResponseHandler/respond/#io.micronaut.http.HttpResponse[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server/-response-handler/respond.md
 $dokka.location:elide.server/ResponseRenderer///PointingToDeclaration/server/server/elide.server/-response-renderer/index.md

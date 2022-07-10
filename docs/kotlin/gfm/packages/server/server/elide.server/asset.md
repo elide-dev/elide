@@ -43,3 +43,19 @@ jvm
 
 [jvm]\
 suspend fun [PageController](../elide.server.controller/-page-controller/index.md).[asset](asset.md)(request: HttpRequest&lt;*&gt;, type: [AssetType](../elide.server.assets/-asset-type/index.md)? = null, block: suspend [AssetHandler](-asset-handler/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StreamedAssetResponse](index.md#-491452832%2FClasslikes%2F-1343588467)
+
+Generate a [StreamedAssetResponse](index.md#-491452832%2FClasslikes%2F-1343588467) which serves an asset embedded within the application, and specified by the provided [block](asset.md); [request](asset.md) will be considered when producing the response.
+
+#### Return
+
+Structure which streams the resolved asset content as the response.
+
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| request | HTTP request to consider when producing the desired asset response. |
+| type | Type of asset expected to be returned with this response. |
+| block | Block to customize the serving of this asset and declare a module ID. |

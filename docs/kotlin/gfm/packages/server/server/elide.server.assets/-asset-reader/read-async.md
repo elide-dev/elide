@@ -3,7 +3,7 @@
 # readAsync
 
 [jvm]\
-abstract suspend fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md), request: HttpRequest&lt;*&gt;? = null): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt;
+abstract suspend fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md), request: HttpRequest&lt;*&gt;): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt;
 
 Given a resolved asset [descriptor](read-async.md) which should be known to exist, read the associated asset content, and return it as an async Deferred task which can be awaited, and then consumed.
 

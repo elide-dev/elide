@@ -5,7 +5,7 @@
 [jvm]\
 @Context
 
-class [ServerAssetManager](index.md)@Injectconstructor(val reader: [AssetReader](../-asset-reader/index.md), config: [ServerConfig](../../elide.server.cfg/-server-config/index.md)) : [AssetManager](../-asset-manager/index.md)
+class [ServerAssetManager](index.md)@Injectconstructor(val reader: [AssetReader](../-asset-reader/index.md)) : [AssetManager](../-asset-manager/index.md)
 
 Built-in asset manager implementation for use with Elide applications.
 
@@ -23,7 +23,7 @@ jvm
 
 | | |
 |---|---|
-| [ServerAssetManager](-server-asset-manager.md) | [jvm]<br>@Inject<br>fun [ServerAssetManager](-server-asset-manager.md)(reader: [AssetReader](../-asset-reader/index.md), config: [ServerConfig](../../elide.server.cfg/-server-config/index.md)) |
+| [ServerAssetManager](-server-asset-manager.md) | [jvm]<br>@Inject<br>fun [ServerAssetManager](-server-asset-manager.md)(reader: [AssetReader](../-asset-reader/index.md)) |
 
 ## Types
 
@@ -35,10 +35,8 @@ jvm
 
 | Name | Summary |
 |---|---|
-| [renderAsset](../-asset-manager/render-asset.md) | [jvm]<br>open suspend fun [renderAsset](../-asset-manager/render-asset.md)(request: HttpRequest&lt;*&gt;, asset: [ServerAsset](../-server-asset/index.md)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Suspending but synchronous variant of [renderAssetAsync](../-asset-manager/render-asset-async.md), which is responsible for rendering a resolved asset to an HTTP response; this variant returns a response value directly. |
 | [renderAssetAsync](render-asset-async.md) | [jvm]<br>open suspend override fun [renderAssetAsync](render-asset-async.md)(request: HttpRequest&lt;*&gt;, asset: [ServerAsset](../-server-asset/index.md)): Deferred&lt;[StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)&gt; |
 | [resolve](../-asset-manager/resolve.md) | [jvm]<br>open fun [resolve](../-asset-manager/resolve.md)(request: HttpRequest&lt;*&gt;): [ServerAsset](../-server-asset/index.md)?<br>Resolve the asset requested by the provided HTTP [request](../-asset-manager/resolve.md); if the corresponding file cannot be found, return `null`, and otherwise, throw an error.<br>[jvm]<br>open fun [resolve](../-asset-manager/resolve.md)(path: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ServerAsset](../-server-asset/index.md)?<br>Resolve the provided asset [path](../-asset-manager/resolve.md) to a [ServerAsset](../-server-asset/index.md) descriptor; if the file cannot be found, return `null`, and otherwise, throw an error. |
-| [serve](../-asset-manager/serve.md) | [jvm]<br>open suspend fun [serve](../-asset-manager/serve.md)(request: HttpRequest&lt;*&gt;): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Produce an HTTP response which serves the asset described by the provided [request](../-asset-manager/serve.md); if the asset in question cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`. |
 | [serveAsync](../-asset-manager/serve-async.md) | [jvm]<br>open suspend fun [serveAsync](../-asset-manager/serve-async.md)(request: HttpRequest&lt;*&gt;): Deferred&lt;[StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)&gt;<br>Asynchronously produce an HTTP response which serves the asset described by the provided [request](../-asset-manager/serve-async.md); if the asset in question cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`. |
 | [serveNotFoundAsync](../-asset-manager/serve-not-found-async.md) | [jvm]<br>open fun [serveNotFoundAsync](../-asset-manager/serve-not-found-async.md)(request: HttpRequest&lt;*&gt;): Deferred&lt;[StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)&gt;<br>Serve a response of status HTTP 404 (Not Found), in response to a request for an asset which could not be located by the built-in asset system. |
 

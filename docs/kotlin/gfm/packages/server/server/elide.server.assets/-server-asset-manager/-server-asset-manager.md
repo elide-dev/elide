@@ -6,7 +6,7 @@
 
 @Inject
 
-fun [ServerAssetManager](-server-asset-manager.md)(reader: [AssetReader](../-asset-reader/index.md), config: [ServerConfig](../../elide.server.cfg/-server-config/index.md))
+fun [ServerAssetManager](-server-asset-manager.md)(reader: [AssetReader](../-asset-reader/index.md))
 
 ## Parameters
 

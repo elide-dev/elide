@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -16,18 +17,28 @@ import tools.elide.data.CompressionMode
 /**
  * Default implementation of an [AssetReader]; used in concert with the default [AssetManager] to fulfill HTTP requests
  * for static assets embedded within the application.
+ *
+ * @param assetConfig Server-side asset configuration.
+ * @Param assetIndex Live index of asset data.
  */
-<span class="fc" id="L20">@Context @Singleton</span>
-<span class="fc" id="L21">public class ServerAssetReader : AssetReader {</span>
-  // Server-side asset configuration.
-<span class="pc bpc" id="L23" title="1 of 2 branches missed.">  @Inject internal lateinit var assetConfig: AssetConfig</span>
-
-  // Live index of asset data.
-<span class="pc bpc" id="L26" title="1 of 2 branches missed.">  @Inject internal lateinit var assetIndex: ServerAssetIndex</span>
-
+<span class="fc" id="L24">@Context @Singleton</span>
+<span class="fc" id="L25">public class ServerAssetReader @Inject internal constructor(</span>
+<span class="fc" id="L26">  private val assetConfig: AssetConfig,</span>
+<span class="fc" id="L27">  private val assetIndex: ServerAssetIndex,</span>
+) : AssetReader {
   @VisibleForTesting
   internal fun baselineHeaders(asset: ServerAsset, variant: CompressedData): Map&lt;String, String&gt; {
-<span class="fc" id="L30">    return emptyMap()</span>
+<span class="fc" id="L31">    val headerMap = HashMap&lt;String, String&gt;()</span>
+
+    // apply content encoding header
+<span class="pc bpc" id="L34" title="4 of 6 branches missed.">    val contentEncoding = when (variant.compression) {</span>
+<span class="fc" id="L35">      CompressionMode.IDENTITY -&gt; &quot;identity&quot;</span>
+<span class="nc" id="L36">      CompressionMode.GZIP -&gt; &quot;gzip&quot;</span>
+<span class="nc" id="L37">      CompressionMode.BROTLI -&gt; &quot;br&quot;</span>
+<span class="nc" id="L38">      else -&gt; null</span>
+    }
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">    if (contentEncoding != null) headerMap[HttpHeaders.CONTENT_ENCODING] = contentEncoding</span>
+<span class="fc" id="L41">    return headerMap</span>
   }
 
   @VisibleForTesting
@@ -37,36 +48,25 @@ import tools.elide.data.CompressionMode
     request: HttpRequest&lt;*&gt;
   ): Pair&lt;Map&lt;String, String&gt;, CompressedData&gt; {
     // @TODO(sgammon) select variant based on request
-<span class="fc" id="L40">    val variant = content.getVariant(0)</span>
-<span class="fc" id="L41">    return baselineHeaders(asset, variant) to variant</span>
+<span class="fc" id="L51">    val variant = content.getVariant(0)</span>
+<span class="fc" id="L52">    return baselineHeaders(asset, variant) to variant</span>
   }
 
   /** @inheritDoc */
-<span class="fc" id="L45">  override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest&lt;*&gt;?): Deferred&lt;RenderedAsset&gt; {</span>
-<span class="fc" id="L46">    val module = descriptor.module</span>
-<span class="pc bpc" id="L47" title="2 of 4 branches missed.">    require(descriptor.index != null) {</span>
-<span class="nc" id="L48">      &quot;Asset index required to serve local asset&quot;</span>
-    }
-<span class="fc" id="L50">    val content = assetIndex.readByModuleIndex(</span>
-<span class="fc" id="L51">      descriptor.index</span>
+<span class="fc" id="L56">  override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest&lt;*&gt;): Deferred&lt;RenderedAsset&gt; {</span>
+<span class="fc" id="L57">    val module = descriptor.module</span>
+<span class="fc" id="L58">    val content = assetIndex.readByModuleIndex(</span>
+<span class="fc" id="L59">      descriptor.index!!</span>
     )
-<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    val (headers, selectedVariant) = if (request != null) {</span>
-      // select the best content variant to use based on the input request, which may specify supported compression
-      // schemes, or may be expressing if-not-modified or if-modified-since conditions.
-<span class="fc" id="L56">      selectBestVariant(</span>
-<span class="fc" id="L57">        descriptor,</span>
-<span class="fc" id="L58">        content,</span>
-<span class="fc" id="L59">        request,</span>
-      )
-    } else {
-      // because we don't have a request, we should always serve the `IDENTITY` variant, which doesn't implement any
-      // compression at all.
-<span class="nc" id="L64">      val identityData = content.getVariant(0)</span>
-<span class="nc bnc" id="L65" title="All 4 branches missed.">      require(identityData.compression == CompressionMode.IDENTITY) {</span>
-<span class="nc" id="L66">        &quot;First variant stanza for an asset should always be `IDENTITY` (module: '$module')&quot;</span>
-      }
-<span class="nc" id="L68">      baselineHeaders(descriptor, identityData) to identityData</span>
-    }
+
+    // select the best content variant to use based on the input request, which may specify supported compression
+    // schemes, or may be expressing if-not-modified or if-modified-since conditions.
+<span class="fc" id="L64">    val (headers, selectedVariant) = selectBestVariant(</span>
+<span class="fc" id="L65">      descriptor,</span>
+<span class="fc" id="L66">      content,</span>
+<span class="fc" id="L67">      request,</span>
+    )
+
 <span class="fc" id="L70">    return Futures.immediateFuture(</span>
 <span class="fc" id="L71">      RenderedAsset(</span>
 <span class="fc" id="L72">        module = module,</span>

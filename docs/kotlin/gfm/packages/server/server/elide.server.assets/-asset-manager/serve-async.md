@@ -11,14 +11,6 @@ Asynchronously produce an HTTP response which serves the asset described by the 
 
 Deferred task which resolves to an HTTP response serving the requested asset.
 
-## See also
-
-jvm
-
-| | |
-|---|---|
-| [elide.server.assets.AssetManager](serve.md) | for a synchronous variant of this method. |
-
 ## Parameters
 
 jvm

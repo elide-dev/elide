@@ -51,37 +51,34 @@ public interface SuspensionRenderer&lt;R&gt; {
   public suspend fun render(): R
 }
 
-/** */
-public fun interface ResponseConfigurator&lt;Context : ResponseHandler&lt;ResponseBody&gt;, RequestBody, ResponseBody&gt; {
-  /**
-   *
-   */
-  public fun respond(handler: Context.() -&gt; Unit)
-}
-
 /**
- *
+ * Describes a handler object which can respond to a request with a given [ResponseBody] type; these throw-away handlers
+ * are typically spawned by utility functions to create a context where rendering can take place.
  */
 public interface ResponseHandler&lt;ResponseBody&gt; {
   /**
+   * Respond to the request with the provided [response].
    *
+   * @param response Response to provide.
    */
   public suspend fun respond(response: HttpResponse&lt;ResponseBody&gt;)
 }
 
 // Shared logic for response handler contexts internal to Elide.
-<span class="nc" id="L73">public abstract class BaseResponseHandler&lt;ResponseBody&gt; : ResponseHandler&lt;ResponseBody&gt; {</span>
-<span class="nc" id="L74">  private val acquired: AtomicBoolean = AtomicBoolean(false)</span>
-<span class="nc" id="L75">  private val response: AtomicReference&lt;HttpResponse&lt;ResponseBody&gt;?&gt; = AtomicReference(null)</span>
+<span class="nc" id="L68">public abstract class BaseResponseHandler&lt;ResponseBody&gt; : ResponseHandler&lt;ResponseBody&gt; {</span>
+<span class="nc" id="L69">  private val acquired: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="nc" id="L70">  private val response: AtomicReference&lt;HttpResponse&lt;ResponseBody&gt;?&gt; = AtomicReference(null)</span>
 
   /** @inheritDoc */
   override suspend fun respond(response: HttpResponse&lt;ResponseBody&gt;) {
-<span class="nc" id="L79">    this.acquired.compareAndSet(false, true)</span>
-<span class="nc" id="L80">    this.response.set(response)</span>
-<span class="nc" id="L81">  }</span>
+<span class="nc" id="L74">    this.acquired.compareAndSet(false, true)</span>
+<span class="nc" id="L75">    this.response.set(response)</span>
+<span class="nc" id="L76">  }</span>
 
   /**
+   * Finalize the request being handled by this [ResponseHandler], by producing a terminal [HttpResponse].
    *
+   * @return Finalized HTTP response.
    */
   internal abstract suspend fun finalize(): HttpResponse&lt;ResponseBody&gt;
 }
@@ -95,15 +92,15 @@ public interface ResponseHandler&lt;ResponseBody&gt; {
  *    located at the specified path.
  */
 public fun staticFile(file: String, contentType: String): HttpResponse&lt;*&gt; {
-<span class="nc" id="L98">  val target = HtmlContent::class.java.getResourceAsStream(&quot;/static/$file&quot;)</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">  return if (target != null) {</span>
-<span class="nc" id="L100">    HttpResponse.ok(</span>
-<span class="nc" id="L101">      target</span>
-<span class="nc" id="L102">    ).contentType(</span>
-<span class="nc" id="L103">      contentType</span>
+<span class="nc" id="L95">  val target = HtmlContent::class.java.getResourceAsStream(&quot;/static/$file&quot;)</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">  return if (target != null) {</span>
+<span class="nc" id="L97">    HttpResponse.ok(</span>
+<span class="nc" id="L98">      target</span>
+<span class="nc" id="L99">    ).contentType(</span>
+<span class="nc" id="L100">      contentType</span>
     )
-<span class="nc" id="L105">  } else {</span>
-<span class="nc" id="L106">    HttpResponse.notFound&lt;Any&gt;()</span>
+<span class="nc" id="L102">  } else {</span>
+<span class="nc" id="L103">    HttpResponse.notFound&lt;Any&gt;()</span>
   }
 }
 
@@ -117,19 +114,19 @@ public fun staticFile(file: String, contentType: String): HttpResponse&lt;*&gt; 
  *    located at the specified path.
  */
 public fun asset(path: String, type: String, contentType: MediaType?): HttpResponse&lt;*&gt; {
-<span class="nc bnc" id="L120" title="All 6 branches missed.">  return if (path.isBlank() || type.isBlank() || contentType == null) {</span>
-<span class="nc" id="L121">    HttpResponse.notFound&lt;Any&gt;()</span>
-<span class="nc" id="L122">  } else {</span>
-<span class="nc" id="L123">    val file = HtmlContent::class.java.getResourceAsStream(&quot;/assets/$type/$path&quot;)</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">    if (file == null) {</span>
-<span class="nc" id="L125">      HttpResponse.notFound&lt;Any&gt;()</span>
+<span class="nc bnc" id="L117" title="All 6 branches missed.">  return if (path.isBlank() || type.isBlank() || contentType == null) {</span>
+<span class="nc" id="L118">    HttpResponse.notFound&lt;Any&gt;()</span>
+<span class="nc" id="L119">  } else {</span>
+<span class="nc" id="L120">    val file = HtmlContent::class.java.getResourceAsStream(&quot;/assets/$type/$path&quot;)</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    if (file == null) {</span>
+<span class="nc" id="L122">      HttpResponse.notFound&lt;Any&gt;()</span>
     } else {
-<span class="nc" id="L127">      HttpResponse.ok(</span>
-<span class="nc" id="L128">        file</span>
-<span class="nc" id="L129">      ).characterEncoding(</span>
-<span class="nc" id="L130">        StandardCharsets.UTF_8</span>
-<span class="nc" id="L131">      ).contentType(</span>
-<span class="nc" id="L132">        contentType</span>
+<span class="nc" id="L124">      HttpResponse.ok(</span>
+<span class="nc" id="L125">        file</span>
+<span class="nc" id="L126">      ).characterEncoding(</span>
+<span class="nc" id="L127">        StandardCharsets.UTF_8</span>
+<span class="nc" id="L128">      ).contentType(</span>
+<span class="nc" id="L129">        contentType</span>
       )
     }
   }
@@ -157,105 +154,131 @@ public typealias AssetTag = String
  * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
  *    located at the specified path.
  */
-<span class="nc" id="L160">public suspend fun PageController.asset(</span>
+<span class="nc" id="L157">public suspend fun PageController.asset(</span>
   request: HttpRequest&lt;*&gt;,
   moduleId: AssetModuleId,
-<span class="nc" id="L163">  type: AssetType? = null</span>
+<span class="nc" id="L160">  type: AssetType? = null</span>
 ): StreamedAssetResponse {
-<span class="nc" id="L165">  val handler = AssetHandler(type, this, request)</span>
-<span class="nc" id="L166">  handler.module(moduleId)</span>
-<span class="nc" id="L167">  return handler.finalize()</span>
+<span class="nc" id="L162">  val handler = AssetHandler(type, this, request)</span>
+<span class="nc" id="L163">  handler.module(moduleId)</span>
+<span class="nc" id="L164">  return handler.finalize()</span>
 }
 
 /**
+ * Serve a static script asset embedded within the application, based on the provided [moduleId], and customizing the
+ * response based on the provided [request].
  *
+ * @param request Request to consider when creating the asset response.
+ * @param moduleId Module ID for the asset which we wish to serve.
+ * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.script(request: HttpRequest&lt;*&gt;, moduleId: AssetModuleId): StreamedAssetResponse {
-<span class="nc" id="L174">  return asset(</span>
-<span class="nc" id="L175">    request,</span>
-<span class="nc" id="L176">    moduleId,</span>
-<span class="nc" id="L177">    AssetType.SCRIPT,</span>
+<span class="nc" id="L176">  return asset(</span>
+<span class="nc" id="L177">    request,</span>
+<span class="nc" id="L178">    moduleId,</span>
+<span class="nc" id="L179">    AssetType.SCRIPT,</span>
   )
 }
 
 /**
+ * Serve a static script asset embedded within the application, based on the provided [block], which should customize
+ * the serving of the script and declare a module ID.
  *
+ * @param request Request to consider when creating the asset response.
+ * @param block Block which, when executed, will configure the script for a response.
+ * @return Streamed asset response generated from the configuration provided by [block].
  */
 public suspend fun PageController.script(
   request: HttpRequest&lt;*&gt;,
   block: AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="nc" id="L188">  return asset(</span>
-<span class="nc" id="L189">    request,</span>
-<span class="nc" id="L190">    AssetType.SCRIPT,</span>
-<span class="nc" id="L191">    block,</span>
+<span class="nc" id="L195">  return asset(</span>
+<span class="nc" id="L196">    request,</span>
+<span class="nc" id="L197">    AssetType.SCRIPT,</span>
+<span class="nc" id="L198">    block,</span>
   )
 }
 
 /**
+ * Serve a static stylesheet asset embedded within the application, based on the provided [moduleId], and customizing
+ * the response based on the provided [request].
  *
+ * @param request Request to consider when creating the asset response.
+ * @param moduleId Module ID for the asset which we wish to serve.
+ * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.stylesheet(request: HttpRequest&lt;*&gt;, moduleId: AssetModuleId): StreamedAssetResponse {
-<span class="nc" id="L199">  return asset(</span>
-<span class="nc" id="L200">    request,</span>
-<span class="nc" id="L201">    moduleId,</span>
-<span class="nc" id="L202">    AssetType.STYLESHEET,</span>
+<span class="nc" id="L211">  return asset(</span>
+<span class="nc" id="L212">    request,</span>
+<span class="nc" id="L213">    moduleId,</span>
+<span class="nc" id="L214">    AssetType.STYLESHEET,</span>
   )
 }
 
 /**
+ * Serve a static stylesheet asset embedded within the application, based on the provided [block], which should
+ * customize the serving of the document and declare a module ID.
  *
+ * @param request Request to consider when creating the asset response.
+ * @param block Block which, when executed, will configure the stylesheet for a response.
+ * @return Streamed asset response generated from the configuration provided by [block].
  */
 public suspend fun PageController.stylesheet(
   request: HttpRequest&lt;*&gt;,
   block: AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="nc" id="L213">  return asset(</span>
-<span class="nc" id="L214">    request,</span>
-<span class="nc" id="L215">    AssetType.STYLESHEET,</span>
-<span class="nc" id="L216">    block,</span>
+<span class="nc" id="L230">  return asset(</span>
+<span class="nc" id="L231">    request,</span>
+<span class="nc" id="L232">    AssetType.STYLESHEET,</span>
+<span class="nc" id="L233">    block,</span>
   )
 }
 
 /**
+ * Generate a [StreamedAssetResponse] which serves an asset embedded within the application, and specified by the
+ * provided [block]; [request] will be considered when producing the response.
  *
+ * @param request HTTP request to consider when producing the desired asset response.
+ * @param type Type of asset expected to be returned with this response.
+ * @param block Block to customize the serving of this asset and declare a module ID.
+ * @return Structure which streams the resolved asset content as the response.
  */
-<span class="nc" id="L223">public suspend fun PageController.asset(</span>
+<span class="nc" id="L246">public suspend fun PageController.asset(</span>
   request: HttpRequest&lt;*&gt;,
-<span class="nc" id="L225">  type: AssetType? = null,</span>
+<span class="nc" id="L248">  type: AssetType? = null,</span>
   block: suspend AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="nc" id="L228">  val handler = AssetHandler(type, this, request)</span>
-<span class="nc" id="L229">  block.invoke(handler)</span>
-<span class="nc" id="L230">  return handler.finalize()</span>
+<span class="nc" id="L251">  val handler = AssetHandler(type, this, request)</span>
+<span class="nc" id="L252">  block.invoke(handler)</span>
+<span class="nc" id="L253">  return handler.finalize()</span>
 }
 
 // Handler context for an asset serving cycle.
-<span class="nc" id="L234">public class AssetHandler(</span>
-<span class="nc" id="L235">  initialExpectedType: AssetType? = null,</span>
-<span class="nc" id="L236">  private val handler: ElideController,</span>
-<span class="nc" id="L237">  private val request: HttpRequest&lt;*&gt;,</span>
-<span class="nc" id="L238">  private val moduleId: AtomicReference&lt;AssetModuleId?&gt; = AtomicReference(null),</span>
-<span class="nc" id="L239">  private val expectedType: AtomicReference&lt;AssetType?&gt; = AtomicReference(initialExpectedType),</span>
-<span class="nc" id="L240">) : BaseResponseHandler&lt;StreamedAsset&gt;() {</span>
+<span class="nc" id="L257">public class AssetHandler(</span>
+<span class="nc" id="L258">  initialExpectedType: AssetType? = null,</span>
+<span class="nc" id="L259">  private val handler: ElideController,</span>
+<span class="nc" id="L260">  private val request: HttpRequest&lt;*&gt;,</span>
+<span class="nc" id="L261">  private val moduleId: AtomicReference&lt;AssetModuleId?&gt; = AtomicReference(null),</span>
+<span class="nc" id="L262">  private val expectedType: AtomicReference&lt;AssetType?&gt; = AtomicReference(initialExpectedType),</span>
+<span class="nc" id="L263">) : BaseResponseHandler&lt;StreamedAsset&gt;() {</span>
   /** Bind an asset handler to an asset module ID. */
-<span class="nc" id="L242">  public fun module(id: AssetModuleId, type: AssetType? = null) {</span>
-<span class="nc" id="L243">    moduleId.set(id)</span>
-<span class="nc bnc" id="L244" title="All 2 branches missed.">    if (type != null) expectedType.set(type)</span>
-<span class="nc" id="L245">  }</span>
+<span class="nc" id="L265">  public fun module(id: AssetModuleId, type: AssetType? = null) {</span>
+<span class="nc" id="L266">    moduleId.set(id)</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">    if (type != null) expectedType.set(type)</span>
+<span class="nc" id="L268">  }</span>
 
   /** Declare the expected asset type for this handler. Optional. */
   public fun assetType(type: AssetType) {
-<span class="nc" id="L249">    expectedType.set(type)</span>
-<span class="nc" id="L250">  }</span>
+<span class="nc" id="L272">    expectedType.set(type)</span>
+<span class="nc" id="L273">  }</span>
 
   /** @inheritDoc */
-<span class="nc" id="L253">  override suspend fun finalize(): HttpResponse&lt;StreamedAsset&gt; {</span>
-<span class="nc" id="L254">    return handler.assets().serveAsync(</span>
-<span class="nc" id="L255">      request</span>
-<span class="nc" id="L256">    ).await()</span>
+<span class="nc" id="L276">  override suspend fun finalize(): HttpResponse&lt;StreamedAsset&gt; {</span>
+<span class="nc" id="L277">    return handler.assets().serveAsync(</span>
+<span class="nc" id="L278">      request</span>
+<span class="nc" id="L279">    ).await()</span>
   }
-<span class="nc" id="L258">}</span>
+<span class="nc" id="L281">}</span>
 
 /**
  * Responds to a client with an HTML response, using specified [block] to build an HTML page via Kotlin's HTML DSL.
@@ -264,34 +287,34 @@ public suspend fun PageController.stylesheet(
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
 public suspend fun html(block: suspend HTML.() -&gt; Unit): RawResponse {
-<span class="nc" id="L267">  return HttpResponse.ok(</span>
-<span class="nc" id="L268">    HtmlContent(builder = block).render()</span>
-<span class="nc" id="L269">  ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
-<span class="nc" id="L270">    &quot;text/html; charset=utf-8&quot;</span>
+<span class="nc" id="L290">  return HttpResponse.ok(</span>
+<span class="nc" id="L291">    HtmlContent(builder = block).render()</span>
+<span class="nc" id="L292">  ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
+<span class="nc" id="L293">    &quot;text/html; charset=utf-8&quot;</span>
   )
 }
 
 // HTML content rendering and container utility.
-<span class="nc" id="L275">internal class HtmlContent(</span>
-<span class="nc" id="L276">  private val prettyhtml: Boolean = false,</span>
-<span class="nc" id="L277">  private val builder: suspend HTML.() -&gt; Unit</span>
+<span class="nc" id="L298">internal class HtmlContent(</span>
+<span class="nc" id="L299">  private val prettyhtml: Boolean = false,</span>
+<span class="nc" id="L300">  private val builder: suspend HTML.() -&gt; Unit</span>
 ) : ResponseRenderer&lt;ByteArrayOutputStream&gt; {
   override fun render(): ByteArrayOutputStream {
-<span class="nc" id="L280">    val baos = ByteArrayOutputStream()</span>
-<span class="nc bnc" id="L281" title="All 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
-<span class="nc" id="L282">      it.appendHTML(</span>
-<span class="nc" id="L283">        prettyPrint = prettyhtml,</span>
-<span class="nc" id="L284">      ).html(</span>
+<span class="nc" id="L303">    val baos = ByteArrayOutputStream()</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
+<span class="nc" id="L305">      it.appendHTML(</span>
+<span class="nc" id="L306">        prettyPrint = prettyhtml,</span>
+<span class="nc" id="L307">      ).html(</span>
         block = {
-<span class="nc" id="L286">          runBlocking {</span>
-<span class="nc" id="L287">            builder()</span>
-<span class="nc" id="L288">          }</span>
-<span class="nc" id="L289">        }</span>
+<span class="nc" id="L309">          runBlocking {</span>
+<span class="nc" id="L310">            builder()</span>
+<span class="nc" id="L311">          }</span>
+<span class="nc" id="L312">        }</span>
       )
     }
-<span class="nc" id="L292">    return baos</span>
+<span class="nc" id="L315">    return baos</span>
   }
-<span class="nc" id="L294">}</span>
+<span class="nc" id="L317">}</span>
 
 /**
  * Responds to a client with an HTML response, using specified [block] to build the CSS document via Kotlin's CSS DSL.
@@ -300,21 +323,21 @@ public suspend fun html(block: suspend HTML.() -&gt; Unit): RawResponse {
  * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
  */
 public fun css(block: CssBuilder.() -&gt; Unit): StreamedAssetResponse {
-<span class="nc" id="L303">  return HttpResponse.ok(</span>
-<span class="nc" id="L304">    CssContent(block).render()</span>
-<span class="nc" id="L305">  ).characterEncoding(</span>
-<span class="nc" id="L306">    StandardCharsets.UTF_8</span>
-<span class="nc" id="L307">  ).contentType(</span>
-<span class="nc" id="L308">    &quot;text/css; chartset=utf-8&quot;</span>
+<span class="nc" id="L326">  return HttpResponse.ok(</span>
+<span class="nc" id="L327">    CssContent(block).render()</span>
+<span class="nc" id="L328">  ).characterEncoding(</span>
+<span class="nc" id="L329">    StandardCharsets.UTF_8</span>
+<span class="nc" id="L330">  ).contentType(</span>
+<span class="nc" id="L331">    &quot;text/css; chartset=utf-8&quot;</span>
   )
 }
 
 // HTML content rendering and container utility.
-<span class="nc" id="L313">internal class CssContent(</span>
-<span class="nc" id="L314">  private val builder: CssBuilder.() -&gt; Unit</span>
+<span class="nc" id="L336">internal class CssContent(</span>
+<span class="nc" id="L337">  private val builder: CssBuilder.() -&gt; Unit</span>
 ) : ResponseRenderer&lt;StreamedAsset&gt; {
   override fun render(): StreamedAsset {
-<span class="nc" id="L317">    TODO(&quot;not yet implemented&quot;)</span>
+<span class="nc" id="L340">    TODO(&quot;not yet implemented&quot;)</span>
 //    return CssBuilder().apply(builder).toString().toByteArray(
 //      StandardCharsets.UTF_8
 //    )

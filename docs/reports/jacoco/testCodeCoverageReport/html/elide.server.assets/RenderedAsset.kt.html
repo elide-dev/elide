@@ -18,14 +18,14 @@ import tools.elide.data.CompressionMode
  * @param digest Raw bytes of the attached digest for this asset.
  * @param producer Data payload callable for this asset response.
  */
-<span class="fc" id="L21">public data class RenderedAsset(</span>
-<span class="pc" id="L22">  public val module: AssetModuleId,</span>
+<span class="fc" id="L21">public class RenderedAsset(</span>
+<span class="fc" id="L22">  public val module: AssetModuleId,</span>
 <span class="fc" id="L23">  public val type: AssetType,</span>
-<span class="pc" id="L24">  public val variant: CompressionMode,</span>
+<span class="fc" id="L24">  public val variant: CompressionMode,</span>
 <span class="fc" id="L25">  public val headers: Map&lt;String, String&gt;,</span>
 <span class="fc" id="L26">  public val size: Long,</span>
-<span class="pc" id="L27">  public val lastModified: Long,</span>
-<span class="pc" id="L28">  public val digest: Pair&lt;HashAlgorithm, ByteString&gt;?,</span>
+<span class="fc" id="L27">  public val lastModified: Long,</span>
+<span class="fc" id="L28">  public val digest: Pair&lt;HashAlgorithm, ByteString&gt;?,</span>
 <span class="fc" id="L29">  public val producer: () -&gt; ByteString,</span>
 )
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

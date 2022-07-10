@@ -18,7 +18,7 @@ import tools.elide.data.CompressionMode
  * @param digest Raw bytes of the attached digest for this asset.
  * @param producer Data payload callable for this asset response.
  */
-public data class RenderedAsset(
+public class RenderedAsset(
   public val module: AssetModuleId,
   public val type: AssetType,
   public val variant: CompressionMode,

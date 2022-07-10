@@ -1,16 +1,12 @@
 package elide.server.assets
 
-import com.google.common.util.concurrent.Futures
-import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
-import elide.server.cfg.ServerConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import jakarta.inject.Inject
 import kotlinx.coroutines.*
-import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
@@ -28,7 +24,6 @@ import java.nio.charset.StandardCharsets
 @Context
 public class ServerAssetManager @Inject constructor(
   override val reader: AssetReader,
-  private val config: ServerConfig,
 ) : AssetManager {
   public companion object {
     // Wait timeout in seconds for initialization.
@@ -63,12 +58,6 @@ public class ServerAssetManager @Inject constructor(
   /** @inheritDoc */
   @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
-    // if asset serving is disabled, return a 404 for all asset calls.
-    if (!config.assets.enabled) {
-      return Futures.immediateFuture(
-        HttpResponse.notFound<StreamedAsset>()
-      ).asDeferred()
-    }
     logging.debug(
       "Serving asset with module ID '${asset.module}'"
     )

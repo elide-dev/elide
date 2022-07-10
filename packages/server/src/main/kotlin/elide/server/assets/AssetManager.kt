@@ -142,25 +142,9 @@ import org.slf4j.Logger
   public suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse>
 
   /**
-   * Suspending but synchronous variant of [renderAssetAsync], which is responsible for rendering a resolved asset to an
-   * HTTP response; this variant returns a response value directly.
-   *
-   * This method calls is an alias which simply awaits an async result. Further documentation is available on the
-   * implementing method.
-   *
-   * @see renderAssetAsync for the asynchronous form of this method.
-   * @param asset Resolved server asset which should be served by this call.
-   * @return Streamed asset response.
-   */
-  public suspend fun renderAsset(request: HttpRequest<*>, asset: ServerAsset): StreamedAssetResponse {
-    return renderAssetAsync(request, asset).await()
-  }
-
-  /**
    * Asynchronously produce an HTTP response which serves the asset described by the provided [request]; if the asset in
    * question cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`.
    *
-   * @see serve for a synchronous variant of this method.
    * @param request HTTP request which should be translated into an asset path and served.
    * @return Deferred task which resolves to an HTTP response serving the requested asset.
    */
@@ -171,17 +155,5 @@ import org.slf4j.Logger
         serveNotFoundAsync(request)
       )
     )
-  }
-
-  /**
-   * Produce an HTTP response which serves the asset described by the provided [request]; if the asset in question
-   * cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`.
-   *
-   * @see serveAsync for an asynchronous variant of this method.
-   * @param request HTTP request which should be translated into an asset path and served.
-   * @return HTTP response serving the requested asset.
-   */
-  public suspend fun serve(request: HttpRequest<*>): StreamedAssetResponse {
-    return serveAsync(request).await()
   }
 }

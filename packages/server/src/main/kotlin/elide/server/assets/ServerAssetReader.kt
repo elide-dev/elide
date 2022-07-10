@@ -38,7 +38,7 @@ public class ServerAssetReader @Inject internal constructor(
       else -> null
     }
     if (contentEncoding != null) headerMap[HttpHeaders.CONTENT_ENCODING] = contentEncoding
-    return emptyMap()
+    return headerMap
   }
 
   @VisibleForTesting

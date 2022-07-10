@@ -1,7 +1,11 @@
 package elide.server.assets
 
+import com.google.protobuf.ByteString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.assertThrows
+import tools.elide.crypto.HashAlgorithm
+import tools.elide.data.CompressionMode
+import java.nio.charset.StandardCharsets
 import kotlin.test.*
 
 /** Tests for data structures and utilities which implement server-side asset serving. */
@@ -79,5 +83,27 @@ class AssetDataTest {
     assertThrows<IllegalArgumentException> {
       AssetDependency("test", "test", optional = false)
     }
+  }
+
+  @Test fun testRenderedAsset() {
+    val asset = RenderedAsset(
+      module = "some-module",
+      type = AssetType.SCRIPT,
+      variant = CompressionMode.GZIP,
+      headers = emptyMap(),
+      size = 123L,
+      lastModified = 124L,
+      digest = HashAlgorithm.SHA256 to ByteString.copyFrom(ByteArray(0)),
+    ) { ByteString.copyFrom("hello world".toByteArray(StandardCharsets.UTF_8)) }
+    assertNotNull(asset)
+    assertNotNull(asset.module)
+    assertNotNull(asset.type)
+    assertNotNull(asset.variant)
+    assertNotNull(asset.headers)
+    assertNotNull(asset.size)
+    assertNotNull(asset.lastModified)
+    assertNotNull(asset.digest)
+    assertEquals(asset, asset)
+    assertNotNull(asset.hashCode())
   }
 }

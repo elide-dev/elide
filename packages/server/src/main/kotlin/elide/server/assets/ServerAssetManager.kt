@@ -7,6 +7,7 @@ import elide.server.cfg.ServerConfig
 import io.micronaut.caffeine.cache.Cache
 import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import jakarta.inject.Inject
 import kotlinx.coroutines.*
@@ -47,7 +48,7 @@ public class ServerAssetManager @Inject constructor(
 
   /** @inheritDoc */
   @OptIn(ExperimentalCoroutinesApi::class)
-  override suspend fun renderAssetAsync(asset: ServerAsset): Deferred<StreamedAssetResponse> {
+  override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
     // if asset serving is disabled, return a 404 for all asset calls.
     if (!config.assets.enabled) {
       return Futures.immediateFuture(

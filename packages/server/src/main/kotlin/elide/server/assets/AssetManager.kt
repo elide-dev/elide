@@ -102,22 +102,58 @@ import org.slf4j.Logger
   }
 
   /**
+   * Serve a response of status HTTP 404 (Not Found), in response to a request for an asset which could not be located
+   * by the built-in asset system.
    *
-   */
-  public suspend fun renderAssetAsync(asset: ServerAsset): Deferred<StreamedAssetResponse>
-
-  /**
-   *
+   * @param request HTTP request which prompted this 404-not-found response.
+   * @return Deferred task which resolves to an HTTP 404 response.
    */
   public fun serveNotFoundAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
     return Futures.immediateFuture(HttpResponse.notFound<StreamedAsset>()).asDeferred()
   }
 
   /**
+   * Responsible for converting a known-good asset held by the server into an efficient [StreamedAssetResponse] which
+   * serves the asset to the invoking client.
    *
+   * This method is the core of the runtime portion of the asset system. When an asset is requested via an endpoint
+   * managed by the [AssetController], it effectively calls into this method, after resolving the asset, in order to
+   * actually serve it.
+   *
+   * [StreamedAssetResponse] is mapped to Netty/Micronaut classes under the hood which are optimal for serving static
+   * asset data.
+   *
+   * ### Dynamic asset transformation
+   *
+   * If the asset must be transformed before being returned, especially in some computationally-expensive manner, then
+   * the underlying method should switch out to the I/O scheduler (or some other scheduler) in order to avoid any
+   * blocking behavior.
+   *
+   * ### Response variability
+   *
+   * If the response needs to be customized based on the provided [request], make sure to include any relevant request
+   * headers as `Vary` values in the response, so that HTTP caching can work correctly.
+   *
+   * @param request HTTP request which this render cycle is responding to.
+   * @param asset Resolved server asset which we intend to render and serve.
+   * @return Deferred task which resolves to a [StreamedAssetResponse] satisfying a request to serve the provided
+   *   resolved [asset] data.
    */
-  public suspend fun renderAsset(asset: ServerAsset): StreamedAssetResponse {
-    return renderAssetAsync(asset).await()
+  public suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse>
+
+  /**
+   * Suspending but synchronous variant of [renderAssetAsync], which is responsible for rendering a resolved asset to an
+   * HTTP response; this variant returns a response value directly.
+   *
+   * This method calls is an alias which simply awaits an async result. Further documentation is available on the
+   * implementing method.
+   *
+   * @see renderAssetAsync for the asynchronous form of this method.
+   * @param asset Resolved server asset which should be served by this call.
+   * @return Streamed asset response.
+   */
+  public suspend fun renderAsset(request: HttpRequest<*>, asset: ServerAsset): StreamedAssetResponse {
+    return renderAssetAsync(request, asset).await()
   }
 
   /**
@@ -130,6 +166,7 @@ import org.slf4j.Logger
    */
   public suspend fun serveAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
     return renderAssetAsync(
+      request,
       resolve(request) ?: return (
         serveNotFoundAsync(request)
       )

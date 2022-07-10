@@ -83,6 +83,7 @@ jobs:
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2
         id: gradlebuild
+        continue-on-error: ${{ matrix.experimental }}
         env:
           CI: true
         with:
@@ -98,11 +99,10 @@ jobs:
             -x test
 
       ## CI: Build
-      - name: "Failure reports"
-        if: failure()
+      - name: "Build reports"
         uses: actions/upload-artifact@v3
         with:
-          name: failure-reports
+          name: build-reports-${{ matrix.os }}-java${{ matrix.java }}-gvm-${{ matrix.gvm }}
           path: |
             build/reports/**/*.*
 

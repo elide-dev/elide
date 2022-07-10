@@ -87,7 +87,7 @@ jobs:
         env:
           CI: true
         with:
-          cache-read-only: ${{ matrix.os != "ubuntu-latest" }}
+          cache-read-only: ${{ matrix.os != 'ubuntu-latest' }}
           arguments: |
             build
             --scan

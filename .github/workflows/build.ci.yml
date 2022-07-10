@@ -141,14 +141,6 @@ jobs:
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      ## Setup: Checkout Code
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       ## Prep: Download Caches
       - name: Cache dependencies
         uses: actions/cache@v3

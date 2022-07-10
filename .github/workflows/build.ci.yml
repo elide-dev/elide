@@ -129,7 +129,6 @@ jobs:
   ##
   tests-jvm:
     runs-on: buildjet-64vcpu-ubuntu-2004
-    needs: [gradle]
     continue-on-error: true
     permissions:
       contents: 'read'
@@ -153,6 +152,14 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      ## Setup: Checkout Code
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       ## Prep: Download Caches
       - name: Cache dependencies
@@ -199,6 +206,37 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
+
+      ## Inflate missing git history
+      - name: "Inflate Git history"
+        run: git fetch --unshallow
+
+      ## Upload to Codecov (JVM)
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          name: jvm
+          fail_ci_if_error: false
+          verbose: true
+
+      ## Run Sonar
+      - name: "Run Sonar"
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: |
+            sonarqube
+            --scan
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -Pversions.java.language=17
+            -x test
+            -x jvmTest
+            -x nativeCompile
+            -x test
 
   ##
   ## Job: Testsuite (Native)
@@ -274,124 +312,6 @@ jobs:
             **/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
-
-#  ##
-#  ## Job: Qodana
-#  ##
-#  tools-qodana:
-#    runs-on: buildjet-64vcpu-ubuntu-2004
-#    needs: [gradle]
-#    continue-on-error: true
-#    timeout-minutes: 10
-#    if: ( false )
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: 'Qodana Scan'
-#        uses: JetBrains/qodana-action@v5.1.0
-#      - uses: github/codeql-action/upload-sarif@v2
-#        with:
-#          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
-
-  ##
-  ## Job: Sonar
-  ##
-  tools-sonar:
-    runs-on: buildjet-64vcpu-ubuntu-2004
-    needs: [gradle, tests-jvm]
-    steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
-      ## Setup: GraalVM
-      - uses: graalvm/setup-graalvm@v1
-        with:
-          components: 'native-image'
-          version: latest
-          java-version: 17
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: Checkout Code
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
-      ## Download JVM reports
-      - name: Download JVM test reports
-        uses: actions/download-artifact@v3
-        with:
-          name: test-reports-jvm
-
-      ## Inflate missing git history
-      - name: "Inflate Git history"
-        run: git fetch --unshallow
-
-      ## Run Sonar
-      - name: "Run Sonar"
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: |
-            sonarqube
-            --scan
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -Pversions.java.language=17
-            -x nativeCompile
-            -x test
-
-
-  ##
-  ## Job: Report Coverage
-  ##
-  tools-codecov:
-    runs-on: buildjet-64vcpu-ubuntu-2004
-    needs: [tests-jvm]
-    continue-on-error: true
-    steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      ## Download JVM reports
-      - name: Download JVM test reports
-        uses: actions/download-artifact@v3
-        with:
-          name: test-reports-jvm
-
-      ## Upload to Codecov (JVM)
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
-          name: jvm
-          fail_ci_if_error: false
-          verbose: true
 
   ##
   ## Job: Docker Samples (JVM)

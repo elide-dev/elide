@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.082s</div>
+<div class="counter">0.500s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,17 +79,17 @@
 </thead>
 <tr>
 <td class="success">testFindLoadManifestDefault()</td>
-<td class="success">0.001s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testFindLoadManifestFound()</td>
-<td class="success">0.005s</td>
+<td class="success">0.105s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testFindLoadManifestNotFound()</td>
-<td class="success">0s</td>
+<td class="success">0.004s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -99,27 +99,27 @@
 </tr>
 <tr>
 <td class="success">testFindManifestFound()</td>
-<td class="success">0s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testFindManifestNotFound()</td>
-<td class="success">0.001s</td>
+<td class="success">0.005s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testManifestEqualsAcrossFormats()</td>
-<td class="success">0.008s</td>
+<td class="success">0.030s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testParseInvalidData()</td>
-<td class="success">0.006s</td>
+<td class="success">0.018s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testParseInvalidFormat()</td>
-<td class="success">0.001s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -129,17 +129,17 @@
 </tr>
 <tr>
 <td class="success">testParseSampleManifestJson()</td>
-<td class="success">0.048s</td>
+<td class="success">0.297s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testParseStabilityBinary()</td>
-<td class="success">0.005s</td>
+<td class="success">0.014s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testParseStabilityJson()</td>
-<td class="success">0.005s</td>
+<td class="success">0.019s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -147,34 +147,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Located asset manifest: loading
-18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Located asset manifest: loading
-18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.721 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.726 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.726 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.729 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'JSON'
-18:12:49.774 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.775 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'TEXT'
-18:12:49.775 [Test worker] WARN elide.server.assets.ServerAssetManifestProvider - Cannot de-serialize asset manifest with format: 'TEXT'. Asset loading disabled.
-18:12:49.776 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.776 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.777 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'JSON'
-18:12:49.778 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.784 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.785 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.785 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.785 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.789 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - No asset manifest located. Asset loading will be disabled.
-18:12:49.790 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'JSON'
-18:12:49.791 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.792 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'JSON'
-18:12:49.793 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Resolved asset manifest with fingerprint SHA256(7GN04gWH3vSj9ngLBWgMNfHFvNwLkZrgQf2E4CfSWP4)
-18:12:49.798 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - No asset manifest located. Asset loading will be disabled.
-18:12:49.800 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'BINARY'
-18:12:49.802 [Test worker] ERROR elide.server.assets.ServerAssetManifestProvider - Failed to load asset manifest
+<pre>?[36m00:02:31.880?[0;39m ?[1;30m[Test worker]?[0;39m ?[31mWARN ?[0;39m ?[35mhellocss?[0;39m - Cannot de-serialize asset manifest with format: 'TEXT'. Asset loading disabled.
+?[36m00:02:31.979?[0;39m ?[1;30m[Test worker]?[0;39m ?[1;31mERROR?[0;39m ?[35mhellocss?[0;39m - Failed to load asset manifest
 com.google.protobuf.InvalidProtocolBufferException: While parsing a protocol message, the input ended unexpectedly in the middle of a field.  This could mean either that the input has been truncated or that an embedded message misreported its own length.
 	at com.google.protobuf.InvalidProtocolBufferException.truncatedMessage(InvalidProtocolBufferException.java:115)
 	at com.google.protobuf.CodedInputStream$StreamDecoder.refillBuffer(CodedInputStream.java:2783)
@@ -278,8 +252,7 @@ com.google.protobuf.InvalidProtocolBufferException: While parsing a protocol mes
 	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:71)
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
-18:12:49.803 [Test worker] DEBUG elide.server.assets.ServerAssetManifestProvider - Decoding manifest from detected format 'JSON'
-18:12:49.804 [Test worker] ERROR elide.server.assets.ServerAssetManifestProvider - Failed to load asset manifest
+?[36m00:02:31.983?[0;39m ?[1;30m[Test worker]?[0;39m ?[1;31mERROR?[0;39m ?[35mhellocss?[0;39m - Failed to load asset manifest
 com.google.protobuf.InvalidProtocolBufferException: Expect message object but got: null
 	at com.google.protobuf.util.JsonFormat$ParserImpl.mergeMessage(JsonFormat.java:1475)
 	at com.google.protobuf.util.JsonFormat$ParserImpl.merge(JsonFormat.java:1452)
@@ -383,7 +356,7 @@ com.google.protobuf.InvalidProtocolBufferException: Expect message object but go
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 7.5-rc-3</a> at Jul 9, 2022, 6:42:16 PM</p>
+<a href="http://www.gradle.org">Gradle 7.5-rc-3</a> at Jul 10, 2022, 12:04:50 AM</p>
 </div>
 </div>
 </body>

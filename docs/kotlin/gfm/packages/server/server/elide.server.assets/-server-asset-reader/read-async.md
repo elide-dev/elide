@@ -3,4 +3,4 @@
 # readAsync
 
 [jvm]\
-open suspend override fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md)): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt;
+open suspend override fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md), request: HttpRequest&lt;*&gt;?): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt;

@@ -6,20 +6,23 @@ import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
 import elide.server.AssetModuleId
-import elide.server.runtime.AppExecutor
+import elide.server.AssetTag
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.server.event.ServerStartupEvent
 import jakarta.inject.Inject
 import tools.elide.assets.AssetBundle
+import tools.elide.assets.AssetBundle.AssetContent
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import kotlin.math.max
 
 /**
  * Server-side utility which, at server startup, consumes the embedded asset bundle (if any), and generates a set of
@@ -45,128 +48,147 @@ import java.util.stream.IntStream
  * initializes by calling into [ServerAssetManifestProvider] (having been initialized by the DI container already), and
  * waits until a materialized asset bundle is ready. From that bundle, indexes are computed and then made live.
  *
- * @param exec Background executor which should be used to load and index assets.
  * @param manifestProvider Provider for the de-serialized asset manifest. Responsible for locating the bundle within the
  *   current application and de-serializing it into an interpreted manifest.
  */
-<span class="fc" id="L52">@Context</span>
+<span class="fc" id="L54">@Context</span>
 @Suppress(&quot;UnstableApiUsage&quot;)
-<span class="fc" id="L54">internal class ServerAssetIndex @Inject constructor(</span>
-<span class="fc" id="L55">  private val exec: AppExecutor,</span>
-<span class="fc" id="L56">  private val manifestProvider: AssetManifestLoader,</span>
+<span class="fc" id="L56">internal class ServerAssetIndex @Inject constructor(</span>
+<span class="fc" id="L57">  private val manifestProvider: AssetManifestLoader,</span>
 ) {
+  companion object {
+    private const val WAIT_TIMEOUT = 5L
+    private const val MIN_TAIL_SIZE = 4
+  }
+
   // Wait latch for asset consumers.
-<span class="fc" id="L59">  private val latch: CountDownLatch = CountDownLatch(1)</span>
+<span class="fc" id="L65">  private val latch: CountDownLatch = CountDownLatch(1)</span>
 
   /** Listens for server startup and runs hooks. */
-<span class="fc" id="L62">  @Context internal class AssetStartupListener : ApplicationEventListener&lt;ServerStartupEvent&gt; {</span>
+<span class="fc" id="L68">  @Context internal class AssetStartupListener : ApplicationEventListener&lt;ServerStartupEvent&gt; {</span>
     @Inject private lateinit var beanContext: BeanContext
 
     /** @inheritDoc */
     override fun onApplicationEvent(event: ServerStartupEvent) {
       // initialize the asset manager
-<span class="pc bpc" id="L68" title="1 of 2 branches missed.">      beanContext.getBean(ServerAssetIndex::class.java).initialize()</span>
-<span class="fc" id="L69">    }</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">      beanContext.getBean(ServerAssetIndex::class.java).initialize()</span>
+<span class="fc" id="L75">    }</span>
   }
 
   // Whether the manager has started initializing yet.
-<span class="fc" id="L73">  internal val initialized: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="fc" id="L79">  internal val initialized: AtomicBoolean = AtomicBoolean(false)</span>
 
   // Dependency graph loaded from the embedded manifest.
-<span class="fc" id="L76">  internal val dependencyGraph: AtomicReference&lt;Network&lt;AssetModuleId, AssetDependency&gt;&gt; =</span>
-<span class="fc" id="L77">    AtomicReference(null)</span>
+<span class="fc" id="L82">  internal val dependencyGraph: AtomicReference&lt;Network&lt;AssetModuleId, AssetDependency&gt;&gt; =</span>
+<span class="fc" id="L83">    AtomicReference(null)</span>
 
   // Interpreted manifest structure loaded from the embedded proto document.
-<span class="fc" id="L80">  internal val assetManifest: AtomicReference&lt;ServerAssetManifest?&gt; = AtomicReference(null)</span>
+<span class="fc" id="L86">  internal val assetManifest: AtomicReference&lt;ServerAssetManifest?&gt; = AtomicReference(null)</span>
 
-  private fun addDirectDeps(
+  // Resolve the active manifest or fail loudly.
+  @VisibleForTesting internal fun activeManifest(): ServerAssetManifest {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    require(initialized.get()) {</span>
+<span class="fc" id="L91">      &quot;Asset manager is not initialized; `activeManifest` cannot be called yet&quot;</span>
+    }
+<span class="fc" id="L93">    return assetManifest.get()!!</span>
+  }
+
+  @VisibleForTesting internal fun addDirectDeps(
     moduleId: String,
     depGraph: ImmutableNetwork.Builder&lt;AssetModuleId, AssetDependency&gt;,
     deps: AssetBundle.AssetDependencies,
   ) {
+<span class="fc" id="L101">    depGraph.addNode(moduleId)</span>
+
     // add only direct dependencies
-<span class="fc" id="L88">    deps.directList.forEach {</span>
-<span class="fc" id="L89">      depGraph.addEdge(</span>
-<span class="fc" id="L90">        moduleId,</span>
-<span class="fc" id="L91">        it,</span>
-<span class="fc" id="L92">        AssetDependency(</span>
-<span class="fc" id="L93">          depender = moduleId,</span>
-<span class="fc" id="L94">          dependee = it,</span>
-<span class="fc" id="L95">          optional = false</span>
+<span class="fc" id="L104">    deps.directList.forEach {</span>
+<span class="fc" id="L105">      depGraph.addEdge(</span>
+<span class="fc" id="L106">        moduleId,</span>
+<span class="fc" id="L107">        it,</span>
+<span class="fc" id="L108">        AssetDependency(</span>
+<span class="fc" id="L109">          depender = moduleId,</span>
+<span class="fc" id="L110">          dependee = it,</span>
+<span class="fc" id="L111">          optional = false</span>
         ),
       )
-<span class="fc" id="L98">    }</span>
-<span class="fc" id="L99">  }</span>
+<span class="fc" id="L114">    }</span>
+<span class="fc" id="L115">  }</span>
 
   @VisibleForTesting
   internal fun buildAssetIndexes(
     bundle: AssetBundle
   ): Pair&lt;Network&lt;AssetModuleId, AssetDependency&gt;, ServerAssetManifest&gt; {
     // create a builder for the asset graph
-<span class="fc" id="L106">    val builder: ImmutableNetwork.Builder&lt;AssetModuleId, AssetDependency&gt; = NetworkBuilder</span>
-<span class="fc" id="L107">      .directed()</span>
-<span class="fc" id="L108">      .allowsParallelEdges(false)</span>
-<span class="fc" id="L109">      .allowsSelfLoops(false)</span>
-<span class="fc" id="L110">      .nodeOrder(ElementOrder.stable&lt;AssetModuleId&gt;())</span>
-<span class="fc" id="L111">      .edgeOrder(ElementOrder.stable&lt;AssetDependency&gt;())</span>
-<span class="fc" id="L112">      .immutable()</span>
+<span class="fc" id="L122">    val builder: ImmutableNetwork.Builder&lt;AssetModuleId, AssetDependency&gt; = NetworkBuilder</span>
+<span class="fc" id="L123">      .directed()</span>
+<span class="fc" id="L124">      .allowsParallelEdges(false)</span>
+<span class="fc" id="L125">      .allowsSelfLoops(false)</span>
+<span class="fc" id="L126">      .nodeOrder(ElementOrder.stable&lt;AssetModuleId&gt;())</span>
+<span class="fc" id="L127">      .edgeOrder(ElementOrder.stable&lt;AssetDependency&gt;())</span>
+<span class="fc" id="L128">      .immutable()</span>
 
-    // first, build the asset tag index by iterating over content, which references assets by module ID. we can then
-    // use this index while building the asset module index, enabled with processed content records.
-<span class="fc" id="L116">    val tagIndex = IntStream.rangeClosed(0, bundle.assetCount - 1).parallel().mapToObj {</span>
-<span class="fc" id="L117">      it to bundle.getAsset(it)</span>
-<span class="fc" id="L118">    }.map {</span>
-<span class="fc" id="L119">      val (idx, content) = it</span>
-<span class="fc" id="L120">      content.module to idx</span>
-<span class="fc" id="L121">    }.collect(</span>
-<span class="fc" id="L122">      Collectors.toMap(</span>
-<span class="fc" id="L123">        { it.first },</span>
-<span class="fc" id="L124">        { it.second },</span>
+<span class="fc" id="L130">    val tagIndex = ConcurrentSkipListMap&lt;AssetTag, Int&gt;()</span>
+
+    // first, build a content payload index which maps each module to the content payload which implements it.
+<span class="fc" id="L133">    val modulesToIndexes = IntStream.rangeClosed(0, bundle.assetCount - 1).parallel().mapToObj {</span>
+<span class="fc" id="L134">      it to bundle.getAsset(it)</span>
+<span class="fc" id="L135">    }.map {</span>
+<span class="fc" id="L136">      val (idx, content) = it</span>
+
+      // map the tag to both the full asset fingerprint, and the &quot;trimmed&quot; asset fingerprint, which is the &quot;asset tag.&quot;
+      // the asset tag length is specified on the settings payload in the manifest.
+<span class="fc" id="L140">      tagIndex[content.token] = idx</span>
+<span class="fc" id="L141">      tagIndex[content.token.takeLast(max(bundle.settings.digestSettings.tail, MIN_TAIL_SIZE))] = idx</span>
+<span class="fc" id="L142">      content.module to idx</span>
+<span class="fc" id="L143">    }.collect(</span>
+<span class="fc" id="L144">      Collectors.toMap(</span>
+<span class="fc" id="L145">        { it.first },</span>
+<span class="fc" id="L146">        { it.second },</span>
         { left, _ -&gt;
-<span class="fc" id="L126">          error(</span>
-<span class="fc" id="L127">            &quot;Found assets with duplicate tags: '$left'. This should not happen; please report this bug to the Elide &quot; +</span>
+<span class="fc" id="L148">          error(</span>
+<span class="fc" id="L149">            &quot;Found assets with duplicate tags: '$left'. This should not happen; please report this bug to the Elide &quot; +</span>
             &quot;project authors: https://github.com/elide-dev&quot;
           )
         },
-<span class="fc" id="L131">        { TreeMap() }</span>
+<span class="fc" id="L153">        { TreeMap() }</span>
       )
     )
 
     // build an index of each module ID =&gt; a module record. we can typically get to the module ID from everything else.
-<span class="fc" id="L136">    val typeRanges = listOf(</span>
-<span class="fc" id="L137">      AssetType.SCRIPT to bundle.scriptsMap.keys,</span>
-<span class="fc" id="L138">      AssetType.STYLESHEET to bundle.stylesMap.keys,</span>
-<span class="fc" id="L139">      AssetType.TEXT to bundle.genericMap.keys,</span>
+<span class="fc" id="L158">    val typeRanges = listOf(</span>
+<span class="fc" id="L159">      AssetType.SCRIPT to bundle.scriptsMap.keys,</span>
+<span class="fc" id="L160">      AssetType.STYLESHEET to bundle.stylesMap.keys,</span>
+<span class="fc" id="L161">      AssetType.TEXT to bundle.genericMap.keys,</span>
     )
-<span class="fc" id="L141">    val moduleIndex = typeRanges.parallelStream().flatMap {</span>
-<span class="fc" id="L142">      val (type, keys) = it</span>
-<span class="fc" id="L143">      keys.parallelStream().map { key -&gt;</span>
-<span class="fc" id="L144">        type to key</span>
+<span class="fc" id="L163">    val moduleIndex = typeRanges.parallelStream().flatMap {</span>
+<span class="fc" id="L164">      val (type, keys) = it</span>
+<span class="fc" id="L165">      keys.parallelStream().map { key -&gt;</span>
+<span class="fc" id="L166">        type to key</span>
       }
-<span class="fc" id="L146">    }.map {</span>
+<span class="fc" id="L168">    }.map {</span>
       // we're working with a type of asset and index in the array here. so we need to use a concrete extractor, but we
       // are just assembling an index, so we return back to generic use quickly.
-<span class="fc" id="L149">      val (assetType, moduleId) = it</span>
-<span class="fc" id="L150">      builder.addNode(moduleId)</span>
-<span class="fc" id="L151">      it.second to pointerForConcrete(</span>
-<span class="fc" id="L152">        assetType,</span>
-<span class="fc" id="L153">        moduleId,</span>
-<span class="fc" id="L154">        tagIndex[moduleId],</span>
-<span class="fc" id="L155">        bundle,</span>
-<span class="fc" id="L156">        builder,</span>
+<span class="fc" id="L171">      val (assetType, moduleId) = it</span>
+<span class="fc" id="L172">      it.second to pointerForConcrete(</span>
+<span class="fc" id="L173">        assetType,</span>
+<span class="fc" id="L174">        moduleId,</span>
+<span class="fc" id="L175">        modulesToIndexes[moduleId],</span>
+<span class="fc" id="L176">        bundle,</span>
+<span class="fc" id="L177">        builder,</span>
       )
-<span class="fc" id="L158">    }.collect(</span>
-<span class="fc" id="L159">      Collectors.toMap(</span>
-<span class="fc" id="L160">        { it.first }, // module ID</span>
-<span class="fc" id="L161">        { it.second }, // pointer</span>
-<span class="fc" id="L162">        { value, _, -&gt; error(&quot;Two assets cannot have the same module ID: '$value'&quot;) },</span>
-<span class="fc" id="L163">        { ConcurrentSkipListMap() }</span>
+<span class="fc" id="L179">    }.collect(</span>
+<span class="fc" id="L180">      Collectors.toMap(</span>
+<span class="fc" id="L181">        { it.first }, // module ID</span>
+<span class="fc" id="L182">        { it.second }, // pointer</span>
+<span class="fc" id="L183">        { value, _, -&gt; error(&quot;Two assets cannot have the same module ID: '$value'&quot;) },</span>
+<span class="fc" id="L184">        { ConcurrentSkipListMap() }</span>
       )
     )
-<span class="fc" id="L166">    return builder.build() to ServerAssetManifest(</span>
-<span class="fc" id="L167">      bundle = bundle,</span>
-<span class="fc" id="L168">      moduleIndex = moduleIndex,</span>
-<span class="fc" id="L169">      tagIndex = tagIndex,</span>
+
+<span class="fc" id="L188">    return builder.build() to ServerAssetManifest(</span>
+<span class="fc" id="L189">      bundle = bundle,</span>
+<span class="fc" id="L190">      moduleIndex = moduleIndex,</span>
+<span class="fc" id="L191">      tagIndex = tagIndex,</span>
     )
   }
 
@@ -177,69 +199,142 @@ import java.util.stream.IntStream
     idx: Int?,
     bundle: AssetBundle,
     depGraph: ImmutableNetwork.Builder&lt;AssetModuleId, AssetDependency&gt;,
-<span class="fc bfc" id="L180" title="All 4 branches covered.">  ): AssetPointer = when (type) {</span>
+<span class="fc bfc" id="L202" title="All 4 branches covered.">  ): AssetPointer = when (type) {</span>
     // JavaScript assets
     AssetType.SCRIPT -&gt; {
-<span class="fc" id="L183">      val script = bundle.getScriptsOrThrow(key)</span>
-<span class="fc bfc" id="L184" title="All 2 branches covered.">      if (script.hasDependencies()) addDirectDeps(</span>
-<span class="fc" id="L185">        key,</span>
-<span class="fc" id="L186">        depGraph,</span>
-<span class="fc" id="L187">        script.dependencies,</span>
+<span class="fc" id="L205">      val script = bundle.getScriptsOrThrow(key)</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">      if (script.hasDependencies()) addDirectDeps(</span>
+<span class="fc" id="L207">        key,</span>
+<span class="fc" id="L208">        depGraph,</span>
+<span class="fc" id="L209">        script.dependencies,</span>
       )
-<span class="fc" id="L189">      AssetPointer(</span>
-<span class="fc" id="L190">        moduleId = key,</span>
-<span class="fc" id="L191">        type = type,</span>
-<span class="fc" id="L192">        index = idx,</span>
+<span class="fc" id="L211">      AssetPointer(</span>
+<span class="fc" id="L212">        moduleId = key,</span>
+<span class="fc" id="L213">        type = type,</span>
+<span class="fc" id="L214">        index = idx,</span>
       )
     }
 
     // CSS assets
     AssetType.STYLESHEET -&gt; {
-<span class="fc" id="L198">      val sheet = bundle.getStylesOrThrow(key)</span>
-<span class="fc bfc" id="L199" title="All 2 branches covered.">      if (sheet.hasDependencies()) addDirectDeps(</span>
-<span class="fc" id="L200">        key,</span>
-<span class="fc" id="L201">        depGraph,</span>
-<span class="fc" id="L202">        sheet.dependencies,</span>
+<span class="fc" id="L220">      val sheet = bundle.getStylesOrThrow(key)</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">      if (sheet.hasDependencies()) addDirectDeps(</span>
+<span class="fc" id="L222">        key,</span>
+<span class="fc" id="L223">        depGraph,</span>
+<span class="fc" id="L224">        sheet.dependencies,</span>
       )
-<span class="fc" id="L204">      AssetPointer(</span>
-<span class="fc" id="L205">        moduleId = key,</span>
-<span class="fc" id="L206">        type = type,</span>
-<span class="fc" id="L207">        index = idx,</span>
+<span class="fc" id="L226">      AssetPointer(</span>
+<span class="fc" id="L227">        moduleId = key,</span>
+<span class="fc" id="L228">        type = type,</span>
+<span class="fc" id="L229">        index = idx,</span>
       )
     }
 
     // generic assets
     AssetType.TEXT -&gt; {
-<span class="fc" id="L213">      bundle.getGenericOrThrow(</span>
-<span class="fc" id="L214">        key</span>
+<span class="fc" id="L235">      bundle.getGenericOrThrow(</span>
+<span class="fc" id="L236">        key</span>
       )
-<span class="fc" id="L216">      AssetPointer(</span>
-<span class="fc" id="L217">        moduleId = key,</span>
-<span class="fc" id="L218">        type = type,</span>
-<span class="fc" id="L219">        index = idx,</span>
+<span class="fc" id="L238">      AssetPointer(</span>
+<span class="fc" id="L239">        moduleId = key,</span>
+<span class="fc" id="L240">        type = type,</span>
+<span class="fc" id="L241">        index = idx,</span>
       )
     }
 
-<span class="fc" id="L223">    else -&gt; error(&quot;Unsupported asset type for pointer: '${type.name}'&quot;)</span>
-<span class="fc" id="L224">  }</span>
+<span class="fc" id="L245">    else -&gt; error(&quot;Unsupported asset type for pointer: '${type.name}'&quot;)</span>
+<span class="fc" id="L246">  }</span>
 
   @VisibleForTesting
   @Synchronized
   internal fun initialize() {
-<span class="fc bfc" id="L229" title="All 2 branches covered.">    if (initialized.compareAndSet(false, true)) {</span>
-<span class="fc" id="L230">      exec.service().run {</span>
-        // read the embedded asset bundle
-<span class="fc bfc" id="L232" title="All 2 branches covered.">        val assetBundle = manifestProvider.findLoadManifest() ?: return@run</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">    if (initialized.compareAndSet(false, true)) {</span>
+      // read the embedded asset bundle
+<span class="fc bfc" id="L253" title="All 2 branches covered.">      val assetBundle = manifestProvider.findLoadManifest() ?: return</span>
 
-        // build index of assets to modules and tags
-<span class="fc" id="L235">        val (graph, manifest) = buildAssetIndexes(assetBundle)</span>
-<span class="fc" id="L236">        assetManifest.set(manifest)</span>
-<span class="fc" id="L237">        dependencyGraph.set(graph)</span>
+      // build index of assets to modules and tags
+<span class="fc" id="L256">      val (graph, manifest) = buildAssetIndexes(assetBundle)</span>
+<span class="fc" id="L257">      assetManifest.set(manifest)</span>
+<span class="fc" id="L258">      dependencyGraph.set(graph)</span>
 
-        // allow asset serving now
-<span class="fc" id="L240">        latch.countDown()</span>
-<span class="fc" id="L241">      }</span>
+      // allow asset serving now
+<span class="fc" id="L261">      latch.countDown()</span>
     }
-<span class="fc" id="L243">  }</span>
+<span class="fc" id="L263">  }</span>
+
+  @VisibleForTesting
+  internal fun buildConcreteAsset(type: AssetType, moduleId: String, bundle: AssetBundle, idx: Int?): ServerAsset {
+<span class="fc bfc" id="L267" title="All 4 branches covered.">    return when (type) {</span>
+      // if it's a script, wrap it as a script
+<span class="fc" id="L269">      AssetType.SCRIPT -&gt; ServerAsset.Script(</span>
+<span class="fc" id="L270">        bundle.getScriptsOrThrow(moduleId),</span>
+<span class="fc" id="L271">        idx,</span>
+      )
+
+      // if it's a stylesheet, wrap it as a stylesheet
+<span class="fc" id="L275">      AssetType.STYLESHEET -&gt; ServerAsset.Stylesheet(</span>
+<span class="fc" id="L276">        bundle.getStylesOrThrow(moduleId),</span>
+<span class="fc" id="L277">        idx,</span>
+      )
+
+      // same with text
+<span class="fc" id="L281">      AssetType.TEXT -&gt; ServerAsset.Text(</span>
+<span class="fc" id="L282">        bundle.getGenericOrThrow(moduleId),</span>
+<span class="fc" id="L283">        idx,</span>
+      )
+
+<span class="fc" id="L286">      else -&gt; error(&quot;Unsupported asset type for pointer: '${type.name}'&quot;)</span>
+    }
+  }
+
+  /**
+   * Look up any embedded server asset by the provided asset [tag], or return `null` to indicate that there was no
+   * matching asset.
+   *
+   * @param tag Tag for the asset to resolve.
+   * @param timeoutSeconds Max time to wait for the asset engine.
+   * @return Resolved and interpreted asset, or `null`.
+   */
+<span class="fc" id="L298">  internal fun resolveByTag(tag: String, timeoutSeconds: Long = WAIT_TIMEOUT): ServerAsset? {</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">    if (!initialized.get()) {</span>
+<span class="fc" id="L300">      latch.await(timeoutSeconds, TimeUnit.SECONDS)</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">      if (!initialized.get()) {</span>
+<span class="fc" id="L302">        return null</span>
+      }
+    }
+<span class="fc" id="L305">    val manifest = activeManifest()</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">    return manifest.tagIndex[tag]?.let { asset -&gt;</span>
+      // we've found an asset pointer, so we just need to wrap it with extra metadata before returning.
+<span class="fc" id="L308">      val assetPayload = manifest.bundle.getAsset(asset)</span>
+<span class="fc" id="L309">      val pointer = manifest.moduleIndex[assetPayload.module]!!</span>
+<span class="fc" id="L310">      buildConcreteAsset(</span>
+<span class="fc" id="L311">        pointer.type,</span>
+<span class="fc" id="L312">        pointer.moduleId,</span>
+<span class="fc" id="L313">        manifest.bundle,</span>
+<span class="fc" id="L314">        pointer.index,</span>
+      )
+    }
+  }
+
+  /**
+   * Given a known-good asset [idx] for a content payload, read the asset and perform any transformations or other
+   * relevant pre-requisite work before returning it to the invoking client.
+   *
+   * @param idx Index of the content payload implementing this module.
+   * @return Rendered asset module, ready for serving decisions.
+   */
+  internal suspend fun readByModuleIndex(idx: Int): AssetContent {
+<span class="fc" id="L327">    return activeManifest().bundle.getAsset(idx)!!</span>
+  }
+
+  /**
+   * Retrieve the timestamp indicating when the active asset bundle was generated; this is used as the last-modified
+   * value when serving assets from the bundle.
+   *
+   * @return Generated timestamp value, in seconds, from the active asset bundle.
+   */
+  internal fun getBundleTimestamp(): Long {
+<span class="fc" id="L337">    return activeManifest().bundle.generated.seconds</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

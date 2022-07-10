@@ -13,16 +13,18 @@ jvm
 
 | | |
 |---|---|
-| mediaType | Type of media assigned to this asset descriptor. |
+| module | ID assigned by the developer to this asset module. |
+| assetType | Type of asset being referenced by this object. |
 | dynamicEligible | Whether this type of media is eligible for dynamic transformation. |
+| index | Index of this asset within the content bundle, if applicable. |
 
 ## Types
 
 | Name | Summary |
 |---|---|
-| [Script](-script/index.md) | [jvm]<br>class [Script](-script/index.md)(descriptor: AssetBundle.ScriptBundle) : [ServerAsset](index.md)<br>Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold script info. |
-| [Stylesheet](-stylesheet/index.md) | [jvm]<br>class [Stylesheet](-stylesheet/index.md)(descriptor: AssetBundle.StyleBundle) : [ServerAsset](index.md)<br>Describes a stylesheet asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold document info. |
-| [Text](-text/index.md) | [jvm]<br>class [Text](-text/index.md)(descriptor: AssetBundle.GenericBundle) : [ServerAsset](index.md)<br>Describes a generic text asset of some kind, for example, `humans.txt` or `robots.txt`; when read from the app bundle and interpreted, this class is used to hold file info. |
+| [Script](-script/index.md) | [jvm]<br>class [Script](-script/index.md)(descriptor: AssetBundle.ScriptBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) : [ServerAsset](index.md)<br>Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold script info. |
+| [Stylesheet](-stylesheet/index.md) | [jvm]<br>class [Stylesheet](-stylesheet/index.md)(descriptor: AssetBundle.StyleBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) : [ServerAsset](index.md)<br>Describes a stylesheet asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold document info. |
+| [Text](-text/index.md) | [jvm]<br>class [Text](-text/index.md)(descriptor: AssetBundle.GenericBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) : [ServerAsset](index.md)<br>Describes a generic text asset of some kind, for example, `humans.txt` or `robots.txt`; when read from the app bundle and interpreted, this class is used to hold file info. |
 
 ## Inheritors
 

@@ -98,7 +98,7 @@ import org.slf4j.Logger
    * @return Resolved server asset, or `null` if one could not be located at the calculated path provided by [request].
    */
   public fun resolve(request: HttpRequest&lt;*&gt;): ServerAsset? {
-<span class="nc" id="L101">    return reader.resolve(request)</span>
+<span class="fc" id="L101">    return reader.resolve(request)</span>
   }
 
   /**
@@ -109,7 +109,7 @@ import org.slf4j.Logger
    * @return Deferred task which resolves to an HTTP 404 response.
    */
   public fun serveNotFoundAsync(request: HttpRequest&lt;*&gt;): Deferred&lt;StreamedAssetResponse&gt; {
-<span class="nc" id="L112">    return Futures.immediateFuture(HttpResponse.notFound&lt;StreamedAsset&gt;()).asDeferred()</span>
+<span class="fc" id="L112">    return Futures.immediateFuture(HttpResponse.notFound&lt;StreamedAsset&gt;()).asDeferred()</span>
   }
 
   /**
@@ -165,10 +165,10 @@ import org.slf4j.Logger
    * @return Deferred task which resolves to an HTTP response serving the requested asset.
    */
   public suspend fun serveAsync(request: HttpRequest&lt;*&gt;): Deferred&lt;StreamedAssetResponse&gt; {
-<span class="nc" id="L168">    return renderAssetAsync(</span>
-<span class="nc" id="L169">      request,</span>
-<span class="nc bnc" id="L170" title="All 2 branches missed.">      resolve(request) ?: return (</span>
-<span class="nc" id="L171">        serveNotFoundAsync(request)</span>
+<span class="fc" id="L168">    return renderAssetAsync(</span>
+<span class="fc" id="L169">      request,</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">      resolve(request) ?: return (</span>
+<span class="fc" id="L171">        serveNotFoundAsync(request)</span>
       )
     )
   }

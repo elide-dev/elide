@@ -3,4 +3,12 @@
 # module
 
 [jvm]\
-val [module](module.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+val [module](module.md): [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467)
+
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| module | Asset module which was rendered to produce this record. |

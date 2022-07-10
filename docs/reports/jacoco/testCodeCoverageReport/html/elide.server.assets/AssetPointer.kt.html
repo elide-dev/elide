@@ -3,10 +3,16 @@
 import elide.server.AssetModuleId
 import kotlinx.serialization.Serializable
 
-/** Reference to an application-embedded asset. */
-<span class="pc bpc" id="L7" title="2 of 9 branches missed.">@Serializable internal data class AssetPointer(</span>
-<span class="fc" id="L8">  val moduleId: AssetModuleId,</span>
-<span class="fc" id="L9">  val type: AssetType,</span>
-<span class="fc" id="L10">  val index: Int?,</span>
-<span class="fc" id="L11">) : java.io.Serializable</span>
+/**
+ * Reference to an application-embedded asset.
+ *
+ * @param moduleId Developer-assigned ID for this asset module.
+ * @param type Type of asset represented by this reference.
+ * @param index Index of the asset within the asset content payload list of the active asset bundle.
+ */
+<span class="pc bpc" id="L13" title="2 of 9 branches missed.">@Serializable internal data class AssetPointer(</span>
+<span class="fc" id="L14">  val moduleId: AssetModuleId,</span>
+<span class="fc" id="L15">  val type: AssetType,</span>
+<span class="fc" id="L16">  val index: Int?,</span>
+<span class="fc" id="L17">) : java.io.Serializable</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

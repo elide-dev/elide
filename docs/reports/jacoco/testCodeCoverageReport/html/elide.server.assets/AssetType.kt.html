@@ -2,18 +2,22 @@
 
 import io.micronaut.http.MediaType
 
-/** Enumerates known kinds of registered application assets. */
-<span class="fc" id="L6">public enum class AssetType constructor(internal val mediaType: MediaType? = null) {</span>
+/**
+ * Enumerates known kinds of registered application assets.
+ *
+ * @param mediaType Micronaut media type associated with this asset type.
+ */
+<span class="fc" id="L10">public enum class AssetType constructor(internal val mediaType: MediaType) {</span>
   /** Generic assets which employ custom configuration. */
-<span class="fc" id="L8">  GENERIC,</span>
+<span class="fc" id="L12">  GENERIC(mediaType = MediaType(&quot;application/octet-stream&quot;)),</span>
 
   /** Plain text assets. */
-<span class="fc" id="L11">  TEXT(mediaType = MediaType(&quot;text/plain&quot;, &quot;txt&quot;)),</span>
+<span class="fc" id="L15">  TEXT(mediaType = MediaType(&quot;text/plain&quot;, &quot;txt&quot;)),</span>
 
   /** JavaScript assets. */
-<span class="fc" id="L14">  SCRIPT(mediaType = MediaType(&quot;application/javascript&quot;, &quot;js&quot;)),</span>
+<span class="fc" id="L18">  SCRIPT(mediaType = MediaType(&quot;application/javascript&quot;, &quot;js&quot;)),</span>
 
   /** Stylesheet assets. */
-<span class="fc" id="L17">  STYLESHEET(mediaType = MediaType(&quot;text/css&quot;, &quot;css&quot;)),</span>
-<span class="fc" id="L18">}</span>
+<span class="fc" id="L21">  STYLESHEET(mediaType = MediaType(&quot;text/css&quot;, &quot;css&quot;)),</span>
+}
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -4,16 +4,17 @@ import com.google.common.util.concurrent.Futures
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import elide.server.cfg.ServerConfig
-import io.micronaut.caffeine.cache.Cache
-import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import jakarta.inject.Inject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Built-in asset manager implementation for use with Elide applications.
@@ -23,52 +24,62 @@ import org.slf4j.LoggerFactory
  *
  * @param reader Active asset reader implementation for this server run.
  */
-<span class="pc" id="L26">@Suppress(&quot;UnstableApiUsage&quot;)</span>
+<span class="pc" id="L27">@Suppress(&quot;UnstableApiUsage&quot;)</span>
 @Context
-<span class="fc" id="L28">public class ServerAssetManager @Inject constructor(</span>
-<span class="pc" id="L29">  override val reader: AssetReader,</span>
-<span class="fc" id="L30">  private val config: ServerConfig,</span>
+<span class="fc" id="L29">public class ServerAssetManager @Inject constructor(</span>
+<span class="fc" id="L30">  override val reader: AssetReader,</span>
+<span class="fc" id="L31">  private val config: ServerConfig,</span>
 ) : AssetManager {
   public companion object {
     // Wait timeout in seconds for initialization.
     public const val waitTimeout: Long = 10L
   }
 
-  // Cache for rendered asset results.
-<span class="fc" id="L38">  private val assetCache: Cache&lt;ServerAsset, RenderedAsset&gt; = Caffeine.newBuilder()</span>
-<span class="fc" id="L39">    .build()</span>
-
   /** @inheritDoc */
-<span class="pc" id="L42">  override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)</span>
+<span class="fc" id="L39">  override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)</span>
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-<span class="nc" id="L46">    TODO(&quot;not yet implemented&quot;)</span>
+<span class="fc" id="L43">    val responseData = NettyStreamedFileCustomizableResponseType(</span>
+<span class="fc" id="L44">      ByteArrayInputStream(asset.producer.invoke().toByteArray()),</span>
+<span class="fc" id="L45">      asset.type.mediaType</span>
+    )
+<span class="fc" id="L47">    val response = HttpResponse.ok(</span>
+<span class="fc" id="L48">      responseData</span>
+<span class="fc" id="L49">    ).characterEncoding(</span>
+<span class="fc" id="L50">      StandardCharsets.UTF_8</span>
+<span class="fc" id="L51">    ).contentType(</span>
+<span class="fc" id="L52">      asset.type.mediaType</span>
+<span class="fc" id="L53">    ).contentLength(</span>
+<span class="fc" id="L54">      asset.size</span>
+    )
+<span class="fc" id="L56">    asset.headers.entries.forEach {</span>
+<span class="nc" id="L57">      val (header, value) = it</span>
+<span class="nc" id="L58">      response.header(header, value)</span>
+<span class="nc" id="L59">    }</span>
+<span class="fc" id="L60">    return response</span>
   }
 
   /** @inheritDoc */
   @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun renderAssetAsync(request: HttpRequest&lt;*&gt;, asset: ServerAsset): Deferred&lt;StreamedAssetResponse&gt; {
     // if asset serving is disabled, return a 404 for all asset calls.
-<span class="nc bnc" id="L53" title="All 2 branches missed.">    if (!config.assets.enabled) {</span>
-<span class="nc" id="L54">      return Futures.immediateFuture(</span>
-<span class="nc" id="L55">        HttpResponse.notFound&lt;StreamedAsset&gt;()</span>
-<span class="nc" id="L56">      ).asDeferred()</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">    if (!config.assets.enabled) {</span>
+<span class="nc" id="L68">      return Futures.immediateFuture(</span>
+<span class="nc" id="L69">        HttpResponse.notFound&lt;StreamedAsset&gt;()</span>
+<span class="nc" id="L70">      ).asDeferred()</span>
     }
-
-<span class="nc bnc" id="L59" title="All 2 branches missed.">    return withContext(Dispatchers.IO) {</span>
-<span class="nc" id="L60">      async {</span>
+<span class="fc" id="L72">    logging.debug(</span>
+<span class="fc" id="L73">      &quot;Serving asset with module ID '${asset.module}'&quot;</span>
+    )
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">    return withContext(Dispatchers.IO) {</span>
+<span class="pc" id="L76">      async {</span>
         // pass off to the reader to read the asset
-<span class="nc" id="L62">        val assetContent = reader.readAsync(asset)</span>
-<span class="nc" id="L63">        assetContent.invokeOnCompletion {</span>
-<span class="nc bnc" id="L64" title="All 2 branches missed.">          if (it != null) {</span>
-<span class="nc" id="L65">            logging.error(&quot;Error reading asset: $asset&quot;, it)</span>
-          } else {
-<span class="nc" id="L67">            assetCache.put(asset, assetContent.getCompleted())</span>
-          }
-<span class="nc" id="L69">        }</span>
-<span class="nc" id="L70">        buildAssetResponse(</span>
-<span class="nc" id="L71">          assetContent.await()</span>
+<span class="fc" id="L78">        buildAssetResponse(</span>
+<span class="fc" id="L79">          reader.readAsync(</span>
+<span class="fc" id="L80">            asset,</span>
+<span class="fc" id="L81">            request = request,</span>
+<span class="fc" id="L82">          ).await()</span>
         )
       }
     }

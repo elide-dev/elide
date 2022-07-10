@@ -5,10 +5,16 @@ import elide.server.AssetTag
 import tools.elide.assets.AssetBundle
 import java.util.SortedMap
 
-/** Loaded/interpreted asset manifest data structure. */
-<span class="fc" id="L9">internal class ServerAssetManifest(</span>
-<span class="fc" id="L10">  internal val bundle: AssetBundle,</span>
-<span class="fc" id="L11">  internal val moduleIndex: SortedMap&lt;AssetModuleId, AssetPointer&gt;,</span>
-<span class="fc" id="L12">  internal val tagIndex: SortedMap&lt;AssetTag, Int&gt;,</span>
+/**
+ * Loaded/interpreted asset manifest data structure.
+ *
+ * @param bundle De-serialized asset bundle, embedded in the application.
+ * @param moduleIndex Sorted map (index) of asset module IDs to asset pointers.
+ * @param tagIndex Sorted map (index) of asset tags to content payload indexes.
+ */
+<span class="fc" id="L15">internal class ServerAssetManifest(</span>
+<span class="fc" id="L16">  internal val bundle: AssetBundle,</span>
+<span class="fc" id="L17">  internal val moduleIndex: SortedMap&lt;AssetModuleId, AssetPointer&gt;,</span>
+<span class="fc" id="L18">  internal val tagIndex: SortedMap&lt;AssetTag, Int&gt;,</span>
 )
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

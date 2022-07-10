@@ -21,5 +21,5 @@ Default implementation of an [AssetReader](../-asset-reader/index.md); used in c
 
 | Name | Summary |
 |---|---|
-| [readAsync](read-async.md) | [jvm]<br>open suspend override fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md)): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt; |
-| [resolve](../-asset-resolver/resolve.md) | [jvm]<br>open fun [resolve](../-asset-resolver/resolve.md)(request: HttpRequest&lt;*&gt;): [ServerAsset](../-server-asset/index.md)?<br>open override fun [resolve](resolve.md)(path: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ServerAsset](../-server-asset/index.md)? |
+| [readAsync](read-async.md) | [jvm]<br>open suspend override fun [readAsync](read-async.md)(descriptor: [ServerAsset](../-server-asset/index.md), request: HttpRequest&lt;*&gt;?): Deferred&lt;[RenderedAsset](../-rendered-asset/index.md)&gt; |
+| [resolve](../-asset-resolver/resolve.md) | [jvm]<br>open fun [resolve](../-asset-resolver/resolve.md)(request: HttpRequest&lt;*&gt;): [ServerAsset](../-server-asset/index.md)?<br>Resolve the provided HTTP [request](../-asset-resolver/resolve.md) to an asset path string, and then resolve the asset path string to a loaded [ServerAsset](../-server-asset/index.md), if possible; return `null` if the asset cannot be located.<br>[jvm]<br>open override fun [resolve](resolve.md)(path: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ServerAsset](../-server-asset/index.md)? |

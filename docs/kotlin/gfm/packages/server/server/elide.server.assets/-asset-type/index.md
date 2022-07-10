@@ -7,6 +7,14 @@ enum [AssetType](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib
 
 Enumerates known kinds of registered application assets.
 
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| mediaType | Micronaut media type associated with this asset type. |
+
 ## Entries
 
 | | |

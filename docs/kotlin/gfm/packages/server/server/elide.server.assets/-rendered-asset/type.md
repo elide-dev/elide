@@ -3,4 +3,12 @@
 # type
 
 [jvm]\
-val [type](type.md): MediaType
+val [type](type.md): [AssetType](../-asset-type/index.md)
+
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| type | Type of asset being served. |

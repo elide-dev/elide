@@ -3,4 +3,13 @@
 # Script
 
 [jvm]\
-fun [Script](-script.md)(descriptor: AssetBundle.ScriptBundle)
+fun [Script](-script.md)(descriptor: AssetBundle.ScriptBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?)
+
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| descriptor | Script-type settings bundle describing this asset. |
+| index | Index of the content payload, within the live asset bundle, corresponding to this script. |

@@ -3,9 +3,9 @@
 # AssetController
 
 [jvm]\
-@Requires(property = &quot;elide.assets.enabled&quot;, value = &quot;true&quot;)
+@Requires(property = &quot;elide.assets.enabled&quot;, notEquals = &quot;false&quot;)
 
-@Controller(value = &quot;${elide.assets.prefix}&quot;)
+@Controller(value = &quot;${elide.assets.prefix:/_/assets}&quot;)
 
 class [AssetController](index.md) : [StatusEnabledController](../../elide.server.controller/-status-enabled-controller/index.md)
 
@@ -23,5 +23,4 @@ For this controller to be enabled, the configuration value `elide.assets.enabled
 
 | Name | Summary |
 |---|---|
-| [assetGet](asset-get.md) | [jvm]<br>@Get<br>suspend fun [assetGet](asset-get.md)(request: HttpRequest&lt;*&gt;): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>TBD |
-| [assetOptions](asset-options.md) | [jvm]<br>@Options<br>suspend fun [assetOptions](asset-options.md)(request: HttpRequest&lt;*&gt;): HttpResponse&lt;*&gt;<br>TBD |
+| [assetGet](asset-get.md) | [jvm]<br>@Get(value = &quot;/{tag}.{ext}&quot;)<br>suspend fun [assetGet](asset-get.md)(request: HttpRequest&lt;*&gt;, tag: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), ext: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Handles HTTP `GET` calls to asset endpoints based on &quot;asset tag&quot; values, which are generated at build time, and are typically composed of  8-16 characters from the tail end of the content hash for the asset. |

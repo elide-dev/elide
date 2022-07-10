@@ -17,18 +17,18 @@ jobs:
   gradle:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [buildjet-64vcpu-ubuntu-2004]
         experimental: [false]
         gu-binary: [gu]
         java: [17]
         gvm: [latest]
         include:
-          - os: ubuntu-latest
+          - os: buildjet-64vcpu-ubuntu-2004
             experimental: false
             gu-binary: gu
             java: 17
             gvm: latest
-          - os: ubuntu-latest
+          - os: buildjet-64vcpu-ubuntu-2004
             experimental: true
             gu-binary: gu
             java: 11
@@ -128,7 +128,7 @@ jobs:
   ## Job: Testsuite (JVM)
   ##
   tests-jvm:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [gradle]
     continue-on-error: true
     permissions:
@@ -204,7 +204,7 @@ jobs:
   ## Job: Testsuite (Native)
   ##
   tests-native:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [gradle]
     continue-on-error: true  # temporary
     if: |
@@ -279,7 +279,7 @@ jobs:
 #  ## Job: Qodana
 #  ##
 #  tools-qodana:
-#    runs-on: ubuntu-latest
+#    runs-on: buildjet-64vcpu-ubuntu-2004
 #    needs: [gradle]
 #    continue-on-error: true
 #    timeout-minutes: 10
@@ -298,7 +298,7 @@ jobs:
   ## Job: Sonar
   ##
   tools-sonar:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [gradle, tests-jvm]
     steps:
       ## Setup: Checkout Code
@@ -371,7 +371,7 @@ jobs:
   ## Job: Report Coverage
   ##
   tools-codecov:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [tests-jvm]
     continue-on-error: true
     steps:
@@ -397,7 +397,7 @@ jobs:
   ## Job: Docker Samples (JVM)
   ##
   docker-jvm:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [gradle]
     if: |
       (
@@ -557,7 +557,7 @@ jobs:
   ##
 
   docker-native:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-64vcpu-ubuntu-2004
     needs: [gradle]
     if: |
       (

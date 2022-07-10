@@ -17,42 +17,42 @@ jobs:
   gradle:
     strategy:
       matrix:
-        os: [buildjet-64vcpu-ubuntu-2004]
+        os: [ubuntu-latest]
         experimental: [false]
         gu-binary: [gu]
         java: [17]
         gvm: [latest]
         include:
-          - os: buildjet-64vcpu-ubuntu-2004
+          - os: ubuntu-latest
             experimental: false
             gu-binary: gu
             java: 17
             gvm: latest
-          - os: buildjet-64vcpu-ubuntu-2004
+          - os: ubuntu-latest
             experimental: true
             gu-binary: gu
             java: 11
             gvm: latest
-          # - os: macos-latest
-          #   experimental: true
-          #   gu-binary: gu
-          #   java: 11
-          #   gvm: latest
-          # - os: macos-latest
-          #   experimental: true
-          #   gu-binary: gu
-          #   java: 17
-          #   gvm: latest
-          # - os: windows-latest
-          #   experimental: true
-          #   gu-binary: gu.cmd
-          #   java: 11
-          #   gvm: latest
-          # - os: windows-latest
-          #   experimental: true
-          #   gu-binary: gu.cmd
-          #   java: 17
-          #   gvm: latest
+         - os: macos-latest
+           experimental: true
+           gu-binary: gu
+           java: 11
+           gvm: latest
+         - os: macos-latest
+           experimental: true
+           gu-binary: gu
+           java: 17
+           gvm: latest
+         - os: windows-latest
+           experimental: true
+           gu-binary: gu.cmd
+           java: 11
+           gvm: latest
+         - os: windows-latest
+           experimental: true
+           gu-binary: gu.cmd
+           java: 17
+           gvm: latest
 
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -68,12 +68,6 @@ jobs:
         shell: bash
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: ${{ matrix.java }}
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
@@ -138,12 +132,6 @@ jobs:
     steps:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
-
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
 
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
@@ -256,12 +244,6 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
@@ -332,12 +314,6 @@ jobs:
       id-token: 'write'
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:
@@ -492,12 +468,6 @@ jobs:
       id-token: 'write'
 
     steps:
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-
       ## Setup: GraalVM
       - uses: graalvm/setup-graalvm@v1
         with:

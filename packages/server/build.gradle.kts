@@ -208,6 +208,7 @@ dependencies {
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
+  testImplementation(libs.micronaut.test.junit5)
   testImplementation(kotlin("test"))
   testImplementation(project(":packages:test"))
 }

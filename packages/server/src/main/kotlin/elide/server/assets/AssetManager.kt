@@ -80,12 +80,6 @@ import org.slf4j.Logger
   public val logging: Logger
 
   /**
-   * Initialize the asset manager by loading embedded asset data, and mapping it in-memory for hot serving; other tasks
-   * may be performed to prep for asset serving via this method.
-   */
-  public fun initialize()
-
-  /**
    * Resolve the provided asset [path] to a [ServerAsset] descriptor; if the file cannot be found, return `null`, and
    * otherwise, throw an error.
    *

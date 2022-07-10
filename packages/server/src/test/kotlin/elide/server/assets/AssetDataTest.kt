@@ -49,4 +49,9 @@ class AssetDataTest {
     )
     assertEquals(pointer, deserialized)
   }
+
+  @Test fun testAssetDependency() {
+    val nonOptional = AssetDependency("test1", "test2", optional = false)
+    val optional = AssetDependency("test1", "test2", optional = true)
+  }
 }

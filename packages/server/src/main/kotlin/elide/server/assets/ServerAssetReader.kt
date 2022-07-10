@@ -6,7 +6,8 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.Deferred
 
 /**
- *
+ * Default implementation of an [AssetReader]; used in concert with the default [AssetManager] to fulfill HTTP requests
+ * for static assets embedded within the application.
  */
 @Context @Singleton
 public class ServerAssetReader : AssetReader {

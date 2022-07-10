@@ -32,8 +32,8 @@ import java.io.InputStream
   public companion object {
     private const val assetRoot = "/assets"
     private val assetManifestCandidates = listOf(
-      ManifestFormat.BINARY to "$assetRoot/assets.assets.pb",
-      ManifestFormat.JSON to "$assetRoot/assets.assets.pb.json",
+      ManifestFormat.BINARY to "$assetRoot/app.assets.pb",
+      ManifestFormat.JSON to "$assetRoot/app.assets.pb.json",
     )
   }
 

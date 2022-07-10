@@ -23,10 +23,7 @@ import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /** Tests for [ServerAssetIndex]. */
 @Suppress("UnstableApiUsage")
@@ -53,11 +50,11 @@ class ServerAssetIndexTest {
     return sample to ServerAssetIndex(
       exec,
       object : AssetManifestLoader {
-        override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
+        override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle {
           return sample
         }
 
-        override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream>? {
+        override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream> {
           return ManifestFormat.BINARY to ByteArrayInputStream(ByteArray(0))
         }
       }
@@ -80,9 +77,9 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateFailDuplicateTags() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts("test2", ScriptBundle.newBuilder().setModule("test2").build())
     val (_, indexer) = createIndexer(bundle.build())
@@ -93,8 +90,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateFailDuplicateModuleIds() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts("test2", ScriptBundle.newBuilder().setModule("test2").build())
     bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
@@ -106,8 +103,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateWithScriptDeps() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts(
       "test2",
@@ -174,8 +171,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateWithStyleDeps() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
     bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
     bundle.putStyles(
       "test2",
@@ -242,7 +239,7 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateIndexesTextAssets() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
     bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
@@ -384,5 +381,168 @@ class ServerAssetIndexTest {
     assertTrue(manifest.moduleIndex.isNotEmpty())
     assertTrue(manifest.tagIndex.isNotEmpty())
     assertThat(sample).isEqualTo(manifest.bundle)
+  }
+
+  @Test fun testLookupAssetByTagScript() {
+    val bundle = AssetBundle.newBuilder()
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
+    val target = bundle.build()
+    val (_, indexer) = createIndexer(target)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    val resolved = assertDoesNotThrow {
+      indexer.resolveByTag("abc123")
+    }
+    assertNotNull(
+      resolved,
+      "should be able to resolve known-good script by tag"
+    )
+    assertTrue(
+      resolved is ServerAsset.Script,
+      "resolved asset should be the right sub-type"
+    )
+  }
+
+  @Test fun testLookupAssetByTagStyle() {
+    val bundle = AssetBundle.newBuilder()
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
+    val target = bundle.build()
+    val (_, indexer) = createIndexer(target)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    val resolved = assertDoesNotThrow {
+      indexer.resolveByTag("abc123")
+    }
+    assertNotNull(
+      resolved,
+      "should be able to resolve known-good stylesheet by tag"
+    )
+    assertTrue(
+      resolved is ServerAsset.Stylesheet,
+      "resolved asset should be the right sub-type"
+    )
+  }
+
+  @Test fun testLookupAssetByTagText() {
+    val bundle = AssetBundle.newBuilder()
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
+    val target = bundle.build()
+    val (_, indexer) = createIndexer(target)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    val resolved = assertDoesNotThrow {
+      indexer.resolveByTag("abc123")
+    }
+    assertNotNull(
+      resolved,
+      "should be able to resolve known-good text asset by tag"
+    )
+    assertTrue(
+      resolved is ServerAsset.Text,
+      "resolved asset should be the right sub-type"
+    )
+  }
+
+  @Test fun testLookupAssetByTagNotFound() {
+    val bundle = AssetBundle.newBuilder()
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
+    val target = bundle.build()
+    val (_, indexer) = createIndexer(target)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    val resolved = assertDoesNotThrow {
+      indexer.resolveByTag("abc124")
+    }
+    assertNull(
+      resolved,
+      "should NOT be able to resolve known-bad asset by tag"
+    )
+  }
+
+  @Test fun testFailBuildConcreteGeneric() {
+    val bundle = AssetBundle.newBuilder()
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
+    val target = bundle.build()
+    val (_, indexer) = createIndexer(target)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    assertThrows<IllegalStateException> {
+      indexer.buildConcreteAsset(
+        AssetType.GENERIC,
+        "some-module-id",
+        target,
+        null,
+      )
+    }
+  }
+
+  @Test fun testInitializeBeforeAccessingManifest() {
+    val (_, indexer) = createIndexer()
+    assertThrows<IllegalArgumentException> {
+      indexer.activeManifest()
+    }
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+    assertDoesNotThrow {
+      indexer.activeManifest()
+    }
+  }
+
+  @Test fun addDirectDepsTest() {
+    // build a deliberately incorrect graph
+    val (_, indexer) = createIndexer()
+    val builder: ImmutableNetwork.Builder<AssetModuleId, AssetDependency> = NetworkBuilder
+      .directed()
+      .allowsParallelEdges(false)
+      .allowsSelfLoops(false)
+      .nodeOrder(ElementOrder.stable<AssetModuleId>())
+      .edgeOrder(ElementOrder.stable<AssetDependency>())
+      .immutable()
+
+    indexer.addDirectDeps(
+      "should-be-there",
+      builder,
+      AssetDependencies.getDefaultInstance(),
+    )
+    indexer.addDirectDeps(
+      "should-also-be-there",
+      builder,
+      AssetDependencies.getDefaultInstance(),
+    )
+    indexer.addDirectDeps(
+      "should-not-be-there",
+      builder,
+      AssetDependencies.getDefaultInstance(),
+    )
+    indexer.addDirectDeps(
+      "some-module-id",
+      builder,
+      AssetDependencies
+        .newBuilder()
+        .addDirect("should-be-there")
+        .addDirect("should-also-be-there")
+        .addTransitive("should-not-be-there")
+        .build()
+    )
+    val depGraph = builder.build()
+    assertTrue(depGraph.nodes().isNotEmpty())
+    assertTrue(depGraph.nodes().contains("should-be-there"))
+    assertTrue(depGraph.nodes().contains("should-also-be-there"))
+    assertTrue(depGraph.nodes().contains("some-module-id"))
+    assertTrue(depGraph.edges().contains(AssetDependency("some-module-id", "should-be-there")))
+    assertTrue(depGraph.edges().contains(AssetDependency("some-module-id", "should-also-be-there")))
+    assertFalse(depGraph.edges().contains(AssetDependency("some-module-id", "should-not-be-there")))
+    assertTrue(depGraph.edgesConnecting("some-module-id", "should-not-be-there").isEmpty())
   }
 }

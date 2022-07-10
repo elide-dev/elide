@@ -6,20 +6,23 @@ import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
 import elide.server.AssetModuleId
-import elide.server.runtime.AppExecutor
+import elide.server.AssetTag
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.server.event.ServerStartupEvent
 import jakarta.inject.Inject
 import tools.elide.assets.AssetBundle
+import tools.elide.assets.AssetBundle.AssetContent
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import kotlin.math.max
 
 /**
  * Server-side utility which, at server startup, consumes the embedded asset bundle (if any), and generates a set of
@@ -45,16 +48,19 @@ import java.util.stream.IntStream
  * initializes by calling into [ServerAssetManifestProvider] (having been initialized by the DI container already), and
  * waits until a materialized asset bundle is ready. From that bundle, indexes are computed and then made live.
  *
- * @param exec Background executor which should be used to load and index assets.
  * @param manifestProvider Provider for the de-serialized asset manifest. Responsible for locating the bundle within the
  *   current application and de-serializing it into an interpreted manifest.
  */
 @Context
 @Suppress("UnstableApiUsage")
 internal class ServerAssetIndex @Inject constructor(
-  private val exec: AppExecutor,
   private val manifestProvider: AssetManifestLoader,
 ) {
+  companion object {
+    private const val WAIT_TIMEOUT = 5L
+    private const val MIN_TAIL_SIZE = 4
+  }
+
   // Wait latch for asset consumers.
   private val latch: CountDownLatch = CountDownLatch(1)
 
@@ -79,11 +85,21 @@ internal class ServerAssetIndex @Inject constructor(
   // Interpreted manifest structure loaded from the embedded proto document.
   internal val assetManifest: AtomicReference<ServerAssetManifest?> = AtomicReference(null)
 
-  private fun addDirectDeps(
+  // Resolve the active manifest or fail loudly.
+  @VisibleForTesting internal fun activeManifest(): ServerAssetManifest {
+    require(initialized.get()) {
+      "Asset manager is not initialized; `activeManifest` cannot be called yet"
+    }
+    return assetManifest.get()!!
+  }
+
+  @VisibleForTesting internal fun addDirectDeps(
     moduleId: String,
     depGraph: ImmutableNetwork.Builder<AssetModuleId, AssetDependency>,
     deps: AssetBundle.AssetDependencies,
   ) {
+    depGraph.addNode(moduleId)
+
     // add only direct dependencies
     deps.directList.forEach {
       depGraph.addEdge(
@@ -111,12 +127,18 @@ internal class ServerAssetIndex @Inject constructor(
       .edgeOrder(ElementOrder.stable<AssetDependency>())
       .immutable()
 
-    // first, build the asset tag index by iterating over content, which references assets by module ID. we can then
-    // use this index while building the asset module index, enabled with processed content records.
-    val tagIndex = IntStream.rangeClosed(0, bundle.assetCount - 1).parallel().mapToObj {
+    val tagIndex = ConcurrentSkipListMap<AssetTag, Int>()
+
+    // first, build a content payload index which maps each module to the content payload which implements it.
+    val modulesToIndexes = IntStream.rangeClosed(0, bundle.assetCount - 1).parallel().mapToObj {
       it to bundle.getAsset(it)
     }.map {
       val (idx, content) = it
+
+      // map the tag to both the full asset fingerprint, and the "trimmed" asset fingerprint, which is the "asset tag."
+      // the asset tag length is specified on the settings payload in the manifest.
+      tagIndex[content.token] = idx
+      tagIndex[content.token.takeLast(max(bundle.settings.digestSettings.tail, MIN_TAIL_SIZE))] = idx
       content.module to idx
     }.collect(
       Collectors.toMap(
@@ -147,11 +169,10 @@ internal class ServerAssetIndex @Inject constructor(
       // we're working with a type of asset and index in the array here. so we need to use a concrete extractor, but we
       // are just assembling an index, so we return back to generic use quickly.
       val (assetType, moduleId) = it
-      builder.addNode(moduleId)
       it.second to pointerForConcrete(
         assetType,
         moduleId,
-        tagIndex[moduleId],
+        modulesToIndexes[moduleId],
         bundle,
         builder,
       )
@@ -163,6 +184,7 @@ internal class ServerAssetIndex @Inject constructor(
         { ConcurrentSkipListMap() }
       )
     )
+
     return builder.build() to ServerAssetManifest(
       bundle = bundle,
       moduleIndex = moduleIndex,
@@ -227,18 +249,90 @@ internal class ServerAssetIndex @Inject constructor(
   @Synchronized
   internal fun initialize() {
     if (initialized.compareAndSet(false, true)) {
-      exec.service().run {
-        // read the embedded asset bundle
-        val assetBundle = manifestProvider.findLoadManifest() ?: return@run
+      // read the embedded asset bundle
+      val assetBundle = manifestProvider.findLoadManifest() ?: return
 
-        // build index of assets to modules and tags
-        val (graph, manifest) = buildAssetIndexes(assetBundle)
-        assetManifest.set(manifest)
-        dependencyGraph.set(graph)
+      // build index of assets to modules and tags
+      val (graph, manifest) = buildAssetIndexes(assetBundle)
+      assetManifest.set(manifest)
+      dependencyGraph.set(graph)
 
-        // allow asset serving now
-        latch.countDown()
+      // allow asset serving now
+      latch.countDown()
+    }
+  }
+
+  @VisibleForTesting
+  internal fun buildConcreteAsset(type: AssetType, moduleId: String, bundle: AssetBundle, idx: Int?): ServerAsset {
+    return when (type) {
+      // if it's a script, wrap it as a script
+      AssetType.SCRIPT -> ServerAsset.Script(
+        bundle.getScriptsOrThrow(moduleId),
+        idx,
+      )
+
+      // if it's a stylesheet, wrap it as a stylesheet
+      AssetType.STYLESHEET -> ServerAsset.Stylesheet(
+        bundle.getStylesOrThrow(moduleId),
+        idx,
+      )
+
+      // same with text
+      AssetType.TEXT -> ServerAsset.Text(
+        bundle.getGenericOrThrow(moduleId),
+        idx,
+      )
+
+      else -> error("Unsupported asset type for pointer: '${type.name}'")
+    }
+  }
+
+  /**
+   * Look up any embedded server asset by the provided asset [tag], or return `null` to indicate that there was no
+   * matching asset.
+   *
+   * @param tag Tag for the asset to resolve.
+   * @return Resolved and interpreted asset, or `null`.
+   */
+  internal fun resolveByTag(tag: String): ServerAsset? {
+    if (!initialized.get()) {
+      latch.await(WAIT_TIMEOUT, TimeUnit.SECONDS)
+      if (!initialized.get()) {
+        return null
       }
     }
+    val manifest = activeManifest()
+    return manifest.tagIndex[tag]?.let { asset ->
+      // we've found an asset pointer, so we just need to wrap it with extra metadata before returning.
+      val assetPayload = manifest.bundle.getAsset(asset)
+      val pointer = manifest.moduleIndex[assetPayload.module]!!
+      buildConcreteAsset(
+        pointer.type,
+        pointer.moduleId,
+        manifest.bundle,
+        pointer.index,
+      )
+    }
+  }
+
+  /**
+   * Given a known-good asset [idx] for a content payload, read the asset and perform any transformations or other
+   * relevant pre-requisite work before returning it to the invoking client.
+   *
+   * @param idx Index of the content payload implementing this module.
+   * @return Rendered asset module, ready for serving decisions.
+   */
+  internal suspend fun readByModuleIndex(idx: Int): AssetContent {
+    return activeManifest().bundle.getAsset(idx)!!
+  }
+
+  /**
+   * Retrieve the timestamp indicating when the active asset bundle was generated; this is used as the last-modified
+   * value when serving assets from the bundle.
+   *
+   * @return Generated timestamp value, in seconds, from the active asset bundle.
+   */
+  internal fun getBundleTimestamp(): Long {
+    return activeManifest().bundle.generated.seconds
   }
 }

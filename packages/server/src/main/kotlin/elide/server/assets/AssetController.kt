@@ -1,13 +1,13 @@
 package elide.server.assets
 
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.server.StreamedAssetResponse
 import elide.server.controller.StatusEnabledController
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Options
 import jakarta.inject.Inject
 
 /**
@@ -18,22 +18,26 @@ import jakarta.inject.Inject
  * asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
  */
 @Requires(property = "elide.assets.enabled", value = "true")
-@Controller("\${elide.assets.prefix}") public class AssetController : StatusEnabledController {
+@Controller("\${elide.assets.prefix}")
+public class AssetController : StatusEnabledController {
+  private val logging: Logger = Logging.of(AssetController::class)
   @Inject internal lateinit var assetManager: AssetManager
 
   /**
-   * TBD
+   * Handles HTTP `GET` calls to asset endpoints based on "asset tag" values, which are generated at build time, and are
+   * typically composed of  8-16 characters from the tail end of the content hash for the asset.
+   *
+   * @param request HTTP request incoming to this endpoint.
+   * @param tag Decoded tag value from the URL.
+   * @param ext Extension value from the URL.
    */
-  @Get public suspend fun assetGet(request: HttpRequest<*>): StreamedAssetResponse {
+  @Get("/{tag}.{ext}")
+  public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): StreamedAssetResponse {
+    logging.debug {
+      "Loading asset with tag '$tag' (extension: '$ext')"
+    }
     return assetManager.serveAsync(
       request
     ).await()
-  }
-
-  /**
-   * TBD
-   */
-  @Options public suspend fun assetOptions(request: HttpRequest<*>): HttpResponse<*> {
-    TODO("not yet implemented")
   }
 }

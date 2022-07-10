@@ -4,16 +4,17 @@ import com.google.common.util.concurrent.Futures
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import elide.server.cfg.ServerConfig
-import io.micronaut.caffeine.cache.Cache
-import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import jakarta.inject.Inject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 /**
  * Built-in asset manager implementation for use with Elide applications.
@@ -34,16 +35,29 @@ public class ServerAssetManager @Inject constructor(
     public const val waitTimeout: Long = 10L
   }
 
-  // Cache for rendered asset results.
-  private val assetCache: Cache<ServerAsset, RenderedAsset> = Caffeine.newBuilder()
-    .build()
-
   /** @inheritDoc */
   override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-    TODO("not yet implemented")
+    val responseData = NettyStreamedFileCustomizableResponseType(
+      ByteArrayInputStream(asset.producer.invoke().toByteArray()),
+      asset.type.mediaType
+    )
+    val response = HttpResponse.ok(
+      responseData
+    ).characterEncoding(
+      StandardCharsets.UTF_8
+    ).contentType(
+      asset.type.mediaType
+    ).contentLength(
+      asset.size
+    )
+    asset.headers.entries.forEach {
+      val (header, value) = it
+      response.header(header, value)
+    }
+    return response
   }
 
   /** @inheritDoc */
@@ -55,20 +69,14 @@ public class ServerAssetManager @Inject constructor(
         HttpResponse.notFound<StreamedAsset>()
       ).asDeferred()
     }
-
     return withContext(Dispatchers.IO) {
       async {
         // pass off to the reader to read the asset
-        val assetContent = reader.readAsync(asset)
-        assetContent.invokeOnCompletion {
-          if (it != null) {
-            logging.error("Error reading asset: $asset", it)
-          } else {
-            assetCache.put(asset, assetContent.getCompleted())
-          }
-        }
         buildAssetResponse(
-          assetContent.await()
+          reader.readAsync(
+            asset,
+            request = request,
+          ).await()
         )
       }
     }

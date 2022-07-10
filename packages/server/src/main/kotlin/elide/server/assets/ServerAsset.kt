@@ -1,49 +1,71 @@
 package elide.server.assets
 
-import io.micronaut.http.MediaType
+import elide.server.AssetModuleId
 import tools.elide.assets.AssetBundle
 
 /**
  * Describes a server-side asset which is embedded in an application bundle through Elide's asset tools and protocol
  * buffer for asset bundle metadata.
  *
- * @param mediaType Type of media assigned to this asset descriptor.
+ * @param module ID assigned by the developer to this asset module.
+ * @param assetType Type of asset being referenced by this object.
  * @param dynamicEligible Whether this type of media is eligible for dynamic transformation.
+ * @param index Index of this asset within the content bundle, if applicable.
  */
-public sealed class ServerAsset private constructor (
-  private val mediaType: MediaType,
-  private val dynamicEligible: Boolean,
+public sealed class ServerAsset private constructor(
+  internal val module: AssetModuleId,
+  internal val assetType: AssetType,
+  internal val dynamicEligible: Boolean,
+  internal val index: Int?,
 ) {
   /**
    * Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol
    * buffer structures; when read from the application bundle and interpreted, this class is used to hold script info.
+   *
+   * @param descriptor Script-type settings bundle describing this asset.
+   * @param index Index of the content payload, within the live asset bundle, corresponding to this script.
    */
   public class Script(
-    private val descriptor: AssetBundle.ScriptBundle
+    internal val descriptor: AssetBundle.ScriptBundle,
+    index: Int?,
   ) : ServerAsset(
-    mediaType = MediaType("application/javascript", "js"),
+    module = descriptor.module,
+    assetType = AssetType.SCRIPT,
     dynamicEligible = true,
+    index = index,
   )
 
   /**
    * Describes a stylesheet asset which is embedded in a given Elide application, and described by Elide's protocol
    * buffer structures; when read from the application bundle and interpreted, this class is used to hold document info.
+   *
+   * @param descriptor Stylesheet-type settings bundle describing this asset.
+   * @param index Index of the content payload, within the live asset bundle, corresponding to this stylesheet.
    */
   public class Stylesheet(
-    private val descriptor: AssetBundle.StyleBundle
+    internal val descriptor: AssetBundle.StyleBundle,
+    index: Int?,
   ) : ServerAsset(
-    mediaType = MediaType("text/css", "css"),
+    module = descriptor.module,
+    assetType = AssetType.STYLESHEET,
     dynamicEligible = true,
+    index = index,
   )
 
   /**
    * Describes a generic text asset of some kind, for example, `humans.txt` or `robots.txt`; when read from the app
    * bundle and interpreted, this class is used to hold file info.
+   *
+   * @param descriptor Text-type settings bundle describing this asset.
+   * @param index Index of the content payload, within the live asset bundle, corresponding to this text asset.
    */
   public class Text(
-    private val descriptor: AssetBundle.GenericBundle
+    internal val descriptor: AssetBundle.GenericBundle,
+    index: Int?,
   ) : ServerAsset(
-    mediaType = MediaType("text/plain", "txt"),
+    module = descriptor.module,
+    assetType = AssetType.TEXT,
     dynamicEligible = false,
+    index = index,
   )
 }

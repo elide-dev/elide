@@ -58,7 +58,9 @@ micronaut {
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
   processing {
     incremental.set(true)
-    annotations.add("$mainPackage.*")
+    annotations.addAll(listOf(
+      "$mainPackage.*",
+    ))
   }
   aot {
     optimizeServiceLoading.set(true)

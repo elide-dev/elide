@@ -1,6 +1,7 @@
 package elide.server.assets
 
 import elide.annotations.API
+import io.micronaut.http.HttpRequest
 import kotlinx.coroutines.Deferred
 import java.io.FileNotFoundException
 
@@ -51,8 +52,9 @@ import java.io.FileNotFoundException
    *
    * @throws FileNotFoundException if the provided asset cannot be located.
    * @param descriptor Resolved asset descriptor, which is expected to exist.
+   * @param request HTTP request which is asking to be served this asset.
    * @return Deferred task which resolves to a rendered asset which may be consumed, corresponding to [descriptor].
    */
   @Throws(FileNotFoundException::class)
-  public suspend fun readAsync(descriptor: ServerAsset): Deferred<RenderedAsset>
+  public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>? = null): Deferred<RenderedAsset>
 }

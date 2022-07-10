@@ -103,6 +103,7 @@ jobs:
           arguments: |
             build
             --scan
+            --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=false
             -Pversions.java.language=${{ matrix.java }}
@@ -161,6 +162,8 @@ jobs:
         with:
           arguments: |
             test
+            --scan
+            --dependency-verification=strict
             :tools:reports:reports
             -Pelide.ci=true
             -Pversions.java.language=17

@@ -16,15 +16,14 @@ import jakarta.inject.Inject
  *
  * For this controller to be enabled, the configuration value `elide.assets.enabled` needs to be set to `true`. The
  * asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
+ *
+ * @param assetManager Main asset manager which should be used to resolve and serve assets.
  */
 @Requires(property = "elide.assets.enabled", notEquals = "false")
 @Controller("\${elide.assets.prefix:/_/assets}")
-public class AssetController : StatusEnabledController {
+public class AssetController @Inject constructor(private val assetManager: AssetManager) : StatusEnabledController {
   // Logger pipe.
   private val logging: Logger = Logging.of(AssetController::class)
-
-  // Main asset manager.
-  @Inject internal lateinit var assetManager: AssetManager
 
   /**
    * Handles HTTP `GET` calls to asset endpoints based on "asset tag" values, which are generated at build time, and are

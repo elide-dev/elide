@@ -80,17 +80,6 @@ import org.slf4j.Logger
   public val logging: Logger
 
   /**
-   * Resolve the provided asset [path] to a [ServerAsset] descriptor; if the file cannot be found, return `null`, and
-   * otherwise, throw an error.
-   *
-   * @param path Relative path to the asset which we want to resolve.
-   * @return Resolved server asset, or `null` if one could not be located at the provided [path].
-   */
-  public fun resolve(path: String): ServerAsset? {
-    return reader.resolve(path)
-  }
-
-  /**
    * Resolve the asset requested by the provided HTTP [request]; if the corresponding file cannot be found, return
    * `null`, and otherwise, throw an error.
    *

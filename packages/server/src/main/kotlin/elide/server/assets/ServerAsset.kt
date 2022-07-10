@@ -9,13 +9,11 @@ import tools.elide.assets.AssetBundle
  *
  * @param module ID assigned by the developer to this asset module.
  * @param assetType Type of asset being referenced by this object.
- * @param dynamicEligible Whether this type of media is eligible for dynamic transformation.
  * @param index Index of this asset within the content bundle, if applicable.
  */
 public sealed class ServerAsset private constructor(
   internal val module: AssetModuleId,
   internal val assetType: AssetType,
-  internal val dynamicEligible: Boolean,
   internal val index: Int?,
 ) {
   /**
@@ -31,7 +29,6 @@ public sealed class ServerAsset private constructor(
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.SCRIPT,
-    dynamicEligible = true,
     index = index,
   )
 
@@ -48,7 +45,6 @@ public sealed class ServerAsset private constructor(
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.STYLESHEET,
-    dynamicEligible = true,
     index = index,
   )
 
@@ -65,7 +61,6 @@ public sealed class ServerAsset private constructor(
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.TEXT,
-    dynamicEligible = false,
     index = index,
   )
 }

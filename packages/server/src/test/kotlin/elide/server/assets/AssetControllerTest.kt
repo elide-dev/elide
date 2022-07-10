@@ -15,11 +15,6 @@ import kotlin.test.assertNotNull
 class AssetControllerTest {
   @Inject lateinit var controller: AssetController
 
-  @Test fun testConstruct() {
-    val ctr = AssetController()
-    assertNotNull(ctr)
-  }
-
   @Test fun testInjectable() {
     assertNotNull(controller)
   }

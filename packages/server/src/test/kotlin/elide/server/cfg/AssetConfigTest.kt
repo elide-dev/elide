@@ -3,6 +3,7 @@ package elide.server.cfg
 import kotlin.test.*
 
 /** Tests for asset-specific server configuration. */
+@Suppress("KotlinConstantConditions")
 class AssetConfigTest {
   @Test fun testAssetConfig() {
     val cfg = AssetConfig()
@@ -10,6 +11,7 @@ class AssetConfigTest {
     assertNotNull(cfg.enabled)
     assertNotNull(cfg.prefix)
     assertTrue(cfg.enabled)
+    assertTrue(cfg.etags)
 
     // asset config should be mutable
     cfg.enabled = false
@@ -19,5 +21,7 @@ class AssetConfigTest {
       cfg.prefix,
       "/_/somethingelse"
     )
+    cfg.etags = false
+    assertFalse(cfg.etags)
   }
 }

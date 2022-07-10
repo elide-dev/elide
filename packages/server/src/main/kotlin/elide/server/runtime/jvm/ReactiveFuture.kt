@@ -26,7 +26,6 @@ import javax.annotation.Nonnull
 import javax.annotation.concurrent.Immutable
 import javax.annotation.concurrent.ThreadSafe
 
-
 /**
  * Adapts future/async value containers from different frameworks (namely, Reactive Java, Guava, and the JDK).
  *
@@ -48,7 +47,7 @@ import javax.annotation.concurrent.ThreadSafe
  */
 @Immutable
 @ThreadSafe
-public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R?> {
+public class ReactiveFuture<R> : Publisher<R?>, ListenableFuture<R?>, ApiFuture<R?> {
   /** Inner future, if one is set. Otherwise [Optional.empty].  */
   private val future: Optional<ListenableFuture<R>>
 
@@ -103,12 +102,14 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
   }
 
   /** @return Internal future representation. */
+  @Suppress("ReturnCount")
   private fun resolveFuture(): ListenableFuture<R> {
     if (publisherAdapter != null) return publisherAdapter else if (javaFutureAdapter != null) return javaFutureAdapter
     return future.get()
   }
 
   /** @return Internal publisher representation. */
+  @Suppress("ReturnCount")
   private fun resolvePublisher(): Publisher<R> {
     if (futureAdapter != null) return futureAdapter else if (javaFutureAdapter != null) return javaFutureAdapter
     return Objects.requireNonNull(publisherAdapter)!!
@@ -434,8 +435,11 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
    *
    * @param <T> Emit type for this adapter. Matches the future it wraps.
   </T> */
+  @Suppress("TooManyFunctions")
   public class CompletableFuturePublisher<T> internal constructor(
-    @field:Nonnull @param:Nonnull private val future: CompletableFuture<T>,
+    @field:Nonnull
+    @param:Nonnull
+    private val future: CompletableFuture<T>,
     callbackExecutor: Executor
   ) : Publisher<T>, ListenableFuture<T>, CompletionStage<T> {
     private val stage: CompletionStage<T>
@@ -812,15 +816,16 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
        * @throws IllegalArgumentException If any value other than <pre>1</pre> is passed in.
        */
       @Synchronized
+      @Suppress("TooGenericExceptionCaught")
       override fun request(n: Long) {
         if (n == 1L && !completed.get()) {
           try {
             val future = this.future
             future.thenAcceptAsync({
-              var `val`: T? = null
+              var value: T? = null
               var err: Throwable? = null
               try {
-                `val` = future.get()
+                value = future.get()
               } catch (exc: Exception) {
                 err = exc
               }
@@ -828,8 +833,8 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
                 if (err != null) {
                   subscriber.onError(err)
                 } else {
-                  if (`val` != null) {
-                    subscriber.onNext(`val`)
+                  if (value != null) {
+                    subscriber.onNext(value)
                   }
                   subscriber.onComplete()
                 }
@@ -878,15 +883,21 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
    * @param future The future to convert or wait on.
    * @param callbackExecutor Executor to run the callback on.
    */ internal constructor(
-    @field:Nonnull @param:Nonnull private val future: ListenableFuture<T>,
-    @field:Nonnull @param:Nonnull private val callbackExecutor: Executor
+    @field:Nonnull
+    @param:Nonnull
+    private val future: ListenableFuture<T>,
+
+    @field:Nonnull
+    @param:Nonnull
+    private val callbackExecutor: Executor
   ) : Publisher<T> {
     override fun subscribe(subscriber: Subscriber<in T>) {
       Objects.requireNonNull(subscriber, "Subscriber cannot be null")
       subscriber.onSubscribe(
         ListenableFutureSubscription(
-          future, subscriber,
-          callbackExecutor
+          future,
+          subscriber,
+          callbackExecutor,
         )
       )
     }
@@ -910,10 +921,12 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
     ) : Subscription {
       private val completed = AtomicBoolean(false)
       private val subscriber: Subscriber<in T>
-      private val future // to allow cancellation
-        : ListenableFuture<T>
-      private val executor // executor to use when dispatching the callback
-        : Executor
+
+      // to allow cancellation
+      private val future: ListenableFuture<T>
+
+      // executor to use when dispatching the callback
+      private val executor: Executor
 
       /**
        * Private constructor, meant for use by `ListenableFuturePublisher` only.
@@ -932,15 +945,16 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
        * @throws IllegalArgumentException If any value other than <pre>1</pre> is passed in.
        */
       @Synchronized
+      @Suppress("TooGenericExceptionCaught")
       override fun request(n: Long) {
         if (n == 1L && !completed.get()) {
           try {
             val future = this.future
             future.addListener({
-              var `val`: T? = null
+              var value: T? = null
               var err: Throwable? = null
               try {
-                `val` = this.future.get()
+                value = this.future.get()
               } catch (exc: Exception) {
                 err = exc
               }
@@ -948,8 +962,8 @@ public class ReactiveFuture<R>: Publisher<R?>, ListenableFuture<R?>, ApiFuture<R
                 if (err != null) {
                   subscriber.onError(err)
                 } else {
-                  if (`val` != null) {
-                    subscriber.onNext(`val`)
+                  if (value != null) {
+                    subscriber.onNext(value)
                   }
                   subscriber.onComplete()
                 }

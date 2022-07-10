@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetResolver.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetResolver.kt</span></div><h1>AssetResolver.kt</h1><pre class="source lang-java linenums">package elide.server.assets
+
+import elide.annotations.API
+import io.micronaut.http.HttpRequest
+
+/**
+ * Describes the expected API surface for a resolver of server-side assets, which, in cooperation with an [AssetReader]
+ * and under the management of an [AssetManager], is responsible for checking asset paths for existence and translating
+ * them to absolute paths which may be read and served.
+ *
+ * @see AssetReader which is charged with efficiently reading asset content.
+ * @see AssetManager which coordinates between the [AssetReader] and [AssetResolver].
+ * @see RenderedAsset for the generic return value model leveraged by [AssetManager].
+ * @see ServerAsset for the symbolic asset reference model leveraged by [AssetManager].
+ */
+@API public interface AssetResolver {
+  /**
+   *
+   */
+  public fun resolve(path: String): ServerAsset?
+
+  /**
+   *
+   */
+  public fun resolve(request: HttpRequest&lt;*&gt;): ServerAsset? {
+<span class="nc" id="L26">    return resolve(request.path)</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

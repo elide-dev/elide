@@ -3,7 +3,7 @@
 # html
 
 [jvm]\
-fun [html](html.md)(block: HTML.() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): HttpResponse&lt;[ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)&gt;
+suspend fun [html](html.md)(block: suspend [HTML](../../../../packages/server/kotlinx.html/-h-t-m-l/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [RawResponse](index.md#852884585%2FClasslikes%2F-1343588467)
 
 Responds to a client with an HTML response, using specified [block](html.md) to build an HTML page via Kotlin's HTML DSL.
 

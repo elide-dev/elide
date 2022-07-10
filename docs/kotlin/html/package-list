@@ -9,6 +9,7 @@ $dokka.location:elide.runtime/Logging.Companion/of/#kotlin.reflect.KClass[*]/Poi
 $dokka.location:elide.runtime/Logging.Companion/root/#/PointingToDeclaration/base/elide.runtime/-logging/[jvm]-companion/root.html
 $dokka.location:elide.util/Base64/encoding/#/PointingToDeclaration/base/elide.util/-base64/[native]encoding.html
 module:base
+elide
 elide.annotations
 elide.runtime
 elide.runtime.js
@@ -25,7 +26,6 @@ elide.server
 elide.server.ssr
 module:graalvm-react
 elide.js.ssr
-react.dom.client
 module:model
 elide.annotations
 elide.model
@@ -37,7 +37,15 @@ elide.server.rpc
 elide.server.rpc.web
 module:server
 elide.server
+elide.server.annotations
+elide.server.assets
+elide.server.cfg
 elide.server.controller
 elide.server.runtime
+elide.server.runtime.jvm
+elide.server.util
+kotlinx.html
+kotlinx.html.tagext
 module:test
+elide.server
 elide.server.runtime

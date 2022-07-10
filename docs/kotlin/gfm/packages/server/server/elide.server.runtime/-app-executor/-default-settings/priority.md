@@ -4,3 +4,5 @@
 
 [jvm]\
 const val [priority](priority.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+
+Default priority assigned to threads for background execution.

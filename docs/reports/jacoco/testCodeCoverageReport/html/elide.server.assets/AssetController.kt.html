@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetController.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetController.kt</span></div><h1>AssetController.kt</h1><pre class="source lang-java linenums">package elide.server.assets
+
+import elide.server.StreamedAssetResponse
+import elide.server.controller.StatusEnabledController
+import io.micronaut.context.annotation.Requires
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Options
+import jakarta.inject.Inject
+
+/**
+ * Built-in controller implementation which bridges the configured asset serving prefix to the active [AssetManager]
+ * layer for this server run.
+ *
+ * For this controller to be enabled, the configuration value `elide.assets.enabled` needs to be set to `true`. The
+ * asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
+ */
+<span class="nc" id="L20">@Requires(property = &quot;elide.assets.enabled&quot;, value = &quot;true&quot;)</span>
+<span class="nc" id="L21">@Controller(&quot;\${elide.assets.prefix}&quot;) public class AssetController : StatusEnabledController {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">  @Inject internal lateinit var assetManager: AssetManager</span>
+
+  /**
+   * TBD
+   */
+<span class="nc" id="L27">  @Get public suspend fun assetGet(request: HttpRequest&lt;*&gt;): StreamedAssetResponse {</span>
+<span class="nc" id="L28">    return assetManager.serveAsync(</span>
+<span class="nc" id="L29">      request</span>
+<span class="nc" id="L30">    ).await()</span>
+  }
+
+  /**
+   * TBD
+   */
+  @Options public suspend fun assetOptions(request: HttpRequest&lt;*&gt;): HttpResponse&lt;*&gt; {
+<span class="nc" id="L37">    TODO(&quot;not yet implemented&quot;)</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

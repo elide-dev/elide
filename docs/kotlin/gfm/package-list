@@ -37,36 +37,22 @@ $dokka.location:elide.model/WireMessage/toSerializedString/#/PointingToDeclarati
 $dokka.location:elide.runtime.graalvm////PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Companion///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-companion/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Companion/acquire/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-companion/acquire.md
+$dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript.Companion///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/-companion/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript/EmbeddedScript/#kotlin.String#java.nio.charset.Charset#kotlin.String?#kotlin.String?/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/-embedded-script.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript/getId/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/get-id.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript/load/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/load.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.EmbeddedScript/path/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-embedded-script/path.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.ExecutableScript///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-executable-script/index.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ExecutableScript/getId/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-executable-script/get-id.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ExecutableScript/invocationBase/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-executable-script/invocation-base.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ExecutableScript/invocationTarget/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-executable-script/invocation-target.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ExecutableScript/load/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-executable-script/load.md
+$dokka.location:elide.runtime.graalvm/JsRuntime.LiteralScript.Companion///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-literal-script/-companion/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.LiteralScript///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-literal-script/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.LiteralScript/LiteralScript/#kotlin.String#kotlin.String/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-literal-script/-literal-script.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.LiteralScript/getId/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-literal-script/get-id.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.LiteralScript/load/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-literal-script/load.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Script///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Script/embedded/#kotlin.String#java.nio.charset.Charset/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script/embedded.md
 $dokka.location:elide.runtime.graalvm/JsRuntime.Script/literal/#kotlin.String#kotlin.String/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script/literal.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ScriptRuntime.Companion///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script-runtime/-companion/index.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ScriptRuntime///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script-runtime/index.md
-$dokka.location:elide.runtime.graalvm/JsRuntime.ScriptRuntime/ScriptRuntime/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-script-runtime/-script-runtime.md
 $dokka.location:elide.runtime.graalvm/JsRuntime///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/index.md
 $dokka.location:elide.runtime.graalvm/JsRuntime/JsRuntime/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/-js-runtime.md
 $dokka.location:elide.runtime.graalvm/JsRuntime/execute/#elide.runtime.graalvm.JsRuntime.ExecutableScript#java.lang.Class[TypeParam(bounds=[kotlin.Any?])]#kotlin.Array[kotlin.Any?]/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/execute.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig.JsRuntimeArtifact///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/-js-runtime-artifact/index.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig.JsRuntimeArtifact/JsRuntimeArtifact/#kotlin.String/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/-js-runtime-artifact/-js-runtime-artifact.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig.JsRuntimeArtifact/name/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/-js-runtime-artifact/name.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig///PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/index.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig/JsRuntimeConfig/#kotlin.String#kotlin.collections.List[elide.runtime.graalvm.JsRuntimeConfig.JsRuntimeArtifact]/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/-js-runtime-config.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig/artifacts/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/artifacts.md
-$dokka.location:elide.runtime.graalvm/JsRuntimeConfig/entry/#/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime-config/entry.md
+$dokka.location:elide.runtime.graalvm/JsRuntime/executeAsync/#elide.runtime.graalvm.JsRuntime.ExecutableScript#java.lang.Class[TypeParam(bounds=[kotlin.Any?])]#kotlin.Array[kotlin.Any?]/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/execute-async.md
+$dokka.location:elide.runtime.graalvm/JsRuntime/executeBlocking/#elide.runtime.graalvm.JsRuntime.ExecutableScript#java.lang.Class[TypeParam(bounds=[kotlin.Any?])]#kotlin.Array[kotlin.Any?]/PointingToDeclaration/graalvm/graalvm/elide.runtime.graalvm/-js-runtime/execute-blocking.md
 $dokka.location:elide.runtime.js////PointingToDeclaration/base/base/elide.runtime.js/index.md
 $dokka.location:elide.runtime.js//toByteArray/org.khronos.webgl.ArrayBuffer#/PointingToDeclaration/base/base/elide.runtime.js/to-byte-array.md
 $dokka.location:elide.runtime.js//toByteArray/org.khronos.webgl.ArrayBuffer?#/PointingToDeclaration/base/base/elide.runtime.js/to-byte-array.md
@@ -115,7 +101,86 @@ $dokka.location:elide.runtime/Logging///PointingToDeclaration/base/base/elide.r
 $dokka.location:elide.runtime/Logging/Logging/#/PointingToDeclaration/base/base/elide.runtime/-logging/-logging.md
 $dokka.location:elide.runtime/Logging/logger/#/PointingToDeclaration/base/base/elide.runtime/-logging/logger.md
 $dokka.location:elide.runtime/Logging/logger/#kotlin.String/PointingToDeclaration/base/base/elide.runtime/-logging/logger.md
+$dokka.location:elide.server.annotations////PointingToDeclaration/server/server/elide.server.annotations/index.md
+$dokka.location:elide.server.annotations/Page///PointingToDeclaration/server/server/elide.server.annotations/-page/index.md
+$dokka.location:elide.server.annotations/Page/Page/#kotlin.String#kotlin.Array[kotlin.String]#kotlin.Array[kotlin.String]/PointingToDeclaration/server/server/elide.server.annotations/-page/-page.md
+$dokka.location:elide.server.annotations/Page/consumes/#/PointingToDeclaration/server/server/elide.server.annotations/-page/consumes.md
+$dokka.location:elide.server.annotations/Page/produces/#/PointingToDeclaration/server/server/elide.server.annotations/-page/produces.md
+$dokka.location:elide.server.annotations/Page/route/#/PointingToDeclaration/server/server/elide.server.annotations/-page/route.md
+$dokka.location:elide.server.assets////PointingToDeclaration/server/server/elide.server.assets/index.md
+$dokka.location:elide.server.assets/AssetController///PointingToDeclaration/server/server/elide.server.assets/-asset-controller/index.md
+$dokka.location:elide.server.assets/AssetController/AssetController/#/PointingToDeclaration/server/server/elide.server.assets/-asset-controller/-asset-controller.md
+$dokka.location:elide.server.assets/AssetController/assetGet/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-controller/asset-get.md
+$dokka.location:elide.server.assets/AssetController/assetOptions/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-controller/asset-options.md
+$dokka.location:elide.server.assets/AssetManager///PointingToDeclaration/server/server/elide.server.assets/-asset-manager/index.md
+$dokka.location:elide.server.assets/AssetManager/logging/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/logging.md
+$dokka.location:elide.server.assets/AssetManager/reader/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/reader.md
+$dokka.location:elide.server.assets/AssetManager/renderAsset/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/render-asset.md
+$dokka.location:elide.server.assets/AssetManager/renderAssetAsync/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/render-asset-async.md
+$dokka.location:elide.server.assets/AssetManager/resolve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/resolve.md
+$dokka.location:elide.server.assets/AssetManager/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/resolve.md
+$dokka.location:elide.server.assets/AssetManager/serve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve.md
+$dokka.location:elide.server.assets/AssetManager/serveAsync/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve-async.md
+$dokka.location:elide.server.assets/AssetManager/serveNotFoundAsync/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-manager/serve-not-found-async.md
+$dokka.location:elide.server.assets/AssetManifestLoader.Companion///PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/-companion/index.md
+$dokka.location:elide.server.assets/AssetManifestLoader///PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/index.md
+$dokka.location:elide.server.assets/AssetManifestLoader/findLoadManifest/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-load-manifest.md
+$dokka.location:elide.server.assets/AssetManifestLoader/findLoadManifest/#kotlin.collections.List[kotlin.Pair[tools.elide.assets.ManifestFormat,kotlin.String]]/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-load-manifest.md
+$dokka.location:elide.server.assets/AssetManifestLoader/findManifest/#/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-manifest.md
+$dokka.location:elide.server.assets/AssetManifestLoader/findManifest/#kotlin.collections.List[kotlin.Pair[tools.elide.assets.ManifestFormat,kotlin.String]]/PointingToDeclaration/server/server/elide.server.assets/-asset-manifest-loader/find-manifest.md
+$dokka.location:elide.server.assets/AssetReader///PointingToDeclaration/server/server/elide.server.assets/-asset-reader/index.md
+$dokka.location:elide.server.assets/AssetReader/readAsync/#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-asset-reader/read-async.md
+$dokka.location:elide.server.assets/AssetResolver///PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/index.md
+$dokka.location:elide.server.assets/AssetResolver/resolve/#io.micronaut.http.HttpRequest[*]/PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/resolve.md
+$dokka.location:elide.server.assets/AssetResolver/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-asset-resolver/resolve.md
+$dokka.location:elide.server.assets/AssetType.GENERIC///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-g-e-n-e-r-i-c/index.md
+$dokka.location:elide.server.assets/AssetType.SCRIPT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-s-c-r-i-p-t/index.md
+$dokka.location:elide.server.assets/AssetType.STYLESHEET///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-s-t-y-l-e-s-h-e-e-t/index.md
+$dokka.location:elide.server.assets/AssetType.TEXT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-t-e-x-t/index.md
+$dokka.location:elide.server.assets/AssetType///PointingToDeclaration/server/server/elide.server.assets/-asset-type/index.md
+$dokka.location:elide.server.assets/RenderedAsset///PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/index.md
+$dokka.location:elide.server.assets/RenderedAsset/RenderedAsset/#kotlin.String#io.micronaut.http.MediaType/PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/-rendered-asset.md
+$dokka.location:elide.server.assets/RenderedAsset/module/#/PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/module.md
+$dokka.location:elide.server.assets/RenderedAsset/type/#/PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/type.md
+$dokka.location:elide.server.assets/ServerAsset.Script///PointingToDeclaration/server/server/elide.server.assets/-server-asset/-script/index.md
+$dokka.location:elide.server.assets/ServerAsset.Script/Script/#tools.elide.assets.AssetBundle.ScriptBundle/PointingToDeclaration/server/server/elide.server.assets/-server-asset/-script/-script.md
+$dokka.location:elide.server.assets/ServerAsset.Stylesheet///PointingToDeclaration/server/server/elide.server.assets/-server-asset/-stylesheet/index.md
+$dokka.location:elide.server.assets/ServerAsset.Stylesheet/Stylesheet/#tools.elide.assets.AssetBundle.StyleBundle/PointingToDeclaration/server/server/elide.server.assets/-server-asset/-stylesheet/-stylesheet.md
+$dokka.location:elide.server.assets/ServerAsset.Text///PointingToDeclaration/server/server/elide.server.assets/-server-asset/-text/index.md
+$dokka.location:elide.server.assets/ServerAsset.Text/Text/#tools.elide.assets.AssetBundle.GenericBundle/PointingToDeclaration/server/server/elide.server.assets/-server-asset/-text/-text.md
+$dokka.location:elide.server.assets/ServerAsset///PointingToDeclaration/server/server/elide.server.assets/-server-asset/index.md
+$dokka.location:elide.server.assets/ServerAssetManager.Companion///PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-companion/index.md
+$dokka.location:elide.server.assets/ServerAssetManager.Companion/waitTimeout/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-companion/wait-timeout.md
+$dokka.location:elide.server.assets/ServerAssetManager///PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/index.md
+$dokka.location:elide.server.assets/ServerAssetManager/ServerAssetManager/#elide.server.assets.AssetReader#elide.server.cfg.ServerConfig/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/-server-asset-manager.md
+$dokka.location:elide.server.assets/ServerAssetManager/logging/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/logging.md
+$dokka.location:elide.server.assets/ServerAssetManager/reader/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/reader.md
+$dokka.location:elide.server.assets/ServerAssetManager/renderAssetAsync/#io.micronaut.http.HttpRequest[*]#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-server-asset-manager/render-asset-async.md
+$dokka.location:elide.server.assets/ServerAssetReader///PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/index.md
+$dokka.location:elide.server.assets/ServerAssetReader/ServerAssetReader/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/-server-asset-reader.md
+$dokka.location:elide.server.assets/ServerAssetReader/readAsync/#elide.server.assets.ServerAsset/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/read-async.md
+$dokka.location:elide.server.assets/ServerAssetReader/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-server-asset-reader/resolve.md
+$dokka.location:elide.server.assets/ServerAssetResolver///PointingToDeclaration/server/server/elide.server.assets/-server-asset-resolver/index.md
+$dokka.location:elide.server.assets/ServerAssetResolver/ServerAssetResolver/#/PointingToDeclaration/server/server/elide.server.assets/-server-asset-resolver/-server-asset-resolver.md
+$dokka.location:elide.server.assets/ServerAssetResolver/resolve/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-server-asset-resolver/resolve.md
+$dokka.location:elide.server.cfg////PointingToDeclaration/server/server/elide.server.cfg/index.md
+$dokka.location:elide.server.cfg/AssetConfig///PointingToDeclaration/server/server/elide.server.cfg/-asset-config/index.md
+$dokka.location:elide.server.cfg/AssetConfig/AssetConfig/#kotlin.Boolean#kotlin.String/PointingToDeclaration/server/server/elide.server.cfg/-asset-config/-asset-config.md
+$dokka.location:elide.server.cfg/AssetConfig/enabled/#/PointingToDeclaration/server/server/elide.server.cfg/-asset-config/enabled.md
+$dokka.location:elide.server.cfg/AssetConfig/prefix/#/PointingToDeclaration/server/server/elide.server.cfg/-asset-config/prefix.md
+$dokka.location:elide.server.cfg/ServerConfig///PointingToDeclaration/server/server/elide.server.cfg/-server-config/index.md
+$dokka.location:elide.server.cfg/ServerConfig/ServerConfig/#elide.server.cfg.AssetConfig/PointingToDeclaration/server/server/elide.server.cfg/-server-config/-server-config.md
+$dokka.location:elide.server.cfg/ServerConfig/assets/#/PointingToDeclaration/server/server/elide.server.cfg/-server-config/assets.md
 $dokka.location:elide.server.controller////PointingToDeclaration/server/server/elide.server.controller/index.md
+$dokka.location:elide.server.controller/BaseController///PointingToDeclaration/server/server/elide.server.controller/-base-controller/index.md
+$dokka.location:elide.server.controller/BaseController/BaseController/#/PointingToDeclaration/server/server/elide.server.controller/-base-controller/-base-controller.md
+$dokka.location:elide.server.controller/ElideController///PointingToDeclaration/server/server/elide.server.controller/-elide-controller/index.md
+$dokka.location:elide.server.controller/ElideController/assets/#/PointingToDeclaration/server/server/elide.server.controller/-elide-controller/assets.md
+$dokka.location:elide.server.controller/ElideController/context/#/PointingToDeclaration/server/server/elide.server.controller/-elide-controller/context.md
+$dokka.location:elide.server.controller/PageController///PointingToDeclaration/server/server/elide.server.controller/-page-controller/index.md
+$dokka.location:elide.server.controller/PageController/PageController/#/PointingToDeclaration/server/server/elide.server.controller/-page-controller/-page-controller.md
+$dokka.location:elide.server.controller/PageController/assets/#/PointingToDeclaration/server/server/elide.server.controller/-page-controller/assets.md
+$dokka.location:elide.server.controller/PageController/context/#/PointingToDeclaration/server/server/elide.server.controller/-page-controller/context.md
 $dokka.location:elide.server.controller/StatusEnabledController///PointingToDeclaration/server/server/elide.server.controller/-status-enabled-controller/index.md
 $dokka.location:elide.server.rpc.web////PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/index.md
 $dokka.location:elide.server.rpc.web/GrpcWeb.Headers///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web/-headers/index.md
@@ -191,7 +256,94 @@ $dokka.location:elide.server.rpc/ServiceHealthManager/notifyServing/#io.grpc.Ser
 $dokka.location:elide.server.rpc/ServiceHealthManager/notifyUnknown/#io.grpc.ServiceDescriptor/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/-service-health-manager/notify-unknown.md
 $dokka.location:elide.server.rpc/ServiceHealthManager/service/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/-service-health-manager/service.md
 $dokka.location:elide.server.rpc/ServiceHealthManager/terminalShutdown/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/-service-health-manager/terminal-shutdown.md
+$dokka.location:elide.server.runtime.jvm////PointingToDeclaration/server/server/elide.server.runtime.jvm/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/cancelled/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/cancelled.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/done/#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/done.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/failed/#kotlin.Throwable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/failed.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#com.google.api.core.ApiFuture[TypeParam(bounds=[kotlin.Any?])]?#java.util.concurrent.Executor?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#com.google.api.core.ApiFuture[TypeParam(bounds=[kotlin.Any?])]?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#com.google.common.util.concurrent.ListenableFuture[TypeParam(bounds=[kotlin.Any?])]?#java.util.concurrent.Executor?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#com.google.common.util.concurrent.ListenableFuture[TypeParam(bounds=[kotlin.Any?])]?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#java.util.concurrent.CompletableFuture[TypeParam(bounds=[kotlin.Any?])]?#java.util.concurrent.Executor?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#java.util.concurrent.CompletableFuture[TypeParam(bounds=[kotlin.Any?])]?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.Companion/wrap/#org.reactivestreams.Publisher[TypeParam(bounds=[kotlin.Any?])]?/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-companion/wrap.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher.CompletableFutureSubscription///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/-completable-future-subscription/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher.CompletableFutureSubscription/cancel/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/-completable-future-subscription/cancel.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher.CompletableFutureSubscription/request/#kotlin.Long/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/-completable-future-subscription/request.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/acceptEither/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/accept-either.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/acceptEitherAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/accept-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/acceptEitherAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/accept-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/addListener/#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/add-listener.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/applyToEither/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/apply-to-either.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/applyToEitherAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/apply-to-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/applyToEitherAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/apply-to-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/cancel/#kotlin.Boolean/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/cancel.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/exceptionally/#java.util.function.Function[kotlin.Throwable,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/exceptionally.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/get/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/get/#kotlin.Long#java.util.concurrent.TimeUnit/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/handle/#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/handle.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/handleAsync/#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable,TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/handle-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/handleAsync/#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/handle-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/isCancelled/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/is-cancelled.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/isDone/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/is-done.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterBoth/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-both.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterBothAsync/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-both-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterBothAsync/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-both-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterEither/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-either.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterEitherAsync/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/runAfterEitherAsync/#java.util.concurrent.CompletionStage[*]?#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/run-after-either-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/subscribe.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAccept/#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAcceptAsync/#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAcceptAsync/#java.util.function.Consumer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAcceptBoth/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept-both.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAcceptBothAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept-both-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenAcceptBothAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-accept-both-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenApply/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-apply.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenApplyAsync/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-apply-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenApplyAsync/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-apply-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenCombine/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-combine.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenCombineAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?,TypeParam(bounds=[kotlin.Any?])]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-combine-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenCombineAsync/#java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])?]#java.util.function.BiFunction[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])?,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-combine-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenCompose/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-compose.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenComposeAsync/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-compose-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenComposeAsync/#java.util.function.Function[TypeParam(bounds=[kotlin.Any?]),java.util.concurrent.CompletionStage[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-compose-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenRun/#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-run.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenRunAsync/#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-run-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/thenRunAsync/#java.lang.Runnable/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/then-run-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/toCompletableFuture/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/to-completable-future.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/whenComplete/#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/when-complete.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/whenCompleteAsync/#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable]#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/when-complete-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.CompletableFuturePublisher/whenCompleteAsync/#java.util.function.BiConsumer[TypeParam(bounds=[kotlin.Any?]),kotlin.Throwable]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-completable-future-publisher/when-complete-async.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.ListenableFuturePublisher.ListenableFutureSubscription///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-listenable-future-publisher/-listenable-future-subscription/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.ListenableFuturePublisher.ListenableFutureSubscription/cancel/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-listenable-future-publisher/-listenable-future-subscription/cancel.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.ListenableFuturePublisher.ListenableFutureSubscription/request/#kotlin.Long/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-listenable-future-publisher/-listenable-future-subscription/request.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.ListenableFuturePublisher///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-listenable-future-publisher/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.ListenableFuturePublisher/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-listenable-future-publisher/subscribe.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/addListener/#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/add-listener.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/cancel/#kotlin.Boolean/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/cancel.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/get/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/get/#kotlin.Long#java.util.concurrent.TimeUnit/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/isCancelled/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/is-cancelled.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/isDone/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/is-done.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture.PublisherListenableFuture/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/-publisher-listenable-future/subscribe.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture///PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/index.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/addListener/#java.lang.Runnable#java.util.concurrent.Executor/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/add-listener.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/cancel/#kotlin.Boolean/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/cancel.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/get/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/get/#kotlin.Long#java.util.concurrent.TimeUnit/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/get.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/isCancelled/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/is-cancelled.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/isDone/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/is-done.md
+$dokka.location:elide.server.runtime.jvm/ReactiveFuture/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])?]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/subscribe.md
 $dokka.location:elide.server.runtime////PointingToDeclaration/test/test/elide.server.runtime/index.md
+$dokka.location:elide.server.runtime/AppExecutor.Companion///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/index.md
+$dokka.location:elide.server.runtime/AppExecutor.Companion/async/#kotlin.coroutines.SuspendFunction0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/async.md
+$dokka.location:elide.server.runtime/AppExecutor.Companion/io/#kotlin.coroutines.SuspendFunction0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/io.md
+$dokka.location:elide.server.runtime/AppExecutor.Companion/main/#kotlin.coroutines.SuspendFunction0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/main.md
+$dokka.location:elide.server.runtime/AppExecutor.Companion/unconfined/#kotlin.coroutines.SuspendFunction0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/unconfined.md
 $dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor.Companion///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/-companion/index.md
 $dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor.Companion/acquire/#/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/-companion/acquire.md
 $dokka.location:elide.server.runtime/AppExecutor.DefaultExecutor///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-default-executor/index.md
@@ -213,33 +365,60 @@ $dokka.location:elide.server.runtime/UncaughtExceptionHandler/uncaughtException/
 $dokka.location:elide.server.ssr////PointingToDeclaration/graalvm/graalvm/elide.server.ssr/index.md
 $dokka.location:elide.server.ssr/ServerRenderer///PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-renderer/index.md
 $dokka.location:elide.server.ssr/ServerSSRRenderer///PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/index.md
-$dokka.location:elide.server.ssr/ServerSSRRenderer/ServerSSRRenderer/#elide.runtime.graalvm.JsRuntime.ExecutableScript/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/-server-s-s-r-renderer.md
+$dokka.location:elide.server.ssr/ServerSSRRenderer/ServerSSRRenderer/#elide.server.controller.ElideController#io.micronaut.http.HttpRequest[*]#elide.runtime.graalvm.JsRuntime.ExecutableScript/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/-server-s-s-r-renderer.md
 $dokka.location:elide.server.ssr/ServerSSRRenderer/render/#/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/render.md
 $dokka.location:elide.server.ssr/ServerSSRRenderer/renderInline/#/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/render-inline.md
 $dokka.location:elide.server.ssr/ServerSSRRenderer/renderResponse/#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/render-response.md
-$dokka.location:elide.server////PointingToDeclaration/server/server/elide.server/index.md
+$dokka.location:elide.server.ssr/ServerSSRRenderer/renderSuspend/#/PointingToDeclaration/graalvm/graalvm/elide.server.ssr/-server-s-s-r-renderer/render-suspend.md
+$dokka.location:elide.server.util////PointingToDeclaration/server/server/elide.server.util/index.md
+$dokka.location:elide.server.util/ServerFlag///PointingToDeclaration/server/server/elide.server.util/-server-flag/index.md
+$dokka.location:elide.server.util/ServerFlag/appEnv/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/app-env.md
+$dokka.location:elide.server.util/ServerFlag/inspect/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/inspect.md
+$dokka.location:elide.server.util/ServerFlag/inspectHost/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/inspect-host.md
+$dokka.location:elide.server.util/ServerFlag/inspectPath/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/inspect-path.md
+$dokka.location:elide.server.util/ServerFlag/inspectPort/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/inspect-port.md
+$dokka.location:elide.server.util/ServerFlag/inspectSecure/#/PointingToDeclaration/server/server/elide.server.util/-server-flag/inspect-secure.md
+$dokka.location:elide.server.util/ServerFlag/resolve/#kotlin.String#kotlin.String#kotlin.Function1[kotlin.String,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.util/-server-flag/resolve.md
+$dokka.location:elide.server.util/ServerFlag/setArgs/#kotlin.Array[kotlin.String]/PointingToDeclaration/server/server/elide.server.util/-server-flag/set-args.md
+$dokka.location:elide.server////PointingToDeclaration/test/test/elide.server/index.md
+$dokka.location:elide.server//DEFAULT_SSR_DOM_ID/#/PointingToDeclaration/graalvm/graalvm/elide.server/-d-e-f-a-u-l-t_-s-s-r_-d-o-m_-i-d.md
+$dokka.location:elide.server//NODE_SSR_DEFAULT_PATH/#/PointingToDeclaration/graalvm/graalvm/elide.server/-n-o-d-e_-s-s-r_-d-e-f-a-u-l-t_-p-a-t-h.md
 $dokka.location:elide.server//asset/#kotlin.String#kotlin.String#io.micronaut.http.MediaType?/PointingToDeclaration/server/server/elide.server/asset.md
+$dokka.location:elide.server//asset/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#elide.server.assets.AssetType?#kotlin.coroutines.SuspendFunction1[elide.server.AssetHandler,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/asset.md
+$dokka.location:elide.server//asset/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.String#elide.server.assets.AssetType?/PointingToDeclaration/server/server/elide.server/asset.md
 $dokka.location:elide.server//css/#kotlin.Function1[kotlinx.css.CssBuilder,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/css.md
-$dokka.location:elide.server//defaultSsrDomId/#/PointingToDeclaration/graalvm/graalvm/elide.server/default-ssr-dom-id.md
-$dokka.location:elide.server//html/#kotlin.Function1[kotlinx.html.HTML,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/html.md
-$dokka.location:elide.server//injectSSR/kotlinx.html.BODY#kotlin.String#kotlin.collections.Set[kotlin.String]#kotlin.collections.List[kotlin.Pair[kotlin.String,kotlin.String]]#kotlin.String/PointingToDeclaration/graalvm/graalvm/elide.server/inject-s-s-r.md
-$dokka.location:elide.server//nodeSsrDefaultPath/#/PointingToDeclaration/graalvm/graalvm/elide.server/node-ssr-default-path.md
+$dokka.location:elide.server//html/#kotlin.coroutines.SuspendFunction1[kotlinx.html.HTML,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/html.md
+$dokka.location:elide.server//injectSSR/kotlinx.html.BODY#elide.server.controller.ElideController#io.micronaut.http.HttpRequest[*]#kotlin.String#kotlin.collections.Set[kotlin.String]#kotlin.collections.List[kotlin.Pair[kotlin.String,kotlin.String]]#kotlin.String/PointingToDeclaration/graalvm/graalvm/elide.server/inject-s-s-r.md
+$dokka.location:elide.server//script/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.Function1[elide.server.AssetHandler,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/script.md
+$dokka.location:elide.server//script/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.String/PointingToDeclaration/server/server/elide.server/script.md
 $dokka.location:elide.server//script/kotlinx.html.BODY#kotlin.String#kotlin.Boolean#kotlin.Boolean#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]?/PointingToDeclaration/server/server/elide.server/script.md
 $dokka.location:elide.server//script/kotlinx.html.HEAD#kotlin.String#kotlin.Boolean#kotlin.Boolean#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]?/PointingToDeclaration/server/server/elide.server/script.md
-$dokka.location:elide.server//ssr/#kotlin.String#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]#kotlin.Function1[kotlinx.html.HTML,kotlin.Unit]/PointingToDeclaration/graalvm/graalvm/elide.server/ssr.md
-$dokka.location:elide.server//ssr/#kotlin.String#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]/PointingToDeclaration/graalvm/graalvm/elide.server/ssr.md
+$dokka.location:elide.server//ssr/#io.micronaut.http.HttpRequest[*]#kotlin.String#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]#kotlin.coroutines.SuspendFunction1[kotlinx.html.HTML,kotlin.Unit]/PointingToDeclaration/graalvm/graalvm/elide.server/ssr.md
+$dokka.location:elide.server//ssr/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.String#io.micronaut.http.MutableHttpResponse[java.io.ByteArrayOutputStream]/PointingToDeclaration/graalvm/graalvm/elide.server/ssr.md
 $dokka.location:elide.server//staticFile/#kotlin.String#kotlin.String/PointingToDeclaration/server/server/elide.server/static-file.md
+$dokka.location:elide.server//stylesheet/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.Function1[elide.server.AssetHandler,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/stylesheet.md
+$dokka.location:elide.server//stylesheet/elide.server.controller.PageController#io.micronaut.http.HttpRequest[*]#kotlin.String/PointingToDeclaration/server/server/elide.server/stylesheet.md
 $dokka.location:elide.server//stylesheet/kotlinx.html.HEAD#kotlin.String#kotlin.String?#kotlin.collections.Map[kotlin.String,kotlin.String]?/PointingToDeclaration/server/server/elide.server/stylesheet.md
-$dokka.location:elide.server/CssContent///PointingToDeclaration/server/server/elide.server/-css-content/index.md
-$dokka.location:elide.server/CssContent/CssContent/#kotlin.Function1[kotlinx.css.CssBuilder,kotlin.Unit]/PointingToDeclaration/server/server/elide.server/-css-content/-css-content.md
-$dokka.location:elide.server/CssContent/render/#/PointingToDeclaration/server/server/elide.server/-css-content/render.md
+$dokka.location:elide.server/Application///PointingToDeclaration/server/server/elide.server/-application/index.md
+$dokka.location:elide.server/Application/boot/#kotlin.Array[kotlin.String]/PointingToDeclaration/server/server/elide.server/-application/boot.md
+$dokka.location:elide.server/AssetHandler///PointingToDeclaration/server/server/elide.server/-asset-handler/index.md
+$dokka.location:elide.server/AssetHandler/AssetHandler/#elide.server.assets.AssetType?#elide.server.controller.ElideController#io.micronaut.http.HttpRequest[*]#java.util.concurrent.atomic.AtomicReference[kotlin.String?]#java.util.concurrent.atomic.AtomicReference[elide.server.assets.AssetType?]/PointingToDeclaration/server/server/elide.server/-asset-handler/-asset-handler.md
+$dokka.location:elide.server/AssetHandler/assetType/#elide.server.assets.AssetType/PointingToDeclaration/server/server/elide.server/-asset-handler/asset-type.md
+$dokka.location:elide.server/AssetHandler/module/#kotlin.String#elide.server.assets.AssetType?/PointingToDeclaration/server/server/elide.server/-asset-handler/module.md
+$dokka.location:elide.server/BaseResponseHandler///PointingToDeclaration/server/server/elide.server/-base-response-handler/index.md
+$dokka.location:elide.server/BaseResponseHandler/BaseResponseHandler/#/PointingToDeclaration/server/server/elide.server/-base-response-handler/-base-response-handler.md
+$dokka.location:elide.server/BaseResponseHandler/respond/#io.micronaut.http.HttpResponse[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server/-base-response-handler/respond.md
+$dokka.location:elide.server/ResponseConfigurator///PointingToDeclaration/server/server/elide.server/-response-configurator/index.md
+$dokka.location:elide.server/ResponseConfigurator/respond/#kotlin.Function1[TypeParam(bounds=[elide.server.ResponseHandler[TypeParam(bounds=[kotlin.Any?])]]),kotlin.Unit]/PointingToDeclaration/server/server/elide.server/-response-configurator/respond.md
+$dokka.location:elide.server/ResponseHandler///PointingToDeclaration/server/server/elide.server/-response-handler/index.md
+$dokka.location:elide.server/ResponseHandler/respond/#io.micronaut.http.HttpResponse[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server/-response-handler/respond.md
 $dokka.location:elide.server/ResponseRenderer///PointingToDeclaration/server/server/elide.server/-response-renderer/index.md
 $dokka.location:elide.server/ResponseRenderer/render/#/PointingToDeclaration/server/server/elide.server/-response-renderer/render.md
-$dokka.location:elide.server/SSRContent///PointingToDeclaration/graalvm/graalvm/elide.server/-s-s-r-content/index.md
-$dokka.location:elide.server/SSRContent/SSRContent/#kotlin.Boolean#kotlin.Function1[kotlinx.html.HTML,kotlin.Unit]/PointingToDeclaration/graalvm/graalvm/elide.server/-s-s-r-content/-s-s-r-content.md
-$dokka.location:elide.server/SSRContent/render/#/PointingToDeclaration/graalvm/graalvm/elide.server/-s-s-r-content/render.md
 $dokka.location:elide.server/SuspensionRenderer///PointingToDeclaration/server/server/elide.server/-suspension-renderer/index.md
 $dokka.location:elide.server/SuspensionRenderer/render/#/PointingToDeclaration/server/server/elide.server/-suspension-renderer/render.md
+$dokka.location:elide.server/TestUtil///PointingToDeclaration/test/test/elide.server/-test-util/index.md
+$dokka.location:elide.server/TestUtil/loadBinary/#kotlin.String/PointingToDeclaration/test/test/elide.server/-test-util/load-binary.md
+$dokka.location:elide.server/TestUtil/loadFixture/#kotlin.String/PointingToDeclaration/test/test/elide.server/-test-util/load-fixture.md
 $dokka.location:elide.util////PointingToDeclaration/base/base/elide.util/index.md
 $dokka.location:elide.util//toBase64/kotlin.ByteArray#/PointingToDeclaration/base/base/elide.util/to-base64.md
 $dokka.location:elide.util//toBase64/kotlin.String#/PointingToDeclaration/base/base/elide.util/to-base64.md
@@ -300,6 +479,16 @@ $dokka.location:elide.util/Hex/encodeToString/#kotlin.String/PointingToDeclarati
 $dokka.location:elide.util/Hex/encoding/#/PointingToDeclaration/base/base/elide.util/-hex/encoding.md
 $dokka.location:elide.util/UUID///PointingToDeclaration/base/base/elide.util/-u-u-i-d/index.md
 $dokka.location:elide.util/UUID/random/#/PointingToDeclaration/base/base/elide.util/-u-u-i-d/random.md
+$dokka.location:elide////PointingToDeclaration/base/base/elide/index.md
+$dokka.location:elide/AppEnvironment.LIVE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide/-app-environment/-l-i-v-e/index.md
+$dokka.location:elide/AppEnvironment.SANDBOX///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide/-app-environment/-s-a-n-d-b-o-x/index.md
+$dokka.location:elide/AppEnvironment///PointingToDeclaration/base/base/elide/-app-environment/index.md
+$dokka.location:kotlinx.html.tagext////PointingToDeclaration/server/server/kotlinx.html.tagext/index.md
+$dokka.location:kotlinx.html.tagext//body/kotlinx.html.HTML#kotlin.String?#kotlin.coroutines.SuspendFunction1[kotlinx.html.BODY,kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html.tagext/body.md
+$dokka.location:kotlinx.html.tagext//head/kotlinx.html.HTML#kotlin.coroutines.SuspendFunction1[kotlinx.html.HEAD,kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html.tagext/head.md
+$dokka.location:kotlinx.html////PointingToDeclaration/server/server/kotlinx.html/index.md
+$dokka.location:kotlinx.html//visitSuspend/TypeParam(bounds=[kotlinx.html.Tag])#kotlin.coroutines.SuspendFunction1[TypeParam(bounds=[kotlinx.html.Tag]),kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html/visit-suspend.md
+$dokka.location:kotlinx.html//visitTagSuspend/TypeParam(bounds=[kotlinx.html.Tag])#kotlin.Function1[TypeParam(bounds=[kotlinx.html.Tag]),kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html/visit-tag-suspend.md
 $dokka.location:lib.grpcweb////PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/index.md
 $dokka.location:lib.grpcweb//SERVER_STREAMING/#/PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-s-e-r-v-e-r_-s-t-r-e-a-m-i-n-g.md
 $dokka.location:lib.grpcweb//UNARY/#/PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-u-n-a-r-y.md
@@ -1058,9 +1247,8 @@ $dokka.location:lib.uuid/v3Static/URL/#/PointingToDeclaration/frontend/frontend
 $dokka.location:lib.uuid/v5Static///PointingToDeclaration/frontend/frontend/lib.uuid/v5-static/index.md
 $dokka.location:lib.uuid/v5Static/DNS/#/PointingToDeclaration/frontend/frontend/lib.uuid/v5-static/-d-n-s.md
 $dokka.location:lib.uuid/v5Static/URL/#/PointingToDeclaration/frontend/frontend/lib.uuid/v5-static/-u-r-l.md
-$dokka.location:react.dom.client////PointingToDeclaration/graalvm-react/graalvm-react/react.dom.client/index.md
-$dokka.location:react.dom.client//hydrateRoot/#org.w3c.dom.Element#react.ReactNode?#react.dom.client.RootOptions/PointingToDeclaration/graalvm-react/graalvm-react/react.dom.client/hydrate-root.md
 module:base
+elide
 elide.annotations
 elide.runtime
 elide.runtime.js
@@ -1077,7 +1265,6 @@ elide.server
 elide.server.ssr
 module:graalvm-react
 elide.js.ssr
-react.dom.client
 module:model
 elide.annotations
 elide.model
@@ -1089,7 +1276,15 @@ elide.server.rpc
 elide.server.rpc.web
 module:server
 elide.server
+elide.server.annotations
+elide.server.assets
+elide.server.cfg
 elide.server.controller
 elide.server.runtime
+elide.server.runtime.jvm
+elide.server.util
+kotlinx.html
+kotlinx.html.tagext
 module:test
+elide.server
 elide.server.runtime

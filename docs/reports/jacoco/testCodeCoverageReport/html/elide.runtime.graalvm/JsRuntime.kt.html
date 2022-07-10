@@ -1,55 +1,263 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JsRuntime.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.runtime.graalvm</a> &gt; <span class="el_source">JsRuntime.kt</span></div><h1>JsRuntime.kt</h1><pre class="source lang-java linenums">package elide.runtime.graalvm
 
 import com.google.common.annotations.VisibleForTesting
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.MoreExecutors
+import elide.server.util.ServerFlag
+import elide.util.Hex
+import io.micronaut.caffeine.cache.Cache
+import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
+import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
+import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import com.google.common.util.concurrent.ListenableFuture as Future
 
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
-<span class="fc" id="L16">@Context class JsRuntime {</span>
-  companion object {
+<span class="fc" id="L32">@Suppress(&quot;MemberVisibilityCanBePrivate&quot;)</span>
+<span class="fc" id="L33">@Context public class JsRuntime {</span>
+  public companion object {
     // Singleton instance.
-<span class="fc" id="L19">    private val singleton = JsRuntime()</span>
+<span class="fc" id="L36">    private val singleton = JsRuntime()</span>
+
+    // Hard-coded JS VM options.
+<span class="fc" id="L39">    private val baseOptions = listOf(</span>
+<span class="fc" id="L40">      StaticProperty(&quot;js.v8-compat&quot;, &quot;true&quot;),</span>
+    )
+
+    // Options which can be controlled via user-configured inputs.
+<span class="fc" id="L44">    private val configurableOptions = listOf(</span>
+<span class="fc" id="L45">      RuntimeProperty(&quot;vm.js.ecma&quot;, &quot;js.ecmascript-version&quot;, &quot;2020&quot;),</span>
+    )
+
+    // Options which must be evaluated at the time a context is created.
+<span class="fc" id="L49">    private val conditionalOptions = listOf(</span>
+<span class="fc" id="L50">      ConditionalProperty(</span>
+<span class="pc" id="L51">        &quot;vm.inspect&quot;, &quot;inspect&quot;, { ServerFlag.inspect }, defaultValue = &quot;false&quot;),</span>
+    )
+
+    /** Runnable task within a JS VM context. */
+<span class="nc" id="L55">    private class VMExecution&lt;R&gt; constructor (</span>
+<span class="nc" id="L56">      val op: (VMContext) -&gt; R,</span>
+<span class="nc" id="L57">      val result: AtomicReference&lt;R?&gt; = AtomicReference(null),</span>
+    ): Runnable, Callable&lt;R&gt; {
+      override fun run() {
+<span class="nc" id="L60">        result.set(</span>
+<span class="nc" id="L61">          ManagedContext.acquire().exec(op)</span>
+        )
+<span class="nc" id="L63">      }</span>
+
+      override fun call(): R? {
+<span class="nc" id="L66">        result.set(</span>
+<span class="nc" id="L67">          ManagedContext.acquire().exec(op)</span>
+        )
+<span class="nc" id="L69">        return result.get()</span>
+      }
+<span class="nc" id="L71">    }</span>
+
+    /** Dedicated executor for the JS Runtime. */
+<span class="nc" id="L74">    internal class RuntimeExecutor {</span>
+      // Dedicated thread executor backing the runtime.
+<span class="nc" id="L76">      private val threadPool: Executor = Executors.newSingleThreadExecutor()</span>
+
+      internal fun &lt;R&gt; submit(runnable: (VMContext) -&gt; R): Future&lt;R&gt; {
+<span class="nc" id="L79">        val task = VMExecution(runnable)</span>
+<span class="nc" id="L80">        return Futures.submit&lt;R&gt;(task) {</span>
+<span class="nc" id="L81">          threadPool.execute(it)</span>
+<span class="nc" id="L82">        }</span>
+      }
+    }
 
     /** @return Static acquisition of the singleton JavaScript runtime. */
-<span class="fc" id="L22">    @JvmStatic fun acquire(): JsRuntime = singleton</span>
+<span class="fc" id="L87">    @JvmStatic public fun acquire(): JsRuntime = singleton</span>
+
+    /** @return Set of options to apply to a new JS VM context. */
+    @JvmStatic private fun buildRuntimeOptions(): Map&lt;JSVMProperty, String?&gt; {
+<span class="nc" id="L91">      return baseOptions.plus(</span>
+<span class="nc" id="L92">        configurableOptions</span>
+<span class="nc" id="L93">      ).plus(</span>
+<span class="nc" id="L94">        conditionalOptions</span>
+<span class="nc" id="L95">      ).map {</span>
+<span class="nc" id="L96">        it to it.value()</span>
+<span class="nc" id="L97">      }.filter {</span>
+<span class="nc bnc" id="L98" title="All 6 branches missed.">        it.second?.isNotBlank() ?: false</span>
+<span class="nc" id="L99">      }.toMap()</span>
+    }
 
     /** @return SDK VM context pre-built for JavaScript execution. */
-    @JvmStatic @Factory private fun initializeContext(): org.graalvm.polyglot.Context {
-<span class="nc" id="L26">      return org.graalvm.polyglot.Context</span>
-<span class="nc" id="L27">        .newBuilder(&quot;js&quot;)</span>
-<span class="nc" id="L28">        .allowExperimentalOptions(true)</span>
-<span class="nc" id="L29">        .option(&quot;js.ecmascript-version&quot;, &quot;2020&quot;)</span>
-<span class="nc" id="L30">        .option(&quot;js.v8-compat&quot;, &quot;true&quot;)</span>
-<span class="nc" id="L31">        .build()</span>
+    @JvmStatic @Factory private fun spawnContext(): VMContext {
+<span class="nc" id="L104">      val logging = LoggerFactory.getLogger(JsRuntime::class.java)</span>
+<span class="nc" id="L105">      val builder = VMContext.newBuilder(&quot;js&quot;)</span>
+<span class="nc" id="L106">        .allowExperimentalOptions(true)</span>
+
+<span class="nc" id="L108">      buildRuntimeOptions().forEach {</span>
+<span class="nc" id="L109">        val prop = it.key</span>
+<span class="nc" id="L110">        val value = prop.value()</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">        if (value != null &amp;&amp; value != &quot;false&quot;) {</span>
+<span class="nc" id="L112">          logging.debug(</span>
+<span class="nc" id="L113">            &quot;Setting JS VM property: '$prop': '$value'&quot;</span>
+          )
+<span class="nc" id="L115">          builder.option(</span>
+<span class="nc" id="L116">            prop.symbol,</span>
+<span class="nc" id="L117">            value</span>
+          )
+          // special case: handle inspection
+        }
+<span class="nc" id="L121">      }</span>
+<span class="nc" id="L122">      return builder.build()</span>
     }
   }
 
+  /** Abstract base interface for a JS VM property. */
+  internal sealed interface JSVMProperty {
+    /** Symbol to use for this property with the JS VM. */
+    val symbol: String
+
+    /** @return Resolved value for this property. */
+    fun value(): String?
+  }
+
+  /**
+   * Represents a hard-coded JS Runtime property.
+   *
+   * @param symbol Symbol to use for the VM property when passing it to a new context.
+   * @param staticValue Value for this property.
+   */
+<span class="fc" id="L141">  internal data class StaticProperty(</span>
+<span class="pc" id="L142">    override val symbol: String,</span>
+<span class="pc" id="L143">    val staticValue: String,</span>
+  ): JSVMProperty {
+<span class="nc" id="L145">    override fun value(): String = staticValue</span>
+  }
+
+  /**
+   * Represents a user-configurable JS Runtime property; binds a JS VM property to an Elide configuration property.
+   *
+   * @param name Name of the property within Elide's configuration system.
+   * @param symbol Symbol to use for the VM property when passing it to a new context.
+   * @param defaultValue If no configured value is available, this value should be passed instead. If null, pass no
+   *   value at all.
+   */
+<span class="pc" id="L156">  internal data class RuntimeProperty(</span>
+<span class="fc" id="L157">    private val name: String,</span>
+<span class="pc" id="L158">    override val symbol: String,</span>
+<span class="pc" id="L159">    private val defaultValue: String? = null,</span>
+  ): JSVMProperty {
+    // @TODO(sgammon): implement
+<span class="nc" id="L162">    override fun value(): String? = defaultValue</span>
+<span class="nc" id="L163">  }</span>
+
+  /**
+   * Represents a property for the JS Runtime which applies based on some [condition], or falls back to a [defaultValue]
+   * at a given [name] in Elide's configuration system.
+   *
+   * @param name Name of the property within Elide's configuration system.
+   * @param symbol Symbol to use for the VM property when passing it to a new context.
+   * @param condition Function to execute to determine whether this property should be applied.
+   * @param value Runtime value bound to this property, if applicable; otherwise, just pass a [defaultValue].
+   * @param defaultValue If the value is disabled, this value should be passed instead. If null, pass no value at all.
+   */
+<span class="fc" id="L175">  internal data class ConditionalProperty(</span>
+<span class="fc" id="L176">    private val name: String,</span>
+<span class="pc" id="L177">    override val symbol: String,</span>
+<span class="fc" id="L178">    private val condition: () -&gt; Boolean,</span>
+<span class="fc" id="L179">    private val value: RuntimeProperty? = null,</span>
+<span class="pc" id="L180">    private val defaultValue: String? = null,</span>
+  ): JSVMProperty {
+<span class="nc bnc" id="L182" title="All 2 branches missed.">    override fun value(): String? = if (condition.invoke()) {</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">      value?.value() ?: defaultValue</span>
+    } else {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">      defaultValue ?: &quot;true&quot;</span>
+<span class="nc" id="L186">    }</span>
+<span class="fc" id="L187">  }</span>
+
   /** Shortcuts for creating script descriptors. */
-  @Suppress(&quot;unused&quot;) object Script {
+  @Suppress(&quot;unused&quot;) public object Script {
     /** @return Embedded script container for the provided [path] (and [charset], defaulting to `UTF-8`). */
-<span class="fc" id="L38">    @JvmStatic fun embedded(path: String, charset: Charset = StandardCharsets.UTF_8): EmbeddedScript = EmbeddedScript(</span>
-<span class="fc" id="L39">      path = path,</span>
-<span class="fc" id="L40">      charset = charset,</span>
-<span class="fc" id="L41">    )</span>
+<span class="fc" id="L192">    @JvmStatic public fun embedded(</span>
+      path: String,
+<span class="fc" id="L194">      charset: Charset = StandardCharsets.UTF_8</span>
+<span class="fc" id="L195">    ): EmbeddedScript = EmbeddedScript(</span>
+<span class="fc" id="L196">      path = path,</span>
+<span class="fc" id="L197">      charset = charset,</span>
+<span class="fc" id="L198">    )</span>
 
     /** @return Literal script container for the provided [script]. */
-<span class="nc" id="L44">    @JvmStatic fun literal(script: String, id: String): ExecutableScript = LiteralScript(id, script)</span>
+<span class="nc" id="L201">    @JvmStatic public fun literal(script: String, id: String): ExecutableScript = LiteralScript(id, script)</span>
+  }
+
+  /** Managed GraalVM execution context, with thread guards. */
+<span class="nc" id="L205">  private class ManagedContext {</span>
+    internal companion object {
+      @JvmStatic internal fun acquire(): ManagedContext {
+<span class="nc" id="L208">        return context.get()</span>
+      }
+
+<span class="nc" id="L211">      private val context: ThreadLocal&lt;ManagedContext&gt; = object: ThreadLocal&lt;ManagedContext&gt;() {</span>
+        override fun initialValue(): ManagedContext {
+<span class="nc" id="L213">          val ctx = ManagedContext()</span>
+<span class="nc" id="L214">          ctx.initialize()</span>
+<span class="nc" id="L215">          return ctx</span>
+        }
+      }
+    }
+
+<span class="nc" id="L220">    private val initialized: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="nc" id="L221">    private val locked: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="nc" id="L222">    private val vmContext: AtomicReference&lt;VMContext?&gt; = AtomicReference(null)</span>
+
+    private fun initialize() {
+<span class="nc" id="L225">      initialized.compareAndSet(</span>
+<span class="nc" id="L226">        false,</span>
+<span class="nc" id="L227">        true,</span>
+      )
+<span class="nc" id="L229">      vmContext.compareAndSet(</span>
+<span class="nc" id="L230">        null,</span>
+<span class="nc" id="L231">        spawnContext(),</span>
+      )
+<span class="nc" id="L233">    }</span>
+
+    // Acquire this context for execution.
+    internal fun &lt;R&gt; exec(operation: (VMContext) -&gt; R): R {
+<span class="nc" id="L237">      locked.compareAndSet(</span>
+<span class="nc" id="L238">        false,</span>
+<span class="nc" id="L239">        true,</span>
+      )
+<span class="nc bnc" id="L241" title="All 2 branches missed.">      val ctx = vmContext.get() ?: throw IllegalStateException(</span>
+<span class="nc" id="L242">        &quot;Context not initialized, cannot execute on VM&quot;</span>
+      )
+<span class="nc" id="L244">      ctx.enter()</span>
+<span class="nc" id="L245">      val result = operation.invoke(ctx)</span>
+<span class="nc" id="L246">      ctx.leave()</span>
+<span class="nc" id="L247">      locked.compareAndSet(</span>
+<span class="nc" id="L248">        true,</span>
+<span class="nc" id="L249">        false,</span>
+      )
+<span class="nc" id="L251">      return result</span>
+    }
   }
 
   /** Script runtime manager. */
-<span class="fc" id="L48">  class ScriptRuntime {</span>
-    companion object {
+<span class="fc" id="L256">  internal class ScriptRuntime {</span>
+    internal companion object {
       private const val embeddedRoot = &quot;embedded&quot;
       private const val manifest = &quot;/$embeddedRoot/runtime/runtime-js.json&quot;
-<span class="fc" id="L52">      private val initialized: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="fc" id="L260">      private val initialized: AtomicBoolean = AtomicBoolean(false)</span>
 
       // Runtime pre-amble from which to clone and splice executable scripts.
       private var preamble: StringBuilder
@@ -57,226 +265,302 @@ import java.util.concurrent.atomic.AtomicBoolean
       // Runtime finalizer / loader function.
       private var loader: StringBuilder
 
-<span class="fc" id="L60">      init {</span>
-<span class="fc" id="L61">        val (p, l) = initialize()</span>
-<span class="fc" id="L62">        preamble = p</span>
-<span class="fc" id="L63">        loader = l</span>
-<span class="fc" id="L64">      }</span>
+<span class="fc" id="L268">      init {</span>
+<span class="fc" id="L269">        val (p, l) = initialize()</span>
+<span class="fc" id="L270">        preamble = p</span>
+<span class="fc" id="L271">        loader = l</span>
+<span class="fc" id="L272">      }</span>
 
       // Load a JS artifact for runtime use from the JAR.
       @JvmStatic private fun loadArtifact(path: String): String {
-<span class="fc" id="L68">        return (</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">          JsRuntime::class.java.getResourceAsStream(&quot;/$embeddedRoot/runtime/$path&quot;) ?:</span>
-<span class="nc" id="L70">            throw FileNotFoundException(&quot;Unable to locate runtime JS resource $path&quot;)</span>
-<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        ).bufferedReader(StandardCharsets.UTF_8).use {</span>
-<span class="fc" id="L72">          it.readText()</span>
+<span class="fc" id="L276">        return (</span>
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">          JsRuntime::class.java.getResourceAsStream(&quot;/$embeddedRoot/runtime/$path&quot;) ?:</span>
+<span class="nc" id="L278">            throw FileNotFoundException(&quot;Unable to locate runtime JS resource $path&quot;)</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        ).bufferedReader(StandardCharsets.UTF_8).use {</span>
+<span class="fc" id="L280">          it.readText()</span>
         }
       }
 
       // Initialize the script runtime by loading artifacts mentioned in the manifest.
       @JvmStatic @Synchronized private fun initialize(): Pair&lt;StringBuilder, StringBuilder&gt; {
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (!initialized.get()) {</span>
-<span class="fc" id="L79">          initialized.compareAndSet(</span>
-<span class="fc" id="L80">            false,</span>
-<span class="fc" id="L81">            true</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">        if (!initialized.get()) {</span>
+<span class="fc" id="L287">          initialized.compareAndSet(</span>
+<span class="fc" id="L288">            false,</span>
+<span class="fc" id="L289">            true</span>
           )
 
           // resolve the stream
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">          val manifestStream = ScriptRuntime::class.java.getResourceAsStream(</span>
-<span class="fc" id="L86">            manifest</span>
-<span class="nc" id="L87">          ) ?: throw IllegalStateException(</span>
-<span class="nc" id="L88">            &quot;Failed to resolve JS runtime manifest: '$manifest'. Please check that you have a dependency on &quot; +</span>
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">          val manifestStream = ScriptRuntime::class.java.getResourceAsStream(</span>
+<span class="fc" id="L294">            manifest</span>
+<span class="nc" id="L295">          ) ?: throw IllegalStateException(</span>
+<span class="nc" id="L296">            &quot;Failed to resolve JS runtime manifest: '$manifest'. Please check that you have a dependency on &quot; +</span>
             &quot;'graalvm-js', which is required to run embedded SSR scripts.&quot;
           )
 
           // grab content
-<span class="pc bpc" id="L93" title="1 of 2 branches missed.">          val manifestContent = manifestStream.bufferedReader().use { it.readText() }</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">          val manifestContent = manifestStream.bufferedReader().use { it.readText() }</span>
 
           // deserialize as script runtime config
-<span class="fc" id="L96">          val config = Json.decodeFromString(</span>
-<span class="fc" id="L97">            JsRuntimeConfig.serializer(),</span>
-<span class="fc" id="L98">            manifestContent</span>
+<span class="fc" id="L304">          val config = Json.decodeFromString(</span>
+<span class="fc" id="L305">            JsRuntimeConfig.serializer(),</span>
+<span class="fc" id="L306">            manifestContent</span>
           )
 
           // load each resource
-<span class="fc" id="L102">          val runtimePreamble = StringBuilder()</span>
-<span class="fc" id="L103">          config.artifacts.map {</span>
-<span class="fc" id="L104">            runtimePreamble.appendLine(loadArtifact(it.name))</span>
+<span class="fc" id="L310">          val runtimePreamble = StringBuilder()</span>
+<span class="fc" id="L311">          config.artifacts.map {</span>
+<span class="fc" id="L312">            runtimePreamble.appendLine(loadArtifact(it.name))</span>
           }
 
           // load entrypoint
-<span class="fc" id="L108">          val runtimeEntry = StringBuilder()</span>
-<span class="pc bpc" id="L109" title="2 of 4 branches missed.">          if (config.entry.isNotBlank()) {</span>
-<span class="fc" id="L110">            runtimeEntry.appendLine(loadArtifact(config.entry))</span>
+<span class="fc" id="L316">          val runtimeEntry = StringBuilder()</span>
+<span class="pc bpc" id="L317" title="2 of 4 branches missed.">          if (config.entry.isNotBlank()) {</span>
+<span class="fc" id="L318">            runtimeEntry.appendLine(loadArtifact(config.entry))</span>
           }
 
-<span class="fc" id="L113">          return (</span>
-<span class="fc" id="L114">            runtimePreamble to runtimeEntry</span>
+<span class="fc" id="L321">          return (</span>
+<span class="fc" id="L322">            runtimePreamble to runtimeEntry</span>
           )
         } else {
-<span class="nc" id="L117">          throw IllegalStateException(</span>
-<span class="nc" id="L118">            &quot;Cannot initialize JS runtime twice&quot;</span>
+<span class="nc" id="L325">          throw IllegalStateException(</span>
+<span class="nc" id="L326">            &quot;Cannot initialize JS runtime twice&quot;</span>
           )
         }
       }
     }
 
-    /** @return */
-    internal fun prepare(script: ExecutableScript): ExecutableScript {
-<span class="nc" id="L126">      val content = script.load()</span>
-<span class="nc" id="L127">      val container = StringBuilder()</span>
-<span class="nc bnc" id="L128" title="All 2 branches missed.">      if (script.installShims) {</span>
-<span class="nc" id="L129">        container.append(</span>
-<span class="nc" id="L130">          preamble</span>
+    // Thread-pool executor where we should acquire execution contexts.
+<span class="pc" id="L333">    internal val executor: RuntimeExecutor by lazy {</span>
+<span class="nc" id="L334">      RuntimeExecutor()</span>
+    }
+
+    // Private cache of warmed sources.
+<span class="fc" id="L338">    private val sourceCache: Cache&lt;ScriptID, Value&gt; = Caffeine.newBuilder()</span>
+<span class="fc" id="L339">      .executor(MoreExecutors.directExecutor())</span>
+<span class="fc" id="L340">      .build()</span>
+
+    /** @return Executable [script] prepared with an entrypoint and runtime glue code. */
+    private fun prepare(script: ExecutableScript): ExecutableScript {
+<span class="nc" id="L344">      val content = script.load()</span>
+<span class="nc" id="L345">      val container = StringBuilder()</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">      if (script.installShims) {</span>
+<span class="nc" id="L347">        container.append(</span>
+<span class="nc" id="L348">          preamble</span>
         )
       }
-<span class="nc" id="L133">      container.append(</span>
-<span class="nc" id="L134">        content</span>
+<span class="nc" id="L351">      container.append(</span>
+<span class="nc" id="L352">        content</span>
       )
-<span class="nc bnc" id="L136" title="All 2 branches missed.">      if (script.installEntry) {</span>
-<span class="nc" id="L137">        container.append(</span>
-<span class="nc" id="L138">          loader</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">      if (script.installEntry) {</span>
+<span class="nc" id="L355">        container.append(</span>
+<span class="nc" id="L356">          loader</span>
         )
       }
-<span class="nc" id="L141">      script.assignRendered(</span>
-<span class="nc" id="L142">        container</span>
+<span class="nc" id="L359">      script.assignRendered(</span>
+<span class="nc" id="L360">        container</span>
       )
-<span class="nc" id="L144">      return script</span>
+<span class="nc" id="L362">      return script</span>
+    }
+
+    /** @return Interpreted and warmed [script] -- in re-used form, or on the fly, as applicable. */
+    internal fun resolve(script: ExecutableScript): Value {
+<span class="nc" id="L367">      return sourceCache.get(script.fingerprint()) { _ -&gt;</span>
+<span class="nc" id="L368">        val prepped = prepare(script)</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">        ManagedContext.acquire().exec {</span>
+<span class="nc" id="L370">          it.eval(prepped.interpret())</span>
+<span class="nc" id="L371">        } ?: throw IllegalStateException(</span>
+<span class="nc" id="L372">          &quot;Failed to resolve value from VM execution: got `null`&quot;</span>
+        )
+      }!!
     }
   }
 
   /** Embedded script descriptor object. */
-<span class="fc" id="L149">  sealed class ExecutableScript(</span>
-<span class="pc" id="L150">    internal val installShims: Boolean = true,</span>
-<span class="pc" id="L151">    internal val installEntry: Boolean = true,</span>
-<span class="pc" id="L152">    val invocationBase: String? = null,</span>
-<span class="pc" id="L153">    val invocationTarget: String? = null,</span>
+<span class="fc" id="L379">  public sealed class ExecutableScript(</span>
+<span class="pc" id="L380">    internal val installShims: Boolean = true,</span>
+<span class="pc" id="L381">    internal val installEntry: Boolean = true,</span>
+<span class="pc" id="L382">    internal val invocationBase: String? = null,</span>
+<span class="pc" id="L383">    internal val invocationTarget: String? = null,</span>
+<span class="fc" id="L384">    private val fingerprint: ScriptID,</span>
   ) {
     private var renderedContent: StringBuilder? = null
+<span class="fc" id="L387">    private var interpreted: AtomicReference&lt;Source&gt; = AtomicReference(null)</span>
 
     /** @return The path or some module ID for the embedded script. */
-    abstract fun getId(): String
+    internal abstract fun getId(): String
 
     /** @return Script content, loaded synchronously. */
-    abstract fun load(): String
+    internal abstract fun load(): String
 
     // Assign rendered preamble+script content before execution.
     internal fun assignRendered(builder: StringBuilder) {
-<span class="nc" id="L165">      renderedContent = builder</span>
-<span class="nc" id="L166">    }</span>
+<span class="nc" id="L397">      renderedContent = builder</span>
+<span class="nc" id="L398">    }</span>
 
-    internal fun render(): Source {
-<span class="nc bnc" id="L169" title="All 4 branches missed.">      val content = renderedContent?.toString() ?: throw IllegalStateException(</span>
-<span class="nc" id="L170">        &quot;Cannot render script before it has been prepared by the JS runtime&quot;</span>
+    // Assign VM-interpreted source object.
+    private fun assignSource(source: Source) {
+<span class="nc" id="L402">      interpreted.compareAndSet(</span>
+<span class="nc" id="L403">        null,</span>
+<span class="nc" id="L404">        source,</span>
       )
-<span class="nc" id="L172">      return Source.create(</span>
-<span class="nc" id="L173">        &quot;js&quot;,</span>
-<span class="nc" id="L174">        content</span>
+<span class="nc" id="L406">    }</span>
+
+    // Evaluate/interpret the rendered output for this script.
+    private fun render(): Source {
+<span class="nc bnc" id="L410" title="All 4 branches missed.">      val content = renderedContent?.toString() ?: throw IllegalStateException(</span>
+<span class="nc" id="L411">        &quot;Cannot render script before it has been prepared by the JS runtime&quot;</span>
       )
+<span class="nc" id="L413">      val source = Source.create(</span>
+<span class="nc" id="L414">        &quot;js&quot;,</span>
+<span class="nc" id="L415">        content</span>
+      )
+<span class="nc" id="L417">      assignSource(</span>
+<span class="nc" id="L418">        source</span>
+      )
+<span class="nc" id="L420">      return source</span>
     }
-<span class="fc" id="L177">  }</span>
+
+    // Unique and stable ID for this script.
+    internal fun fingerprint(): ScriptID {
+<span class="nc" id="L425">      return fingerprint</span>
+    }
+
+    // Acquire VM-interpreted source object.
+    internal fun interpret(): Source {
+<span class="nc bnc" id="L430" title="All 2 branches missed.">      return interpreted.get() ?: render()</span>
+    }
+<span class="fc" id="L432">  }</span>
 
   /** Embedded script implementation which pulls from local JAR resources. */
-<span class="fc" id="L180">  class EmbeddedScript(</span>
-<span class="pc" id="L181">    val path: String,</span>
-<span class="pc" id="L182">    private val charset: Charset = StandardCharsets.UTF_8,</span>
-<span class="fc" id="L183">    invocationBase: String? = null,</span>
-<span class="fc" id="L184">    invocationTarget: String? = null,</span>
-<span class="fc" id="L185">  ): ExecutableScript(</span>
-<span class="fc" id="L186">    invocationBase = invocationBase,</span>
-<span class="fc" id="L187">    invocationTarget = invocationTarget,</span>
+<span class="fc" id="L435">  public class EmbeddedScript(</span>
+<span class="pc" id="L436">    public val path: String,</span>
+<span class="pc" id="L437">    private val charset: Charset = StandardCharsets.UTF_8,</span>
+<span class="fc" id="L438">    invocationBase: String? = null,</span>
+<span class="fc" id="L439">    invocationTarget: String? = null,</span>
+<span class="fc" id="L440">  ): ExecutableScript(</span>
+<span class="fc" id="L441">    invocationBase = invocationBase,</span>
+<span class="fc" id="L442">    invocationTarget = invocationTarget,</span>
+<span class="fc" id="L443">    fingerprint = fingerprintScriptPath(path),</span>
   ) {
-    /** @inheritDoc */
-<span class="nc" id="L190">    override fun getId(): String = path</span>
+    public companion object {
+      private const val hashAlgo = &quot;SHA-256&quot;
 
-    /** @inheritDoc */
-    override fun load(): String {
-<span class="pc bpc" id="L194" title="1 of 2 branches missed.">      val stream = javaClass.getResourceAsStream(path) ?:</span>
-<span class="nc" id="L195">      throw FileNotFoundException(&quot;Embedded script not found: '$path'&quot;)</span>
-
-<span class="pc bpc" id="L197" title="1 of 2 branches missed.">      return stream.bufferedReader(charset).use {</span>
-<span class="fc" id="L198">        it.readText()</span>
+      // Hash an embedded script path to determine a stable fingerprint value.
+      @JvmStatic private fun fingerprintScriptPath(path: String): ScriptID {
+<span class="fc" id="L450">        val hasher = MessageDigest.getInstance(hashAlgo)</span>
+<span class="fc" id="L451">        hasher.update(path.toByteArray(StandardCharsets.UTF_8))</span>
+<span class="fc" id="L452">        return String(</span>
+<span class="fc" id="L453">          hasher.digest(),</span>
+<span class="fc" id="L454">          StandardCharsets.UTF_8</span>
+        )
       }
     }
-<span class="fc" id="L201">  }</span>
 
-  /** Embedded script implementation which pulls from a string literal. */
-<span class="nc" id="L204">  class LiteralScript(</span>
-<span class="nc" id="L205">    private val moduleId: String,</span>
-<span class="nc" id="L206">    private val script: String</span>
-<span class="nc" id="L207">  ): ExecutableScript() {</span>
     /** @inheritDoc */
-<span class="nc" id="L209">    override fun getId(): String = moduleId</span>
+<span class="nc" id="L460">    override fun getId(): String = path</span>
 
     /** @inheritDoc */
     override fun load(): String {
-<span class="nc" id="L213">      return script</span>
+<span class="pc bpc" id="L464" title="1 of 2 branches missed.">      val stream = javaClass.getResourceAsStream(path) ?:</span>
+<span class="nc" id="L465">      throw FileNotFoundException(&quot;Embedded script not found: '$path'&quot;)</span>
+
+<span class="pc bpc" id="L467" title="1 of 2 branches missed.">      return stream.bufferedReader(charset).use {</span>
+<span class="fc" id="L468">        it.readText()</span>
+      }
+    }
+<span class="fc" id="L471">  }</span>
+
+  /** Embedded script implementation which pulls from a string literal. */
+<span class="nc" id="L474">  public class LiteralScript(</span>
+<span class="nc" id="L475">    private val moduleId: String,</span>
+<span class="nc" id="L476">    private val script: String</span>
+<span class="nc" id="L477">  ): ExecutableScript(</span>
+<span class="nc" id="L478">    fingerprint = fingerprintScriptContent(moduleId, script)</span>
+  ) {
+    public companion object {
+      private const val hashAlgorithm = &quot;SHA-256&quot;
+
+      // Hash a script to determine a stable fingerprint value.
+      @JvmStatic private fun fingerprintScriptContent(moduleId: String, content: String): ScriptID {
+<span class="nc" id="L485">        val hasher = MessageDigest.getInstance(hashAlgorithm)</span>
+<span class="nc" id="L486">        hasher.update(</span>
+<span class="nc" id="L487">          moduleId.toByteArray(StandardCharsets.UTF_8)</span>
+        )
+<span class="nc" id="L489">        hasher.update(</span>
+<span class="nc" id="L490">          content.toByteArray(StandardCharsets.UTF_8)</span>
+        )
+<span class="nc" id="L492">        return String(Hex.encode(</span>
+<span class="nc" id="L493">          hasher.digest()</span>
+<span class="nc" id="L494">        ), StandardCharsets.UTF_8)</span>
+      }
+    }
+
+    /** @inheritDoc */
+<span class="nc" id="L499">    override fun getId(): String = moduleId</span>
+
+    /** @inheritDoc */
+    override fun load(): String {
+<span class="nc" id="L503">      return script</span>
     }
   }
 
   // Create the singleton script runtime.
-<span class="fc" id="L218">  private val runtime: ScriptRuntime = ScriptRuntime()</span>
+<span class="fc" id="L508">  private val runtime: ScriptRuntime = ScriptRuntime()</span>
 
   @VisibleForTesting
   internal fun &lt;R&gt; evalExecuteScript(
-    context: org.graalvm.polyglot.Context,
     script: ExecutableScript,
     returnType: Class&lt;R&gt;,
     vararg arguments: Any?
   ): R? {
-<span class="nc bnc" id="L227" title="All 2 branches missed.">    val interpreted = context.eval(</span>
-<span class="nc" id="L228">      runtime.prepare(script).render()</span>
-<span class="nc" id="L229">    ) ?: throw IllegalStateException(</span>
-<span class="nc" id="L230">      &quot;Failed to interpret script: '${script.getId()}'&quot;</span>
-    )
-
-<span class="nc" id="L233">    val base = script.invocationBase</span>
-<span class="nc" id="L234">    val target = script.invocationTarget</span>
-<span class="nc bnc" id="L235" title="All 2 branches missed.">    val baseTarget: Value = if (target != null) {</span>
-<span class="nc" id="L236">      var baseSegment: Value = interpreted</span>
-<span class="nc bnc" id="L237" title="All 2 branches missed.">      val baseResolved = if (base != null) {</span>
-<span class="nc" id="L238">        base.split(&quot;.&quot;).forEach {</span>
-<span class="nc bnc" id="L239" title="All 2 branches missed.">          baseSegment = baseSegment.getMember(</span>
-<span class="nc" id="L240">            it</span>
-<span class="nc" id="L241">          ) ?: throw IllegalStateException(</span>
-<span class="nc" id="L242">            &quot;Failed to resolve base segment: '$it' in '$base' was not found&quot;</span>
+<span class="nc" id="L516">    val interpreted = runtime.resolve(script)</span>
+<span class="nc" id="L517">    val base = script.invocationBase</span>
+<span class="nc" id="L518">    val target = script.invocationTarget</span>
+<span class="nc bnc" id="L519" title="All 2 branches missed.">    val baseTarget: Value = if (target != null) {</span>
+<span class="nc" id="L520">      var baseSegment: Value = interpreted</span>
+<span class="nc bnc" id="L521" title="All 2 branches missed.">      val baseResolved = if (base != null) {</span>
+<span class="nc" id="L522">        base.split(&quot;.&quot;).forEach {</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">          baseSegment = baseSegment.getMember(</span>
+<span class="nc" id="L524">            it</span>
+<span class="nc" id="L525">          ) ?: throw IllegalStateException(</span>
+<span class="nc" id="L526">            &quot;Failed to resolve base segment: '$it' in '$base' was not found&quot;</span>
           )
-<span class="nc" id="L244">        }</span>
-<span class="nc" id="L245">        baseSegment</span>
+<span class="nc" id="L528">        }</span>
+<span class="nc" id="L529">        baseSegment</span>
       } else {
-<span class="nc" id="L247">        interpreted</span>
+<span class="nc" id="L531">        interpreted</span>
       }
 
       // from the resolved base segment, pluck the executable member
-<span class="nc bnc" id="L251" title="All 2 branches missed.">      val found = baseResolved.getMember(</span>
-<span class="nc" id="L252">        script.invocationTarget,</span>
-<span class="nc" id="L253">      ) ?: throw IllegalStateException(</span>
-<span class="nc" id="L254">        &quot;Failed to invoke script member: '${script.getId()}' (fn: '${script.invocationTarget}')&quot;</span>
+<span class="nc bnc" id="L535" title="All 2 branches missed.">      val found = baseResolved.getMember(</span>
+<span class="nc" id="L536">        script.invocationTarget,</span>
+<span class="nc" id="L537">      ) ?: throw IllegalStateException(</span>
+<span class="nc" id="L538">        &quot;Failed to invoke script member: '${script.getId()}' (fn: '${script.invocationTarget}')&quot;</span>
       )
 
-<span class="nc bnc" id="L257" title="All 2 branches missed.">      if (!found.canExecute()) {</span>
-<span class="nc" id="L258">        throw IllegalStateException(</span>
-<span class="nc" id="L259">          &quot;Member found, but not executable, at '${base}.${script.invocationTarget}'&quot;</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">      if (!found.canExecute()) {</span>
+<span class="nc" id="L542">        throw IllegalStateException(</span>
+<span class="nc" id="L543">          &quot;Member found, but not executable, at '${base}.${script.invocationTarget}'&quot;</span>
         )
       } else {
-<span class="nc" id="L262">        found</span>
+<span class="nc" id="L546">        found</span>
       }
     } else {
       // execute the script directly
-<span class="nc" id="L266">      interpreted</span>
+<span class="nc" id="L550">      interpreted</span>
     }
 
     // if we are handed back an executable, execute it, providing the input arguments. in both cases, cast the return
     // value to the expected type.
-<span class="nc bnc" id="L271" title="All 2 branches missed.">    return if (baseTarget.canExecute()) {</span>
-<span class="nc" id="L272">      baseTarget.execute(</span>
-<span class="nc" id="L273">        *arguments</span>
-<span class="nc bnc" id="L274" title="All 2 branches missed.">      )?.`as`(</span>
-<span class="nc" id="L275">        returnType</span>
+<span class="nc bnc" id="L555" title="All 2 branches missed.">    return if (baseTarget.canExecute()) {</span>
+<span class="nc" id="L556">      baseTarget.execute(</span>
+<span class="nc" id="L557">        *arguments</span>
+<span class="nc bnc" id="L558" title="All 2 branches missed.">      )?.`as`(</span>
+<span class="nc" id="L559">        returnType</span>
       )
     } else {
-<span class="nc" id="L278">      interpreted.`as`(</span>
-<span class="nc" id="L279">        returnType</span>
+<span class="nc" id="L562">      interpreted.`as`(</span>
+<span class="nc" id="L563">        returnType</span>
       )
     }
   }
@@ -288,17 +572,67 @@ import java.util.concurrent.atomic.AtomicBoolean
    * @param script Executable script spec to execute within the embedded JS VM.
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
-  fun &lt;R&gt; execute(script: ExecutableScript, returnType: Class&lt;R&gt;, vararg arguments: Any?): R? {
+  private fun &lt;R&gt; executeBackground(
+    script: ExecutableScript,
+    returnType: Class&lt;R&gt;,
+    arguments: Array&lt;out Any?&gt;,
+  ): Future&lt;R?&gt; {
     // interpret the script
-<span class="nc" id="L293">    val ctx = initializeContext()</span>
-<span class="nc" id="L294">    return ctx.use {</span>
-<span class="nc" id="L295">      evalExecuteScript(</span>
-<span class="nc" id="L296">        it,</span>
-<span class="nc" id="L297">        script,</span>
-<span class="nc" id="L298">        returnType,</span>
-<span class="nc" id="L299">        *arguments</span>
+<span class="nc" id="L581">    return runtime.executor.submit {</span>
+<span class="nc" id="L582">      evalExecuteScript(</span>
+<span class="nc" id="L583">        script,</span>
+<span class="nc" id="L584">        returnType,</span>
+<span class="nc" id="L585">        *arguments</span>
       )
     }
   }
+
+  /**
+   * Asynchronously execute the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
+   * de-serialize the result [R] and provide it as the return value.
+   *
+   * @param script Executable script spec to execute within the embedded JS VM.
+   * @return Deferred task which evaluates to the return value [R] when execution finishes.
+   */
+  public fun &lt;R&gt; executeAsync(script: ExecutableScript, returnType: Class&lt;R&gt;, vararg arguments: Any?): Deferred&lt;R?&gt; {
+    // interpret the script
+<span class="nc" id="L599">    return executeBackground(</span>
+<span class="nc" id="L600">      script,</span>
+<span class="nc" id="L601">      returnType,</span>
+<span class="nc" id="L602">      arguments,</span>
+<span class="nc" id="L603">    ).asDeferred()</span>
+  }
+
+  /**
+   * Suspension execution of the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
+   * de-serialize the result [R] and provide it as the return value.
+   *
+   * @param script Executable script spec to execute within the embedded JS VM.
+   * @return Deferred task which evaluates to the return value [R] when execution finishes.
+   */
+  public suspend fun &lt;R&gt; execute(script: ExecutableScript, returnType: Class&lt;R&gt;, vararg arguments: Any?): R? {
+    // interpret the script
+<span class="nc" id="L615">    return executeAsync(</span>
+<span class="nc" id="L616">      script,</span>
+<span class="nc" id="L617">      returnType,</span>
+<span class="nc" id="L618">      arguments,</span>
+<span class="nc" id="L619">    ).await()</span>
+  }
+
+  /**
+   * Blocking execution of the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
+   * de-serialize the result [R] and provide it as the return value.
+   *
+   * @param script Executable script spec to execute within the embedded JS VM.
+   * @return Deferred task which evaluates to the return value [R] when execution finishes.
+   */
+  public fun &lt;R&gt; executeBlocking(script: ExecutableScript, returnType: Class&lt;R&gt;, vararg arguments: Any?): R? {
+    // interpret the script
+<span class="nc" id="L631">    return executeBackground(</span>
+<span class="nc" id="L632">      script,</span>
+<span class="nc" id="L633">      returnType,</span>
+<span class="nc" id="L634">      arguments,</span>
+<span class="nc" id="L635">    ).get()</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

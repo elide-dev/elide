@@ -3,7 +3,7 @@
 # service
 
 [jvm]\
-abstract fun [service](service.md)(): ListeningScheduledExecutorService
+abstract fun [service](service.md)(): ListeningExecutorService
 
 #### Return
 

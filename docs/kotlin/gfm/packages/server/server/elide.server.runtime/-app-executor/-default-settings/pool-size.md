@@ -3,4 +3,6 @@
 # poolSize
 
 [jvm]\
-const val [poolSize](pool-size.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 4
+val [poolSize](pool-size.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+
+Default size of threads available for background execution.

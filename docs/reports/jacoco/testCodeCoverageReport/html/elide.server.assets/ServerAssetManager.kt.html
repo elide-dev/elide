@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerAssetManager.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">ServerAssetManager.kt</span></div><h1>ServerAssetManager.kt</h1><pre class="source lang-java linenums">package elide.server.assets
+
+import com.google.common.util.concurrent.Futures
+import elide.server.StreamedAsset
+import elide.server.StreamedAssetResponse
+import elide.server.cfg.ServerConfig
+import io.micronaut.caffeine.cache.Cache
+import io.micronaut.caffeine.cache.Caffeine
+import io.micronaut.context.annotation.Context
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import jakarta.inject.Inject
+import kotlinx.coroutines.*
+import kotlinx.coroutines.guava.asDeferred
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+/**
+ * Built-in asset manager implementation for use with Elide applications.
+ *
+ * Resolves and loads assets embedded in the application at build-time, based on binary-encoded protocol buffer messages
+ * which define the dependency structure and metadata of each embedded asset.
+ *
+ * @param reader Active asset reader implementation for this server run.
+ */
+<span class="pc" id="L26">@Suppress(&quot;UnstableApiUsage&quot;)</span>
+@Context
+<span class="fc" id="L28">public class ServerAssetManager @Inject constructor(</span>
+<span class="pc" id="L29">  override val reader: AssetReader,</span>
+<span class="fc" id="L30">  private val config: ServerConfig,</span>
+) : AssetManager {
+  public companion object {
+    // Wait timeout in seconds for initialization.
+    public const val waitTimeout: Long = 10L
+  }
+
+  // Cache for rendered asset results.
+<span class="fc" id="L38">  private val assetCache: Cache&lt;ServerAsset, RenderedAsset&gt; = Caffeine.newBuilder()</span>
+<span class="fc" id="L39">    .build()</span>
+
+  /** @inheritDoc */
+<span class="pc" id="L42">  override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)</span>
+
+  // Build an HTTP asset response from the provided asset result.
+  private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
+<span class="nc" id="L46">    TODO(&quot;not yet implemented&quot;)</span>
+  }
+
+  /** @inheritDoc */
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override suspend fun renderAssetAsync(request: HttpRequest&lt;*&gt;, asset: ServerAsset): Deferred&lt;StreamedAssetResponse&gt; {
+    // if asset serving is disabled, return a 404 for all asset calls.
+<span class="nc bnc" id="L53" title="All 2 branches missed.">    if (!config.assets.enabled) {</span>
+<span class="nc" id="L54">      return Futures.immediateFuture(</span>
+<span class="nc" id="L55">        HttpResponse.notFound&lt;StreamedAsset&gt;()</span>
+<span class="nc" id="L56">      ).asDeferred()</span>
+    }
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">    return withContext(Dispatchers.IO) {</span>
+<span class="nc" id="L60">      async {</span>
+        // pass off to the reader to read the asset
+<span class="nc" id="L62">        val assetContent = reader.readAsync(asset)</span>
+<span class="nc" id="L63">        assetContent.invokeOnCompletion {</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">          if (it != null) {</span>
+<span class="nc" id="L65">            logging.error(&quot;Error reading asset: $asset&quot;, it)</span>
+          } else {
+<span class="nc" id="L67">            assetCache.put(asset, assetContent.getCompleted())</span>
+          }
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">        buildAssetResponse(</span>
+<span class="nc" id="L71">          assetContent.await()</span>
+        )
+      }
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

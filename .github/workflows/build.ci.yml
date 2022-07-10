@@ -26,12 +26,12 @@ jobs:
           - os: ubuntu-latest
             experimental: false
             gu-binary: gu
-            java: 17
+            java: 11
             gvm: latest
           - os: ubuntu-latest
             experimental: true
             gu-binary: gu
-            java: 11
+            java: 17
             gvm: latest
           - os: macos-latest
             experimental: true

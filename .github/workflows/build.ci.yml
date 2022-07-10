@@ -79,20 +79,6 @@ jobs:
       ## Setup: Checkout Code
       - uses: actions/checkout@v3
 
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
       ## CI: Build
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2
@@ -100,6 +86,7 @@ jobs:
         env:
           CI: true
         with:
+          cache-read-only: ${{ matrix.os != "ubuntu-latest" }}
           arguments: |
             build
             --scan
@@ -142,24 +129,11 @@ jobs:
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
       ## Run JVM Tests
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@v2
         with:
+          cache-read-only: false
           arguments: |
             test
             --scan
@@ -210,6 +184,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          cache-read-only: false
           arguments: |
             sonarqube
             --scan
@@ -226,7 +201,7 @@ jobs:
   ##
   tests-native:
     runs-on: buildjet-16vcpu-ubuntu-2004
-    needs: [gradle]
+    needs: [tests-jvm]
     continue-on-error: true  # temporary
     if: |
       (
@@ -253,24 +228,11 @@ jobs:
           gu install native-image espresso
           gu rebuild-images
 
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
       ## Run Native Tests
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2
         with:
+          cache-read-only: false
           arguments: |
             graalvm:test
             graalvm-js:test
@@ -359,20 +321,6 @@ jobs:
           registry: ghcr.io
           username: elidebot
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
 
       ## -- Samples -- ##
 
@@ -519,20 +467,6 @@ jobs:
           registry: ghcr.io
           username: elidebot
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
 
       ## -- Samples -- ##
 

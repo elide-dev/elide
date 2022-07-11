@@ -24,7 +24,7 @@ kotlin {
     binaries.executable()
     browser {
       commonWebpackConfig {
-        sourceMaps = devMode
+        sourceMaps = false
         cssSupport.enabled = true
         mode = if (devMode) {
           org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT

@@ -143,12 +143,12 @@ internal class ServerAssetIndex @Inject constructor(
     }.collect(
       Collectors.toMap(
         { it.first },
-        { it.second },
-        { left, _ ->
-          error(
-            "Found assets with duplicate tags: '$left'. This should not happen; please report this bug to the Elide " +
-            "project authors: https://github.com/elide-dev"
-          )
+        { sortedSetOf(it.second) },
+        { left, right ->
+          val combined = TreeSet<Int>()
+          combined.addAll(left)
+          combined.addAll(right)
+          combined
         },
         { TreeMap() }
       )
@@ -196,7 +196,7 @@ internal class ServerAssetIndex @Inject constructor(
   internal fun pointerForConcrete(
     type: AssetType,
     key: AssetModuleId,
-    idx: Int?,
+    idx: TreeSet<Int>?,
     bundle: AssetBundle,
     depGraph: ImmutableNetwork.Builder<AssetModuleId, AssetDependency>,
   ): AssetPointer = when (type) {
@@ -263,7 +263,12 @@ internal class ServerAssetIndex @Inject constructor(
   }
 
   @VisibleForTesting
-  internal fun buildConcreteAsset(type: AssetType, moduleId: String, bundle: AssetBundle, idx: Int?): ServerAsset {
+  internal fun buildConcreteAsset(
+    type: AssetType,
+    moduleId: String,
+    bundle: AssetBundle,
+    idx: SortedSet<Int>?
+  ): ServerAsset {
     return when (type) {
       // if it's a script, wrap it as a script
       AssetType.SCRIPT -> ServerAsset.Script(

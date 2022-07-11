@@ -34,25 +34,15 @@ class AssetDataTest {
     val pointer = AssetPointer(
       moduleId = "some-module",
       type = AssetType.SCRIPT,
-      index = 5,
+      index = sortedSetOf(5),
     )
     assertEquals("some-module", pointer.moduleId)
     assertEquals(AssetType.SCRIPT, pointer.type)
-    assertEquals(5, pointer.index)
-    assertNotNull(AssetPointer.serializer())
+    assertEquals(5, pointer.index!!.first())
     assertEquals(pointer, pointer)
     assertEquals(pointer, pointer.copy())
     assertNotNull(pointer.hashCode())
     assertTrue(pointer.toString().contains("some-module"))
-    val serialized = Json.encodeToString(
-      AssetPointer.serializer(),
-      pointer,
-    )
-    val deserialized = Json.decodeFromString(
-      AssetPointer.serializer(),
-      serialized,
-    )
-    assertEquals(pointer, deserialized)
   }
 
   @Test fun testAssetDependency() {

@@ -48,6 +48,9 @@ enum CompressionMode {
 
   // Snappy-based compression.
   SNAPPY = 3;
+
+  // Deflate (zlib)-based compression.
+  DEFLATE = 4;
 }
 
 

@@ -94,8 +94,13 @@ public class ServerAssetManager @Inject internal constructor(
             ).asDeferred()
           }
         } else {
+          require(asset.index != null && asset.index.size == 1) {
+            "Asset must be inlined in asset bundle, and cannot have more than one source file specified." +
+            " Please check that each of your asset bundles are specified with a maximum of 1 source file."
+          }
+
           // it's a strong etag, so we need to compare it with the Base64-encoded asset hash.
-          val content = assetIndex.readByModuleIndex(asset.index!!)
+          val content = assetIndex.readByModuleIndex(asset.index.first())
           val identityVariant = content.getVariant(0)
           val b64 = String(
             Base64.encodeWebSafe(identityVariant.getIntegrity(0).toByteArray()),

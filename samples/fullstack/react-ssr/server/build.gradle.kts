@@ -40,8 +40,8 @@ elide {
     }
     assets {
       bundler {
+        format(tools.elide.assets.ManifestFormat.BINARY)
         compression {
-          modes(CompressionMode.GZIP)
           minimumSizeBytes(0)
           keepAllVariants()
         }

@@ -160,6 +160,12 @@ dependencies {
   implementation(libs.protobuf.util)
   implementation(libs.protobuf.kotlin)
 
+  // Brotli
+  implementation(libs.brotli)
+  implementation(libs.brotli.native.osx)
+  implementation(libs.brotli.native.linux)
+  implementation(libs.brotli.native.windows)
+
   // Google
   implementation(libs.grpc.core)
   implementation(libs.grpc.api)

@@ -10,7 +10,7 @@ import react.dom.server.rawRenderToString
 @JsExport fun renderContent(): String {
   return rawRenderToString(Fragment.create() {
     SampleApp {
-      message = "Hello, React SSR!"
+      message = "Hello, Elide! This page was served over Hybrid SSR."
     }
   })
 }

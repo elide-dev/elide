@@ -2,6 +2,7 @@ package elide.server.assets
 
 import elide.server.AssetModuleId
 import tools.elide.assets.AssetBundle
+import java.util.SortedSet
 
 /**
  * Describes a server-side asset which is embedded in an application bundle through Elide's asset tools and protocol
@@ -14,7 +15,7 @@ import tools.elide.assets.AssetBundle
 public sealed class ServerAsset private constructor(
   internal val module: AssetModuleId,
   internal val assetType: AssetType,
-  internal val index: Int?,
+  internal val index: SortedSet<Int>?,
 ) {
   /**
    * Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol
@@ -25,7 +26,7 @@ public sealed class ServerAsset private constructor(
    */
   public class Script(
     internal val descriptor: AssetBundle.ScriptBundle,
-    index: Int?,
+    index: SortedSet<Int>?,
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.SCRIPT,
@@ -41,7 +42,7 @@ public sealed class ServerAsset private constructor(
    */
   public class Stylesheet(
     internal val descriptor: AssetBundle.StyleBundle,
-    index: Int?,
+    index: SortedSet<Int>?,
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.STYLESHEET,
@@ -57,7 +58,7 @@ public sealed class ServerAsset private constructor(
    */
   public class Text(
     internal val descriptor: AssetBundle.GenericBundle,
-    index: Int?,
+    index: SortedSet<Int>?,
   ) : ServerAsset(
     module = descriptor.module,
     assetType = AssetType.TEXT,

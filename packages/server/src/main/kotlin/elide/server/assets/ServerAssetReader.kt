@@ -52,6 +52,7 @@ public class ServerAssetReader @Inject internal constructor(
     val contentEncoding = when (variant.compression) {
       CompressionMode.IDENTITY -> "identity"
       CompressionMode.GZIP -> "gzip"
+      CompressionMode.DEFLATE -> "deflate"
       CompressionMode.BROTLI -> "br"
       else -> null
     }
@@ -76,8 +77,9 @@ public class ServerAssetReader @Inject internal constructor(
       val encodings = EnumSet.copyOf(
         acceptEncoding.split(",").mapNotNull {
           when (it.trim().lowercase()) {
-            "gzip" -> CompressionMode.GZIP
             "br" -> CompressionMode.BROTLI
+            "deflate" -> CompressionMode.DEFLATE
+            "gzip" -> CompressionMode.GZIP
             else -> null
           }
         }
@@ -124,8 +126,15 @@ public class ServerAssetReader @Inject internal constructor(
   /** @inheritDoc */
   override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
     val module = descriptor.module
+    require(descriptor.index != null) {
+      "Asset descriptor must be inlined in payload; external assets are not supported yet"
+    }
+    require(descriptor.index.size == 1) {
+      "Asset descriptor contains more than one file, which is not supported yet. Please make sure your asset bundle " +
+      "entries each have a maximum of 1 source file specified."
+    }
     val content = assetIndex.readByModuleIndex(
-      descriptor.index!!
+      descriptor.index.first(),
     )
 
     // select the best content variant to use based on the input request, which may specify supported compression

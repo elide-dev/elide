@@ -1,7 +1,7 @@
 package elide.server.assets
 
 import elide.server.AssetModuleId
-import kotlinx.serialization.Serializable
+import java.util.SortedSet
 
 /**
  * Reference to an application-embedded asset.
@@ -10,8 +10,8 @@ import kotlinx.serialization.Serializable
  * @param type Type of asset represented by this reference.
  * @param index Index of the asset within the asset content payload list of the active asset bundle.
  */
-@Serializable internal data class AssetPointer(
+internal data class AssetPointer(
   val moduleId: AssetModuleId,
   val type: AssetType,
-  val index: Int?,
+  val index: SortedSet<Int>?,
 ) : java.io.Serializable

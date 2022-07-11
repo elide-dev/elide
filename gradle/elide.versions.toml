@@ -40,7 +40,6 @@ closure = "v20220601"
 closure_stylesheets = "20160212"
 picocli = "4.6.3"
 slf4j = "1.7.36"
-jvmbrotli = "0.2.0"
 jakarta = "2.0.1"
 jsoup = "1.15.1"
 junit_jupiter = "5.8.2"
@@ -93,6 +92,8 @@ shadow_plugin = "7.1.2"
 gcloud_sdk = "25.4.0"
 gcloud_native = "0.14.1"
 jib = "3.2.1"
+commons_compress = "1.21"
+brotli4j = "1.7.1"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -161,7 +162,6 @@ closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closur
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
-brotli = { group = "com.nixxcode.jvmbrotli", name = "jvmbrotli", version.ref="jvmbrotli" }
 jakarta_inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
@@ -225,3 +225,8 @@ google_api_common = { group = "com.google.api", name = "api-common", version.ref
 reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
 google_cloud_bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud_sdk" }
 google_cloud_nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud_native" }
+brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
+brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli_native_linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }

@@ -55,11 +55,11 @@ tasks.withType<Zip>{
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-val browserDist by configurations.creating {
+val assetDist by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }
 
 artifacts {
-  add(browserDist.name, tasks.named("browserDistribution").map { it.outputs.files.files.single() })
+  add(assetDist.name, tasks.named("browserDistribution").map { it.outputs.files.files.single() })
 }

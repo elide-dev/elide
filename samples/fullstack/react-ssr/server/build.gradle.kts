@@ -42,15 +42,18 @@ elide {
       bundler {
         compression {
           modes(CompressionMode.GZIP)
-          minimumSizeBytes(400)
+          minimumSizeBytes(0)
           keepAllVariants()
-          forceVariants()
         }
       }
 
       // stylesheet: `styles.base`
       stylesheet("styles.base") {
         sourceFile("src/main/assets/basestyles.css")
+      }
+
+      script("scripts.ui") {
+        from(project(":samples:fullstack:react-ssr:frontend"))
       }
     }
   }

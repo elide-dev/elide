@@ -4,7 +4,6 @@ import elide.server.*
 import elide.server.annotations.Page
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
 import kotlinx.html.tagext.body
@@ -48,11 +47,9 @@ object App : Application {
     }
 
     // Serve the built & embedded JavaScript.
-    @Get("/scripts/ui.js") fun js() = asset(
-      "frontend.js",
-      "js",
-      MediaType("application/javascript", "js"),
-    )
+    @Get("/scripts/ui.js") suspend fun js(request: HttpRequest<*>) = script(request) {
+      module("scripts.ui")
+    }
   }
 
   /** Main entrypoint for the application. */

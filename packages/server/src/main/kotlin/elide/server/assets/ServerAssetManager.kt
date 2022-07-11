@@ -102,16 +102,29 @@ public class ServerAssetManager @Inject internal constructor(
           // it's a strong etag, so we need to compare it with the Base64-encoded asset hash.
           val content = assetIndex.readByModuleIndex(asset.index.first())
           val identityVariant = content.getVariant(0)
-          val b64 = String(
-            Base64.encodeWebSafe(identityVariant.getIntegrity(0).toByteArray()),
-            StandardCharsets.UTF_8
-          )
-          if (etag == b64) {
-            // we have a match against a strong ETag.
-            return Futures.immediateFuture(
-              HttpResponse.notModified<StreamedAsset>()
-            ).asDeferred()
+          if (identityVariant.integrityCount > 0 || (
+                identityVariant.hasData() && identityVariant.data.integrityCount > 0
+              )
+          ) {
+            val integrityValue = if (identityVariant.integrityCount > 0) {
+              identityVariant.getIntegrity(0).fingerprint
+            } else {
+              identityVariant.data.getIntegrity(0).fingerprint
+            }
+            val tailCount = this.assetIndex.activeManifest().bundle.settings.digestSettings.tail
+            val b64 = String(
+              Base64.encodeWebSafe(integrityValue.toByteArray().takeLast(tailCount).toByteArray()),
+              StandardCharsets.UTF_8
+            )
+            if (etag.removeSurrounding("\"") == b64) {
+              // we have a match against a strong ETag.
+              return Futures.immediateFuture(
+                HttpResponse.notModified<StreamedAsset>()
+              ).asDeferred()
+            }
           }
+          // if we arrive here, the ETag either didn't match, or was not present in a substantive way. either way we
+          // need to fall back to regular serving (below).
         }
       }
     }

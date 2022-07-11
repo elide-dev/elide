@@ -257,7 +257,7 @@ class ServerAssetIndexTest {
       indexer.pointerForConcrete(
         AssetType.GENERIC,
         "some-module",
-        5,
+        sortedSetOf(5),
         bundle,
         builder,
       )

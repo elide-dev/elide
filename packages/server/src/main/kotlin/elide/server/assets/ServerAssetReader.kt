@@ -30,21 +30,6 @@ public class ServerAssetReader @Inject internal constructor(
   private val assetIndex: ServerAssetIndex,
 ) : AssetReader {
   @VisibleForTesting
-  internal fun buildETagForAsset(entry: AssetContent): String {
-    val identityVariant = entry.getVariant(0)
-    return if (identityVariant.integrityCount > 0) {
-      val integrity = identityVariant.getIntegrity(0)
-      val encoded = Base64.encodeWebSafe(integrity.fingerprint.toByteArray())
-      "\"$encoded\""
-    } else {
-      // since we don't have an integrity fingerprint for this asset, we can substitute and use a "weak" ETag via the
-      // generated-timestamp in the asset bundle.
-      val generatedTime = assetIndex.getBundleTimestamp()
-      "W/\"$generatedTime\""
-    }
-  }
-
-  @VisibleForTesting
   internal fun baselineHeaders(entry: AssetContent, variant: CompressedData): Map<String, String> {
     val headerMap = HashMap<String, String>()
 
@@ -60,7 +45,7 @@ public class ServerAssetReader @Inject internal constructor(
 
     // if we have a digest for this asset, we should affix it as the `ETag` for the response.
     if (assetConfig.etags) {
-      headerMap[HttpHeaders.ETAG] = buildETagForAsset(entry)
+      headerMap[HttpHeaders.ETAG] = assetIndex.buildETagForAsset(entry)
     }
     return headerMap
   }
@@ -72,33 +57,33 @@ public class ServerAssetReader @Inject internal constructor(
   ): Pair<Map<String, String>, CompressedData> {
     val identity = content.getVariant(0)
     val acceptEncoding = request.headers[HttpHeaders.ACCEPT_ENCODING]
-    if (acceptEncoding != null && acceptEncoding.isNotBlank()) {
+    if (acceptEncoding != null && acceptEncoding.isNotBlank() && acceptEncoding != "identity") {
       // calculate supported encodings based on request
-      val encodings = EnumSet.copyOf(
-        acceptEncoding.split(",").mapNotNull {
-          when (it.trim().lowercase()) {
-            "br" -> CompressionMode.BROTLI
-            "deflate" -> CompressionMode.DEFLATE
-            "gzip" -> CompressionMode.GZIP
-            else -> null
-          }
+      val encodingNames = acceptEncoding.split(",").mapNotNull {
+        when (it.trim().lowercase()) {
+          "br" -> CompressionMode.BROTLI
+          "deflate" -> CompressionMode.DEFLATE
+          "gzip" -> CompressionMode.GZIP
+          else -> null
         }
-      )
-
-      // based on the set of supported encodings, find the smallest response available. because payloads are either
-      // elided based on size, or sorted by size in ascending order (aside from the first which is the `IDENTITY`
-      // payload), then it should always be the first option we can actually use.
-      val bestCandidate = content.variantList.find {
-        (it.compression != CompressionMode.IDENTITY && encodings.contains(it.compression))
       }
+      if (encodingNames.isNotEmpty()) {
+        val encodings = EnumSet.copyOf(encodingNames)
 
-      // sanity check: the compressed variant should of course be smaller than the identity variant, otherwise it is
-      // more efficient to just serve the identity variant.
-      if (bestCandidate != null && bestCandidate.size < identity.size) {
-        return baselineHeaders(content, bestCandidate) to bestCandidate
+        // based on the set of supported encodings, find the smallest response available. because payloads are either
+        // elided based on size, or sorted by size in ascending order (aside from the first which is the `IDENTITY`
+        // payload), then it should always be the first option we can actually use.
+        val bestCandidate = content.variantList.find {
+          (it.compression != CompressionMode.IDENTITY && encodings.contains(it.compression))
+        }
+
+        // sanity check: the compressed variant should of course be smaller than the identity variant, otherwise it is
+        // more efficient to just serve the identity variant.
+        if (bestCandidate != null && bestCandidate.size < identity.size) {
+          return baselineHeaders(content, bestCandidate) to bestCandidate
+        }
       }
     }
-
     // fallback to serve the non-compressed version of the asset.
     return baselineHeaders(content, identity) to identity
   }

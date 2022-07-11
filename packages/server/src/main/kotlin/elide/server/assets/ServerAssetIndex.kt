@@ -7,6 +7,7 @@ import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
 import elide.server.AssetModuleId
 import elide.server.AssetTag
+import elide.util.Base64
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
@@ -14,6 +15,7 @@ import io.micronaut.runtime.server.event.ServerStartupEvent
 import jakarta.inject.Inject
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundle.AssetContent
+import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
@@ -85,6 +87,31 @@ internal class ServerAssetIndex @Inject constructor(
   // Interpreted manifest structure loaded from the embedded proto document.
   internal val assetManifest: AtomicReference<ServerAssetManifest?> = AtomicReference(null)
 
+  // Build an ETag value for the provided `entry`.
+  @VisibleForTesting internal fun buildETagForAsset(entry: AssetContent): String {
+    val identityVariant = entry.getVariant(0)
+    val integrityValue = if (identityVariant.integrityCount > 0) {
+      identityVariant.getIntegrity(0)
+    } else if (identityVariant.hasData() && identityVariant.data.integrityCount > 0) {
+      identityVariant.data.getIntegrity(0)
+    } else {
+      null
+    }
+    return if (integrityValue != null) {
+      val tailCount = activeManifest().bundle.settings.digestSettings.tail
+      val encoded = String(
+        Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
+        StandardCharsets.UTF_8
+      )
+      "\"$encoded\""
+    } else {
+      // since we don't have an integrity fingerprint for this asset, we can substitute and use a "weak" ETag via the
+      // generated-timestamp in the asset bundle.
+      val generatedTime = getBundleTimestamp()
+      "W/\"$generatedTime\""
+    }
+  }
+
   // Resolve the active manifest or fail loudly.
   @VisibleForTesting internal fun activeManifest(): ServerAssetManifest {
     require(initialized.get()) {
@@ -126,6 +153,26 @@ internal class ServerAssetIndex @Inject constructor(
       .nodeOrder(ElementOrder.stable<AssetModuleId>())
       .edgeOrder(ElementOrder.stable<AssetDependency>())
       .immutable()
+
+    // check for module and tag duplicates
+    val distinctAssets = bundle.assetList.stream().map {
+      it.module
+    }.distinct().collect(Collectors.toSet())
+
+    // no duplicate module IDs allowed
+    if (distinctAssets.size != bundle.assetCount) {
+      val dupes = bundle.assetList.stream().map {
+        it.module
+      }.map { moduleId ->
+        moduleId to bundle.assetList.count {
+          it.module == moduleId
+        }
+      }.collect(Collectors.toList()).joinToString(", ") {
+        "${it.first} (${it.second} entries)"
+      }
+
+      error("Duplicate asset modules detected in bundle: $dupes")
+    }
 
     val tagIndex = ConcurrentSkipListMap<AssetTag, Int>()
 

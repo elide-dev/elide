@@ -4,9 +4,15 @@ import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.NetworkBuilder
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
+import com.google.protobuf.ByteString
 import elide.server.AssetModuleId
 import elide.server.TestUtil
+import elide.server.cfg.AssetConfig
+import io.micronaut.http.HttpHeaders
+import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
@@ -16,8 +22,15 @@ import tools.elide.assets.AssetBundle.GenericBundle
 import tools.elide.assets.AssetBundle.ScriptBundle
 import tools.elide.assets.AssetBundle.StyleBundle
 import tools.elide.assets.ManifestFormat
+import tools.elide.crypto.HashAlgorithm
+import tools.elide.data.CompressedData
+import tools.elide.data.compressedData
+import tools.elide.data.dataContainer
+import tools.elide.data.dataFingerprint
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.*
 
@@ -34,9 +47,13 @@ class ServerAssetIndexTest {
     ) ?: error("Failed to load embedded sample manifest")
   }
 
-  private fun createIndexer(assetBundle: AssetBundle? = null): Pair<AssetBundle, ServerAssetIndex> {
+  private fun createIndexer(
+    assetBundle: AssetBundle? = null,
+    config: AssetConfig? = null
+  ): Pair<AssetBundle, ServerAssetIndex> {
     val sample = assetBundle ?: assertNotNull(loadSampleManifest())
     return sample to ServerAssetIndex(
+      config ?: AssetConfig(),
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle {
           return sample
@@ -63,11 +80,27 @@ class ServerAssetIndexTest {
     assertTrue(depGraph.nodes().isNotEmpty(), "nodes list in dep graph should not be empty")
   }
 
+  private fun identityVariant(): CompressedData {
+    val data = "hello world".toByteArray(StandardCharsets.UTF_8)
+    return compressedData {
+      this.size = data.size.toLong()
+      this.data = dataContainer {
+        raw = ByteString.copyFrom(data)
+        integrity.add(
+          dataFingerprint {
+            this.hash = HashAlgorithm.SHA256
+            this.fingerprint = ByteString.copyFrom(MessageDigest.getInstance("SHA-256").digest(data))
+          }
+        )
+      }
+    }
+  }
+
   @Test fun testGenerateFailDuplicateTags() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123").addVariant(identityVariant()))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts("test2", ScriptBundle.newBuilder().setModule("test2").build())
     val (_, indexer) = createIndexer(bundle.build())
@@ -78,8 +111,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateFailDuplicateModuleIds() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123").addVariant(identityVariant()))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts("test2", ScriptBundle.newBuilder().setModule("test2").build())
     bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
@@ -91,8 +124,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateWithScriptDeps() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123").addVariant(identityVariant()))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     bundle.putScripts(
       "test2",
@@ -159,8 +192,8 @@ class ServerAssetIndexTest {
 
   @Test fun testGenerateWithStyleDeps() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
-    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test2").setToken("abc123").addVariant(identityVariant()))
     bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
     bundle.putStyles(
       "test2",
@@ -225,9 +258,444 @@ class ServerAssetIndexTest {
     )
   }
 
+  @Test fun testGenerateEtagsStrong() {
+    // standard config
+    val (sample, indexer) = createIndexer(
+      config = AssetConfig(
+        enabled = true,
+        etags = true,
+        preferWeakEtags = false,
+      )
+    )
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("\""), "strong etag should start with a double-quote")
+    assertTrue(etag.endsWith("\""), "strong etag should end with a double-quote")
+  }
+
+  @Test fun testGenerateEtagsWeak() {
+    // standard config
+    val (sample, indexer) = createIndexer(
+      config = AssetConfig(
+        enabled = true,
+        etags = true,
+        preferWeakEtags = true,
+      )
+    )
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("W/\""), "weak etag should start with `W/\"`")
+    assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
+  }
+
+  @Test fun testRenderConditionalStrongETagMatch() {
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = false,
+    )
+    val (sample, indexer) = createIndexer(config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("\""), "strong etag should start with `\"`")
+    assertTrue(etag.endsWith("\""), "strong etag should end with a double-quote")
+
+    // forge a request with a matching etag, make sure it matches
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, etag)
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        error("should not be called")
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    val response = assertDoesNotThrow {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+    assertNotNull(response, "should not get `null` response from strong conditional etag match")
+    assertEquals(304, response.status.code, "should get HTTP 200 from conditional etag match")
+  }
+
+  @Test fun testRenderConditionalStrongETagMismatch() {
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = false,
+    )
+    val (sample, indexer) = createIndexer(config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("\""), "strong etag should start with `\"`")
+    assertTrue(etag.endsWith("\""), "strong etag should end with a double-quote")
+
+    // forge a request with a matching etag, make sure it DOES NOT match
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, "some-other-etag-value")
+
+    class ItMismatched : RuntimeException()
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        throw ItMismatched()
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    assertThrows<ItMismatched> {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+  }
+
+  @Test fun testRenderConditionalWeakETagMatch() {
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = true,
+    )
+    val (sample, indexer) = createIndexer(config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("W/\""), "weak etag should start with `W/\"`")
+    assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
+
+    // forge a request with a matching weak etag, make sure it matches
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, etag)
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        error("should not be called")
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    val response = assertDoesNotThrow {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+    assertNotNull(response, "should not get `null` response from strong conditional etag match")
+    assertEquals(304, response.status.code, "should get HTTP 200 from conditional etag match")
+  }
+
+  @Test fun testRenderConditionalWeakETagMismatch() {
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = true,
+    )
+    val (sample, indexer) = createIndexer(config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("W/\""), "weak etag should start with `W/\"`")
+    assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
+
+    // forge a request with a matching weak etag, make sure it matches
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, "W/\"123123123\"")
+
+    class ItMismatched : RuntimeException()
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        throw ItMismatched()
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    assertThrows<ItMismatched> {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+  }
+
+  @Test fun testRenderConditionalWeakETagBadFormat() {
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = true,
+    )
+    val (sample, indexer) = createIndexer(config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("W/\""), "weak etag should start with `W/\"`")
+    assertTrue(etag.endsWith("\""), "weak etag should end with a double-quote")
+
+    // forge a request with a matching weak etag, make sure it matches
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, "W/\"lololol\"")
+
+    class ItMismatched : RuntimeException()
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        throw ItMismatched()
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    assertThrows<ItMismatched> {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+  }
+
+  @Test fun testRenderConditionalWeakETagMatchInStrongMode() {
+    val (sample, indexerWithWeakEtags) = createIndexer(
+      config = AssetConfig(
+        enabled = true,
+        etags = true,
+        preferWeakEtags = true,
+      )
+    )
+    assertDoesNotThrow {
+      indexerWithWeakEtags.initialize()
+    }
+
+    // generate an etag
+    val injectedEtag = indexerWithWeakEtags.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(injectedEtag, "generated etag value should not be null")
+    assertTrue(injectedEtag.startsWith("W/\""), "weak etag should start with `W/\"`")
+    assertTrue(injectedEtag.endsWith("\""), "weak etag should end with a double-quote")
+
+    // standard config
+    val cfg = AssetConfig(
+      enabled = true,
+      etags = true,
+      preferWeakEtags = false, // important
+    )
+    val (_, indexer) = createIndexer(sample, config = cfg)
+    assertDoesNotThrow {
+      indexer.initialize()
+    }
+
+    // generate an etag
+    val etag = indexer.buildETagForAsset(sample.getAsset(0))
+    assertNotNull(etag, "generated etag value should not be null")
+    assertTrue(etag.startsWith("\""), "strong etag should start with `\"`")
+    assertTrue(etag.endsWith("\""), "strong etag should end with a double-quote")
+
+    // forge a request with a matching weak etag, make sure it matches
+    val req = HttpRequest.GET<Any>("/_/assets/some-asset-url.css")
+      .header(HttpHeaders.IF_NONE_MATCH, injectedEtag)
+
+    val reader = object : AssetReader {
+      override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
+        error("should not be called")
+      }
+
+      override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+        error("should not be called")
+      }
+
+      override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
+        error("should not be called")
+      }
+
+      override fun resolve(path: String): ServerAsset? {
+        error("should not be called")
+      }
+    }
+
+    val descriptor = sample.stylesMap[sample.stylesMap.keys.first()]!!
+    val baseStyleAsset = ServerAsset.Stylesheet(
+      descriptor = descriptor,
+      sortedSetOf(
+        List(
+          sample.assetList.filter {
+            it.module == descriptor.module
+          }.size
+        ) { idx -> idx }.first()
+      )
+    )
+    val response = assertDoesNotThrow {
+      runBlocking {
+        ServerAssetManager(cfg, indexer, reader).renderAssetAsync(
+          req,
+          baseStyleAsset,
+        ).await()
+      }
+    }
+    assertNotNull(response, "should not get `null` response from strong conditional etag match")
+    assertEquals(304, response.status.code, "should get HTTP 200 from conditional etag match")
+  }
+
   @Test fun testGenerateIndexesTextAssets() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
@@ -257,6 +725,13 @@ class ServerAssetIndexTest {
       indexer.pointerForConcrete(
         AssetType.GENERIC,
         "some-module",
+        AssetContent
+          .newBuilder()
+          .setToken("token-value-here")
+          .setModule("module-id")
+          .setFilename("filename.data")
+          .addVariant(identityVariant())
+          .build(),
         sortedSetOf(5),
         bundle,
         builder,
@@ -291,6 +766,7 @@ class ServerAssetIndexTest {
   @Test fun testAssetIndexerDoesNotInitializeMoreThanOnce() {
     val firstCall = AtomicBoolean(true)
     val indexer = ServerAssetIndex(
+      AssetConfig(),
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           if (firstCall.get()) {
@@ -320,6 +796,7 @@ class ServerAssetIndexTest {
 
   @Test fun testAssetIndexBootNoManifest() {
     val indexer = ServerAssetIndex(
+      AssetConfig(),
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           return null
@@ -357,7 +834,7 @@ class ServerAssetIndexTest {
 
   @Test fun testLookupAssetByTagScript() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putScripts("test1", ScriptBundle.newBuilder().setModule("test1").build())
     val target = bundle.build()
     val (_, indexer) = createIndexer(target)
@@ -379,7 +856,7 @@ class ServerAssetIndexTest {
 
   @Test fun testLookupAssetByTagStyle() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putStyles("test1", StyleBundle.newBuilder().setModule("test1").build())
     val target = bundle.build()
     val (_, indexer) = createIndexer(target)
@@ -401,7 +878,7 @@ class ServerAssetIndexTest {
 
   @Test fun testLookupAssetByTagText() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
     val target = bundle.build()
     val (_, indexer) = createIndexer(target)
@@ -423,7 +900,7 @@ class ServerAssetIndexTest {
 
   @Test fun testLookupAssetByTagNotFound() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
     val target = bundle.build()
     val (_, indexer) = createIndexer(target)
@@ -441,7 +918,7 @@ class ServerAssetIndexTest {
 
   @Test fun testFailBuildConcreteGeneric() {
     val bundle = AssetBundle.newBuilder()
-    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123"))
+    bundle.addAsset(AssetContent.newBuilder().setModule("test1").setToken("abc123").addVariant(identityVariant()))
     bundle.putGeneric("test1", GenericBundle.newBuilder().setModule("test1").build())
     val target = bundle.build()
     val (_, indexer) = createIndexer(target)

@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import elide.server.AssetModuleId
 import elide.server.cfg.AssetConfig
-import elide.util.Base64
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
@@ -34,14 +33,15 @@ public class ServerAssetReader @Inject internal constructor(
     val headerMap = HashMap<String, String>()
 
     // apply content encoding header
-    val contentEncoding = when (variant.compression) {
-      CompressionMode.IDENTITY -> "identity"
-      CompressionMode.GZIP -> "gzip"
-      CompressionMode.DEFLATE -> "deflate"
-      CompressionMode.BROTLI -> "br"
-      else -> null
+    val contentEncoding = if (CompressionMode.BROTLI == variant.compression) {
+      "br"
+    } else {
+      // optimization: each content encoding is the lower-cased name of the enum, except for `BROTLI`, which is `br`.
+      variant.compression.name.lowercase()
     }
-    if (contentEncoding != null) headerMap[HttpHeaders.CONTENT_ENCODING] = contentEncoding
+    if (contentEncoding != "identity") {
+      headerMap[HttpHeaders.CONTENT_ENCODING] = contentEncoding
+    }
 
     // if we have a digest for this asset, we should affix it as the `ETag` for the response.
     if (assetConfig.etags) {
@@ -89,38 +89,31 @@ public class ServerAssetReader @Inject internal constructor(
   }
 
   /** @inheritDoc */
+  override fun pointerTo(moduleId: AssetModuleId): AssetPointer? {
+    return assetIndex.activeManifest().moduleIndex[moduleId]
+  }
+
+  /** @inheritDoc */
   override fun findByModuleId(moduleId: AssetModuleId): ServerAsset? {
-    return if (assetIndex.initialized.get()) {
+    if (assetIndex.initialized.get()) {
       val manifest = assetIndex.activeManifest()
       val asset = manifest.moduleIndex[moduleId]
       if (asset != null) {
-        assetIndex.buildConcreteAsset(
+        return assetIndex.buildConcreteAsset(
           asset.type,
           asset.moduleId,
           manifest.bundle,
           asset.index,
         )
-      } else {
-        null
       }
-    } else {
-      null
     }
+    return null
   }
 
   /** @inheritDoc */
   override suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset> {
     val module = descriptor.module
-    require(descriptor.index != null) {
-      "Asset descriptor must be inlined in payload; external assets are not supported yet"
-    }
-    require(descriptor.index.size == 1) {
-      "Asset descriptor contains more than one file, which is not supported yet. Please make sure your asset bundle " +
-      "entries each have a maximum of 1 source file specified."
-    }
-    val content = assetIndex.readByModuleIndex(
-      descriptor.index.first(),
-    )
+    val content = assetIndex.readByModuleIndex(descriptor.index!!.first())
 
     // select the best content variant to use based on the input request, which may specify supported compression
     // schemes, or may be expressing if-not-modified or if-modified-since conditions.
@@ -149,23 +142,12 @@ public class ServerAssetReader @Inject internal constructor(
 
   /** @inheritDoc */
   override fun resolve(path: String): ServerAsset? {
-    val unprefixed = if (path.startsWith(assetConfig.prefix)) {
-      // if the asset is prefixed, trim it first
-      path.substring(assetConfig.prefix.length)
-    } else {
-      path
-    }
-    val unextensioned = if (unprefixed.contains(".")) {
-      unprefixed.dropLast(unprefixed.length - unprefixed.lastIndexOf("."))
-    } else {
-      unprefixed
+    var unextensioned = path
+    if (path.contains(".")) {
+      unextensioned = unextensioned.dropLast(unextensioned.length - unextensioned.lastIndexOf("."))
     }
     return assetIndex.resolveByTag(
-      if (unextensioned.startsWith("/")) {
-        unextensioned.drop(1)
-      } else {
-        unextensioned
-      }
+      unextensioned.removePrefix(assetConfig.prefix).removePrefix("/")
     )
   }
 }

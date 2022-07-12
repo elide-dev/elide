@@ -12,6 +12,7 @@ coverage:
     project:
       default:
         informational: true
+    patch: off
 
 comment:
   layout: "reach,diff,flags,files,footer"

@@ -150,12 +150,20 @@ kotlin {
         implementation(libs.kotlinx.coroutines.jdk9)
         implementation(libs.kotlinx.coroutines.guava)
         implementation(libs.grpc.testing)
+        implementation(kotlin("test"))
         implementation(kotlin("test-junit5"))
         implementation(libs.jsoup)
 
         implementation(libs.truth)
         implementation(libs.truth.java8)
         implementation(libs.truth.proto)
+
+        implementation(libs.micronaut.context)
+        implementation(libs.micronaut.runtime)
+        implementation(libs.micronaut.test.junit5)
+        implementation(libs.micronaut.http)
+        implementation(libs.micronaut.http.client)
+        implementation(libs.micronaut.http.server)
 
         runtimeOnly(libs.junit.jupiter.engine)
         runtimeOnly(libs.logback)

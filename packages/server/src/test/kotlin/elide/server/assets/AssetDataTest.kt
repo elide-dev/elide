@@ -23,6 +23,10 @@ class AssetDataTest {
     val pointer = AssetPointer(
       moduleId = "some-module",
       type = AssetType.SCRIPT,
+      token = "some-token-some-tag",
+      tag = "some-tag",
+      etag = "W/\"some-etag\"",
+      modified = 123L,
       index = null,
     )
     assertNull(
@@ -34,14 +38,22 @@ class AssetDataTest {
     val pointer = AssetPointer(
       moduleId = "some-module",
       type = AssetType.SCRIPT,
+      token = "some-token-some-tag",
+      tag = "some-tag",
+      etag = "W/\"some-etag\"",
+      modified = 123L,
       index = sortedSetOf(5),
     )
     assertEquals("some-module", pointer.moduleId)
+    assertEquals("some-token-some-tag", pointer.token)
+    assertEquals("some-tag", pointer.tag)
     assertEquals(AssetType.SCRIPT, pointer.type)
     assertEquals(5, pointer.index!!.first())
     assertEquals(pointer, pointer)
     assertEquals(pointer, pointer.copy())
     assertNotNull(pointer.hashCode())
+    assertEquals("W/\"some-etag\"", pointer.etag)
+    assertEquals(123L, pointer.modified)
     assertTrue(pointer.toString().contains("some-module"))
   }
 
@@ -95,5 +107,63 @@ class AssetDataTest {
     assertNotNull(asset.digest)
     assertEquals(asset, asset)
     assertNotNull(asset.hashCode())
+  }
+
+  @Test fun testAssetReferenceDefaults() {
+    val ref = AssetReference(
+      module = "some-module",
+      assetType = AssetType.STYLESHEET,
+      href = "/_/assets/some-path.css",
+    )
+    assertEquals(ref.module, "some-module")
+    assertEquals(ref.assetType, AssetType.STYLESHEET)
+    assertEquals(ref.href, "/_/assets/some-path.css")
+
+    // type should be `null` and `inline` should be not be `null` by default.
+    assertNull(ref.type)
+    assertNotNull(ref.inline)
+    assertNotNull(ref.preload)
+  }
+
+  @Test fun testAssetReference() {
+    val ref = AssetReference(
+      module = "some-module",
+      assetType = AssetType.STYLESHEET,
+      href = "/_/assets/some-path.css",
+      type = "type-override",
+      inline = true,
+    )
+    assertEquals(ref.module, "some-module")
+    assertEquals(ref.assetType, AssetType.STYLESHEET)
+    assertEquals(ref.href, "/_/assets/some-path.css")
+    assertEquals(ref.type, "type-override")
+    assertTrue(ref.inline)
+    assertNotNull(AssetReference.serializer())
+    assertEquals(ref, ref)
+    assertEquals(ref, ref.copy())
+    val json = Json.encodeToString(AssetReference.serializer(), ref)
+    assertNotNull(json)
+    val inflated = Json.decodeFromString(AssetReference.serializer(), json)
+    assertNotNull(inflated)
+    assertEquals(ref, inflated)
+  }
+
+  @Test fun testAssetReferenceFromPointer() {
+    val pointer = AssetPointer(
+      moduleId = "some-module",
+      type = AssetType.SCRIPT,
+      token = "some-token-some-tag",
+      tag = "some-tag",
+      etag = "W/\"some-etag\"",
+      modified = 123L,
+      index = sortedSetOf(5),
+    )
+    val reference = AssetReference.fromPointer(
+      pointer,
+      "/_/assets/some-uri.js"
+    )
+    assertNotNull(reference)
+    assertEquals(reference.module, "some-module")
+    assertEquals(reference.assetType, AssetType.SCRIPT)
   }
 }

@@ -12,6 +12,7 @@ class AssetConfigTest {
     assertNotNull(cfg.prefix)
     assertTrue(cfg.enabled)
     assertTrue(cfg.etags)
+    assertFalse(cfg.preferWeakEtags)
 
     // asset config should be mutable
     cfg.enabled = false
@@ -23,5 +24,7 @@ class AssetConfigTest {
     )
     cfg.etags = false
     assertFalse(cfg.etags)
+    cfg.preferWeakEtags = true
+    assertTrue(cfg.preferWeakEtags)
   }
 }

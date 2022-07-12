@@ -7,7 +7,6 @@
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
-import tools.elide.data.CompressionMode
 
 plugins {
   java
@@ -18,6 +17,7 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
   id("dev.elide.buildtools.plugin")
+  alias(libs.plugins.testLogger)
   alias(libs.plugins.micronautApplication)
   alias(libs.plugins.micronautAot)
   alias(libs.plugins.sonar)
@@ -171,11 +171,17 @@ dependencies {
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))
 
+  implementation(libs.jsoup)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
+
+  testImplementation(kotlin("test"))
+  testImplementation(kotlin("test-junit5"))
+  testImplementation(project(":packages:test"))
+  testImplementation(libs.micronaut.test.junit5)
 }
 
 tasks.withType<Tar> {

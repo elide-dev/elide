@@ -24,7 +24,7 @@ kotlin {
     binaries.executable()
     browser {
       commonWebpackConfig {
-        sourceMaps = devMode
+        sourceMaps = false
         cssSupport.enabled = true
         mode = if (devMode) {
           org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
@@ -50,11 +50,11 @@ tasks.withType<Zip>{
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-val browserDist by configurations.creating {
+val assetDist by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }
 
 artifacts {
-  add(browserDist.name, tasks.named("browserDistribution").map { it.outputs.files.files.single() })
+  add(assetDist.name, tasks.named("browserDistribution").map { it.outputs.files.files.single() })
 }

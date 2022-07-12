@@ -1,7 +1,8 @@
 package fullstack.react
 
 import elide.server.*
-import io.micronaut.http.MediaType
+import elide.server.controller.PageController
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.runtime.Micronaut.build
@@ -13,11 +14,10 @@ import kotlinx.html.head
 import kotlinx.html.strong
 import kotlinx.html.title
 
-
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */
-  @Controller class Index {
+  @Controller class Index : PageController() {
     // Serve the page itself.
     @Get("/") suspend fun index() = html {
       head {
@@ -41,11 +41,9 @@ object App {
     }
 
     // Serve the built & embedded JavaScript.
-    @Get("/scripts/ui.js") fun js() = asset(
-      "frontend.js",
-      "js",
-      MediaType("application/javascript", "js"),
-    )
+    @Get("/scripts/ui.js") suspend fun js(request: HttpRequest<Any>) = script(request) {
+      module("scripts.ui")
+    }
   }
 
   /** Main entrypoint for the application. */

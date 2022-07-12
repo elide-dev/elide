@@ -133,6 +133,15 @@ tasks.jacocoTestReport {
 
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
+  processing {
+    incremental.set(true)
+    annotations.addAll(listOf(
+      "elide.server",
+      "elide.server.*",
+      "elide.server.annotations",
+      "elide.server.annotations.*",
+    ))
+  }
 }
 
 dependencies {
@@ -143,6 +152,8 @@ dependencies {
   api(platform(libs.netty.bom))
 
   // Modules
+  kapt(libs.micronaut.inject)
+  kapt(libs.micronaut.inject.java)
   implementation(project(":packages:base"))
   implementation(project(":packages:proto"))
 
@@ -211,6 +222,8 @@ dependencies {
   implementation(libs.reactivestreams)
 
   // Testing
+  kaptTest(libs.micronaut.inject)
+  kaptTest(libs.micronaut.inject.java)
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)

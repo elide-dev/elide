@@ -2,6 +2,7 @@ package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
 import elide.annotations.API
+import elide.server.AssetModuleId
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import io.micronaut.http.HttpRequest
@@ -99,12 +100,40 @@ import org.slf4j.Logger
    * Serve a response of status HTTP 404 (Not Found), in response to a request for an asset which could not be located
    * by the built-in asset system.
    *
+   * The resulting response is not specific to the asset requested, but the [request] is provided nonetheless so that
+   * implementations may log or perform other relevant follow-up work.
+   *
    * @param request HTTP request which prompted this 404-not-found response.
    * @return Deferred task which resolves to an HTTP 404 response.
    */
   public fun serveNotFoundAsync(request: HttpRequest<*>): Deferred<StreamedAssetResponse> {
     return Futures.immediateFuture(HttpResponse.notFound<StreamedAsset>()).asDeferred()
   }
+
+  /**
+   * Resolve an [AssetPointer] for the specified [asset] module ID; if none can be located within the current set of
+   * live server assets, return `null`.
+   *
+   * @param asset Asset module ID to resolve.
+   * @return Pointer to the resulting asset, or `null` if it could not be located.
+   */
+  public fun findAssetByModuleId(asset: AssetModuleId): AssetPointer? {
+    return reader.pointerTo(asset)
+  }
+
+  /**
+   * Generate a relative link to serve the asset specified by the provided [module] ID; the link is built from the
+   * active configured asset prefix, plus the "asset tag," which is a variable-length cryptographic fingerprint of the
+   * asset's content.
+   *
+   * If the asset system isn't ready, this method may suspend to wait for a period of time for initialization.
+   *
+   * @param module Asset module ID for which a relative link is needed.
+   * @param overrideType Overrides the asset type, which governs the file extension in the generated link.
+   * @return Relative URI calculated to serve the provided asset.
+   * @throws IllegalArgumentException If the provided [module] ID cannot be found in the active asset bundle.
+   */
+  public fun linkForAsset(module: AssetModuleId, overrideType: AssetType? = null): String
 
   /**
    * Responsible for converting a known-good asset held by the server into an efficient [StreamedAssetResponse] which

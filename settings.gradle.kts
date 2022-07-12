@@ -15,6 +15,7 @@ plugins {
 
 dependencyResolutionManagement {
   repositories {
+    maven("gcs://elide-snapshots/tools")
     maven("https://maven-central.storage-download.googleapis.com/maven2/")
     mavenCentral()
     google()

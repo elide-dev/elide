@@ -6,6 +6,7 @@
 *.BUILD -linguist-detectable
 *.bzl linguist-language=Starlark linguist-detectable
 **/package-info.java -linguist-detectable linguist-generated
+gradle/verification* -linguist-detectable linguist-generated
 samples/** -linguist-detectable
 packages/graalvm/src/test/resources/embedded/** -linguist-detectable linguist-generated
 packages/graalvm/src/test/resources/embedded/*.js -linguist-detectable linguist-generated

@@ -113,6 +113,7 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib-common"))
         implementation(project(":packages:base"))
+        implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.collections.immutable)
         implementation(libs.kotlinx.datetime)
       }
@@ -129,7 +130,6 @@ kotlin {
         implementation(libs.protobuf.java)
         implementation(libs.protobuf.util)
         implementation(libs.protobuf.kotlin)
-        implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.serialization.json.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
         implementation(libs.kotlinx.coroutines.core.jvm)

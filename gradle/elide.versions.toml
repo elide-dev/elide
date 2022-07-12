@@ -94,6 +94,7 @@ gcloud_native = "0.14.1"
 jib = "3.2.1"
 commons_compress = "1.21"
 brotli4j = "1.7.1"
+projectreactor = "2022.0.0-M4"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -230,3 +231,6 @@ brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x
 brotli_native_linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
 brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }
+projectreactor_bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
+reactor_core = { group = "io.projectreactor", name = "reactor-core", version.ref = "projectreactor" }
+reactor_netty = { group = "io.projectreactor", name = "reactor-netty", version.ref = "projectreactor" }

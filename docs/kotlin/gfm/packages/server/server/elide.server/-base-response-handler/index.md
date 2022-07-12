@@ -15,7 +15,7 @@ abstract class [BaseResponseHandler](index.md)&lt;[ResponseBody](index.md)&gt; :
 
 | Name | Summary |
 |---|---|
-| [respond](respond.md) | [jvm]<br>open suspend override fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;) |
+| [respond](respond.md) | [jvm]<br>open suspend override fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;): HttpResponse&lt;[ResponseBody](index.md)&gt; |
 
 ## Inheritors
 

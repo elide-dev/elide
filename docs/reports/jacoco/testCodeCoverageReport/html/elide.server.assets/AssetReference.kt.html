@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetReference.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetReference.kt</span></div><h1>AssetReference.kt</h1><pre class="source lang-java linenums">package elide.server.assets
+
+import elide.server.AssetModuleId
+import kotlinx.serialization.Serializable
+
+/**
+ * Represents a resolved reference to an asset at serving-time, before it is rendered into a link or other tag.
+ *
+ * @param module ID of the asset module being referenced.
+ * @param assetType Type of asset being referenced.
+ * @param href Relative link to serve the asset.
+ * @param type Type override for the tag, if applicable.
+ * @param inline Whether this asset is eligible to be inlined into the page.
+ * @param preload Whether this asset is eligible to be preloaded.
+ */
+<span class="pc bpc" id="L16" title="8 of 22 branches missed.">@Serializable public data class AssetReference(</span>
+<span class="fc" id="L17">  val module: AssetModuleId,</span>
+<span class="fc" id="L18">  val assetType: AssetType,</span>
+<span class="fc" id="L19">  val href: String,</span>
+<span class="fc" id="L20">  val type: String? = null,</span>
+<span class="pc bpc" id="L21" title="2 of 4 branches missed.">  val inline: Boolean = false,</span>
+<span class="pc bpc" id="L22" title="2 of 4 branches missed.">  val preload: Boolean = false,</span>
+) : java.io.Serializable {
+<span class="fc" id="L24">  internal companion object {</span>
+    /** @return [AssetReference] from the specified [pointer]. */
+<span class="fc" id="L26">    @JvmStatic internal fun fromPointer(pointer: AssetPointer, uri: String): AssetReference = AssetReference(</span>
+<span class="fc" id="L27">      module = pointer.moduleId,</span>
+<span class="fc" id="L28">      assetType = pointer.type,</span>
+<span class="fc" id="L29">      href = uri,</span>
+<span class="fc" id="L30">    )</span>
+  }
+<span class="fc" id="L32">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

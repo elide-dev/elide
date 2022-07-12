@@ -3,9 +3,13 @@
 # respond
 
 [jvm]\
-abstract suspend fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;)
+abstract suspend fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;): HttpResponse&lt;[ResponseBody](index.md)&gt;
 
 Respond to the request with the provided [response](respond.md).
+
+#### Return
+
+Response, after registration with the object.
 
 ## Parameters
 

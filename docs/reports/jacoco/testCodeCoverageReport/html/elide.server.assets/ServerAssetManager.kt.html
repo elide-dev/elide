@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerAssetManager.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">ServerAssetManager.kt</span></div><h1>ServerAssetManager.kt</h1><pre class="source lang-java linenums">package elide.server.assets
 
+import com.google.common.util.concurrent.Futures
+import elide.server.AssetModuleId
+import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
+import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import jakarta.inject.Inject
 import kotlinx.coroutines.*
+import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
@@ -18,12 +24,16 @@ import java.nio.charset.StandardCharsets
  * Resolves and loads assets embedded in the application at build-time, based on binary-encoded protocol buffer messages
  * which define the dependency structure and metadata of each embedded asset.
  *
+ * @param assetConfig Server-side asset configuration.
+ * @param assetIndex Active asset index for this server run.
  * @param reader Active asset reader implementation for this server run.
  */
-<span class="pc" id="L23">@Suppress(&quot;UnstableApiUsage&quot;)</span>
+<span class="fc" id="L31">@Suppress(&quot;UnstableApiUsage&quot;)</span>
 @Context
-<span class="fc" id="L25">public class ServerAssetManager @Inject constructor(</span>
-<span class="fc" id="L26">  override val reader: AssetReader,</span>
+<span class="fc" id="L33">public class ServerAssetManager @Inject internal constructor(</span>
+<span class="fc" id="L34">  private val assetConfig: AssetConfig,</span>
+<span class="fc" id="L35">  private val assetIndex: ServerAssetIndex,</span>
+<span class="fc" id="L36">  override val reader: AssetReader,</span>
 ) : AssetManager {
   public companion object {
     // Wait timeout in seconds for initialization.
@@ -31,44 +41,100 @@ import java.nio.charset.StandardCharsets
   }
 
   /** @inheritDoc */
-<span class="fc" id="L34">  override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)</span>
+<span class="fc" id="L44">  override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)</span>
+
+  // Check if a request has conditional headers.
+  private fun requestIsConditional(request: HttpRequest&lt;*&gt;): Boolean {
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">    return request.headers.contains(HttpHeaders.IF_NONE_MATCH) || request.headers.contains(HttpHeaders.IF_MATCH)</span>
+  }
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-<span class="fc" id="L38">    val responseData = NettyStreamedFileCustomizableResponseType(</span>
-<span class="fc" id="L39">      ByteArrayInputStream(asset.producer.invoke().toByteArray()),</span>
-<span class="fc" id="L40">      asset.type.mediaType</span>
+<span class="fc" id="L53">    val responseData = NettyStreamedFileCustomizableResponseType(</span>
+<span class="fc" id="L54">      ByteArrayInputStream(asset.producer.invoke().toByteArray()),</span>
+<span class="fc" id="L55">      asset.type.mediaType</span>
     )
-<span class="fc" id="L42">    val response = HttpResponse.ok(</span>
-<span class="fc" id="L43">      responseData</span>
-<span class="fc" id="L44">    ).characterEncoding(</span>
-<span class="fc" id="L45">      StandardCharsets.UTF_8</span>
-<span class="fc" id="L46">    ).contentType(</span>
-<span class="fc" id="L47">      asset.type.mediaType</span>
-<span class="fc" id="L48">    ).contentLength(</span>
-<span class="fc" id="L49">      asset.size</span>
+<span class="fc" id="L57">    val response = HttpResponse.ok(</span>
+<span class="fc" id="L58">      responseData</span>
+<span class="fc" id="L59">    ).characterEncoding(</span>
+<span class="fc" id="L60">      StandardCharsets.UTF_8</span>
+<span class="fc" id="L61">    ).contentType(</span>
+<span class="fc" id="L62">      asset.type.mediaType</span>
+<span class="fc" id="L63">    ).contentLength(</span>
+<span class="fc" id="L64">      asset.size</span>
     )
-<span class="fc" id="L51">    asset.headers.entries.forEach {</span>
-<span class="fc" id="L52">      val (header, value) = it</span>
-<span class="fc" id="L53">      response.header(header, value)</span>
-<span class="fc" id="L54">    }</span>
-<span class="fc" id="L55">    return response</span>
+<span class="fc" id="L66">    asset.headers.entries.forEach {</span>
+<span class="fc" id="L67">      val (header, value) = it</span>
+<span class="fc" id="L68">      response.header(header, value)</span>
+<span class="fc" id="L69">    }</span>
+<span class="fc" id="L70">    return response</span>
   }
 
   /** @inheritDoc */
+  override fun linkForAsset(module: AssetModuleId, overrideType: AssetType?): String {
+<span class="fc" id="L75">    val pointer = reader.pointerTo(module)</span>
+<span class="fc bfc" id="L76" title="All 4 branches covered.">    require(pointer != null) {</span>
+<span class="fc" id="L77">      &quot;Failed to generate link for asset: asset module '$module' not found&quot;</span>
+    }
+<span class="fc" id="L79">    val prefix = assetConfig.prefix.removeSuffix(&quot;/&quot;)</span>
+<span class="fc" id="L80">    val tag = pointer.tag</span>
+<span class="fc bfc" id="L81" title="All 6 branches covered.">    val extension = when (overrideType ?: pointer.type) {</span>
+<span class="fc" id="L82">      AssetType.STYLESHEET -&gt; &quot;.css&quot;</span>
+<span class="fc" id="L83">      AssetType.SCRIPT -&gt; &quot;.js&quot;</span>
+<span class="fc" id="L84">      AssetType.TEXT -&gt; &quot;.txt&quot;</span>
+<span class="fc" id="L85">      AssetType.GENERIC -&gt; &quot;&quot;</span>
+    }
+<span class="fc" id="L87">    return &quot;$prefix/$tag$extension&quot;</span>
+  }
+
+  /** @inheritDoc */
+  @Suppress(&quot;NestedBlockDepth&quot;, &quot;ReturnCount&quot;)
   @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun renderAssetAsync(request: HttpRequest&lt;*&gt;, asset: ServerAsset): Deferred&lt;StreamedAssetResponse&gt; {
-<span class="fc" id="L61">    logging.debug(</span>
-<span class="fc" id="L62">      &quot;Serving asset with module ID '${asset.module}'&quot;</span>
+<span class="fc" id="L94">    logging.debug(</span>
+<span class="fc" id="L95">      &quot;Serving asset with module ID '${asset.module}'&quot;</span>
     )
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">    return withContext(Dispatchers.IO) {</span>
-<span class="pc" id="L65">      async {</span>
+
+    // before serving the asset, check if the request is conditional. if it has an ETag specified that matches, or a
+    // last-modified time that matches, we can skip serving it and serve a 304.
+<span class="pc bpc" id="L100" title="1 of 4 branches missed.">    if (assetConfig.etags &amp;&amp; requestIsConditional(request)) {</span>
+<span class="fc" id="L101">      val etag = request.headers[HttpHeaders.IF_NONE_MATCH]</span>
+<span class="pc bpc" id="L102" title="3 of 6 branches missed.">      if (etag != null &amp;&amp; etag.isNotEmpty()) {</span>
+        // fast path: the current server assigned the ETag.
+<span class="fc" id="L104">        val module = assetIndex.activeManifest().moduleIndex[asset.module]</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (module != null) {</span>
+<span class="fc" id="L106">          val reference = module.etag</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">          if (etag == reference) {</span>
+            // we have a match against a strong ETag.
+<span class="fc" id="L109">            return Futures.immediateFuture(</span>
+<span class="fc" id="L110">              HttpResponse.notModified&lt;StreamedAsset&gt;()</span>
+<span class="fc" id="L111">            ).asDeferred()</span>
+          }
+        }
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (etag.startsWith(&quot;W/&quot;)) {</span>
+          // match against the manifest timestamp. if the two match, we're able to satisfy this without sending the
+          // asset, via a weak ETag.
+<span class="fc" id="L117">          val generatedTime = assetIndex.getBundleTimestamp()</span>
+<span class="fc" id="L118">          val etagTime = etag.substring(2).removeSurrounding(&quot;\&quot;&quot;)</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">          if (etagTime == generatedTime.toString()) {</span>
+            // we have a match against a weak ETag.
+<span class="fc" id="L121">            return Futures.immediateFuture(</span>
+<span class="fc" id="L122">              HttpResponse.notModified&lt;StreamedAsset&gt;()</span>
+<span class="fc" id="L123">            ).asDeferred()</span>
+          }
+        }
+        // if we arrive here, the ETag either didn't match, or was not present in a substantive way. either way we need
+        // to fall back to regular serving (below).
+      }
+    }
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">    return withContext(Dispatchers.IO) {</span>
+<span class="pc" id="L131">      async {</span>
         // pass off to the reader to read the asset
-<span class="fc" id="L67">        buildAssetResponse(</span>
-<span class="fc" id="L68">          reader.readAsync(</span>
-<span class="fc" id="L69">            asset,</span>
-<span class="fc" id="L70">            request = request,</span>
-<span class="fc" id="L71">          ).await()</span>
+<span class="fc" id="L133">        buildAssetResponse(</span>
+<span class="fc" id="L134">          reader.readAsync(</span>
+<span class="fc" id="L135">            asset,</span>
+<span class="fc" id="L136">            request = request,</span>
+<span class="fc" id="L137">          ).await()</span>
         )
       }
     }

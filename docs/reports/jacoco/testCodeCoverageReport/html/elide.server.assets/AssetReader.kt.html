@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetReader.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetReader.kt</span></div><h1>AssetReader.kt</h1><pre class="source lang-java linenums">package elide.server.assets
 
 import elide.annotations.API
+import elide.server.AssetModuleId
 import io.micronaut.http.HttpRequest
 import kotlinx.coroutines.Deferred
 import java.io.FileNotFoundException
@@ -43,7 +44,7 @@ import java.io.FileNotFoundException
  * @see RenderedAsset for the generic return value model leveraged by [AssetManager].
  * @see ServerAsset for the symbolic asset reference model leveraged by [AssetManager].
  */
-<span class="fc" id="L46">@API public interface AssetReader : AssetResolver {</span>
+<span class="fc" id="L47">@API public interface AssetReader : AssetResolver {</span>
   /**
    * Given a resolved asset [descriptor] which should be known to exist, read the associated asset content, and return
    * it as an async [Deferred] task which can be awaited, and then consumed.
@@ -57,5 +58,14 @@ import java.io.FileNotFoundException
    */
   @Throws(FileNotFoundException::class)
   public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest&lt;*&gt;): Deferred&lt;RenderedAsset&gt;
-<span class="fc" id="L60">}</span>
+
+  /**
+   * Resolve a reference to an asset identified by the provided [moduleId], in the form of an [AssetPointer]; if no
+   * matching asset can be found, return `null` to indicate a not-found failure.
+   *
+   * @param moduleId ID of the module which we should resolve from the active asset bundle.
+   * @return Asset pointer resolved for the provided [moduleId], or `null`.
+   */
+  public fun pointerTo(moduleId: AssetModuleId): AssetPointer?
+<span class="fc" id="L70">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

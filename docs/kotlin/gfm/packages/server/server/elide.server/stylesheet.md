@@ -3,7 +3,12 @@
 # stylesheet
 
 [jvm]\
-inline fun [HEAD](../../../../packages/server/kotlinx.html/-h-e-a-d/index.md).[stylesheet](stylesheet.md)(uri: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), media: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, attrs: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;? = null)
+fun [HEAD](../../../../packages/server/kotlinx.html/-h-e-a-d/index.md).[stylesheet](stylesheet.md)(asset: [AssetReference](../elide.server.assets/-asset-reference/index.md), media: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, attrs: [SortedMap](https://docs.oracle.com/javase/8/docs/api/java/util/SortedMap.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;? = null)
+
+Generate a stylesheet link from an embedded server [asset](stylesheet.md), optionally with the provided [media](stylesheet.md) declaration.
+
+[jvm]\
+fun [HEAD](../../../../packages/server/kotlinx.html/-h-e-a-d/index.md).[stylesheet](stylesheet.md)(uri: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), media: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, attrs: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;? = null)
 
 Generates a CSS link from the provided handler [uri](stylesheet.md), optionally including the specified [attrs](stylesheet.md).
 

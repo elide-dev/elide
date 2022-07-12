@@ -3,4 +3,15 @@
 # AssetController
 
 [jvm]\
-fun [AssetController](-asset-controller.md)()
+
+@Inject
+
+fun [AssetController](-asset-controller.md)(assetManager: [AssetManager](../-asset-manager/index.md))
+
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| assetManager | Main asset manager which should be used to resolve and serve assets. |

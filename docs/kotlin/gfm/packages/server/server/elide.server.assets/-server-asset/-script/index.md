@@ -3,7 +3,7 @@
 # Script
 
 [jvm]\
-class [Script](index.md)(descriptor: AssetBundle.ScriptBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) : [ServerAsset](../index.md)
+class [Script](index.md)(descriptor: AssetBundle.ScriptBundle, index: [SortedSet](https://docs.oracle.com/javase/8/docs/api/java/util/SortedSet.html)&lt;[Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)&gt;?) : [ServerAsset](../index.md)
 
 Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold script info.
 
@@ -20,4 +20,4 @@ jvm
 
 | | |
 |---|---|
-| [Script](-script.md) | [jvm]<br>fun [Script](-script.md)(descriptor: AssetBundle.ScriptBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) |
+| [Script](-script.md) | [jvm]<br>fun [Script](-script.md)(descriptor: AssetBundle.ScriptBundle, index: [SortedSet](https://docs.oracle.com/javase/8/docs/api/java/util/SortedSet.html)&lt;[Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)&gt;?) |

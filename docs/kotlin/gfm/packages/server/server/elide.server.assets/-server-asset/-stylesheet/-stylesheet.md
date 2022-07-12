@@ -3,7 +3,7 @@
 # Stylesheet
 
 [jvm]\
-fun [Stylesheet](-stylesheet.md)(descriptor: AssetBundle.StyleBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?)
+fun [Stylesheet](-stylesheet.md)(descriptor: AssetBundle.StyleBundle, index: [SortedSet](https://docs.oracle.com/javase/8/docs/api/java/util/SortedSet.html)&lt;[Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)&gt;?)
 
 ## Parameters
 

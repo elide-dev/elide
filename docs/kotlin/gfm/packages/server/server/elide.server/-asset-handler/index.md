@@ -17,4 +17,4 @@ class [AssetHandler](index.md)(initialExpectedType: [AssetType](../../elide.serv
 |---|---|
 | [assetType](asset-type.md) | [jvm]<br>fun [assetType](asset-type.md)(type: [AssetType](../../elide.server.assets/-asset-type/index.md))<br>Declare the expected asset type for this handler. Optional. |
 | [module](module.md) | [jvm]<br>fun [module](module.md)(id: [AssetModuleId](../index.md#-803173189%2FClasslikes%2F-1343588467), type: [AssetType](../../elide.server.assets/-asset-type/index.md)? = null)<br>Bind an asset handler to an asset module ID. |
-| [respond](index.md#1153369062%2FFunctions%2F-1343588467) | [jvm]<br>open suspend override fun [respond](index.md#1153369062%2FFunctions%2F-1343588467)(response: HttpResponse&lt;[StreamedAsset](../index.md#-1290834015%2FClasslikes%2F-1343588467)&gt;) |
+| [respond](index.md#1153369062%2FFunctions%2F-1343588467) | [jvm]<br>open suspend override fun [respond](index.md#1153369062%2FFunctions%2F-1343588467)(response: HttpResponse&lt;[StreamedAsset](../index.md#-1290834015%2FClasslikes%2F-1343588467)&gt;): HttpResponse&lt;[StreamedAsset](../index.md#-1290834015%2FClasslikes%2F-1343588467)&gt; |

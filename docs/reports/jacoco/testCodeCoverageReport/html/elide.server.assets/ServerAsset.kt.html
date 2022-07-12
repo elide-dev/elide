@@ -2,6 +2,7 @@
 
 import elide.server.AssetModuleId
 import tools.elide.assets.AssetBundle
+import java.util.SortedSet
 
 /**
  * Describes a server-side asset which is embedded in an application bundle through Elide's asset tools and protocol
@@ -9,14 +10,12 @@ import tools.elide.assets.AssetBundle
  *
  * @param module ID assigned by the developer to this asset module.
  * @param assetType Type of asset being referenced by this object.
- * @param dynamicEligible Whether this type of media is eligible for dynamic transformation.
  * @param index Index of this asset within the content bundle, if applicable.
  */
 <span class="fc" id="L15">public sealed class ServerAsset private constructor(</span>
 <span class="fc" id="L16">  internal val module: AssetModuleId,</span>
 <span class="fc" id="L17">  internal val assetType: AssetType,</span>
-<span class="pc" id="L18">  internal val dynamicEligible: Boolean,</span>
-<span class="fc" id="L19">  internal val index: Int?,</span>
+<span class="fc" id="L18">  internal val index: SortedSet&lt;Int&gt;?,</span>
 ) {
   /**
    * Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol
@@ -25,14 +24,13 @@ import tools.elide.assets.AssetBundle
    * @param descriptor Script-type settings bundle describing this asset.
    * @param index Index of the content payload, within the live asset bundle, corresponding to this script.
    */
-<span class="fc" id="L28">  public class Script(</span>
-<span class="pc" id="L29">    internal val descriptor: AssetBundle.ScriptBundle,</span>
-    index: Int?,
-<span class="fc" id="L31">  ) : ServerAsset(</span>
-<span class="fc" id="L32">    module = descriptor.module,</span>
-<span class="fc" id="L33">    assetType = AssetType.SCRIPT,</span>
-<span class="fc" id="L34">    dynamicEligible = true,</span>
-<span class="fc" id="L35">    index = index,</span>
+<span class="fc" id="L27">  public class Script(</span>
+<span class="fc" id="L28">    internal val descriptor: AssetBundle.ScriptBundle,</span>
+    index: SortedSet&lt;Int&gt;?,
+<span class="fc" id="L30">  ) : ServerAsset(</span>
+<span class="fc" id="L31">    module = descriptor.module,</span>
+<span class="fc" id="L32">    assetType = AssetType.SCRIPT,</span>
+<span class="fc" id="L33">    index = index,</span>
   )
 
   /**
@@ -42,14 +40,13 @@ import tools.elide.assets.AssetBundle
    * @param descriptor Stylesheet-type settings bundle describing this asset.
    * @param index Index of the content payload, within the live asset bundle, corresponding to this stylesheet.
    */
-<span class="fc" id="L45">  public class Stylesheet(</span>
-<span class="pc" id="L46">    internal val descriptor: AssetBundle.StyleBundle,</span>
-    index: Int?,
-<span class="fc" id="L48">  ) : ServerAsset(</span>
-<span class="fc" id="L49">    module = descriptor.module,</span>
-<span class="fc" id="L50">    assetType = AssetType.STYLESHEET,</span>
-<span class="fc" id="L51">    dynamicEligible = true,</span>
-<span class="fc" id="L52">    index = index,</span>
+<span class="fc" id="L43">  public class Stylesheet(</span>
+<span class="fc" id="L44">    internal val descriptor: AssetBundle.StyleBundle,</span>
+    index: SortedSet&lt;Int&gt;?,
+<span class="fc" id="L46">  ) : ServerAsset(</span>
+<span class="fc" id="L47">    module = descriptor.module,</span>
+<span class="fc" id="L48">    assetType = AssetType.STYLESHEET,</span>
+<span class="fc" id="L49">    index = index,</span>
   )
 
   /**
@@ -59,14 +56,13 @@ import tools.elide.assets.AssetBundle
    * @param descriptor Text-type settings bundle describing this asset.
    * @param index Index of the content payload, within the live asset bundle, corresponding to this text asset.
    */
-<span class="fc" id="L62">  public class Text(</span>
-<span class="pc" id="L63">    internal val descriptor: AssetBundle.GenericBundle,</span>
-    index: Int?,
-<span class="fc" id="L65">  ) : ServerAsset(</span>
-<span class="fc" id="L66">    module = descriptor.module,</span>
-<span class="fc" id="L67">    assetType = AssetType.TEXT,</span>
-<span class="fc" id="L68">    dynamicEligible = false,</span>
-<span class="fc" id="L69">    index = index,</span>
+<span class="fc" id="L59">  public class Text(</span>
+<span class="fc" id="L60">    internal val descriptor: AssetBundle.GenericBundle,</span>
+    index: SortedSet&lt;Int&gt;?,
+<span class="fc" id="L62">  ) : ServerAsset(</span>
+<span class="fc" id="L63">    module = descriptor.module,</span>
+<span class="fc" id="L64">    assetType = AssetType.TEXT,</span>
+<span class="fc" id="L65">    index = index,</span>
   )
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

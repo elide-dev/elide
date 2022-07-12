@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssetResolver.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.assets</a> &gt; <span class="el_source">AssetResolver.kt</span></div><h1>AssetResolver.kt</h1><pre class="source lang-java linenums">package elide.server.assets
 
 import elide.annotations.API
+import elide.server.AssetModuleId
 import io.micronaut.http.HttpRequest
 
 /**
@@ -23,6 +24,15 @@ import io.micronaut.http.HttpRequest
  */
 @API public interface AssetResolver {
   /**
+   * Return the asset module corresponding to the provided [moduleId], if possible, or return `null` to indicate that
+   * the asset could not be located.
+   *
+   * @param moduleId ID for the asset module, assigned by the developer.
+   * @return Resolved server asset, or `null`, indicating that the asset could not be located.
+   */
+  public fun findByModuleId(moduleId: AssetModuleId): ServerAsset?
+
+  /**
    * Resolve the provided [path] to a server asset, if possible, or return `null` to indicate that the asset could not
    * be located; the given [path] value can be prefixed with the asset serving prefix (`/_/asset` by default) or not
    * prefixed at all.
@@ -42,7 +52,7 @@ import io.micronaut.http.HttpRequest
    * @return Resolved server-held asset, or `null` to indicate that the asset could not be located.
    */
   public fun resolve(request: HttpRequest&lt;*&gt;): ServerAsset? {
-<span class="fc" id="L45">    return resolve(request.path)</span>
+<span class="fc" id="L55">    return resolve(request.path)</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

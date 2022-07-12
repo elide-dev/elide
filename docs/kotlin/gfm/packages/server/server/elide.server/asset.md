@@ -3,25 +3,6 @@
 # asset
 
 [jvm]\
-fun [asset](asset.md)(path: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), type: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), contentType: MediaType?): HttpResponse&lt;*&gt;
-
-Serve an application asset file which is embedded in the application JAR, from the path `/assets/[type]/[path]`.
-
-#### Return
-
-HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be     located at the specified path.
-
-## Parameters
-
-jvm
-
-| | |
-|---|---|
-| path | Path to the file within the provided [type](asset.md) directory. |
-| type | Type of asset to serve; accepted values are `css` and `js`. |
-| contentType | Resolved MediaType to use when serving this asset. Must not be null. |
-
-[jvm]\
 suspend fun [PageController](../elide.server.controller/-page-controller/index.md).[asset](asset.md)(request: HttpRequest&lt;*&gt;, moduleId: [AssetModuleId](index.md#-803173189%2FClasslikes%2F-1343588467), type: [AssetType](../elide.server.assets/-asset-type/index.md)? = null): [StreamedAssetResponse](index.md#-491452832%2FClasslikes%2F-1343588467)
 
 Serve an application asset file which is embedded in the application JAR as a registered server asset, from the application resource path `/assets`.

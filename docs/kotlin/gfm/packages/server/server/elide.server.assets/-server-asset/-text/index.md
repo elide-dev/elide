@@ -3,7 +3,7 @@
 # Text
 
 [jvm]\
-class [Text](index.md)(descriptor: AssetBundle.GenericBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) : [ServerAsset](../index.md)
+class [Text](index.md)(descriptor: AssetBundle.GenericBundle, index: [SortedSet](https://docs.oracle.com/javase/8/docs/api/java/util/SortedSet.html)&lt;[Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)&gt;?) : [ServerAsset](../index.md)
 
 Describes a generic text asset of some kind, for example, `humans.txt` or `robots.txt`; when read from the app bundle and interpreted, this class is used to hold file info.
 
@@ -20,4 +20,4 @@ jvm
 
 | | |
 |---|---|
-| [Text](-text.md) | [jvm]<br>fun [Text](-text.md)(descriptor: AssetBundle.GenericBundle, index: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)?) |
+| [Text](-text.md) | [jvm]<br>fun [Text](-text.md)(descriptor: AssetBundle.GenericBundle, index: [SortedSet](https://docs.oracle.com/javase/8/docs/api/java/util/SortedSet.html)&lt;[Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)&gt;?) |

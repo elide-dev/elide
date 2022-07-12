@@ -3,4 +3,4 @@
 # respond
 
 [jvm]\
-open suspend override fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;)
+open suspend override fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;): HttpResponse&lt;[ResponseBody](index.md)&gt;

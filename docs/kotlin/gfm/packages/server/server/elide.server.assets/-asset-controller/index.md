@@ -7,17 +7,25 @@
 
 @Controller(value = &quot;${elide.assets.prefix:/_/assets}&quot;)
 
-class [AssetController](index.md) : [StatusEnabledController](../../elide.server.controller/-status-enabled-controller/index.md)
+class [AssetController](index.md)@Injectconstructor(assetManager: [AssetManager](../-asset-manager/index.md)) : [StatusEnabledController](../../elide.server.controller/-status-enabled-controller/index.md)
 
 Built-in controller implementation which bridges the configured asset serving prefix to the active [AssetManager](../-asset-manager/index.md) layer for this server run.
 
 For this controller to be enabled, the configuration value `elide.assets.enabled` needs to be set to `true`. The asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
 
+## Parameters
+
+jvm
+
+| | |
+|---|---|
+| assetManager | Main asset manager which should be used to resolve and serve assets. |
+
 ## Constructors
 
 | | |
 |---|---|
-| [AssetController](-asset-controller.md) | [jvm]<br>fun [AssetController](-asset-controller.md)() |
+| [AssetController](-asset-controller.md) | [jvm]<br>@Inject<br>fun [AssetController](-asset-controller.md)(assetManager: [AssetManager](../-asset-manager/index.md)) |
 
 ## Functions
 

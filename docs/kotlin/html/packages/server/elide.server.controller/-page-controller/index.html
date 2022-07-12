@@ -44,7 +44,7 @@ if(savedDarkMode === true){
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">PageController</a> : <a href="../-base-controller/index.html">BaseController</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Defines the built-in concept of a <code class="lang-kotlin">Page</code>-type handler, which is capable of performing SSR, serving static assets, and handling page-level RPC calls.</p><p class="paragraph">Page controllers use a dual-pronged mechanism to hook into application code. First, the controller annotates with <a href="../../elide.server.annotations/-page/index.html">Page</a>, which provides AOT advice and route bindings; a suite of on-class functions and injections related to page can also then be inherited from <a href="index.html">PageController</a>, although this is only necessary to leverage static asset serving and SSR. Most of these resources are acquired statically, which keeps things fast.</p><p class="paragraph">When the developer calls a method like <code class="lang-kotlin">ssr</code> or <code class="lang-kotlin">asset</code>, for example, the bean context is consulted, and an <code class="lang-kotlin">AssetManager</code> or <code class="lang-kotlin">JsRuntime</code> is resolved to satisfy the response.</p><h3 class=""> Controller lifecycle</h3><p class="paragraph">Bean objects created within a Micronaut dependency injection context have an associated <i>scope</i>, which governs something called the "bean lifecycle." The bean lifecycle, and by extension, the bean scope, determines when an instance is constructed, how long it survives, and when garbage is collected.</p><p class="paragraph">By default, raw Micronaut controllers are API endpoints. For example, the default input/output <code class="lang-kotlin">Content-Type</code> is JSON and the lifecycle is set to <code class="lang-kotlin">Singleton</code>. This means a controller is initialized the <i>first time it is accessed</i>, and then lives for the duration of the server run.</p><p class="paragraph">Pages follow this default and provide on-class primitives to the user, via <a href="index.html">PageController</a>, which help with the management of state, caching, sessions, and so forth.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Extensions">Extensions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Extensions">Extensions</button></div>
     <div class="tabs-section-body">
       <h2 class="tabbedcontent">Constructors</h2>
       <div class="table" data-togglable="Constructors"><a data-name="-138914591%2FConstructors%2F-1592384214" anchor-label="PageController" id="-138914591%2FConstructors%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
@@ -63,8 +63,40 @@ if(savedDarkMode === true){
           </div>
         </div>
       </div>
+      <h2 class="">Types</h2>
+      <div class="table" data-togglable="Types"><a data-name="-1794245151%2FClasslikes%2F-1592384214" anchor-label="AssetReferenceBuilder" id="-1794245151%2FClasslikes%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+        <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="-asset-reference-builder/index.html"><span>Asset</span><wbr><span>Reference</span><wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1794245151%2FClasslikes%2F-1592384214"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">inner </span><span class="token keyword">class </span><a href="-asset-reference-builder/index.html">AssetReferenceBuilder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Context handler to collect asset configuration.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <h2 class="">Functions</h2>
-      <div class="table" data-togglable="Functions"><a data-name="1421478665%2FFunctions%2F-1592384214" anchor-label="assets" id="1421478665%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+      <div class="table" data-togglable="Functions"><a data-name="-1673854364%2FFunctions%2F-1592384214" anchor-label="asset" id="-1673854364%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
+        <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="asset.html"><span><span>asset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1673854364%2FFunctions%2F-1592384214"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="asset.html"><span class="token function">asset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">module<span class="token operator">: </span><a href="../../elide.server/index.html#-803173189%2FClasslikes%2F-1592384214">AssetModuleId</a><span class="token punctuation">, </span></span><span class="parameter ">handler<span class="token operator">: </span><span class="token keyword"></span><a href="-asset-reference-builder/index.html">PageController.AssetReferenceBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../elide.server.assets/-asset-reference/index.html">AssetReference</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1421478665%2FFunctions%2F-1592384214" anchor-label="assets" id="1421478665%2FFunctions%2F-1592384214" data-filterable-set=":packages:server:dokkaHtmlPartial/main"></a>
         <div class="table-row" data-filterable-current=":packages:server:dokkaHtmlPartial/main" data-filterable-set=":packages:server:dokkaHtmlPartial/main">
           <div class="main-subrow keyValue ">
             <div class=""><span class="inline-flex">

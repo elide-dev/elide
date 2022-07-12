@@ -11,7 +11,7 @@ Describes a handler object which can respond to a request with a given [Response
 
 | Name | Summary |
 |---|---|
-| [respond](respond.md) | [jvm]<br>abstract suspend fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;)<br>Respond to the request with the provided [response](respond.md). |
+| [respond](respond.md) | [jvm]<br>abstract suspend fun [respond](respond.md)(response: HttpResponse&lt;[ResponseBody](index.md)&gt;): HttpResponse&lt;[ResponseBody](index.md)&gt;<br>Respond to the request with the provided [response](respond.md). |
 
 ## Inheritors
 

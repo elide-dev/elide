@@ -2,6 +2,7 @@
 
 import com.google.common.util.concurrent.Futures
 import elide.annotations.API
+import elide.server.AssetModuleId
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import io.micronaut.http.HttpRequest
@@ -80,37 +81,59 @@ import org.slf4j.Logger
   public val logging: Logger
 
   /**
-   * Resolve the provided asset [path] to a [ServerAsset] descriptor; if the file cannot be found, return `null`, and
-   * otherwise, throw an error.
-   *
-   * @param path Relative path to the asset which we want to resolve.
-   * @return Resolved server asset, or `null` if one could not be located at the provided [path].
-   */
-  public fun resolve(path: String): ServerAsset? {
-<span class="nc" id="L90">    return reader.resolve(path)</span>
-  }
-
-  /**
    * Resolve the asset requested by the provided HTTP [request]; if the corresponding file cannot be found, return
    * `null`, and otherwise, throw an error.
    *
    * @param request HTTP request to interpret into a relative asset path and return a descriptor for.
+   * @param moduleId Resolved asset module ID to serve, if known; if `null`, one will be resolved from the [request].
    * @return Resolved server asset, or `null` if one could not be located at the calculated path provided by [request].
    */
-  public fun resolve(request: HttpRequest&lt;*&gt;): ServerAsset? {
-<span class="fc" id="L101">    return reader.resolve(request)</span>
+<span class="fc" id="L91">  public fun resolve(request: HttpRequest&lt;*&gt;, moduleId: String? = null): ServerAsset? {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">    return if (moduleId != null) {</span>
+<span class="fc" id="L93">      reader.findByModuleId(moduleId)</span>
+    } else {
+<span class="fc" id="L95">      reader.resolve(request)</span>
+    }
   }
 
   /**
    * Serve a response of status HTTP 404 (Not Found), in response to a request for an asset which could not be located
    * by the built-in asset system.
    *
+   * The resulting response is not specific to the asset requested, but the [request] is provided nonetheless so that
+   * implementations may log or perform other relevant follow-up work.
+   *
    * @param request HTTP request which prompted this 404-not-found response.
    * @return Deferred task which resolves to an HTTP 404 response.
    */
   public fun serveNotFoundAsync(request: HttpRequest&lt;*&gt;): Deferred&lt;StreamedAssetResponse&gt; {
-<span class="fc" id="L112">    return Futures.immediateFuture(HttpResponse.notFound&lt;StreamedAsset&gt;()).asDeferred()</span>
+<span class="fc" id="L110">    return Futures.immediateFuture(HttpResponse.notFound&lt;StreamedAsset&gt;()).asDeferred()</span>
   }
+
+  /**
+   * Resolve an [AssetPointer] for the specified [asset] module ID; if none can be located within the current set of
+   * live server assets, return `null`.
+   *
+   * @param asset Asset module ID to resolve.
+   * @return Pointer to the resulting asset, or `null` if it could not be located.
+   */
+  public fun findAssetByModuleId(asset: AssetModuleId): AssetPointer? {
+<span class="fc" id="L121">    return reader.pointerTo(asset)</span>
+  }
+
+  /**
+   * Generate a relative link to serve the asset specified by the provided [module] ID; the link is built from the
+   * active configured asset prefix, plus the &quot;asset tag,&quot; which is a variable-length cryptographic fingerprint of the
+   * asset's content.
+   *
+   * If the asset system isn't ready, this method may suspend to wait for a period of time for initialization.
+   *
+   * @param module Asset module ID for which a relative link is needed.
+   * @param overrideType Overrides the asset type, which governs the file extension in the generated link.
+   * @return Relative URI calculated to serve the provided asset.
+   * @throws IllegalArgumentException If the provided [module] ID cannot be found in the active asset bundle.
+   */
+<span class="fc" id="L136">  public fun linkForAsset(module: AssetModuleId, overrideType: AssetType? = null): String</span>
 
   /**
    * Responsible for converting a known-good asset held by the server into an efficient [StreamedAssetResponse] which
@@ -146,13 +169,14 @@ import org.slf4j.Logger
    * question cannot be located, serve a `404 Not Found`, and for any other error, serve a `500 Internal Server Error`.
    *
    * @param request HTTP request which should be translated into an asset path and served.
+   * @param moduleId Resolved asset module ID to serve, if known; if `null`, one will be resolved from the [request].
    * @return Deferred task which resolves to an HTTP response serving the requested asset.
    */
-  public suspend fun serveAsync(request: HttpRequest&lt;*&gt;): Deferred&lt;StreamedAssetResponse&gt; {
-<span class="fc" id="L152">    return renderAssetAsync(</span>
-<span class="fc" id="L153">      request,</span>
-<span class="fc bfc" id="L154" title="All 2 branches covered.">      resolve(request) ?: return (</span>
-<span class="fc" id="L155">        serveNotFoundAsync(request)</span>
+<span class="fc" id="L175">  public suspend fun serveAsync(request: HttpRequest&lt;*&gt;, moduleId: String? = null): Deferred&lt;StreamedAssetResponse&gt; {</span>
+<span class="fc" id="L176">    return renderAssetAsync(</span>
+<span class="fc" id="L177">      request,</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">      resolve(request, moduleId) ?: return (</span>
+<span class="fc" id="L179">        serveNotFoundAsync(request)</span>
       )
     )
   }

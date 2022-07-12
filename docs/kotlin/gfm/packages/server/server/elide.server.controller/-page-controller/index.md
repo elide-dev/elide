@@ -25,10 +25,17 @@ Pages follow this default and provide on-class primitives to the user, via [Page
 |---|---|
 | [PageController](-page-controller.md) | [jvm]<br>fun [PageController](-page-controller.md)() |
 
+## Types
+
+| Name | Summary |
+|---|---|
+| [AssetReferenceBuilder](-asset-reference-builder/index.md) | [jvm]<br>inner class [AssetReferenceBuilder](-asset-reference-builder/index.md)<br>Context handler to collect asset configuration. |
+
 ## Functions
 
 | Name | Summary |
 |---|---|
+| [asset](asset.md) | [jvm]<br>fun [asset](asset.md)(module: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467), handler: [PageController.AssetReferenceBuilder](-asset-reference-builder/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)? = null): [AssetReference](../../elide.server.assets/-asset-reference/index.md) |
 | [assets](assets.md) | [jvm]<br>open override fun [assets](assets.md)(): [AssetManager](../../elide.server.assets/-asset-manager/index.md) |
 | [context](context.md) | [jvm]<br>open override fun [context](context.md)(): ApplicationContext |
 

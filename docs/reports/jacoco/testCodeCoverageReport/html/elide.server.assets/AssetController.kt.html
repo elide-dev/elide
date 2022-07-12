@@ -16,15 +16,14 @@ import jakarta.inject.Inject
  *
  * For this controller to be enabled, the configuration value `elide.assets.enabled` needs to be set to `true`. The
  * asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
+ *
+ * @param assetManager Main asset manager which should be used to resolve and serve assets.
  */
-<span class="fc" id="L20">@Requires(property = &quot;elide.assets.enabled&quot;, notEquals = &quot;false&quot;)</span>
+<span class="fc" id="L22">@Requires(property = &quot;elide.assets.enabled&quot;, notEquals = &quot;false&quot;)</span>
 @Controller(&quot;\${elide.assets.prefix:/_/assets}&quot;)
-<span class="fc" id="L22">public class AssetController : StatusEnabledController {</span>
+<span class="fc" id="L24">public class AssetController @Inject constructor(private val assetManager: AssetManager) : StatusEnabledController {</span>
   // Logger pipe.
-<span class="fc" id="L24">  private val logging: Logger = Logging.of(AssetController::class)</span>
-
-  // Main asset manager.
-<span class="pc bpc" id="L27" title="1 of 2 branches missed.">  @Inject internal lateinit var assetManager: AssetManager</span>
+<span class="fc" id="L26">  private val logging: Logger = Logging.of(AssetController::class)</span>
 
   /**
    * Handles HTTP `GET` calls to asset endpoints based on &quot;asset tag&quot; values, which are generated at build time, and are
@@ -35,13 +34,13 @@ import jakarta.inject.Inject
    * @param ext Extension value from the URL.
    */
   @Get(&quot;/{tag}.{ext}&quot;)
-<span class="fc" id="L38">  public suspend fun assetGet(request: HttpRequest&lt;*&gt;, tag: String, ext: String): StreamedAssetResponse {</span>
-<span class="fc" id="L39">    logging.debug(</span>
-<span class="fc" id="L40">      &quot;Loading asset with tag '$tag' (extension: '$ext')&quot;</span>
+<span class="fc" id="L37">  public suspend fun assetGet(request: HttpRequest&lt;*&gt;, tag: String, ext: String): StreamedAssetResponse {</span>
+<span class="fc" id="L38">    logging.debug(</span>
+<span class="fc" id="L39">      &quot;Loading asset with tag '$tag' (extension: '$ext')&quot;</span>
     )
-<span class="fc" id="L42">    return assetManager.serveAsync(</span>
-<span class="fc" id="L43">      request</span>
-<span class="fc" id="L44">    ).await()</span>
+<span class="fc" id="L41">    return assetManager.serveAsync(</span>
+<span class="fc" id="L42">      request</span>
+<span class="fc" id="L43">    ).await()</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

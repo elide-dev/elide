@@ -30,6 +30,7 @@ jvm
 
 | Name | Summary |
 |---|---|
+| [findByModuleId](find-by-module-id.md) | [jvm]<br>abstract fun [findByModuleId](find-by-module-id.md)(moduleId: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467)): [ServerAsset](../-server-asset/index.md)?<br>Return the asset module corresponding to the provided [moduleId](find-by-module-id.md), if possible, or return `null` to indicate that the asset could not be located. |
 | [resolve](resolve.md) | [jvm]<br>open fun [resolve](resolve.md)(request: HttpRequest&lt;*&gt;): [ServerAsset](../-server-asset/index.md)?<br>Resolve the provided HTTP [request](resolve.md) to an asset path string, and then resolve the asset path string to a loaded [ServerAsset](../-server-asset/index.md), if possible; return `null` if the asset cannot be located.<br>[jvm]<br>abstract fun [resolve](resolve.md)(path: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [ServerAsset](../-server-asset/index.md)?<br>Resolve the provided [path](resolve.md) to a server asset, if possible, or return `null` to indicate that the asset could not be located; the given [path](resolve.md) value can be prefixed with the asset serving prefix (`/_/asset` by default) or not prefixed at all. |
 
 ## Inheritors

@@ -7,10 +7,14 @@ import io.micronaut.context.annotation.ConfigurationProperties
  *
  * @param enabled Whether the asset system is enabled.
  * @param prefix URI prefix where static assets are served.
+ * @param etags Whether to generate, and respond to, ETag headers for assets.
+ * @param preferWeakEtags Whether to prefer weak ETags. Defaults to `false`.
  */
-<span class="fc" id="L11">@ConfigurationProperties(&quot;elide.server.assets&quot;)</span>
-<span class="fc" id="L12">public data class AssetConfig(</span>
-<span class="fc" id="L13">  public var enabled: Boolean = true,</span>
-<span class="fc" id="L14">  public var prefix: String = &quot;/_/assets&quot;,</span>
-<span class="fc" id="L15">)</span>
+<span class="fc" id="L13">@ConfigurationProperties(&quot;elide.server.assets&quot;)</span>
+<span class="fc" id="L14">public data class AssetConfig(</span>
+<span class="fc" id="L15">  public var enabled: Boolean = true,</span>
+<span class="fc" id="L16">  public var prefix: String = &quot;/_/assets&quot;,</span>
+<span class="fc" id="L17">  public var etags: Boolean = true,</span>
+<span class="fc" id="L18">  public var preferWeakEtags: Boolean = false,</span>
+<span class="fc" id="L19">)</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

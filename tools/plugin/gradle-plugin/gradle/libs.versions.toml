@@ -1,6 +1,6 @@
 [versions]
 detekt = "1.20.0"
-kotlin = "1.7.0"
+kotlin = "1.7.10"
 ktlint = "0.46.1"
 ktlintGradle = "10.3.0"
 pluginPublish = "0.21.0"
@@ -11,15 +11,19 @@ sonar = "3.4.0.2513"
 protobuf = "3.20.1"
 kotlinx_serialization = "1.3.3"
 truth = "1.1.3"
-soy = "2022-03-07"
 picocli = "4.6.3"
 slf4j = "1.7.36"
-jvmbrotli = "0.2.0"
+brotli4j = "1.7.1"
 gson = "2.9.0"
+guava = "31.1-jre"
 checker_compat_qual = "2.5.5"
 npm_esbuild = "0.14.47"
 npm_prepack = "0.2.54"
 commons_compress = "1.21"
+shadow_plugin = "7.1.2"
+soy = "2022-03-07"
+closure = "v20220601"
+closure_stylesheets = "20160212"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -32,9 +36,11 @@ node = { id = "com.github.node-gradle.node", version.ref = "nodePlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish"}
 versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
@@ -47,8 +53,14 @@ soy = { group = "com.google.template", name = "soy", version.ref = "soy" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
-brotli = { group = "com.nixxcode.jvmbrotli", name = "jvmbrotli", version.ref="jvmbrotli" }
+brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
+brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli_native_linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 gson_parent = { group = "com.google.code.gson", name = "gson-parent", version.ref = "gson" }
 checker = { group = "org.checkerframework", name = "checker-compat-qual", version.ref = "checker_compat_qual" }
 commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }
+closure_templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
+closure_compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
+closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure_stylesheets" }

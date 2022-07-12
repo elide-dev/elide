@@ -82,10 +82,11 @@ subprojects {
         verbose.set(true)
         android.set(false)
         outputToConsole.set(true)
-        ignoreFailures.set(false)
+        ignoreFailures.set(true)
         enableExperimentalRules.set(true)
         filter {
             exclude("**/generated/**")
+            exclude("**/model/**")
             include("**/kotlin/**")
         }
     }

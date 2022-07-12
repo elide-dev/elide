@@ -1,0 +1,9 @@
+version: "1.0"
+linter: jetbrains/qodana-jvm:2022.1-eap
+exclude:
+  - name: All
+    paths:
+      - plugin-build/plugin/src/model
+include:
+  - name: CheckDependencyLicenses
+

@@ -1,7 +1,7 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
-import dev.elide.buildtools.gradle.plugin.js.BundleTarget
-import dev.elide.buildtools.gradle.plugin.js.BundleTool
+import dev.elide.buildtools.bundler.js.BundleTarget
+import dev.elide.buildtools.bundler.js.BundleTool
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel

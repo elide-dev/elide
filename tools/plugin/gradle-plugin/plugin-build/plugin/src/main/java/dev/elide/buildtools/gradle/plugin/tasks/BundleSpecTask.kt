@@ -1,7 +1,7 @@
 package dev.elide.buildtools.gradle.plugin.tasks
 
 import com.google.protobuf.Message
-import dev.elide.buildtools.gradle.plugin.BuildMode
+import dev.elide.buildtools.bundler.BuildMode
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input

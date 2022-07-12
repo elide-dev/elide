@@ -2,12 +2,16 @@
 
 package dev.elide.buildtools.gradle.plugin.tasks
 
+import com.aayushatharva.brotli4j.Brotli4jLoader
+import com.aayushatharva.brotli4j.encoder.Encoder
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.NetworkBuilder
 import com.google.protobuf.ByteString
 import com.google.protobuf.Timestamp
+import dev.elide.buildtools.bundler.cfg.*
+import dev.elide.buildtools.bundler.util.TopologicalGraphIterator
 import dev.elide.buildtools.gradle.plugin.ElideExtension
 import dev.elide.buildtools.gradle.plugin.cfg.*
 import org.gradle.api.file.FileCollection
@@ -31,37 +35,50 @@ import tools.elide.assets.AssetBundleKt.styleBundle
 import tools.elide.assets.ManifestFormat
 import tools.elide.assets.assetBundle
 import tools.elide.crypto.HashAlgorithm
-import tools.elide.data.CompressedData
-import tools.elide.data.CompressionMode
-import tools.elide.data.compressedData
-import tools.elide.data.dataContainer
-import tools.elide.data.dataFingerprint
+import tools.elide.data.*
 import tools.elide.page.ContextKt.ScriptsKt.javaScript
 import tools.elide.page.ContextKt.StylesKt.stylesheet
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.io.OutputStream
 import java.nio.charset.StandardCharsets
 import java.time.Instant
-import java.util.Base64
+import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.stream.Collectors
 import java.util.stream.IntStream
-import java.util.zip.GZIPOutputStream
+import java.util.stream.Stream
+import java.util.zip.CRC32
+import java.util.zip.Deflater
+import java.util.zip.DeflaterOutputStream
 import javax.inject.Inject
 import kotlin.streams.toList
 
 /** Task to interpret server-side asset configuration and content into a compiled asset bundle. */
-@Suppress("UnstableApiUsage", "SameParameterValue")
+@Suppress("UnstableApiUsage", "SameParameterValue", "LargeClass")
 abstract class GenerateAssetGraphTask @Inject constructor(
     objects: ObjectFactory,
 ) : BundleBaseTask() {
     companion object {
-        /**
-         * Generate a trimmed digest which should be used as an asset's "tag".
-         */
+        private const val BROWSER_DIST_DEFAULT = "assetDist"
+        private const val GZIP_BUFFER_SIZE = 1024
+        private const val BROTLI_LEVEL = 11
+        private const val BROTLI_WINDOW = 24
+
+        // Indicate whether Brotli can be loaded and used in this environment.
+        @Suppress("TooGenericExceptionCaught", "SwallowedException")
+        private fun brotliSupported(): Boolean {
+            return try {
+                Brotli4jLoader.isAvailable()
+            } catch (thr: Throwable) {
+                false
+            }
+        }
+
+        /** Generate a trimmed digest which should be used as an asset's "tag". */
         @JvmStatic
         @VisibleForTesting
         internal fun generateAssetToken(
@@ -69,7 +86,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
             tagConfig: AssetTagConfig,
             digest: ByteArray,
         ): String {
-            val (algorithm, tailSize, rounds) = tagConfig
+            val (algorithm, _, rounds) = tagConfig
             val algo = if (algorithm == HashAlgorithm.IDENTITY) {
                 HashAlgorithm.SHA256
             } else {
@@ -94,7 +111,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                     digestTarget = digester.digest(digestTarget)
                 }
             }
-            return digest.takeLast(tailSize).joinToString("") {
+            return digest.joinToString("") {
                 java.lang.Byte.toUnsignedInt(it).toString(radix = 16).padStart(2, '0')
             }
         }
@@ -268,7 +285,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                     bundle,
                     encoding,
                 )
-                else -> throw IllegalStateException(
+                else -> error(
                     "Unrecognized bundle encoding: $${encoding.name}"
                 )
             }
@@ -320,6 +337,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         return this.assetGraphBuilder.build()
     }
 
+    @Suppress("LongMethod")
     private fun buildAssetSpecMap(
         assetModules: Map<AssetModuleId, AssetInfo>,
         hashAlgorithm: HashAlgorithm,
@@ -328,16 +346,55 @@ abstract class GenerateAssetGraphTask @Inject constructor(
             val moduleId = entry.key
             val assetInfo = entry.value
             val paths = assetInfo.paths
-            val files = paths.stream().parallel().map {
+            val depPaths = assetInfo.projectDeps
+
+            // resolve files for each project dependency
+            val resolvedProjectDeps = depPaths.map {
+                val dep = it as ElideAssetsHandler.InterProjectAssetHandler
+                dep.projectPath.get() to (dep.sourceConfiguration.get() ?: BROWSER_DIST_DEFAULT)
+            }.mapNotNull {
+                val (projectTarget, configSource) = it
+                if (projectTarget == null) {
+                    null
+                } else {
+                    val project = project.findProject(projectTarget)
+                    if (project == null) {
+                        null
+                    } else {
+                        project to configSource
+                    }
+                }
+            }.mapNotNull {
+                val (_, sourceConfig) = it
+                project.configurations.findByName(sourceConfig)
+            }.flatMap {
+                it.resolve()
+            }.flatMap {
+                require(it.exists()) {
+                    "Project dependency mapping '${it.path}' (for module '$moduleId') does not exist"
+                }
+                if (it.isDirectory) {
+                    it.listFiles()?.toList() ?: emptyList()
+                } else {
+                    listOf(it)
+                }
+            }
+
+            val staticFiles = paths.stream().parallel().map {
                 val file = project.file(it)
-                if (!file.exists()) {
-                    throw IllegalStateException(
-                        "Failed to resolve bundled asset file: '$it'"
-                    )
+                require(file.exists()) {
+                    "Failed to resolve bundled asset file: '$it'"
                 }
                 project.logger.debug(
                     "Processing asset for module ID '$moduleId': ${file.path}"
                 )
+                file
+            }
+            val allFiles = Stream.concat(
+                staticFiles,
+                resolvedProjectDeps.stream(),
+            )
+            val allResolvedFiles = allFiles.parallel().map { file ->
                 val fileBytes = file.inputStream().buffered().use { buf ->
                     buf.readAllBytes()
                 }
@@ -358,24 +415,27 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                     content = fileBytes,
                     file = file,
                 )
-            }.collect(Collectors.toCollection {
-                ConcurrentLinkedQueue()
-            })
+            }.collect(
+                Collectors.toCollection {
+                    ConcurrentLinkedQueue()
+                }
+            )
             AssetContent(
                 assetInfo = assetInfo,
-                assets = files,
+                assets = allResolvedFiles,
             )
         }.sorted { left, right ->
             left.assetInfo.module.compareTo(
                 right.assetInfo.module
             )
-        }.collect(Collectors.toMap({ it.assetInfo.module }, { it }, { _, _ ->
-            throw IllegalStateException("Duplicate module ID")
-        }, {
-            ConcurrentSkipListMap()
-        }))
+        }.collect(
+            Collectors.toMap({ it.assetInfo.module }, { it }, { _, _ ->
+                error("Duplicate module ID")
+            }, { ConcurrentSkipListMap() })
+        )
     }
 
+    @Suppress("LongMethod")
     private fun buildDependencySortedAssetBundle(
         dependencyGraph: ImmutableNetwork<AssetModuleId, AssetDependency>,
         assetSpecs: Map<AssetModuleId, AssetContent>,
@@ -383,7 +443,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
     ): List<Pair<AssetBundle.Builder, AssetContent>> {
         return TopologicalGraphIterator.map(dependencyGraph.asGraph()) { moduleId ->
             // resolve module content
-            val moduleContent = assetSpecs[moduleId] ?: throw IllegalStateException(
+            val moduleContent = assetSpecs[moduleId] ?: error(
                 "Failed to resolve known-good module at ID '$moduleId'"
             )
 
@@ -415,13 +475,15 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                                 token,
                             )
                             partial.addAsset(content)
-                            asset.add(scriptAsset {
-                                this.filename = content.filename
-                                this.token = token
-                                this.script = javaScript {
-                                    // @TODO(sgammon): script injection customization from build script or server?
+                            asset.add(
+                                scriptAsset {
+                                    this.filename = content.filename
+                                    this.token = token
+                                    this.script = javaScript {
+                                        // @TODO(sgammon): script injection customization from build script or server?
+                                    }
                                 }
-                            })
+                            )
                         }
                         dependencies = assetDependencies {
                             direct.addAll(directDeps)
@@ -449,13 +511,15 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                                 token,
                             )
                             partial.addAsset(content)
-                            asset.add(styleAsset {
-                                this.filename = content.filename
-                                this.token = token
-                                this.stylesheet = stylesheet {
-                                    // @TODO(sgammon): sheet injection customization from build script or server?
+                            asset.add(
+                                styleAsset {
+                                    this.filename = content.filename
+                                    this.token = token
+                                    this.stylesheet = stylesheet {
+                                        // @TODO(sgammon): sheet injection customization from build script or server?
+                                    }
                                 }
-                            })
+                            )
                         }
                         dependencies = assetDependencies {
                             direct.addAll(directDeps)
@@ -531,7 +595,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         ).build()
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER", "LongMethod", "ComplexMethod")
     private fun buildDescriptorVariants(
         hashAlgorithm: HashAlgorithm,
         builder: AssetBundle.Builder,
@@ -545,6 +609,10 @@ abstract class GenerateAssetGraphTask @Inject constructor(
             // compression is disabled
             builder
         } else {
+            require(builder.assetCount > 0) {
+                "Cannot build descriptor with no asset payloads"
+            }
+
             // for each indexed asset in the set, split off a job which then splits off for each configured compression
             // mode. each job generates its own variant from the read-only `IDENTITY` data already present.
             IntStream.of(builder.assetCount - 1).parallel().mapToObj { idx ->
@@ -590,23 +658,26 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                 }
 
                 // compress the data using the specified compression mode.
-                assetIdx to (mode to compressAssetData(
-                    mode,
-                    rawContent,
-                ))
+                assetIdx to (
+                    mode to compressAssetData(
+                        mode,
+                        rawContent,
+                    )
+                )
             }.filter {
                 // if the compressed output data is null, it means the compression mode in question is not supported or
                 // could not be loaded; that condition logs its own warning.
-                it.second.second != null
+                it.second.second?.second != null
             }.map {
                 val (assetIdx, compressedPayload) = it
                 val (mode, compressed) = compressedPayload
+                val (compressedLength, compressedData) = compressed!!
 
                 // build a digest of the compressed data, which we also include with the variant payload. the digest and
                 // size can be checked at runtime to enforce data integrity guarantees.
                 val digester = hashAlgorithm.digester()
                 val digest = if (digester != null) {
-                    digester.digest(compressed)
+                    digester.digest(compressedData)
                 } else {
                     ByteArray(0)
                 }
@@ -615,14 +686,16 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                 // with the has algorithm that produced it.
                 assetIdx to compressedData {
                     compression = mode
-                    size = compressed!!.size.toLong()
+                    size = compressedLength.toLong()
                     data = dataContainer {
-                        raw = ByteString.copyFrom(compressed)
+                        raw = ByteString.copyFrom(compressedData)
                     }
-                    integrity.add(dataFingerprint {
-                        hash = hashAlgorithm
-                        fingerprint = ByteString.copyFrom(digest)
-                    })
+                    integrity.add(
+                        dataFingerprint {
+                            hash = hashAlgorithm
+                            fingerprint = ByteString.copyFrom(digest)
+                        }
+                    )
                 }
             }.collect(Collectors.toMap({ it.first }, {
                 // sort inner set by compression mode to make sure the output of this method remains deterministic.
@@ -637,11 +710,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
                 // by compression mode -- unless we expect to make decisions based on the size of each compressed data
                 // variant, in which case it is ordered by size.
                 val wrapset = ConcurrentSkipListSet<CompressedData> { left, right ->
-                    if (resolvedConfig.keepBest) {
-                        left.size.compareTo(right.size)
-                    } else {
-                        left.compression.compareTo(right.compression)
-                    }
+                    left.size.compareTo(right.size)
                 }
                 wrapset.addAll(leftSet)
                 wrapset.addAll(rightSet)
@@ -730,28 +799,173 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         // resolve it here safely.
         return (assetData.variantList.find { candidate ->
             candidate.compression == CompressionMode.IDENTITY
-        } ?: throw IllegalStateException(
+        } ?: error(
             "Failed to resolve payload of type `IDENTITY`."
         )).data.raw.toByteArray()
     }
 
-    private fun compressAssetData(mode: CompressionMode, data: ByteArray): ByteArray? = when (mode) {
+    private fun compressAssetData(mode: CompressionMode, data: ByteArray): Pair<Int, ByteArray>? = when {
         // `IDENTITY` mode uses no compression.
-        CompressionMode.IDENTITY -> data
+        mode == CompressionMode.IDENTITY -> data.size to data
 
-        CompressionMode.GZIP -> {
-            val target = ByteArrayOutputStream()
-            GZIPOutputStream(target).use { compressor ->
+        mode == CompressionMode.GZIP -> {
+            val baos = ByteArrayOutputStream()
+            val gzipOut = OptimizedGzipOutputStream(baos)
+            gzipOut.use { compressor ->
                 compressor.write(data)
             }
-            target.toByteArray()
+            val compressed = baos.toByteArray()
+            compressed.size to compressed
+        }
+
+        mode == CompressionMode.DEFLATE -> {
+            val baos = ByteArrayOutputStream()
+            val deflater = Deflater(Deflater.BEST_COMPRESSION)
+            val gzipOut = DeflaterOutputStream(baos, deflater, GZIP_BUFFER_SIZE)
+            gzipOut.use { compressor ->
+                compressor.write(data)
+            }
+            val compressed = baos.toByteArray()
+            compressed.size to compressed
+        }
+
+        brotliSupported() && mode == CompressionMode.BROTLI -> {
+            val encoderParams = Encoder.Parameters()
+            encoderParams.setQuality(BROTLI_LEVEL)
+            encoderParams.setWindow(BROTLI_WINDOW)
+            val compressed = Encoder.compress(data, encoderParams)
+            compressed.size to compressed
         }
 
         else -> {
-            project.logger.warn(
-                "Compression mode is not supported yet: '${mode.name}'. Skipping variant."
+            project.logger.debug(
+                "Compression mode is not supported in this environment: '${mode.name}'. Skipping variant."
             )
             null
+        }
+    }
+
+    @Suppress("MagicNumber")
+    class OptimizedGzipOutputStream(delegate: OutputStream) : DeflaterOutputStream(
+        delegate,
+        Deflater(Deflater.BEST_COMPRESSION, true),
+        GZIP_BUFFER_SIZE,
+        true,
+    ) {
+        companion object {
+            /*
+             * GZIP header magic number.
+             */
+            private const val GZIP_MAGIC = 0x8b1f
+
+            /*
+             * Trailer size in bytes.
+             *
+             */
+            private const val TRAILER_SIZE = 8
+        }
+
+        /**
+         * CRC-32 of uncompressed data.
+         */
+        private var crc = CRC32()
+
+        init {
+            writeHeader()
+            crc.reset()
+        }
+
+        /** Writes GZIP member header. */
+        @Throws(IOException::class)
+        private fun writeHeader() {
+            out.write(
+                byteArrayOf(
+                    GZIP_MAGIC.toByte(),
+                    (GZIP_MAGIC shr 8).toByte(), // Magic number (short)
+                    Deflater.DEFLATED.toByte(), // Compression method (CM)
+                    0, // Flags (FLG)
+                    0, // Modification time MTIME (int)
+                    0, // Modification time MTIME (int)
+                    0, // Modification time MTIME (int)
+                    0, // Modification time MTIME (int)
+                    0, // Extra flags
+                    0 // Operating system (OS)
+                )
+            )
+        }
+
+        /*
+         * Writes GZIP member trailer to a byte array, starting at a given
+         * offset.
+         */
+        @Throws(IOException::class)
+        private fun writeTrailer(buf: ByteArray, offset: Int) {
+            writeInt(crc.value.toInt(), buf, offset) // CRC-32 of uncompressed data
+            writeInt(def.totalIn, buf, offset + 4) // Number of uncompressed bytes
+        }
+
+        /*
+         * Writes integer in Intel byte order to a byte array, starting at a
+         * given offset.
+         */
+        @Throws(IOException::class)
+        private fun writeInt(i: Int, buf: ByteArray, offset: Int) {
+            writeShort(i and 0xffff, buf, offset)
+            writeShort(i shr 16 and 0xffff, buf, offset + 2)
+        }
+
+        /*
+         * Writes short integer in Intel byte order to a byte array, starting
+         * at a given offset
+         */
+        @Throws(IOException::class)
+        private fun writeShort(s: Int, buf: ByteArray, offset: Int) {
+            buf[offset] = (s and 0xff).toByte()
+            buf[offset + 1] = (s shr 8 and 0xff).toByte()
+        }
+
+        /**
+         * Writes array of bytes to the compressed output stream. This method
+         * will block until all the bytes are written.
+         * @param buf the data to be written
+         * @param off the start offset of the data
+         * @param len the length of the data
+         * @exception IOException If an I/O error has occurred.
+         */
+        @Synchronized
+        @Throws(IOException::class)
+        override fun write(buf: ByteArray, off: Int, len: Int) {
+            super.write(buf, off, len)
+            crc.update(buf, off, len)
+        }
+
+        /**
+         * Finishes writing compressed data to the output stream without closing
+         * the underlying stream. Use this method when applying multiple filters
+         * in succession to the same output stream.
+         * @exception IOException if an I/O error has occurred
+         */
+        @Throws(IOException::class)
+        override fun finish() {
+            if (!def.finished()) {
+                def.finish()
+                while (!def.finished()) {
+                    var len = def.deflate(buf, 0, buf.size)
+                    if (def.finished() && len <= buf.size - TRAILER_SIZE) {
+                        // last deflater buffer. Fit trailer at the end
+                        writeTrailer(buf, len)
+                        len += TRAILER_SIZE
+                        out.write(buf, 0, len)
+                        return
+                    }
+                    if (len > 0) out.write(buf, 0, len)
+                }
+                // if we can't fit the trailer at the end of the last
+                // deflater buffer, we write it separately
+                val trailer = ByteArray(TRAILER_SIZE)
+                writeTrailer(trailer, 0)
+                out.write(trailer)
+            }
         }
     }
 }

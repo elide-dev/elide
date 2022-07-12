@@ -1,7 +1,12 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
+import dev.elide.buildtools.bundler.cfg.AssetCompressionConfig
+import dev.elide.buildtools.bundler.cfg.AssetTagConfig
+import dev.elide.buildtools.bundler.cfg.AssetType
+import dev.elide.buildtools.bundler.cfg.StaticValues
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.CopySpec
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.ManifestFormat
@@ -23,9 +28,10 @@ open class ElideAssetsHandler @Inject constructor(
     private val objects: ObjectFactory
 ) {
     companion object {
-        val defaultManifestFormat = ManifestFormat.TEXT
-        val defaultHashAlgorithm = HashAlgorithm.SHA256
+        val defaultManifestFormat = StaticValues.defaultEncoding
+        val defaultHashAlgorithm = StaticValues.assetHashAlgo
         const val defaultMinimumUncompressedSize: Int = 400
+        const val BROWSER_DIST_TARGET = "assetDist"
     }
 
     /** Whether the user has assets configured for embedding. */
@@ -68,7 +74,9 @@ open class ElideAssetsHandler @Inject constructor(
     fun asset(type: AssetType, module: String, block: Action<ServerAsset>) {
         val asset = ServerAsset(objects, module, type)
         block.execute(asset)
-        if (assets.containsKey(module)) throw IllegalArgumentException("Asset module '$module' already configured")
+        require(!assets.containsKey(module)) {
+            "Asset module '$module' already configured"
+        }
         assets[module] = asset
         active.set(true)
     }
@@ -76,6 +84,28 @@ open class ElideAssetsHandler @Inject constructor(
     /** Configuration for the asset bundler task. */
     fun bundler(block: Action<AssetBundlerConfig>) {
         block.execute(bundlerConfig)
+    }
+
+    /** @return `true` if inter-project dependencies have been declared; `false` otherwise. */
+    fun hasAnyProjectDeps(): Boolean {
+        return assets.values.any { asset ->
+            asset.projectDeps.get().isNotEmpty()
+        }
+    }
+
+    /** @return Rolled-up set of inter-project dependencies. */
+    fun getAllProjectDeps(): List<Pair<String, String>> {
+        return assets.values.flatMap { asset ->
+            asset.projectDeps.get().mapNotNull { handler ->
+                val projectTarget = handler.projectPath.get()
+                val configTarget = handler.targetConfiguration.get()
+                if (projectTarget != null && configTarget != null) {
+                    Pair(projectTarget, configTarget)
+                } else {
+                    null
+                }
+            }
+        }
     }
 
     /** Extends a standard Gradle copy-task-spec with asset type information, so that sensible defaults can be used. */
@@ -92,24 +122,106 @@ open class ElideAssetsHandler @Inject constructor(
      * @param module Name of the module representing this server asset.
      * @param type Type of server asset.
      */
+    @Suppress("TooManyFunctions")
     open class ServerAsset(
         private val objects: ObjectFactory,
         internal val module: String,
         internal val type: AssetType
     ) {
         /** Specification to copy target files from a given location. */
-        internal val copySpec: AtomicReference<AssetCopySpec?> = AtomicReference(null)
+        internal val copySpec: AtomicReference<AssetCopySpec> = AtomicReference(
+            objects.newInstance(AssetCopySpec::class.java, type)
+        )
 
         /** Direct dependencies to consider for this asset. */
         internal val directDeps: AtomicReference<SortedSet<String>> = AtomicReference(TreeSet())
+
+        /** Project-provided dependency declarations. */
+        internal val projectDeps: AtomicReference<MutableList<InterProjectAssetHandler>> = AtomicReference(ArrayList())
 
         /** Source file paths for this asset module. */
         internal val filePaths: AtomicReference<SortedSet<String>> = AtomicReference(TreeSet())
 
         /** Copy assets from a specific location on-disk. */
         private fun copy(block: Action<AssetCopySpec>) {
-            val spec = objects.newInstance(AssetCopySpec::class.java, type)
-            block.execute(spec)
+            block.execute(copySpec.get())
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped.
+         *
+         * @param project Path to the project containing the asset targets.
+         * @param configuration Optionally, the name of a configuration to pull from. Defaults to `browserDist`.
+         */
+        public fun fromProject(project: String, configuration: String = BROWSER_DIST_TARGET) {
+            projectDeps.get().add(
+                InterProjectAssetHandler.fromProject(
+                    objects,
+                    project,
+                    configuration,
+                )
+            )
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped.
+         *
+         * @param project Path to the project containing the asset targets.
+         * @param configuration Optionally, the name of a configuration to pull from. Defaults to `browserDist`.
+         */
+        public fun fromProject(project: Project, configuration: String = BROWSER_DIST_TARGET) {
+            projectDeps.get().add(
+                InterProjectAssetHandler.fromProject(
+                    objects,
+                    project.path,
+                    configuration,
+                )
+            )
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped; in this case, using a
+         * declared configuration.
+         *
+         * @param configuration Configuration to pull the assets from.
+         * @param project Project to pull from.
+         */
+        public fun from(configuration: Configuration, project: Project) {
+            projectDeps.get().add(
+                InterProjectAssetHandler.fromProject(
+                    objects,
+                    project.path,
+                    configuration.name,
+                )
+            )
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped; in this case, using a
+         * managed configuration.
+         *
+         * @param project Project to pull from.
+         */
+        public fun from(project: Project) {
+            projectDeps.get().add(
+                InterProjectAssetHandler.fromProject(
+                    objects,
+                    project.path,
+                    BROWSER_DIST_TARGET,
+                )
+            )
+        }
+
+        /**
+         * Pull an asset from somewhere else in a Gradle project where the plugin is equipped; in this case, using a
+         * [block] to configure the dependency mapping.
+         *
+         * @param block Block to execute to configure this mapping.
+         */
+        public fun from(block: Action<InterProjectAssetHandler>) {
+            val handler = objects.newInstance(InterProjectAssetHandler::class.java)
+            block.execute(handler)
+            projectDeps.get().add(handler)
         }
 
         /** Shorthand to declare a single source file copy spec. */
@@ -132,17 +244,94 @@ open class ElideAssetsHandler @Inject constructor(
         }
 
         /** Indicate dependencies for this asset. */
-        public fun dependsOn(block: Action<MutableSet<String>>) {
+        public fun dependsOn(vararg deps: String) {
+            deps.forEach {
+                if (it.startsWith(":")) {
+                    projectDeps.get().add(
+                        InterProjectAssetHandler.fromProject(
+                            objects,
+                            it,
+                            BROWSER_DIST_TARGET,
+                        )
+                    )
+                } else {
+                    dependsOnAsset(it)
+                }
+            }
+        }
+
+        /** Indicate embedded asset dependencies for this asset. */
+        public fun dependsOnAsset(block: Action<MutableSet<String>>) {
             val deps = TreeSet<String>()
             block.execute(deps)
             directDeps.set(deps)
         }
 
         /** Indicate dependencies for this asset. */
-        public fun dependsOn(vararg deps: String) {
-            dependsOn {
+        public fun dependsOnAsset(vararg deps: String) {
+            dependsOnAsset {
                 it.addAll(deps)
             }
+        }
+    }
+
+    /** Handler for configuring an inter-project asset dependency. */
+    open class InterProjectAssetHandler : java.io.Serializable {
+        internal val projectPath: AtomicReference<String?> = AtomicReference(null)
+        internal val internalConfiguration: AtomicReference<String?> = AtomicReference(null)
+        internal val targetConfiguration: AtomicReference<String?> = AtomicReference(null)
+        internal val sourceConfiguration: AtomicReference<String?> = AtomicReference(null)
+        internal val managedConfiguration: AtomicBoolean = AtomicBoolean(true)
+        internal val includePaths: AtomicReference<SortedSet<String>> = AtomicReference(TreeSet())
+
+        companion object {
+            @JvmStatic internal fun fromProject(
+                objects: ObjectFactory,
+                project: String,
+                configuration: String? = null
+            ): InterProjectAssetHandler {
+                val handler = objects.newInstance(InterProjectAssetHandler::class.java)
+                handler.project(project, configuration)
+                return handler
+            }
+        }
+
+        /** Set the project which should be used for this target dependency. */
+        public fun project(path: String, configuration: String? = null) {
+            projectPath.set(path)
+            if (configuration != null) {
+                this.configuration(configuration)
+            }
+        }
+
+        /** Set the project which should be used for this target dependency. */
+        public fun project(project: Project, configuration: String? = null) {
+            projectPath.set(project.path)
+            if (configuration != null) {
+                this.configuration(configuration)
+            }
+        }
+
+        /** Set the project which should be used for this target dependency. */
+        public fun project(configuration: Configuration, project: String) {
+            projectPath.set(project)
+            this.configuration(configuration.name)
+        }
+
+        /** Set the name of the target-side configuration to use. */
+        public fun configuration(configuration: String) {
+            targetConfiguration.set(configuration)
+        }
+
+        /** Set an explicit consumer configuration. This will disable managed configurations for this target. */
+        public fun consumer(configuration: Configuration) {
+            managedConfiguration.set(false)
+            sourceConfiguration.set(configuration.name)
+        }
+
+        /** Set included paths for the copy operation between modules. Not usually necessary. */
+        public fun include(vararg paths: String) {
+            includePaths.get().addAll(paths)
         }
     }
 
@@ -213,11 +402,13 @@ open class ElideAssetsHandler @Inject constructor(
     open class CompressionHandler {
         internal val enableCompression: AtomicBoolean = AtomicBoolean(true)
         internal val minimumUncompressedSize: AtomicInteger = AtomicInteger(defaultMinimumUncompressedSize)
-        internal val keepOnlyBest: AtomicBoolean = AtomicBoolean(true)
+        internal val keepOnlyBest: AtomicBoolean = AtomicBoolean(false)
         internal val forceKeepAll: AtomicBoolean = AtomicBoolean(false)
         internal val compressionAlgorithms: AtomicReference<EnumSet<CompressionMode>> = AtomicReference(EnumSet.of(
             // `IDENTITY` is implied
             CompressionMode.GZIP,
+            CompressionMode.DEFLATE,
+            CompressionMode.BROTLI,
         ))
 
         /** @return Packaged compression config, based on the contents of this handler. */

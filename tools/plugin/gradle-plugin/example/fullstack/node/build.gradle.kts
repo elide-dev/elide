@@ -5,9 +5,9 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
-import dev.elide.buildtools.gradle.plugin.js.BundleTarget
-import dev.elide.buildtools.gradle.plugin.js.BundleTool
+import dev.elide.buildtools.bundler.BuildMode
+import dev.elide.buildtools.bundler.js.BundleTarget
+import dev.elide.buildtools.bundler.js.BundleTool
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {

@@ -60,7 +60,7 @@ abstract class BundleWriteTask : BundleBaseTask() {
                 }
             }
 
-            else -> throw IllegalStateException(
+            else -> error(
                 "Unrecognized bundle format: '${this.name}'"
             )
         }
@@ -72,7 +72,7 @@ abstract class BundleWriteTask : BundleBaseTask() {
         val assetSpec = sourceTask.assetSpec.get()
 
         if (assetSpec == null) {
-            throw IllegalStateException("Failed to resolve built asset spec: could not write.")
+            error("Failed to resolve built asset spec: could not write.")
         } else {
             project.logger.lifecycle(
                 "Writing asset bundle '${outputSpecName.get()}'"

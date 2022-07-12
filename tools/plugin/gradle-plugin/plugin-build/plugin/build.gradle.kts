@@ -1,7 +1,17 @@
+@file:Suppress(
+    "UnstableApiUsage",
+    "unused",
+    "UNUSED_VARIABLE",
+    "DSL_SCOPE_VIOLATION",
+)
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
+
 plugins {
     kotlin("jvm")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
+    alias(libs.plugins.shadow)
 }
 
 repositories {
@@ -12,7 +22,12 @@ repositories {
 dependencies {
     api(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib-jdk7"))
-    implementation(gradleApi())
+    shadow(gradleApi())
+    shadow(project(":model"))
+    shadow(project(":bundler"))
+
+    implementation(project(":model"))
+    implementation(project(":bundler"))
     implementation("com.github.node-gradle:gradle-node-plugin:3.4.0")
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:2.4.0")
 
@@ -20,9 +35,12 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.protobuf)
 
-    implementation(libs.soy)
+    shadow(libs.soy)
     implementation(libs.slf4j)
     implementation(libs.brotli)
+    implementation(libs.brotli.native.osx)
+    implementation(libs.brotli.native.linux)
+    implementation(libs.brotli.native.windows)
     implementation(libs.picocli)
     implementation(libs.picocli.codegen)
 
@@ -49,21 +67,28 @@ kotlin {
     // Nothing at this time.
 }
 
-sourceSets.getByName("main").java {
-    srcDir("src/model/java")
-    srcDir("src/model/kotlin")
+val javaLanguageVersion = "9"
+val kotlinLanguageVersion = project.properties["kotlin.language.version"] as String
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        apiVersion = kotlinLanguageVersion
+        languageVersion = kotlinLanguageVersion
+        jvmTarget = javaLanguageVersion
+        javaParameters = true
+    }
+}
+
+tasks.create("relocateShadowJar", ConfigureShadowRelocation::class.java) {
+    target = tasks.shadowJar.get()
+}
+tasks.shadowJar {
+    dependsOn("relocateShadowJar")
 }
 
 detekt {
     source = files(
         "src/main/java",
     )
-}
-
-ktlint {
-    filter {
-        exclude("**/model/**")
-    }
 }
 
 gradlePlugin {

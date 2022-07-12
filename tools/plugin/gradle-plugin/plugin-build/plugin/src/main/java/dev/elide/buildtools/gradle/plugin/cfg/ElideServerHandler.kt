@@ -22,17 +22,17 @@ open class ElideServerHandler @Inject constructor(
     internal val active: AtomicBoolean = AtomicBoolean(false)
 
     /** Server-embedded asset configuration. */
-    internal val assets: ElideAssetsHandler = objects.newInstance(ElideAssetsHandler::class.java)
+    public val assets: ElideAssetsHandler = objects.newInstance(ElideAssetsHandler::class.java)
 
     /** Server embedded SSR configuration. */
-    internal val ssrConfig: ServerSSRHandler = objects.newInstance(ServerSSRHandler::class.java)
+    public val ssr: ServerSSRHandler = objects.newInstance(ServerSSRHandler::class.java)
 
     /** Server SSR runtime configuration. */
     internal val ssrRuntime: AtomicReference<EmbeddedScriptLanguage> = AtomicReference(defaultScriptLanguage)
 
     /** @return True if the user has configured an SSR bundle from their build script. */
     public fun hasSsrBundle(): Boolean {
-        return ssrConfig.hasBundle()
+        return ssr.hasBundle()
     }
 
     /** @return Whether the user has configured assets */
@@ -48,7 +48,7 @@ open class ElideServerHandler @Inject constructor(
     /** Configure a JVM server target for SSR. */
     public fun ssr(language: EmbeddedScriptLanguage = defaultScriptLanguage, action: Action<ServerSSRHandler>) {
         ssrRuntime.set(language)
-        action.execute(ssrConfig)
+        action.execute(ssr)
     }
 
     /** Configures SSR features for Elide server targets. */

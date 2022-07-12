@@ -5,11 +5,10 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
+import dev.elide.buildtools.bundler.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
-import tools.elide.data.CompressionMode
 
 plugins {
     kotlin("jvm")
@@ -25,7 +24,7 @@ elide {
         }
         assets {
             bundler {
-                format(ManifestFormat.TEXT)
+                format(ManifestFormat.BINARY)
                 digestAlgorithm(HashAlgorithm.SHA256)
 
                 tagGenerator {
@@ -33,9 +32,7 @@ elide {
                 }
 
                 compression {
-                    modes(CompressionMode.GZIP)
-                    minimumSizeBytes(400)
-                    keepAllVariants()
+                    minimumSizeBytes(1)
                     forceVariants()
                 }
             }
@@ -54,6 +51,10 @@ elide {
             // script: `main.js`
             script("main.js") {
                 sourceFile("src/main/assets/some-script.js")
+            }
+
+            script("main.ui") {
+                from(project(":example:fullstack:browser"))
             }
 
             // text: `util.humans`

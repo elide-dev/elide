@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import com.google.protobuf.util.JsonFormat
 import dev.elide.buildtools.gradle.plugin.ElideExtension
+import dev.elide.buildtools.bundler.cfg.StaticValues
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
@@ -46,7 +47,7 @@ abstract class BundleBaseTask : DefaultTask() {
             ManifestFormat.BINARY -> "$name.assets.pb"
             ManifestFormat.TEXT -> "$name.assets.pb.txt"
             ManifestFormat.JSON -> "$name.assets.pb.json"
-            else -> throw IllegalStateException(
+            else -> error(
                 "Unrecognized bundle format: '${this.name}'"
             )
         }
@@ -115,15 +116,6 @@ abstract class BundleBaseTask : DefaultTask() {
                 null
             }
         }
-    }
-
-    // Hard-coded or constant values that relate to asset bundles.
-    internal object StaticValues {
-        const val currentVersion: Int = 2
-        const val defaultHashRounds: Int = 1
-        const val defaultTailSize: Int = 8
-        val defaultEncoding: ManifestFormat = ManifestFormat.TEXT
-        val assetHashAlgo: HashAlgorithm = HashAlgorithm.SHA256
     }
 
     /** Folder in which to put built bundle targets. */

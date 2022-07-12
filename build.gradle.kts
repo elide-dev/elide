@@ -116,6 +116,7 @@ subprojects {
       properties {
         property("sonar.sources", "src/main/kotlin")
         property("sonar.tests", "src/test/kotlin")
+        property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
       }
     } else {
       properties {

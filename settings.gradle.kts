@@ -41,6 +41,7 @@ include(
   ":packages:rpc-js",
   ":packages:rpc-jvm",
   ":packages:test",
+  ":tools:bundler",
   ":tools:reports",
 )
 
@@ -67,8 +68,6 @@ if (buildPlugins == "true") {
   includeBuild(
     "tools/plugin/gradle-plugin",
   )
-} else {
-  enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 }
 
 gradleEnterprise {

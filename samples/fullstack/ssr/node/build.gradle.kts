@@ -5,14 +5,6 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrLink
-import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig
-import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig.Mode
-import elide.dev.buildtools.gradle.tasks.GenerateEsBuildConfig.Mode.*
-import elide.dev.buildtools.gradle.tasks.outputBundleFile
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask
-import java.util.*
-
 plugins {
   idea
   distribution

@@ -131,10 +131,9 @@ jobs:
           arguments: |
             test
             jacocoTestReport
-            :tools:reports:reports
-            sonarqube
             --scan
             --dependency-verification=strict
+            :tools:reports:reports
             -Pelide.ci=true
             -PbuildSamples=true
             -Pversions.java.language=17
@@ -173,6 +172,26 @@ jobs:
           name: jvm
           fail_ci_if_error: false
           verbose: true
+
+      ## Run Sonar
+      - name: "Run Sonar"
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          cache-read-only: false
+          arguments: |
+            jacocoTestReport
+            sonarqube
+            --scan
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -Pversions.java.language=17
+            -x test
+            -x jvmTest
+            -x nativeCompile
+            -x test
 
   ##
   ## Job: Testsuite (Native)

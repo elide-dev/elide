@@ -15,6 +15,7 @@ plugins {
   alias(libs.plugins.micronautApplication)
   alias(libs.plugins.micronautAot)
   alias(libs.plugins.sonar)
+  id("dev.elide.buildtools.plugin")
 }
 
 group = "dev.elide.samples"
@@ -23,6 +24,16 @@ version = rootProject.version as String
 kotlin {
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+  }
+}
+
+elide {
+  server {
+    assets {
+      script("scripts.ui") {
+        from(project(":samples:fullstack:basic:frontend"))
+      }
+    }
   }
 }
 
@@ -70,11 +81,6 @@ micronaut {
   }
 }
 
-val browserDist: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-
 dependencies {
   implementation(project(":packages:server"))
   implementation(libs.micronaut.context)
@@ -82,25 +88,10 @@ dependencies {
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)
-
-  browserDist(
-    project(
-      mapOf(
-        "path" to ":samples:fullstack:basic:frontend",
-        "configuration" to "browserDist"
-      )
-    )
-  )
 }
 
 tasks.withType<Copy>().named("processResources") {
-  dependsOn("copyJs")
   dependsOn("copyStatic")
-}
-
-tasks.register<Copy>("copyJs") {
-  from(browserDist)
-  into("$buildDir/resources/main/assets/js")
 }
 
 tasks.register<Copy>("copyStatic") {

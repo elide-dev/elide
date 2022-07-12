@@ -10,7 +10,9 @@ class ServerConfigTest {
     val config = ServerConfig()
     assertNotNull(config)
     assertNotNull(config.assets)
-    val assetsDisabled = AssetConfig(enabled = false)
+    val assetsDisabled = AssetConfig().copy(
+      enabled = false
+    )
     config.assets = assetsDisabled
     assertFalse(config.assets.enabled)
   }

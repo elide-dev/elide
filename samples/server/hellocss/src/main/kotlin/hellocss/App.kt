@@ -14,7 +14,6 @@ import kotlinx.html.head
 import kotlinx.html.strong
 import kotlinx.html.title
 
-
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */

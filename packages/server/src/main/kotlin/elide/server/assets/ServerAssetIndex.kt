@@ -7,6 +7,7 @@ import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
 import elide.server.AssetModuleId
 import elide.server.AssetTag
+import elide.server.cfg.AssetConfig
 import elide.util.Base64
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
@@ -50,12 +51,14 @@ import kotlin.math.max
  * initializes by calling into [ServerAssetManifestProvider] (having been initialized by the DI container already), and
  * waits until a materialized asset bundle is ready. From that bundle, indexes are computed and then made live.
  *
+ * @param assetConfig Configuration for the asset system, which is live for this server run.
  * @param manifestProvider Provider for the de-serialized asset manifest. Responsible for locating the bundle within the
  *   current application and de-serializing it into an interpreted manifest.
  */
 @Context
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage", "TooManyFunctions")
 internal class ServerAssetIndex @Inject constructor(
+  private val assetConfig: AssetConfig,
   private val manifestProvider: AssetManifestLoader,
 ) {
   companion object {
@@ -88,17 +91,11 @@ internal class ServerAssetIndex @Inject constructor(
   internal val assetManifest: AtomicReference<ServerAssetManifest?> = AtomicReference(null)
 
   // Build an ETag value for the provided `entry`.
-  @VisibleForTesting internal fun buildETagForAsset(entry: AssetContent): String {
+  @VisibleForTesting internal fun buildETagForAsset(entry: AssetContent, bundle: AssetBundle): String {
     val identityVariant = entry.getVariant(0)
-    val integrityValue = if (identityVariant.integrityCount > 0) {
-      identityVariant.getIntegrity(0)
-    } else if (identityVariant.hasData() && identityVariant.data.integrityCount > 0) {
-      identityVariant.data.getIntegrity(0)
-    } else {
-      null
-    }
-    return if (integrityValue != null) {
-      val tailCount = activeManifest().bundle.settings.digestSettings.tail
+    val integrityValue = identityVariant.data.getIntegrity(0)
+    return if (!assetConfig.preferWeakEtags) {
+      val tailCount = bundle.settings.digestSettings.tail
       val encoded = String(
         Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
         StandardCharsets.UTF_8
@@ -107,9 +104,14 @@ internal class ServerAssetIndex @Inject constructor(
     } else {
       // since we don't have an integrity fingerprint for this asset, we can substitute and use a "weak" ETag via the
       // generated-timestamp in the asset bundle.
-      val generatedTime = getBundleTimestamp()
+      val generatedTime = bundle.generated.seconds
       "W/\"$generatedTime\""
     }
+  }
+
+  // Build an ETag value for the provided `entry`, resolving the active manifest.
+  @VisibleForTesting internal fun buildETagForAsset(entry: AssetContent): String {
+    return buildETagForAsset(entry, activeManifest().bundle)
   }
 
   // Resolve the active manifest or fail loudly.
@@ -191,12 +193,7 @@ internal class ServerAssetIndex @Inject constructor(
       Collectors.toMap(
         { it.first },
         { sortedSetOf(it.second) },
-        { left, right ->
-          val combined = TreeSet<Int>()
-          combined.addAll(left)
-          combined.addAll(right)
-          combined
-        },
+        { _, _ -> error("Assets must hold a maximum of one source file.") },
         { TreeMap() }
       )
     )
@@ -216,9 +213,15 @@ internal class ServerAssetIndex @Inject constructor(
       // we're working with a type of asset and index in the array here. so we need to use a concrete extractor, but we
       // are just assembling an index, so we return back to generic use quickly.
       val (assetType, moduleId) = it
+
+      // we also need to fetch the content record so we can index the asset tag along with the other details.
+      val targetIndexes = modulesToIndexes[moduleId]
+      val assetContent = bundle.getAsset(targetIndexes!!.first())
+
       it.second to pointerForConcrete(
         assetType,
         moduleId,
+        assetContent,
         modulesToIndexes[moduleId],
         bundle,
         builder,
@@ -227,11 +230,10 @@ internal class ServerAssetIndex @Inject constructor(
       Collectors.toMap(
         { it.first }, // module ID
         { it.second }, // pointer
-        { value, _, -> error("Two assets cannot have the same module ID: '$value'") },
+        { value, _ -> error("Two assets cannot have the same module ID: '$value'") },
         { ConcurrentSkipListMap() }
       )
     )
-
     return builder.build() to ServerAssetManifest(
       bundle = bundle,
       moduleIndex = moduleIndex,
@@ -243,53 +245,56 @@ internal class ServerAssetIndex @Inject constructor(
   internal fun pointerForConcrete(
     type: AssetType,
     key: AssetModuleId,
+    content: AssetContent,
     idx: TreeSet<Int>?,
     bundle: AssetBundle,
     depGraph: ImmutableNetwork.Builder<AssetModuleId, AssetDependency>,
-  ): AssetPointer = when (type) {
-    // JavaScript assets
-    AssetType.SCRIPT -> {
-      val script = bundle.getScriptsOrThrow(key)
-      if (script.hasDependencies()) addDirectDeps(
-        key,
-        depGraph,
-        script.dependencies,
-      )
-      AssetPointer(
-        moduleId = key,
-        type = type,
-        index = idx,
-      )
-    }
+  ): AssetPointer {
+    // pre-emptively build an etag (if enabled)
+    val token = content.token
+    val etag = buildETagForAsset(content, bundle)
+    val tailCount = bundle.settings.digestSettings.tail
+    val tag = token.takeLast(tailCount)
 
-    // CSS assets
-    AssetType.STYLESHEET -> {
-      val sheet = bundle.getStylesOrThrow(key)
-      if (sheet.hasDependencies()) addDirectDeps(
-        key,
-        depGraph,
-        sheet.dependencies,
-      )
-      AssetPointer(
-        moduleId = key,
-        type = type,
-        index = idx,
-      )
-    }
+    when (type) {
+      // JavaScript assets
+      AssetType.SCRIPT -> {
+        val script = bundle.getScriptsOrThrow(key)
+        if (script.hasDependencies()) addDirectDeps(
+          key,
+          depGraph,
+          script.dependencies,
+        )
+      }
 
-    // generic assets
-    AssetType.TEXT -> {
-      bundle.getGenericOrThrow(
-        key
-      )
-      AssetPointer(
-        moduleId = key,
-        type = type,
-        index = idx,
-      )
-    }
+      // CSS assets
+      AssetType.STYLESHEET -> {
+        val sheet = bundle.getStylesOrThrow(key)
+        if (sheet.hasDependencies()) addDirectDeps(
+          key,
+          depGraph,
+          sheet.dependencies,
+        )
+      }
 
-    else -> error("Unsupported asset type for pointer: '${type.name}'")
+      // generic assets
+      AssetType.TEXT -> {
+        bundle.getGenericOrThrow(
+          key
+        )
+      }
+
+      else -> error("Unsupported asset type for pointer: '${type.name}'")
+    }
+    return AssetPointer(
+      moduleId = key,
+      type = type,
+      token = token,
+      tag = tag,
+      etag = etag,
+      modified = bundle.generated.seconds,
+      index = idx,
+    )
   }
 
   @VisibleForTesting

@@ -6,8 +6,12 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import tools.elide.assets.AssetBundle.AssetContent
+import tools.elide.assets.AssetBundle.GenericBundle
 import kotlin.test.*
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
@@ -17,6 +21,10 @@ import kotlin.test.*
     private const val sampleStylesheet = "$assetPrefix/753eb23d.css"
   }
 
+  // Asset index.
+  @Inject internal lateinit var index: ServerAssetIndex
+
+  // Asset manager.
   @Inject lateinit var manager: AssetManager
 
   private fun execute(
@@ -33,13 +41,12 @@ import kotlin.test.*
     assetType: AssetType,
     response: HttpResponse<StreamedAsset>?,
     status: Int = 200,
-    encoding: String? = "identity",
+    encoding: String? = null,
     more: (() -> Unit)? = null
   ) {
     assertNotNull(response)
     assertEquals(status, response.status.code)
     if (status == 200) {
-      assertTrue(response.headers.contains("Content-Encoding"))
       assertTrue(response.headers.contains("Content-Length"))
       assertNotNull(response.headers.get("Content-Length")?.toLongOrNull())
       assertTrue(response.headers.get("Content-Length")!!.toLong() > 0)
@@ -48,6 +55,7 @@ import kotlin.test.*
       assertTrue(response.headers.get("Content-Type")!!.contains(assetType.mediaType.type))
       assertTrue(response.headers.get("Content-Type")!!.contains(assetType.mediaType.subtype))
       if (encoding != null) {
+        assertTrue(response.headers.contains("Content-Encoding"))
         assertEquals(response.headers.get("Content-Encoding"), encoding)
       }
     }
@@ -56,6 +64,7 @@ import kotlin.test.*
 
   @Test fun testInjectable() {
     assertNotNull(manager)
+    assertNotNull(index)
   }
 
   @Test fun testNonConditional() {
@@ -104,6 +113,69 @@ import kotlin.test.*
     }
   }
 
+  @Test fun testResolveUnknownFromModuleId() {
+    assertNull(
+      assertDoesNotThrow {
+        manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "unknown-module")
+      }
+    )
+  }
+
+  @Test fun testResolveUnknownFromRequest() {
+    assertNull(
+      assertDoesNotThrow {
+        manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"))
+      }
+    )
+  }
+
+  @Test fun testResolveKnownFromModuleId() {
+    assertNotNull(
+      assertDoesNotThrow {
+        manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "styles.base")
+      }
+    )
+  }
+
+  @Test fun testResolveKnownFromRequest() {
+    assertNotNull(
+      assertDoesNotThrow {
+        manager.resolve(HttpRequest.GET<Any>(manager.linkForAsset("styles.base")))
+      }
+    )
+  }
+
+  @Test fun testGenerateUnknownLink() {
+    assertThrows<IllegalArgumentException> {
+      manager.linkForAsset("unknown-module-id")
+    }
+  }
+
+  @CsvSource("styles.base:css", "scripts.ui:js")
+  @ParameterizedTest
+  fun testGenerateLink(spec: String) {
+    val split = spec.split(":")
+    val module = split.first()
+    val extension = split.last()
+    val assetLink = manager.linkForAsset(module)
+    assertNotNull(assetLink)
+    assertTrue(assetLink.endsWith(".$extension"), "expected extension '$extension' for module '$module'")
+  }
+
+  @Test fun testGenerateLinkOverrideType() {
+    val assetLink = manager.linkForAsset("styles.base")
+    assertTrue(assetLink.endsWith(".css"))
+    val assetLink2 = manager.linkForAsset("styles.base", overrideType = AssetType.TEXT)
+    assertTrue(assetLink2.endsWith(".txt"))
+  }
+
+  @Test fun testGenerateLinkGeneric() {
+    val assetLink = manager.linkForAsset("styles.base")
+    assertTrue(assetLink.endsWith(".css"))
+    val assetLink2 = manager.linkForAsset("styles.base", overrideType = AssetType.GENERIC)
+    assertFalse(assetLink2.contains(".")) // should not have a file extension
+  }
+
   @CsvSource("gzip", "br", "deflate")
   @ParameterizedTest
   fun testCompressionSupported(encodingName: String) {
@@ -137,5 +209,102 @@ import kotlin.test.*
       AssetType.STYLESHEET,
       identityResponse,
     )
+  }
+
+  @Test fun testLocateKnownGoodModule() {
+    assertNotNull(
+      assertDoesNotThrow {
+        manager.findAssetByModuleId("styles.base")
+      }
+    )
+  }
+
+  @Test fun testLocateKnownBadModule() {
+    assertNull(
+      assertDoesNotThrow {
+        manager.findAssetByModuleId("some.unknown.module.here")
+      }
+    )
+  }
+
+  @Test fun testServerAssetDescriptorScript() {
+    val assetType = AssetType.SCRIPT
+    val bundle = index.activeManifest().bundle
+    val someScript = bundle.scriptsMap[bundle.scriptsMap.keys.first()]!!
+    val idx = List(
+      bundle.assetList.filter {
+        it.module == someScript.module
+      }.size
+    ) { idx ->
+      idx
+    }.first()
+
+    val concrete = index.buildConcreteAsset(
+      assetType,
+      someScript.module,
+      bundle,
+      sortedSetOf(idx),
+    )
+    assertTrue(concrete is ServerAsset.Script, "concrete script should be a `ServerAsset.Script`")
+    assertNotNull(concrete.descriptor)
+    assertNotNull(concrete.assetType)
+    assertEquals(assetType, concrete.assetType)
+    assertEquals(someScript.module, concrete.module)
+  }
+
+  @Test fun testServerAssetDescriptorStyle() {
+    val assetType = AssetType.STYLESHEET
+    val bundle = index.activeManifest().bundle
+    val someStylesheet = bundle.stylesMap[bundle.stylesMap.keys.first()]!!
+    val idx = List(
+      bundle.assetList.filter {
+        it.module == someStylesheet.module
+      }.size
+    ) { idx ->
+      idx
+    }.first()
+
+    val concrete = index.buildConcreteAsset(
+      assetType,
+      someStylesheet.module,
+      bundle,
+      sortedSetOf(idx),
+    )
+    assertTrue(concrete is ServerAsset.Stylesheet, "concrete script should be a `ServerAsset.Stylesheet`")
+    assertNotNull(concrete.descriptor)
+    assertNotNull(concrete.assetType)
+    assertEquals(assetType, concrete.assetType)
+    assertEquals(someStylesheet.module, concrete.module)
+  }
+
+  @Test fun testServerAssetDescriptorText() {
+    val assetType = AssetType.TEXT
+    val bundle = index.activeManifest().bundle
+    val someText = GenericBundle.newBuilder()
+      .setModule("module-text-id")
+      .setToken("abc123123123123123123")
+      .build()
+
+    val newBundle = bundle.toBuilder()
+      .putGeneric("module-text-id", someText)
+      .addAsset(
+        AssetContent.newBuilder()
+          .setModule("module-text-id")
+          .setToken("abc123123123123123123")
+      )
+      .build()
+
+    val idx = newBundle.assetCount - 1
+    val concrete = index.buildConcreteAsset(
+      assetType,
+      someText.module,
+      newBundle,
+      sortedSetOf(idx),
+    )
+    assertTrue(concrete is ServerAsset.Text, "concrete script should be a `ServerAsset.Text`")
+    assertNotNull(concrete.descriptor)
+    assertNotNull(concrete.assetType)
+    assertEquals(assetType, concrete.assetType)
+    assertEquals(someText.module, concrete.module)
   }
 }

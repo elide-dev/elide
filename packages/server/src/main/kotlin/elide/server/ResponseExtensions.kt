@@ -7,7 +7,6 @@ import elide.server.controller.ElideController
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import kotlinx.coroutines.runBlocking
 import kotlinx.css.CssBuilder
@@ -61,8 +60,9 @@ public interface ResponseHandler<ResponseBody> {
    * Respond to the request with the provided [response].
    *
    * @param response Response to provide.
+   * @return Response, after registration with the object.
    */
-  public suspend fun respond(response: HttpResponse<ResponseBody>)
+  public suspend fun respond(response: HttpResponse<ResponseBody>): HttpResponse<ResponseBody>
 }
 
 // Shared logic for response handler contexts internal to Elide.
@@ -71,9 +71,10 @@ public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<Respon
   private val response: AtomicReference<HttpResponse<ResponseBody>?> = AtomicReference(null)
 
   /** @inheritDoc */
-  override suspend fun respond(response: HttpResponse<ResponseBody>) {
+  override suspend fun respond(response: HttpResponse<ResponseBody>): HttpResponse<ResponseBody> {
     this.acquired.compareAndSet(false, true)
     this.response.set(response)
+    return response
   }
 
   /**
@@ -93,7 +94,8 @@ public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<Respon
  *    located at the specified path.
  */
 public fun staticFile(file: String, contentType: String): HttpResponse<*> {
-  val target = HtmlContent::class.java.getResourceAsStream("/static/$file")
+  val cleanedPath = file.removePrefix("/static").removePrefix("/")
+  val target = HtmlContent::class.java.getResourceAsStream("/static/$cleanedPath")
   return if (target != null) {
     HttpResponse.ok(
       target
@@ -102,34 +104,6 @@ public fun staticFile(file: String, contentType: String): HttpResponse<*> {
     )
   } else {
     HttpResponse.notFound<Any>()
-  }
-}
-
-/**
- * Serve an application asset file which is embedded in the application JAR, from the path `/assets/[type]/[path]`.
- *
- * @param path Path to the file within the provided [type] directory.
- * @param type Type of asset to serve; accepted values are `css` and `js`.
- * @param contentType Resolved [MediaType] to use when serving this asset. Must not be null.
- * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
- *    located at the specified path.
- */
-public fun asset(path: String, type: String, contentType: MediaType?): HttpResponse<*> {
-  return if (path.isBlank() || type.isBlank() || contentType == null) {
-    HttpResponse.notFound<Any>()
-  } else {
-    val file = HtmlContent::class.java.getResourceAsStream("/assets/$type/$path")
-    if (file == null) {
-      HttpResponse.notFound<Any>()
-    } else {
-      HttpResponse.ok(
-        file
-      ).characterEncoding(
-        StandardCharsets.UTF_8
-      ).contentType(
-        contentType
-      )
-    }
   }
 }
 
@@ -275,10 +249,12 @@ public class AssetHandler(
 
   /** @inheritDoc */
   override suspend fun finalize(): HttpResponse<StreamedAsset> {
-    return handler.assets().serveAsync(
-      request,
-      moduleId.get(),
-    ).await()
+    return respond(
+      handler.assets().serveAsync(
+        request,
+        moduleId.get(),
+      ).await()
+    )
   }
 }
 

@@ -1,10 +1,10 @@
 package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
+import elide.server.AssetModuleId
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
 import elide.server.cfg.AssetConfig
-import elide.util.Base64
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
@@ -71,6 +71,24 @@ public class ServerAssetManager @Inject internal constructor(
   }
 
   /** @inheritDoc */
+  override fun linkForAsset(module: AssetModuleId, overrideType: AssetType?): String {
+    val pointer = reader.pointerTo(module)
+    require(pointer != null) {
+      "Failed to generate link for asset: asset module '$module' not found"
+    }
+    val prefix = assetConfig.prefix.removeSuffix("/")
+    val tag = pointer.tag
+    val extension = when (overrideType ?: pointer.type) {
+      AssetType.STYLESHEET -> ".css"
+      AssetType.SCRIPT -> ".js"
+      AssetType.TEXT -> ".txt"
+      AssetType.GENERIC -> ""
+    }
+    return "$prefix/$tag$extension"
+  }
+
+  /** @inheritDoc */
+  @Suppress("NestedBlockDepth", "ReturnCount")
   @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
     logging.debug(
@@ -82,6 +100,17 @@ public class ServerAssetManager @Inject internal constructor(
     if (assetConfig.etags && requestIsConditional(request)) {
       val etag = request.headers[HttpHeaders.IF_NONE_MATCH]
       if (etag != null && etag.isNotEmpty()) {
+        // fast path: the current server assigned the ETag.
+        val module = assetIndex.activeManifest().moduleIndex[asset.module]
+        if (module != null) {
+          val reference = module.etag
+          if (etag == reference) {
+            // we have a match against a strong ETag.
+            return Futures.immediateFuture(
+              HttpResponse.notModified<StreamedAsset>()
+            ).asDeferred()
+          }
+        }
         if (etag.startsWith("W/")) {
           // match against the manifest timestamp. if the two match, we're able to satisfy this without sending the
           // asset, via a weak ETag.
@@ -93,39 +122,9 @@ public class ServerAssetManager @Inject internal constructor(
               HttpResponse.notModified<StreamedAsset>()
             ).asDeferred()
           }
-        } else {
-          require(asset.index != null && asset.index.size == 1) {
-            "Asset must be inlined in asset bundle, and cannot have more than one source file specified." +
-            " Please check that each of your asset bundles are specified with a maximum of 1 source file."
-          }
-
-          // it's a strong etag, so we need to compare it with the Base64-encoded asset hash.
-          val content = assetIndex.readByModuleIndex(asset.index.first())
-          val identityVariant = content.getVariant(0)
-          if (identityVariant.integrityCount > 0 || (
-                identityVariant.hasData() && identityVariant.data.integrityCount > 0
-              )
-          ) {
-            val integrityValue = if (identityVariant.integrityCount > 0) {
-              identityVariant.getIntegrity(0).fingerprint
-            } else {
-              identityVariant.data.getIntegrity(0).fingerprint
-            }
-            val tailCount = this.assetIndex.activeManifest().bundle.settings.digestSettings.tail
-            val b64 = String(
-              Base64.encodeWebSafe(integrityValue.toByteArray().takeLast(tailCount).toByteArray()),
-              StandardCharsets.UTF_8
-            )
-            if (etag.removeSurrounding("\"") == b64) {
-              // we have a match against a strong ETag.
-              return Futures.immediateFuture(
-                HttpResponse.notModified<StreamedAsset>()
-              ).asDeferred()
-            }
-          }
-          // if we arrive here, the ETag either didn't match, or was not present in a substantive way. either way we
-          // need to fall back to regular serving (below).
         }
+        // if we arrive here, the ETag either didn't match, or was not present in a substantive way. either way we need
+        // to fall back to regular serving (below).
       }
     }
     return withContext(Dispatchers.IO) {

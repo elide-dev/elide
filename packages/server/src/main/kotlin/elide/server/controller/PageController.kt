@@ -1,7 +1,10 @@
 package elide.server.controller
 
+import elide.server.AssetModuleId
 import elide.server.annotations.Page
 import elide.server.assets.AssetManager
+import elide.server.assets.AssetPointer
+import elide.server.assets.AssetReference
 import io.micronaut.context.ApplicationContext
 import jakarta.inject.Inject
 
@@ -39,12 +42,52 @@ public abstract class PageController : BaseController() {
   @Inject internal lateinit var appContext: ApplicationContext
 
   /** @return Access to the active asset manager. */
-  override fun assets(): AssetManager {
-    return assetManager
-  }
+  override fun assets(): AssetManager = assetManager
 
   /** @return Access to the active application context. */
-  override fun context(): ApplicationContext {
-    return appContext
+  override fun context(): ApplicationContext = appContext
+
+  /** @return Reference to the asset identified by the provided [module] ID. */
+  public fun asset(module: AssetModuleId, handler: (AssetReferenceBuilder.() -> Unit)? = null): AssetReference {
+    val pointer = assetManager.findAssetByModuleId(module)
+    require(pointer != null) {
+      "Failed to locate asset at module ID: '$module'"
+    }
+    val generatedLink = assetManager.linkForAsset(module)
+    return if (handler != null) {
+      val builder = AssetReferenceBuilder(pointer)
+      handler.invoke(builder)
+      return builder.build(generatedLink)
+    } else {
+      AssetReference.fromPointer(pointer, generatedLink)
+    }
+  }
+
+  /** Context handler to collect asset configuration. */
+  @Suppress("MemberCanBePrivate")
+  public inner class AssetReferenceBuilder internal constructor(private val pointer: AssetPointer) {
+    /** Set the asset module for this reference. */
+    public var module: AssetModuleId = pointer.moduleId
+
+    /** Whether this asset is eligible for inlining. */
+    public var inline: Boolean = false
+
+    /** Whether this asset is eligible for preloading. */
+    public var preload: Boolean = false
+
+    /** @return Fabricated asset reference. */
+    internal fun build(link: String): AssetReference {
+      val module = this.module
+      require(module.isNotBlank()) {
+        "Module ID is required to generate an asset link (was blank)"
+      }
+      return AssetReference(
+        module = module,
+        assetType = pointer.type,
+        href = link,
+        inline = inline,
+        preload = preload,
+      )
+    }
   }
 }

@@ -1,6 +1,7 @@
 package elide.server.assets
 
 import elide.annotations.API
+import elide.server.AssetModuleId
 import io.micronaut.http.HttpRequest
 import kotlinx.coroutines.Deferred
 import java.io.FileNotFoundException
@@ -57,4 +58,13 @@ import java.io.FileNotFoundException
    */
   @Throws(FileNotFoundException::class)
   public suspend fun readAsync(descriptor: ServerAsset, request: HttpRequest<*>): Deferred<RenderedAsset>
+
+  /**
+   * Resolve a reference to an asset identified by the provided [moduleId], in the form of an [AssetPointer]; if no
+   * matching asset can be found, return `null` to indicate a not-found failure.
+   *
+   * @param moduleId ID of the module which we should resolve from the active asset bundle.
+   * @return Asset pointer resolved for the provided [moduleId], or `null`.
+   */
+  public fun pointerTo(moduleId: AssetModuleId): AssetPointer?
 }

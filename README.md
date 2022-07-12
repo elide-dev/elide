@@ -102,11 +102,9 @@ Docker images. Click through to each one for a short tour and getting started gu
   }
 
   // Serve the built & embedded JavaScript.
-  @Get("/scripts/ui.js") fun js() = asset(
-    "frontend.js",
-    "js",
-    MediaType("application/javascript", "js"),
-  )
+  @Get("/scripts/ui.js") suspend fun js(request: HttpRequest<*>) = script(request) {
+    module("scripts.ui")
+  }
 }
 ```
 

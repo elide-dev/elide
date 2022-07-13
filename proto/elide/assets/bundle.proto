@@ -23,7 +23,6 @@ import "elide/crypto/crypto.proto";
 import "elide/data/data.proto";
 import "elide/model/model.proto";
 import "elide/struct/bloom.proto";
-import "elide/page/page.proto";
 
 
 // Enumerates supported asset manifest formats. These are all powered by Protocol Buffers' encoding tools. For maximum
@@ -121,8 +120,7 @@ message AssetBundle {
       // Original name of the source file, if applicable.
       string filename = 2;
 
-      // URL and DOM settings for this asset.
-      page.Context.Styles.Stylesheet stylesheet = 3;
+      reserved 3;
 
       // Whether a renaming map is available for this stylesheet.
       bool renaming = 4;
@@ -159,7 +157,7 @@ message AssetBundle {
       string filename = 2;
 
       // URL and DOM settings for this asset.
-      page.Context.Scripts.JavaScript script = 3;
+      reserved 3;
     }
 
     // Script module name/path.

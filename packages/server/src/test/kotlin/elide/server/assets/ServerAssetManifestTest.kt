@@ -89,6 +89,8 @@ class ServerAssetManifestTest {
       )
     }
     assertThat(manifest1)
+      .ignoringFields(AssetBundle.getDescriptor().findFieldByName("styles").number)
+      .ignoringFields(AssetBundle.getDescriptor().findFieldByName("scripts").number)
       .ignoringFields(AssetBundle.getDescriptor().findFieldByName("generated").number)
       .isEqualTo(manifest2)
   }

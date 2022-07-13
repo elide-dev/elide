@@ -72,7 +72,6 @@ buildscript {
   }
   dependencies {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
-    classpath("org.jetbrains.kotlinx:kotlinx-benchmark-plugin:${libs.versions.kotlinx.benchmark.plugin.get()}")
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
     }

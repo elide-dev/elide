@@ -9,6 +9,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourcePropertyResolver
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * Configures Micronaut on behalf of an Elide application with default configuration state.
@@ -31,12 +32,12 @@ import java.util.SortedMap
 @ContextConfigurer public class ServerConfigurator : ApplicationContextConfigurer {
   public companion object {
     // Properties which cause errors.
-    private val bannedConfig = sortedSetOf(
+    public val bannedConfig: SortedSet<String> = sortedSetOf(
       "micronaut.server.netty.http2.push-enabled",
     )
 
     // JVM configurations applied at server startup.
-    private val systemProps = sortedMapOf(
+    public val systemProps: SortedMap<String, String> = sortedMapOf(
       "jdk.tls.client.protocols" to "TLSv1.2,TLSv1.1,TLSv1",
       "jdk.jar.disabledAlgorithms" to sortedSetOf(
         "anon",
@@ -57,7 +58,7 @@ import java.util.SortedMap
     )
 
     // Cipher suites to support, in order of preference.
-    private val cipherSuites: List<String> = listOf(
+    public val cipherSuites: List<String> = listOf(
       "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
       "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
@@ -82,12 +83,12 @@ import java.util.SortedMap
     )
 
     // URL paths which should be excluded by default from the access log.
-    private val defaultAccessLogExclusions = sortedSetOf(
+    public val defaultAccessLogExclusions: SortedSet<String> = sortedSetOf(
       "/health",
     )
 
     // Base properties applied to all runs (unless disabled).
-    private val baseMap: SortedMap<String, Any> = sortedMapOf(
+    public val baseMap: SortedMap<String, Any> = sortedMapOf(
       "jackson.module-scan" to false,
       "jackson.bean-introspection-module" to true,
       "micronaut.application.default-charset" to "utf-8",
@@ -114,7 +115,7 @@ import java.util.SortedMap
     )
 
     // Properties applied only outside of tests.
-    private val nonTestMap: SortedMap<String, Any> = sortedMapOf(
+    public val nonTestMap: SortedMap<String, Any> = sortedMapOf(
       "micronaut.server.netty.chunked-supported" to true,
       "micronaut.server.netty.compression-threshold" to 400,
       "micronaut.server.netty.compression-level" to 4,
@@ -128,8 +129,13 @@ import java.util.SortedMap
       "micronaut.server.netty.access-logger.exclusions" to defaultAccessLogExclusions.toList(),
     )
 
-    // Properties applied only only in dev mode.
-    private val devMap: SortedMap<String, Any> = sortedMapOf(
+    // Properties applied only in dev mode.
+    public val devMap: SortedMap<String, Any> = sortedMapOf(
+      "micronaut.server.ssl.enabled" to true,
+      "micronaut.server.http-to-https-redirect" to true,
+      "micronaut.server.http-version" to 2.0,
+      "micronaut.server.dual-protocol" to true,
+      "micronaut.server.http-to-https-redirect" to true,
       "micronaut.server.ssl.build-self-signed" to (
         System.getProperty("elide.ssl.build-self-signed", "true").toBoolean()),
     )
@@ -144,7 +150,7 @@ import java.util.SortedMap
     builder.eagerInitSingletons(true)
       .banner(false)
       .deduceEnvironment(true)
-      .environmentPropertySource(false)
+      .environmentPropertySource(true)
       .eagerInitConfiguration(true)
       .eagerInitAnnotated(Eager::class.java)
       .eagerInitAnnotated(Logic::class.java)

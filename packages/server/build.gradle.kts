@@ -218,7 +218,6 @@ dependencies {
   implementation(libs.micronaut.grpc.server.runtime)
   implementation(libs.micronaut.management)
   implementation(libs.micronaut.views.core)
-  implementation(libs.micronaut.views.soy)
 
   // Netty: Native
   implementation(libs.netty.tcnative)
@@ -238,6 +237,7 @@ dependencies {
 
   // General
   implementation(libs.reactivestreams)
+  implementation(libs.google.common.html.types.types)
 
   // Testing
   kaptTest(libs.micronaut.inject)

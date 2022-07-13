@@ -25,7 +25,7 @@ kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.7.5"
 kotlinx_serialization = "1.3.3"
 kotlinx_atomicfu_plugin = "0.18.2"
-kotlinx_benchmark_plugin = "0.4.4"
+kotlinx_benchmark = "0.4.4"
 detekt = "1.20.0"
 dokka = "1.7.10"
 ktlint = "0.46.1"
@@ -86,6 +86,7 @@ npm_lit_labs_ssrClient = "1.0.1"
 npm_lit_labs_virtualizer = "0.7.0"
 npm_lit_labs_task = "1.1.2"
 google_api_common = "2.2.1"
+google_html_types = "1.0.8"
 reactivestreams = "1.0.4"
 kotlin_dataframe = "0.9.0-dev-1059"
 kotlin_knit = "0.4.0"
@@ -100,6 +101,7 @@ bouncycastle = "1.71"
 tink = "1.6.1"
 conscrypt = "2.5.2"
 kover = "0.5.0"
+jmh_plugin = "0.6.6"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -115,6 +117,7 @@ kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.re
 kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
 kotlinx_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin_sdk" }
 kotlinx_plugin_knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin_knit" }
+kotlinx_plugin_benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx_benchmark" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
@@ -130,6 +133,7 @@ node = { id = "com.github.node-gradle.node", version.ref = "node_plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker_plugin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
+jmh = { id = "me.champeau.jmh", version.ref = "jmh_plugin" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
@@ -140,6 +144,7 @@ protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
 kotlinx_atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin_sdk" }
+kotlinx_benchmark_runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx_benchmark" }
 kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx_coroutines" }
@@ -175,6 +180,7 @@ uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
+micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
 micronaut_graal = { group = "io.micronaut", name = "micronaut-graal", version.ref = "micronaut_lib" }
 micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
@@ -187,6 +193,7 @@ micronaut_gcp_pubsub = { group = "io.micronaut.gcp", name = "micronaut-gcp-pubsu
 micronaut_gcp_secretManager = { group = "io.micronaut.gcp", name = "micronaut-gcp-secret-manager", version.ref = "micronaut_gcp" }
 micronaut_inject = { group = "io.micronaut", name = "micronaut-inject", version.ref = "micronaut_lib" }
 micronaut_inject_java = { group = "io.micronaut", name = "micronaut-inject-java", version.ref = "micronaut_lib" }
+micronaut_inject_java_test = { group = "io.micronaut", name = "micronaut-inject-java-test", version.ref = "micronaut_lib" }
 micronaut_runtime = { group = "io.micronaut", name = "micronaut-runtime", version.ref = "micronaut_lib" }
 micronaut_runtime_osx = { group = "io.micronaut", name = "micronaut-runtime-osx", version.ref = "micronaut_lib" }
 micronaut_management = { group = "io.micronaut", name = "micronaut-management", version.ref = "micronaut_lib" }
@@ -198,6 +205,9 @@ micronaut_cache_core = { group = "io.micronaut.cache", name = "micronaut-cache-c
 micronaut_cache_caffeine = { group = "io.micronaut.cache", name = "micronaut-cache-caffeine", version.ref = "micronaut_cache" }
 micronaut_redis = { group = "io.micronaut.redis", name = "micronaut-redis-lettuce", version.ref = "micronaut_redis" }
 micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
+micronaut_router = { group = "io.micronaut", name = "micronaut-router", version.ref = "micronaut_lib" }
+micronaut_validation = { group = "io.micronaut", name = "micronaut-validation", version.ref = "micronaut_lib" }
+micronaut_http_validation = { group = "io.micronaut", name = "micronaut-http-validation", version.ref = "micronaut_lib" }
 micronaut_views_core = { group = "io.micronaut.views", name = "micronaut-views-core", version.ref = "micronaut_views" }
 micronaut_views_soy = { group = "io.micronaut.views", name = "micronaut-views-soy", version.ref = "micronaut_views" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
@@ -253,3 +263,5 @@ tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
 tink_gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
 tink_aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
 conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
+google_common_html_types_proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google_html_types" }
+google_common_html_types_types = { group = "com.google.common.html.types", name = "proto", version.ref = "google_html_types" }

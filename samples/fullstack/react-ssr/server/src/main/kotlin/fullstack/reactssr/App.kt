@@ -4,6 +4,8 @@ import elide.server.*
 import elide.server.annotations.Page
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
 import kotlinx.html.tagext.body
@@ -14,7 +16,7 @@ import kotlinx.html.title
 object App : Application {
   /** GET `/`: Controller for index page. */
   @Page class Index : PageController() {
-    // Serve the page itself.
+    // Serve the root page.
     @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
       head {
         title { +"Hello, Elide!" }
@@ -26,6 +28,10 @@ object App : Application {
         injectSSR(this@Index, request)
       }
     }
+
+    // Serve the page itself.
+    @Get("/basic", produces = [MediaType.TEXT_PLAIN])
+    fun basic() = HttpResponse.ok("Hello Elide!")
 
     // Serve an embedded asset.
     @Get("/styles/base.css") suspend fun baseStyles(request: HttpRequest<*>) = stylesheet(request) {

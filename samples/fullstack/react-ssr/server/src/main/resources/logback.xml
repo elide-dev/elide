@@ -7,14 +7,14 @@
     </appender>
 
     <!-- JS Runtime -->
-    <logger name="elide.runtime.graalvm.JsRuntime" level="TRACE" />
+    <logger name="elide.runtime.graalvm.JsRuntime" level="off" />
 
     <!-- HTTP Access Log -->
-    <logger name="http:access" additivity="false" level="info">
+    <logger name="http:access" additivity="false" level="off">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="io.micronaut.context.env" level="TRACE"/>
+    <logger name="io.micronaut.context.env" level="off"/>
 
     <!-- Root Logger -->
     <root level="info">

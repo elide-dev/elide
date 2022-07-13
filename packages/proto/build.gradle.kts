@@ -118,10 +118,9 @@ sourceSets {
 
 dependencies {
   // Protocol Buffers
-  protobuf(files("${rootProject.projectDir}/proto/deps/webutil.tar.gz"))
-
-  // Protocol Buffers
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.util)
   implementation(libs.protobuf.kotlin)
+  implementation(libs.google.common.html.types.proto)
+  compileOnly(libs.google.cloud.nativeImageSupport)
 }

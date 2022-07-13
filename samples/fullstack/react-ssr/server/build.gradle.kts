@@ -73,6 +73,9 @@ micronaut {
     convertYamlToJava.set(true)
     precomputeOperations.set(true)
     cacheEnvironment.set(true)
+    optimizeClassLoading.set(true)
+    optimizeNetty.set(true)
+
     netty {
       enabled.set(true)
     }

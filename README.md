@@ -22,6 +22,8 @@ _elide: verb. to omit (a sound or syllable) when speaking. to join together; to 
 
 _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].**_
 
+Latest version: `1.0-v3-alpha1-rc8`
+
 <hr />
 
 Elide is a **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in

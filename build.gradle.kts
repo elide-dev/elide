@@ -57,6 +57,9 @@ tasks.create("docs") {
   dependsOn(listOf(
     "dokkaHtmlMultiModule",
     "dokkaGfmMultiModule",
+    ":packages:graalvm:dokkaJavadoc",
+    ":packages:rpc-jvm:dokkaJavadoc",
+    ":packages:server:dokkaJavadoc",
   ))
 }
 

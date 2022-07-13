@@ -121,12 +121,16 @@ import java.util.SortedSet
       "micronaut.server.netty.compression-level" to 4,
       "micronaut.server.netty.validate-headers" to true,
       "micronaut.server.netty.use-native-transport" to true,
-      "micronaut.server.netty.parent.prefer-native-transport" to true,
-      "micronaut.server.netty.worker.prefer-native-transport" to true,
       "micronaut.server.netty.access-logger.enabled" to true,
       "micronaut.server.netty.access-logger.log-format" to "common",
       "micronaut.server.netty.access-logger.logger-name" to "http:access",
       "micronaut.server.netty.access-logger.exclusions" to defaultAccessLogExclusions.toList(),
+    )
+
+    // Experimental properties.
+    public val labsMap: SortedMap<String, Any> = sortedMapOf(
+      "micronaut.server.netty.parent.prefer-native-transport" to true,
+      "micronaut.server.netty.worker.prefer-native-transport" to true,
     )
 
     // Properties applied only in dev mode.

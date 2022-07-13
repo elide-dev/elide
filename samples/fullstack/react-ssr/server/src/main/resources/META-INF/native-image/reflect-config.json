@@ -2959,5 +2959,14 @@
     {"name":"getValueDescriptor","parameterTypes":[] }, 
     {"name":"valueOf","parameterTypes":["com.google.protobuf.Descriptors$EnumValueDescriptor"] }
   ]
+},
+{
+  "name" : "kotlin.internal.jdk8.JDK8PlatformImplementations",
+  "allDeclaredConstructors" : true,
+  "allPublicConstructors" : true,
+  "allDeclaredFields" : true,
+  "allPublicFields" : true,
+  "allDeclaredMethods" : true,
+  "allPublicMethods" : true
 }
 ]

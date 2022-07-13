@@ -217,6 +217,7 @@ tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative"
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
+  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
   baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }

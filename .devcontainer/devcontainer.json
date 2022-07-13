@@ -9,7 +9,8 @@
     "java.test.editor.enableShortcuts": true
   },
   "runArgs": [
-    "--init"
+    "--init",
+    "--privileged"
   ],
   "overrideCommand": false,
   "extensions": [

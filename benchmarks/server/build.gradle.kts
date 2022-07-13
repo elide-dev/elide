@@ -24,9 +24,6 @@ elide {
   mode = BuildMode.PRODUCTION
 
   server {
-    ssr(EmbeddedScriptLanguage.JS) {
-      bundle(project(":samples:fullstack:react-ssr:node"))
-    }
     assets {
       bundler {
         format(tools.elide.assets.ManifestFormat.BINARY)

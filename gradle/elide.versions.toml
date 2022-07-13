@@ -18,6 +18,7 @@ micronaut_test = "3.4.0"
 micronaut_plugin = "3.4.1"
 micronaut_redis = "5.2.0"
 micronaut_cache = "3.4.1"
+micronaut_views = "3.4.0"
 kotlinx_coroutines = "1.6.3"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
@@ -95,6 +96,9 @@ jib = "3.2.1"
 commons_compress = "1.21"
 brotli4j = "1.7.1"
 projectreactor = "2020.0.21"
+bouncycastle = "1.71"
+tink = "1.6.1"
+conscrypt = "2.5.2"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -183,6 +187,7 @@ micronaut_inject_java = { group = "io.micronaut", name = "micronaut-inject-java"
 micronaut_runtime = { group = "io.micronaut", name = "micronaut-runtime", version.ref = "micronaut_lib" }
 micronaut_runtime_osx = { group = "io.micronaut", name = "micronaut-runtime-osx", version.ref = "micronaut_lib" }
 micronaut_management = { group = "io.micronaut", name = "micronaut-management", version.ref = "micronaut_lib" }
+micronaut_protobuf = { group = "io.micronaut.grpc", name = "micronaut-protobuff-support", version.ref = "micronaut_grpc" }
 micronaut_grpc_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_client_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-client-runtime", version.ref = "micronaut_grpc" }
 micronaut_grpc_server_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-server-runtime", version.ref = "micronaut_grpc" }
@@ -190,6 +195,8 @@ micronaut_cache_core = { group = "io.micronaut.cache", name = "micronaut-cache-c
 micronaut_cache_caffeine = { group = "io.micronaut.cache", name = "micronaut-cache-caffeine", version.ref = "micronaut_cache" }
 micronaut_redis = { group = "io.micronaut.redis", name = "micronaut-redis-lettuce", version.ref = "micronaut_redis" }
 micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
+micronaut_views_core = { group = "io.micronaut.views", name = "micronaut-views-core", version.ref = "micronaut_views" }
+micronaut_views_soy = { group = "io.micronaut.views", name = "micronaut-views-soy", version.ref = "micronaut_views" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
@@ -235,3 +242,11 @@ projectreactor_bom = { group = "io.projectreactor", name = "reactor-bom", versio
 reactor_core = { group = "io.projectreactor", name = "reactor-core" }
 reactor_netty_core = { group = "io.projectreactor.netty", name = "reactor-netty-core" }
 reactor_netty_http = { group = "io.projectreactor.netty", name = "reactor-netty-http" }
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_tls = { group = "org.bouncycastle", name = "bctls-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_util = { group = "org.bouncycastle", name = "bcutil-jdk18on", version.ref = "bouncycastle" }
+tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
+tink_gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
+tink_aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
+conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }

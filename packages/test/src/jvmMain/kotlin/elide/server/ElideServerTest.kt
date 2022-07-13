@@ -59,7 +59,7 @@ public abstract class ElideServerTest {
   ): HttpResponse<Any> {
     assertReady()
     val req: HttpRequest<Any> = request.uri(
-      URI.create("http://${app.host}:${app.port}${request.uri}")
+      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}")
     )
     val client = client.toBlocking()
     val response = client.exchange<Any, Any>(req)
@@ -92,7 +92,7 @@ public abstract class ElideServerTest {
   ): HttpResponse<R> {
     assertReady()
     val req: HttpRequest<P> = request.uri(
-      URI.create("http://${app.host}:${app.port}${request.uri}")
+      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}")
     )
     val client = client.toBlocking()
     val response = client.exchange(

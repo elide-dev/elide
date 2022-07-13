@@ -135,7 +135,7 @@ jobs:
             --dependency-verification=strict
             :tools:reports:reports
             -Pelide.ci=true
-            -PbuildSamples=true
+            -PbuildSamples=false
             -Pversions.java.language=17
             -x nativeCompile
             -x :packages:graalvm:test

@@ -155,6 +155,9 @@ application {
 
 tasks.named<JavaExec>("run") {
   val argsList = ArrayList<String>()
+  jvmArgs = (jvmArgs ?: emptyList()).plus(listOf(
+    "-Delide.dev=true"
+  ))
   if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
     argsList.add("--elide.vm.inspect=true")
   } else {
@@ -176,6 +179,10 @@ dependencies {
   implementation(libs.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.bouncycastle)
+  implementation(libs.bouncycastle.pkix)
+  implementation(libs.conscrypt)
+  implementation(libs.tink)
   runtimeOnly(libs.logback)
 
   testImplementation(kotlin("test"))

@@ -1,6 +1,7 @@
 package elide.server.cfg
 
 import elide.annotations.Logic
+import elide.server.annotations.Eager
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.annotation.ContextConfigurer
@@ -145,6 +146,7 @@ import java.util.SortedMap
       .deduceEnvironment(true)
       .environmentPropertySource(false)
       .eagerInitConfiguration(true)
+      .eagerInitAnnotated(Eager::class.java)
       .eagerInitAnnotated(Logic::class.java)
       .bootstrapEnvironment(true)
 

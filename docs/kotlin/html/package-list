@@ -41,6 +41,7 @@ elide.server.annotations
 elide.server.assets
 elide.server.cfg
 elide.server.controller
+elide.server.http
 elide.server.runtime
 elide.server.runtime.jvm
 elide.server.util

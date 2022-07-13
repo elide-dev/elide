@@ -1,0 +1,11 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:elide.server.rpc.web/GrpcWeb.Headers///PointingToDeclaration/elide/server/rpc/web/GrpcWeb.Headers.html
+$dokka.location:elide.server.rpc.web/GrpcWeb.Metadata///PointingToDeclaration/elide/server/rpc/web/GrpcWeb.Metadata.html
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.Error///PointingToDeclaration/elide/server/rpc/web/GrpcWebCallResponse.Error.html
+$dokka.location:elide.server.rpc.web/GrpcWebCallResponse.UnaryResponse///PointingToDeclaration/elide/server/rpc/web/GrpcWebCallResponse.UnaryResponse.html
+$dokka.location:elide.server.rpc.web/GrpcWebConfig.Companion///PointingToDeclaration/elide/server/rpc/web/GrpcWebConfig.Companion.html
+$dokka.location:elide.server.rpc.web/GrpcWebContentType.Companion///PointingToDeclaration/elide/server/rpc/web/GrpcWebContentType.Companion.html
+elide.server.rpc
+elide.server.rpc.web
+

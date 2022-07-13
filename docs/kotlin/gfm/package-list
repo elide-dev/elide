@@ -194,6 +194,10 @@ $dokka.location:elide.server.cfg/AssetConfig/prefix/#/PointingToDeclaration/ser
 $dokka.location:elide.server.cfg/ServerConfig///PointingToDeclaration/server/server/elide.server.cfg/-server-config/index.md
 $dokka.location:elide.server.cfg/ServerConfig/ServerConfig/#elide.server.cfg.AssetConfig/PointingToDeclaration/server/server/elide.server.cfg/-server-config/-server-config.md
 $dokka.location:elide.server.cfg/ServerConfig/assets/#/PointingToDeclaration/server/server/elide.server.cfg/-server-config/assets.md
+$dokka.location:elide.server.cfg/ServerConfigurator.Companion///PointingToDeclaration/server/server/elide.server.cfg/-server-configurator/-companion/index.md
+$dokka.location:elide.server.cfg/ServerConfigurator///PointingToDeclaration/server/server/elide.server.cfg/-server-configurator/index.md
+$dokka.location:elide.server.cfg/ServerConfigurator/ServerConfigurator/#/PointingToDeclaration/server/server/elide.server.cfg/-server-configurator/-server-configurator.md
+$dokka.location:elide.server.cfg/ServerConfigurator/configure/#io.micronaut.context.ApplicationContextBuilder/PointingToDeclaration/server/server/elide.server.cfg/-server-configurator/configure.md
 $dokka.location:elide.server.controller////PointingToDeclaration/server/server/elide.server.controller/index.md
 $dokka.location:elide.server.controller/BaseController///PointingToDeclaration/server/server/elide.server.controller/-base-controller/index.md
 $dokka.location:elide.server.controller/BaseController/BaseController/#/PointingToDeclaration/server/server/elide.server.controller/-base-controller/-base-controller.md
@@ -210,6 +214,19 @@ $dokka.location:elide.server.controller/PageController/asset/#kotlin.String#kotl
 $dokka.location:elide.server.controller/PageController/assets/#/PointingToDeclaration/server/server/elide.server.controller/-page-controller/assets.md
 $dokka.location:elide.server.controller/PageController/context/#/PointingToDeclaration/server/server/elide.server.controller/-page-controller/context.md
 $dokka.location:elide.server.controller/StatusEnabledController///PointingToDeclaration/server/server/elide.server.controller/-status-enabled-controller/index.md
+$dokka.location:elide.server.http////PointingToDeclaration/server/server/elide.server.http/index.md
+$dokka.location:elide.server.http/HeaderFinalizingFilter///PointingToDeclaration/server/server/elide.server.http/-header-finalizing-filter/index.md
+$dokka.location:elide.server.http/HeaderFinalizingFilter/HeaderFinalizingFilter/#/PointingToDeclaration/server/server/elide.server.http/-header-finalizing-filter/-header-finalizing-filter.md
+$dokka.location:elide.server.http/HeaderFinalizingFilter/doFilter/#io.micronaut.http.HttpRequest[*]#io.micronaut.http.filter.ServerFilterChain/PointingToDeclaration/server/server/elide.server.http/-header-finalizing-filter/do-filter.md
+$dokka.location:elide.server.http/RequestContext.Key.Companion///PointingToDeclaration/server/server/elide.server.http/-request-context/-key/-companion/index.md
+$dokka.location:elide.server.http/RequestContext.Key.Companion/ASSET_MANAGER/#/PointingToDeclaration/server/server/elide.server.http/-request-context/-key/-companion/-a-s-s-e-t_-m-a-n-a-g-e-r.md
+$dokka.location:elide.server.http/RequestContext.Key///PointingToDeclaration/server/server/elide.server.http/-request-context/-key/index.md
+$dokka.location:elide.server.http/RequestContext.Key/Key/#kotlin.String/PointingToDeclaration/server/server/elide.server.http/-request-context/-key/-key.md
+$dokka.location:elide.server.http/RequestContext.Key/name/#/PointingToDeclaration/server/server/elide.server.http/-request-context/-key/name.md
+$dokka.location:elide.server.http/RequestContext///PointingToDeclaration/server/server/elide.server.http/-request-context/index.md
+$dokka.location:elide.server.http/RequestContextFilter///PointingToDeclaration/server/server/elide.server.http/-request-context-filter/index.md
+$dokka.location:elide.server.http/RequestContextFilter/RequestContextFilter/#/PointingToDeclaration/server/server/elide.server.http/-request-context-filter/-request-context-filter.md
+$dokka.location:elide.server.http/RequestContextFilter/doFilter/#io.micronaut.http.HttpRequest[*]#io.micronaut.http.filter.ServerFilterChain/PointingToDeclaration/server/server/elide.server.http/-request-context-filter/do-filter.md
 $dokka.location:elide.server.rpc.web////PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/index.md
 $dokka.location:elide.server.rpc.web/GrpcWeb.Headers///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web/-headers/index.md
 $dokka.location:elide.server.rpc.web/GrpcWeb.Headers/errorMessage/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web/-headers/error-message.md
@@ -366,6 +383,10 @@ $dokka.location:elide.server.runtime.jvm/ReactiveFuture/get/#kotlin.Long#java.ut
 $dokka.location:elide.server.runtime.jvm/ReactiveFuture/isCancelled/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/is-cancelled.md
 $dokka.location:elide.server.runtime.jvm/ReactiveFuture/isDone/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/is-done.md
 $dokka.location:elide.server.runtime.jvm/ReactiveFuture/subscribe/#org.reactivestreams.Subscriber[TypeParam(bounds=[kotlin.Any?])?]/PointingToDeclaration/server/server/elide.server.runtime.jvm/-reactive-future/subscribe.md
+$dokka.location:elide.server.runtime.jvm/SecurityProviderConfigurator.Companion///PointingToDeclaration/server/server/elide.server.runtime.jvm/-security-provider-configurator/-companion/index.md
+$dokka.location:elide.server.runtime.jvm/SecurityProviderConfigurator.Companion/registerProviders/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-security-provider-configurator/-companion/register-providers.md
+$dokka.location:elide.server.runtime.jvm/SecurityProviderConfigurator///PointingToDeclaration/server/server/elide.server.runtime.jvm/-security-provider-configurator/index.md
+$dokka.location:elide.server.runtime.jvm/SecurityProviderConfigurator/SecurityProviderConfigurator/#/PointingToDeclaration/server/server/elide.server.runtime.jvm/-security-provider-configurator/-security-provider-configurator.md
 $dokka.location:elide.server.runtime////PointingToDeclaration/test/test/elide.server.runtime/index.md
 $dokka.location:elide.server.runtime/AppExecutor.Companion///PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/index.md
 $dokka.location:elide.server.runtime/AppExecutor.Companion/async/#kotlin.coroutines.SuspendFunction0[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/server/server/elide.server.runtime/-app-executor/-companion/async.md
@@ -1317,6 +1338,7 @@ elide.server.annotations
 elide.server.assets
 elide.server.cfg
 elide.server.controller
+elide.server.http
 elide.server.runtime
 elide.server.runtime.jvm
 elide.server.util

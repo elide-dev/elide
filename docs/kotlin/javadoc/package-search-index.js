@@ -1,0 +1,1 @@
+var packageSearchIndex = [{"l":"elide.server.rpc","url":"elide/server/rpc/package-summary.html"}, {"l":"elide.server.rpc.web","url":"elide/server/rpc/web/package-summary.html"}, {"l":"All packages","url":"index.html"}]

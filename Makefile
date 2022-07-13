@@ -102,8 +102,13 @@ docs: $(DOCS)  ## Generate docs for all library modules.
 	@echo "Generating docs..."
 	$(CMD)$(RM) -fr$(POSIX_FLAGS) docs/kotlin docs/reports
 	$(CMD)$(GRADLE) docs $(_ARGS)
-	$(CMD)$(MKDIR) -p $(DOCS)
-	$(CMD)cd $(TARGET)/docs && $(CP) -fr$(POSIX_FLAGS) ./* $(PWD)/docs/
+	$(CMD)$(MKDIR) -p $(DOCS) $(DOCS)/kotlin $(DOCS)/kotlin/javadoc
+	$(CMD)cd $(TARGET)/docs \
+		&& $(CP) -fr$(POSIX_FLAGS) ./* $(PWD)/docs/
+	$(CMD)cd packages/server/build/dokka \
+		&& $(CP) -fr$(POSIX_FLAGS) ./javadoc/* $(PWD)/docs/kotlin/javadoc/
+	$(CMD)cd packages/rpc-jvm/build/dokka \
+		&& $(CP) -fr$(POSIX_FLAGS) ./javadoc/* $(PWD)/docs/kotlin/javadoc/
 	@echo "Docs update complete."
 
 reports:  ## Generate reports for tests, coverage, etc.

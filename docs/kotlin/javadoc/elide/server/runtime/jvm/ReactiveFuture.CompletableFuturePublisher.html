@@ -1,0 +1,1413 @@
+<!DOCTYPE HTML>
+<!-- NewPage -->
+<html lang="en"><head>
+    <title>CompletableFuturePublisher </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="dc.created" content="2020-03-25">
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+    <link rel="stylesheet" type="text/css" href="../../../../dokka-javadoc-stylesheet.css" title="Style">
+    <link rel="stylesheet" type="text/css" href="../../../../jquery/jquery-ui.css" title="Style">
+    <script type="text/javascript" src="../../../../jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../../../../jquery/jquery-migrate-3.4.0.min.js"></script>
+    <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="../../../../search.js"></script>
+    <script async type="text/javascript" src="../../../../module-search-index.js"></script>
+    <script async type="text/javascript" src="../../../../package-search-index.js"></script>
+    <script async type="text/javascript" src="../../../../type-search-index.js"></script>
+    <script async type="text/javascript" src="../../../../member-search-index.js"></script>
+    <script async type="text/javascript" src="../../../../tag-search-index.js"></script>
+</head><body>
+<script type="text/javascript">
+var pathtoroot = "../../../../";
+</script>
+<noscript>
+    <div>JavaScript is disabled on your browser.</div>
+</noscript><header role="banner">
+    <nav role="navigation">
+        <div class="fixedNav">
+            <!-- ========= START OF TOP NAVBAR ======= -->
+            <div class="topNav"><a id="navbar.top">
+                <!--   -->
+            </a>
+                <div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a>
+                </div>
+                <a id="navbar.top.firstrow">
+                    <!--   -->
+                </a>
+                <ul class="navList" title="Navigation">
+    <li><a href="../../../../index.html">Overview</a></li>
+    
+    <li><a href="package-summary.html">Package</a></li>
+    
+    <li class="navBarCell1Rev">Class</li>
+    
+    <li><a href="package-tree.html">Tree</a></li>
+    
+    <li><a href="../../../../deprecated.html">Deprecated</a></li>
+    <li><a href="../../../../index-files/index-1.html">Index</a></li>
+    <li>Help</li>
+</ul></div>
+            <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top" style="display: block;">
+    <li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" class="ui-autocomplete-input" autocomplete="off" placeholder="Search">
+<input type="reset" id="reset" value="reset">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div><!-- ========= END OF TOP NAVBAR ========= -->
+        </div>
+        <div class="navPadding">&nbsp;</div>
+        <script type="text/javascript"><!--
+        $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
+        //-->
+        </script>
+    </nav>
+</header>
+
+<main role="main">
+    <div class="header">
+        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html"></a></div>
+        <h2 title="Class ReactiveFuture.CompletableFuturePublisher" class="title">Class ReactiveFuture.CompletableFuturePublisher</h2>
+    </div>
+    <div class="contentContainer">
+        <!-- <ul class="inheritance">
+            <li>java.lang.Object</li>
+            <li>
+                <ul class="inheritance">
+                    <li>adaptation.Adaptation</li>
+                </ul>
+            </li>
+        </ul> TODO inheritance tree -->
+        <div class="description">
+            <ul class="blockList">
+                <li class="blockList">
+                    
+                    <dl>
+                        <dt>All Implemented Interfaces:</dt>
+                        <dd>
+                            
+                            <code>com.google.common.util.concurrent.ListenableFuture</code>
+                            
+                            ,
+                            
+                            
+                            <code>java.util.concurrent.CompletionStage</code>
+                            
+                            ,
+                            
+                            
+                            <code>java.util.concurrent.Future</code>
+                            
+                            ,
+                            
+                            
+                            <code>org.reactivestreams.Publisher</code>
+                            
+                            
+                        </dd>
+                    </dl>
+                    
+                    <hr>
+                    <pre class="wrap-overflow">
+
+public final class <span class="typeNameLabel"><a href=ReactiveFuture.CompletableFuturePublisher.html>ReactiveFuture.CompletableFuturePublisher</a>&lt;T extends <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</span>
+ implements Publisher&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;, ListenableFuture&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;
+                    </pre>
+                    <div class="block"><p>Structure that adapts Java's <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a> to a Reactive Java Publisher, which publishes one item - either the result of the computation, or an error.</p><p>This object is used in the specific circumstance that a <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a> is wrapped by a <a href=ReactiveFuture.html>ReactiveFuture</a>, and then used within the Reactive Java or Guava ecosystems as a Publisher or a ListenableFuture (or ApiFuture), or a descendent thereof. As in <a href=ReactiveFuture.ListenableFuturePublisher.html>ListenableFuturePublisher</a>, we simply set the callback for the future value, upon item-request (one cycle is allowed), and propagate any events received to the publisher.</p></div>
+                </li>
+            </ul>
+        </div>
+        <div class="summary">
+            <ul class="blockList">
+                <li class="blockList">
+                <!-- ======== NESTED CLASS SUMMARY ======== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="nested.class.summary">
+                                <!--   -->
+                            </a>
+                                <h3>Nested Class Summary</h3>
+                                <div class="memberSummary">
+                                    <table>
+                                        <caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+                                        <tr>
+                                            <th class="colFirst" scope="col">Modifier and Type</th>
+                                            <th class="colSecond" scope="col">Class</th>
+                                            <th class="colLast" scope="col">Description</th>
+                                        </tr>
+                                        
+                                        <tr class="altColor">
+                                            <td class="colFirst"><code>public final class</code></td>
+                                            <th class="colSecond" scope="row"><code><a href="ReactiveFuture.CompletableFuturePublisher.CompletableFutureSubscription.html">ReactiveFuture.CompletableFuturePublisher.CompletableFutureSubscription</a></span></code>
+                                            </th>
+                                            <td class="colLast"><p>Models a Reactive Java Subscription, which is responsible for propagating events from a Concurrent Java <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a> to a Subscriber.</p><p>This object is generally used internally by the <a href=elide/server/runtime/jvm/ReactiveFuture.CompletableFuturePublisher.html>CompletableFuturePublisher</a>, once a Subscriber attaches itself to a Publisher that is actually a wrapped <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a>. Error (exception) events and value events are both propagated. Subscribers based on this wrapping will only ever receive a maximum of one value or one error.</p></td>
+                                        </tr>
+                                        
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- =========== FIELD SUMMARY =========== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="field.summary">
+                                <!--   -->
+                            </a>
+                                <h3>Field Summary</h3>
+                                <div class="memberSummary">
+                                    <table>
+                                        <caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+                                        <tr>
+                                            <th class="colFirst" scope="col">Modifier and Type</th>
+                                            <th class="colSecond" scope="col">Field</th>
+                                            <th class="colLast" scope="col">Description</th>
+                                        </tr>
+                                        
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- ======== CONSTRUCTOR SUMMARY ======== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="constructor.summary">
+                                <!--   -->
+                            </a>
+                                <h3>Constructor Summary</h3>
+                                <div class="memberSummary">
+                                    <table>
+                                        <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+                                        <tbody>
+                                        <tr>
+                                            <th class="colFirst" scope="col">Constructor</th>
+                                            <th class="colLast" scope="col">Description</th>
+                                        </tr>
+
+                                        
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- =========== ENUM CONSTANT SUMMARY =========== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="enum.constant.summary">
+                                <!--   -->
+                            </a>
+                                <h3>Enum Constant Summary</h3>
+                                <table class="memberSummary">
+                                    <caption><span>Enum Constants</span><span class="tabEnd">&nbsp;</span></caption>
+                                    <tr>
+                                        <th class="colFirst" scope="col">Enum Constant</th>
+                                        <th class="colLast" scope="col">Description</th>
+                                    </tr>
+                                    
+                                </table>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- ========== METHOD SUMMARY =========== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="method.summary">
+                                <!--   -->
+                            </a>
+                                <h3>Method Summary</h3>
+                                <div class="memberSummary">
+                                    <div role="tablist" aria-orientation="horizontal">
+                                        <button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button>
+                                        <!-- TODO: Instance and Concrete Methods #1118 -->
+                                    </div>
+                                    <div id="memberSummary_tabpanel" role="tabpanel">
+                                    <table aria-labelledby="t0">
+                                        <tr>
+                                            <th class="colFirst" scope="col">Modifier and Type</th>
+                                            <th class="colSecond" scope="col">Method</th>
+                                            <th class="colLast" scope="col">Description</th>
+                                        </tr>
+                                        
+                                        <tr id="i0" class="altColor">
+                                            <td class="colFirst"><code><a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#subscribe(Subscriber)>subscribe</a>(Subscriber&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; subscriber) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i1" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#addListener(Runnable,Executor)>addListener</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> runnable, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i2" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#cancel(Boolean)>cancel</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> mayInterruptIfRunning) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i3" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#isCancelled()>isCancelled</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i4" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#isDone()>isDone</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i5" class="rowColor">
+                                            <td class="colFirst"><code><a href=ReactiveFuture.CompletableFuturePublisher.html>T</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#get()>get</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i6" class="altColor">
+                                            <td class="colFirst"><code><a href=ReactiveFuture.CompletableFuturePublisher.html>T</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#get(Long,TimeUnit)>get</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html>Long</a> timeout, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/TimeUnit.html>TimeUnit</a> unit) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i7" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>thenApply</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i8" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>thenApplyAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i9" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>thenApplyAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i10" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAccept(Consumer)>thenAccept</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i11" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptAsync(Consumer)>thenAcceptAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i12" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptAsync(Consumer,Executor)>thenAcceptAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i13" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenRun(Runnable)>thenRun</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i14" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenRunAsync(Runnable)>thenRunAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i15" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenRunAsync(Runnable,Executor)>thenRunAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i16" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>V</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>thenCombine</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>V</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i17" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>V</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>thenCombineAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>V</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i18" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>V</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>thenCombineAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>V</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i19" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>thenAcceptBoth</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>U</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i20" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>thenAcceptBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>U</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i21" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>thenAcceptBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>U</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i22" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBoth(CompletionStage,Runnable)>runAfterBoth</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i23" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBothAsync(CompletionStage,Runnable)>runAfterBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i24" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBothAsync(CompletionStage,Runnable,Executor)>runAfterBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i25" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>applyToEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i26" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>applyToEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i27" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>applyToEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i28" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEither(CompletionStage,Consumer)>acceptEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i29" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEitherAsync(CompletionStage,Consumer)>acceptEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i30" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEitherAsync(CompletionStage,Consumer,Executor)>acceptEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i31" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEither(CompletionStage,Runnable)>runAfterEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i32" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEitherAsync(CompletionStage,Runnable)>runAfterEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i33" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEitherAsync(CompletionStage,Runnable,Executor)>runAfterEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i34" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>thenCompose</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>U</a>&gt;&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i35" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>thenComposeAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>U</a>&gt;&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i36" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>thenComposeAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>U</a>&gt;&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i37" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>handle</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i38" class="altColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>handleAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>U</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i39" class="rowColor">
+                                            <td class="colFirst"><code>&lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>U</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>handleAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i40" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#whenComplete(BiConsumer)>whenComplete</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i41" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#whenCompleteAsync(BiConsumer)>whenCompleteAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i42" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#whenCompleteAsync(BiConsumer,Executor)>whenCompleteAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i43" class="rowColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#exceptionally(Function)>exceptionally</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; fn) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i44" class="altColor">
+                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt;</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ReactiveFuture.CompletableFuturePublisher.html#toCompletableFuture()>toCompletableFuture</a>() </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ul class="blockList">
+                                
+                                    <li class="blockList"><a id="methods.inherited.from.class.java.util.concurrent.CompletionStage">
+                                            <!--   -->
+                                        </a>
+                                            <h3>Methods inherited from class&nbsp;java.util.concurrent.CompletionStage</h3>
+                                            <code>exceptionallyAsync, exceptionallyAsync, exceptionallyCompose, exceptionallyComposeAsync, exceptionallyComposeAsync</code></li>
+                                 
+                                    <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
+                                        <!--   -->
+                                    </a>
+                                        <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
+                                        <code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString,
+                                            wait, wait, wait</code></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    
+                </li>
+            </ul>
+        </div>
+        <div class="details">
+            <ul class="blockList">
+                <li class="blockList">
+                    <!-- ========= CONSTRUCTOR DETAIL ======== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="constructor.detail">
+                                <!--   -->
+                            </a>
+                                <h3>Constructor Detail</h3>
+                                
+                            </li>
+                        </ul>
+                    </section>
+                    
+                    <!-- ============ METHOD DETAIL ========== -->
+                    
+                    <section role="region">
+                        <ul class="blockList">
+                            <li class="blockList"><a id="method.detail">
+                                <!--   -->
+                            </a>
+                                <h3>Method Detail</h3>
+                                
+                                <a id="subscribe(Subscriber)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>subscribe</h4>
+                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#subscribe(Subscriber)>subscribe</a>(Subscriber&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; subscriber)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="addListener(Runnable,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>addListener</h4>
+                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#addListener(Runnable,Executor)>addListener</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> runnable, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="cancel(Boolean)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>cancel</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#cancel(Boolean)>cancel</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> mayInterruptIfRunning)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="isCancelled()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>isCancelled</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#isCancelled()>isCancelled</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="isDone()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>isDone</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#isDone()>isDone</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="get()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>get</h4>
+                                        <pre class="methodSignature"> <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#get()>get</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="get(Long,TimeUnit)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>get</h4>
+                                        <pre class="methodSignature"> <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a> <a href=ReactiveFuture.CompletableFuturePublisher.html#get(Long,TimeUnit)>get</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html>Long</a> timeout, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/TimeUnit.html>TimeUnit</a> unit)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenApply(Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenApply</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>thenApply</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApply(Function)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenApplyAsync(Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenApplyAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>thenApplyAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenApplyAsync(Function,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenApplyAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>thenApplyAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenApplyAsync(Function,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAccept(Consumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAccept</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAccept(Consumer)>thenAccept</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAcceptAsync(Consumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAcceptAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptAsync(Consumer)>thenAcceptAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAcceptAsync(Consumer,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAcceptAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptAsync(Consumer,Executor)>thenAcceptAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenRun(Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenRun</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenRun(Runnable)>thenRun</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenRunAsync(Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenRunAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenRunAsync(Runnable)>thenRunAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenRunAsync(Runnable,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenRunAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenRunAsync(Runnable,Executor)>thenRunAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenCombine(CompletionStage,BiFunction)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenCombine</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>V</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>thenCombine</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombine(CompletionStage,BiFunction)>V</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenCombineAsync(CompletionStage,BiFunction)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenCombineAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>V</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>thenCombineAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction)>V</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenCombineAsync(CompletionStage,BiFunction,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenCombineAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, V extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>V</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>thenCombineAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>U</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCombineAsync(CompletionStage,BiFunction,Executor)>V</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAcceptBoth(CompletionStage,BiConsumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAcceptBoth</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>thenAcceptBoth</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBoth(CompletionStage,BiConsumer)>U</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAcceptBothAsync(CompletionStage,BiConsumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAcceptBothAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>thenAcceptBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer)>U</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenAcceptBothAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>thenAcceptBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>U</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=ReactiveFuture.CompletableFuturePublisher.html#thenAcceptBothAsync(CompletionStage,BiConsumer,Executor)>U</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterBoth(CompletionStage,Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterBoth</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBoth(CompletionStage,Runnable)>runAfterBoth</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterBothAsync(CompletionStage,Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterBothAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBothAsync(CompletionStage,Runnable)>runAfterBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterBothAsync(CompletionStage,Runnable,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterBothAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterBothAsync(CompletionStage,Runnable,Executor)>runAfterBothAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="applyToEither(CompletionStage,Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>applyToEither</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>applyToEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEither(CompletionStage,Function)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="applyToEitherAsync(CompletionStage,Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>applyToEitherAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>applyToEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="applyToEitherAsync(CompletionStage,Function,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>applyToEitherAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>applyToEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=ReactiveFuture.CompletableFuturePublisher.html#applyToEitherAsync(CompletionStage,Function,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="acceptEither(CompletionStage,Consumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>acceptEither</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEither(CompletionStage,Consumer)>acceptEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="acceptEitherAsync(CompletionStage,Consumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>acceptEitherAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEitherAsync(CompletionStage,Consumer)>acceptEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="acceptEitherAsync(CompletionStage,Consumer,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>acceptEitherAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#acceptEitherAsync(CompletionStage,Consumer,Executor)>acceptEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html>Consumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterEither(CompletionStage,Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterEither</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEither(CompletionStage,Runnable)>runAfterEither</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterEitherAsync(CompletionStage,Runnable)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterEitherAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEitherAsync(CompletionStage,Runnable)>runAfterEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="runAfterEitherAsync(CompletionStage,Runnable,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>runAfterEitherAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html>Void</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#runAfterEitherAsync(CompletionStage,Runnable,Executor)>runAfterEitherAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;?&gt; other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Runnable.html>Runnable</a> action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenCompose(Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenCompose</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>thenCompose</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenCompose(Function)>U</a>&gt;&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenComposeAsync(Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenComposeAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>thenComposeAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function)>U</a>&gt;&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="thenComposeAsync(Function,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>thenComposeAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>thenComposeAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, out <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#thenComposeAsync(Function,Executor)>U</a>&gt;&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="handle(BiFunction)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>handle</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>handle</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handle(BiFunction)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="handleAsync(BiFunction)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>handleAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>handleAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction)>U</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="handleAsync(BiFunction,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>handleAsync</h4>
+                                        <pre class="methodSignature"> &lt;U extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>U</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>handleAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html>BiFunction</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html#handleAsync(BiFunction,Executor)>U</a>&gt; fn, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="whenComplete(BiConsumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>whenComplete</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#whenComplete(BiConsumer)>whenComplete</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="whenCompleteAsync(BiConsumer)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>whenCompleteAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#whenCompleteAsync(BiConsumer)>whenCompleteAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="whenCompleteAsync(BiConsumer,Executor)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>whenCompleteAsync</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#whenCompleteAsync(BiConsumer,Executor)>whenCompleteAsync</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/BiConsumer.html>BiConsumer</a>&lt;in <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>, in <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>&gt; action, <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executor.html>Executor</a> executor)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="exceptionally(Function)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>exceptionally</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html>CompletionStage</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#exceptionally(Function)>exceptionally</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html>Function</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html>Throwable</a>, out <a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; fn)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="toCompletableFuture()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>toCompletableFuture</h4>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>CompletableFuture</a>&lt;<a href=ReactiveFuture.CompletableFuturePublisher.html>T</a>&gt; <a href=ReactiveFuture.CompletableFuturePublisher.html#toCompletableFuture()>toCompletableFuture</a>()</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                            </li>
+                        </ul>
+                    </section>
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>
+<footer role="contentinfo">
+    <nav role="navigation">
+        <!-- ======= START OF BOTTOM NAVBAR ====== -->
+        <div class="bottomNav"><a id="navbar.bottom">
+            <!--   -->
+        </a>
+            <div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a>
+            </div>
+            <a id="navbar.bottom.firstrow">
+                <!--   -->
+            </a>
+            <ul class="navList" title="Navigation">
+    <li><a href="../../../../index.html">Overview</a></li>
+    
+    <li><a href="package-summary.html">Package</a></li>
+    
+    <li class="navBarCell1Rev">Class</li>
+    
+    <li><a href="package-tree.html">Tree</a></li>
+    
+    <li><a href="../../../../deprecated.html">Deprecated</a></li>
+    <li><a href="../../../../index-files/index-1.html">Index</a></li>
+    <li>Help</li>
+</ul></div>
+        <a id="skip.navbar.bottom">
+            <!--   -->
+        </a>
+        <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top" style="display: block;">
+    <li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<a id="skip.navbar.top">
+<!--   -->
+</a></div><!-- ======== END OF BOTTOM NAVBAR ======= -->
+    </nav>
+</footer><ul class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content" id="ui-id-1" tabindex="0"
+    style="display: none;"></ul>
+<span role="status" aria-live="assertive" aria-relevant="additions" class="ui-helper-hidden-accessible"></span>
+</body>
+</html>

@@ -150,12 +150,24 @@ dependencies {
   api(libs.slf4j)
   api(platform(libs.grpc.bom))
   api(platform(libs.netty.bom))
+  api(platform(libs.projectreactor.bom))
 
   // Modules
   kapt(libs.micronaut.inject)
   kapt(libs.micronaut.inject.java)
   implementation(project(":packages:base"))
   implementation(project(":packages:proto"))
+
+  // Crypto
+  implementation(libs.bouncycastle)
+  implementation(libs.bouncycastle.pkix)
+  implementation(libs.conscrypt)
+  implementation(libs.tink)
+
+  // Reactive Java
+  implementation(libs.reactor.core)
+  implementation(libs.reactor.netty.core)
+  implementation(libs.reactor.netty.http)
 
   // Kotlin
   implementation(libs.kotlinx.html.jvm)
@@ -198,9 +210,13 @@ dependencies {
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
   implementation(libs.micronaut.inject.java)
+  implementation(libs.micronaut.protobuf)
   implementation(libs.micronaut.grpc.runtime)
   implementation(libs.micronaut.grpc.client.runtime)
   implementation(libs.micronaut.grpc.server.runtime)
+  implementation(libs.micronaut.management)
+  implementation(libs.micronaut.views.core)
+  implementation(libs.micronaut.views.soy)
 
   // Netty: Native
   implementation(libs.netty.tcnative)

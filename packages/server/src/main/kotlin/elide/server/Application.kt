@@ -1,5 +1,6 @@
 package elide.server
 
+import elide.server.runtime.jvm.SecurityProviderConfigurator
 import elide.server.util.ServerFlag
 import io.micronaut.runtime.Micronaut
 
@@ -19,8 +20,10 @@ public interface Application {
    *
    * @param args Arguments passed to the application.
    */
+  @Suppress("SpreadOperator")
   public fun boot(args: Array<String>) {
+    SecurityProviderConfigurator.registerProviders()
     ServerFlag.setArgs(args)
-    Micronaut.build().args(*args).start()
+    Micronaut.build().start()
   }
 }

@@ -6,9 +6,17 @@
         </encoder>
     </appender>
 
-    <!-- Root Logger -->
+    <!-- JS Runtime -->
     <logger name="elide.runtime.graalvm.JsRuntime" level="TRACE" />
 
+    <!-- HTTP Access Log -->
+    <logger name="http:access" additivity="false" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="io.micronaut.context.env" level="TRACE"/>
+
+    <!-- Root Logger -->
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

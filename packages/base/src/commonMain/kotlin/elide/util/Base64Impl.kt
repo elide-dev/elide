@@ -62,7 +62,14 @@ private val defaultDecoder: Base64Kt.Decoder = Base64Kt.Decoder()
  * @author  Xueming Shen
  * @since   1.8
  */
-@Suppress("DuplicatedCode")
+@Suppress(
+  "DuplicatedCode",
+  "MagicNumber",
+  "LoopWithTooManyJumpStatements",
+  "ComplexMethod",
+  "LongMethod",
+  "NestedBlockDepth"
+)
 public object Base64Kt {
   /**
    * This array is a lookup table that translates 6-bit positive integer

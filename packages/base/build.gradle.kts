@@ -12,6 +12,7 @@ plugins {
     signing
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    alias(libs.plugins.kotlinx.plugin.atomicfu)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.dokka)
 }

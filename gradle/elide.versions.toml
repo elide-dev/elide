@@ -24,10 +24,10 @@ kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.7.5"
 kotlinx_serialization = "1.3.3"
-kotlinx_atomicfu_plugin = "0.18.0"
+kotlinx_atomicfu_plugin = "0.18.2"
 kotlinx_benchmark_plugin = "0.4.4"
 detekt = "1.20.0"
-dokka = "1.7.0"
+dokka = "1.7.10"
 ktlint = "0.46.1"
 ktlintGradle = "10.3.0"
 qodanaGradle = "0.1.13"
@@ -99,6 +99,7 @@ projectreactor = "2020.0.21"
 bouncycastle = "1.71"
 tink = "1.6.1"
 conscrypt = "2.5.2"
+kover = "0.5.0"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
@@ -112,9 +113,11 @@ kotlin_plugin_jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kot
 kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin_sdk"}
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin_sdk" }
 kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
+kotlinx_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin_sdk" }
 kotlinx_plugin_knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin_knit" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish"}
 versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}

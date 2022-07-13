@@ -15,7 +15,9 @@ plugins {
   signing
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
+  alias(libs.plugins.kotlinx.plugin.atomicfu)
   alias(libs.plugins.testLogger)
   alias(libs.plugins.micronautLibrary)
   alias(libs.plugins.dokka)

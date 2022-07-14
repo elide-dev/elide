@@ -191,14 +191,28 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     /** @return Embedded script container for the provided [path] (and [charset], defaulting to `UTF-8`). */
     @JvmStatic public fun embedded(
       path: String,
-      charset: Charset = StandardCharsets.UTF_8
+      charset: Charset = StandardCharsets.UTF_8,
+      invocationBase: String? = null,
+      invocationTarget: String? = null,
     ): EmbeddedScript = EmbeddedScript(
       path = path,
       charset = charset,
+      invocationBase = invocationBase,
+      invocationTarget = invocationTarget,
     )
 
     /** @return Literal script container for the provided [script]. */
-    @JvmStatic public fun literal(script: String, id: String): ExecutableScript = LiteralScript(id, script)
+    @JvmStatic public fun literal(
+      script: String,
+      id: String,
+      invocationBase: String? = null,
+      invocationTarget: String? = null,
+    ): ExecutableScript = LiteralScript(
+      id,
+      script,
+      invocationBase = invocationBase,
+      invocationTarget = invocationTarget,
+    )
   }
 
   /** Managed GraalVM execution context, with thread guards. */
@@ -473,8 +487,12 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   /** Embedded script implementation which pulls from a string literal. */
   public class LiteralScript(
     private val moduleId: String,
-    private val script: String
+    private val script: String,
+    invocationBase: String? = null,
+    invocationTarget: String? = null,
   ): ExecutableScript(
+    invocationBase = invocationBase,
+    invocationTarget = invocationTarget,
     fingerprint = fingerprintScriptContent(moduleId, script)
   ) {
     public companion object {

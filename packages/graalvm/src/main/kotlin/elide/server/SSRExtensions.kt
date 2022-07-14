@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "WildcardImport", "RedundantSuspendModifier")
 
 package elide.server
 
@@ -28,6 +28,12 @@ private const val NODE_DEV_DEFAULT: String = "node-dev.opt.js"
 
 // Default name if no mode is specified or resolvable.
 public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
+
+// Default base member for SSR invocation.
+public val DEFAULT_INVOCATION_BASE: String? = null
+
+// Default target name for SSR invocation.
+public val DEFAULT_INVOCATION_TARGET: String? = null
 
 // Default ID to use in the DOM.
 public const val DEFAULT_SSR_DOM_ID: String = "root"
@@ -81,7 +87,12 @@ public suspend fun PageController.ssr(
  * @param attrs Set of additional attribute pairs to apply in the DOM to the root element. Defaults to an empty set.
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
+ * @param invocationBase Base object where the engine should look for the invocation entrypoint. Defaults to `null`.
+ * @param invocationTarget Member name of [invocationBase] (or global) where the engine should look for the invocation
+ *     entrypoint. Defaults to `null`.
+ * @param embeddedRoot Resource folder path where embedded scripts are held. Defaults to `embedded`.
  */
+@Suppress("LongParameterList")
 public suspend fun BODY.injectSSR(
   handler: ElideController,
   request: HttpRequest<*>,
@@ -89,6 +100,9 @@ public suspend fun BODY.injectSSR(
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
   path: String = NODE_SSR_DEFAULT_PATH,
+  invocationBase: String? = DEFAULT_INVOCATION_BASE,
+  invocationTarget: String? = DEFAULT_INVOCATION_TARGET,
+  embeddedRoot: String = EMBEDDED_ROOT,
 ): Unit = MAIN(
   attributesMapOf(
     "id",
@@ -107,7 +121,9 @@ public suspend fun BODY.injectSSR(
     handler,
     request,
     JsRuntime.Script.embedded(
-      path = "/$EMBEDDED_ROOT/$path",
+      path = "/$embeddedRoot/$path",
+      invocationBase = invocationBase,
+      invocationTarget = invocationTarget,
     )
   ).renderSuspend()
 

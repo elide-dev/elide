@@ -51,10 +51,6 @@ java {
   }
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("javadoc")
-}
-
 signing {
   if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
     sign(configurations.archives.get())
@@ -80,7 +76,6 @@ publishing {
   }
 
   publications.withType<MavenPublication> {
-    artifact(javadocJar.get())
     pom {
       name.set("Elide")
       description.set("Polyglot application framework")
@@ -111,6 +106,25 @@ testing {
     val test by getting(JvmTestSuite::class) {
       useJUnitJupiter()
     }
+  }
+}
+
+tasks {
+  val javadocJar by creating(Jar::class) {
+    dependsOn(":packages:server:dokkaJavadoc")
+    classifier = "javadoc"
+    from(named("dokkaJavadoc"))
+  }
+
+  val sourcesJar by creating(Jar::class) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    classifier = "sources"
+    from(sourceSets["main"].allSource)
+  }
+
+  artifacts {
+    add("archives", sourcesJar)
+    add("archives", javadocJar)
   }
 }
 

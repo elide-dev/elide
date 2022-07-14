@@ -24,6 +24,13 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
+tasks {
+    artifacts {
+        add("archives", javadocJar)
+        add("archives", sourcesJar)
+    }
+}
+
 signing {
   if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
     sign(configurations.archives.get())
@@ -50,6 +57,7 @@ publishing {
 
     publications.withType<MavenPublication> {
         artifact(javadocJar.get())
+
         pom {
             name.set("Elide")
             description.set("Polyglot application framework")

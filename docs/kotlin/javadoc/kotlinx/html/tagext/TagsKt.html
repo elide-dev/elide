@@ -242,7 +242,7 @@ public final class <span class="typeNameLabel"><a href=TagsKt.html>TagsKt</a></s
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=TagsKt.html#body(HTML,String,SuspendFunction1)>body</a>(HTML $self, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> classes, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;BODY, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
                                             </th>
-                                            <td class="colLast">TBD</td>
+                                            <td class="colLast">Open a <code>&lt;body&gt;</code> tag with support for suspension calls.</td>
                                         </tr>
                                         
                                         <tr id="i1" class="rowColor">
@@ -250,7 +250,7 @@ public final class <span class="typeNameLabel"><a href=TagsKt.html>TagsKt</a></s
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=TagsKt.html#head(HTML,SuspendFunction1)>head</a>(HTML $self, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HEAD, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
                                             </th>
-                                            <td class="colLast">Document head</td>
+                                            <td class="colLast">Open a <code>&lt;head&gt;</code> tag with support for suspension calls.</td>
                                         </tr>
                                         
                                         </tbody>
@@ -306,7 +306,22 @@ public final class <span class="typeNameLabel"><a href=TagsKt.html>TagsKt</a></s
                                     <li class="blockList">
                                         <h4>body</h4>
                                         <pre class="methodSignature"> final static <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=TagsKt.html#body(HTML,String,SuspendFunction1)>body</a>(HTML $self, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> classes, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;BODY, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
-                                        <div class="block"><p>TBD</p></div>
+                                        <div class="block"><p>Open a <code>&lt;body&gt;</code> tag with support for suspension calls.</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            
+                                            
+                                            <dd><code>classes</code> - Classes to apply to the body tag in the DOM.</dd>
+                                            
+                                            
+                                            
+                                            <dd><code>block</code> - Callable block to configure and populate the body tag.</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>
@@ -321,7 +336,18 @@ public final class <span class="typeNameLabel"><a href=TagsKt.html>TagsKt</a></s
                                     <li class="blockList">
                                         <h4>head</h4>
                                         <pre class="methodSignature"> final static <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=TagsKt.html#head(HTML,SuspendFunction1)>head</a>(HTML $self, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HEAD, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
-                                        <div class="block"><p>Document head</p></div>
+                                        <div class="block"><p>Open a <code>&lt;head&gt;</code> tag with support for suspension calls.</p></div>
+                                        
+                                        <dl>
+                                            <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
+                                            
+                                            
+                                            <dd><code>block</code> - Callable block to configure and populate the body tag.</dd>
+                                            
+                                            
+                                        </dl>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>

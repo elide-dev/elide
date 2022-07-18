@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerConfigurator.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.cfg</a> &gt; <span class="el_source">ServerConfigurator.kt</span></div><h1>ServerConfigurator.kt</h1><pre class="source lang-java linenums">package elide.server.cfg
 
 import elide.annotations.Logic
+import elide.server.annotations.Eager
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.annotation.ContextConfigurer
@@ -8,6 +9,7 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourcePropertyResolver
 import java.util.SortedMap
+import java.util.SortedSet
 
 /**
  * Configures Micronaut on behalf of an Elide application with default configuration state.
@@ -26,142 +28,152 @@ import java.util.SortedMap
  * No action is needed to enable the above components; the DI container loads and applies this configuration
  * automatically at application startup.
  */
-<span class="fc" id="L29">@Requires(notEnv = [&quot;test&quot;])</span>
-<span class="fc" id="L30">@ContextConfigurer public class ServerConfigurator : ApplicationContextConfigurer {</span>
+<span class="fc" id="L31">@Requires(notEnv = [&quot;test&quot;])</span>
+<span class="fc" id="L32">@ContextConfigurer public class ServerConfigurator : ApplicationContextConfigurer {</span>
   public companion object {
     // Properties which cause errors.
-<span class="fc" id="L33">    private val bannedConfig = sortedSetOf(</span>
-<span class="fc" id="L34">      &quot;micronaut.server.netty.http2.push-enabled&quot;,</span>
+<span class="pc" id="L35">    public val bannedConfig: SortedSet&lt;String&gt; = sortedSetOf(</span>
+<span class="fc" id="L36">      &quot;micronaut.server.netty.http2.push-enabled&quot;,</span>
     )
 
     // JVM configurations applied at server startup.
-<span class="fc" id="L38">    private val systemProps = sortedMapOf(</span>
-<span class="fc" id="L39">      &quot;jdk.tls.client.protocols&quot; to &quot;TLSv1.2,TLSv1.1,TLSv1&quot;,</span>
-<span class="fc" id="L40">      &quot;jdk.jar.disabledAlgorithms&quot; to sortedSetOf(</span>
-<span class="fc" id="L41">        &quot;anon&quot;,</span>
-<span class="fc" id="L42">        &quot;NULL&quot;,</span>
-<span class="fc" id="L43">        &quot;MD2&quot;,</span>
-<span class="fc" id="L44">        &quot;EC keySize &lt; 224&quot;,</span>
-<span class="fc" id="L45">        &quot;DH keySize &lt; 1024&quot;,</span>
-<span class="fc" id="L46">        &quot;RSA keySize &lt; 2048&quot;,</span>
-<span class="fc" id="L47">        &quot;SSLv3&quot;,</span>
-<span class="fc" id="L48">        &quot;RC4&quot;,</span>
-<span class="fc" id="L49">        &quot;RC4_40&quot;,</span>
-<span class="fc" id="L50">        &quot;DES40_CBC&quot;,</span>
-<span class="fc" id="L51">        &quot;MD5withRSA&quot;,</span>
-<span class="fc" id="L52">        &quot;DES&quot;,</span>
-<span class="fc" id="L53">        &quot;3DES_EDE_CBC&quot;,</span>
-<span class="fc" id="L54">        &quot;SHA1 jdkCA &amp; usage TLSServer&quot;,</span>
-<span class="fc" id="L55">      ).joinToString(&quot;, &quot;),</span>
+<span class="pc" id="L40">    public val systemProps: SortedMap&lt;String, String&gt; = sortedMapOf(</span>
+<span class="fc" id="L41">      &quot;jdk.tls.client.protocols&quot; to &quot;TLSv1.2,TLSv1.1,TLSv1&quot;,</span>
+<span class="fc" id="L42">      &quot;jdk.jar.disabledAlgorithms&quot; to sortedSetOf(</span>
+<span class="fc" id="L43">        &quot;anon&quot;,</span>
+<span class="fc" id="L44">        &quot;NULL&quot;,</span>
+<span class="fc" id="L45">        &quot;MD2&quot;,</span>
+<span class="fc" id="L46">        &quot;EC keySize &lt; 224&quot;,</span>
+<span class="fc" id="L47">        &quot;DH keySize &lt; 1024&quot;,</span>
+<span class="fc" id="L48">        &quot;RSA keySize &lt; 2048&quot;,</span>
+<span class="fc" id="L49">        &quot;SSLv3&quot;,</span>
+<span class="fc" id="L50">        &quot;RC4&quot;,</span>
+<span class="fc" id="L51">        &quot;RC4_40&quot;,</span>
+<span class="fc" id="L52">        &quot;DES40_CBC&quot;,</span>
+<span class="fc" id="L53">        &quot;MD5withRSA&quot;,</span>
+<span class="fc" id="L54">        &quot;DES&quot;,</span>
+<span class="fc" id="L55">        &quot;3DES_EDE_CBC&quot;,</span>
+<span class="fc" id="L56">        &quot;SHA1 jdkCA &amp; usage TLSServer&quot;,</span>
+<span class="fc" id="L57">      ).joinToString(&quot;, &quot;),</span>
     )
 
     // Cipher suites to support, in order of preference.
-<span class="fc" id="L59">    private val cipherSuites: List&lt;String&gt; = listOf(</span>
-<span class="fc" id="L60">      &quot;TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L61">      &quot;TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L62">      &quot;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L63">      &quot;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L64">      &quot;TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
-<span class="fc" id="L65">      &quot;TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
-<span class="fc" id="L66">      &quot;TLS_DHE_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L67">      &quot;TLS_DHE_DSS_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L68">      &quot;TLS_DHE_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L69">      &quot;TLS_DHE_DSS_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L70">      &quot;TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
-<span class="fc" id="L71">      &quot;TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L72">      &quot;TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L73">      &quot;TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L74">      &quot;TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
-<span class="fc" id="L75">      &quot;TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384&quot;,</span>
-<span class="fc" id="L76">      &quot;TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384&quot;,</span>
-<span class="fc" id="L77">      &quot;TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256&quot;,</span>
-<span class="fc" id="L78">      &quot;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256&quot;,</span>
-<span class="fc" id="L79">      &quot;TLS_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
-<span class="fc" id="L80">      &quot;TLS_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="pc" id="L61">    public val cipherSuites: List&lt;String&gt; = listOf(</span>
+<span class="fc" id="L62">      &quot;TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L63">      &quot;TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L64">      &quot;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L65">      &quot;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L66">      &quot;TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
+<span class="fc" id="L67">      &quot;TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
+<span class="fc" id="L68">      &quot;TLS_DHE_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L69">      &quot;TLS_DHE_DSS_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L70">      &quot;TLS_DHE_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L71">      &quot;TLS_DHE_DSS_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L72">      &quot;TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256&quot;,</span>
+<span class="fc" id="L73">      &quot;TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L74">      &quot;TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L75">      &quot;TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L76">      &quot;TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
+<span class="fc" id="L77">      &quot;TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384&quot;,</span>
+<span class="fc" id="L78">      &quot;TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384&quot;,</span>
+<span class="fc" id="L79">      &quot;TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256&quot;,</span>
+<span class="fc" id="L80">      &quot;TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256&quot;,</span>
+<span class="fc" id="L81">      &quot;TLS_RSA_WITH_AES_256_GCM_SHA384&quot;,</span>
+<span class="fc" id="L82">      &quot;TLS_RSA_WITH_AES_128_GCM_SHA256&quot;,</span>
     )
 
     // URL paths which should be excluded by default from the access log.
-<span class="fc" id="L84">    private val defaultAccessLogExclusions = sortedSetOf(</span>
-<span class="fc" id="L85">      &quot;/health&quot;,</span>
+<span class="pc" id="L86">    public val defaultAccessLogExclusions: SortedSet&lt;String&gt; = sortedSetOf(</span>
+<span class="fc" id="L87">      &quot;/health&quot;,</span>
     )
 
     // Base properties applied to all runs (unless disabled).
-<span class="fc" id="L89">    private val baseMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
-<span class="fc" id="L90">      &quot;jackson.module-scan&quot; to false,</span>
-<span class="fc" id="L91">      &quot;jackson.bean-introspection-module&quot; to true,</span>
-<span class="fc" id="L92">      &quot;micronaut.application.default-charset&quot; to &quot;utf-8&quot;,</span>
-<span class="fc" id="L93">      &quot;micronaut.server.ssl.ciphers&quot; to cipherSuites.joinToString(&quot;,&quot;),</span>
-<span class="fc" id="L94">      &quot;micronaut.server.ssl.protocols&quot; to arrayOf(&quot;TLSv1.2&quot;),</span>
-<span class="fc" id="L95">      &quot;micronaut.server.ssl.protocol&quot; to &quot;TLS&quot;,</span>
-<span class="fc" id="L96">      &quot;micronaut.server.default-charset&quot; to &quot;utf-8&quot;,</span>
-<span class="fc" id="L97">      &quot;micronaut.server.max-request-size&quot; to &quot;10MB&quot;,</span>
-<span class="fc" id="L98">      &quot;micronaut.server.server-header&quot; to System.getProperty(&quot;elide.server.name&quot;, &quot;elide/v1&quot;),</span>
-<span class="fc" id="L99">      &quot;micronaut.server.thread-selection&quot; to &quot;AUTO&quot;,</span>
-<span class="fc" id="L100">      &quot;micronaut.server.locale-resolution.session-attribute&quot; to &quot;locale&quot;,</span>
-<span class="fc" id="L101">      &quot;micronaut.server.locale-resolution.header&quot; to true,</span>
-<span class="fc" id="L102">      &quot;micronaut.validator.enabled&quot; to true,</span>
-<span class="fc" id="L103">      &quot;micronaut.jcache.enabled&quot; to true,</span>
-<span class="fc" id="L104">      &quot;micronaut.views.csp.enabled&quot; to true,</span>
-<span class="fc" id="L105">      &quot;micronaut.views.csp.generate-nonce&quot; to true,</span>
-<span class="fc" id="L106">      &quot;micronaut.views.soy.enabled&quot; to false,</span>
-<span class="fc" id="L107">      &quot;micronaut.views.soy.renaming-enabled&quot; to false,</span>
-<span class="fc" id="L108">      &quot;netty.default.allocator.max-order&quot; to 3,</span>
-<span class="fc" id="L109">      &quot;elide.assets.enabled&quot; to true,</span>
-<span class="fc" id="L110">      &quot;elide.assets.prefix&quot; to &quot;/_/assets&quot;,</span>
-<span class="fc" id="L111">      &quot;elide.assets.etags&quot; to true,</span>
-<span class="fc" id="L112">      &quot;elide.assets.prefer-weak-etags&quot; to true,</span>
+<span class="pc" id="L91">    public val baseMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
+<span class="fc" id="L92">      &quot;jackson.module-scan&quot; to false,</span>
+<span class="fc" id="L93">      &quot;jackson.bean-introspection-module&quot; to true,</span>
+<span class="fc" id="L94">      &quot;micronaut.application.default-charset&quot; to &quot;utf-8&quot;,</span>
+<span class="fc" id="L95">      &quot;micronaut.server.ssl.ciphers&quot; to cipherSuites.joinToString(&quot;,&quot;),</span>
+<span class="fc" id="L96">      &quot;micronaut.server.ssl.protocols&quot; to arrayOf(&quot;TLSv1.2&quot;),</span>
+<span class="fc" id="L97">      &quot;micronaut.server.ssl.protocol&quot; to &quot;TLS&quot;,</span>
+<span class="fc" id="L98">      &quot;micronaut.server.default-charset&quot; to &quot;utf-8&quot;,</span>
+<span class="fc" id="L99">      &quot;micronaut.server.max-request-size&quot; to &quot;10MB&quot;,</span>
+<span class="fc" id="L100">      &quot;micronaut.server.server-header&quot; to System.getProperty(&quot;elide.server.name&quot;, &quot;elide/v1&quot;),</span>
+<span class="fc" id="L101">      &quot;micronaut.server.thread-selection&quot; to &quot;AUTO&quot;,</span>
+<span class="fc" id="L102">      &quot;micronaut.server.locale-resolution.session-attribute&quot; to &quot;locale&quot;,</span>
+<span class="fc" id="L103">      &quot;micronaut.server.locale-resolution.header&quot; to true,</span>
+<span class="fc" id="L104">      &quot;micronaut.validator.enabled&quot; to true,</span>
+<span class="fc" id="L105">      &quot;micronaut.jcache.enabled&quot; to true,</span>
+<span class="fc" id="L106">      &quot;micronaut.views.csp.enabled&quot; to true,</span>
+<span class="fc" id="L107">      &quot;micronaut.views.csp.generate-nonce&quot; to true,</span>
+<span class="fc" id="L108">      &quot;micronaut.views.soy.enabled&quot; to false,</span>
+<span class="fc" id="L109">      &quot;micronaut.views.soy.renaming-enabled&quot; to false,</span>
+<span class="fc" id="L110">      &quot;netty.default.allocator.max-order&quot; to 3,</span>
+<span class="fc" id="L111">      &quot;elide.assets.enabled&quot; to true,</span>
+<span class="fc" id="L112">      &quot;elide.assets.prefix&quot; to &quot;/_/assets&quot;,</span>
+<span class="fc" id="L113">      &quot;elide.assets.etags&quot; to true,</span>
+<span class="fc" id="L114">      &quot;elide.assets.prefer-weak-etags&quot; to true,</span>
     )
 
     // Properties applied only outside of tests.
-<span class="fc" id="L116">    private val nonTestMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
-<span class="fc" id="L117">      &quot;micronaut.server.netty.chunked-supported&quot; to true,</span>
-<span class="fc" id="L118">      &quot;micronaut.server.netty.compression-threshold&quot; to 400,</span>
-<span class="fc" id="L119">      &quot;micronaut.server.netty.compression-level&quot; to 4,</span>
-<span class="fc" id="L120">      &quot;micronaut.server.netty.validate-headers&quot; to true,</span>
-<span class="fc" id="L121">      &quot;micronaut.server.netty.use-native-transport&quot; to true,</span>
-<span class="fc" id="L122">      &quot;micronaut.server.netty.parent.prefer-native-transport&quot; to true,</span>
-<span class="fc" id="L123">      &quot;micronaut.server.netty.worker.prefer-native-transport&quot; to true,</span>
+<span class="pc" id="L118">    public val nonTestMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
+<span class="fc" id="L119">      &quot;micronaut.server.netty.chunked-supported&quot; to true,</span>
+<span class="fc" id="L120">      &quot;micronaut.server.netty.compression-threshold&quot; to 400,</span>
+<span class="fc" id="L121">      &quot;micronaut.server.netty.compression-level&quot; to 4,</span>
+<span class="fc" id="L122">      &quot;micronaut.server.netty.validate-headers&quot; to true,</span>
+<span class="fc" id="L123">      &quot;micronaut.server.netty.use-native-transport&quot; to true,</span>
 <span class="fc" id="L124">      &quot;micronaut.server.netty.access-logger.enabled&quot; to true,</span>
 <span class="fc" id="L125">      &quot;micronaut.server.netty.access-logger.log-format&quot; to &quot;common&quot;,</span>
 <span class="fc" id="L126">      &quot;micronaut.server.netty.access-logger.logger-name&quot; to &quot;http:access&quot;,</span>
 <span class="fc" id="L127">      &quot;micronaut.server.netty.access-logger.exclusions&quot; to defaultAccessLogExclusions.toList(),</span>
     )
 
-    // Properties applied only only in dev mode.
-<span class="fc" id="L131">    private val devMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
-<span class="fc" id="L132">      &quot;micronaut.server.ssl.build-self-signed&quot; to (</span>
-<span class="fc" id="L133">        System.getProperty(&quot;elide.ssl.build-self-signed&quot;, &quot;true&quot;).toBoolean()),</span>
+    // Experimental properties.
+<span class="pc" id="L131">    public val labsMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
+<span class="fc" id="L132">      &quot;micronaut.server.netty.parent.prefer-native-transport&quot; to true,</span>
+<span class="fc" id="L133">      &quot;micronaut.server.netty.worker.prefer-native-transport&quot; to true,</span>
+    )
+
+    // Properties applied only in dev mode.
+<span class="pc" id="L137">    public val devMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
+<span class="fc" id="L138">      &quot;micronaut.server.ssl.enabled&quot; to true,</span>
+<span class="fc" id="L139">      &quot;micronaut.server.http-to-https-redirect&quot; to true,</span>
+<span class="fc" id="L140">      &quot;micronaut.server.http-version&quot; to 2.0,</span>
+<span class="fc" id="L141">      &quot;micronaut.server.dual-protocol&quot; to true,</span>
+<span class="fc" id="L142">      &quot;micronaut.server.http-to-https-redirect&quot; to true,</span>
+<span class="fc" id="L143">      &quot;micronaut.server.ssl.build-self-signed&quot; to (</span>
+<span class="fc" id="L144">        System.getProperty(&quot;elide.ssl.build-self-signed&quot;, &quot;true&quot;).toBoolean()),</span>
     )
   }
 
   /** @inheritDoc */
   override fun configure(builder: ApplicationContextBuilder) {
-<span class="fc" id="L139">    systemProps.forEach { entry -&gt;</span>
-<span class="fc" id="L140">      System.setProperty(entry.key, entry.value)</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L150">    systemProps.forEach { entry -&gt;</span>
+<span class="fc" id="L151">      System.setProperty(entry.key, entry.value)</span>
+<span class="fc" id="L152">    }</span>
     // basics
-<span class="fc" id="L143">    builder.eagerInitSingletons(true)</span>
-<span class="fc" id="L144">      .banner(false)</span>
-<span class="fc" id="L145">      .deduceEnvironment(true)</span>
-<span class="fc" id="L146">      .environmentPropertySource(false)</span>
-<span class="fc" id="L147">      .eagerInitConfiguration(true)</span>
-<span class="fc" id="L148">      .eagerInitAnnotated(Logic::class.java)</span>
-<span class="fc" id="L149">      .bootstrapEnvironment(true)</span>
+<span class="fc" id="L154">    builder.eagerInitSingletons(true)</span>
+<span class="fc" id="L155">      .banner(false)</span>
+<span class="fc" id="L156">      .deduceEnvironment(true)</span>
+<span class="fc" id="L157">      .environmentPropertySource(true)</span>
+<span class="fc" id="L158">      .eagerInitConfiguration(true)</span>
+<span class="fc" id="L159">      .eagerInitAnnotated(Eager::class.java)</span>
+<span class="fc" id="L160">      .eagerInitAnnotated(Logic::class.java)</span>
+<span class="fc" id="L161">      .bootstrapEnvironment(true)</span>
 
     // inject configuration unless disabled
-<span class="pc bpc" id="L152" title="1 of 2 branches missed.">    if (System.getProperty(&quot;elide.config.noInject&quot;) != &quot;true&quot;) {</span>
-<span class="fc" id="L153">      builder.propertySources(</span>
-<span class="fc" id="L154">        PropertySource.of(baseMap.plus(nonTestMap).plus(</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">          if (System.getProperty(&quot;elide.dev&quot;) == &quot;true&quot;) {</span>
-<span class="nc" id="L156">            devMap</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">    if (System.getProperty(&quot;elide.config.noInject&quot;) != &quot;true&quot;) {</span>
+<span class="fc" id="L165">      builder.propertySources(</span>
+<span class="fc" id="L166">        PropertySource.of(baseMap.plus(nonTestMap).plus(</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">          if (System.getProperty(&quot;elide.dev&quot;) == &quot;true&quot;) {</span>
+<span class="nc" id="L168">            devMap</span>
           } else {
-<span class="fc" id="L158">            emptyMap()</span>
+<span class="fc" id="L170">            emptyMap()</span>
           }
-<span class="fc" id="L160">        ).filter {</span>
-<span class="pc bpc" id="L161" title="2 of 4 branches missed.">          !bannedConfig.contains(it.key)</span>
+<span class="fc" id="L172">        ).filter {</span>
+<span class="pc bpc" id="L173" title="2 of 4 branches missed.">          !bannedConfig.contains(it.key)</span>
         }),
       )
     }
-<span class="fc" id="L165">  }</span>
+<span class="fc" id="L177">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

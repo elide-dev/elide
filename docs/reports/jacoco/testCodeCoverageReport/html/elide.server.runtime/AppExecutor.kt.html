@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.ListeningScheduledExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
+import elide.server.runtime.jvm.UncaughtExceptionHandler
 import io.micronaut.context.annotation.Context
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -33,7 +34,7 @@ public interface AppExecutor {
   /** Default settings applied to an application executor. */
   public object DefaultSettings {
     /** Default size of threads available for background execution. */
-<span class="fc" id="L36">    public val poolSize: Int = (Runtime.getRuntime().availableProcessors() * 2) - 1</span>
+<span class="fc" id="L37">    public val poolSize: Int = (Runtime.getRuntime().availableProcessors() * 2) - 1</span>
 
     /** Default priority assigned to threads for background execution. */
     public const val priority: Int = Thread.NORM_PRIORITY
@@ -50,9 +51,9 @@ public interface AppExecutor {
      * @return Deferred task providing the result of the [operation].
      */
     @JvmStatic public suspend fun &lt;R&gt; async(operation: suspend () -&gt; R): Deferred&lt;R&gt; {
-<span class="nc" id="L53">      return withContext(DefaultExecutor.backgroundDispatcher) {</span>
-<span class="nc" id="L54">        async {</span>
-<span class="nc" id="L55">          operation.invoke()</span>
+<span class="nc" id="L54">      return withContext(DefaultExecutor.backgroundDispatcher) {</span>
+<span class="nc" id="L55">        async {</span>
+<span class="nc" id="L56">          operation.invoke()</span>
         }
       }
     }
@@ -67,95 +68,61 @@ public interface AppExecutor {
      * @return Deferred task providing the result of the [operation].
      */
     @JvmStatic public suspend fun &lt;R&gt; io(operation: suspend () -&gt; R): R {
-<span class="nc" id="L70">      return withContext(DefaultExecutor.ioDispatcher) {</span>
-<span class="nc" id="L71">        operation.invoke()</span>
-      }
-    }
-
-    /**
-     * Run the provided [operation] on the main thread, returning whatever result is returned by the [operation].
-     *
-     * The operation is executed against the main dispatcher ([Dispatchers.Main]).
-     *
-     * @param R Return type.
-     * @param operation Operation to run. Can suspend.
-     * @return Deferred task providing the result of the [operation].
-     */
-    @JvmStatic public suspend fun &lt;R&gt; main(operation: suspend () -&gt; R): R {
-<span class="nc" id="L85">      return withContext(DefaultExecutor.mainDispatcher) {</span>
-<span class="nc" id="L86">        operation.invoke()</span>
-      }
-    }
-
-    /**
-     * Run the provided [operation] in unconfined mode, where it will start a co-routine in the caller thread, but only
-     * until the first suspension point.
-     *
-     * The operation is executed against the &quot;unconfined&quot; dispatcher ([Dispatchers.Unconfined]). For more about confined
-     * versus unconfined co-routines, see here:
-     *
-     * https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html#unconfined-vs-confined-dispatcher
-     *
-     * @param R Return type.
-     * @param operation Operation to run. Can suspend.
-     * @return Deferred task providing the result of the [operation].
-     */
-    @JvmStatic public suspend fun &lt;R&gt; unconfined(operation: suspend () -&gt; R): R {
-<span class="nc" id="L104">      return withContext(DefaultExecutor.mainDispatcher) {</span>
-<span class="nc" id="L105">        operation.invoke()</span>
+<span class="fc" id="L71">      return withContext(DefaultExecutor.ioDispatcher) {</span>
+<span class="fc" id="L72">        operation.invoke()</span>
       }
     }
   }
 
   /** @return Instance of the main [Executor] held by this [AppExecutor]. */
-<span class="nc" id="L111">  public fun executor(): Executor = service()</span>
+<span class="fc" id="L78">  public fun executor(): Executor = service()</span>
 
   /** @return Service-oriented instance of the main [Executor] held by this [AppExecutor]. */
   public fun service(): ListeningExecutorService
 
   /** Implements the application-default-executor, as a bridge to Micronaut. */
-<span class="fc" id="L117">  @Context</span>
+<span class="fc" id="L84">  @Context</span>
   @Singleton
   @Suppress(&quot;unused&quot;)
-<span class="fc" id="L120">  public class DefaultExecutor @Inject constructor (</span>
+<span class="fc" id="L87">  public class DefaultExecutor @Inject constructor (</span>
     uncaughtHandler: Thread.UncaughtExceptionHandler
   ): AppExecutor {
     public companion object {
       /** Uncaught exception handler (global). */
-<span class="fc" id="L125">      private val errHandler = UncaughtExceptionHandler()</span>
+<span class="fc" id="L92">      private val errHandler = UncaughtExceptionHandler()</span>
 
       /** Main executor. */
-<span class="fc" id="L128">      private val mainExec = DefaultExecutor(errHandler)</span>
+<span class="fc" id="L95">      private val mainExec = DefaultExecutor(errHandler)</span>
 
       /** IO dispatcher. */
-<span class="pc" id="L131">      internal val ioDispatcher = Dispatchers.IO</span>
+<span class="fc" id="L98">      internal val ioDispatcher = Dispatchers.IO</span>
 
       /** IO dispatcher. */
-<span class="pc" id="L134">      internal val unconfinedDispatcher = Dispatchers.Unconfined</span>
+<span class="pc" id="L101">      internal val unconfinedDispatcher = Dispatchers.Unconfined</span>
 
       /** Work dispatcher. */
-<span class="pc" id="L137">      internal val backgroundDispatcher = Dispatchers.Default</span>
+<span class="pc" id="L104">      internal val backgroundDispatcher = Dispatchers.Default</span>
 
       /** Main thread dispatcher. */
-<span class="pc" id="L140">      internal val mainDispatcher = Dispatchers.Main</span>
+<span class="pc" id="L107">      internal val mainDispatcher = Dispatchers.Main</span>
 
       /** Acquire the main application executor. */
-<span class="nc" id="L143">      @JvmStatic public fun acquire(): AppExecutor = mainExec</span>
+<span class="fc" id="L110">      @JvmStatic public fun acquire(): AppExecutor = mainExec</span>
     }
 
     /** Base factory for acquiring threads. */
-<span class="fc" id="L147">    private val threadFactory = ThreadFactoryBuilder()</span>
-<span class="fc" id="L148">      .setNameFormat(&quot;app-%d&quot;)</span>
-<span class="fc" id="L149">      .setPriority(DefaultSettings.priority)</span>
-<span class="fc" id="L150">      .setUncaughtExceptionHandler(uncaughtHandler)</span>
-<span class="fc" id="L151">      .build()</span>
+<span class="fc" id="L114">    private val threadFactory = ThreadFactoryBuilder()</span>
+<span class="fc" id="L115">      .setNameFormat(&quot;app-%d&quot;)</span>
+<span class="fc" id="L116">      .setPriority(DefaultSettings.priority)</span>
+<span class="fc" id="L117">      .setUncaughtExceptionHandler(uncaughtHandler)</span>
+<span class="fc" id="L118">      .build()</span>
 
     /** Wrapped executor for use with Guava via listenable futures. */
-<span class="fc" id="L154">    private var runner: ListeningScheduledExecutorService = MoreExecutors.listeningDecorator(</span>
-<span class="fc" id="L155">      MoreExecutors.getExitingScheduledExecutorService(</span>
-<span class="fc" id="L156">        ScheduledThreadPoolExecutor(</span>
-<span class="fc" id="L157">          DefaultSettings.poolSize,</span>
-<span class="fc" id="L158">          threadFactory</span>
+<span class="fc" id="L121">    private var runner: ListeningScheduledExecutorService = MoreExecutors.listeningDecorator(</span>
+<span class="fc" id="L122">      MoreExecutors.getExitingScheduledExecutorService(</span>
+<span class="fc" id="L123">        ScheduledThreadPoolExecutor(</span>
+<span class="fc" id="L124">          DefaultSettings.poolSize,</span>
+<span class="fc" id="L125">          threadFactory</span>
         )
       )
     )
@@ -164,11 +131,11 @@ public interface AppExecutor {
      * Override the active main application executor with the provided [exec] service.
      */
     public fun overrideExecutor(exec: ListeningScheduledExecutorService) {
-<span class="nc" id="L167">      this.runner = exec</span>
-<span class="nc" id="L168">    }</span>
+<span class="nc" id="L134">      this.runner = exec</span>
+<span class="nc" id="L135">    }</span>
 
     /** @inheritDoc */
-<span class="nc" id="L171">    override fun service(): ListeningScheduledExecutorService = runner</span>
+<span class="fc" id="L138">    override fun service(): ListeningScheduledExecutorService = runner</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BuiltinController.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server.controller.builtin</a> &gt; <span class="el_source">BuiltinController.kt</span></div><h1>BuiltinController.kt</h1><pre class="source lang-java linenums">package elide.server.controller.builtin
+
+import elide.server.RawResponse
+import elide.server.controller.BaseController
+import elide.server.controller.PageController
+import elide.server.controller.StatusEnabledController
+import elide.server.runtime.jvm.UncaughtExceptionHandler
+import io.micronaut.http.HttpRequest
+
+/**
+ * Base class for built-in controllers provided by Elide.
+ *
+ * &quot;Built-in&quot; controllers are mounted within the application context by default, and handle events like global
+ * `404 Not Found` and upstream call failures.
+ *
+ * ### Built-in controllers
+ *
+ * Each built-in controller operates at the default `@Singleton` scope, and complies with [StatusEnabledController]. As
+ * such, state tied to individual requests is not allowed on built-in controllers unless proper synchronization is used.
+ *
+ * Users can replace built-in controllers via Micronaut annotations. See below for more.
+ *
+ * ### Overriding built-in controllers
+ *
+ * To override a built-in controller, implement [BaseController] and annotate your class as follows:
+ * ```kotlin
+ * @Controller
+ * @Replaces(SomeBuiltinController::class)
+ * class MyController {
+ *   // ...
+ * }
+ * ```
+ *
+ * ### Default built-in controllers
+ *
+ * The following built-in controllers are provided by the framework by default:
+ * - [NotFoundController]: handles `404 Not Found` events by rendering a designated HTML template.
+ * - [ServerErrorController]: handles generic `500 Internal Server Error` events via a designated HTML template.
+ *
+ * ### Low-level error handler
+ *
+ * General/low-level error handling is provided at the executor level by [UncaughtExceptionHandler], which can also be
+ * customized / replaced via the same mechanism shown above. See docs on that class for more info.
+ *
+ * @see NotFoundController for the built-in controller which handles `404 Not Found` events.
+ * @see ServerErrorController for the built-in controller which handles generic internal error events.
+ * @see UncaughtExceptionHandler for customizable background error handling logic.
+ */
+<span class="fc" id="L49">public abstract class BuiltinController : StatusEnabledController, PageController() {</span>
+  /**
+   * Handles a request to this built-in controller.
+   *
+   * To perform I/O or any other blocking task, this method should suspend against the appropriate dispatcher.
+   *
+   * @param request Subject request to handle.
+   * @return HTTP response which should be returned in response to the provided [request].
+   */
+  public abstract suspend fun handle(request: HttpRequest&lt;out Any&gt;): RawResponse
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

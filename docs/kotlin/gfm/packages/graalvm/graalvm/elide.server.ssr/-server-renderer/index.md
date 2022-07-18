@@ -12,9 +12,3 @@ Describes supported server-renderer API methods, which are used by the framework
 | Name | Summary |
 |---|---|
 | [render](index.md#-2105732579%2FFunctions%2F-106064166) | [jvm]<br>abstract fun [render](index.md#-2105732579%2FFunctions%2F-106064166)(): [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html) |
-
-## Inheritors
-
-| Name |
-|---|
-| [ServerSSRRenderer](../-server-s-s-r-renderer/index.md) |

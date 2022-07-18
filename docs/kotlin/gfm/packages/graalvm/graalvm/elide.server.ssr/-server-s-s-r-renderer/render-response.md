@@ -3,13 +3,13 @@
 # renderResponse
 
 [jvm]\
-fun [renderResponse](render-response.md)(response: MutableHttpResponse&lt;[ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)&gt;): MutableHttpResponse&lt;[ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)&gt;
+suspend fun [renderResponse](render-response.md)(response: MutableHttpResponse&lt;[ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)&gt;): MutableHttpResponse&lt;[ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)&gt;
 
-Render the attached [script](../../../../../packages/graalvm/elide.server.ssr/-server-s-s-r-renderer/script.md) into a [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html), and wrap it in a Micronaut MutableHttpResponse provided at [response](render-response.md).
+Render the attached [script](../../../../../packages/server/kotlinx.html/index.md) into a [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html), and wrap it in a Micronaut MutableHttpResponse provided at [response](render-response.md).
 
 #### Return
 
-Mutable [response](render-response.md) with body data filled in from the execution result of [script](../../../../../packages/graalvm/elide.server.ssr/-server-s-s-r-renderer/script.md).
+Mutable [response](render-response.md) with body data filled in from the execution result of [script](../../../../../packages/server/kotlinx.html/index.md).
 
 ## Parameters
 

@@ -3,18 +3,13 @@
 # SecurityProviderConfigurator
 
 [jvm]\
-class [SecurityProviderConfigurator](index.md)
+object [SecurityProviderConfigurator](index.md)
 
 Initializes JVM security providers at server startup.
 
-## Constructors
-
-| | |
-|---|---|
-| [SecurityProviderConfigurator](-security-provider-configurator.md) | [jvm]<br>fun [SecurityProviderConfigurator](-security-provider-configurator.md)() |
-
-## Types
+## Functions
 
 | Name | Summary |
 |---|---|
-| [Companion](-companion/index.md) | [jvm]<br>object [Companion](-companion/index.md) |
+| [initialize](initialize.md) | [jvm]<br>@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun [initialize](initialize.md)()<br>Initialize security providers available statically; this method is typically run at server startup. |
+| [ready](ready.md) | [jvm]<br>@[JvmStatic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html)<br>fun [ready](ready.md)(): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br>Indicate whether security providers have initialized. |

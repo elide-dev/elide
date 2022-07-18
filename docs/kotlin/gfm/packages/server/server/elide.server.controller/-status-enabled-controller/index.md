@@ -10,3 +10,4 @@ interface [StatusEnabledController](index.md)
 | Name |
 |---|
 | [AssetController](../../elide.server.assets/-asset-controller/index.md) |
+| [BuiltinController](../../elide.server.controller.builtin/-builtin-controller/index.md) |

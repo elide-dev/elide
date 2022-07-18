@@ -40,7 +40,7 @@ var pathtoroot = "../../../../";
     
     <li><a href="package-summary.html">Package</a></li>
     
-    <li class="navBarCell1Rev">Class</li>
+    <li>Class</li>
     
     <li><a href="package-tree.html">Tree</a></li>
     
@@ -89,7 +89,7 @@ var pathtoroot = "../../../../";
 <main role="main">
     <div class="header">
         <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html"></a></div>
-        <h2 title="Class SecurityProviderConfigurator" class="title">Class SecurityProviderConfigurator</h2>
+        <h2 title="Object SecurityProviderConfigurator" class="title">Object SecurityProviderConfigurator</h2>
     </div>
     <div class="contentContainer">
         <!-- <ul class="inheritance">
@@ -114,7 +114,7 @@ var pathtoroot = "../../../../";
                     <hr>
                     <pre class="wrap-overflow">
 
-public final class <span class="typeNameLabel"><a href=SecurityProviderConfigurator.html>SecurityProviderConfigurator</a></span>
+public class <span class="typeNameLabel"><a href=SecurityProviderConfigurator.html>SecurityProviderConfigurator</a></span>
 
                     </pre>
                     <div class="block"><p>Initializes JVM security providers at server startup.</p></div>
@@ -141,13 +141,6 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                                             <th class="colLast" scope="col">Description</th>
                                         </tr>
                                         
-                                        <tr class="altColor">
-                                            <td class="colFirst"><code>public class</code></td>
-                                            <th class="colSecond" scope="row"><code><a href="SecurityProviderConfigurator.Companion.html">SecurityProviderConfigurator.Companion</a></span></code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
                                     </table>
                                 </div>
                             </li>
@@ -169,6 +162,12 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                                             <th class="colFirst" scope="col">Modifier and Type</th>
                                             <th class="colSecond" scope="col">Field</th>
                                             <th class="colLast" scope="col">Description</th>
+                                        </tr>
+                                        
+                                        <tr class="altColor">
+                                            <td class="colFirst"><code>public final static <a href=SecurityProviderConfigurator.html>SecurityProviderConfigurator</a></code></td>
+                                            <th class="colSecond" scope="row"><code><a href=SecurityProviderConfigurator.html#INSTANCE>INSTANCE</a></code></th>
+                                            <td class="colLast"></td>
                                         </tr>
                                         
                                     </table>
@@ -194,12 +193,6 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                                             <th class="colLast" scope="col">Description</th>
                                         </tr>
 
-                                        
-                                            <tr class="altColor">
-                                                <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#SecurityProviderConfigurator()">SecurityProviderConfigurator</a></span>()</code></th>
-                                                <td class="colLast"></td>
-                                            </tr>
                                         
 
                                         </tbody>
@@ -250,6 +243,22 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                                             <th class="colLast" scope="col">Description</th>
                                         </tr>
                                         
+                                        <tr id="i0" class="altColor">
+                                            <td class="colFirst"><code>final static <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=SecurityProviderConfigurator.html#initialize()>initialize</a>() </code>
+                                            </th>
+                                            <td class="colLast">Initialize security providers available statically; this method is typically run at server startup.</td>
+                                        </tr>
+                                        
+                                        <tr id="i1" class="rowColor">
+                                            <td class="colFirst"><code>final static <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a></code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=SecurityProviderConfigurator.html#ready()>ready</a>() </code>
+                                            </th>
+                                            <td class="colLast">Indicate whether security providers have initialized.</td>
+                                        </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -281,16 +290,6 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="SecurityProviderConfigurator()"></a>
-                                <ul class="blockList">
-                                    <li class="blockList">
-                                        <h4>SecurityProviderConfigurator</h4>
-                                        <pre>SecurityProviderConfigurator()</pre>
-                                        <div class="block"></div>
-                                        
-                                    </li>
-                                </ul>
-                                
                             </li>
                         </ul>
                     </section>
@@ -303,6 +302,36 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
                                 <!--   -->
                             </a>
                                 <h3>Method Detail</h3>
+                                
+                                <a id="initialize()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>initialize</h4>
+                                        <pre class="methodSignature"> final static <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=SecurityProviderConfigurator.html#initialize()>initialize</a>()</pre>
+                                        <div class="block"><p>Initialize security providers available statically; this method is typically run at server startup.</p></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="ready()">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>ready</h4>
+                                        <pre class="methodSignature"> final static <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=SecurityProviderConfigurator.html#ready()>ready</a>()</pre>
+                                        <div class="block"><p>Indicate whether security providers have initialized.</p></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
                                 
                             </li>
                         </ul>
@@ -329,7 +358,7 @@ public final class <span class="typeNameLabel"><a href=SecurityProviderConfigura
     
     <li><a href="package-summary.html">Package</a></li>
     
-    <li class="navBarCell1Rev">Class</li>
+    <li>Class</li>
     
     <li><a href="package-tree.html">Tree</a></li>
     

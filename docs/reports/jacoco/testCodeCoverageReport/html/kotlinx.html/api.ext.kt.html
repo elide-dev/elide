@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>api.ext.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">kotlinx.html</a> &gt; <span class="el_source">api.ext.kt</span></div><h1>api.ext.kt</h1><pre class="source lang-java linenums">package kotlinx.html
 
 
-/**
- * TBD
- */
-<span class="nc" id="L7">public suspend inline fun &lt;T : Tag&gt; T.visitSuspend(crossinline block: suspend T.() -&gt; Unit): Unit = visitTagSuspend {</span>
-<span class="nc" id="L8">  block()</span>
-<span class="nc" id="L9">}</span>
+// Visitor with suspension support.
+<span class="nc" id="L5">public suspend inline fun &lt;T : Tag&gt; T.visitSuspend(crossinline block: suspend T.() -&gt; Unit): Unit = visitTagSuspend {</span>
+<span class="nc" id="L6">  block()</span>
+<span class="nc" id="L7">}</span>
 
-
-/**
- * TBD
- */
-public suspend inline fun &lt;T : Tag&gt; T.visitTagSuspend(block: T.() -&gt; Unit): Unit {
-<span class="nc" id="L16">  consumer.onTagStart(this)</span>
-<span class="nc" id="L17">  try {</span>
-<span class="nc" id="L18">    this.block()</span>
-<span class="nc" id="L19">  } catch (err: Throwable) {</span>
-<span class="nc" id="L20">    consumer.onTagError(this, err)</span>
+// Tag visitor with suspension support.
+@Suppress(&quot;TooGenericExceptionCaught&quot;)
+<span class="nc" id="L11">public suspend inline fun &lt;T : Tag&gt; T.visitTagSuspend(crossinline block: suspend T.() -&gt; Unit) {</span>
+<span class="nc" id="L12">  consumer.onTagStart(this)</span>
+<span class="nc" id="L13">  try {</span>
+<span class="nc" id="L14">    this.block()</span>
+<span class="nc" id="L15">  } catch (err: Throwable) {</span>
+<span class="nc" id="L16">    consumer.onTagError(this, err)</span>
   } finally {
-<span class="nc" id="L22">    consumer.onTagEnd(this)</span>
+<span class="nc" id="L18">    consumer.onTagEnd(this)</span>
   }
-<span class="nc" id="L24">}</span>
+<span class="nc" id="L20">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

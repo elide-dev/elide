@@ -22,7 +22,7 @@ public interface Application {
    */
   @Suppress(&quot;SpreadOperator&quot;)
   public fun boot(args: Array&lt;String&gt;) {
-<span class="nc" id="L25">    SecurityProviderConfigurator.registerProviders()</span>
+<span class="nc" id="L25">    SecurityProviderConfigurator.initialize()</span>
 <span class="nc" id="L26">    ServerFlag.setArgs(args)</span>
 <span class="nc" id="L27">    Micronaut.build().start()</span>
 <span class="nc" id="L28">  }</span>

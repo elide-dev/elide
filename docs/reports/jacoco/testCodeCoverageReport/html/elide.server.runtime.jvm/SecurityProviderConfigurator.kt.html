@@ -6,31 +6,39 @@ import java.security.Security
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Initializes JVM security providers at server startup. */
-<span class="nc" id="L9">@Suppress(&quot;UtilityClassWithPublicConstructor&quot;)</span>
-<span class="nc" id="L10">public class SecurityProviderConfigurator {</span>
-  public companion object {
-<span class="nc" id="L12">    private val ready = AtomicBoolean(false)</span>
+@Suppress(&quot;UtilityClassWithPublicConstructor&quot;)
+public object SecurityProviderConfigurator {
+<span class="fc" id="L11">  private val ready = AtomicBoolean(false)</span>
 
-    // Register security providers at JVM startup time.
-    @JvmStatic @Synchronized public fun registerProviders() {
-<span class="nc" id="L16">      var bcposition = 0</span>
-<span class="nc bnc" id="L17" title="All 2 branches missed.">      if (Conscrypt.isAvailable()) {</span>
-<span class="nc" id="L18">        Security.insertProviderAt(Conscrypt.newProvider(), 0)</span>
-<span class="nc" id="L19">        bcposition = 1</span>
-      }
+  // Register security providers at JVM startup time.
+  @JvmStatic @Synchronized private fun registerProviders() {
+<span class="fc" id="L15">    var bcposition = 0</span>
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">    if (Conscrypt.isAvailable()) {</span>
+<span class="nc" id="L17">      Security.insertProviderAt(Conscrypt.newProvider(), 0)</span>
+<span class="nc" id="L18">      bcposition = 1</span>
+    }
 
-<span class="nc" id="L22">      Security.insertProviderAt(</span>
-<span class="nc" id="L23">        BouncyCastleProvider(),</span>
-<span class="nc" id="L24">        bcposition</span>
-      )
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L21">    Security.insertProviderAt(</span>
+<span class="fc" id="L22">      BouncyCastleProvider(),</span>
+<span class="fc" id="L23">      bcposition</span>
+    )
+<span class="fc" id="L25">  }</span>
 
-<span class="nc" id="L28">    init {</span>
-<span class="nc bnc" id="L29" title="All 2 branches missed.">      if (!ready.get()) {</span>
-<span class="nc" id="L30">        ready.compareAndSet(false, true)</span>
-<span class="nc" id="L31">        registerProviders()</span>
-      }
-<span class="nc" id="L33">    }</span>
+  /**
+   * Initialize security providers available statically; this method is typically run at server startup.
+   */
+  @JvmStatic public fun initialize() {
+<span class="fc bfc" id="L31" title="All 2 branches covered.">    if (!ready()) {</span>
+<span class="fc" id="L32">      ready.compareAndSet(false, true)</span>
+<span class="fc" id="L33">      registerProviders()</span>
+    }
+<span class="fc" id="L35">  }</span>
+
+  /**
+   * Indicate whether security providers have initialized.
+   */
+  @JvmStatic public fun ready(): Boolean {
+<span class="fc" id="L41">    return ready.get()</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -3,9 +3,9 @@
 # render
 
 [jvm]\
-open override fun [render](render.md)(): [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)
+open suspend override fun [render](render.md)(): [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html)
 
-Render the attached [script](../../../../../packages/graalvm/elide.server.ssr/-server-s-s-r-renderer/script.md) and return the resulting content as a [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html), built from the result of [renderInline](render-inline.md).
+Render the attached [script](../../../../../packages/server/kotlinx.html/index.md) and return the resulting content as a [ByteArrayOutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html), built from the result of [renderSuspendAsync](render-suspend-async.md).
 
 #### Return
 

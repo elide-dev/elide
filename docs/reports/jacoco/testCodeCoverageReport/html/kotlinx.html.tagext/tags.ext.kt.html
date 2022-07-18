@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>tags.ext.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">kotlinx.html.tagext</a> &gt; <span class="el_source">tags.ext.kt</span></div><h1>tags.ext.kt</h1><pre class="source lang-java linenums">package kotlinx.html.tagext
 
-import kotlinx.html.*
+import kotlinx.html.BODY
+import kotlinx.html.HEAD
+import kotlinx.html.HTML
+import kotlinx.html.HtmlTagMarker
+import kotlinx.html.attributesMapOf
+import kotlinx.html.emptyMap
+import kotlinx.html.visitSuspend
 
 /**
- * TBD
+ * Open a `&lt;body&gt;` tag with support for suspension calls.
+ *
+ * @Param classes Classes to apply to the body tag in the DOM.
+ * @param block Callable block to configure and populate the body tag.
  */
 @HtmlTagMarker
-<span class="nc" id="L9">public suspend inline fun HTML.body(</span>
-<span class="nc" id="L10">  classes : String? = null,</span>
+<span class="nc" id="L18">public suspend inline fun HTML.body(</span>
+<span class="nc" id="L19">  classes : String? = null,</span>
   crossinline block : suspend BODY.() -&gt; Unit
-<span class="nc" id="L12">) : Unit = BODY(</span>
-<span class="nc" id="L13">  attributesMapOf(&quot;class&quot;, classes),</span>
-<span class="nc" id="L14">  consumer</span>
-<span class="nc" id="L15">).visitSuspend(block)</span>
+<span class="nc" id="L21">) : Unit = BODY(</span>
+<span class="nc" id="L22">  attributesMapOf(&quot;class&quot;, classes),</span>
+<span class="nc" id="L23">  consumer</span>
+<span class="nc" id="L24">).visitSuspend(block)</span>
 
 
 /**
- * Document head
+ * Open a `&lt;head&gt;` tag with support for suspension calls.
+ *
+ * @param block Callable block to configure and populate the body tag.
  */
 @HtmlTagMarker
-<span class="nc" id="L22">public suspend inline fun HTML.head(</span>
+<span class="nc" id="L33">public suspend inline fun HTML.head(</span>
   crossinline block : suspend HEAD.() -&gt; Unit
-<span class="nc" id="L24">) : Unit = HEAD(emptyMap, consumer).visitSuspend(</span>
+<span class="nc" id="L35">) : Unit = HEAD(emptyMap, consumer).visitSuspend(</span>
   block
-<span class="nc" id="L26">)</span>
+<span class="nc" id="L37">)</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

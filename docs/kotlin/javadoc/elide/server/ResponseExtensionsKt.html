@@ -296,7 +296,7 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                         <tr id="i7" class="rowColor">
                                             <td class="colFirst"><code>final static HttpResponse&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html>ByteArrayOutputStream</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=ResponseExtensionsKt.html#html(SuspendFunction1)>html</a>(<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
+                                            <th class="colSecond" scope="row"><code><a href=ResponseExtensionsKt.html#html(PageController,SuspendFunction1)>html</a>(<a href=controller/PageController.html>PageController</a> $self, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
                                             </th>
                                             <td class="colLast">Responds to a client with an HTML response, using specified block to build an HTML page via Kotlin's HTML DSL.</td>
                                         </tr>
@@ -307,6 +307,22 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                             <th class="colSecond" scope="row"><code><a href=ResponseExtensionsKt.html#css(Function1)>css</a>(Function1&lt;CssBuilder, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
                                             </th>
                                             <td class="colLast">Responds to a client with an HTML response, using specified block to build the CSS document via Kotlin's CSS DSL.</td>
+                                        </tr>
+                                        
+                                        <tr id="i9" class="rowColor">
+                                            <td class="colFirst"><code>final static &lt;T extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, C extends TagConsumer&lt;T&gt;&gt; T</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ResponseExtensionsKt.html#htmlSuspend(C,String,SuspendFunction1)>htmlSuspend</a>(C $self, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> namespace, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
+                                            </th>
+                                            <td class="colLast"></td>
+                                        </tr>
+                                        
+                                        <tr id="i10" class="altColor">
+                                            <td class="colFirst"><code>final static &lt;T extends Tag, R extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; R</code>
+                                            </td>
+                                            <th class="colSecond" scope="row"><code><a href=ResponseExtensionsKt.html#visitAndFinalizeSuspend(T,TagConsumer,SuspendFunction1)>visitAndFinalizeSuspend</a>(T $self, TagConsumer&lt;R&gt; consumer, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;T, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block) </code>
+                                            </th>
+                                            <td class="colLast"></td>
                                         </tr>
                                         
                                         </tbody>
@@ -567,7 +583,7 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                     </li>
                                 </ul>
                                 
-                                <a id="html(SuspendFunction1)">
+                                <a id="html(PageController,SuspendFunction1)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -575,11 +591,13 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                           >
                                     <li class="blockList">
                                         <h4>html</h4>
-                                        <pre class="methodSignature"> final static HttpResponse&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html>ByteArrayOutputStream</a>&gt; <a href=ResponseExtensionsKt.html#html(SuspendFunction1)>html</a>(<a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
+                                        <pre class="methodSignature"> final static HttpResponse&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/io/ByteArrayOutputStream.html>ByteArrayOutputStream</a>&gt; <a href=ResponseExtensionsKt.html#html(PageController,SuspendFunction1)>html</a>(<a href=controller/PageController.html>PageController</a> $self, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
                                         <div class="block"><p>Responds to a client with an HTML response, using specified block to build an HTML page via Kotlin's HTML DSL.</p></div>
                                         
                                         <dl>
                                             <dt><span class="paramLabel">Parameters:</span></dt>
+                                            
+                                            
                                             
                                             
                                             <dd><code>block</code> - Block to execute to build the HTML page.</dd>
@@ -595,7 +613,7 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockListLast"
+                                              "blockList"
                                           >
                                     <li class="blockList">
                                         <h4>css</h4>
@@ -610,6 +628,36 @@ public final class <span class="typeNameLabel"><a href=ResponseExtensionsKt.html
                                             
                                             
                                         </dl>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="htmlSuspend(C,String,SuspendFunction1)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>htmlSuspend</h4>
+                                        <pre class="methodSignature"> final static &lt;T extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>, C extends TagConsumer&lt;T&gt;&gt; T <a href=ResponseExtensionsKt.html#htmlSuspend(C,String,SuspendFunction1)>htmlSuspend</a>(C $self, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> namespace, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;HTML, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
+                                        <div class="block"></div>
+                                        
+                                        <!-- TODO missing return annotation -->
+                                    </li>
+                                </ul>
+                                
+                                <a id="visitAndFinalizeSuspend(T,TagConsumer,SuspendFunction1)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockListLast"
+                                          >
+                                    <li class="blockList">
+                                        <h4>visitAndFinalizeSuspend</h4>
+                                        <pre class="methodSignature"> final static &lt;T extends Tag, R extends <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html>Any</a>&gt; R <a href=ResponseExtensionsKt.html#visitAndFinalizeSuspend(T,TagConsumer,SuspendFunction1)>visitAndFinalizeSuspend</a>(T $self, TagConsumer&lt;R&gt; consumer, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-suspend-function1/index.html>SuspendFunction1</a>&lt;T, <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a>&gt; block)</pre>
+                                        <div class="block"></div>
                                         
                                         <!-- TODO missing return annotation -->
                                     </li>

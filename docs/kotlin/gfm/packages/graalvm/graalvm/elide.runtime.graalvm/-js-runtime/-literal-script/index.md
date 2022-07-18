@@ -3,7 +3,7 @@
 # LiteralScript
 
 [jvm]\
-class [LiteralScript](index.md)(moduleId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), script: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) : [JsRuntime.ExecutableScript](../-executable-script/index.md)
+class [LiteralScript](index.md)(moduleId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), script: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), invocationBase: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, invocationTarget: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) : [JsRuntime.ExecutableScript](../-executable-script/index.md)
 
 Embedded script implementation which pulls from a string literal.
 
@@ -11,7 +11,7 @@ Embedded script implementation which pulls from a string literal.
 
 | | |
 |---|---|
-| [LiteralScript](-literal-script.md) | [jvm]<br>fun [LiteralScript](-literal-script.md)(moduleId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), script: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
+| [LiteralScript](-literal-script.md) | [jvm]<br>fun [LiteralScript](-literal-script.md)(moduleId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), script: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), invocationBase: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, invocationTarget: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null) |
 
 ## Types
 

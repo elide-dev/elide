@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseExtensions.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server</a> &gt; <span class="el_source">ResponseExtensions.kt</span></div><h1>ResponseExtensions.kt</h1><pre class="source lang-java linenums">@file:Suppress(&quot;unused&quot;)
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseExtensions.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">reports</a> &gt; <a href="index.source.html" class="el_package">elide.server</a> &gt; <span class="el_source">ResponseExtensions.kt</span></div><h1>ResponseExtensions.kt</h1><pre class="source lang-java linenums">@file:Suppress(&quot;unused&quot;, &quot;TooManyFunctions&quot;, &quot;WildcardImport&quot;)
 
 package elide.server
 
@@ -8,10 +8,8 @@ import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
-import kotlinx.coroutines.runBlocking
 import kotlinx.css.CssBuilder
-import kotlinx.html.HTML
-import kotlinx.html.html
+import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -66,15 +64,15 @@ public interface ResponseHandler&lt;ResponseBody&gt; {
 }
 
 // Shared logic for response handler contexts internal to Elide.
-<span class="fc" id="L69">public abstract class BaseResponseHandler&lt;ResponseBody&gt; : ResponseHandler&lt;ResponseBody&gt; {</span>
-<span class="fc" id="L70">  private val acquired: AtomicBoolean = AtomicBoolean(false)</span>
-<span class="fc" id="L71">  private val response: AtomicReference&lt;HttpResponse&lt;ResponseBody&gt;?&gt; = AtomicReference(null)</span>
+<span class="fc" id="L67">public abstract class BaseResponseHandler&lt;ResponseBody&gt; : ResponseHandler&lt;ResponseBody&gt; {</span>
+<span class="fc" id="L68">  private val acquired: AtomicBoolean = AtomicBoolean(false)</span>
+<span class="fc" id="L69">  private val response: AtomicReference&lt;HttpResponse&lt;ResponseBody&gt;?&gt; = AtomicReference(null)</span>
 
   /** @inheritDoc */
   override suspend fun respond(response: HttpResponse&lt;ResponseBody&gt;): HttpResponse&lt;ResponseBody&gt; {
-<span class="fc" id="L75">    this.acquired.compareAndSet(false, true)</span>
-<span class="fc" id="L76">    this.response.set(response)</span>
-<span class="fc" id="L77">    return response</span>
+<span class="fc" id="L73">    this.acquired.compareAndSet(false, true)</span>
+<span class="fc" id="L74">    this.response.set(response)</span>
+<span class="fc" id="L75">    return response</span>
   }
 
   /**
@@ -94,16 +92,16 @@ public interface ResponseHandler&lt;ResponseBody&gt; {
  *    located at the specified path.
  */
 public fun staticFile(file: String, contentType: String): HttpResponse&lt;*&gt; {
-<span class="fc" id="L97">  val cleanedPath = file.removePrefix(&quot;/static&quot;).removePrefix(&quot;/&quot;)</span>
-<span class="fc" id="L98">  val target = HtmlContent::class.java.getResourceAsStream(&quot;/static/$cleanedPath&quot;)</span>
-<span class="fc bfc" id="L99" title="All 2 branches covered.">  return if (target != null) {</span>
-<span class="fc" id="L100">    HttpResponse.ok(</span>
-<span class="fc" id="L101">      target</span>
-<span class="fc" id="L102">    ).contentType(</span>
-<span class="fc" id="L103">      contentType</span>
+<span class="fc" id="L95">  val cleanedPath = file.removePrefix(&quot;/static&quot;).removePrefix(&quot;/&quot;)</span>
+<span class="fc" id="L96">  val target = HtmlRenderer::class.java.getResourceAsStream(&quot;/static/$cleanedPath&quot;)</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">  return if (target != null) {</span>
+<span class="fc" id="L98">    HttpResponse.ok(</span>
+<span class="fc" id="L99">      target</span>
+<span class="fc" id="L100">    ).contentType(</span>
+<span class="fc" id="L101">      contentType</span>
     )
-<span class="fc" id="L105">  } else {</span>
-<span class="fc" id="L106">    HttpResponse.notFound&lt;Any&gt;()</span>
+<span class="fc" id="L103">  } else {</span>
+<span class="fc" id="L104">    HttpResponse.notFound&lt;Any&gt;()</span>
   }
 }
 
@@ -129,14 +127,14 @@ public typealias AssetTag = String
  * @return HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be
  *    located at the specified path.
  */
-<span class="nc" id="L132">public suspend fun PageController.asset(</span>
+<span class="nc" id="L130">public suspend fun PageController.asset(</span>
   request: HttpRequest&lt;*&gt;,
   moduleId: AssetModuleId,
-<span class="nc" id="L135">  type: AssetType? = null</span>
+<span class="nc" id="L133">  type: AssetType? = null</span>
 ): StreamedAssetResponse {
-<span class="fc" id="L137">  val handler = AssetHandler(type, this, request)</span>
-<span class="fc" id="L138">  handler.module(moduleId)</span>
-<span class="fc" id="L139">  return handler.finalize()</span>
+<span class="fc" id="L135">  val handler = AssetHandler(type, this, request)</span>
+<span class="fc" id="L136">  handler.module(moduleId)</span>
+<span class="fc" id="L137">  return handler.finalize()</span>
 }
 
 /**
@@ -148,10 +146,10 @@ public typealias AssetTag = String
  * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.script(request: HttpRequest&lt;*&gt;, moduleId: AssetModuleId): StreamedAssetResponse {
-<span class="fc" id="L151">  return asset(</span>
-<span class="fc" id="L152">    request,</span>
-<span class="fc" id="L153">    moduleId,</span>
-<span class="fc" id="L154">    AssetType.SCRIPT,</span>
+<span class="fc" id="L149">  return asset(</span>
+<span class="fc" id="L150">    request,</span>
+<span class="fc" id="L151">    moduleId,</span>
+<span class="fc" id="L152">    AssetType.SCRIPT,</span>
   )
 }
 
@@ -167,10 +165,10 @@ public suspend fun PageController.script(
   request: HttpRequest&lt;*&gt;,
   block: AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="fc" id="L170">  return asset(</span>
-<span class="fc" id="L171">    request,</span>
-<span class="fc" id="L172">    AssetType.SCRIPT,</span>
-<span class="fc" id="L173">    block,</span>
+<span class="fc" id="L168">  return asset(</span>
+<span class="fc" id="L169">    request,</span>
+<span class="fc" id="L170">    AssetType.SCRIPT,</span>
+<span class="fc" id="L171">    block,</span>
   )
 }
 
@@ -183,10 +181,10 @@ public suspend fun PageController.script(
  * @return Streamed asset response for the desired module ID.
  */
 public suspend fun PageController.stylesheet(request: HttpRequest&lt;*&gt;, moduleId: AssetModuleId): StreamedAssetResponse {
-<span class="fc" id="L186">  return asset(</span>
-<span class="fc" id="L187">    request,</span>
-<span class="fc" id="L188">    moduleId,</span>
-<span class="fc" id="L189">    AssetType.STYLESHEET,</span>
+<span class="fc" id="L184">  return asset(</span>
+<span class="fc" id="L185">    request,</span>
+<span class="fc" id="L186">    moduleId,</span>
+<span class="fc" id="L187">    AssetType.STYLESHEET,</span>
   )
 }
 
@@ -202,10 +200,10 @@ public suspend fun PageController.stylesheet(
   request: HttpRequest&lt;*&gt;,
   block: AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="fc" id="L205">  return asset(</span>
-<span class="fc" id="L206">    request,</span>
-<span class="fc" id="L207">    AssetType.STYLESHEET,</span>
-<span class="fc" id="L208">    block,</span>
+<span class="fc" id="L203">  return asset(</span>
+<span class="fc" id="L204">    request,</span>
+<span class="fc" id="L205">    AssetType.STYLESHEET,</span>
+<span class="fc" id="L206">    block,</span>
   )
 }
 
@@ -218,45 +216,45 @@ public suspend fun PageController.stylesheet(
  * @param block Block to customize the serving of this asset and declare a module ID.
  * @return Structure which streams the resolved asset content as the response.
  */
-<span class="fc" id="L221">public suspend fun PageController.asset(</span>
+<span class="fc" id="L219">public suspend fun PageController.asset(</span>
   request: HttpRequest&lt;*&gt;,
-<span class="fc" id="L223">  type: AssetType? = null,</span>
+<span class="fc" id="L221">  type: AssetType? = null,</span>
   block: suspend AssetHandler.() -&gt; Unit
 ): StreamedAssetResponse {
-<span class="fc" id="L226">  val handler = AssetHandler(type, this, request)</span>
-<span class="fc" id="L227">  block.invoke(handler)</span>
-<span class="fc" id="L228">  return handler.finalize()</span>
+<span class="fc" id="L224">  val handler = AssetHandler(type, this, request)</span>
+<span class="fc" id="L225">  block.invoke(handler)</span>
+<span class="fc" id="L226">  return handler.finalize()</span>
 }
 
 // Handler context for an asset serving cycle.
-<span class="fc" id="L232">public class AssetHandler(</span>
-<span class="nc" id="L233">  initialExpectedType: AssetType? = null,</span>
-<span class="fc" id="L234">  private val handler: ElideController,</span>
-<span class="fc" id="L235">  private val request: HttpRequest&lt;*&gt;,</span>
-<span class="fc" id="L236">  private val moduleId: AtomicReference&lt;AssetModuleId?&gt; = AtomicReference(null),</span>
-<span class="fc" id="L237">  private val expectedType: AtomicReference&lt;AssetType?&gt; = AtomicReference(initialExpectedType),</span>
-<span class="fc" id="L238">) : BaseResponseHandler&lt;StreamedAsset&gt;() {</span>
+<span class="fc" id="L230">public class AssetHandler(</span>
+<span class="nc" id="L231">  initialExpectedType: AssetType? = null,</span>
+<span class="fc" id="L232">  private val handler: ElideController,</span>
+<span class="fc" id="L233">  private val request: HttpRequest&lt;*&gt;,</span>
+<span class="fc" id="L234">  private val moduleId: AtomicReference&lt;AssetModuleId?&gt; = AtomicReference(null),</span>
+<span class="fc" id="L235">  private val expectedType: AtomicReference&lt;AssetType?&gt; = AtomicReference(initialExpectedType),</span>
+<span class="fc" id="L236">) : BaseResponseHandler&lt;StreamedAsset&gt;() {</span>
   /** Bind an asset handler to an asset module ID. */
-<span class="fc" id="L240">  public fun module(id: AssetModuleId, type: AssetType? = null) {</span>
-<span class="fc" id="L241">    moduleId.set(id)</span>
-<span class="pc bpc" id="L242" title="1 of 2 branches missed.">    if (type != null) expectedType.set(type)</span>
-<span class="fc" id="L243">  }</span>
+<span class="fc" id="L238">  public fun module(id: AssetModuleId, type: AssetType? = null) {</span>
+<span class="fc" id="L239">    moduleId.set(id)</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">    if (type != null) expectedType.set(type)</span>
+<span class="fc" id="L241">  }</span>
 
   /** Declare the expected asset type for this handler. Optional. */
   public fun assetType(type: AssetType) {
-<span class="fc" id="L247">    expectedType.set(type)</span>
-<span class="fc" id="L248">  }</span>
+<span class="fc" id="L245">    expectedType.set(type)</span>
+<span class="fc" id="L246">  }</span>
 
   /** @inheritDoc */
-<span class="fc" id="L251">  override suspend fun finalize(): HttpResponse&lt;StreamedAsset&gt; {</span>
-<span class="fc" id="L252">    return respond(</span>
-<span class="fc" id="L253">      handler.assets().serveAsync(</span>
-<span class="fc" id="L254">        request,</span>
-<span class="fc" id="L255">        moduleId.get(),</span>
-<span class="fc" id="L256">      ).await()</span>
+<span class="fc" id="L249">  override suspend fun finalize(): HttpResponse&lt;StreamedAsset&gt; {</span>
+<span class="fc" id="L250">    return respond(</span>
+<span class="fc" id="L251">      handler.assets().serveAsync(</span>
+<span class="fc" id="L252">        request,</span>
+<span class="fc" id="L253">        moduleId.get(),</span>
+<span class="fc" id="L254">      ).await()</span>
     )
   }
-<span class="fc" id="L259">}</span>
+<span class="fc" id="L257">}</span>
 
 /**
  * Responds to a client with an HTML response, using specified [block] to build an HTML page via Kotlin's HTML DSL.
@@ -264,35 +262,35 @@ public suspend fun PageController.stylesheet(
  * @param block Block to execute to build the HTML page.
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
-public suspend fun html(block: suspend HTML.() -&gt; Unit): RawResponse {
-<span class="fc" id="L268">  return HttpResponse.ok(</span>
-<span class="fc" id="L269">    HtmlContent(builder = block).render()</span>
-<span class="fc" id="L270">  ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
-<span class="fc" id="L271">    &quot;text/html; charset=utf-8&quot;</span>
+public suspend fun PageController.html(block: suspend HTML.() -&gt; Unit): RawResponse {
+<span class="fc" id="L266">  return HttpResponse.ok(</span>
+<span class="fc" id="L267">    HtmlRenderer(</span>
+<span class="fc" id="L268">      builder = block,</span>
+<span class="fc" id="L269">      handler = this,</span>
+<span class="fc" id="L270">    ).render()</span>
+<span class="fc" id="L271">  ).characterEncoding(StandardCharsets.UTF_8).contentType(</span>
+<span class="fc" id="L272">    &quot;text/html; charset=utf-8&quot;</span>
   )
 }
 
 // HTML content rendering and container utility.
-<span class="fc" id="L276">internal class HtmlContent(</span>
-<span class="fc" id="L277">  private val prettyhtml: Boolean = false,</span>
-<span class="fc" id="L278">  private val builder: suspend HTML.() -&gt; Unit</span>
-) : ResponseRenderer&lt;ByteArrayOutputStream&gt; {
-  override fun render(): ByteArrayOutputStream {
-<span class="fc" id="L281">    val baos = ByteArrayOutputStream()</span>
-<span class="pc bpc" id="L282" title="1 of 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
-<span class="fc" id="L283">      it.appendHTML(</span>
-<span class="fc" id="L284">        prettyPrint = prettyhtml,</span>
-<span class="fc" id="L285">      ).html(</span>
-        block = {
-<span class="fc" id="L287">          runBlocking {</span>
-<span class="fc" id="L288">            builder()</span>
-<span class="fc" id="L289">          }</span>
-<span class="fc" id="L290">        }</span>
+<span class="fc" id="L277">public class HtmlRenderer(</span>
+<span class="fc" id="L278">  private val prettyhtml: Boolean = false,</span>
+<span class="pc" id="L279">  private val handler: PageController? = null,</span>
+<span class="fc" id="L280">  private val builder: suspend HTML.() -&gt; Unit,</span>
+) : SuspensionRenderer&lt;ByteArrayOutputStream&gt; {
+  override suspend fun render(): ByteArrayOutputStream {
+<span class="fc" id="L283">    val baos = ByteArrayOutputStream()</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">    baos.bufferedWriter(StandardCharsets.UTF_8).use {</span>
+<span class="fc" id="L285">      it.appendHTML(</span>
+<span class="fc" id="L286">        prettyPrint = prettyhtml,</span>
+<span class="fc" id="L287">      ).htmlSuspend(</span>
+<span class="fc" id="L288">        block = builder</span>
       )
     }
-<span class="fc" id="L293">    return baos</span>
+<span class="fc" id="L291">    return baos</span>
   }
-<span class="fc" id="L295">}</span>
+<span class="fc" id="L293">}</span>
 
 /**
  * Responds to a client with an HTML response, using specified [block] to build the CSS document via Kotlin's CSS DSL.
@@ -301,27 +299,48 @@ public suspend fun html(block: suspend HTML.() -&gt; Unit): RawResponse {
  * @return HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
  */
 public fun css(block: CssBuilder.() -&gt; Unit): StreamedAssetResponse {
-<span class="fc" id="L304">  return HttpResponse.ok(</span>
-<span class="fc" id="L305">    CssContent(block).render()</span>
-<span class="fc" id="L306">  ).characterEncoding(</span>
-<span class="fc" id="L307">    StandardCharsets.UTF_8</span>
-<span class="fc" id="L308">  ).contentType(</span>
-<span class="fc" id="L309">    &quot;text/css; chartset=utf-8&quot;</span>
+<span class="fc" id="L302">  return HttpResponse.ok(</span>
+<span class="fc" id="L303">    CssContent(block).render()</span>
+<span class="fc" id="L304">  ).characterEncoding(</span>
+<span class="fc" id="L305">    StandardCharsets.UTF_8</span>
+<span class="fc" id="L306">  ).contentType(</span>
+<span class="fc" id="L307">    &quot;text/css; chartset=utf-8&quot;</span>
   )
 }
 
 // HTML content rendering and container utility.
-<span class="fc" id="L314">internal class CssContent(</span>
-<span class="fc" id="L315">  private val builder: CssBuilder.() -&gt; Unit</span>
+<span class="fc" id="L312">internal class CssContent(</span>
+<span class="fc" id="L313">  private val builder: CssBuilder.() -&gt; Unit</span>
 ) : ResponseRenderer&lt;StreamedAsset&gt; {
   override fun render(): StreamedAsset {
-<span class="fc" id="L318">    val contentBytes = CssBuilder().apply(builder).toString().toByteArray(</span>
-<span class="fc" id="L319">      StandardCharsets.UTF_8</span>
+<span class="fc" id="L316">    val contentBytes = CssBuilder().apply(builder).toString().toByteArray(</span>
+<span class="fc" id="L317">      StandardCharsets.UTF_8</span>
     )
-<span class="fc" id="L321">    return NettyStreamedFileCustomizableResponseType(</span>
-<span class="fc" id="L322">      ByteArrayInputStream(contentBytes),</span>
-<span class="fc" id="L323">      AssetType.STYLESHEET.mediaType,</span>
+<span class="fc" id="L319">    return NettyStreamedFileCustomizableResponseType(</span>
+<span class="fc" id="L320">      ByteArrayInputStream(contentBytes),</span>
+<span class="fc" id="L321">      AssetType.STYLESHEET.mediaType,</span>
     )
   }
 }
+
+@HtmlTagMarker
+<span class="nc" id="L327">public suspend inline fun &lt;T, C : TagConsumer&lt;T&gt;&gt; C.htmlSuspend(</span>
+<span class="nc" id="L328">  namespace : String? = null,</span>
+  crossinline block : suspend HTML.() -&gt; Unit
+<span class="nc" id="L330">) : T = HTML(</span>
+<span class="nc" id="L331">  emptyMap,</span>
+<span class="nc" id="L332">  this,</span>
+<span class="nc" id="L333">  namespace</span>
+<span class="nc" id="L334">).visitAndFinalizeSuspend(</span>
+  this,
+  block,
+<span class="nc" id="L337">)</span>
+
+
+<span class="nc" id="L340">public suspend inline fun &lt;T : Tag, R&gt; T.visitAndFinalizeSuspend(</span>
+  consumer: TagConsumer&lt;R&gt;,
+  crossinline block: suspend T.() -&gt; Unit
+<span class="nc" id="L343">): R = visitTagAndFinalize(consumer) {</span>
+<span class="nc" id="L344">  block()</span>
+<span class="nc" id="L345">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

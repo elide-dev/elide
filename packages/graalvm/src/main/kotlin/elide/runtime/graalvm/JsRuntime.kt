@@ -3,6 +3,7 @@ package elide.runtime.graalvm
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
+import elide.server.type.RequestState
 import elide.server.util.ServerFlag
 import elide.util.Hex
 import io.micronaut.caffeine.cache.Cache
@@ -12,6 +13,7 @@ import io.micronaut.context.annotation.Factory
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
+import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -21,6 +23,7 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -36,19 +39,40 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     private val singleton = JsRuntime()
 
     // Hard-coded JS VM options.
-    private val baseOptions = listOf(
-      StaticProperty("js.v8-compat", "true"),
+    private val baseOptions : List<JSVMProperty> = listOf(
+      StaticProperty("js.strict", "true"),
     )
 
     // Options which can be controlled via user-configured inputs.
-    private val configurableOptions = listOf(
+    private val configurableOptions : List<JSVMProperty> = listOf(
       RuntimeProperty("vm.js.ecma", "js.ecmascript-version", "2020"),
     )
 
     // Options which must be evaluated at the time a context is created.
-    private val conditionalOptions = listOf(
-      ConditionalProperty(
-        "vm.inspect", "inspect", { ServerFlag.inspect }, defaultValue = "false"),
+    private val conditionalOptions : List<JSVMProperty> = listOf(
+      ConditionalMultiProperty(main = ConditionalProperty(
+        "vm.inspect",
+        "inspect",
+        { ServerFlag.inspect },
+        defaultValue = "false"
+      ), properties = listOf(
+        // Inspection: Path.
+        RuntimeProperty("vm.inspect.path", "inspect.Path") { ServerFlag.inspectPath },
+
+        // Inspection: Suspend.
+        RuntimeProperty("vm.inspect.suspend", "inspect.Suspend", "true"),
+
+        // Inspection: Secure.
+        RuntimeProperty("vm.inspect.secure", "inspect.Secure", "false") {
+          ServerFlag.inspectSecure.toString()
+        },
+
+        // Inspection: Wait for debugger.
+        RuntimeProperty("vm.inspect.wait", "inspect.WaitAttached", "false"),
+
+        // Inspection: Runtime sources.
+        RuntimeProperty("vm.inspect.internal", "inspect.Internal", "false"),
+      )),
     )
 
     /** Runnable task within a JS VM context. */
@@ -105,8 +129,22 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       val builder = VMContext.newBuilder("js")
         .allowExperimentalOptions(true)
 
-      buildRuntimeOptions().forEach {
+      buildRuntimeOptions().flatMap {
         val prop = it.key
+        val value = prop.value()
+        if (value != null && value != "false") {
+          if (prop is ConditionalMultiProperty) {
+            // if it's a multi-property, explode into the individual property values.
+            prop.explode()
+          } else {
+            // otherwise, just consider the single value.
+            listOf(prop)
+          }
+        } else {
+          // if there's no value for this property, then we don't need to consider it.
+          emptyList()
+        }
+      }.forEach { prop ->
         val value = prop.value()
         if (value != null && value != "false") {
           logging.debug(
@@ -120,6 +158,65 @@ import com.google.common.util.concurrent.ListenableFuture as Future
         }
       }
       return builder.build()
+    }
+  }
+
+  /** Describes inputs to be made available during a VM execution. */
+  public class ExecutionInputs<State : Any> public constructor(
+    public val data: Map<String, Any?> = ConcurrentSkipListMap(),
+  ) {
+    public companion object {
+      /** Key where shared state is placed in the execution input data map. */
+      public const val STATE: String = "_state_"
+
+      /** Key where combined state is placed in the execution input data map. */
+      public const val CONTEXT: String = "_ctx_"
+
+      // Shortcut for empty inputs.
+      public val EMPTY: ExecutionInputs<Any> = ExecutionInputs()
+
+      /** @return Execution inputs from the provided request state object. */
+      @JvmStatic public fun <State : Any> fromRequestState(
+        context: RequestState,
+        state: State?,
+      ): ExecutionInputs<State> {
+        return ExecutionInputs(mapOf(
+          STATE to state,
+          CONTEXT to context,
+        ))
+      }
+    }
+
+    // Build the execution inputs into a set of arguments for the program.
+    internal fun buildArguments(): Array<out Any?> {
+      return arrayOf(this)
+    }
+
+    /**
+     * Host access to fetch the current state; if no state is available, `null` is returned.
+     *
+     * The "state" for an execution is modeled by the developer, via a serializable data class. If state is provided,
+     * then it is made available to the JavaScript context.
+     *
+     * @return Instance of execution state provided at invocation time, or `null`.
+     */
+    @Suppress("UNCHECKED_CAST")
+    @HostAccess.Export
+    public fun state(): State? {
+      return data[STATE] as? State
+    }
+
+    /**
+     * Host access to fetch the current context; if no execution context is available, `null` is returned.
+     *
+     * The "context" is modeled by the [RequestState] class, which provides a consistent structure with guest language
+     * accessors for notable context properties, such as the active HTTP request.
+     *
+     * @return Instance of execution context provided at invocation time, or `null`.
+     */
+    @HostAccess.Export
+    public fun context(): RequestState? {
+      return data[CONTEXT] as? RequestState
     }
   }
 
@@ -157,9 +254,10 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     private val name: String,
     override val symbol: String,
     private val defaultValue: String? = null,
+    private val getter: (() -> String?)? = null,
   ): JSVMProperty {
     // @TODO(sgammon): implement
-    override fun value(): String? = defaultValue
+    override fun value(): String? = getter?.invoke() ?: defaultValue
   }
 
   /**
@@ -179,10 +277,38 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     private val value: RuntimeProperty? = null,
     private val defaultValue: String? = null,
   ): JSVMProperty {
-    override fun value(): String? = if (condition.invoke()) {
-      value?.value() ?: defaultValue
+    override fun value(): String = if (condition.invoke()) {
+      value?.value() ?: "true"
     } else {
-      defaultValue ?: "true"
+      defaultValue ?: "false"
+    }
+  }
+
+  /**
+   * Represents a property for the JS Runtime which applies based on some `condition`, or falls back to a `defaultValue`
+   * at a given `name` in Elide's configuration system; this is similar to a [ConditionalProperty], but allows for
+   * multiple properties to be efficiently applied based on a single condition.
+   *
+   * @param main Conditional property which should trigger this set of properties.
+   * @param properties Other property configurations which should apply if this one applies.
+   */
+  internal data class ConditionalMultiProperty(
+    private val main: ConditionalProperty,
+    private val properties: List<RuntimeProperty>,
+  ): JSVMProperty {
+    /** @return Main value for this conditional multi-property set. */
+    override fun value(): String = main.value()
+
+    /** @return Main property symbol for this conditional multi-property set. */
+    override val symbol: String get() = main.symbol
+
+    /** @return Full list of properties that should apply for this set, including the root property. */
+    internal fun explode(): List<JSVMProperty> {
+      return listOf(
+        main
+      ).plus(
+        properties
+      )
     }
   }
 
@@ -217,7 +343,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 
   /** Managed GraalVM execution context, with thread guards. */
   private class ManagedContext {
-    internal companion object {
+    companion object {
       @JvmStatic internal fun acquire(): ManagedContext {
         return context.get()
       }
@@ -247,12 +373,12 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
 
     // Acquire this context for execution.
-    internal fun <R> exec(operation: (VMContext) -> R): R {
+    fun <R> exec(operation: (VMContext) -> R): R {
       locked.compareAndSet(
         false,
         true,
       )
-      val ctx = vmContext.get() ?: throw IllegalStateException(
+      val ctx = vmContext.get() ?: error(
         "Context not initialized, cannot execute on VM"
       )
       ctx.enter()
@@ -335,11 +461,9 @@ import com.google.common.util.concurrent.ListenableFuture as Future
           return (
             runtimePreamble to runtimeEntry
           )
-        } else {
-          throw IllegalStateException(
-            "Cannot initialize JS runtime twice"
-          )
-        }
+        } else error(
+          "Cannot initialize JS runtime twice"
+        )
       }
     }
 
@@ -382,7 +506,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
         val prepped = prepare(script)
         ManagedContext.acquire().exec {
           it.eval(prepped.interpret())
-        } ?: throw IllegalStateException(
+        } ?: error(
           "Failed to resolve value from VM execution: got `null`"
         )
       }!!
@@ -421,7 +545,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 
     // Evaluate/interpret the rendered output for this script.
     private fun render(): Source {
-      val content = renderedContent?.toString() ?: throw IllegalStateException(
+      val content = renderedContent?.toString() ?: error(
         "Cannot render script before it has been prepared by the JS runtime"
       )
       val source = Source.create(
@@ -540,7 +664,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
         base.split(".").forEach {
           baseSegment = baseSegment.getMember(
             it
-          ) ?: throw IllegalStateException(
+          ) ?: error(
             "Failed to resolve base segment: '$it' in '$base' was not found"
           )
         }
@@ -552,12 +676,12 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       // from the resolved base segment, pluck the executable member
       val found = baseResolved.getMember(
         script.invocationTarget,
-      ) ?: throw IllegalStateException(
+      ) ?: error(
         "Failed to invoke script member: '${script.getId()}' (fn: '${script.invocationTarget}')"
       )
 
       if (!found.canExecute()) {
-        throw IllegalStateException(
+        error(
           "Member found, but not executable, at '${base}.${script.invocationTarget}'"
         )
       } else {
@@ -590,6 +714,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
    * @param script Executable script spec to execute within the embedded JS VM.
    * @return Deferred task which evaluates to the return value [R] when execution finishes.
    */
+  @Suppress("SpreadOperator")
   private fun <R> executeBackground(
     script: ExecutableScript,
     returnType: Class<R>,

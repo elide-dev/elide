@@ -1,5 +1,6 @@
 package helloworld
 
+import elide.server.controller.PageController
 import elide.server.html
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -13,7 +14,7 @@ import kotlinx.html.title
 /** Self-contained application example, which serves an HTML page that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */
-  @Controller class Index {
+  @Controller class Index : PageController() {
     @Get("/") suspend fun index() = html {
       head {
         title { +"Hello, Elide!" }

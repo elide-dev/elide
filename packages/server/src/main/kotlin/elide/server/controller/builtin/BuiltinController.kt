@@ -4,7 +4,7 @@ import elide.server.RawResponse
 import elide.server.controller.BaseController
 import elide.server.controller.PageController
 import elide.server.controller.StatusEnabledController
-import elide.server.runtime.UncaughtExceptionHandler
+import elide.server.runtime.jvm.UncaughtExceptionHandler
 import io.micronaut.http.HttpRequest
 
 /**

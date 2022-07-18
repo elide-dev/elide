@@ -30,7 +30,6 @@ dependencyResolutionManagement {
 rootProject.name = "elide"
 
 include(
-  ":benchmarks:server",
   ":packages:base",
   ":packages:frontend",
   ":packages:server",

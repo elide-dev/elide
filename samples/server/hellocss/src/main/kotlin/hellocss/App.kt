@@ -1,5 +1,6 @@
 package hellocss
 
+import elide.server.controller.PageController
 import elide.server.css
 import elide.server.html
 import elide.server.stylesheet
@@ -17,7 +18,7 @@ import kotlinx.html.title
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App {
   /** GET `/`: Controller for index page. */
-  @Controller class Index {
+  @Controller class Index : PageController() {
     // Serve the page itself.
     @Get("/") suspend fun index() = html {
       head {

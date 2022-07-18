@@ -1,8 +1,11 @@
+@file:Suppress("WildcardImport")
+
 package fullstack.reactssr
 
 import elide.server.*
 import elide.server.annotations.Page
-import elide.server.controller.PageController
+import elide.server.controller.PageWithProps
+import elide.server.type.RequestState
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -11,11 +14,24 @@ import kotlinx.css.*
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
+import kotlinx.serialization.Serializable
+import org.graalvm.polyglot.HostAccess
 
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
 object App : Application {
+  /** State properties for the root page. */
+  @Serializable
+  data class HelloProps (
+    @get:HostAccess.Export val name: String = "Elide"
+  )
+
   /** GET `/`: Controller for index page. */
-  @Page class Index : PageController() {
+  @Page class Index : PageWithProps<HelloProps>(HelloProps.serializer()) {
+    /** @return Props to use when rendering this page. */
+    override suspend fun props(request: RequestState): HelloProps {
+      return HelloProps(name = "Elide v3")
+    }
+
     // Serve the root page.
     @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
       head {

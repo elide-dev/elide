@@ -4,14 +4,10 @@ package elide.server
 
 import elide.runtime.graalvm.JsRuntime
 import elide.server.controller.ElideController
-import elide.server.controller.PageController
-import elide.server.ssr.ServerRenderer
 import elide.server.ssr.ServerSSRRenderer
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
-import kotlinx.coroutines.runBlocking
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayOutputStream
@@ -37,43 +33,6 @@ public val DEFAULT_INVOCATION_TARGET: String? = null
 
 // Default ID to use in the DOM.
 public const val DEFAULT_SSR_DOM_ID: String = "root"
-
-/**
- * Load and serve a JavaScript bundle server-side, executing it within the context of an isolated GraalVM JavaScript
- * runtime; then, collect the output and return it as an HTTP response.
- *
- * Additional response properties, such as headers, may be set on the return result, as it is kept mutable. To change
- * initial parameters like the HTTP status, use the [response] parameter via constructors like [HttpResponse.notFound].
- *
- * @param path Path to the React SSR entrypoint script, which should be embedded within the asset section of the JAR.
- * @param response Mutable HTTP response to fill with the resulting SSR content. Sets the status and headers.
- * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
- *    could not be located at the specified path.
- */
-public suspend fun PageController.ssr(
-  request: HttpRequest<*>,
-  path: String = NODE_SSR_DEFAULT_PATH,
-  response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
-): MutableHttpResponse<ByteArrayOutputStream> {
-  return if (path.isBlank()) {
-    HttpResponse.notFound()
-  } else {
-    val renderer = ServerSSRRenderer(
-      this,
-      request,
-      JsRuntime.EmbeddedScript(
-        path = "/$EMBEDDED_ROOT/$path",
-      )
-    )
-    renderer.renderResponse(
-      response
-    ).characterEncoding(
-      StandardCharsets.UTF_8
-    ).contentType(
-      MediaType("text/html; charset=utf-8", "html")
-    )
-  }
-}
 
 /**
  * Evaluate and inject SSR content into a larger HTML page, using a `<main>` tag as the root element in the dom; apply
@@ -103,21 +62,9 @@ public suspend fun BODY.injectSSR(
   invocationBase: String? = DEFAULT_INVOCATION_BASE,
   invocationTarget: String? = DEFAULT_INVOCATION_TARGET,
   embeddedRoot: String = EMBEDDED_ROOT,
-): Unit = MAIN(
-  attributesMapOf(
-    "id",
-    domId,
-    "class",
-    classes.joinToString(" "),
-    "data-serving-mode",
-    "ssr"
-  ).plus(
-    attrs
-  ),
-  consumer
-).visitSuspend {
-  // @TODO(sgammon): avoid blocking call here
-  val content = ServerSSRRenderer(
+) {
+  val rendered = ServerSSRRenderer(
+    this,
     handler,
     request,
     JsRuntime.Script.embedded(
@@ -125,13 +72,25 @@ public suspend fun BODY.injectSSR(
       invocationBase = invocationBase,
       invocationTarget = invocationTarget,
     )
-  ).renderSuspend()
+  ).renderSuspendAsync()
 
-  unsafe {
-    if (content != null) {
-      +content
-    } else {
-      +"<!-- // -->"
+  MAIN(
+    attributesMapOf(
+      "id",
+      domId,
+      "class",
+      classes.joinToString(" "),
+      "data-serving-mode",
+      "ssr"
+    ).plus(
+      attrs
+    ),
+    consumer
+  ).visitSuspend {
+    val content = rendered.await()
+
+    unsafe {
+      +(content.ifBlank { "<!-- // -->" })
     }
   }
 }
@@ -172,18 +131,14 @@ public suspend fun ssr(
 internal class SSRContent(
   private val prettyhtml: Boolean = false,
   private val builder: suspend HTML.() -> Unit
-) : ServerRenderer {
-  override fun render(): ByteArrayOutputStream {
+) : SuspensionRenderer<ByteArrayOutputStream> {
+  override suspend fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {
       it.appendHTML(
         prettyPrint = prettyhtml,
-      ).html(
-        block = {
-          runBlocking {
-            builder()
-          }
-        }
+      ).htmlSuspend(
+        block = builder
       )
     }
     return baos

@@ -1,9 +1,18 @@
 package kotlinx.html.tagext
 
-import kotlinx.html.*
+import kotlinx.html.BODY
+import kotlinx.html.HEAD
+import kotlinx.html.HTML
+import kotlinx.html.HtmlTagMarker
+import kotlinx.html.attributesMapOf
+import kotlinx.html.emptyMap
+import kotlinx.html.visitSuspend
 
 /**
- * TBD
+ * Open a `<body>` tag with support for suspension calls.
+ *
+ * @Param classes Classes to apply to the body tag in the DOM.
+ * @param block Callable block to configure and populate the body tag.
  */
 @HtmlTagMarker
 public suspend inline fun HTML.body(
@@ -16,7 +25,9 @@ public suspend inline fun HTML.body(
 
 
 /**
- * Document head
+ * Open a `<head>` tag with support for suspension calls.
+ *
+ * @param block Callable block to configure and populate the body tag.
  */
 @HtmlTagMarker
 public suspend inline fun HTML.head(

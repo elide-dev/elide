@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "TooManyFunctions", "WildcardImport")
 
 package elide.server
 
@@ -8,10 +8,8 @@ import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
-import kotlinx.coroutines.runBlocking
 import kotlinx.css.CssBuilder
-import kotlinx.html.HTML
-import kotlinx.html.html
+import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -95,7 +93,7 @@ public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<Respon
  */
 public fun staticFile(file: String, contentType: String): HttpResponse<*> {
   val cleanedPath = file.removePrefix("/static").removePrefix("/")
-  val target = HtmlContent::class.java.getResourceAsStream("/static/$cleanedPath")
+  val target = HtmlRenderer::class.java.getResourceAsStream("/static/$cleanedPath")
   return if (target != null) {
     HttpResponse.ok(
       target
@@ -264,30 +262,30 @@ public class AssetHandler(
  * @param block Block to execute to build the HTML page.
  * @return HTTP response wrapping the HTML page, with a content type of `text/html; charset=utf-8`.
  */
-public suspend fun html(block: suspend HTML.() -> Unit): RawResponse {
+public suspend fun PageController.html(block: suspend HTML.() -> Unit): RawResponse {
   return HttpResponse.ok(
-    HtmlContent(builder = block).render()
+    HtmlRenderer(
+      builder = block,
+      handler = this,
+    ).render()
   ).characterEncoding(StandardCharsets.UTF_8).contentType(
     "text/html; charset=utf-8"
   )
 }
 
 // HTML content rendering and container utility.
-internal class HtmlContent(
+public class HtmlRenderer(
   private val prettyhtml: Boolean = false,
-  private val builder: suspend HTML.() -> Unit
-) : ResponseRenderer<ByteArrayOutputStream> {
-  override fun render(): ByteArrayOutputStream {
+  private val handler: PageController? = null,
+  private val builder: suspend HTML.() -> Unit,
+) : SuspensionRenderer<ByteArrayOutputStream> {
+  override suspend fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {
       it.appendHTML(
         prettyPrint = prettyhtml,
-      ).html(
-        block = {
-          runBlocking {
-            builder()
-          }
-        }
+      ).htmlSuspend(
+        block = builder
       )
     }
     return baos
@@ -323,4 +321,25 @@ internal class CssContent(
       AssetType.STYLESHEET.mediaType,
     )
   }
+}
+
+@HtmlTagMarker
+public suspend inline fun <T, C : TagConsumer<T>> C.htmlSuspend(
+  namespace : String? = null,
+  crossinline block : suspend HTML.() -> Unit
+) : T = HTML(
+  emptyMap,
+  this,
+  namespace
+).visitAndFinalizeSuspend(
+  this,
+  block,
+)
+
+
+public suspend inline fun <T : Tag, R> T.visitAndFinalizeSuspend(
+  consumer: TagConsumer<R>,
+  crossinline block: suspend T.() -> Unit
+): R = visitTagAndFinalize(consumer) {
+  block()
 }

@@ -12,7 +12,7 @@ _elide: verb. to omit (a sound or syllable) when speaking. to join together; to 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
 
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin](https://img.shields.io/badge/Java-17-blue.svg?logo=java)](https://openjdk.org/projects/jdk/17/)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
 [![GraalVM](https://img.shields.io/badge/GraalVM-22.1.x-blue.svg?logo=oracle)](https://www.graalvm.org/)

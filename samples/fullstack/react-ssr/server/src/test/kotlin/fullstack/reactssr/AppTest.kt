@@ -85,7 +85,7 @@ import kotlin.test.assertTrue
       assertNotNull(root, "should be able to find root content element for React at `#root`")
       assertEquals("ssr", root.attr("data-serving-mode"), "serving-mode should be `ssr`")
       assertTrue(
-        root.html().contains("Hello, Elide!")
+        root.html().contains("Hello, Elide v3!")
       )
     }
   }

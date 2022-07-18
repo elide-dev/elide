@@ -99,6 +99,9 @@ dependencies {
   implementation(libs.kotlinx.wrappers.node)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
+  implementation(libs.kotlinx.coroutines.core.js)
+  implementation(libs.kotlinx.serialization.core.js)
+  implementation(libs.kotlinx.serialization.json.js)
 
   // Testing
   testImplementation(project(":packages:test"))

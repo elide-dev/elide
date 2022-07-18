@@ -1,41 +1,21 @@
+@file:Suppress("MatchingDeclarationName")
+
 package fullstack.reactssr
 
-import kotlinx.browser.document
 import react.Fragment
 import react.create
-import react.dom.client.createRoot
-import react.dom.client.hydrateRoot
+import elide.js.ssr.boot
 import fullstack.react.ui.SampleApp
+import react.Props
 
-const val SSR_FLAG = "data-serving-mode"
+external interface AppProps: Props {
+  var name: String?
+}
 
-fun main() {
-  val target = document.getElementById("root")
-  val container = if (target == null) {
-    val c = document.createElement("div")
-    document.body!!.appendChild(c)
-    c
-  } else {
-    target
-  }
-
-  val application = Fragment.create() {
+fun main() = boot<AppProps> { bootProps ->
+  Fragment.create() {
     SampleApp {
-      message = "Hello, Elide! This page was served over Hybrid SSR."
+      message = "Hello, ${bootProps?.name ?: "Elide"}! This page was served over Hybrid SSR."
     }
-  }
-  if (container.hasAttribute(SSR_FLAG) && container.getAttribute(SSR_FLAG) == "ssr") {
-    console.log("Hydrating client-side (SSR flag found)")
-    hydrateRoot(
-      container,
-      application
-    )
-  } else {
-    console.log("Rendering client-side (no SSR flag)")
-    createRoot(
-      container
-    ).render(
-      application
-    )
   }
 }

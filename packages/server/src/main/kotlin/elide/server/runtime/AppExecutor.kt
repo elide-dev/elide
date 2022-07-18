@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.ListeningScheduledExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
+import elide.server.runtime.jvm.UncaughtExceptionHandler
 import io.micronaut.context.annotation.Context
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -68,40 +69,6 @@ public interface AppExecutor {
      */
     @JvmStatic public suspend fun <R> io(operation: suspend () -> R): R {
       return withContext(DefaultExecutor.ioDispatcher) {
-        operation.invoke()
-      }
-    }
-
-    /**
-     * Run the provided [operation] on the main thread, returning whatever result is returned by the [operation].
-     *
-     * The operation is executed against the main dispatcher ([Dispatchers.Main]).
-     *
-     * @param R Return type.
-     * @param operation Operation to run. Can suspend.
-     * @return Deferred task providing the result of the [operation].
-     */
-    @JvmStatic public suspend fun <R> main(operation: suspend () -> R): R {
-      return withContext(DefaultExecutor.mainDispatcher) {
-        operation.invoke()
-      }
-    }
-
-    /**
-     * Run the provided [operation] in unconfined mode, where it will start a co-routine in the caller thread, but only
-     * until the first suspension point.
-     *
-     * The operation is executed against the "unconfined" dispatcher ([Dispatchers.Unconfined]). For more about confined
-     * versus unconfined co-routines, see here:
-     *
-     * https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html#unconfined-vs-confined-dispatcher
-     *
-     * @param R Return type.
-     * @param operation Operation to run. Can suspend.
-     * @return Deferred task providing the result of the [operation].
-     */
-    @JvmStatic public suspend fun <R> unconfined(operation: suspend () -> R): R {
-      return withContext(DefaultExecutor.mainDispatcher) {
         operation.invoke()
       }
     }

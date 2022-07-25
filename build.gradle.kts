@@ -17,6 +17,7 @@ plugins {
   alias(libs.plugins.ktlint)
   alias(libs.plugins.sonar)
   alias(libs.plugins.versionCheck)
+  alias(libs.plugins.doctor)
   jacoco
   signing
 }

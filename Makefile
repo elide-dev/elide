@@ -15,6 +15,7 @@ SAMPLES ?= no
 # NATIVE ?= no
 # CI ?= no
 # DRY ?= no
+# SCAN ?= no
 # IGNORE_ERRORS ?= no
 
 GRADLE ?= ./gradlew
@@ -43,6 +44,10 @@ endif
 
 ifeq ($(CI),yes)
 BUILD_ARGS += -Pelide.ci=true
+endif
+
+ifeq ($(SCAN),yes)
+BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)

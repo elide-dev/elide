@@ -14,7 +14,6 @@ plugins {
   idea
   distribution
   kotlin("js")
-  kotlin("kapt")
   kotlin("plugin.serialization")
   alias(libs.plugins.sonar)
   id("dev.elide.buildtools.plugin")

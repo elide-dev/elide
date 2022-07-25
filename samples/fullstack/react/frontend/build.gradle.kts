@@ -8,7 +8,6 @@
 plugins {
   idea
   kotlin("js")
-  kotlin("kapt")
   kotlin("plugin.serialization")
   alias(libs.plugins.sonar)
 }

@@ -10,12 +10,10 @@ import com.google.protobuf.gradle.*
 
 plugins {
   java
-  jacoco
   idea
   `maven-publish`
   signing
   kotlin("jvm")
-  kotlin("kapt")
   alias(libs.plugins.protobuf)
 }
 

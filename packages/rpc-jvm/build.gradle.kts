@@ -27,6 +27,10 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+kapt {
+  useBuildCache = true
+}
+
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
   processing {

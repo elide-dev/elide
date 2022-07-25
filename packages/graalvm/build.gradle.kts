@@ -24,6 +24,10 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+kapt {
+  useBuildCache = true
+}
+
 kotlin {
   explicitApi()
 

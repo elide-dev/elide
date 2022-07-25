@@ -160,6 +160,10 @@ micronaut {
   }
 }
 
+kapt {
+  useBuildCache = true
+}
+
 dependencies {
   // API Deps
   api(libs.jakarta.inject)

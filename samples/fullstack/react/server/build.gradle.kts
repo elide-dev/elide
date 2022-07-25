@@ -21,6 +21,10 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
+kapt {
+  useBuildCache = true
+}
+
 kotlin {
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))

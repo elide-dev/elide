@@ -59,6 +59,10 @@ elide {
   }
 }
 
+kapt {
+  useBuildCache = true
+}
+
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)

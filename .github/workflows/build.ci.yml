@@ -9,6 +9,10 @@ on:
   pull_request:
     types: [labeled, opened, reopened, synchronize]
 
+env:
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+
 jobs:
   ##
   ## Job: Library Build

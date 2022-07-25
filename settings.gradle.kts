@@ -15,9 +15,10 @@ plugins {
 
 dependencyResolutionManagement {
   repositories {
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
-    mavenCentral()
-    google()
+    maven("https://buildcache.dyme.cloud/maven2/")
+//    maven("https://maven-central.storage-download.googleapis.com/maven2/")
+//    mavenCentral()
+//    google()
     maven("https://plugins.gradle.org/m2/")
   }
   versionCatalogs {
@@ -30,6 +31,7 @@ dependencyResolutionManagement {
 rootProject.name = "elide"
 
 include(
+  ":benchmarks",
   ":packages:base",
   ":packages:frontend",
   ":packages:server",
@@ -74,5 +76,24 @@ gradleEnterprise {
   buildScan {
     termsOfServiceUrl = "https://gradle.com/terms-of-service"
     termsOfServiceAgree = "yes"
+  }
+}
+
+val cacheUsername: String? by settings
+val cachePassword: String? by settings
+val cachePush: String? by settings
+
+buildCache {
+  local {
+    isEnabled = false
+  }
+  remote<HttpBuildCache> {
+    isEnabled = true
+    isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
+    url = uri("https://buildcache.dyme.cloud/gradle/cache/")
+    credentials {
+      username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: error("Failed to resolve cache username")
+      password = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD") ?: error("Failed to resolve cache password")
+    }
   }
 }

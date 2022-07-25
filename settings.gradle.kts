@@ -31,7 +31,7 @@ dependencyResolutionManagement {
 rootProject.name = "elide"
 
 include(
-  ":benchmarks",
+//  ":benchmarks",
   ":packages:base",
   ":packages:frontend",
   ":packages:server",

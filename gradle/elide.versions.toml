@@ -102,8 +102,10 @@ tink = "1.6.1"
 conscrypt = "2.5.2"
 kover = "0.5.0"
 jmh_plugin = "0.6.6"
+doctor_plugin = "0.8.1"
 
 [plugins]
+doctor = { id = "com.osacky.doctor", version.ref = "doctor_plugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }

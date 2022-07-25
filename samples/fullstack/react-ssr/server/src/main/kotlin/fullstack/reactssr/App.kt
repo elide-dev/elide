@@ -6,6 +6,8 @@ import elide.server.*
 import elide.server.annotations.Page
 import elide.server.controller.PageWithProps
 import elide.server.type.RequestState
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
@@ -21,6 +23,8 @@ import org.graalvm.polyglot.HostAccess
 object App : Application {
   /** State properties for the root page. */
   @Serializable
+  @Introspected
+  @ReflectiveAccess
   data class HelloProps (
     @get:HostAccess.Export val name: String = "Elide"
   )

@@ -139,7 +139,7 @@ import java.util.SortedSet
       "micronaut.server.http-to-https-redirect" to true,
       "micronaut.server.http-version" to 2.0,
       "micronaut.server.dual-protocol" to true,
-      "micronaut.server.http-to-https-redirect" to true,
+      "micronaut.server.http-to-https-redirect" to false,
       "micronaut.server.ssl.build-self-signed" to (
         System.getProperty("elide.ssl.build-self-signed", "true").toBoolean()),
     )

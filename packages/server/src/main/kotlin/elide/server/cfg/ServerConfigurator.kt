@@ -136,8 +136,7 @@ import java.util.SortedSet
     // Properties applied only in dev mode.
     public val devMap: SortedMap<String, Any> = sortedMapOf(
       "micronaut.server.ssl.enabled" to true,
-      "micronaut.server.http-to-https-redirect" to true,
-      "micronaut.server.http-version" to 2.0,
+//      "micronaut.server.http-version" to 2.0,
       "micronaut.server.dual-protocol" to true,
       "micronaut.server.http-to-https-redirect" to false,
       "micronaut.server.ssl.build-self-signed" to (

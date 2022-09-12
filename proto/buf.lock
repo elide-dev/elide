@@ -4,8 +4,8 @@ deps:
   - remote: buf.build
     owner: elide
     repository: safe-html-types
-    commit: 067cdbab3a254649892ff1e9f778e70b
+    commit: 3d5d7e9b28be4293bba1e2571091590e
   - remote: buf.build
     owner: googleapis
     repository: googleapis
-    commit: 7629d38b907142a2a548d74ed881c985
+    commit: 8d7204855ec14631a499bd7393ce1970

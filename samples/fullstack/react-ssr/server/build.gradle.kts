@@ -27,6 +27,16 @@ plugins {
 group = "dev.elide.samples"
 version = rootProject.version as String
 
+testlogger {
+  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
+  showExceptions = true
+  showFailed = true
+  showPassed = true
+  showSkipped = true
+  showFailedStandardStreams = true
+  showFullStackTraces = true
+}
+
 elide {
   mode = if (devMode) {
     BuildMode.DEVELOPMENT

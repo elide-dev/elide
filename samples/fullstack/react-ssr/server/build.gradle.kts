@@ -187,6 +187,7 @@ tasks.named<JavaExec>("run") {
 }
 
 dependencies {
+  api(libs.graalvm.sdk)
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))

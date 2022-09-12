@@ -168,6 +168,7 @@ dependencies {
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)
+  api(libs.graalvm.sdk)
   api(platform(libs.grpc.bom))
   api(platform(libs.netty.bom))
   api(platform(libs.projectreactor.bom))

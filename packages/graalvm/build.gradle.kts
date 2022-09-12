@@ -152,6 +152,7 @@ publishing {
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
+  api(libs.graalvm.sdk)
 
   // Modules
   implementation(project(":packages:base"))
@@ -178,9 +179,6 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
-
-  // GraalVM SDK
-  implementation(libs.graalvm.sdk)
 
   // Testing
   testImplementation(project(":packages:test"))

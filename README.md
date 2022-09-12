@@ -22,7 +22,7 @@ _elide: verb. to omit (a sound or syllable) when speaking. to join together; to 
 
 _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].**_
 
-Latest version: `1.0-v3-alpha1-rc10`
+Latest version: `1.0-v3-alpha1-rc12`
 
 <hr />
 
@@ -274,9 +274,9 @@ not need some of these components:
 
 | Status                                                          | **Java**  | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
 |-----------------------------------------------------------------|-----------|------------|-------------|---------------|-----------|-------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.0`    | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.20`   | `22.1.x`    | `3.6.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.20`   | `22.1.x`    | `3.6.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.20`   | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`  | --         | --          | --            | --        | --                |
 
 

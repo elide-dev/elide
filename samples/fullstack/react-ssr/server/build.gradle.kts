@@ -18,8 +18,8 @@ plugins {
   kotlin("plugin.serialization")
   id("dev.elide.buildtools.plugin")
   alias(libs.plugins.testLogger)
-  alias(libs.plugins.micronautApplication)
-  alias(libs.plugins.micronautAot)
+  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.sonar)
   alias(libs.plugins.jib)
 }

@@ -12,8 +12,8 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  alias(libs.plugins.micronautApplication)
-  alias(libs.plugins.micronautAot)
+  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.sonar)
 }
 

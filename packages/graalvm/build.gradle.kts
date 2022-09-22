@@ -16,7 +16,7 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  alias(libs.plugins.micronautLibrary)
+  alias(libs.plugins.micronaut.library)
   alias(libs.plugins.testLogger)
   alias(libs.plugins.dokka)
 }

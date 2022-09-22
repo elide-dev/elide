@@ -19,7 +19,7 @@ plugins {
   kotlin("plugin.serialization")
   alias(libs.plugins.kotlinx.plugin.atomicfu)
   alias(libs.plugins.testLogger)
-  alias(libs.plugins.micronautLibrary)
+  alias(libs.plugins.micronaut.library)
   alias(libs.plugins.dokka)
 }
 

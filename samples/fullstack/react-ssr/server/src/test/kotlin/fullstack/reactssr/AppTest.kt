@@ -4,6 +4,7 @@ import elide.server.ElideServerTest
 import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import jakarta.inject.Inject
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 import kotlin.test.assertEquals
@@ -20,7 +21,7 @@ import kotlin.test.assertTrue
   }
 
   // Make sure the index page (`/`) doesn't error and yields an HTTP 200.
-  @Test fun testFetchIndex() {
+  @Test @Disabled fun testFetchIndex() {
     exchange(HttpRequest.GET("/")) {
       assertEquals(
         200,
@@ -51,7 +52,7 @@ import kotlin.test.assertTrue
   }
 
   // Decode the returned page as HTML and assert against the structure.
-  @Test fun testFetchIndexContent() {
+  @Test @Disabled fun testFetchIndexContent() {
     exchangeHTML(HttpRequest.GET("/")) {
       // you can still do basic assertions, because `this` == `HttpResponse`
       assertEquals(

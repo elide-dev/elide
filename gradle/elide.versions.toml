@@ -33,6 +33,7 @@ micronaut_objectstorage = "1.0.0"
 micronaut_multitenancy = "4.2.0"
 micronaut_jmx = "3.1.0"
 micronaut_k8s = "3.4.0"
+micronaut_rss = "3.2.0"
 micronaut_beanvalidation = "3.2.0"
 micronaut_kotlin = "3.2.2"
 kotlinx_coroutines = "1.6.4"
@@ -305,6 +306,7 @@ micronaut_kotlin_runtime = { group = "io.micronaut.kotlin", name = "micronaut-ko
 micronaut_kotlin_extension_functions = { group = "io.micronaut.kotlin", name = "micronaut-kotlin-extension-functions", version.ref = "micronaut_kotlin" }
 micronaut_jmx = { group = "io.micronaut.jmx", name = "micronaut-jmx", version.ref = "micronaut_jmx" }
 micronaut_xml_jackson = { group = "io.micronaut.xml", name = "micronaut-jackson-xml", version.ref = "micronaut_xml" }
+micronaut_rss = { group = "io.micronaut.rss", name = "micronaut-rss", version.ref = "micronaut_rss" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }

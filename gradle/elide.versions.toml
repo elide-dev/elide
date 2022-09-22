@@ -13,6 +13,7 @@ netty = "4.1.81.Final"
 netty_tcnative = "2.0.46.Final"
 dekorate = "3.0.0"
 micronaut_lib = "3.7.0"
+micronaut_aot = "1.1.1"
 micronaut_aws = "3.9.2"
 micronaut_data = "3.8.0"
 micronaut_grpc = "3.3.1"
@@ -28,6 +29,7 @@ micronaut_serde = "1.3.2"
 micronaut_security = "3.8.0"
 micronaut_sql = "4.7.0"
 micronaut_openapi = "4.5.2"
+micronaut_objectstorage = "1.0.0"
 micronaut_multitenancy = "4.2.0"
 micronaut_jmx = "3.1.0"
 micronaut_k8s = "3.4.0"
@@ -165,9 +167,12 @@ pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish
 versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}
 artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth_plugin" }
 testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
-micronautLibrary = { id = "io.micronaut.library", version.ref = "micronaut_plugin" }
-micronautApplication = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
-micronautAot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
+micronaut_library = { id = "io.micronaut.library", version.ref = "micronaut_plugin" }
+micronaut_application = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
+micronaut_docker = { id = "io.micronaut.docker", version.ref = "micronaut_plugin" }
+micronaut_graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut_plugin" }
+micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
+micronaut_crac = { id = "io.micronaut.crac", version.ref = "micronaut_plugin" }
 node = { id = "com.github.node-gradle.node", version.ref = "node_plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker_plugin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
@@ -286,6 +291,10 @@ micronaut_security_oauth2 = { group = "io.micronaut.security", name = "micronaut
 micronaut_sql_hibernate_jpa = { group = "io.micronaut.sql", name = "micronaut-hibernate-jpa", version.ref = "micronaut_sql" }
 micronaut_sql_jdbc_hikari = { group = "io.micronaut.sql", name = "micronaut-jdbc-hikari", version.ref = "micronaut_sql" }
 micronaut_openapi = { group = "io.micronaut.openapi", name = "micronaut-openapi", version.ref = "micronaut_openapi" }
+micronaut_objectstorage_bom = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-bom", version.ref = "micronaut_objectstorage" }
+micronaut_objectstorage_core = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-core", version.ref = "micronaut_objectstorage" }
+micronaut_objectstorage_aws = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-aws", version.ref = "micronaut_objectstorage" }
+micronaut_objectstorage_gcp = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-gcp", version.ref = "micronaut_objectstorage" }
 micronaut_liquibase = { group = "io.micronaut.liquibase", name = "micronaut-liquibase", version.ref = "micronaut_liquibase" }
 micronaut_kubernetes_client = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-client", version.ref = "micronaut_k8s" }
 micronaut_kubernetes_discovery = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-discovery-client", version.ref = "micronaut_k8s" }

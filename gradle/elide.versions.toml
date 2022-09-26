@@ -29,6 +29,7 @@ micronaut_serde = "1.3.2"
 micronaut_security = "3.8.0"
 micronaut_sql = "4.7.0"
 micronaut_openapi = "4.5.2"
+micronaut_picocli = "4.3.0"
 micronaut_objectstorage = "1.0.0"
 micronaut_multitenancy = "4.2.0"
 micronaut_jmx = "3.1.0"
@@ -59,7 +60,7 @@ closure = "v20220601"
 closure_stylesheets = "20160212"
 picocli = "4.6.3"
 picocli_jansi_graalvm = "1.2.0"
-slf4j = "2.0.2"
+slf4j = "1.7.36"
 jakarta = "2.0.1"
 jakarta_persistence = "2.2.3"
 jakarta_annotation_api = "2.1.1"
@@ -292,6 +293,7 @@ micronaut_security_oauth2 = { group = "io.micronaut.security", name = "micronaut
 micronaut_sql_hibernate_jpa = { group = "io.micronaut.sql", name = "micronaut-hibernate-jpa", version.ref = "micronaut_sql" }
 micronaut_sql_jdbc_hikari = { group = "io.micronaut.sql", name = "micronaut-jdbc-hikari", version.ref = "micronaut_sql" }
 micronaut_openapi = { group = "io.micronaut.openapi", name = "micronaut-openapi", version.ref = "micronaut_openapi" }
+micronaut_picocli = { group = "io.micronaut.picocli", name = "micronaut-picocli", version.ref = "micronaut_picocli" }
 micronaut_objectstorage_bom = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-bom", version.ref = "micronaut_objectstorage" }
 micronaut_objectstorage_core = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-core", version.ref = "micronaut_objectstorage" }
 micronaut_objectstorage_aws = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-aws", version.ref = "micronaut_objectstorage" }

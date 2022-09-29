@@ -132,7 +132,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:$kotlinxCollectionsVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
-                implementation("org.jetbrains.kotlin:atomicfu:1.6.21")  // bugfix for missing dep
+                implementation("org.jetbrains.kotlin:atomicfu:1.7.20")  // bugfix for missing dep
 
                 // docs dependencies
 //                dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${Versions.kotlin}")

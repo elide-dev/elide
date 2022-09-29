@@ -3,7 +3,7 @@
 import java.util.Properties
 
 plugins {
-  kotlin("plugin.serialization") version "1.7.0" apply false
+  kotlin("plugin.serialization") version "1.7.20" apply false
   id("com.google.cloud.artifactregistry.gradle-plugin")
   id("org.jetbrains.dokka") version "1.7.0"
   id("org.jetbrains.kotlinx.kover") version "0.5.1"

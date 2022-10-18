@@ -1,5 +1,5 @@
 val kotlinVersion = "1.7.0"
-val micronautPluginVersion = "3.4.1"
+val micronautPluginVersion = "3.6.2"
 val atomicFuPluginVersion = "0.18.0"
 val dockerPluginVersion = "7.4.0"
 val nodePluginVersion = "3.0.1"

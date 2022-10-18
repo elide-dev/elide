@@ -75,7 +75,8 @@ RULE += -
 endif
 
 ifeq ($(DRY),yes)
-CMD ?= "$(RULE)echo "
+CMD ?= $(RULE)echo
+CMD += " "
 else
 CMD ?= $(RULE)
 endif

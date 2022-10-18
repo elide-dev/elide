@@ -15,7 +15,7 @@ Decode the provided [data](decode-to-string.md) from Base64, returning a regular
 
 Decoded string value.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -54,7 +54,7 @@ Decode the provided [string](decode-to-string.md) from Base64, returning a regul
 
 Decoded string value.
 
-## Parameters
+#### Parameters
 
 common
 

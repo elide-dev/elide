@@ -1,6 +1,6 @@
 //[server](../../index.md)/[kotlinx.html](index.md)
 
-# Package kotlinx.html
+# Package-level declarations
 
 ## Functions
 

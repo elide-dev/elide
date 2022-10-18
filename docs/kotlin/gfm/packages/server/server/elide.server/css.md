@@ -11,7 +11,7 @@ Responds to a client with an HTML response, using specified [block](css.md) to b
 
 HTTP response wrapping the CSS content, with a content type of `text/css; charset=utf-8`.
 
-## Parameters
+#### Parameters
 
 jvm
 

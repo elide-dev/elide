@@ -1,6 +1,6 @@
 //[frontend](../../index.md)/[lib.protobuf](index.md)
 
-# Package lib.protobuf
+# Package-level declarations
 
 ## Types
 

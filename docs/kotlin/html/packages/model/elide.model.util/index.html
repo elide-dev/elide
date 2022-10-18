@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>elide.model.util</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -44,9 +53,9 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="model::elide.model.util////PointingToDeclaration//-2140494506">
-  <div class="breadcrumbs"><a href="../index.html">model</a><span class="delimiter">/</span><a href="index.html">elide.model.util</a></div>
+  <div class="breadcrumbs"><a href="../index.html">model</a><span class="delimiter">/</span><span class="current">elide.model.util</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>elide.</span><wbr><span>model.</span><wbr><span>util</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
@@ -63,8 +72,8 @@ if(savedDarkMode === true){
             <div>
               <div class="title">
                 <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:model:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:model:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:model:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark js-like" data-filterable-current=":packages:model:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jsMain" data-toggle=":packages:model:dokkaHtmlPartial/jsMain">js</button><button class="platform-bookmark jvm-like" data-filterable-current=":packages:model:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain" data-toggle=":packages:model:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark native-like" data-filterable-current=":packages:model:dokkaHtmlPartial/nativeMain" data-filterable-set=":packages:model:dokkaHtmlPartial/nativeMain" data-toggle=":packages:model:dokkaHtmlPartial/nativeMain">native</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:model:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div><div class="content sourceset-depenent-content" data-togglable=":packages:model:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div><div class="content sourceset-depenent-content" data-togglable=":packages:model:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Utilities to convert between different time objects, particularly a standard Protocol Buffer <span data-unresolved-link="com.google.protobuf/Timestamp///PointingToDeclaration/">Timestamp</span> and Java's time objects, such as <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html">Instant</a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Date.html">Date</a>.</p></div></div><div class="content sourceset-depenent-content" data-togglable=":packages:model:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div>                </div>
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:model:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:model:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/jsMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jsMain" data-toggle=":packages:model:dokkaHtmlPartial/jsMain">js</button><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/jvmMain" data-filterable-set=":packages:model:dokkaHtmlPartial/jvmMain" data-toggle=":packages:model:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":packages:model:dokkaHtmlPartial/nativeMain" data-filterable-set=":packages:model:dokkaHtmlPartial/nativeMain" data-toggle=":packages:model:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:model:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":packages:model:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":packages:model:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a></div><div class="brief "><p class="paragraph">Utilities to convert between different time objects, particularly a standard Protocol Buffer <span data-unresolved-link="com.google.protobuf/Timestamp///PointingToDeclaration/">Timestamp</span> and Java's time objects, such as <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html">Instant</a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Date.html">Date</a>.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":packages:model:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-instant-factory/index.html">InstantFactory</a></div><div class="brief "><p class="paragraph">Tool which can be used to convert time and date structures used with Elide Models into different representations, including ISO-8601, standard platform dates, and Protocol Buffer standard dates and times.</p></div></div>                </div>
               </div>
             </div>
           </div>

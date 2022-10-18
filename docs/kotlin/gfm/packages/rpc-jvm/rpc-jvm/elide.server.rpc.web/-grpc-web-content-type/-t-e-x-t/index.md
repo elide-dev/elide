@@ -7,13 +7,13 @@
 
 Text (base64-encoded) dispatch for gRPC-Web, potentially with Protocol Buffers.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.rpc.web.GrpcWebContentType.TEXT](../../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/-t-e-x-t/content-type.md) | For calculation of a full `Content-Type` header. |
+| [GrpcWebContentType.TEXT.contentType](../../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/-t-e-x-t/content-type.md) | For calculation of a full `Content-Type` header. |
 
 ## Functions
 

@@ -11,7 +11,7 @@ Resolve an [AssetPointer](../-asset-pointer/index.md) for the specified [asset](
 
 Pointer to the resulting asset, or `null` if it could not be located.
 
-## Parameters
+#### Parameters
 
 jvm
 

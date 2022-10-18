@@ -17,19 +17,13 @@ Annotations which is applied to handlers which respond to HTTP requests with HTT
 
 The Micronaut annotations `Controller` behaves in essentially the same manner as `Page`, but with different defaults and available settings.
 
-## Parameters
+#### Parameters
 
 jvm
 
 | | |
 |---|---|
 | route | HTTP route that should be bound to this page. |
-
-## Constructors
-
-| | |
-|---|---|
-| [Page](-page.md) | [jvm]<br>fun [Page](-page.md)(route: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = UriMapping.DEFAULT_URI, produces: [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; = [MediaType.TEXT_HTML], consumes: [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt; = [MediaType.TEXT_HTML]) |
 
 ## Properties
 

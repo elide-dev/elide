@@ -11,7 +11,7 @@ Built-in asset manager implementation for use with Elide applications.
 
 Resolves and loads assets embedded in the application at build-time, based on binary-encoded protocol buffer messages which define the dependency structure and metadata of each embedded asset.
 
-## Parameters
+#### Parameters
 
 jvm
 

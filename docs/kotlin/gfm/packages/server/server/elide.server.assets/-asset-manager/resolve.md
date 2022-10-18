@@ -11,7 +11,7 @@ Resolve the asset requested by the provided HTTP [request](resolve.md); if the c
 
 Resolved server asset, or `null` if one could not be located at the calculated path provided by [request](resolve.md).
 
-## Parameters
+#### Parameters
 
 jvm
 

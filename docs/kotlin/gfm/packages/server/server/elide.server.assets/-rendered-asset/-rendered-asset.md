@@ -5,7 +5,7 @@
 [jvm]\
 fun [RenderedAsset](-rendered-asset.md)(module: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467), type: [AssetType](../-asset-type/index.md), variant: CompressionMode, headers: [Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, size: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), lastModified: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html), digest: [Pair](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html)&lt;HashAlgorithm, ByteString&gt;?, producer: () -&gt; ByteString)
 
-## Parameters
+#### Parameters
 
 jvm
 

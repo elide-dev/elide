@@ -15,7 +15,7 @@ Decode the provided [data](decode.md) from Base64, returning a raw set of bytes 
 
 Raw bytes of decoded data.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -50,7 +50,7 @@ Decode the provided [data](decode.md) into a Base64-encoded set of bytes, which 
 
 Base64-decoded bytes.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -89,7 +89,7 @@ Decode the provided [string](decode.md) from Base64, returning a raw set of byte
 
 Raw bytes of decoded data.
 
-## Parameters
+#### Parameters
 
 common
 

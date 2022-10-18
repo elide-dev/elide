@@ -1,6 +1,6 @@
 //[server](../../index.md)/[elide.server.annotations](index.md)
 
-# Package elide.server.annotations
+# Package-level declarations
 
 ## Types
 

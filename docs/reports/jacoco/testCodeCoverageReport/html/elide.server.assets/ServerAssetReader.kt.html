@@ -60,7 +60,7 @@ import java.util.EnumSet
 <span class="pc bpc" id="L60" title="3 of 8 branches missed.">    if (acceptEncoding != null &amp;&amp; acceptEncoding.isNotBlank() &amp;&amp; acceptEncoding != &quot;identity&quot;) {</span>
       // calculate supported encodings based on request
 <span class="fc" id="L62">      val encodingNames = acceptEncoding.split(&quot;,&quot;).mapNotNull {</span>
-<span class="fc bfc" id="L63" title="All 6 branches covered.">        when (it.trim().lowercase()) {</span>
+<span class="fc bfc" id="L63" title="All 4 branches covered.">        when (it.trim().lowercase()) {</span>
 <span class="fc" id="L64">          &quot;br&quot; -&gt; CompressionMode.BROTLI</span>
 <span class="fc" id="L65">          &quot;deflate&quot; -&gt; CompressionMode.DEFLATE</span>
 <span class="fc" id="L66">          &quot;gzip&quot; -&gt; CompressionMode.GZIP</span>

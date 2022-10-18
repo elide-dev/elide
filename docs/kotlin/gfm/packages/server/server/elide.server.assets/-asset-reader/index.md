@@ -35,15 +35,15 @@ public class MyCoolAssetReader: AssetReader {
 }
 ```
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.assets.AssetManager](../-asset-manager/index.md) | which coordinates between the [AssetReader](index.md) and [AssetResolver](../-asset-resolver/index.md). |
-| [elide.server.assets.RenderedAsset](../-rendered-asset/index.md) | for the generic return value model leveraged by [AssetManager](../-asset-manager/index.md). |
-| [elide.server.assets.ServerAsset](../-server-asset/index.md) | for the symbolic asset reference model leveraged by [AssetManager](../-asset-manager/index.md). |
+| [AssetManager](../-asset-manager/index.md) | which coordinates between the [AssetReader](index.md) and [AssetResolver](../-asset-resolver/index.md). |
+| [RenderedAsset](../-rendered-asset/index.md) | for the generic return value model leveraged by [AssetManager](../-asset-manager/index.md). |
+| [ServerAsset](../-server-asset/index.md) | for the symbolic asset reference model leveraged by [AssetManager](../-asset-manager/index.md). |
 
 ## Functions
 

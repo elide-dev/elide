@@ -7,7 +7,7 @@ data class [AssetPointer](index.md)(val moduleId: [AssetModuleId](../../elide.se
 
 Reference to an application-embedded asset.
 
-## Parameters
+#### Parameters
 
 jvm
 

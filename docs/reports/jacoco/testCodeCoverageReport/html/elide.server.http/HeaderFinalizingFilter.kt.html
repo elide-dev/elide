@@ -56,7 +56,7 @@ import java.util.*
 <span class="nc" id="L56">    response.headers.mapNotNull { entry -&gt;</span>
 <span class="nc" id="L57">      val header = entry.key.lowercase().trim()</span>
 <span class="nc bnc" id="L58" title="All 2 branches missed.">      if (header.isBlank()) return@mapNotNull null</span>
-<span class="nc bnc" id="L59" title="All 2 branches missed.">      header to entry</span>
+<span class="nc" id="L59">      header to entry</span>
 <span class="nc" id="L60">    }.flatMap {</span>
 <span class="nc" id="L61">      val (header, entry) = it</span>
 <span class="nc" id="L62">      entry.value.map { headerValue -&gt;</span>

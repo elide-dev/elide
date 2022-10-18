@@ -5,7 +5,7 @@
 [jvm]\
 fun [Error](-error.md)(contentType: [GrpcWebContentType](../../-grpc-web-content-type/index.md), status: Status, cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)?, headers: Metadata, trailers: Metadata)
 
-## Parameters
+#### Parameters
 
 jvm
 

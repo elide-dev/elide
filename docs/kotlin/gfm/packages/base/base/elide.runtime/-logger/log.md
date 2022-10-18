@@ -16,7 +16,7 @@ Log one or more arbitrary [message](log.md)s to the console or log, depending on
 
 Each argument will be converted to a string, and all strings will be concatenated together into one log message. To engage in string formatting, or callable log messages, see other variants of this same method.
 
-## Parameters
+#### Parameters
 
 common
 

@@ -9,7 +9,7 @@ data class [AssetConfig](index.md)(var enabled: [Boolean](https://kotlinlang.org
 
 Configuration loaded at runtime which governs Elide's built-in asset serving tools.
 
-## Parameters
+#### Parameters
 
 jvm
 

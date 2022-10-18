@@ -1,6 +1,6 @@
 //[base](../../index.md)/[elide](index.md)
 
-# Package elide
+# Package-level declarations
 
 ## Types
 

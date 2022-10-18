@@ -167,7 +167,7 @@ import kotlin.math.max
 <span class="fc" id="L167">        it.module</span>
 <span class="fc" id="L168">      }.map { moduleId -&gt;</span>
 <span class="fc" id="L169">        moduleId to bundle.assetList.count {</span>
-<span class="pc bpc" id="L170" title="1 of 4 branches missed.">          it.module == moduleId</span>
+<span class="fc" id="L170">          it.module == moduleId</span>
         }
 <span class="fc" id="L172">      }.collect(Collectors.toList()).joinToString(&quot;, &quot;) {</span>
 <span class="fc" id="L173">        &quot;${it.first} (${it.second} entries)&quot;</span>

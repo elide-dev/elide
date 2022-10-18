@@ -1,6 +1,6 @@
 //[frontend](../../index.md)/[lib.uuid](index.md)
 
-# Package lib.uuid
+# Package-level declarations
 
 ## Types
 

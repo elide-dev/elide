@@ -3,11 +3,13 @@
 # AssetReference
 
 [jvm]\
+@Serializable
+
 data class [AssetReference](index.md)(val module: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467), val assetType: [AssetType](../-asset-type/index.md), val href: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), val type: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, val inline: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, val preload: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false) : [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)
 
 Represents a resolved reference to an asset at serving-time, before it is rendered into a link or other tag.
 
-## Parameters
+#### Parameters
 
 jvm
 

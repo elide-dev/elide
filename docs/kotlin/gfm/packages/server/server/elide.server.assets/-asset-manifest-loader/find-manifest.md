@@ -13,7 +13,7 @@ If a manifest is found at any of the candidate locations, a pair of ManifestForm
 
 Pair of the located ManifestFormat and an [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), or `null` if no manifest was found.
 
-## Parameters
+#### Parameters
 
 jvm
 

@@ -21,7 +21,7 @@ Serve a static stylesheet asset embedded within the application, based on the pr
 
 Streamed asset response for the desired module ID.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -39,7 +39,7 @@ Serve a static stylesheet asset embedded within the application, based on the pr
 
 Streamed asset response generated from the configuration provided by [block](stylesheet.md).
 
-## Parameters
+#### Parameters
 
 jvm
 

@@ -23,7 +23,7 @@ If the response needs to be customized based on the provided [request](render-as
 
 Deferred task which resolves to a [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467) satisfying a request to serve the provided resolved [asset](render-asset-async.md) data.
 
-## Parameters
+#### Parameters
 
 jvm
 

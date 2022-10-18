@@ -9,15 +9,17 @@ Notify the central service health system that the provided [service](notify.md) 
 
 Passing `null` for the [status](notify.md) value forcibly clears any active status for the specified [service](notify.md) (not recommended except in extreme circumstances).
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.rpc.ServiceHealthManager](notify-unknown.md) | shorthand for unknown status. |
+| [ServiceHealthManager.notifyPending](notify-pending.md) | shorthand for pending status. |
+| [ServiceHealthManager.notifyServing](notify-serving.md) | shorthand for active status. |
+| [ServiceHealthManager.notifyUnknown](notify-unknown.md) | shorthand for unknown status. |
 
-## Parameters
+#### Parameters
 
 jvm
 

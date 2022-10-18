@@ -119,7 +119,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 <span class="nc" id="L119">      ).map {</span>
 <span class="nc" id="L120">        it to it.value()</span>
 <span class="nc" id="L121">      }.filter {</span>
-<span class="nc bnc" id="L122" title="All 6 branches missed.">        it.second?.isNotBlank() ?: false</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">        it.second?.isNotBlank() ?: false</span>
 <span class="nc" id="L123">      }.toMap()</span>
     }
 

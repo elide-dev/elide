@@ -7,7 +7,7 @@ enum [GrpcWebContentType](index.md) : [Enum](https://kotlinlang.org/api/latest/j
 
 Describes the content types available for use with gRPC Web, including their corresponding HTTP symbols.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -34,6 +34,8 @@ jvm
 |---|---|
 | [contentType](content-type.md) | [jvm]<br>fun [contentType](content-type.md)(proto: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>Render an HTTP `Content-Type` string for the selected format with consideration made for use of [proto](content-type.md)col buffers. |
 | [mediaType](media-type.md) | [jvm]<br>fun [mediaType](media-type.md)(proto: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true): MediaType<br>Render a Micronaut MediaType for the selected format with consideration made for the use of [proto](media-type.md)col buffers. |
+| [valueOf](value-of.md) | [jvm]<br>fun [valueOf](value-of.md)(value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [GrpcWebContentType](index.md)<br>Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.) |
+| [values](values.md) | [jvm]<br>fun [values](values.md)(): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[GrpcWebContentType](index.md)&gt;<br>Returns an array containing the constants of this enum type, in the order they're declared. |
 
 ## Properties
 

@@ -1,6 +1,6 @@
 //[rpc-jvm](../../index.md)/[elide.server.rpc](index.md)
 
-# Package elide.server.rpc
+# Package-level declarations
 
 ## Types
 

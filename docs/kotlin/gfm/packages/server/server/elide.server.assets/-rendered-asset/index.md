@@ -7,7 +7,7 @@ class [RenderedAsset](index.md)(val module: [AssetModuleId](../../elide.server/i
 
 Intermediary class which represents an asset that has been fully prepared to serve to an end-user request, including any headers which should apply to the response.
 
-## Parameters
+#### Parameters
 
 jvm
 

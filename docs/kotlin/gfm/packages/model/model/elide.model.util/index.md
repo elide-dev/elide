@@ -1,6 +1,6 @@
 //[model](../../index.md)/[elide.model.util](index.md)
 
-# Package elide.model.util
+# Package-level declarations
 
 ## Types
 

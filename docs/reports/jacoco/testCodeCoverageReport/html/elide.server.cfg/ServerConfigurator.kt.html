@@ -136,44 +136,43 @@ import java.util.SortedSet
     // Properties applied only in dev mode.
 <span class="pc" id="L137">    public val devMap: SortedMap&lt;String, Any&gt; = sortedMapOf(</span>
 <span class="fc" id="L138">      &quot;micronaut.server.ssl.enabled&quot; to true,</span>
-<span class="fc" id="L139">      &quot;micronaut.server.http-to-https-redirect&quot; to true,</span>
-<span class="fc" id="L140">      &quot;micronaut.server.http-version&quot; to 2.0,</span>
-<span class="fc" id="L141">      &quot;micronaut.server.dual-protocol&quot; to true,</span>
-<span class="fc" id="L142">      &quot;micronaut.server.http-to-https-redirect&quot; to true,</span>
-<span class="fc" id="L143">      &quot;micronaut.server.ssl.build-self-signed&quot; to (</span>
-<span class="fc" id="L144">        System.getProperty(&quot;elide.ssl.build-self-signed&quot;, &quot;true&quot;).toBoolean()),</span>
+//      &quot;micronaut.server.http-version&quot; to 2.0,
+<span class="fc" id="L140">      &quot;micronaut.server.dual-protocol&quot; to true,</span>
+<span class="fc" id="L141">      &quot;micronaut.server.http-to-https-redirect&quot; to false,</span>
+<span class="fc" id="L142">      &quot;micronaut.server.ssl.build-self-signed&quot; to (</span>
+<span class="fc" id="L143">        System.getProperty(&quot;elide.ssl.build-self-signed&quot;, &quot;true&quot;).toBoolean()),</span>
     )
   }
 
   /** @inheritDoc */
   override fun configure(builder: ApplicationContextBuilder) {
-<span class="fc" id="L150">    systemProps.forEach { entry -&gt;</span>
-<span class="fc" id="L151">      System.setProperty(entry.key, entry.value)</span>
-<span class="fc" id="L152">    }</span>
+<span class="fc" id="L149">    systemProps.forEach { entry -&gt;</span>
+<span class="fc" id="L150">      System.setProperty(entry.key, entry.value)</span>
+<span class="fc" id="L151">    }</span>
     // basics
-<span class="fc" id="L154">    builder.eagerInitSingletons(true)</span>
-<span class="fc" id="L155">      .banner(false)</span>
-<span class="fc" id="L156">      .deduceEnvironment(true)</span>
-<span class="fc" id="L157">      .environmentPropertySource(true)</span>
-<span class="fc" id="L158">      .eagerInitConfiguration(true)</span>
-<span class="fc" id="L159">      .eagerInitAnnotated(Eager::class.java)</span>
-<span class="fc" id="L160">      .eagerInitAnnotated(Logic::class.java)</span>
-<span class="fc" id="L161">      .bootstrapEnvironment(true)</span>
+<span class="fc" id="L153">    builder.eagerInitSingletons(true)</span>
+<span class="fc" id="L154">      .banner(false)</span>
+<span class="fc" id="L155">      .deduceEnvironment(true)</span>
+<span class="fc" id="L156">      .environmentPropertySource(true)</span>
+<span class="fc" id="L157">      .eagerInitConfiguration(true)</span>
+<span class="fc" id="L158">      .eagerInitAnnotated(Eager::class.java)</span>
+<span class="fc" id="L159">      .eagerInitAnnotated(Logic::class.java)</span>
+<span class="fc" id="L160">      .bootstrapEnvironment(true)</span>
 
     // inject configuration unless disabled
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">    if (System.getProperty(&quot;elide.config.noInject&quot;) != &quot;true&quot;) {</span>
-<span class="fc" id="L165">      builder.propertySources(</span>
-<span class="fc" id="L166">        PropertySource.of(baseMap.plus(nonTestMap).plus(</span>
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">          if (System.getProperty(&quot;elide.dev&quot;) == &quot;true&quot;) {</span>
-<span class="nc" id="L168">            devMap</span>
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">    if (System.getProperty(&quot;elide.config.noInject&quot;) != &quot;true&quot;) {</span>
+<span class="fc" id="L164">      builder.propertySources(</span>
+<span class="fc" id="L165">        PropertySource.of(baseMap.plus(nonTestMap).plus(</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">          if (System.getProperty(&quot;elide.dev&quot;) == &quot;true&quot;) {</span>
+<span class="nc" id="L167">            devMap</span>
           } else {
-<span class="fc" id="L170">            emptyMap()</span>
+<span class="fc" id="L169">            emptyMap()</span>
           }
-<span class="fc" id="L172">        ).filter {</span>
-<span class="pc bpc" id="L173" title="2 of 4 branches missed.">          !bannedConfig.contains(it.key)</span>
+<span class="fc" id="L171">        ).filter {</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">          !bannedConfig.contains(it.key)</span>
         }),
       )
     }
-<span class="fc" id="L177">  }</span>
+<span class="fc" id="L176">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

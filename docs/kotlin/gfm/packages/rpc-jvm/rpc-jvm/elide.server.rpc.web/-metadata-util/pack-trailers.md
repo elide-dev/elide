@@ -12,7 +12,7 @@ Given a set of [trailers](pack-trailers.md) as gRPC Metadata, and the provided s
 
 Trailers are packed at the end of a given response, formatted as a set of `key:value` pairs, with each pair separated by `\r\n`. A special [RpcSymbol](../-rpc-symbol/index.md) denotes the `TRAILER` section ([RpcSymbol.TRAILER](../-rpc-symbol/-t-r-a-i-l-e-r/index.md)), and separates it from the `DATA` section ([RpcSymbol.DATA](../-rpc-symbol/-d-a-t-a/index.md)).
 
-## Parameters
+#### Parameters
 
 jvm
 

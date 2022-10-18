@@ -16,6 +16,13 @@ The [TRAILER](-t-r-a-i-l-e-r/index.md) value is used to encode gRPC responses ov
 | [DATA](-d-a-t-a/index.md) | [jvm]<br>[DATA](-d-a-t-a/index.md)<br>Symbol indicating a data frame. |
 | [TRAILER](-t-r-a-i-l-e-r/index.md) | [jvm]<br>[TRAILER](-t-r-a-i-l-e-r/index.md)<br>Symbol used to demarcate trailers. |
 
+## Functions
+
+| Name | Summary |
+|---|---|
+| [valueOf](value-of.md) | [jvm]<br>fun [valueOf](value-of.md)(value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [RpcSymbol](index.md)<br>Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.) |
+| [values](values.md) | [jvm]<br>fun [values](values.md)(): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[RpcSymbol](index.md)&gt;<br>Returns an array containing the constants of this enum type, in the order they're declared. |
+
 ## Properties
 
 | Name | Summary |

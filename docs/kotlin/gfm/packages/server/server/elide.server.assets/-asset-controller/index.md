@@ -13,7 +13,7 @@ Built-in controller implementation which bridges the configured asset serving pr
 
 For this controller to be enabled, the configuration value `elide.assets.enabled` needs to be set to `true`. The asset prefix used by this controller is governed by the configuration value `elide.assets.prefix`.
 
-## Parameters
+#### Parameters
 
 jvm
 

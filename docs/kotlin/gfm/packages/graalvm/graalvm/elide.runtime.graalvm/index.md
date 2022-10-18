@@ -1,6 +1,6 @@
 //[graalvm](../../index.md)/[elide.runtime.graalvm](index.md)
 
-# Package elide.runtime.graalvm
+# Package-level declarations
 
 ## Types
 

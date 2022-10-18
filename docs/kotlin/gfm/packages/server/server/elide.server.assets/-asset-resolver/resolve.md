@@ -13,7 +13,7 @@ Resolve the provided [path](resolve.md) to a server asset, if possible, or retur
 
 Resolved server asset, or `null`, indicating that the asset could not be located.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -30,7 +30,7 @@ Resolve the provided HTTP [request](resolve.md) to an asset path string, and the
 
 Resolved server-held asset, or `null` to indicate that the asset could not be located.
 
-## Parameters
+#### Parameters
 
 jvm
 

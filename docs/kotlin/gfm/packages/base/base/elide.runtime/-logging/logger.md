@@ -15,7 +15,7 @@ Acquire a [Logger](../-logger/index.md) for the given logger [name](logger.md), 
 
 Desired logger.
 
-## Parameters
+#### Parameters
 
 common
 

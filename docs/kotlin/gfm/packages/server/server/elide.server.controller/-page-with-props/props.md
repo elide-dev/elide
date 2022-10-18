@@ -22,15 +22,15 @@ To use a given class as server-side [State](index.md), it must:
 
 State that should be active for this cycle, or `null` if no state is provided or available.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.controller.PageWithProps](props-async.md) | for the asynchronous version of this same method (available, but not recommended). |
+| [PageWithProps.propsAsync](props-async.md) | for the asynchronous version of this same method (available, but not recommended). |
 
-## Parameters
+#### Parameters
 
 jvm
 

@@ -1,6 +1,6 @@
 //[server](../../index.md)/[elide.server.cfg](index.md)
 
-# Package elide.server.cfg
+# Package-level declarations
 
 ## Types
 

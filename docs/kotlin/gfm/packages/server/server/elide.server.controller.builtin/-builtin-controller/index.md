@@ -40,15 +40,15 @@ The following built-in controllers are provided by the framework by default:
 
 General/low-level error handling is provided at the executor level by [UncaughtExceptionHandler](../../elide.server.runtime.jvm/-uncaught-exception-handler/index.md), which can also be customized / replaced via the same mechanism shown above. See docs on that class for more info.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.controller.builtin.NotFoundController](../-not-found-controller/index.md) | for the built-in controller which handles `404 Not Found` events. |
-| [elide.server.controller.builtin.ServerErrorController](../-server-error-controller/index.md) | for the built-in controller which handles generic internal error events. |
-| [elide.server.runtime.jvm.UncaughtExceptionHandler](../../elide.server.runtime.jvm/-uncaught-exception-handler/index.md) | for customizable background error handling logic. |
+| [NotFoundController](../-not-found-controller/index.md) | for the built-in controller which handles `404 Not Found` events. |
+| [ServerErrorController](../-server-error-controller/index.md) | for the built-in controller which handles generic internal error events. |
+| [UncaughtExceptionHandler](../../elide.server.runtime.jvm/-uncaught-exception-handler/index.md) | for customizable background error handling logic. |
 
 ## Constructors
 
@@ -71,3 +71,12 @@ jvm
 |---|
 | [NotFoundController](../-not-found-controller/index.md) |
 | [ServerErrorController](../-server-error-controller/index.md) |
+
+## Extensions
+
+| Name | Summary |
+|---|---|
+| [asset](../../elide.server/asset.md) | [jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[asset](../../elide.server/asset.md)(request: HttpRequest&lt;*&gt;, moduleId: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467), type: [AssetType](../../elide.server.assets/-asset-type/index.md)? = null): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Serve an application asset file which is embedded in the application JAR as a registered server asset, from the application resource path `/assets`.<br>[jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[asset](../../elide.server/asset.md)(request: HttpRequest&lt;*&gt;, type: [AssetType](../../elide.server.assets/-asset-type/index.md)? = null, block: suspend [AssetHandler](../../elide.server/-asset-handler/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Generate a [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467) which serves an asset embedded within the application, and specified by the provided [block](../../elide.server/asset.md); [request](../../elide.server/asset.md) will be considered when producing the response. |
+| [html](../../elide.server/html.md) | [jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[html](../../elide.server/html.md)(block: suspend [HTML](../../../../../packages/server/kotlinx.html/-h-t-m-l/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [RawResponse](../../elide.server/index.md#852884585%2FClasslikes%2F-1343588467)<br>Responds to a client with an HTML response, using specified [block](../../elide.server/html.md) to build an HTML page via Kotlin's HTML DSL. |
+| [script](../../elide.server/script.md) | [jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[script](../../elide.server/script.md)(request: HttpRequest&lt;*&gt;, moduleId: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Serve a static script asset embedded within the application, based on the provided [moduleId](../../elide.server/script.md), and customizing the response based on the provided [request](../../elide.server/script.md).<br>[jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[script](../../elide.server/script.md)(request: HttpRequest&lt;*&gt;, block: [AssetHandler](../../elide.server/-asset-handler/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Serve a static script asset embedded within the application, based on the provided [block](../../elide.server/script.md), which should customize the serving of the script and declare a module ID. |
+| [stylesheet](../../elide.server/stylesheet.md) | [jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[stylesheet](../../elide.server/stylesheet.md)(request: HttpRequest&lt;*&gt;, moduleId: [AssetModuleId](../../elide.server/index.md#-803173189%2FClasslikes%2F-1343588467)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Serve a static stylesheet asset embedded within the application, based on the provided [moduleId](../../elide.server/stylesheet.md), and customizing the response based on the provided [request](../../elide.server/stylesheet.md).<br>[jvm]<br>suspend fun [PageController](../../elide.server.controller/-page-controller/index.md).[stylesheet](../../elide.server/stylesheet.md)(request: HttpRequest&lt;*&gt;, block: [AssetHandler](../../elide.server/-asset-handler/index.md).() -&gt; [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)): [StreamedAssetResponse](../../elide.server/index.md#-491452832%2FClasslikes%2F-1343588467)<br>Serve a static stylesheet asset embedded within the application, based on the provided [block](../../elide.server/stylesheet.md), which should customize the serving of the document and declare a module ID. |

@@ -11,33 +11,33 @@ Each argument is expected to be a string. For automatic string conversion or dir
 
 This method is a thin alias for the equivalent [warn](warn.md) call.
 
-## See also
+#### See also
 
 common
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 js
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 jvm
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 native
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
-## Parameters
+#### Parameters
 
 common
 
@@ -73,33 +73,33 @@ Each argument is expected to be a string. For automatic string conversion or dir
 
 This method is a thin alias for the equivalent [warn](warn.md) call.
 
-## See also
+#### See also
 
 common
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 js
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 jvm
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 native
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
-## Parameters
+#### Parameters
 
 common
 
@@ -132,7 +132,7 @@ Log the message produced by the provided [producer](warning.md), at the level of
 
 If warn logging is not active, the producer will not be dispatched. This method is a thin alias for the equivalent [warn](warn.md) call.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -166,7 +166,7 @@ Log the message produced by the provided [producer](warning.md), at the level of
 
 If warn logging is not active, the producer will not be dispatched. This method is a thin alias for the equivalent [warn](warn.md) call.
 
-## Parameters
+#### Parameters
 
 common
 

@@ -1,6 +1,6 @@
 //[base](../../index.md)/[elide.runtime.jvm](index.md)
 
-# Package elide.runtime.jvm
+# Package-level declarations
 
 ## Types
 

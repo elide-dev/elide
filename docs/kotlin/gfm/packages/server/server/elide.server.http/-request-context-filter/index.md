@@ -9,13 +9,13 @@ class [RequestContextFilter](index.md) : HttpServerFilter
 
 Provides an HttpServerFilter which affixes context values at known keys in HttpRequests processed by Elide apps; known keys are defined via [RequestContext.Key](../-request-context/-key/index.md).
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.http.RequestContext.Key](../-request-context/-key/index.md) | for an exhaustive review of available request context. |
+| [RequestContext.Key](../-request-context/-key/index.md) | for an exhaustive review of available request context. |
 
 ## Constructors
 

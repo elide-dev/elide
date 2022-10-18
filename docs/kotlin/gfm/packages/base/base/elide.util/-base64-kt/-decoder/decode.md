@@ -11,7 +11,7 @@ Decodes all bytes from the input byte array using the [Base64](../../-base64/ind
 
 A newly-allocated byte array containing the decoded bytes.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -19,8 +19,8 @@ common
 |---|---|
 | src | the byte array to decode |
 
-## Throws
+#### Throws
 
 | | |
 |---|---|
-| [kotlin.IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html) | if `src` is not in valid Base64 scheme |
+| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html) | if `src` is not in valid Base64 scheme |

@@ -7,7 +7,7 @@ class [Stylesheet](index.md)(descriptor: AssetBundle.StyleBundle, index: [Sorted
 
 Describes a stylesheet asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold document info.
 
-## Parameters
+#### Parameters
 
 jvm
 

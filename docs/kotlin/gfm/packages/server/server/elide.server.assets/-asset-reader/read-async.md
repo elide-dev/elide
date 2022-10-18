@@ -13,7 +13,7 @@ If the asset underlying the provided asset descriptor is found not to exist, a [
 
 Deferred task which resolves to a rendered asset which may be consumed, corresponding to [descriptor](read-async.md).
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -22,8 +22,8 @@ jvm
 | descriptor | Resolved asset descriptor, which is expected to exist. |
 | request | HTTP request which is asking to be served this asset. |
 
-## Throws
+#### Throws
 
 | | |
 |---|---|
-| [java.io.FileNotFoundException](https://docs.oracle.com/javase/8/docs/api/java/io/FileNotFoundException.html) | if the provided asset cannot be located. |
+| [FileNotFoundException](https://docs.oracle.com/javase/8/docs/api/java/io/FileNotFoundException.html) | if the provided asset cannot be located. |

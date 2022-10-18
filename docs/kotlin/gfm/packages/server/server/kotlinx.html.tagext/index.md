@@ -1,6 +1,6 @@
 //[server](../../index.md)/[kotlinx.html.tagext](index.md)
 
-# Package kotlinx.html.tagext
+# Package-level declarations
 
 ## Functions
 

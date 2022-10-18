@@ -7,7 +7,7 @@ sealed class [ServerAsset](index.md)
 
 Describes a server-side asset which is embedded in an application bundle through Elide's asset tools and protocol buffer for asset bundle metadata.
 
-## Parameters
+#### Parameters
 
 jvm
 

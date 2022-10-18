@@ -11,7 +11,7 @@ open suspend fun [finalizeAsync](finalize-async.md)(state: [RequestState](../../
 
 Deferred task which resolves to a pair, where the first item is the [State](index.md) procured for this cycle via the [props](props.md) and [propsAsync](props-async.md) methods, and the second item is the same state, serialized as a JSON [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html). If no state is available, both pair members are `null`.
 
-## Parameters
+#### Parameters
 
 jvm
 

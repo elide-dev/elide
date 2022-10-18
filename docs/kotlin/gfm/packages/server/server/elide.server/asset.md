@@ -13,7 +13,7 @@ To use module ID-based assets, files must be registered at build time through th
 
 HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be     located at the specified path.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -31,7 +31,7 @@ Generate a [StreamedAssetResponse](index.md#-491452832%2FClasslikes%2F-134358846
 
 Structure which streams the resolved asset content as the response.
 
-## Parameters
+#### Parameters
 
 jvm
 

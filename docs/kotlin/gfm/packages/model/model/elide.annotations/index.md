@@ -1,6 +1,6 @@
 //[model](../../index.md)/[elide.annotations](index.md)
 
-# Package elide.annotations
+# Package-level declarations
 
 ## Types
 

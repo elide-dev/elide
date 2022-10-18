@@ -1,6 +1,6 @@
 //[graalvm](../../index.md)/[elide.server.ssr](index.md)
 
-# Package elide.server.ssr
+# Package-level declarations
 
 ## Types
 

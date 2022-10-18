@@ -43,16 +43,16 @@ public class MyCoolAssetReader: AssetReader {
 
 The [AssetManager](index.md) participates in the DI container, so the developer only needs to provide a component definition. Later, when an [AssetManager](index.md) instance is requested by the app, the main implementation will load and use the developer's custom implementation.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.assets.AssetResolver](../-asset-resolver/index.md) | which is responsible for checking, translating, and loading asset paths. |
-| [elide.server.assets.AssetReader](../-asset-reader/index.md) | which is responsible for reading asset content efficiently. |
-| [elide.server.assets.RenderedAsset](../-rendered-asset/index.md) | for the generic return value model leveraged by [AssetManager](index.md). |
-| [elide.server.assets.ServerAsset](../-server-asset/index.md) | for the symbolic asset reference model leveraged by [AssetManager](index.md). |
+| [AssetResolver](../-asset-resolver/index.md) | which is responsible for checking, translating, and loading asset paths. |
+| [AssetReader](../-asset-reader/index.md) | which is responsible for reading asset content efficiently. |
+| [RenderedAsset](../-rendered-asset/index.md) | for the generic return value model leveraged by [AssetManager](index.md). |
+| [ServerAsset](../-server-asset/index.md) | for the symbolic asset reference model leveraged by [AssetManager](index.md). |
 
 ## Functions
 

@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>elide.server.rpc.web</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,9 +47,9 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="rpc-jvm::elide.server.rpc.web////PointingToDeclaration//1929219804">
-  <div class="breadcrumbs"><a href="../index.html">rpc-jvm</a><span class="delimiter">/</span><a href="index.html">elide.server.rpc.web</a></div>
+  <div class="breadcrumbs"><a href="../index.html">rpc-jvm</a><span class="delimiter">/</span><span class="current">elide.server.rpc.web</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>elide.</span><wbr><span>server.</span><wbr><span>rpc.</span><wbr><span>web</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
@@ -56,7 +65,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-grpc-web/index.html">GrpcWeb</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Provides constant values which are used internally by Elide's gRPC integration layer.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-grpc-web/index.html">GrpcWeb</a></div><div class="brief "><p class="paragraph">Provides constant values which are used internally by Elide's gRPC integration layer.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -71,7 +80,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-grpc-web-call-response/index.html">GrpcWebCallResponse</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Describes the possible states that a gRPC Web call outcome can take on, namely an error state and a success state which provides one or more response payloads.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-grpc-web-call-response/index.html">GrpcWebCallResponse</a></div><div class="brief "><p class="paragraph">Describes the possible states that a gRPC Web call outcome can take on, namely an error state and a success state which provides one or more response payloads.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -86,7 +95,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="io.micronaut.context.annotation/ConfigurationProperties///PointingToDeclaration/"><span class="token annotation">ConfigurationProperties</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"elide.grpc.web"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="-grpc-web-config/index.html">GrpcWebConfig</a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">var </span>enabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">var </span>endpoint<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span>defaultEndpoint<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">var </span>timeout<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html">Duration</a><span class="token operator"> = </span>Duration.ofSeconds(30)</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Describes active configuration for Elide's RPC layer as related to integration with gRPC Web.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/ConfigurationProperties///PointingToDeclaration/"><span class="token annotation builtin">ConfigurationProperties</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"elide.grpc.web"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="-grpc-web-config/index.html">GrpcWebConfig</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">var </span>enabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>endpoint<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span>defaultEndpoint<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>timeout<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html">Duration</a><span class="token operator"> = </span>Duration.ofSeconds(30)</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Describes active configuration for Elide's RPC layer as related to integration with gRPC Web.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -101,7 +110,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-grpc-web-content-type/index.html">GrpcWebContentType</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-grpc-web-content-type/index.html">GrpcWebContentType</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Describes the content types available for use with gRPC Web, including their corresponding HTTP symbols.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-grpc-web-content-type/index.html">GrpcWebContentType</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-grpc-web-content-type/index.html">GrpcWebContentType</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Describes the content types available for use with gRPC Web, including their corresponding HTTP symbols.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -116,7 +125,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="io.micronaut.context.annotation/Requires///PointingToDeclaration/"><span class="token annotation">Requires</span></span><span class="token punctuation">(</span><span>property<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"elide.grpc.web.enabled"</span></span><span class="token punctuation">, </span></span><wbr><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"true"</span></span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation">@</span><span data-unresolved-link="io.micronaut.http.annotation/Controller///PointingToDeclaration/"><span class="token annotation">Controller</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"${elide.grpc.web.endpoint:/_/rpc}"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">class </span><a href="-grpc-web-controller/index.html">GrpcWebController</a> : <a href="../../../packages/server/elide.server.controller/-status-enabled-controller/index.html">StatusEnabledController</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Entrypoint controller for gRPC Web traffic handled on behalf of the user's application by Elide's RPC framework.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/Requires///PointingToDeclaration/"><span class="token annotation builtin">Requires</span></span><span class="token punctuation">(</span><span>property<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"elide.grpc.web.enabled"</span></span><span class="token punctuation">, </span></span><wbr><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"true"</span></span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.http.annotation/Controller///PointingToDeclaration/"><span class="token annotation builtin">Controller</span></span><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"${elide.grpc.web.endpoint:/_/rpc}"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">class </span><a href="-grpc-web-controller/index.html">GrpcWebController</a> : <a href="../../../packages/server/elide.server.controller/-status-enabled-controller/index.html">StatusEnabledController</a></div><div class="brief "><p class="paragraph">Entrypoint controller for gRPC Web traffic handled on behalf of the user's application by Elide's RPC framework.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -131,7 +140,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-grpc-web-transport/index.html">GrpcWebTransport</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Describes the provided API surface for a manager which holds a connection to a backing gRPC server, which is used to fulfill requests on behalf of Elide's gRPC Web integration.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-grpc-web-transport/index.html">GrpcWebTransport</a></div><div class="brief "><p class="paragraph">Describes the provided API surface for a manager which holds a connection to a backing gRPC server, which is used to fulfill requests on behalf of Elide's gRPC Web integration.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -146,7 +155,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-message-deserializer/index.html">MessageDeserializer</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Defines the API surface provided for a class which knows how to deserialize gRPC method parameters from raw bytes to inflated <span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">com.google.protobuf.Message</span> instances.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-message-deserializer/index.html">MessageDeserializer</a></div><div class="brief "><p class="paragraph">Defines the API surface provided for a class which knows how to deserialize gRPC method parameters from raw bytes to inflated <span data-unresolved-link="com.google.protobuf/Message///PointingToDeclaration/">com.google.protobuf.Message</span> instances.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -161,7 +170,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-metadata-util/index.html">MetadataUtil</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Provides metadata-related declarations and tooling for gRPC and gRPC Web.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-metadata-util/index.html">MetadataUtil</a></div><div class="brief "><p class="paragraph">Provides metadata-related declarations and tooling for gRPC and gRPC Web.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -176,7 +185,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="index.html#-571776252%2FClasslikes%2F1929219804">RawRpcPayload</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Describes the payload type used on HTTP requests and responses when communicating RPC request and response structures. Aliased here for easy refactoring.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="index.html#-571776252%2FClasslikes%2F1929219804">RawRpcPayload</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">Describes the payload type used on HTTP requests and responses when communicating RPC request and response structures. Aliased here for easy refactoring.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -191,7 +200,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-rpc-symbol/index.html">RpcSymbol</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-rpc-symbol/index.html">RpcSymbol</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Enumerates byte symbols which are meaningful in the gRPC-Web Protocol; there are only two, <a href="-rpc-symbol/-d-a-t-a/index.html">DATA</a> and <a href="-rpc-symbol/-t-r-a-i-l-e-r/index.html">TRAILER</a>.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-rpc-symbol/index.html">RpcSymbol</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-rpc-symbol/index.html">RpcSymbol</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Enumerates byte symbols which are meaningful in the gRPC-Web Protocol; there are only two, <a href="-rpc-symbol/-d-a-t-a/index.html">DATA</a> and <a href="-rpc-symbol/-t-r-a-i-l-e-r/index.html">TRAILER</a>.</p></div></div></div>
               </div>
             </div>
           </div>

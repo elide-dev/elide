@@ -1,6 +1,6 @@
 //[frontend](../../index.md)/[lib.tsstdlib](index.md)
 
-# Package lib.tsstdlib
+# Package-level declarations
 
 ## Types
 

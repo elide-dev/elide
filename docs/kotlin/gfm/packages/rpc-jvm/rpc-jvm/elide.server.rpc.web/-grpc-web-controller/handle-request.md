@@ -24,15 +24,15 @@ Unhandled and/or unrecognized exceptions will be translated into their gRPC equi
 
 HTTP response to be sent back to the invoking client.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.rpc.RpcRuntime](../../../../../packages/rpc-jvm/elide.server.rpc/-rpc-runtime/index.md) | for service and method resolution details. |
+| [RpcRuntime](../../../../../packages/rpc-jvm/elide.server.rpc/-rpc-runtime/index.md) | for service and method resolution details. |
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -43,8 +43,8 @@ jvm
 | request | HTTP request which is incoming to the RPC endpoint, and which should be processed as a potential gRPC-Web invocation. |
 | principal | Logged-in security principal, if any. |
 
-## Throws
+#### Throws
 
 | | |
 |---|---|
-| io.grpc.StatusRuntimeException | if the service or method cannot be located, or if the request cannot be decoded, or if any runtime error occurs. Any exception that *does not* inherit from this type should be considered unhandled. |
+| StatusRuntimeException | if the service or method cannot be located, or if the request cannot be decoded, or if any runtime error occurs. Any exception that *does not* inherit from this type should be considered unhandled. |

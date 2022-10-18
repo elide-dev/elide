@@ -18,7 +18,7 @@ Indicate whether the provided [level](is-enabled.md) is enabled for the current 
 
 Whether the log level is enabled.
 
-## Parameters
+#### Parameters
 
 common
 

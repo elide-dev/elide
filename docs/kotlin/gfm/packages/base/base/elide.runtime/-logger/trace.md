@@ -9,33 +9,33 @@ Log one or more arbitrary [message](trace.md)s to the console or log, at the lev
 
 Each argument is expected to be a string. For automatic string conversion or direct log level control, see [log](log.md). To engage in string formatting, or callable log messages, see other variants of this same method.
 
-## See also
+#### See also
 
 common
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 js
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 jvm
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 native
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
-## Parameters
+#### Parameters
 
 common
 
@@ -69,33 +69,33 @@ Log one or more arbitrary [message](trace.md)s to the console or log, at the lev
 
 Each argument is expected to be a string. For automatic string conversion or direct log level control, see [log](log.md). To engage in string formatting, or callable log messages, see other variants of this same method.
 
-## See also
+#### See also
 
 common
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 js
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 jvm
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
 native
 
 | | |
 |---|---|
-| [elide.runtime.Logger](info.md) | other variants of this method. |
+| [Logger.info](info.md) | other variants of this method. |
 
-## Parameters
+#### Parameters
 
 common
 
@@ -128,7 +128,7 @@ Log the message produced by the provided [producer](trace.md), at the level of [
 
 If trace logging is not active, the producer will not be dispatched.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -162,7 +162,7 @@ Log the message produced by the provided [producer](trace.md), at the level of [
 
 If trace logging is not active, the producer will not be dispatched.
 
-## Parameters
+#### Parameters
 
 common
 

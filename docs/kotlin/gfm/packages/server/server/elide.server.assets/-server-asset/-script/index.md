@@ -7,7 +7,7 @@ class [Script](index.md)(descriptor: AssetBundle.ScriptBundle, index: [SortedSet
 
 Describes a JavaScript asset which is embedded in a given Elide application, and described by Elide's protocol buffer structures; when read from the application bundle and interpreted, this class is used to hold script info.
 
-## Parameters
+#### Parameters
 
 jvm
 

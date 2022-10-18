@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Metadata</title>
 <link href="../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,10 +47,10 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="rpc-jvm::elide.server.rpc.web/GrpcWeb.Metadata///PointingToDeclaration//1929219804">
-  <div class="breadcrumbs"><a href="../../../index.html">rpc-jvm</a><span class="delimiter">/</span><a href="../../index.html">elide.server.rpc.web</a><span class="delimiter">/</span><a href="../index.html">GrpcWeb</a><span class="delimiter">/</span><a href="index.html">Metadata</a></div>
+  <div class="breadcrumbs"><a href="../../../index.html">rpc-jvm</a><span class="delimiter">/</span><a href="../../index.html">elide.server.rpc.web</a><span class="delimiter">/</span><a href="../index.html">GrpcWeb</a><span class="delimiter">/</span><span class="current">Metadata</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Metadata</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Metadata</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Special metadata keys.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Metadata</a></div><p class="paragraph">Special metadata keys.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Properties">Properties</button></div>
@@ -57,7 +66,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="-202406860%2FProperties%2F1929219804" anchor-label="apiKey" id="-202406860%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="api-key.html">apiKey</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-202406860%2FProperties%2F1929219804" anchor-label="apiKey" id="-202406860%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">User-provided <code class="lang-kotlin">x-api-key</code> header.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="-202406860%2FProperties%2F1929219804" anchor-label="apiKey" id="-202406860%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="api-key.html">apiKey</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><a data-name="-202406860%2FProperties%2F1929219804" anchor-label="apiKey" id="-202406860%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">User-provided <code class="lang-kotlin">x-api-key</code> header.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -72,7 +81,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="441556776%2FProperties%2F1929219804" anchor-label="authorization" id="441556776%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="authorization.html">authorization</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="441556776%2FProperties%2F1929219804" anchor-label="authorization" id="441556776%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">User-provided <code class="lang-kotlin">authorization</code> header.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="441556776%2FProperties%2F1929219804" anchor-label="authorization" id="441556776%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="authorization.html">authorization</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><a data-name="441556776%2FProperties%2F1929219804" anchor-label="authorization" id="441556776%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">User-provided <code class="lang-kotlin">authorization</code> header.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -87,7 +96,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="-356240610%2FProperties%2F1929219804" anchor-label="internalCall" id="-356240610%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="internal-call.html">internalCall</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-356240610%2FProperties%2F1929219804" anchor-label="internalCall" id="-356240610%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">Key which is used to signify an internal gRPC Web call to the backing server.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="-356240610%2FProperties%2F1929219804" anchor-label="internalCall" id="-356240610%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="internal-call.html">internalCall</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><a data-name="-356240610%2FProperties%2F1929219804" anchor-label="internalCall" id="-356240610%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">Key which is used to signify an internal gRPC Web call to the backing server.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -102,7 +111,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="1162072028%2FProperties%2F1929219804" anchor-label="trace" id="1162072028%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="trace.html">trace</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1162072028%2FProperties%2F1929219804" anchor-label="trace" id="1162072028%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">Trace header.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:rpc-jvm:dokkaHtmlPartial/main"><a data-name="1162072028%2FProperties%2F1929219804" anchor-label="trace" id="1162072028%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="trace.html">trace</a><span class="token operator">: </span><span data-unresolved-link="io.grpc/Metadata.Key///PointingToDeclaration/">Metadata.Key</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div><div class="brief "><a data-name="1162072028%2FProperties%2F1929219804" anchor-label="trace" id="1162072028%2FProperties%2F1929219804" data-filterable-set=":packages:rpc-jvm:dokkaHtmlPartial/main"></a><p class="paragraph">Trace header.</p></div></div></div>
               </div>
             </div>
           </div>

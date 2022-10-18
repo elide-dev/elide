@@ -11,7 +11,7 @@ Encode the provided [string](encode.md) into a Base64-encoded byte array, which 
 
 Base64-encoded bytes.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -47,7 +47,7 @@ Encode the provided [string](encode.md) into a Base64-encoded string, which incl
 
 Base64-encoded string.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -86,7 +86,7 @@ Encode the provided [data](encode.md) into a Base64-encoded set of bytes, which 
 
 Base64-encoded bytes.
 
-## Parameters
+#### Parameters
 
 common
 

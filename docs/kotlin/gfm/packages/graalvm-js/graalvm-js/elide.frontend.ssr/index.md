@@ -1,6 +1,6 @@
 //[graalvm-js](../../index.md)/[elide.frontend.ssr](index.md)
 
-# Package elide.frontend.ssr
+# Package-level declarations
 
 ## Types
 

@@ -15,7 +15,7 @@ Encode the provided [string](encode-to-string.md) into a Base64-encoded string, 
 
 Base64-encoded string.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -54,7 +54,7 @@ Encode the provided [data](encode-to-string.md) into a Base64-encoded string, wh
 
 Base64-encoded string.
 
-## Parameters
+#### Parameters
 
 common
 

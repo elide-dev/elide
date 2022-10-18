@@ -9,7 +9,7 @@ Describes the possible states that a gRPC Web call outcome can take on, namely a
 
 This class works in concert with [GrpcWebCall](../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-call/index.md) to track the status of calls to the backing gRPC server. If a [GrpcWebCall](../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-call/index.md) has a [GrpcWebCallResponse](index.md) object present, the call has completed processing.
 
-## Parameters
+#### Parameters
 
 jvm
 

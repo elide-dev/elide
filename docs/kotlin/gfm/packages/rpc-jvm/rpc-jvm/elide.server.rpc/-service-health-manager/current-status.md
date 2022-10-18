@@ -11,7 +11,7 @@ Query for the current service status for the service at [name](current-status.md
 
 Current serving status, or ServingStatus.UNKNOWN if unknown.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -28,7 +28,7 @@ Query for the current service status for the service by the named service descri
 
 Current serving status, or ServingStatus.UNKNOWN if unknown.
 
-## Parameters
+#### Parameters
 
 jvm
 

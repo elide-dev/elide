@@ -11,7 +11,7 @@ Encode the provided [data](encode-to-string.md) as a string of hex-encoded data.
 
 String encoded with hex.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -28,7 +28,7 @@ Encode the provided [string](encode-to-string.md) as a string of hex-encoded dat
 
 String encoded with hex.
 
-## Parameters
+#### Parameters
 
 common
 

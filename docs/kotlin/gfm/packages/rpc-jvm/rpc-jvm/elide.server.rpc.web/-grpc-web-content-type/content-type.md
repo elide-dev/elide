@@ -11,7 +11,7 @@ Render an HTTP `Content-Type` string for the selected format with consideration 
 
 `Content-Type` string to use.
 
-## Parameters
+#### Parameters
 
 jvm
 

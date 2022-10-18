@@ -1,6 +1,6 @@
 //[rpc-js](../../index.md)/[lib.grpcweb](index.md)
 
-# Package lib.grpcweb
+# Package-level declarations
 
 ## Types
 

@@ -7,7 +7,7 @@ inline suspend fun [HTML](../../../../packages/server/kotlinx.html/-h-t-m-l/inde
 
 Open a `<head>` tag with support for suspension calls.
 
-## Parameters
+#### Parameters
 
 jvm
 

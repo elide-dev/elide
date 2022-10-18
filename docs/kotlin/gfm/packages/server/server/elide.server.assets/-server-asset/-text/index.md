@@ -7,7 +7,7 @@ class [Text](index.md)(descriptor: AssetBundle.GenericBundle, index: [SortedSet]
 
 Describes a generic text asset of some kind, for example, `humans.txt` or `robots.txt`; when read from the app bundle and interpreted, this class is used to hold file info.
 
-## Parameters
+#### Parameters
 
 jvm
 

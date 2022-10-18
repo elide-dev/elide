@@ -22,15 +22,15 @@ To use a given class as server-side [State](index.md), it must:
 
 Deferred task which resolves to the state provided for this cycle, or `null`.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.controller.PageWithProps](props.md) | for the synchronous version of this same method (the preferred extension point). |
+| [PageWithProps.props](props.md) | for the synchronous version of this same method (the preferred extension point). |
 
-## Parameters
+#### Parameters
 
 jvm
 

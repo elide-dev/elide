@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Base64Kt</title>
 <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -41,12 +50,10 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="base::elide.util/Base64Kt///PointingToDeclaration//326005543">
-  <div class="breadcrumbs"><a href="../../index.html">base</a><span class="delimiter">/</span><a href="../index.html">elide.util</a><span class="delimiter">/</span><a href="index.html">Base64Kt</a></div>
+  <div class="breadcrumbs"><a href="../../index.html">base</a><span class="delimiter">/</span><a href="../index.html">elide.util</a><span class="delimiter">/</span><span class="current">Base64Kt</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Base64Kt</span></span></h1>
-    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:base:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Base64Kt</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme. The implementation of this class supports the following types of Base64 as specified in <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a> and <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.</p><ul><li><p class="paragraph"><a id="basic"><strong>Basic</strong></a></p></li></ul><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 4648 and RFC 2045 for encoding and decoding operation. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><ul><li><p class="paragraph"><a id="url"><strong>URL and Filename safe</strong></a></p></li></ul><p class="paragraph">Uses the "URL and Filename safe Base64 Alphabet" as specified in Table 2 of RFC 4648 for encoding and decoding. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><ul><li><p class="paragraph"><a id="mime"><strong>MIME</strong></a></p></li></ul><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code class="lang-kotlin">'\r'</code> followed immediately by a linefeed <code class="lang-kotlin">'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p><p class="paragraph">Unless otherwise noted, passing a <code class="lang-kotlin">null</code> argument to a method of this class will cause a <code class="lang-kotlin">NullPointerException</code> to be thrown.</p><h4 class="">Author</h4><p class="paragraph">Xueming Shen</p><h4 class="">Since</h4><p class="paragraph">1.8</p></div>    </div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Base64Kt</a></div><p class="paragraph">This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme. The implementation of this class supports the following types of Base64 as specified in <a href="http://www.ietf.org/rfc/rfc4648.txt">RFC 4648</a> and <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.</p><ul><li><p class="paragraph"><a id="basic"><strong>Basic</strong></a></p></li></ul><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 4648 and RFC 2045 for encoding and decoding operation. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><ul><li><p class="paragraph"><a id="url"><strong>URL and Filename safe</strong></a></p></li></ul><p class="paragraph">Uses the "URL and Filename safe Base64 Alphabet" as specified in Table 2 of RFC 4648 for encoding and decoding. The encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters outside the base64 alphabet.</p><ul><li><p class="paragraph"><a id="mime"><strong>MIME</strong></a></p></li></ul><p class="paragraph">Uses "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code class="lang-kotlin">'\r'</code> followed immediately by a linefeed <code class="lang-kotlin">'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p><p class="paragraph">Unless otherwise noted, passing a <code class="lang-kotlin">null</code> argument to a method of this class will cause a <code class="lang-kotlin">NullPointerException</code> to be thrown.</p><span class="kdoc-tag"><h4 class="">Author</h4><p class="paragraph">Xueming Shen</p></span><span class="kdoc-tag"><h4 class="">Since</h4><p class="paragraph">1.8</p></span></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
@@ -62,9 +69,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:base:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-decoder/index.html">Decoder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-decoder/index.html">Decoder</a></div><div class="brief "><p class="paragraph">This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -79,9 +84,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:base:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-encoder/index.html">Encoder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-encoder/index.html">Encoder</a></div><div class="brief "><p class="paragraph">This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -98,9 +101,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:base:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><a data-name="1892052686%2FProperties%2F326005543" anchor-label="decoder" id="1892052686%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="decoder.html">decoder</a><span class="token operator">: </span><a href="-decoder/index.html">Base64Kt.Decoder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1892052686%2FProperties%2F326005543" anchor-label="decoder" id="1892052686%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><p class="paragraph">Returns a <a href="-decoder/index.html">Decoder</a> that decodes using the #basic type base64 encoding scheme.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><a data-name="1892052686%2FProperties%2F326005543" anchor-label="decoder" id="1892052686%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="decoder.html">decoder</a><span class="token operator">: </span><a href="-decoder/index.html">Base64Kt.Decoder</a></div><div class="brief "><a data-name="1892052686%2FProperties%2F326005543" anchor-label="decoder" id="1892052686%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><p class="paragraph">Returns a <a href="-decoder/index.html">Decoder</a> that decodes using the #basic type base64 encoding scheme.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -115,9 +116,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":packages:base:dokkaHtmlPartial/commonMain" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":packages:base:dokkaHtmlPartial/commonMain">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><a data-name="-1255819018%2FProperties%2F326005543" anchor-label="encoder" id="-1255819018%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="encoder.html">encoder</a><span class="token operator">: </span><a href="-encoder/index.html">Base64Kt.Encoder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1255819018%2FProperties%2F326005543" anchor-label="encoder" id="-1255819018%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><p class="paragraph">Returns a <a href="-encoder/index.html">Encoder</a> that encodes using the #basic type base64 encoding scheme.</p></div></div>                </div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:base:dokkaHtmlPartial/commonMain"><a data-name="-1255819018%2FProperties%2F326005543" anchor-label="encoder" id="-1255819018%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="encoder.html">encoder</a><span class="token operator">: </span><a href="-encoder/index.html">Base64Kt.Encoder</a></div><div class="brief "><a data-name="-1255819018%2FProperties%2F326005543" anchor-label="encoder" id="-1255819018%2FProperties%2F326005543" data-filterable-set=":packages:base:dokkaHtmlPartial/commonMain"></a><p class="paragraph">Returns a <a href="-encoder/index.html">Encoder</a> that encodes using the #basic type base64 encoding scheme.</p></div></div></div>
               </div>
             </div>
           </div>

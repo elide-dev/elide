@@ -13,7 +13,7 @@ If the asset system isn't ready, this method may suspend to wait for a period of
 
 Relative URI calculated to serve the provided asset.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -22,8 +22,8 @@ jvm
 | module | Asset module ID for which a relative link is needed. |
 | overrideType | Overrides the asset type, which governs the file extension in the generated link. |
 
-## Throws
+#### Throws
 
 | | |
 |---|---|
-| [kotlin.IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html) | If the provided [module](link-for-asset.md) ID cannot be found in the active asset bundle. |
+| [IllegalArgumentException](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/index.html) | If the provided [module](link-for-asset.md) ID cannot be found in the active asset bundle. |

@@ -1,6 +1,6 @@
 //[base](../../index.md)/[elide.runtime.js](index.md)
 
-# Package elide.runtime.js
+# Package-level declarations
 
 ## Types
 

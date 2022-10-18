@@ -11,7 +11,7 @@ Encodes all bytes from the specified byte array into a newly-allocated byte arra
 
 A newly-allocated byte array containing the resulting encoded bytes.
 
-## Parameters
+#### Parameters
 
 common
 

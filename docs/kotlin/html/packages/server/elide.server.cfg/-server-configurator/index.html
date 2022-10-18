@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>ServerConfigurator</title>
 <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,10 +47,10 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="server::elide.server.cfg/ServerConfigurator///PointingToDeclaration//-1592384214">
-  <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.cfg</a><span class="delimiter">/</span><a href="index.html">ServerConfigurator</a></div>
+  <div class="breadcrumbs"><a href="../../index.html">server</a><span class="delimiter">/</span><a href="../index.html">elide.server.cfg</a><span class="delimiter">/</span><span class="current">ServerConfigurator</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Server</span><wbr><span><span>Configurator</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="io.micronaut.context.annotation/Requires///PointingToDeclaration/"><span class="token annotation">Requires</span></span><span class="token punctuation">(</span><span>notEnv<span class="token operator"> = </span><span class="token punctuation">[</span><span><span class="breakable-word"><span class="token string">"test"</span></span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation">@</span><span data-unresolved-link="io.micronaut.context.annotation/ContextConfigurer///PointingToDeclaration/"><span class="token annotation">ContextConfigurer</span></span></div></div><span class="token keyword">class </span><a href="index.html">ServerConfigurator</a> : <span data-unresolved-link="io.micronaut.context/ApplicationContextConfigurer///PointingToDeclaration/">ApplicationContextConfigurer</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Configures Micronaut on behalf of an Elide application with default configuration state.</p><p class="paragraph">The developer may override these properties via their own configuration sources, which can be placed on the classpath as resources, loaded via Kubernetes configuration, or loaded via custom implementations of <span data-unresolved-link="io.micronaut.context.env/PropertySource///PointingToDeclaration/">PropertySource</span> / <span data-unresolved-link="io.micronaut.context.env/PropertySourcePropertyResolver///PointingToDeclaration/">PropertySourcePropertyResolver</span>.</p><p class="paragraph">On behalf of the developer, the following application components are configured:</p><ul><li><p class="paragraph"><strong>Netty</strong>: Workers, native transports, threading, allocation, event loops</p></li><li><p class="paragraph"><strong>SSL</strong>: Self-signed certs for development, modern suite of TLS ciphers and protocols</p></li><li><p class="paragraph"><strong>HTTP</strong>: HTTP/2, compression thresholds and modes, HTTP-&gt;HTTPS redirect</p></li><li><p class="paragraph"><strong>Access Log</strong>: Shows the HTTP access log via <code class="lang-kotlin">stdout</code> during development</p></li><li><p class="paragraph"><strong>DI Container</strong>: Eager initialization of <a href="../../../../packages/base/elide.annotations/-logic/index.html">Logic</a> objects</p></li></ul><p class="paragraph">No action is needed to enable the above components; the DI container loads and applies this configuration automatically at application startup.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/Requires///PointingToDeclaration/"><span class="token annotation builtin">Requires</span></span><span class="token punctuation">(</span><span>notEnv<span class="token operator"> = </span><span class="token punctuation">[</span><span><span class="breakable-word"><span class="token string">"test"</span></span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="io.micronaut.context.annotation/ContextConfigurer///PointingToDeclaration/"><span class="token annotation builtin">ContextConfigurer</span></span></div></div><span class="token keyword">class </span><a href="index.html">ServerConfigurator</a> : <span data-unresolved-link="io.micronaut.context/ApplicationContextConfigurer///PointingToDeclaration/">ApplicationContextConfigurer</span></div><p class="paragraph">Configures Micronaut on behalf of an Elide application with default configuration state.</p><p class="paragraph">The developer may override these properties via their own configuration sources, which can be placed on the classpath as resources, loaded via Kubernetes configuration, or loaded via custom implementations of <span data-unresolved-link="io.micronaut.context.env/PropertySource///PointingToDeclaration/">PropertySource</span> / <span data-unresolved-link="io.micronaut.context.env/PropertySourcePropertyResolver///PointingToDeclaration/">PropertySourcePropertyResolver</span>.</p><p class="paragraph">On behalf of the developer, the following application components are configured:</p><ul><li><p class="paragraph"><strong>Netty</strong>: Workers, native transports, threading, allocation, event loops</p></li><li><p class="paragraph"><strong>SSL</strong>: Self-signed certs for development, modern suite of TLS ciphers and protocols</p></li><li><p class="paragraph"><strong>HTTP</strong>: HTTP/2, compression thresholds and modes, HTTP-&gt;HTTPS redirect</p></li><li><p class="paragraph"><strong>Access Log</strong>: Shows the HTTP access log via <code class="lang-kotlin">stdout</code> during development</p></li><li><p class="paragraph"><strong>DI Container</strong>: Eager initialization of <a href="../../../../packages/base/elide.annotations/-logic/index.html">Logic</a> objects</p></li></ul><p class="paragraph">No action is needed to enable the above components; the DI container loads and applies this configuration automatically at application startup.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button></div>
@@ -57,7 +66,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-server-configurator.html"><span class="token function">ServerConfigurator</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-server-configurator.html"><span class="token function">ServerConfigurator</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
               </div>
             </div>
           </div>
@@ -74,7 +83,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
               </div>
             </div>
           </div>
@@ -91,7 +100,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="configure.html"><span class="token function">configure</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="io.micronaut.context/ApplicationContextBuilder///PointingToDeclaration/">ApplicationContextBuilder</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="configure.html"><span class="token function">configure</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">builder<span class="token operator">: </span><span data-unresolved-link="io.micronaut.context/ApplicationContextBuilder///PointingToDeclaration/">ApplicationContextBuilder</span></span></span><span class="token punctuation">)</span></div></div></div>
               </div>
             </div>
           </div>
@@ -106,7 +115,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.server.http/-request-context-filter/index.html#785826419%2FFunctions%2F-1592384214"><span class="token function">getOrder</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:server:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../elide.server.http/-request-context-filter/index.html#785826419%2FFunctions%2F-1592384214"><span class="token function">getOrder</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
               </div>
             </div>
           </div>

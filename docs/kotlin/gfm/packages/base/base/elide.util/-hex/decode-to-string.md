@@ -11,7 +11,7 @@ Decode the provided [data](decode-to-string.md) into a string of decoded data.
 
 String decoded from hex.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -28,7 +28,7 @@ Decode the provided [string](decode-to-string.md) into a string of decoded data.
 
 String decoded from hex.
 
-## Parameters
+#### Parameters
 
 common
 

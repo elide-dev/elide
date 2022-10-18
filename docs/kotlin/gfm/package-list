@@ -2,15 +2,10 @@ $dokka.format:gfm-v1
 $dokka.linkExtension:md
 $dokka.location:elide.annotations////PointingToDeclaration/model/model/elide.annotations/index.md
 $dokka.location:elide.annotations/API///PointingToDeclaration/base/base/elide.annotations/-a-p-i/index.md
-$dokka.location:elide.annotations/API/API/#/PointingToDeclaration/base/base/elide.annotations/-a-p-i/-a-p-i.md
 $dokka.location:elide.annotations/Endpoint///PointingToDeclaration/base/base/elide.annotations/-endpoint/index.md
-$dokka.location:elide.annotations/Endpoint/Endpoint/#/PointingToDeclaration/base/base/elide.annotations/-endpoint/-endpoint.md
 $dokka.location:elide.annotations/Generated///PointingToDeclaration/base/base/elide.annotations/-generated/index.md
-$dokka.location:elide.annotations/Generated/Generated/#/PointingToDeclaration/base/base/elide.annotations/-generated/-generated.md
 $dokka.location:elide.annotations/Logic///PointingToDeclaration/base/base/elide.annotations/-logic/index.md
-$dokka.location:elide.annotations/Logic/Logic/#/PointingToDeclaration/base/base/elide.annotations/-logic/-logic.md
 $dokka.location:elide.annotations/Model///PointingToDeclaration/model/model/elide.annotations/-model/index.md
-$dokka.location:elide.annotations/Model/Model/#/PointingToDeclaration/model/model/elide.annotations/-model/-model.md
 $dokka.location:elide.frontend.ssr////PointingToDeclaration/graalvm-js/graalvm-js/elide.frontend.ssr/index.md
 $dokka.location:elide.frontend.ssr/SSRContext.Companion///PointingToDeclaration/graalvm-js/graalvm-js/elide.frontend.ssr/-s-s-r-context/-companion/index.md
 $dokka.location:elide.frontend.ssr/SSRContext.Companion/CONTEXT/#/PointingToDeclaration/graalvm-js/graalvm-js/elide.frontend.ssr/-s-s-r-context/-companion/-c-o-n-t-e-x-t.md
@@ -103,6 +98,8 @@ $dokka.location:elide.runtime/LogLevel.INFO///PointingToDeclaration/{"org.jetbra
 $dokka.location:elide.runtime/LogLevel.TRACE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide.runtime/-log-level/-t-r-a-c-e/index.md
 $dokka.location:elide.runtime/LogLevel.WARN///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide.runtime/-log-level/-w-a-r-n/index.md
 $dokka.location:elide.runtime/LogLevel///PointingToDeclaration/base/base/elide.runtime/-log-level/index.md
+$dokka.location:elide.runtime/LogLevel/valueOf/#kotlin.String/PointingToDeclaration/base/base/elide.runtime/-log-level/value-of.md
+$dokka.location:elide.runtime/LogLevel/values/#/PointingToDeclaration/base/base/elide.runtime/-log-level/values.md
 $dokka.location:elide.runtime/Logger///PointingToDeclaration/base/base/elide.runtime/-logger/index.md
 $dokka.location:elide.runtime/Logger/debug/#kotlin.Array[kotlin.Any]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
 $dokka.location:elide.runtime/Logger/debug/#kotlin.Function0[kotlin.String]/PointingToDeclaration/base/base/elide.runtime/-logger/debug.md
@@ -130,9 +127,7 @@ $dokka.location:elide.runtime/Logging/logger/#/PointingToDeclaration/base/base/
 $dokka.location:elide.runtime/Logging/logger/#kotlin.String/PointingToDeclaration/base/base/elide.runtime/-logging/logger.md
 $dokka.location:elide.server.annotations////PointingToDeclaration/server/server/elide.server.annotations/index.md
 $dokka.location:elide.server.annotations/Eager///PointingToDeclaration/server/server/elide.server.annotations/-eager/index.md
-$dokka.location:elide.server.annotations/Eager/Eager/#/PointingToDeclaration/server/server/elide.server.annotations/-eager/-eager.md
 $dokka.location:elide.server.annotations/Page///PointingToDeclaration/server/server/elide.server.annotations/-page/index.md
-$dokka.location:elide.server.annotations/Page/Page/#kotlin.String#kotlin.Array[kotlin.String]#kotlin.Array[kotlin.String]/PointingToDeclaration/server/server/elide.server.annotations/-page/-page.md
 $dokka.location:elide.server.annotations/Page/consumes/#/PointingToDeclaration/server/server/elide.server.annotations/-page/consumes.md
 $dokka.location:elide.server.annotations/Page/produces/#/PointingToDeclaration/server/server/elide.server.annotations/-page/produces.md
 $dokka.location:elide.server.annotations/Page/route/#/PointingToDeclaration/server/server/elide.server.annotations/-page/route.md
@@ -184,6 +179,8 @@ $dokka.location:elide.server.assets/AssetType.SCRIPT///PointingToDeclaration/{"o
 $dokka.location:elide.server.assets/AssetType.STYLESHEET///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-s-t-y-l-e-s-h-e-e-t/index.md
 $dokka.location:elide.server.assets/AssetType.TEXT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}server/server/elide.server.assets/-asset-type/-t-e-x-t/index.md
 $dokka.location:elide.server.assets/AssetType///PointingToDeclaration/server/server/elide.server.assets/-asset-type/index.md
+$dokka.location:elide.server.assets/AssetType/valueOf/#kotlin.String/PointingToDeclaration/server/server/elide.server.assets/-asset-type/value-of.md
+$dokka.location:elide.server.assets/AssetType/values/#/PointingToDeclaration/server/server/elide.server.assets/-asset-type/values.md
 $dokka.location:elide.server.assets/RenderedAsset///PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/index.md
 $dokka.location:elide.server.assets/RenderedAsset/RenderedAsset/#kotlin.String#elide.server.assets.AssetType#tools.elide.data.CompressionMode#kotlin.collections.Map[kotlin.String,kotlin.String]#kotlin.Long#kotlin.Long#kotlin.Pair[tools.elide.crypto.HashAlgorithm,com.google.protobuf.ByteString]?#kotlin.Function0[com.google.protobuf.ByteString]/PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/-rendered-asset.md
 $dokka.location:elide.server.assets/RenderedAsset/digest/#/PointingToDeclaration/server/server/elide.server.assets/-rendered-asset/digest.md
@@ -323,6 +320,8 @@ $dokka.location:elide.server.rpc.web/GrpcWebContentType.TEXT///PointingToDeclara
 $dokka.location:elide.server.rpc.web/GrpcWebContentType///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/index.md
 $dokka.location:elide.server.rpc.web/GrpcWebContentType/contentType/#kotlin.Boolean/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/content-type.md
 $dokka.location:elide.server.rpc.web/GrpcWebContentType/mediaType/#kotlin.Boolean/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/media-type.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType/valueOf/#kotlin.String/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/value-of.md
+$dokka.location:elide.server.rpc.web/GrpcWebContentType/values/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/values.md
 $dokka.location:elide.server.rpc.web/GrpcWebController///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-controller/index.md
 $dokka.location:elide.server.rpc.web/GrpcWebController/GrpcWebController/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-controller/-grpc-web-controller.md
 $dokka.location:elide.server.rpc.web/GrpcWebController/handleRequest/#kotlin.String#kotlin.String#io.micronaut.http.HttpRequest[kotlin.ByteArray]#java.security.Principal?/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-grpc-web-controller/handle-request.md
@@ -340,6 +339,8 @@ $dokka.location:elide.server.rpc.web/RpcSymbol.DATA///PointingToDeclaration/{"or
 $dokka.location:elide.server.rpc.web/RpcSymbol.TRAILER///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}rpc-jvm/rpc-jvm/elide.server.rpc.web/-rpc-symbol/-t-r-a-i-l-e-r/index.md
 $dokka.location:elide.server.rpc.web/RpcSymbol///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-rpc-symbol/index.md
 $dokka.location:elide.server.rpc.web/RpcSymbol/value/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-rpc-symbol/value.md
+$dokka.location:elide.server.rpc.web/RpcSymbol/valueOf/#kotlin.String/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-rpc-symbol/value-of.md
+$dokka.location:elide.server.rpc.web/RpcSymbol/values/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc.web/-rpc-symbol/values.md
 $dokka.location:elide.server.rpc////PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/index.md
 $dokka.location:elide.server.rpc/ServiceHealthManager///PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/-service-health-manager/index.md
 $dokka.location:elide.server.rpc/ServiceHealthManager/ServiceHealthManager/#/PointingToDeclaration/rpc-jvm/rpc-jvm/elide.server.rpc/-service-health-manager/-service-health-manager.md
@@ -504,6 +505,8 @@ $dokka.location:elide.util/Encoder/encoding/#/PointingToDeclaration/base/base/e
 $dokka.location:elide.util/Encoding.BASE64///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide.util/-encoding/-b-a-s-e64/index.md
 $dokka.location:elide.util/Encoding.HEX///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide.util/-encoding/-h-e-x/index.md
 $dokka.location:elide.util/Encoding///PointingToDeclaration/base/base/elide.util/-encoding/index.md
+$dokka.location:elide.util/Encoding/valueOf/#kotlin.String/PointingToDeclaration/base/base/elide.util/-encoding/value-of.md
+$dokka.location:elide.util/Encoding/values/#/PointingToDeclaration/base/base/elide.util/-encoding/values.md
 $dokka.location:elide.util/Hex///PointingToDeclaration/base/base/elide.util/-hex/index.md
 $dokka.location:elide.util/Hex/CHARACTER_SET/#/PointingToDeclaration/base/base/elide.util/-hex/-c-h-a-r-a-c-t-e-r_-s-e-t.md
 $dokka.location:elide.util/Hex/decode/#kotlin.ByteArray/PointingToDeclaration/base/base/elide.util/-hex/decode.md
@@ -521,6 +524,8 @@ $dokka.location:elide////PointingToDeclaration/base/base/elide/index.md
 $dokka.location:elide/AppEnvironment.LIVE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide/-app-environment/-l-i-v-e/index.md
 $dokka.location:elide/AppEnvironment.SANDBOX///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}base/base/elide/-app-environment/-s-a-n-d-b-o-x/index.md
 $dokka.location:elide/AppEnvironment///PointingToDeclaration/base/base/elide/-app-environment/index.md
+$dokka.location:elide/AppEnvironment/valueOf/#kotlin.String/PointingToDeclaration/base/base/elide/-app-environment/value-of.md
+$dokka.location:elide/AppEnvironment/values/#/PointingToDeclaration/base/base/elide/-app-environment/values.md
 $dokka.location:kotlinx.html.tagext////PointingToDeclaration/server/server/kotlinx.html.tagext/index.md
 $dokka.location:kotlinx.html.tagext//body/kotlinx.html.HTML#kotlin.String?#kotlin.coroutines.SuspendFunction1[kotlinx.html.BODY,kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html.tagext/body.md
 $dokka.location:kotlinx.html.tagext//head/kotlinx.html.HTML#kotlin.coroutines.SuspendFunction1[kotlinx.html.HEAD,kotlin.Unit]/PointingToDeclaration/server/server/kotlinx.html.tagext/head.md
@@ -599,6 +604,8 @@ $dokka.location:lib.grpcweb/StatusCode.UNAVAILABLE///PointingToDeclaration/{"org
 $dokka.location:lib.grpcweb/StatusCode.UNIMPLEMENTED///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}rpc-js/rpc-js/lib.grpcweb/-status-code/-u-n-i-m-p-l-e-m-e-n-t-e-d/index.md
 $dokka.location:lib.grpcweb/StatusCode.UNKNOWN///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}rpc-js/rpc-js/lib.grpcweb/-status-code/-u-n-k-n-o-w-n/index.md
 $dokka.location:lib.grpcweb/StatusCode///PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-status-code/index.md
+$dokka.location:lib.grpcweb/StatusCode/valueOf/#kotlin.String/PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-status-code/value-of.md
+$dokka.location:lib.grpcweb/StatusCode/values/#/PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-status-code/values.md
 $dokka.location:lib.grpcweb/StreamInterceptor///PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-stream-interceptor/index.md
 $dokka.location:lib.grpcweb/StreamInterceptor/intercept/#lib.grpcweb.Request[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[lib.grpcweb.Request[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])],lib.grpcweb.ClientReadableStream[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-stream-interceptor/intercept.md
 $dokka.location:lib.grpcweb/UnaryInterceptor///PointingToDeclaration/rpc-js/rpc-js/lib.grpcweb/-unary-interceptor/index.md
@@ -995,6 +1002,8 @@ $dokka.location:lib.protobuf/FieldType.UINT32///PointingToDeclaration/{"org.jetb
 $dokka.location:lib.protobuf/FieldType.UINT64///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}frontend/frontend/lib.protobuf/-field-type/-u-i-n-t64/index.md
 $dokka.location:lib.protobuf/FieldType.VHASH64///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}frontend/frontend/lib.protobuf/-field-type/-v-h-a-s-h64/index.md
 $dokka.location:lib.protobuf/FieldType///PointingToDeclaration/frontend/frontend/lib.protobuf/-field-type/index.md
+$dokka.location:lib.protobuf/FieldType/valueOf/#kotlin.String/PointingToDeclaration/frontend/frontend/lib.protobuf/-field-type/value-of.md
+$dokka.location:lib.protobuf/FieldType/values/#/PointingToDeclaration/frontend/frontend/lib.protobuf/-field-type/values.md
 $dokka.location:lib.protobuf/Int64.Companion///PointingToDeclaration/frontend/frontend/lib.protobuf/-int64/-companion/index.md
 $dokka.location:lib.protobuf/Int64.Companion/fromString/#kotlin.String/PointingToDeclaration/frontend/frontend/lib.protobuf/-int64/-companion/from-string.md
 $dokka.location:lib.protobuf/Int64///PointingToDeclaration/frontend/frontend/lib.protobuf/-int64/index.md
@@ -1128,6 +1137,8 @@ $dokka.location:lib.protobuf/WireType.INVALID///PointingToDeclaration/{"org.jetb
 $dokka.location:lib.protobuf/WireType.START_GROUP///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}frontend/frontend/lib.protobuf/-wire-type/-s-t-a-r-t_-g-r-o-u-p/index.md
 $dokka.location:lib.protobuf/WireType.VARINT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}frontend/frontend/lib.protobuf/-wire-type/-v-a-r-i-n-t/index.md
 $dokka.location:lib.protobuf/WireType///PointingToDeclaration/frontend/frontend/lib.protobuf/-wire-type/index.md
+$dokka.location:lib.protobuf/WireType/valueOf/#kotlin.String/PointingToDeclaration/frontend/frontend/lib.protobuf/-wire-type/value-of.md
+$dokka.location:lib.protobuf/WireType/values/#/PointingToDeclaration/frontend/frontend/lib.protobuf/-wire-type/values.md
 $dokka.location:lib.tsstdlib.intl////PointingToDeclaration/frontend/frontend/lib.tsstdlib.intl/index.md
 $dokka.location:lib.tsstdlib.intl/Collator.Companion///PointingToDeclaration/frontend/frontend/lib.tsstdlib.intl/-collator/-companion/index.md
 $dokka.location:lib.tsstdlib.intl/Collator.Companion/invoke/#kotlin.Any#lib.tsstdlib.intl.CollatorOptions/PointingToDeclaration/frontend/frontend/lib.tsstdlib.intl/-collator/-companion/invoke.md

@@ -13,15 +13,15 @@ If any step of the parsing or fetching process fails, the test invoking this met
 
 HTTP response from the server.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.ElideServerTest](exchange.md) | which allows an arbitrary response body type. |
+| [ElideServerTest.exchange](exchange.md) | which allows an arbitrary response body type. |
 
-## Parameters
+#### Parameters
 
 jvm
 

@@ -13,15 +13,15 @@ In this case, no response payload type is provided, and the request payload type
 
 HTTP response from the server.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.ElideServerTest](exchange.md) | which allows a response body type. |
+| [ElideServerTest.exchange](exchange.md) | which allows a response body type. |
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -40,7 +40,7 @@ Exchange a test [request](exchange.md) with the current server, expecting [statu
 
 HTTP response from the server.
 
-## Parameters
+#### Parameters
 
 jvm
 

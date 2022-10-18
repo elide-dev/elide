@@ -15,7 +15,7 @@ Encode the provided [string](encode-web-safe.md) into a Base64-encoded string, o
 
 Base64-encoded string, using only web-safe characters.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -54,7 +54,7 @@ Encode the provided [data](encode-web-safe.md) into a Base64-encoded set of byte
 
 Base64-encoded bytes, using only web-safe characters.
 
-## Parameters
+#### Parameters
 
 common
 

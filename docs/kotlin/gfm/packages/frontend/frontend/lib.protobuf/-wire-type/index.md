@@ -17,6 +17,13 @@ external enum [WireType](index.md) : [Enum](https://kotlinlang.org/api/latest/jv
 | [END_GROUP](-e-n-d_-g-r-o-u-p/index.md) | [js]<br>[END_GROUP](-e-n-d_-g-r-o-u-p/index.md) |
 | [FIXED32](-f-i-x-e-d32/index.md) | [js]<br>[FIXED32](-f-i-x-e-d32/index.md) |
 
+## Functions
+
+| Name | Summary |
+|---|---|
+| [valueOf](value-of.md) | [js]<br>fun [valueOf](value-of.md)(value: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)): [WireType](index.md)<br>Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.) |
+| [values](values.md) | [js]<br>fun [values](values.md)(): [Array](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)&lt;[WireType](index.md)&gt;<br>Returns an array containing the constants of this enum type, in the order they're declared. |
+
 ## Properties
 
 | Name | Summary |

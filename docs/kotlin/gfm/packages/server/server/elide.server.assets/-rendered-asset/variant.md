@@ -5,7 +5,7 @@
 [jvm]\
 val [variant](variant.md): CompressionMode
 
-## Parameters
+#### Parameters
 
 jvm
 

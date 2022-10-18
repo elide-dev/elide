@@ -11,7 +11,7 @@ Encode the provided [data](encode.md) as a byte array of hex-encoded data.
 
 Data encoded with hex.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -28,7 +28,7 @@ Encode the provided [string](encode.md) as a byte array of hex-encoded data.
 
 Data encoded with hex.
 
-## Parameters
+#### Parameters
 
 common
 

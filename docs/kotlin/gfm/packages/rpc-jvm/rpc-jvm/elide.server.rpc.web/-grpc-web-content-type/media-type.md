@@ -11,7 +11,7 @@ Render a Micronaut MediaType for the selected format with consideration made for
 
 Micronaut MediaType to use.
 
-## Parameters
+#### Parameters
 
 jvm
 

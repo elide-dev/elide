@@ -11,7 +11,7 @@ class [ServerAssetReader](index.md) : [AssetReader](../-asset-reader/index.md)
 
 Default implementation of an [AssetReader](../-asset-reader/index.md); used in concert with the default [AssetManager](../-asset-manager/index.md) to fulfill HTTP requests for static assets embedded within the application.
 
-## Parameters
+#### Parameters
 
 jvm
 

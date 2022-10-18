@@ -9,7 +9,7 @@ data class [GrpcWebConfig](index.md)(var enabled: [Boolean](https://kotlinlang.o
 
 Describes active configuration for Elide's RPC layer as related to integration with gRPC Web.
 
-## Parameters
+#### Parameters
 
 jvm
 

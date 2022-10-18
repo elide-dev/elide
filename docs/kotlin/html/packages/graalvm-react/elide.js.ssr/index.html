@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>elide.js.ssr</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,9 +47,9 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="graalvm-react::elide.js.ssr////PointingToDeclaration//-497097663">
-  <div class="breadcrumbs"><a href="../index.html">graalvm-react</a><span class="delimiter">/</span><a href="index.html">elide.js.ssr</a></div>
+  <div class="breadcrumbs"><a href="../index.html">graalvm-react</a><span class="delimiter">/</span><span class="current">elide.js.ssr</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>elide.</span><wbr><span>js.</span><wbr><span>ssr</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
@@ -56,7 +65,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="boot.html">AppProps</a><span class="token operator"> : </span><span data-unresolved-link="react/Props///PointingToDeclaration/">Props</span><span class="token operator">&gt; </span><a href="boot.html"><span class="token function">boot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="boot.html">AppProps</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><span data-unresolved-link="react/ReactElement///PointingToDeclaration/">ReactElement</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">TBD</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="boot.html">AppProps</a><span class="token operator"> : </span><span data-unresolved-link="react/Props///PointingToDeclaration/">Props</span><span class="token operator">&gt; </span><a href="boot.html"><span class="token function">boot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="boot.html">AppProps</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><span data-unresolved-link="react/ReactElement///PointingToDeclaration/">ReactElement</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">TBD</p></div></div></div>
               </div>
             </div>
           </div>
@@ -73,7 +82,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-1337038335%2FProperties%2F-497097663" anchor-label="DEFAULT_EL_TYPE" id="-1337038335%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-d-e-f-a-u-l-t_-e-l_-t-y-p-e.html">DEFAULT_EL_TYPE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-1337038335%2FProperties%2F-497097663" anchor-label="DEFAULT_EL_TYPE" id="-1337038335%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-d-e-f-a-u-l-t_-e-l_-t-y-p-e.html">DEFAULT_EL_TYPE</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>
@@ -88,7 +97,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="1389527490%2FProperties%2F-497097663" anchor-label="hydrate" id="1389527490%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="hydrate.html">hydrate</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span>container<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom/-element/index.html">Element</a><span class="token punctuation">, </span><span class="token keyword"></span>initialChildren<span class="token operator">: </span><span data-unresolved-link="react/ReactNode///PointingToDeclaration/">ReactNode</span><span class="token punctuation">, </span><span class="token keyword"></span>options<span class="token operator">: </span><span data-unresolved-link="react.dom.client/HydrationOptions///PointingToDeclaration/">HydrationOptions</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><span data-unresolved-link="react.dom.client/Root///PointingToDeclaration/">Root</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1389527490%2FProperties%2F-497097663" anchor-label="hydrate" id="1389527490%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><p class="paragraph">Alias into React 18+ hydration.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="1389527490%2FProperties%2F-497097663" anchor-label="hydrate" id="1389527490%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="hydrate.html">hydrate</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><span data-unresolved-link="dom/Element///PointingToDeclaration/">Element</span><span class="token punctuation">, </span><span class="token keyword"></span>initialChildren<span class="token operator">: </span><span data-unresolved-link="react/ReactNode///PointingToDeclaration/">ReactNode</span><span class="token punctuation">, </span><span class="token keyword"></span>options<span class="token operator">: </span><span data-unresolved-link="react.dom.client/HydrationOptions///PointingToDeclaration/">HydrationOptions</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><span data-unresolved-link="react.dom.client/Root///PointingToDeclaration/">Root</span></div><div class="brief "><a data-name="1389527490%2FProperties%2F-497097663" anchor-label="hydrate" id="1389527490%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><p class="paragraph">Alias into React 18+ hydration.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -103,7 +112,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-1434459082%2FProperties%2F-497097663" anchor-label="RENDER_ROOT_ID" id="-1434459082%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-n-d-e-r_-r-o-o-t_-i-d.html">RENDER_ROOT_ID</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-1434459082%2FProperties%2F-497097663" anchor-label="RENDER_ROOT_ID" id="-1434459082%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-n-d-e-r_-r-o-o-t_-i-d.html">RENDER_ROOT_ID</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>
@@ -118,7 +127,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="403624732%2FProperties%2F-497097663" anchor-label="SERVING_MODE_SSR" id="403624732%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-n-g_-m-o-d-e_-s-s-r.html">SERVING_MODE_SSR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="403624732%2FProperties%2F-497097663" anchor-label="SERVING_MODE_SSR" id="403624732%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-e-r-v-i-n-g_-m-o-d-e_-s-s-r.html">SERVING_MODE_SSR</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>
@@ -133,7 +142,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="457390098%2FProperties%2F-497097663" anchor-label="SSR_DATA_ID" id="457390098%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-s-r_-d-a-t-a_-i-d.html">SSR_DATA_ID</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="457390098%2FProperties%2F-497097663" anchor-label="SSR_DATA_ID" id="457390098%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-s-r_-d-a-t-a_-i-d.html">SSR_DATA_ID</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>
@@ -148,7 +157,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-118014004%2FProperties%2F-497097663" anchor-label="SSR_FLAG" id="-118014004%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-s-r_-f-l-a-g.html">SSR_FLAG</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":packages:graalvm-react:dokkaHtmlPartial/main"><a data-name="-118014004%2FProperties%2F-497097663" anchor-label="SSR_FLAG" id="-118014004%2FProperties%2F-497097663" data-filterable-set=":packages:graalvm-react:dokkaHtmlPartial/main"></a><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-s-s-r_-f-l-a-g.html">SSR_FLAG</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
               </div>
             </div>
           </div>

@@ -13,13 +13,13 @@ import kotlinx.serialization.Serializable
  * @param inline Whether this asset is eligible to be inlined into the page.
  * @param preload Whether this asset is eligible to be preloaded.
  */
-<span class="pc bpc" id="L16" title="8 of 22 branches missed.">@Serializable public data class AssetReference(</span>
-<span class="fc" id="L17">  val module: AssetModuleId,</span>
-<span class="fc" id="L18">  val assetType: AssetType,</span>
-<span class="fc" id="L19">  val href: String,</span>
-<span class="fc" id="L20">  val type: String? = null,</span>
-<span class="pc bpc" id="L21" title="2 of 4 branches missed.">  val inline: Boolean = false,</span>
-<span class="pc bpc" id="L22" title="2 of 4 branches missed.">  val preload: Boolean = false,</span>
+<span class="nc bnc" id="L16" title="All 22 branches missed.">@Serializable public data class AssetReference(</span>
+<span class="nc" id="L17">  val module: AssetModuleId,</span>
+<span class="nc" id="L18">  val assetType: AssetType,</span>
+<span class="nc" id="L19">  val href: String,</span>
+<span class="nc" id="L20">  val type: String? = null,</span>
+<span class="nc bnc" id="L21" title="All 4 branches missed.">  val inline: Boolean = false,</span>
+<span class="nc bnc" id="L22" title="All 4 branches missed.">  val preload: Boolean = false,</span>
 ) : java.io.Serializable {
 <span class="fc" id="L24">  internal companion object {</span>
     /** @return [AssetReference] from the specified [pointer]. */
@@ -29,5 +29,5 @@ import kotlinx.serialization.Serializable
 <span class="fc" id="L29">      href = uri,</span>
 <span class="fc" id="L30">    )</span>
   }
-<span class="fc" id="L32">}</span>
+<span class="nc" id="L32">}</span>
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

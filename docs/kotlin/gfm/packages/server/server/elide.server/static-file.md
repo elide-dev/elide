@@ -11,7 +11,7 @@ Serve a static file which is embedded in the application JAR, at the path `/stat
 
 HTTP response wrapping the desired asset, or an HTTP response which serves a 404 if the asset could not be     located at the specified path.
 
-## Parameters
+#### Parameters
 
 jvm
 

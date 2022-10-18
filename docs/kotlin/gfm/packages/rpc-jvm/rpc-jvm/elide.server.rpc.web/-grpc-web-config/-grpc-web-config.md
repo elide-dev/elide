@@ -5,7 +5,7 @@
 [jvm]\
 fun [GrpcWebConfig](-grpc-web-config.md)(enabled: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, endpoint: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = defaultEndpoint, timeout: [Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html) = Duration.ofSeconds(30))
 
-## Parameters
+#### Parameters
 
 jvm
 

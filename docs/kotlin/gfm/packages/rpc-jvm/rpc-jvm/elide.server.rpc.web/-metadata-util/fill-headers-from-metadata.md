@@ -14,7 +14,7 @@ Given a set of gRPC io.grpc.Metadata, compute a corresponding set of HTTP Header
 
 HTTP headers from the provided [metadata](fill-headers-from-metadata.md).
 
-## Parameters
+#### Parameters
 
 jvm
 

@@ -5,7 +5,7 @@
 [jvm]\
 val [contentType](content-type.md): [GrpcWebContentType](../../-grpc-web-content-type/index.md)
 
-## Parameters
+#### Parameters
 
 jvm
 

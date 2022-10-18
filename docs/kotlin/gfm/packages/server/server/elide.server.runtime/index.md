@@ -1,6 +1,6 @@
 //[server](../../index.md)/[elide.server.runtime](index.md)
 
-# Package elide.server.runtime
+# Package-level declarations
 
 ## Types
 

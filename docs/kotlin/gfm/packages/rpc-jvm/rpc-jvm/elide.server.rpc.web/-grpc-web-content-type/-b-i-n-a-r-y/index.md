@@ -7,13 +7,13 @@
 
 Binary dispatch for gRPC-Web, potentially with Protocol Buffers.
 
-## See also
+#### See also
 
 jvm
 
 | | |
 |---|---|
-| [elide.server.rpc.web.GrpcWebContentType.BINARY](../../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/-b-i-n-a-r-y/content-type.md) | For calculation of a full `Content-Type` header. |
+| [GrpcWebContentType.BINARY.contentType](../../../../../../packages/rpc-jvm/elide.server.rpc.web/-grpc-web-content-type/-b-i-n-a-r-y/content-type.md) | For calculation of a full `Content-Type` header. |
 
 ## Functions
 

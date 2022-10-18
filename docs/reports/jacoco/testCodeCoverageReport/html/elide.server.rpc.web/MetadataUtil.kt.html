@@ -99,7 +99,7 @@ object MetadataUtil {
 <span class="fc" id="L99">    val metadata = Metadata()</span>
 <span class="fc" id="L100">    headers.filter {</span>
       (
-<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        INCLUDED.contains(it.key) ||</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">        INCLUDED.contains(it.key) ||</span>
           (
 <span class="fc bfc" id="L104" title="All 2 branches covered.">            it.key.lowercase().startsWith(GRPC_HEADER_PREFIX) &amp;&amp;</span>
 <span class="fc bfc" id="L105" title="All 2 branches covered.">            !EXCLUDED.contains(it.key)</span>

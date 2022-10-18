@@ -1,6 +1,6 @@
 //[server](../../index.md)/[elide.server.http](index.md)
 
-# Package elide.server.http
+# Package-level declarations
 
 ## Types
 

@@ -13,7 +13,7 @@ Additional response properties, such as headers, may be set on the return result
 
 HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset     could not be located at the specified path.
 
-## Parameters
+#### Parameters
 
 jvm
 
@@ -22,4 +22,4 @@ jvm
 | request | Request we are responding to. |
 | path | Path to the React SSR entrypoint script, which should be embedded within the asset section of the JAR. |
 | response | Mutable HTTP response to fill with the resulting SSR content. Sets the status and headers. |
-| block |  |
+| block |

@@ -15,13 +15,13 @@ Unless otherwise noted, passing a `null` argument to a method of this class will
 
 1.8
 
-## See also
+#### See also
 
 common
 
-| | |
-|---|---|
-| [elide.util.Base64Kt.Decoder](../-decoder/index.md) |  |
+| |
+|---|
+| [Base64Kt.Decoder](../-decoder/index.md) |
 
 ## Types
 

@@ -11,7 +11,7 @@ Decode the provided [data](decode.md) as a byte array of hex-encoded data.
 
 Raw data decoded from hex.
 
-## Parameters
+#### Parameters
 
 common
 
@@ -28,7 +28,7 @@ Decode the provided [string](decode.md) as a byte array of hex-encoded data.
 
 Raw data decoded from hex.
 
-## Parameters
+#### Parameters
 
 common
 

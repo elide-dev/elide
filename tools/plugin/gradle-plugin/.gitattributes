@@ -2,3 +2,6 @@
 
 *.bat text eol=crlf
 *.jar binary
+plugin-build/plugin/src/main/model -linguist-detectable linguist-generated
+plugin-build/plugin/src/main/model/java -linguist-detectable linguist-generated
+plugin-build/plugin/src/main/model/kotlin -linguist-detectable linguist-generated

@@ -30,14 +30,14 @@ below for specific installation and use instructions.
 **Kotlin DSL**
 ```kotlin
 plugins {
-  id("dev.elide.buildtools.plugin") version "1.0.0-beta7"
+  id("dev.elide.buildtools.plugin") version "1.0.0-beta8"
 }
 ```
 
 **Groovy DSL**
 ```groovy
 plugins {
-    id "dev.elide.buildtools.plugin" version "1.0.0-beta7"
+    id "dev.elide.buildtools.plugin" version "1.0.0-beta8"
 }
 ```
 

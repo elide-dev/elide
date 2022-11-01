@@ -32,6 +32,7 @@ micronaut_openapi = "4.5.2"
 micronaut_picocli = "4.3.0"
 micronaut_objectstorage = "1.1.0"
 micronaut_multitenancy = "4.2.0"
+micronaut_tracing = "4.4.0"
 micronaut_jmx = "3.1.0"
 micronaut_k8s = "3.4.0"
 micronaut_rss = "3.2.0"
@@ -56,9 +57,9 @@ pluginProtobuf = "0.9.1"
 versionCheck = "0.43.0"
 sonar = "3.4.0.2513"
 truth = "1.1.3"
-soy = "2022-03-07"
-closure = "v20220601"
-closure_stylesheets = "20160212"
+soy = "2022-03-07"  # next: "2022-07-20"
+closure = "v20221004"
+closure_stylesheets = "1.5.0"
 picocli = "4.6.3"
 picocli_jansi_graalvm = "1.2.0"
 slf4j = "1.7.36"
@@ -79,26 +80,26 @@ testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.5.0"
 guava = "31.1-jre"
 gax = "2.19.2"
-kotlinxWrappers = "pre.410"
-kotlinx_wrappers_browser = "0.0.1-pre.410"
-kotlinx_wrappers_css = "1.0.0-pre.410"
-kotlinx_wrappers_node = "18.11.0-pre.410"
-kotlinx_wrappers_react = "18.2.0-pre.410"
-kotlinx_wrappers_react_router_dom = "6.3.0-pre.410"
-kotlinx_wrappers_emotion = "11.10.4-pre.410"
-kotlinx_wrappers_redux = "4.1.2-pre.410"
-kotlinx_wrappers_react_redux = "7.2.6-pre.410"
-kotlinx_wrappers_mui = "5.9.1-pre.410"
-kotlinx_wrappers_styled = "5.3.5-pre.410"
-kotlinx_wrappers_styled_next = "1.2.1-pre.410"
-kotlinx_wrappers_history = "5.3.0-pre.410"
-kotlinx_wrappers_typescript = "4.8.3-pre.410"
-kotlinx_wrappers_tanstack_query_core = "4.3.8-pre.410"
-kotlinx_wrappers_tanstack_react_query = "4.3.9-pre.410"
-kotlinx_wrappers_tanstack_react_table = "8.5.13-pre.410"
-kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.410"
-kotlinx_wrappers_tanstack_table_core = "8.5.13-pre.410"
-kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.410"
+kotlinxWrappers = "pre.422"
+kotlinx_wrappers_browser = "0.0.1-pre.422"
+kotlinx_wrappers_css = "1.0.0-pre.422"
+kotlinx_wrappers_node = "18.11.8-pre.422"
+kotlinx_wrappers_react = "18.2.0-pre.422"
+kotlinx_wrappers_react_router_dom = "6.3.0-pre.422"
+kotlinx_wrappers_emotion = "11.10.5-pre.422"
+kotlinx_wrappers_redux = "4.1.2-pre.422"
+kotlinx_wrappers_react_redux = "7.2.6-pre.422"
+kotlinx_wrappers_mui = "5.9.1-pre.422"
+kotlinx_wrappers_styled = "5.3.6-pre.422"
+kotlinx_wrappers_styled_next = "1.2.1-pre.422"
+kotlinx_wrappers_history = "5.3.0-pre.422"
+kotlinx_wrappers_typescript = "4.8.4-pre.422"
+kotlinx_wrappers_tanstack_query_core = "4.14.1-pre.422"
+kotlinx_wrappers_tanstack_react_query = "4.14.1-pre.422"
+kotlinx_wrappers_tanstack_react_table = "8.5.22-pre.422"
+kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.422"
+kotlinx_wrappers_tanstack_table_core = "8.5.22-pre.422"
+kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.422"
 npm_esbuild = "0.15.11"
 npm_prepack = "0.2.54"
 npm_buffer = "6.0.3"
@@ -271,6 +272,8 @@ micronaut_http_server_netty = { group = "io.micronaut", name = "micronaut-http-s
 micronaut_gcp_common = { group = "io.micronaut.gcp", name = "micronaut-gcp-common", version.ref = "micronaut_gcp" }
 micronaut_gcp_logging = { group = "io.micronaut.gcp", name = "micronaut-gcp-logging", version.ref = "micronaut_gcp" }
 micronaut_gcp_pubsub = { group = "io.micronaut.gcp", name = "micronaut-gcp-pubsub", version.ref = "micronaut_gcp" }
+micronaut_gcp_tracing = { group = "io.micronaut.gcp", name = "micronaut-gcp-tracing", version.ref = "micronaut_gcp" }
+micronaut_gcp_httpClient = { group = "io.micronaut.gcp", name = "micronaut-gcp-http-client", version.ref = "micronaut_gcp" }
 micronaut_gcp_secretManager = { group = "io.micronaut.gcp", name = "micronaut-gcp-secret-manager", version.ref = "micronaut_gcp" }
 micronaut_inject = { group = "io.micronaut", name = "micronaut-inject", version.ref = "micronaut_lib" }
 micronaut_inject_java = { group = "io.micronaut", name = "micronaut-inject-java", version.ref = "micronaut_lib" }
@@ -299,6 +302,7 @@ micronaut_security = { group = "io.micronaut.security", name = "micronaut-securi
 micronaut_security_annotations = { group = "io.micronaut.security", name = "micronaut-security-annotations", version.ref = "micronaut_security" }
 micronaut_security_jwt = { group = "io.micronaut.security", name = "micronaut-security-jwt", version.ref = "micronaut_security" }
 micronaut_security_oauth2 = { group = "io.micronaut.security", name = "micronaut-security-oauth2", version.ref = "micronaut_security" }
+micronaut_security_session = { group = "io.micronaut.security", name = "micronaut-security-session", version.ref = "micronaut_security" }
 micronaut_sql_hibernate_jpa = { group = "io.micronaut.sql", name = "micronaut-hibernate-jpa", version.ref = "micronaut_sql" }
 micronaut_sql_jdbc_hikari = { group = "io.micronaut.sql", name = "micronaut-jdbc-hikari", version.ref = "micronaut_sql" }
 micronaut_openapi = { group = "io.micronaut.openapi", name = "micronaut-openapi", version.ref = "micronaut_openapi" }
@@ -319,6 +323,13 @@ micronaut_kotlin_extension_functions = { group = "io.micronaut.kotlin", name = "
 micronaut_jmx = { group = "io.micronaut.jmx", name = "micronaut-jmx", version.ref = "micronaut_jmx" }
 micronaut_xml_jackson = { group = "io.micronaut.xml", name = "micronaut-jackson-xml", version.ref = "micronaut_xml" }
 micronaut_rss = { group = "io.micronaut.rss", name = "micronaut-rss", version.ref = "micronaut_rss" }
+micronaut_tracing_core = { group = "io.micronaut.tracing", name = "micronaut-tracing-core", version.ref = "micronaut_tracing" }
+micronaut_tracing_annotation = { group = "io.micronaut.tracing", name = "micronaut-tracing-annotation", version.ref = "micronaut_tracing" }
+micronaut_tracing_opentelemetry_annotation = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-annotation", version.ref = "micronaut_tracing" }
+micronaut_tracing_opentelemetry_http = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-http", version.ref = "micronaut_tracing" }
+micronaut_tracing_opentelemetry_grpc = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-grpc", version.ref = "micronaut_tracing" }
+opentelemetry_exporter_logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
+opentelemetry_exporter_googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
@@ -375,7 +386,7 @@ tink_gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref
 tink_aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
 conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.ref = "conscrypt" }
 google_common_html_types_proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google_html_types" }
-google_common_html_types_types = { group = "com.google.common.html.types", name = "proto", version.ref = "google_html_types" }
+google_common_html_types_types = { group = "com.google.common.html.types", name = "types", version.ref = "google_html_types" }
 swagger_annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
 javax_annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax_annotations" }
 javax_persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax_persistence" }

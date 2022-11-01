@@ -17,17 +17,17 @@ data class AssetInfo(
     /** Registered paths for this asset module -- all must be distinct across all [AssetInfo] entries. */
     val paths: SortedSet<String>,
 
+    /** Gradle multi-module project dependencies related to this asset. Each pair is a `project`, `configuration`. */
+    val projectDeps: List<ElideAssetsHandler.InterProjectAssetHandler>,
+
     /** Copy specification for this module's sources. */
     @Transient val copySpec: CopySpec,
 ) : java.io.Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as AssetInfo
-
         if (module != other.module) return false
-
         return true
     }
 

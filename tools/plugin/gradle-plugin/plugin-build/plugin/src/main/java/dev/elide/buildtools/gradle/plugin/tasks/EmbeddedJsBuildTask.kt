@@ -2,14 +2,13 @@ package dev.elide.buildtools.gradle.plugin.tasks
 
 import com.github.gradle.node.task.NodeTask
 import com.google.protobuf.Timestamp
-import dev.elide.buildtools.bundler.cfg.StaticValues
-import dev.elide.buildtools.bundler.BuildMode
-import dev.elide.buildtools.bundler.cfg.Versions
+import dev.elide.buildtools.gradle.plugin.BuildMode
 import dev.elide.buildtools.gradle.plugin.ElideExtension
 import dev.elide.buildtools.gradle.plugin.cfg.ElideJsHandler
-import dev.elide.buildtools.bundler.js.BundleTarget
-import dev.elide.buildtools.bundler.js.BundleTool
-import dev.elide.buildtools.bundler.js.BundleType
+import dev.elide.buildtools.gradle.plugin.cfg.StaticValues
+import dev.elide.buildtools.gradle.plugin.js.BundleTarget
+import dev.elide.buildtools.gradle.plugin.js.BundleTool
+import dev.elide.buildtools.gradle.plugin.js.BundleType
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.DuplicatesStrategy

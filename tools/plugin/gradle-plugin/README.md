@@ -3,7 +3,7 @@
 
 ![beta](https://img.shields.io/badge/status-beta-blue.svg)
 [![CI](https://github.com/elide-dev/buildtools/actions/workflows/pre-merge.yaml/badge.svg)](https://github.com/elide-dev/buildtools/actions/workflows/pre-merge.yaml)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.7.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Gradle](https://img.shields.io/badge/gradle-7.x-blue.svg?logo=gradle)](http://gradle.org)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
@@ -20,7 +20,6 @@ In particular, this plugin is responsible for configuring and running [`esbuild`
 ### Features
 - [x] **Embedded SSR:** Build JS apps, including Kotlin JS, into optimized embedded SSR bundles
 - [x] **Asset compiler:** Optimize and compile frontend assets, and package them for use in Elide
-- [x] **Tool agnostic:** Build your frontend with any tool (Kotlin/JS, Node, Bazel, etc)
 
 ### Installing the plugin
 
@@ -31,20 +30,20 @@ below for specific installation and use instructions.
 **Kotlin DSL**
 ```kotlin
 plugins {
-  id("dev.elide.buildtools.plugin") version "1.0.0-beta4"
+  id("dev.elide.buildtools.plugin") version "1.0.0-beta7"
 }
 ```
 
 **Groovy DSL**
 ```groovy
 plugins {
-    id "dev.elide.buildtools.plugin" version "1.0.0-beta4"
+    id "dev.elide.buildtools.plugin" version "1.0.0-beta7"
 }
 ```
 
 #### Plugin coordinates
 
-- **Version:** `1.0.0-beta4`
+- **Version:** `1.0.0-beta7`
 - **Plugin ID:** `dev.elide.buildtools.plugin`
 - **Classpath Coordinate:** `dev.elide.buildtools:plugin`
 

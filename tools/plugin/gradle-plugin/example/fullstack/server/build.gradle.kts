@@ -5,7 +5,7 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.bundler.BuildMode
+import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm

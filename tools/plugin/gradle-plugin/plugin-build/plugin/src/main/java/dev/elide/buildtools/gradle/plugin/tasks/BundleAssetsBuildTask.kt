@@ -1,9 +1,8 @@
 package dev.elide.buildtools.gradle.plugin.tasks
 
 import dev.elide.buildtools.gradle.plugin.ElideExtension
-import dev.elide.buildtools.bundler.cfg.AssetInfo
-import dev.elide.buildtools.bundler.cfg.StaticValues
-import dev.elide.buildtools.gradle.plugin.cfg.ElideAssetsHandler
+import dev.elide.buildtools.gradle.plugin.cfg.AssetInfo
+import dev.elide.buildtools.gradle.plugin.cfg.StaticValues
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
@@ -170,7 +169,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
                 val assetDeps = assetConfig.directDeps.get() ?: TreeSet()
 
                 // prepare the asset's copy spec, falling back to a sensible default glob if needed.
-                project.copySpec {
+                val targetCopySpec = assetConfig.copySpec.get() ?: project.copySpec {
                     it.from("${project.projectDir}/src/main") { spec ->
                         spec.include("**/*.${assetType.extension}")
                     }
@@ -185,6 +184,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
                     module = moduleId,
                     type = assetType,
                     directDeps = assetDeps,
+                    copySpec = targetCopySpec,
                     paths = targetPaths,
                     projectDeps = projectDeps,
                 )
@@ -208,7 +208,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
             }.map {
                 // resolve target project
                 val (moduleId, bundle) = it
-                val projectName = (bundle as ElideAssetsHandler.InterProjectAssetHandler).projectPath.get()
+                val projectName = bundle.projectPath.get()
                 require(projectName != null && projectName.isNotBlank()) {
                     "Failed to resolve `null` dependency for project '${project.path}'"
                 }

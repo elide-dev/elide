@@ -4,7 +4,7 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.Message
 import com.google.protobuf.util.JsonFormat
 import dev.elide.buildtools.gradle.plugin.ElideExtension
-import dev.elide.buildtools.bundler.cfg.StaticValues
+import dev.elide.buildtools.gradle.plugin.cfg.StaticValues
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException

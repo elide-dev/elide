@@ -64,12 +64,12 @@ public final class Data {
       "ata.DataContainerRef.FingerprintPathPair" +
       "H\000\032O\n\023FingerprintPathPair\022*\n\013fingerprint" +
       "\030\001 \001(\0132\025.data.DataFingerprint\022\014\n\004path\030\002 " +
-      "\001(\tB\013\n\treference*A\n\017CompressionMode\022\014\n\010I" +
+      "\001(\tB\013\n\treference*N\n\017CompressionMode\022\014\n\010I" +
       "DENTITY\020\000\022\010\n\004GZIP\020\001\022\n\n\006BROTLI\020\002\022\n\n\006SNAPP" +
-      "Y\020\003B\200\001\n\020tools.elide.dataH\001P\001Z&github.com" +
-      "/elide-tools/elide/data;data\330\001\001\370\001\001\242\002\003ELD" +
-      "\252\002\nElide.Data\272\002\005Elide\302\002\003ELD\312\002\nElide\\Data" +
-      "\352\002\013Elide::Datab\006proto3"
+      "Y\020\003\022\013\n\007DEFLATE\020\004B\200\001\n\020tools.elide.dataH\001P" +
+      "\001Z&github.com/elide-tools/elide/data;dat" +
+      "a\330\001\001\370\001\001\242\002\003ELD\252\002\nElide.Data\272\002\005Elide\302\002\003ELD" +
+      "\312\002\nElide\\Data\352\002\013Elide::Datab\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

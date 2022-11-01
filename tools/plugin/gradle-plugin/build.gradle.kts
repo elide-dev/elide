@@ -86,7 +86,6 @@ subprojects {
         enableExperimentalRules.set(true)
         filter {
             exclude("**/generated/**")
-            exclude("**/model/**")
             include("**/kotlin/**")
         }
     }

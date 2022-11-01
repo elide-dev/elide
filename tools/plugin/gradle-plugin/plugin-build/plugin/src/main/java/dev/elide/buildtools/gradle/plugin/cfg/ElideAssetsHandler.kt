@@ -1,9 +1,5 @@
 package dev.elide.buildtools.gradle.plugin.cfg
 
-import dev.elide.buildtools.bundler.cfg.AssetCompressionConfig
-import dev.elide.buildtools.bundler.cfg.AssetTagConfig
-import dev.elide.buildtools.bundler.cfg.AssetType
-import dev.elide.buildtools.bundler.cfg.StaticValues
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration

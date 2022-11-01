@@ -45,6 +45,14 @@ public enum CompressionMode
    * <code>SNAPPY = 3;</code>
    */
   SNAPPY(3),
+  /**
+   * <pre>
+   * Deflate (zlib)-based compression.
+   * </pre>
+   *
+   * <code>DEFLATE = 4;</code>
+   */
+  DEFLATE(4),
   UNRECOGNIZED(-1),
   ;
 
@@ -80,6 +88,14 @@ public enum CompressionMode
    * <code>SNAPPY = 3;</code>
    */
   public static final int SNAPPY_VALUE = 3;
+  /**
+   * <pre>
+   * Deflate (zlib)-based compression.
+   * </pre>
+   *
+   * <code>DEFLATE = 4;</code>
+   */
+  public static final int DEFLATE_VALUE = 4;
 
 
   public final int getNumber() {
@@ -110,6 +126,7 @@ public enum CompressionMode
       case 1: return GZIP;
       case 2: return BROTLI;
       case 3: return SNAPPY;
+      case 4: return DEFLATE;
       default: return null;
     }
   }

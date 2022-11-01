@@ -49,15 +49,6 @@ internal class TopologicalGraphIterator<N> constructor (private val graph: Graph
     }
 
     companion object {
-        /** @return Run [op] on each node in the provided [graph], in reverse topological order. */
-        @JvmStatic fun <N> forEachNode(graph: Graph<N>, op: (N) -> Unit) {
-            val iterator = TopologicalGraphIterator(graph)
-            val nodes = iterator.asSequence().toList()
-            nodes.reversed().forEach {
-                op.invoke(it)
-            }
-        }
-
         /** @return Map [op] across each node in the provided [graph], in reverse topological order. */
         @JvmStatic fun <N, R> map(graph: Graph<N>, op: (N) -> R): Stream<R> {
             val iterator = TopologicalGraphIterator(graph)

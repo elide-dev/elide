@@ -48,6 +48,9 @@ enum CompressionMode {
 
     // Snappy-based compression.
     SNAPPY = 3;
+
+    // Deflate (zlib)-based compression.
+    DEFLATE = 4;
 }
 
 
@@ -103,7 +106,7 @@ message DataContainerRef {
     // Specifies a fingerprint and path pair.
     message FingerprintPathPair {
         // Specifies the fingerprint information associated with, or calculated for, the subject info.
-        data.DataFingerprint fingerprint = 1;
+        DataFingerprint fingerprint = 1;
 
         // Specifies the path for this data container reference.
         string path = 2;
@@ -113,7 +116,7 @@ message DataContainerRef {
     oneof reference {
         // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
         // are enclosed inline within the protocol buffer.
-        data.CompressedData data = 1;
+        CompressedData data = 1;
 
         // Specifies a reference to a file resident in the application JAR or native image.
         FingerprintPathPair resource = 2;

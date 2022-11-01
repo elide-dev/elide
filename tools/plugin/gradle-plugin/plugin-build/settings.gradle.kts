@@ -26,7 +26,5 @@ dependencyResolutionManagement {
 rootProject.name = ("dev.elide.buildtools.gradle")
 
 include(
-    ":model",
-    ":bundler",
     ":plugin"
 )

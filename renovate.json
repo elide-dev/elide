@@ -17,6 +17,9 @@
     "gradle",
     "gradle-wrapper"
   ],
+  "baseBranches": [
+    "v3"
+  ],
   "pinDigests": true,
   "rangeStrategy": "pin",
   "updateLockFiles": true,

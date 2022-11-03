@@ -9,6 +9,7 @@ protobuf = "3.20.1"
 grpc_java = "1.46.0"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
+testcontainers = "1.17.5"
 netty = "4.1.84.Final"
 netty_tcnative = "2.0.46.Final"
 dekorate = "3.0.0"
@@ -397,3 +398,7 @@ jackson_core = { group = "com.fasterxml.jackson.core", name = "jackson-core", ve
 jackson_databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson_jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
 jackson_module_kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+testcontainers_core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
+testcontainers_bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
+testcontainers_postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+testcontainers_gcloud = { group = "org.testcontainers", name = "gcloud", version.ref = "testcontainers" }

@@ -3,6 +3,7 @@ kotlin_sdk = "1.7.20"
 kotlin_language = "1.7"
 graalvm = "22.3.0"
 graalvm_sdk = "22.2.0.1"
+graalvm_metadata = "0.1.0"
 node = "18.0.1"
 react = "18.2.0"
 protobuf = "3.20.1"
@@ -12,10 +13,10 @@ grpc_web = "1.3.1"
 testcontainers = "1.17.5"
 netty = "4.1.84.Final"
 netty_tcnative = "2.0.46.Final"
-dekorate = "3.0.0"
+dekorate = "3.1.1"
 micronaut_lib = "3.7.3"
 micronaut_aot = "1.1.1"
-micronaut_aws = "3.9.2"
+micronaut_aws = "3.9.3"
 micronaut_data = "3.8.1"
 micronaut_grpc = "3.3.1"
 micronaut_graphql = "3.2.0"
@@ -26,10 +27,10 @@ micronaut_redis = "5.3.0"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
 micronaut_views = "3.7.2"
-micronaut_serde = "1.3.2"
+micronaut_serde = "1.3.3"
 micronaut_security = "3.8.0"
 micronaut_sql = "4.7.2"
-micronaut_openapi = "4.5.2"
+micronaut_openapi = "4.6.0"
 micronaut_picocli = "4.3.0"
 micronaut_objectstorage = "1.1.0"
 micronaut_multitenancy = "4.2.0"
@@ -61,7 +62,7 @@ truth = "1.1.3"
 soy = "2022-03-07"  # next: "2022-07-20"
 closure = "v20221004"
 closure_stylesheets = "1.5.0"
-picocli = "4.6.3"
+picocli = "4.7.0"
 picocli_jansi_graalvm = "1.2.0"
 slf4j = "1.7.36"
 slf4j_jul = "1.7.36"
@@ -74,7 +75,7 @@ jsoup = "1.15.2"
 junit_jupiter = "5.9.1"
 logback = "1.2.11"
 docker_plugin = "7.4.0"
-node_plugin = "3.4.0"
+node_plugin = "3.5.0"
 gauth_plugin = "2.2.0"
 kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
@@ -125,11 +126,12 @@ google_html_types = "1.0.8"
 reactivestreams = "1.0.4"
 kotlin_dataframe = "0.9.0-dev-1059"
 kotlin_knit = "0.4.0"
+lz4 = "1.3.0"
 shadow_plugin = "7.1.2"
 gcloud_sdk = "26.1.2"
 gcloud_native = "0.14.1"
 jib = "3.3.1"
-commons_compress = "1.21"
+commons_compress = "1.22"
 commons_csv = "1.9.0"
 brotli4j = "1.8.0"
 projectreactor = "2020.0.24"
@@ -143,7 +145,7 @@ jansi = "1.18"
 hibernate = "5.6.11.Final"
 hikari = "4.0.3"
 postgres = "42.5.0"
-swagger = "2.2.3"
+swagger = "2.2.6"
 micronaut_liquibase = "5.4.1"
 sqlcommenter = "2.1.1-elide"
 jackson = "2.13.3"
@@ -180,6 +182,7 @@ micronaut_docker = { id = "io.micronaut.docker", version.ref = "micronaut_plugin
 micronaut_graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut_plugin" }
 micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
 micronaut_crac = { id = "io.micronaut.crac", version.ref = "micronaut_plugin" }
+micronaut_test_resources = { id = "io.micronaut.test-resources", version.ref = "micronaut_plugin" }
 node = { id = "com.github.node-gradle.node", version.ref = "node_plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker_plugin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
@@ -246,6 +249,7 @@ uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
 logback_base = { group = "ch.qos.logback", name = "logback", version.ref = "logback" }
 logback_core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
 micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
@@ -269,6 +273,7 @@ micronaut_hibernate_validator = { group = "io.micronaut.beanvalidation", name = 
 micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
 micronaut_http_client = { group = "io.micronaut", name = "micronaut-http-client", version.ref = "micronaut_lib" }
 micronaut_http_server = { group = "io.micronaut", name = "micronaut-http-server", version.ref = "micronaut_lib" }
+micronaut_http_netty = { group = "io.micronaut", name = "micronaut-http-netty", version.ref = "micronaut_lib" }
 micronaut_http_server_netty = { group = "io.micronaut", name = "micronaut-http-server-netty", version.ref = "micronaut_lib" }
 micronaut_gcp_common = { group = "io.micronaut.gcp", name = "micronaut-gcp-common", version.ref = "micronaut_gcp" }
 micronaut_gcp_logging = { group = "io.micronaut.gcp", name = "micronaut-gcp-logging", version.ref = "micronaut_gcp" }
@@ -297,6 +302,7 @@ micronaut_validation = { group = "io.micronaut", name = "micronaut-validation", 
 micronaut_http_validation = { group = "io.micronaut", name = "micronaut-http-validation", version.ref = "micronaut_lib" }
 micronaut_views_core = { group = "io.micronaut.views", name = "micronaut-views-core", version.ref = "micronaut_views" }
 micronaut_views_soy = { group = "io.micronaut.views", name = "micronaut-views-soy", version.ref = "micronaut_views" }
+micronaut_serde_api = { group = "io.micronaut.serde", name = "micronaut-serde-api", version.ref = "micronaut_serde" }
 micronaut_serde_processor = { group = "io.micronaut.serde", name = "micronaut-serde-processor", version.ref = "micronaut_serde" }
 micronaut_serde_jackson = { group = "io.micronaut.serde", name = "micronaut-serde-jackson", version.ref = "micronaut_serde" }
 micronaut_security = { group = "io.micronaut.security", name = "micronaut-security", version.ref = "micronaut_security" }
@@ -370,8 +376,13 @@ google_cloud_bom = { group = "com.google.cloud", name = "libraries-bom", version
 google_cloud_nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud_native" }
 brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
 brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli_native_osx_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
+brotli_native_osx_arm64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-aarch64", version.ref = "brotli4j" }
 brotli_native_linux = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli_native_linux_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-x86_64", version.ref = "brotli4j" }
+brotli_native_linux_arm64 = { group = "com.aayushatharva.brotli4j", name = "native-linux-aarch64", version.ref = "brotli4j" }
 brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
+brotli_native_windows_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }
 commons_csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons_csv" }
 projectreactor_bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
@@ -389,6 +400,7 @@ conscrypt = { group = "org.conscrypt", name = "conscrypt-openjdk-uber", version.
 google_common_html_types_proto = { group = "com.google.common.html.types", name = "proto", version.ref = "google_html_types" }
 google_common_html_types_types = { group = "com.google.common.html.types", name = "types", version.ref = "google_html_types" }
 swagger_annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
+swagger_model = { group = "io.swagger.core.v3", name = "swagger-models", version.ref = "swagger" }
 javax_annotations = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax_annotations" }
 javax_persistence = { group = "javax.persistence", name = "javax.persistence-api", version.ref = "javax_persistence" }
 lettuce_core = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
@@ -398,6 +410,7 @@ jackson_core = { group = "com.fasterxml.jackson.core", name = "jackson-core", ve
 jackson_databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson_jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
 jackson_module_kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+testcontainers_junit_jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers_core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
 testcontainers_bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 testcontainers_postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }

@@ -1,4 +1,4 @@
-val kotlinVersion = "1.7.20-RC"
+val kotlinVersion = "1.7.21"
 
 plugins {
     `kotlin-dsl`

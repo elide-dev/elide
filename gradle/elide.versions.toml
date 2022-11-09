@@ -1,5 +1,5 @@
 [versions]
-kotlin_sdk = "1.7.20"
+kotlin_sdk = "1.7.21"
 kotlin_language = "1.7"
 graalvm = "22.3.0"
 graalvm_sdk = "22.2.0.1"

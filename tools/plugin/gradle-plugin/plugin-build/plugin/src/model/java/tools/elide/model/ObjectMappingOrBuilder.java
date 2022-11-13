@@ -3,48 +3,46 @@
 
 package tools.elide.model;
 
-public interface ObjectMappingOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:model.ObjectMapping)
-    com.google.protobuf.MessageOrBuilder {
-
-  /**
-   * <pre>
-   * Maps an enumeration instance to this object. Enumeration membership is contextual.
-   * </pre>
-   *
-   * <code>repeated string instance = 1;</code>
-   * @return A list containing the instance.
-   */
-  java.util.List<java.lang.String>
-      getInstanceList();
-  /**
-   * <pre>
-   * Maps an enumeration instance to this object. Enumeration membership is contextual.
-   * </pre>
-   *
-   * <code>repeated string instance = 1;</code>
-   * @return The count of instance.
-   */
-  int getInstanceCount();
-  /**
-   * <pre>
-   * Maps an enumeration instance to this object. Enumeration membership is contextual.
-   * </pre>
-   *
-   * <code>repeated string instance = 1;</code>
-   * @param index The index of the element to return.
-   * @return The instance at the given index.
-   */
-  java.lang.String getInstance(int index);
-  /**
-   * <pre>
-   * Maps an enumeration instance to this object. Enumeration membership is contextual.
-   * </pre>
-   *
-   * <code>repeated string instance = 1;</code>
-   * @param index The index of the value to return.
-   * @return The bytes of the instance at the given index.
-   */
-  com.google.protobuf.ByteString
-      getInstanceBytes(int index);
+public interface ObjectMappingOrBuilder
+    extends
+        // @@protoc_insertion_point(interface_extends:model.ObjectMapping)
+        com.google.protobuf.MessageOrBuilder {
+    /**
+     * <pre>
+     * Maps an enumeration instance to this object. Enumeration membership is contextual.
+     * </pre>
+     *
+     * <code>repeated string instance = 1;</code>
+     * @return A list containing the instance.
+     */
+    java.util.List<java.lang.String> getInstanceList();
+    /**
+     * <pre>
+     * Maps an enumeration instance to this object. Enumeration membership is contextual.
+     * </pre>
+     *
+     * <code>repeated string instance = 1;</code>
+     * @return The count of instance.
+     */
+    int getInstanceCount();
+    /**
+     * <pre>
+     * Maps an enumeration instance to this object. Enumeration membership is contextual.
+     * </pre>
+     *
+     * <code>repeated string instance = 1;</code>
+     * @param index The index of the element to return.
+     * @return The instance at the given index.
+     */
+    java.lang.String getInstance(int index);
+    /**
+     * <pre>
+     * Maps an enumeration instance to this object. Enumeration membership is contextual.
+     * </pre>
+     *
+     * <code>repeated string instance = 1;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the instance at the given index.
+     */
+    com.google.protobuf.ByteString getInstanceBytes(int index);
 }

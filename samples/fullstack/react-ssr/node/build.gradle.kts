@@ -11,11 +11,7 @@ import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 
 plugins {
-  idea
-  distribution
-  kotlin("js")
-  kotlin("plugin.serialization")
-  alias(libs.plugins.sonar)
+  id("dev.elide.build.samples.frontend")
   id("dev.elide.buildtools.plugin")
 }
 

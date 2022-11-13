@@ -8,10 +8,7 @@
     "java.debug.settings.enableRunDebugCodeLens": true,
     "java.test.editor.enableShortcuts": true
   },
-  "runArgs": [
-    "--init",
-    "--privileged"
-  ],
+  "runArgs": ["--init", "--privileged"],
   "overrideCommand": false,
   "extensions": [
     "asf.apache-netbeans-java",

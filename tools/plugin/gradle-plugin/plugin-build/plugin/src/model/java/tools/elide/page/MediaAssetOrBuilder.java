@@ -3,109 +3,109 @@
 
 package tools.elide.page;
 
-public interface MediaAssetOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:page.MediaAsset)
-    com.google.protobuf.MessageOrBuilder {
+public interface MediaAssetOrBuilder
+    extends
+        // @@protoc_insertion_point(interface_extends:page.MediaAsset)
+        com.google.protobuf.MessageOrBuilder {
+    /**
+     * <pre>
+     * Describes, in broad terms, the kind of media being attached.
+     * </pre>
+     *
+     * <code>.page.MediaType kind = 1;</code>
+     * @return The enum numeric value on the wire for kind.
+     */
+    int getKindValue();
+    /**
+     * <pre>
+     * Describes, in broad terms, the kind of media being attached.
+     * </pre>
+     *
+     * <code>.page.MediaType kind = 1;</code>
+     * @return The kind.
+     */
+    tools.elide.page.MediaType getKind();
 
-  /**
-   * <pre>
-   * Describes, in broad terms, the kind of media being attached.
-   * </pre>
-   *
-   * <code>.page.MediaType kind = 1;</code>
-   * @return The enum numeric value on the wire for kind.
-   */
-  int getKindValue();
-  /**
-   * <pre>
-   * Describes, in broad terms, the kind of media being attached.
-   * </pre>
-   *
-   * <code>.page.MediaType kind = 1;</code>
-   * @return The kind.
-   */
-  tools.elide.page.MediaType getKind();
+    /**
+     * <pre>
+     * Describes concrete information about an attached media link.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Link link = 10;</code>
+     * @return Whether the link field is set.
+     */
+    boolean hasLink();
+    /**
+     * <pre>
+     * Describes concrete information about an attached media link.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Link link = 10;</code>
+     * @return The link.
+     */
+    tools.elide.page.MediaAsset.Link getLink();
+    /**
+     * <pre>
+     * Describes concrete information about an attached media link.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Link link = 10;</code>
+     */
+    tools.elide.page.MediaAsset.LinkOrBuilder getLinkOrBuilder();
 
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   * @return Whether the link field is set.
-   */
-  boolean hasLink();
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   * @return The link.
-   */
-  tools.elide.page.MediaAsset.Link getLink();
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   */
-  tools.elide.page.MediaAsset.LinkOrBuilder getLinkOrBuilder();
+    /**
+     * <pre>
+     * Describes concrete information about an attached image.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Image image = 20;</code>
+     * @return Whether the image field is set.
+     */
+    boolean hasImage();
+    /**
+     * <pre>
+     * Describes concrete information about an attached image.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Image image = 20;</code>
+     * @return The image.
+     */
+    tools.elide.page.MediaAsset.Image getImage();
+    /**
+     * <pre>
+     * Describes concrete information about an attached image.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Image image = 20;</code>
+     */
+    tools.elide.page.MediaAsset.ImageOrBuilder getImageOrBuilder();
 
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   * @return Whether the image field is set.
-   */
-  boolean hasImage();
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   * @return The image.
-   */
-  tools.elide.page.MediaAsset.Image getImage();
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   */
-  tools.elide.page.MediaAsset.ImageOrBuilder getImageOrBuilder();
+    /**
+     * <pre>
+     * Describes concrete information about an attached video.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Video video = 30;</code>
+     * @return Whether the video field is set.
+     */
+    boolean hasVideo();
+    /**
+     * <pre>
+     * Describes concrete information about an attached video.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Video video = 30;</code>
+     * @return The video.
+     */
+    tools.elide.page.MediaAsset.Video getVideo();
+    /**
+     * <pre>
+     * Describes concrete information about an attached video.
+     * </pre>
+     *
+     * <code>.page.MediaAsset.Video video = 30;</code>
+     */
+    tools.elide.page.MediaAsset.VideoOrBuilder getVideoOrBuilder();
 
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   * @return Whether the video field is set.
-   */
-  boolean hasVideo();
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   * @return The video.
-   */
-  tools.elide.page.MediaAsset.Video getVideo();
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   */
-  tools.elide.page.MediaAsset.VideoOrBuilder getVideoOrBuilder();
-
-  public tools.elide.page.MediaAsset.MediaCase getMediaCase();
+    public tools.elide.page.MediaAsset.MediaCase getMediaCase();
 }

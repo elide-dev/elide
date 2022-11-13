@@ -1,78 +1,79 @@
 {
-  "resources":{
-  "includes":[
-    {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.core.beans.BeanIntrospectionReference\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.grpc.NameResolverProvider\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.context.env.PropertySourceLoader\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.core.beans.BeanIntrospectionReference\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.core.type.TypeInformationProvider\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.http.HttpResponseFactory\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.http.server.netty.handler.accesslog.element.LogElementBuilder\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanConfiguration\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
-    }, 
-    {
-      "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
-    }, 
-    {
-      "pattern":"\\Qapplication.yml\\E"
-    }, 
-    {
-      "pattern":"\\Qassets/app.assets.pb\\E"
-    }, 
-    {
-      "pattern":"\\Qbootstrap.properties\\E"
-    }, 
-    {
-      "pattern":"\\Qembedded/runtime/abort-controller.js\\E"
-    }, 
-    {
-      "pattern":"\\Qembedded/runtime/invoke.js\\E"
-    }, 
-    {
-      "pattern":"\\Qembedded/runtime/preamble.js\\E"
-    }, 
-    {
-      "pattern":"\\Qembedded/runtime/runtime-js.json\\E"
-    }, 
-    {
-      "pattern":"\\Qlogback.xml\\E"
-    }, 
-    {
-      "pattern":"\\Qmicronaut-version.properties\\E"
-    }, 
-    {
-      "pattern":"\\Qorg/conscrypt/conscrypt.properties\\E"
-    }, 
-    {
-      "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
-    }
-  ]},
-  "bundles":[]
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.core.beans.BeanIntrospectionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.grpc.NameResolverProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.context.env.PropertySourceLoader\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.core.beans.BeanIntrospectionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.core.type.TypeInformationProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.http.HttpResponseFactory\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.http.server.netty.handler.accesslog.element.LogElementBuilder\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.inject.BeanConfiguration\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
+      },
+      {
+        "pattern": "\\Qapplication.yml\\E"
+      },
+      {
+        "pattern": "\\Qassets/app.assets.pb\\E"
+      },
+      {
+        "pattern": "\\Qbootstrap.properties\\E"
+      },
+      {
+        "pattern": "\\Qembedded/runtime/abort-controller.js\\E"
+      },
+      {
+        "pattern": "\\Qembedded/runtime/invoke.js\\E"
+      },
+      {
+        "pattern": "\\Qembedded/runtime/preamble.js\\E"
+      },
+      {
+        "pattern": "\\Qembedded/runtime/runtime-js.json\\E"
+      },
+      {
+        "pattern": "\\Qlogback.xml\\E"
+      },
+      {
+        "pattern": "\\Qmicronaut-version.properties\\E"
+      },
+      {
+        "pattern": "\\Qorg/conscrypt/conscrypt.properties\\E"
+      },
+      {
+        "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+      }
+    ]
+  },
+  "bundles": []
 }

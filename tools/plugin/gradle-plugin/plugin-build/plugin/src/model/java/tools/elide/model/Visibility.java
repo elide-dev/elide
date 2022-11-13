@@ -12,175 +12,180 @@ package tools.elide.model;
  *
  * Protobuf enum {@code model.Visibility}
  */
-public enum Visibility
-    implements com.google.protobuf.ProtocolMessageEnum {
-  /**
-   * <pre>
-   * Default visibility: the property or item is public.
-   * </pre>
-   *
-   * <code>PUBLIC = 0;</code>
-   */
-  PUBLIC(0),
-  /**
-   * <pre>
-   * Private visibility: only usable and addressable by itself, or associated items.
-   * </pre>
-   *
-   * <code>PRIVATE = 1;</code>
-   */
-  PRIVATE(1),
-  /**
-   * <pre>
-   * Protected visibility: children and other associated objects can access or address this item.
-   * </pre>
-   *
-   * <code>PROTECTED = 2;</code>
-   */
-  PROTECTED(2),
-  /**
-   * <pre>
-   * Package visibility: items or objects in the same package can access and address this item.
-   * </pre>
-   *
-   * <code>PACKAGE = 3;</code>
-   */
-  PACKAGE(3),
-  /**
-   * <pre>
-   * Export visibility: expose this item to the outer invoking context.
-   * </pre>
-   *
-   * <code>EXPORT = 4;</code>
-   */
-  EXPORT(4),
-  UNRECOGNIZED(-1),
-  ;
+public enum Visibility implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <pre>
+     * Default visibility: the property or item is public.
+     * </pre>
+     *
+     * <code>PUBLIC = 0;</code>
+     */
+    PUBLIC(0),
+    /**
+     * <pre>
+     * Private visibility: only usable and addressable by itself, or associated items.
+     * </pre>
+     *
+     * <code>PRIVATE = 1;</code>
+     */
+    PRIVATE(1),
+    /**
+     * <pre>
+     * Protected visibility: children and other associated objects can access or address this item.
+     * </pre>
+     *
+     * <code>PROTECTED = 2;</code>
+     */
+    PROTECTED(2),
+    /**
+     * <pre>
+     * Package visibility: items or objects in the same package can access and address this item.
+     * </pre>
+     *
+     * <code>PACKAGE = 3;</code>
+     */
+    PACKAGE(3),
+    /**
+     * <pre>
+     * Export visibility: expose this item to the outer invoking context.
+     * </pre>
+     *
+     * <code>EXPORT = 4;</code>
+     */
+    EXPORT(4),
+    UNRECOGNIZED(-1);
 
-  /**
-   * <pre>
-   * Default visibility: the property or item is public.
-   * </pre>
-   *
-   * <code>PUBLIC = 0;</code>
-   */
-  public static final int PUBLIC_VALUE = 0;
-  /**
-   * <pre>
-   * Private visibility: only usable and addressable by itself, or associated items.
-   * </pre>
-   *
-   * <code>PRIVATE = 1;</code>
-   */
-  public static final int PRIVATE_VALUE = 1;
-  /**
-   * <pre>
-   * Protected visibility: children and other associated objects can access or address this item.
-   * </pre>
-   *
-   * <code>PROTECTED = 2;</code>
-   */
-  public static final int PROTECTED_VALUE = 2;
-  /**
-   * <pre>
-   * Package visibility: items or objects in the same package can access and address this item.
-   * </pre>
-   *
-   * <code>PACKAGE = 3;</code>
-   */
-  public static final int PACKAGE_VALUE = 3;
-  /**
-   * <pre>
-   * Export visibility: expose this item to the outer invoking context.
-   * </pre>
-   *
-   * <code>EXPORT = 4;</code>
-   */
-  public static final int EXPORT_VALUE = 4;
+    /**
+     * <pre>
+     * Default visibility: the property or item is public.
+     * </pre>
+     *
+     * <code>PUBLIC = 0;</code>
+     */
+    public static final int PUBLIC_VALUE = 0;
+    /**
+     * <pre>
+     * Private visibility: only usable and addressable by itself, or associated items.
+     * </pre>
+     *
+     * <code>PRIVATE = 1;</code>
+     */
+    public static final int PRIVATE_VALUE = 1;
+    /**
+     * <pre>
+     * Protected visibility: children and other associated objects can access or address this item.
+     * </pre>
+     *
+     * <code>PROTECTED = 2;</code>
+     */
+    public static final int PROTECTED_VALUE = 2;
+    /**
+     * <pre>
+     * Package visibility: items or objects in the same package can access and address this item.
+     * </pre>
+     *
+     * <code>PACKAGE = 3;</code>
+     */
+    public static final int PACKAGE_VALUE = 3;
+    /**
+     * <pre>
+     * Export visibility: expose this item to the outer invoking context.
+     * </pre>
+     *
+     * <code>EXPORT = 4;</code>
+     */
+    public static final int EXPORT_VALUE = 4;
 
-
-  public final int getNumber() {
-    if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalArgumentException(
-          "Can't get the number of an unknown enum value.");
+    public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+            throw new java.lang.IllegalArgumentException(
+                "Can't get the number of an unknown enum value."
+            );
+        }
+        return value;
     }
-    return value;
-  }
 
-  /**
-   * @param value The numeric wire value of the corresponding enum entry.
-   * @return The enum associated with the given numeric wire value.
-   * @deprecated Use {@link #forNumber(int)} instead.
-   */
-  @java.lang.Deprecated
-  public static Visibility valueOf(int value) {
-    return forNumber(value);
-  }
-
-  /**
-   * @param value The numeric wire value of the corresponding enum entry.
-   * @return The enum associated with the given numeric wire value.
-   */
-  public static Visibility forNumber(int value) {
-    switch (value) {
-      case 0: return PUBLIC;
-      case 1: return PRIVATE;
-      case 2: return PROTECTED;
-      case 3: return PACKAGE;
-      case 4: return EXPORT;
-      default: return null;
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static Visibility valueOf(int value) {
+        return forNumber(value);
     }
-  }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<Visibility>
-      internalGetValueMap() {
-    return internalValueMap;
-  }
-  private static final com.google.protobuf.Internal.EnumLiteMap<
-      Visibility> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<Visibility>() {
-          public Visibility findValueByNumber(int number) {
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static Visibility forNumber(int value) {
+        switch (value) {
+            case 0:
+                return PUBLIC;
+            case 1:
+                return PRIVATE;
+            case 2:
+                return PROTECTED;
+            case 3:
+                return PACKAGE;
+            case 4:
+                return EXPORT;
+            default:
+                return null;
+        }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<Visibility> internalGetValueMap() {
+        return internalValueMap;
+    }
+
+    private static final com.google.protobuf.Internal.EnumLiteMap<Visibility> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<Visibility>() {
+        public Visibility findValueByNumber(int number) {
             return Visibility.forNumber(number);
-          }
-        };
+        }
+    };
 
-  public final com.google.protobuf.Descriptors.EnumValueDescriptor
-      getValueDescriptor() {
-    if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalStateException(
-          "Can't get the descriptor of an unrecognized enum value.");
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
+        if (this == UNRECOGNIZED) {
+            throw new java.lang.IllegalStateException(
+                "Can't get the descriptor of an unrecognized enum value."
+            );
+        }
+        return getDescriptor().getValues().get(ordinal());
     }
-    return getDescriptor().getValues().get(ordinal());
-  }
-  public final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptorForType() {
-    return getDescriptor();
-  }
-  public static final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptor() {
-    return tools.elide.model.Datamodel.getDescriptor().getEnumTypes().get(0);
-  }
 
-  private static final Visibility[] VALUES = values();
-
-  public static Visibility valueOf(
-      com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-    if (desc.getType() != getDescriptor()) {
-      throw new java.lang.IllegalArgumentException(
-        "EnumValueDescriptor is not for this type.");
+    public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
+        return getDescriptor();
     }
-    if (desc.getIndex() == -1) {
-      return UNRECOGNIZED;
+
+    public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
+        return tools.elide.model.Datamodel
+            .getDescriptor()
+            .getEnumTypes()
+            .get(0);
     }
-    return VALUES[desc.getIndex()];
-  }
 
-  private final int value;
+    private static final Visibility[] VALUES = values();
 
-  private Visibility(int value) {
-    this.value = value;
-  }
+    public static Visibility valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc
+    ) {
+        if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+                "EnumValueDescriptor is not for this type."
+            );
+        }
+        if (desc.getIndex() == -1) {
+            return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+    }
 
-  // @@protoc_insertion_point(enum_scope:model.Visibility)
+    private final int value;
+
+    private Visibility(int value) {
+        this.value = value;
+    }
+    // @@protoc_insertion_point(enum_scope:model.Visibility)
 }
-

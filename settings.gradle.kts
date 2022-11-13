@@ -10,20 +10,24 @@ pluginManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version("3.10.2")
+  id("com.gradle.enterprise") version("3.11.4")
 }
+
+val micronautVersion: String by settings
 
 dependencyResolutionManagement {
   repositories {
-    maven("https://buildcache.dyme.cloud/maven2/")
-//    maven("https://maven-central.storage-download.googleapis.com/maven2/")
-//    mavenCentral()
-//    google()
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
+    mavenCentral()
+    google()
     maven("https://plugins.gradle.org/m2/")
   }
   versionCatalogs {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
+    }
+    create("mn") {
+      from("io.micronaut:micronaut-bom:$micronautVersion")
     }
   }
 }
@@ -33,8 +37,8 @@ rootProject.name = "elide"
 include(
 //  ":benchmarks",
   ":packages:base",
+  ":packages:bom",
   ":packages:frontend",
-  ":packages:server",
   ":packages:graalvm",
   ":packages:graalvm-js",
   ":packages:graalvm-react",
@@ -42,11 +46,14 @@ include(
   ":packages:proto",
   ":packages:rpc-js",
   ":packages:rpc-jvm",
+  ":packages:server",
+  ":packages:ssg",
   ":packages:test",
   ":tools:bundler",
   ":tools:reports",
 )
 
+val buildDocs: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
 
@@ -63,6 +70,14 @@ if (buildSamples == "true") {
     ":samples:fullstack:react-ssr:frontend",
     ":samples:fullstack:react-ssr:node",
     ":samples:fullstack:react-ssr:server",
+  )
+}
+
+if (buildDocs == "true") {
+  include(
+    ":site:docs:frontend",
+    ":site:docs:node",
+    ":site:docs:server",
   )
 }
 
@@ -85,10 +100,10 @@ val cachePush: String? by settings
 
 buildCache {
   local {
-    isEnabled = false
+    isEnabled = !(System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: false)
   }
   remote<HttpBuildCache> {
-    isEnabled = true
+    isEnabled = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: false
     isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
     url = uri("https://buildcache.dyme.cloud/gradle/cache/")
     credentials {
@@ -97,3 +112,9 @@ buildCache {
     }
   }
 }
+
+enableFeaturePreview("VERSION_CATALOGS")
+enableFeaturePreview("VERSION_ORDERING_V2")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+enableFeaturePreview("ONE_LOCKFILE_PER_PROJECT")

@@ -1,4 +1,4 @@
-# `elide` (v3)
+# Elide (v3)
 
 _elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge._
 
@@ -11,31 +11,27 @@ _elide: verb. to omit (a sound or syllable) when speaking. to join together; to 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
 
-
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin](https://img.shields.io/badge/Java-17-blue.svg?logo=java)](https://openjdk.org/projects/jdk/17/)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
-[![GraalVM](https://img.shields.io/badge/GraalVM-22.1.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
-[![Micronaut](https://img.shields.io/badge/Micronaut-3.5.x-blue.svg?logo=java)](https://micronaut.io)
+[![GraalVM](https://img.shields.io/badge/GraalVM-22.3.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
+[![Micronaut](https://img.shields.io/badge/Micronaut-3.7.x-blue.svg?logo=java)](https://micronaut.io)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg?logo=react)](https://reactjs.org/)
-
 
 _**Elide is under construction. You can also browse to [`v2`][12] or [`v1`][11].**_
 
-Latest version: `1.0-v3-alpha1-rc31`
+Latest version: `1.0-v3-alpha1-rc32`
 
 <hr />
 
 Elide is a **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
 Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
-
 ### What do you mean by _meta-framework_?
 
 Elide could be characterized as a _meta-framework_ in the sense that it is powered entirely by mature and well-supported
 software under the hood. Via a thin combination of build tooling and runtime interfaces, the developer can
 leverage these tools together without worrying about performance or compatibility.
-
 
 #### Cross-platform features
 
@@ -54,7 +50,6 @@ leverage these tools together without worrying about performance or compatibilit
 - **Data modeling.** Express data models once, with support for databasing, serialization/de-serialization, and data
   exchange via RESTful APIs, gRPC, or gRPC-Web.
 
-
 ## Distinguishing features
 
 - **Native development with Kotlin.** Write your core application logic and models once, and share them across platforms
@@ -69,7 +64,6 @@ leverage these tools together without worrying about performance or compatibilit
   [Kotlin data classes](https://kotlinlang.org/docs/data-classes.html), the same Elide model is code-generated for use
   with your database, API, and UI.
 
-
 ## Code samples
 
 A full suite of [code samples](./samples) demo various functionality. The samples are runnable locally or via pre-built
@@ -78,6 +72,7 @@ Docker images. Click through to each one for a short tour and getting started gu
 "Blah blah blah, okay, show me some code." Certainly:
 
 **`App.kt`** (for the server)
+
 ```kotlin
 /** GET `/`: Controller for index page. */
 @Controller class Index {
@@ -111,6 +106,7 @@ Docker images. Click through to each one for a short tour and getting started gu
 ```
 
 **`main.kt`** (for the browser)
+
 ```kotlin
 // React props for a component
 external interface HelloProps: Props {
@@ -150,12 +146,10 @@ pasted into the README. What we get out of this is surprising:
   - Build & test virtualized on any platform
   - Ship & perform natively on any platform
 
-
 What's going on here? Elide has helped us wire together code from **Micronaut** (that's where `@Controller` comes from),
 **Kotlin/JS**, **GraalVM**, and **esbuild** to make the above code make sense on both platforms. The React code builds
 for the browser _and_ a pure server environment; both are embedded into the JAR and served through a thin runtime layer
 provided by the framework.
-
 
 #### Why is this useful?
 
@@ -166,7 +160,6 @@ You can do the same thing with these same tools in a custom codebase, but settin
 of app is challenging and error-prone. Elide _intentionally_ leverages existing frameworks with rich ecosystems and
 docs, _instead of_ re-providing existing functionality so that you always have an escape hatch up to a more industrial
 toolset if you need it.
-
 
 ### Trying it out
 
@@ -180,29 +173,31 @@ The `react-ssr` sample is recommended, because it demoes the broadest set of fun
 code for each sample is in the [`samples/`](./samples) directory. If you're going to build from source, make sure to see
 the _Requirements to build_ section.
 
-
 **Run the `helloworld` sample via Docker (JVM):**
+
 ```
 docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-server-helloworld-jvm
 ```
 
 **Run the `react-ssr` sample via Docker (JVM):**
+
 ```
 docker run --rm -it -p 8080:8080 ghcr.io/elide-dev/samples-fullstack-react-ssr-jvm:latest
 ```
 
 **Run the `react-ssr` sample via Gradle (JVM):**
+
 ```
 git clone git@github.com:elide-dev/v3.git && cd v3
 ./gradlew :samples:fullstack:react-ssr:server:run
 ```
 
 **Run the `react-ssr` sample via Gradle (Native):**
+
 ```
 git clone git@github.com:elide-dev/v3.git && cd v3
 ./gradlew :samples:fullstack:react-ssr:server:runNative
 ```
-
 
 #### Requirements to build
 
@@ -225,7 +220,6 @@ To summarize:
 - **For building via Gradle:** JDK11+, any reasonable JVM should work.
 - **For building native:** GraalVM (consult compat table for version advice).
 - **For building browser/embedded JS:** Recent Node.js toolchain. 16.x+ is recommended.
-
 
 ### Powered-by
 
@@ -263,7 +257,6 @@ development scenarios:
   support for [Webpack](https://webpack.js.org/)-based frontend builds and [esbuild](https://esbuild.github.io/)-based
   embedded SSR builds.
 
-
 ## Version compatibility
 
 The following version matrix indicates tested support across tool and platform versions, including **Java**,
@@ -273,15 +266,13 @@ Following this guide is recommended but optional. Depending on the style of deve
 not need some of these components:
 
 | Status                                                          | **Java**  | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
-|-----------------------------------------------------------------|-----------|------------|-------------|---------------|-----------|-------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.21`   | `22.1.x`    | `3.6.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.21`   | `22.1.x`    | `3.6.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.21`   | `22.1.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| --------------------------------------------------------------- | --------- | ---------- | ----------- | ------------- | --------- | ----------------- |
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.21`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`  | --         | --          | --            | --        | --                |
 
-
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
-
 
 ## Platform Support
 
@@ -290,17 +281,16 @@ Client-side, all major browsers are supported, along with Android and iOS via Ko
 
 Please consult the table below for a complete list of supported platforms and architectures:
 
-| Build | OS             | Arch     | Libc   | Supported | Notes                  |
-|-------|:---------------|----------|--------|:---------:|:-----------------------|
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `x86_64` | `libc` | ✅ | Default JVM platform   |
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `x86_64` | `libc` | ✅ | Supported dev platform |
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `arm64`  | `libc` | ✅ | Supported dev platform |
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Alpine) | `x86_64` | `musl` | ☢️ | _Experimental_         |
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `arm64`  | `libc` | ☢️ | _Experimental_         |
-| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Windows        | `x86_64` | N/A    | ☢️ | _Experimental_         |
+| Build                                                                                                                                                | OS             | Arch     | Libc   | Supported | Notes                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | :------------- | -------- | ------ | :-------: | :--------------------- |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `x86_64` | `libc` |    ✅     | Default JVM platform   |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `x86_64` | `libc` |    ✅     | Supported dev platform |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | macOS          | `arm64`  | `libc` |    ✅     | Supported dev platform |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Alpine) | `x86_64` | `musl` |    ☢️     | _Experimental_         |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Linux (Ubuntu) | `arm64`  | `libc` |    ☢️     | _Experimental_         |
+| [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml) | Windows        | `x86_64` | N/A    |    ☢️     | _Experimental_         |
 
 Bazel, Gradle, GraalVM, and Kotlin/Native must support a given platform for Elide to work across architectures.
-
 
 ### **"What about [x] functionality that I want/need?"**
 
@@ -334,7 +324,6 @@ Elide supports both and allows you to access software written for both. Here are
   - **Build a mobile app**
     - (tbd)
 
-
 ## About this framework
 
 Elide has existed in different forms for over a decade. It was first released under the name `canteen` in 2011 as a
@@ -354,9 +343,7 @@ and goals:
   concepts should be strongly expressed as models, and the developer _should not have to repeat themselves_ across
   platforms to actualize or interchange expressions of those concepts.
 
-
 ### History
-
 
 #### Adopters
 
@@ -374,8 +361,6 @@ organizations (newest first):
 
 - **[Keen IO](https://keen.io).** Elide powered the Keen website for a time, which reached millions of developers across
   the span of its early use in Python.
-
-
 
 #### Timeline
 
@@ -397,7 +382,6 @@ organizations (newest first):
 - [2022-now]: **`elide` v3**: Complete rewrite into pure Kotlin to leverage Kotlin Multiplatform, with native support
   for polyglot development via GraalVM, gRPC/Protobuf, and React. Build tooling support through Bazel and Gradle.
 
-
 [1]: https://kotlinlang.org/
 [2]: https://graalvm.org/
 [3]: https://micronaut.io/
@@ -412,6 +396,6 @@ organizations (newest first):
 [12]: https://github.com/sgammon/elide
 [13]: https://buf.build
 
-
 ## License
+
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_large)

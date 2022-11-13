@@ -1,47 +1,18 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 plugins {
-  java
-  jacoco
-  idea
-  kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.serialization")
-  alias(libs.plugins.micronaut.application)
-  alias(libs.plugins.micronaut.aot)
+  id("dev.elide.build.samples.backend")
+  id("dev.elide.build.docker")
+  id("io.micronaut.application")
+  id("io.micronaut.aot")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
-
-kapt {
-  useBuildCache = true
-}
-
-kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-  }
-}
-
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-  }
-}
-
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) {
-      useJUnitJupiter()
-    }
-  }
-}
 
 application {
   mainClass.set("hellocss.App")
@@ -84,15 +55,16 @@ tasks.register<Copy>("copyStatic") {
   into("$buildDir/resources/main/static")
 }
 
-tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/base:latest")
-}
-
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
   images.set(listOf(
     "${project.properties["elide.publish.repo.docker.samples"]}/server/hellocss/jvm:latest"
   ))
-  this.target
+}
+
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
+  images.set(listOf(
+    "${project.properties["elide.publish.repo.docker.samples"]}/server/hellocss/jvm:opt-latest"
+  ))
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
@@ -101,8 +73,8 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuil
   ))
 }
 
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage(project.properties["elide.samples.docker.base.native"] as String)
-  args("-H:+StaticExecutableWithDynamicLibC")
+tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
+  images.set(listOf(
+    "${project.properties["elide.publish.repo.docker.samples"]}/server/hellocss/native:opt-latest"
+  ))
 }

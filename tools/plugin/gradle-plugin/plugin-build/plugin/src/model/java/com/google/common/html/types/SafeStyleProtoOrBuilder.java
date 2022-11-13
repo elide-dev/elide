@@ -3,42 +3,41 @@
 
 package com.google.common.html.types;
 
-public interface SafeStyleProtoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:webutil.html.types.SafeStyleProto)
-    com.google.protobuf.MessageOrBuilder {
-
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
-   * @return Whether the privateDoNotAccessOrElseSafeStyleWrappedValue field is set.
-   */
-  boolean hasPrivateDoNotAccessOrElseSafeStyleWrappedValue();
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
-   * @return The privateDoNotAccessOrElseSafeStyleWrappedValue.
-   */
-  java.lang.String getPrivateDoNotAccessOrElseSafeStyleWrappedValue();
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
-   * @return The bytes for privateDoNotAccessOrElseSafeStyleWrappedValue.
-   */
-  com.google.protobuf.ByteString
-      getPrivateDoNotAccessOrElseSafeStyleWrappedValueBytes();
+public interface SafeStyleProtoOrBuilder
+    extends
+        // @@protoc_insertion_point(interface_extends:webutil.html.types.SafeStyleProto)
+        com.google.protobuf.MessageOrBuilder {
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
+     * @return Whether the privateDoNotAccessOrElseSafeStyleWrappedValue field is set.
+     */
+    boolean hasPrivateDoNotAccessOrElseSafeStyleWrappedValue();
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
+     * @return The privateDoNotAccessOrElseSafeStyleWrappedValue.
+     */
+    java.lang.String getPrivateDoNotAccessOrElseSafeStyleWrappedValue();
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_style_wrapped_value = 5;</code>
+     * @return The bytes for privateDoNotAccessOrElseSafeStyleWrappedValue.
+     */
+    com.google.protobuf.ByteString getPrivateDoNotAccessOrElseSafeStyleWrappedValueBytes();
 }

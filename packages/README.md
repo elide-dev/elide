@@ -1,12 +1,12 @@
-
 ## Elide Packages
+
 ### `dev.elide.v3` ([API docs](https://v3.docs.elide.dev/kotlin/html/))
 
 This directory contains the main framework source code for each distinct package. Packages are organized in a flat
 directory structure.
 
 | **Package**                       | Artifact                     | Platforms            | Summary                                            |
-|-----------------------------------|------------------------------|----------------------|----------------------------------------------------|
+| --------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------- |
 | [`base`][1] ([docs][11])          | `dev.elide.v3:base`          | Multiplatform        | Base library (annotations, x-plat code)            |
 | [`frontend`][2] ([docs][12])      | `dev.elide.v3:frontend`      | JavaScript (Browser) | Baseline frontend code, lib bindings (proto, gRPC) |
 | [`graalvm`][3] ([docs][13])       | `dev.elide.v3:graalvm`       | JVM/Native           | JVM integration code for GraalVM support           |
@@ -29,7 +29,6 @@ Core modules shoot for full, 100% coverage.
 
 [![codecov box](https://codecov.io/gh/elide-dev/v3/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
 [![codecov sunburst](https://codecov.io/gh/elide-dev/v3/branch/v3/graphs/sunburst.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
-
 
 ### Static analysis
 
@@ -90,7 +89,6 @@ PR or branch.
     </tbody>
 </table>
 
-
 ## Dependency management
 
 Library dependencies are declared in the [`elide` version catalog](../gradle/elide.versions.toml), and should be
@@ -101,11 +99,9 @@ and by [Renovate](https://github.com/renovatebot/renovate) (see
 
 License checks are handled by [Licensebat](https://licensebat.com/). Additional OWASP security checks are performed by Snyk and OWASP's own tools.
 
-
 ### Interactive upgrades
 
 Run `update-jsdeps` or `update-jdeps` to run an interactive upgrade for NPM or Maven deps, respectively.
-
 
 ### Dependency locking
 
@@ -113,7 +109,6 @@ Elide extensively locks and verifies dependencies. Gradle is configured to [veri
 files if dependencies change, and to verify your update is legitimate to the best of your abilities.
 
 After dependency changes, locks can be updated with `make relock-deps`.
-
 
 [1]: ./base
 [2]: ./frontend
@@ -136,4 +131,3 @@ After dependency changes, locks can be updated with `make relock-deps`.
 [19]: https://v3.docs.elide.dev/kotlin/html/packages/server/index.html
 [20]: https://v3.docs.elide.dev/kotlin/html/packages/test/index.html
 [21]: https://docs.gradle.org/7.4.2/userguide/dependency_verification.html#sub:enabling-verification
-

@@ -12,192 +12,198 @@ package tools.elide.base;
  *
  * Protobuf enum {@code base.Language}
  */
-public enum Language
-    implements com.google.protobuf.ProtocolMessageEnum {
-  /**
-   * <pre>
-   * Generic, unqualified reference to English.
-   * </pre>
-   *
-   * <code>ENGLISH = 0;</code>
-   */
-  ENGLISH(0),
-  /**
-   * <pre>
-   * Traditional French.
-   * </pre>
-   *
-   * <code>FRENCH = 1;</code>
-   */
-  FRENCH(1),
-  /**
-   * <pre>
-   * Generic, unqualified reference to Spanish.
-   * </pre>
-   *
-   * <code>SPANISH = 2;</code>
-   */
-  SPANISH(2),
-  /**
-   * <pre>
-   * Generic, unqualified reference to Chinese.
-   * </pre>
-   *
-   * <code>CHINESE = 3;</code>
-   */
-  CHINESE(3),
-  /**
-   * <pre>
-   * Specific reference to Mandarin Chinese.
-   * </pre>
-   *
-   * <code>CHINESE_MANDARIN = 4;</code>
-   */
-  CHINESE_MANDARIN(4),
-  /**
-   * <pre>
-   * Specific reference to Cantonese.
-   * </pre>
-   *
-   * <code>CHINESE_CANTONESE = 5;</code>
-   */
-  CHINESE_CANTONESE(5),
-  UNRECOGNIZED(-1),
-  ;
+public enum Language implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <pre>
+     * Generic, unqualified reference to English.
+     * </pre>
+     *
+     * <code>ENGLISH = 0;</code>
+     */
+    ENGLISH(0),
+    /**
+     * <pre>
+     * Traditional French.
+     * </pre>
+     *
+     * <code>FRENCH = 1;</code>
+     */
+    FRENCH(1),
+    /**
+     * <pre>
+     * Generic, unqualified reference to Spanish.
+     * </pre>
+     *
+     * <code>SPANISH = 2;</code>
+     */
+    SPANISH(2),
+    /**
+     * <pre>
+     * Generic, unqualified reference to Chinese.
+     * </pre>
+     *
+     * <code>CHINESE = 3;</code>
+     */
+    CHINESE(3),
+    /**
+     * <pre>
+     * Specific reference to Mandarin Chinese.
+     * </pre>
+     *
+     * <code>CHINESE_MANDARIN = 4;</code>
+     */
+    CHINESE_MANDARIN(4),
+    /**
+     * <pre>
+     * Specific reference to Cantonese.
+     * </pre>
+     *
+     * <code>CHINESE_CANTONESE = 5;</code>
+     */
+    CHINESE_CANTONESE(5),
+    UNRECOGNIZED(-1);
 
-  /**
-   * <pre>
-   * Generic, unqualified reference to English.
-   * </pre>
-   *
-   * <code>ENGLISH = 0;</code>
-   */
-  public static final int ENGLISH_VALUE = 0;
-  /**
-   * <pre>
-   * Traditional French.
-   * </pre>
-   *
-   * <code>FRENCH = 1;</code>
-   */
-  public static final int FRENCH_VALUE = 1;
-  /**
-   * <pre>
-   * Generic, unqualified reference to Spanish.
-   * </pre>
-   *
-   * <code>SPANISH = 2;</code>
-   */
-  public static final int SPANISH_VALUE = 2;
-  /**
-   * <pre>
-   * Generic, unqualified reference to Chinese.
-   * </pre>
-   *
-   * <code>CHINESE = 3;</code>
-   */
-  public static final int CHINESE_VALUE = 3;
-  /**
-   * <pre>
-   * Specific reference to Mandarin Chinese.
-   * </pre>
-   *
-   * <code>CHINESE_MANDARIN = 4;</code>
-   */
-  public static final int CHINESE_MANDARIN_VALUE = 4;
-  /**
-   * <pre>
-   * Specific reference to Cantonese.
-   * </pre>
-   *
-   * <code>CHINESE_CANTONESE = 5;</code>
-   */
-  public static final int CHINESE_CANTONESE_VALUE = 5;
+    /**
+     * <pre>
+     * Generic, unqualified reference to English.
+     * </pre>
+     *
+     * <code>ENGLISH = 0;</code>
+     */
+    public static final int ENGLISH_VALUE = 0;
+    /**
+     * <pre>
+     * Traditional French.
+     * </pre>
+     *
+     * <code>FRENCH = 1;</code>
+     */
+    public static final int FRENCH_VALUE = 1;
+    /**
+     * <pre>
+     * Generic, unqualified reference to Spanish.
+     * </pre>
+     *
+     * <code>SPANISH = 2;</code>
+     */
+    public static final int SPANISH_VALUE = 2;
+    /**
+     * <pre>
+     * Generic, unqualified reference to Chinese.
+     * </pre>
+     *
+     * <code>CHINESE = 3;</code>
+     */
+    public static final int CHINESE_VALUE = 3;
+    /**
+     * <pre>
+     * Specific reference to Mandarin Chinese.
+     * </pre>
+     *
+     * <code>CHINESE_MANDARIN = 4;</code>
+     */
+    public static final int CHINESE_MANDARIN_VALUE = 4;
+    /**
+     * <pre>
+     * Specific reference to Cantonese.
+     * </pre>
+     *
+     * <code>CHINESE_CANTONESE = 5;</code>
+     */
+    public static final int CHINESE_CANTONESE_VALUE = 5;
 
-
-  public final int getNumber() {
-    if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalArgumentException(
-          "Can't get the number of an unknown enum value.");
+    public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+            throw new java.lang.IllegalArgumentException(
+                "Can't get the number of an unknown enum value."
+            );
+        }
+        return value;
     }
-    return value;
-  }
 
-  /**
-   * @param value The numeric wire value of the corresponding enum entry.
-   * @return The enum associated with the given numeric wire value.
-   * @deprecated Use {@link #forNumber(int)} instead.
-   */
-  @java.lang.Deprecated
-  public static Language valueOf(int value) {
-    return forNumber(value);
-  }
-
-  /**
-   * @param value The numeric wire value of the corresponding enum entry.
-   * @return The enum associated with the given numeric wire value.
-   */
-  public static Language forNumber(int value) {
-    switch (value) {
-      case 0: return ENGLISH;
-      case 1: return FRENCH;
-      case 2: return SPANISH;
-      case 3: return CHINESE;
-      case 4: return CHINESE_MANDARIN;
-      case 5: return CHINESE_CANTONESE;
-      default: return null;
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static Language valueOf(int value) {
+        return forNumber(value);
     }
-  }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<Language>
-      internalGetValueMap() {
-    return internalValueMap;
-  }
-  private static final com.google.protobuf.Internal.EnumLiteMap<
-      Language> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<Language>() {
-          public Language findValueByNumber(int number) {
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static Language forNumber(int value) {
+        switch (value) {
+            case 0:
+                return ENGLISH;
+            case 1:
+                return FRENCH;
+            case 2:
+                return SPANISH;
+            case 3:
+                return CHINESE;
+            case 4:
+                return CHINESE_MANDARIN;
+            case 5:
+                return CHINESE_CANTONESE;
+            default:
+                return null;
+        }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<Language> internalGetValueMap() {
+        return internalValueMap;
+    }
+
+    private static final com.google.protobuf.Internal.EnumLiteMap<Language> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<Language>() {
+        public Language findValueByNumber(int number) {
             return Language.forNumber(number);
-          }
-        };
+        }
+    };
 
-  public final com.google.protobuf.Descriptors.EnumValueDescriptor
-      getValueDescriptor() {
-    if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalStateException(
-          "Can't get the descriptor of an unrecognized enum value.");
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
+        if (this == UNRECOGNIZED) {
+            throw new java.lang.IllegalStateException(
+                "Can't get the descriptor of an unrecognized enum value."
+            );
+        }
+        return getDescriptor().getValues().get(ordinal());
     }
-    return getDescriptor().getValues().get(ordinal());
-  }
-  public final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptorForType() {
-    return getDescriptor();
-  }
-  public static final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptor() {
-    return tools.elide.base.BaseLanguage.getDescriptor().getEnumTypes().get(0);
-  }
 
-  private static final Language[] VALUES = values();
-
-  public static Language valueOf(
-      com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-    if (desc.getType() != getDescriptor()) {
-      throw new java.lang.IllegalArgumentException(
-        "EnumValueDescriptor is not for this type.");
+    public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
+        return getDescriptor();
     }
-    if (desc.getIndex() == -1) {
-      return UNRECOGNIZED;
+
+    public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
+        return tools.elide.base.BaseLanguage
+            .getDescriptor()
+            .getEnumTypes()
+            .get(0);
     }
-    return VALUES[desc.getIndex()];
-  }
 
-  private final int value;
+    private static final Language[] VALUES = values();
 
-  private Language(int value) {
-    this.value = value;
-  }
+    public static Language valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc
+    ) {
+        if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+                "EnumValueDescriptor is not for this type."
+            );
+        }
+        if (desc.getIndex() == -1) {
+            return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+    }
 
-  // @@protoc_insertion_point(enum_scope:base.Language)
+    private final int value;
+
+    private Language(int value) {
+        this.value = value;
+    }
+    // @@protoc_insertion_point(enum_scope:base.Language)
 }
-

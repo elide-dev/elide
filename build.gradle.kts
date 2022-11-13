@@ -1,22 +1,19 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 import java.util.Properties
 
 plugins {
-  kotlin("plugin.allopen") version libs.versions.kotlin.sdk.get() apply false
-  kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
   id("project-report")
-  alias(libs.plugins.dokka)
-  alias(libs.plugins.detekt)
+  id("org.jetbrains.dokka")
+  id("org.sonarqube")
+  id("org.jetbrains.kotlinx.kover")
+  id("io.gitlab.arturbosch.detekt")
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
-  alias(libs.plugins.sonar)
-  alias(libs.plugins.versionCheck)
   alias(libs.plugins.doctor)
   jacoco
   signing
@@ -42,16 +39,25 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
+val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
+
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 
-tasks.dokkaHtmlMultiModule.configure {
-  outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
-}
+// List of code samples to consider for official builds and testing.
+val samplesList = listOf(
+  ":samples:server:hellocss",
+  ":samples:server:helloworld",
+  ":samples:fullstack:basic:server",
+  ":samples:fullstack:react:server",
+  ":samples:fullstack:ssr:server",
+  ":samples:fullstack:react-ssr:server",
+)
 
-tasks.dokkaGfmMultiModule.configure {
-  outputDirectory.set(buildDir.resolve("docs/kotlin/gfm"))
+tasks.dokkaHtmlMultiModule.configure {
+  includes.from("README.md")
+  outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
 }
 
 tasks.create("docs") {
@@ -100,10 +106,13 @@ sonarqube {
     property("sonar.dynamicAnalysis", "reuseReports")
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
-    property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
     property("sonar.sourceEncoding", "UTF-8")
+    property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/kover/merged/xml/report.xml")
   }
 }
+
+val dokkaVersion = libs.versions.dokka.get()
+val mermaidDokka = "0.4.1"
 
 subprojects {
   val name = this.name
@@ -112,19 +121,51 @@ subprojects {
     plugin("io.gitlab.arturbosch.detekt")
     plugin("org.jlleitschuh.gradle.ktlint")
     plugin("org.sonarqube")
+    plugin("org.jetbrains.dokka")
+  }
+
+  val dokkaPlugin by configurations
+  dependencies {
+    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
+    dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
+    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
+//    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
   }
 
   sonarqube {
-    if (name != "base" && name != "test" && name != "model") {
+    if (name != "base" && name != "test" && name != "model" && name != "bom" && name != "ssg") {
       properties {
         property("sonar.sources", "src/main/kotlin")
         property("sonar.tests", "src/test/kotlin")
-        property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
+        property(
+          "sonar.coverage.jacoco.xmlReportPaths",
+          listOf(
+            "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+            "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+            "build/reports/jacoco/test/jacocoTestReport.xml",
+            "build/reports/kover/xml/coverage.xml",
+          )
+        )
+        if (name == "server" || name == "proto" || name == "model") {
+          property("sonar.java.binaries", "build/classes/java/main,build/classes/kotlin/main")
+        }
       }
+    } else if (name == "bom" || name == "ssg") {
+      // nothing
     } else {
       properties {
         property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
         property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
+        property("sonar.java.binaries", "build/classes/kotlin/jvm/main")
+        property(
+          "sonar.coverage.jacoco.xmlReportPaths",
+          listOf(
+            "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+            "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+            "build/reports/jacoco/test/jacocoTestReport.xml",
+            "build/reports/kover/xml/coverage.xml",
+          )
+        )
       }
     }
   }
@@ -177,31 +218,6 @@ allprojects {
     mavenCentral()
     google()
   }
-  tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = javaLanguageVersion
-    targetCompatibility = javaLanguageVersion
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-    }
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-      jvmTarget = javaLanguageVersion
-      javaParameters = true
-    }
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-      target = ecmaVersion
-    }
-  }
 }
 
 tasks.register("resolveAndLockAll") {
@@ -242,7 +258,55 @@ if (tasks.findByName("resolveAllDependencies") == null) {
   }
 }
 
+koverMerged {
+  enable()
+
+  xmlReport {
+    onCheck.set(isCI)
+  }
+
+  htmlReport {
+    onCheck.set(isCI)
+  }
+}
+
+tasks.register("samples") {
+  description = "Build and test all built-in code samples, in the `samples` path and with Knit."
+
+  dependsOn(
+    "buildSamples",
+    "testSamples",
+    "nativeTestSamples",
+  )
+}
+
+tasks.register("buildSamples") {
+  description = "Assemble all sample code."
+
+  samplesList.forEach {
+    dependsOn("$it:assemble")
+  }
+}
+
+tasks.register("testSamples") {
+  description = "Run all tests for sample code."
+
+  samplesList.forEach {
+    dependsOn("$it:test")
+  }
+}
+
+tasks.register("nativeTestSamples") {
+  description = "Run native (GraalVM) tests for sample code."
+
+  samplesList.forEach {
+    dependsOn("$it:nativeTest")
+  }
+}
+
 tasks.register("reports") {
+  description = "Build all reports."
+
   dependsOn(
     ":dependencyReport",
     ":htmlDependencyReport",

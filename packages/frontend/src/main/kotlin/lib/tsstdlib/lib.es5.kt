@@ -11,36 +11,36 @@ package lib.tsstdlib
 
 import kotlin.js.*
 
-external interface DateConstructor {
-  var prototype: Date
-    fun parse(s: String): Number
-    fun UTC(year: Number, month: Number, date: Number = definedExternally, hours: Number = definedExternally, minutes: Number = definedExternally, seconds: Number = definedExternally, ms: Number = definedExternally): Number
-    fun now(): Number
+public external interface DateConstructor {
+  public var prototype: Date
+  public fun parse(s: String): Number
+  public fun UTC(year: Number, month: Number, date: Number = definedExternally, hours: Number = definedExternally, minutes: Number = definedExternally, seconds: Number = definedExternally, ms: Number = definedExternally): Number
+  public fun now(): Number
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline operator fun DateConstructor.invoke(): String {
+public inline operator fun DateConstructor.invoke(): String {
   return asDynamic()() as String
 }
 
-external interface ArrayLike<T> {
-    var length: Number
+public external interface ArrayLike<T> {
+  public var length: Number
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline operator fun <T> ArrayLike<T>.get(n: Number): T? = asDynamic()[n] as? T
+public inline operator fun <T> ArrayLike<T>.get(n: Number): T? = asDynamic()[n] as? T
 
 @Suppress("NOTHING_TO_INLINE")
-inline operator fun <T> ArrayLike<T>.set(n: Number, value: T) {
+public inline operator fun <T> ArrayLike<T>.set(n: Number, value: T) {
   asDynamic()[n] = value
 }
 
-external interface ErrorConstructor {
+public external interface ErrorConstructor {
   @nativeInvoke
-  operator fun invoke(message: String = definedExternally): Error
-  var prototype: Error
+  public operator fun invoke(message: String = definedExternally): Error
+  public var prototype: Error
 }
 
-external interface PromiseLike<T> {
-  fun then(onfulfilled: ((value: T) -> Any?)? = definedExternally, onrejected: ((reason: Any) -> Any?)? = definedExternally): PromiseLike<dynamic /* TResult1 | TResult2 */>
+public external interface PromiseLike<T> {
+  public fun then(onfulfilled: ((value: T) -> Any?)? = definedExternally, onrejected: ((reason: Any) -> Any?)? = definedExternally): PromiseLike<dynamic /* TResult1 | TResult2 */>
 }

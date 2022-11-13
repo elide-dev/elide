@@ -3,42 +3,41 @@
 
 package com.google.common.html.types;
 
-public interface SafeHtmlProtoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:webutil.html.types.SafeHtmlProto)
-    com.google.protobuf.MessageOrBuilder {
-
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
-   * @return Whether the privateDoNotAccessOrElseSafeHtmlWrappedValue field is set.
-   */
-  boolean hasPrivateDoNotAccessOrElseSafeHtmlWrappedValue();
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
-   * @return The privateDoNotAccessOrElseSafeHtmlWrappedValue.
-   */
-  java.lang.String getPrivateDoNotAccessOrElseSafeHtmlWrappedValue();
-  /**
-   * <pre>
-   * IMPORTANT: Never set or read this field, even from tests, it is private.
-   * See documentation at the top of .proto file for programming language
-   * packages with which to create or read this message.
-   * </pre>
-   *
-   * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
-   * @return The bytes for privateDoNotAccessOrElseSafeHtmlWrappedValue.
-   */
-  com.google.protobuf.ByteString
-      getPrivateDoNotAccessOrElseSafeHtmlWrappedValueBytes();
+public interface SafeHtmlProtoOrBuilder
+    extends
+        // @@protoc_insertion_point(interface_extends:webutil.html.types.SafeHtmlProto)
+        com.google.protobuf.MessageOrBuilder {
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
+     * @return Whether the privateDoNotAccessOrElseSafeHtmlWrappedValue field is set.
+     */
+    boolean hasPrivateDoNotAccessOrElseSafeHtmlWrappedValue();
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
+     * @return The privateDoNotAccessOrElseSafeHtmlWrappedValue.
+     */
+    java.lang.String getPrivateDoNotAccessOrElseSafeHtmlWrappedValue();
+    /**
+     * <pre>
+     * IMPORTANT: Never set or read this field, even from tests, it is private.
+     * See documentation at the top of .proto file for programming language
+     * packages with which to create or read this message.
+     * </pre>
+     *
+     * <code>optional string private_do_not_access_or_else_safe_html_wrapped_value = 2 [ctype = CORD];</code>
+     * @return The bytes for privateDoNotAccessOrElseSafeHtmlWrappedValue.
+     */
+    com.google.protobuf.ByteString getPrivateDoNotAccessOrElseSafeHtmlWrappedValueBytes();
 }

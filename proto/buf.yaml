@@ -54,4 +54,3 @@ breaking:
 deps:
   - buf.build/googleapis/googleapis
   - buf.build/elide/safe-html-types
-

@@ -4,92 +4,104 @@
 package tools.elide.assets;
 
 public final class Embedded {
-  private Embedded() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_assets_EmbeddedScriptMetadata_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_assets_EmbeddedScriptMetadata_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_assets_EmbeddedScript_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_assets_EmbeddedScript_fieldAccessorTable;
+    private Embedded() {}
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n\033elide/assets/embedded.proto\022\006assets\032\037g" +
-      "oogle/protobuf/timestamp.proto\032\025elide/da" +
-      "ta/data.proto\"\304\002\n\026EmbeddedScriptMetadata" +
-      "\022E\n\njavascript\030\001 \001(\0132/.assets.EmbeddedSc" +
-      "riptMetadata.JsScriptMetadataH\000\032\326\001\n\020JsSc" +
-      "riptMetadata\022N\n\005level\030\001 \001(\0162?.assets.Emb" +
-      "eddedScriptMetadata.JsScriptMetadata.JsL" +
-      "anguageLevel\"r\n\017JsLanguageLevel\022\035\n\031JS_LA" +
-      "NGUAGE_LEVEL_DEFAULT\020\000\022\007\n\003ES5\020\001\022\007\n\003ES6\020\002" +
-      "\022\n\n\006ES2017\020\003\022\n\n\006ES2018\020\004\022\n\n\006ES2019\020\005\022\n\n\006" +
-      "ES2020\020\006B\n\n\010metadata\"\326\002\n\016EmbeddedScript\022" +
-      "\016\n\006module\030\001 \001(\t\022\020\n\010filename\030\002 \001(\t\0220\n\010lan" +
-      "guage\030\003 \001(\0162\036.assets.EmbeddedScriptLangu" +
-      "age\0220\n\010metadata\030\004 \001(\0132\036.assets.EmbeddedS" +
-      "criptMetadata\0221\n\rlast_modified\030\005 \001(\0132\032.g" +
-      "oogle.protobuf.Timestamp\022\031\n\021direct_depen" +
-      "dency\030\006 \003(\t\022\035\n\025transitive_dependency\030\007 \003" +
-      "(\t\022&\n\006script\030\010 \001(\0132\026.data.DataContainerR" +
-      "ef\022)\n\tsourcemap\030\t \001(\0132\026.data.DataContain" +
-      "erRef*:\n\026EmbeddedScriptLanguage\022\030\n\024LANGU" +
-      "AGE_UNSPECIFIED\020\000\022\006\n\002JS\020\001B`\n\022tools.elide" +
-      ".assetsH\001P\001\330\001\001\370\001\001\242\002\003ELD\252\002\014Elide.Assets\272\002" +
-      "\005Elide\302\002\003ELD\312\002\014Elide\\Assets\352\002\rElide::Ass" +
-      "etsb\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.TimestampProto.getDescriptor(),
-          tools.elide.data.Data.getDescriptor(),
-        });
-    internal_static_assets_EmbeddedScriptMetadata_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_assets_EmbeddedScriptMetadata_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_assets_EmbeddedScriptMetadata_descriptor,
-        new java.lang.String[] { "Javascript", "Metadata", });
-    internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor =
-      internal_static_assets_EmbeddedScriptMetadata_descriptor.getNestedTypes().get(0);
-    internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor,
-        new java.lang.String[] { "Level", });
-    internal_static_assets_EmbeddedScript_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_assets_EmbeddedScript_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_assets_EmbeddedScript_descriptor,
-        new java.lang.String[] { "Module", "Filename", "Language", "Metadata", "LastModified", "DirectDependency", "TransitiveDependency", "Script", "Sourcemap", });
-    com.google.protobuf.TimestampProto.getDescriptor();
-    tools.elide.data.Data.getDescriptor();
-  }
+    public static void registerAllExtensions(
+        com.google.protobuf.ExtensionRegistryLite registry
+    ) {}
 
-  // @@protoc_insertion_point(outer_class_scope)
+    public static void registerAllExtensions(
+        com.google.protobuf.ExtensionRegistry registry
+    ) {
+        registerAllExtensions(
+            (com.google.protobuf.ExtensionRegistryLite) registry
+        );
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor internal_static_assets_EmbeddedScriptMetadata_descriptor;
+    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_assets_EmbeddedScriptMetadata_fieldAccessorTable;
+    static final com.google.protobuf.Descriptors.Descriptor internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor;
+    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_fieldAccessorTable;
+    static final com.google.protobuf.Descriptors.Descriptor internal_static_assets_EmbeddedScript_descriptor;
+    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_assets_EmbeddedScript_fieldAccessorTable;
+
+    public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+            "\n\033elide/assets/embedded.proto\022\006assets\032\037g" +
+            "oogle/protobuf/timestamp.proto\032\025elide/da" +
+            "ta/data.proto\"\304\002\n\026EmbeddedScriptMetadata" +
+            "\022E\n\njavascript\030\001 \001(\0132/.assets.EmbeddedSc" +
+            "riptMetadata.JsScriptMetadataH\000\032\326\001\n\020JsSc" +
+            "riptMetadata\022N\n\005level\030\001 \001(\0162?.assets.Emb" +
+            "eddedScriptMetadata.JsScriptMetadata.JsL" +
+            "anguageLevel\"r\n\017JsLanguageLevel\022\035\n\031JS_LA" +
+            "NGUAGE_LEVEL_DEFAULT\020\000\022\007\n\003ES5\020\001\022\007\n\003ES6\020\002" +
+            "\022\n\n\006ES2017\020\003\022\n\n\006ES2018\020\004\022\n\n\006ES2019\020\005\022\n\n\006" +
+            "ES2020\020\006B\n\n\010metadata\"\326\002\n\016EmbeddedScript\022" +
+            "\016\n\006module\030\001 \001(\t\022\020\n\010filename\030\002 \001(\t\0220\n\010lan" +
+            "guage\030\003 \001(\0162\036.assets.EmbeddedScriptLangu" +
+            "age\0220\n\010metadata\030\004 \001(\0132\036.assets.EmbeddedS" +
+            "criptMetadata\0221\n\rlast_modified\030\005 \001(\0132\032.g" +
+            "oogle.protobuf.Timestamp\022\031\n\021direct_depen" +
+            "dency\030\006 \003(\t\022\035\n\025transitive_dependency\030\007 \003" +
+            "(\t\022&\n\006script\030\010 \001(\0132\026.data.DataContainerR" +
+            "ef\022)\n\tsourcemap\030\t \001(\0132\026.data.DataContain" +
+            "erRef*:\n\026EmbeddedScriptLanguage\022\030\n\024LANGU" +
+            "AGE_UNSPECIFIED\020\000\022\006\n\002JS\020\001B`\n\022tools.elide" +
+            ".assetsH\001P\001\330\001\001\370\001\001\242\002\003ELD\252\002\014Elide.Assets\272\002" +
+            "\005Elide\302\002\003ELD\312\002\014Elide\\Assets\352\002\rElide::Ass" +
+            "etsb\006proto3",
+        };
+        descriptor =
+            com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+                descriptorData,
+                new com.google.protobuf.Descriptors.FileDescriptor[] {
+                    com.google.protobuf.TimestampProto.getDescriptor(),
+                    tools.elide.data.Data.getDescriptor(),
+                }
+            );
+        internal_static_assets_EmbeddedScriptMetadata_descriptor =
+            getDescriptor().getMessageTypes().get(0);
+        internal_static_assets_EmbeddedScriptMetadata_fieldAccessorTable =
+            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_assets_EmbeddedScriptMetadata_descriptor,
+                new java.lang.String[] { "Javascript", "Metadata" }
+            );
+        internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor =
+            internal_static_assets_EmbeddedScriptMetadata_descriptor
+                .getNestedTypes()
+                .get(0);
+        internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_fieldAccessorTable =
+            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_assets_EmbeddedScriptMetadata_JsScriptMetadata_descriptor,
+                new java.lang.String[] { "Level" }
+            );
+        internal_static_assets_EmbeddedScript_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+        internal_static_assets_EmbeddedScript_fieldAccessorTable =
+            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_assets_EmbeddedScript_descriptor,
+                new java.lang.String[] {
+                    "Module",
+                    "Filename",
+                    "Language",
+                    "Metadata",
+                    "LastModified",
+                    "DirectDependency",
+                    "TransitiveDependency",
+                    "Script",
+                    "Sourcemap",
+                }
+            );
+        com.google.protobuf.TimestampProto.getDescriptor();
+        tools.elide.data.Data.getDescriptor();
+    }
+    // @@protoc_insertion_point(outer_class_scope)
 }

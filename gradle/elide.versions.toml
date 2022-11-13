@@ -1,18 +1,22 @@
 [versions]
 kotlin_sdk = "1.7.21"
 kotlin_language = "1.7"
+ksp = "1.7.20-1.0.8"
+koin = "3.2.2"
+koin_ksp = "1.0.3"
 graalvm = "22.3.0"
-graalvm_sdk = "22.2.0.1"
-graalvm_metadata = "0.1.0"
+graalvm_sdk = "22.3.0"
+graalvm_metadata = "0.2.4"
+graalvm_plugin = "0.9.17"
 node = "18.0.1"
 react = "18.2.0"
-protobuf = "3.20.1"
-grpc_java = "1.46.0"
+protobuf = "3.21.2"
+grpc_java = "1.50.2"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 testcontainers = "1.17.5"
-netty = "4.1.84.Final"
-netty_tcnative = "2.0.46.Final"
+netty = "4.1.85.Final"
+netty_tcnative = "2.0.54.Final"
 dekorate = "3.1.1"
 micronaut_lib = "3.7.3"
 micronaut_aot = "1.1.1"
@@ -22,7 +26,7 @@ micronaut_grpc = "3.3.1"
 micronaut_graphql = "3.2.0"
 micronaut_gcp = "4.6.0"
 micronaut_test = "3.7.0"
-micronaut_plugin = "3.6.3"
+micronaut_plugin = "3.6.4"
 micronaut_redis = "5.3.0"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
@@ -46,9 +50,9 @@ kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.8.0"
 kotlinx_serialization = "1.4.1"
-kotlinx_atomicfu_plugin = "0.18.2"
+atomicfu = "0.18.5"
 kotlinx_benchmark = "0.4.4"
-detekt = "1.20.0"
+detekt = "1.22.0-RC3"
 dokka = "1.7.20"
 ktlint = "0.47.1"
 lettuce = "6.2.0.RELEASE"
@@ -59,7 +63,7 @@ pluginProtobuf = "0.9.1"
 versionCheck = "0.43.0"
 sonar = "3.5.0.2730"
 truth = "1.1.3"
-soy = "2022-03-07"  # next: "2022-07-20"
+soy = "2022-03-07" # next: "2022-07-20"
 closure = "v20221004"
 closure_stylesheets = "1.5.0"
 picocli = "4.7.0"
@@ -71,17 +75,18 @@ jakarta_persistence = "3.1.0"
 jakarta_annotation_api = "2.1.1"
 javax_persistence = "2.2"
 javax_annotations = "1.3.2"
-jsoup = "1.15.2"
+jsoup = "1.15.3"
 junit_jupiter = "5.9.1"
 logback = "1.2.11"
 docker_plugin = "7.4.0"
 node_plugin = "3.5.0"
 gauth_plugin = "2.2.0"
+kotest = "5.5.4"
 kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
-kotlin_uuid = "0.5.0"
+kotlin_uuid = "0.6.0"
 guava = "31.1-jre"
-gax = "2.19.4"
+gax = "2.19.5"
 kotlinxWrappers = "pre.422"
 kotlinx_wrappers_browser = "0.0.1-pre.422"
 kotlinx_wrappers_css = "1.0.0-pre.422"
@@ -134,7 +139,9 @@ jib = "3.3.1"
 commons_compress = "1.22"
 commons_csv = "1.9.0"
 brotli4j = "1.8.0"
-projectreactor = "2020.0.24"
+projectreactor = "2022.0.0"
+projectreactor_core = "3.5.0"
+projectreactor_netty = "1.1.0"
 bouncycastle = "1.70"
 tink = "1.7.0"
 conscrypt = "2.5.2"
@@ -150,19 +157,22 @@ micronaut_liquibase = "5.4.1"
 sqlcommenter = "2.1.1-elide"
 jackson = "2.13.3"
 jsr310 = "2.9.8"
+spotless = "6.11.0"
 micronaut_xml = "3.1.0"
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor_plugin" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
+graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm_plugin" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
-kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_sdk"}
-kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin_sdk"}
-kotlin_multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_sdk"}
-kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin_sdk"}
-kotlin_plugin_jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin_sdk"}
-kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin_sdk"}
+kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_sdk" }
+kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin_sdk" }
+kotlin_multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_sdk" }
+kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin_sdk" }
+kotlin_plugin_jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin_sdk" }
+kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin_sdk" }
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin_sdk" }
 kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
 kotlinx_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin_sdk" }
@@ -172,8 +182,8 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
-pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish"}
-versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
+versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 artifactRegistry = { id = "com.google.cloud.artifactregistry.gradle-plugin", version.ref = "gauth_plugin" }
 testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
 micronaut_library = { id = "io.micronaut.library", version.ref = "micronaut_plugin" }
@@ -199,6 +209,8 @@ protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
 kotlinx_atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin_sdk" }
+kotlinx_atomicfu_linux_x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-linuxx64", version.ref = "atomicfu" }
+kotlinx_atomicfu_macos_x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }
 kotlinx_benchmark_runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx_benchmark" }
 kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "kotlinx_coroutines" }
@@ -210,6 +222,8 @@ kotlinx_coroutines_guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx_coroutines_reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "kotlinx_coroutines" }
 kotlinx_collections_immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx_collections" }
 kotlinx_datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx_datetime" }
+kotlinx_html = { group = "org.jetbrains.kotlinx", name = "kotlinx-html", version.ref = "kotlinx_html" }
+kotlinx_html_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-js", version.ref = "kotlinx_html" }
 kotlinx_html_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm", version.ref = "kotlinx_html" }
 kotlinx_serialization_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-js", version.ref = "kotlinx_serialization" }
@@ -253,10 +267,11 @@ lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
 micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
+micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
 micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
 micronaut_graal = { group = "io.micronaut", name = "micronaut-graal", version.ref = "micronaut_lib" }
-micronaut_graphql = { group = "io.micronaut.graphql",  name = "micronaut-graphql", version.ref = "micronaut_graphql" }
+micronaut_graphql = { group = "io.micronaut.graphql", name = "micronaut-graphql", version.ref = "micronaut_graphql" }
 micronaut_data_processor = { group = "io.micronaut.data", name = "micronaut-data-processor", version.ref = "micronaut_data" }
 micronaut_data_document_processor = { group = "io.micronaut.data", name = "micronaut-data-document-processor", version.ref = "micronaut_data" }
 micronaut_data_tx = { group = "io.micronaut.data", name = "micronaut-data-tx", version.ref = "micronaut_data" }
@@ -386,9 +401,10 @@ brotli_native_windows_amd64 = { group = "com.aayushatharva.brotli4j", name = "na
 commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }
 commons_csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons_csv" }
 projectreactor_bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
-reactor_core = { group = "io.projectreactor", name = "reactor-core" }
-reactor_netty_core = { group = "io.projectreactor.netty", name = "reactor-netty-core" }
-reactor_netty_http = { group = "io.projectreactor.netty", name = "reactor-netty-http" }
+reactor_core = { group = "io.projectreactor", name = "reactor-core", version.ref = "projectreactor_core" }
+reactor_netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor_netty" }
+reactor_netty_core = { group = "io.projectreactor.netty", name = "reactor-netty-core", version.ref = "projectreactor_netty" }
+reactor_netty_http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "projectreactor_netty" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk15on", version.ref = "bouncycastle" }
 bouncycastle_tls = { group = "org.bouncycastle", name = "bctls-jdk15on", version.ref = "bouncycastle" }
 bouncycastle_pkix = { group = "org.bouncycastle", name = "bcpkix-jdk15on", version.ref = "bouncycastle" }
@@ -415,3 +431,44 @@ testcontainers_core = { group = "org.testcontainers", name = "testcontainers", v
 testcontainers_bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
 testcontainers_postgres = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
 testcontainers_gcloud = { group = "org.testcontainers", name = "gcloud", version.ref = "testcontainers" }
+koin_core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin_annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin_ksp" }
+koin_test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koint_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
+koin_test_junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+koin_test_junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+## Plugin Aliases
+plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
+plugin_testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
+plugin_detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+plugin_dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+plugin_docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut_plugin" }
+plugin_micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut_plugin" }
+plugin_kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover" }
+plugin_spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
+plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin_sdk" }
+plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin_sdk" }
+plugin_kotlinx_atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
+plugin_kotlinx_serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin_sdk" }
+plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm_plugin" }
+
+[bundles]
+kotlinx_coroutines_jvm = [
+  "kotlinx_coroutines_core",
+  "kotlinx_coroutines_jdk8",
+  "kotlinx_coroutines_jdk9",
+  "kotlinx_coroutines_slf4j"
+]
+kotlinx_serialization = [
+  "kotlinx_serialization_core",
+  "kotlinx_serialization_json",
+  "kotlinx_serialization_protobuf",
+  "kotlinx_serialization_properties"
+]
+kotlinx_atomicfu = [
+  "kotlinx_atomicfu",
+  "kotlinx_atomicfu_linux_x64",
+  "kotlinx_atomicfu_macos_x64"
+]
+koin = ["koin_core", "koin_annotations"]

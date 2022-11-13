@@ -11,528 +11,218 @@ package tools.elide.page;
  *
  * Protobuf type {@code page.MediaAsset}
  */
-public final class MediaAsset extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:page.MediaAsset)
-    MediaAssetOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use MediaAsset.newBuilder() to construct.
-  private MediaAsset(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private MediaAsset() {
-    kind_ = 0;
-  }
+public final class MediaAsset
+    extends com.google.protobuf.GeneratedMessageV3
+    implements
+        // @@protoc_insertion_point(message_implements:page.MediaAsset)
+        MediaAssetOrBuilder {
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new MediaAsset();
-  }
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private MediaAsset(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
+    // Use MediaAsset.newBuilder() to construct.
+    private MediaAsset(
+        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+    ) {
+        super(builder);
     }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            int rawValue = input.readEnum();
 
-            kind_ = rawValue;
-            break;
-          }
-          case 82: {
-            tools.elide.page.MediaAsset.Link.Builder subBuilder = null;
-            if (mediaCase_ == 10) {
-              subBuilder = ((tools.elide.page.MediaAsset.Link) media_).toBuilder();
-            }
-            media_ =
-                input.readMessage(tools.elide.page.MediaAsset.Link.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((tools.elide.page.MediaAsset.Link) media_);
-              media_ = subBuilder.buildPartial();
-            }
-            mediaCase_ = 10;
-            break;
-          }
-          case 162: {
-            tools.elide.page.MediaAsset.Image.Builder subBuilder = null;
-            if (mediaCase_ == 20) {
-              subBuilder = ((tools.elide.page.MediaAsset.Image) media_).toBuilder();
-            }
-            media_ =
-                input.readMessage(tools.elide.page.MediaAsset.Image.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((tools.elide.page.MediaAsset.Image) media_);
-              media_ = subBuilder.buildPartial();
-            }
-            mediaCase_ = 20;
-            break;
-          }
-          case 242: {
-            tools.elide.page.MediaAsset.Video.Builder subBuilder = null;
-            if (mediaCase_ == 30) {
-              subBuilder = ((tools.elide.page.MediaAsset.Video) media_).toBuilder();
-            }
-            media_ =
-                input.readMessage(tools.elide.page.MediaAsset.Video.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((tools.elide.page.MediaAsset.Video) media_);
-              media_ = subBuilder.buildPartial();
-            }
-            mediaCase_ = 30;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            tools.elide.page.MediaAsset.class, tools.elide.page.MediaAsset.Builder.class);
-  }
-
-  public interface LinkOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:page.MediaAsset.Link)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * URI to consider for an attached media link.
-     * </pre>
-     *
-     * <code>string uri = 1;</code>
-     * @return The uri.
-     */
-    java.lang.String getUri();
-    /**
-     * <pre>
-     * URI to consider for an attached media link.
-     * </pre>
-     *
-     * <code>string uri = 1;</code>
-     * @return The bytes for uri.
-     */
-    com.google.protobuf.ByteString
-        getUriBytes();
-
-    /**
-     * <pre>
-     * Alternative text to display for this link, if applicable.
-     * </pre>
-     *
-     * <code>string alt = 2;</code>
-     * @return The alt.
-     */
-    java.lang.String getAlt();
-    /**
-     * <pre>
-     * Alternative text to display for this link, if applicable.
-     * </pre>
-     *
-     * <code>string alt = 2;</code>
-     * @return The bytes for alt.
-     */
-    com.google.protobuf.ByteString
-        getAltBytes();
-  }
-  /**
-   * <pre>
-   * Describes concrete information about a media link, attached to some web page or data point.
-   * </pre>
-   *
-   * Protobuf type {@code page.MediaAsset.Link}
-   */
-  public static final class Link extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:page.MediaAsset.Link)
-      LinkOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Link.newBuilder() to construct.
-    private Link(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Link() {
-      uri_ = "";
-      alt_ = "";
+    private MediaAsset() {
+        kind_ = 0;
     }
 
     @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Link();
+    @SuppressWarnings({ "unused" })
+    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+        return new MediaAsset();
     }
 
     @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
+    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+        return this.unknownFields;
     }
-    private Link(
+
+    private MediaAsset(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              uri_ = s;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              alt_ = s;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 8:
+                        {
+                            int rawValue = input.readEnum();
+
+                            kind_ = rawValue;
+                            break;
+                        }
+                    case 82:
+                        {
+                            tools.elide.page.MediaAsset.Link.Builder subBuilder =
+                                null;
+                            if (mediaCase_ == 10) {
+                                subBuilder =
+                                    (
+                                        (tools.elide.page.MediaAsset.Link) media_
+                                    ).toBuilder();
+                            }
+                            media_ =
+                                input.readMessage(
+                                    tools.elide.page.MediaAsset.Link.parser(),
+                                    extensionRegistry
+                                );
+                            if (subBuilder != null) {
+                                subBuilder.mergeFrom(
+                                    (tools.elide.page.MediaAsset.Link) media_
+                                );
+                                media_ = subBuilder.buildPartial();
+                            }
+                            mediaCase_ = 10;
+                            break;
+                        }
+                    case 162:
+                        {
+                            tools.elide.page.MediaAsset.Image.Builder subBuilder =
+                                null;
+                            if (mediaCase_ == 20) {
+                                subBuilder =
+                                    (
+                                        (tools.elide.page.MediaAsset.Image) media_
+                                    ).toBuilder();
+                            }
+                            media_ =
+                                input.readMessage(
+                                    tools.elide.page.MediaAsset.Image.parser(),
+                                    extensionRegistry
+                                );
+                            if (subBuilder != null) {
+                                subBuilder.mergeFrom(
+                                    (tools.elide.page.MediaAsset.Image) media_
+                                );
+                                media_ = subBuilder.buildPartial();
+                            }
+                            mediaCase_ = 20;
+                            break;
+                        }
+                    case 242:
+                        {
+                            tools.elide.page.MediaAsset.Video.Builder subBuilder =
+                                null;
+                            if (mediaCase_ == 30) {
+                                subBuilder =
+                                    (
+                                        (tools.elide.page.MediaAsset.Video) media_
+                                    ).toBuilder();
+                            }
+                            media_ =
+                                input.readMessage(
+                                    tools.elide.page.MediaAsset.Video.parser(),
+                                    extensionRegistry
+                                );
+                            if (subBuilder != null) {
+                                subBuilder.mergeFrom(
+                                    (tools.elide.page.MediaAsset.Video) media_
+                                );
+                                media_ = subBuilder.buildPartial();
+                            }
+                            mediaCase_ = 30;
+                            break;
+                        }
+                    default:
+                        {
+                            if (
+                                !parseUnknownField(
+                                    input,
+                                    unknownFields,
+                                    extensionRegistry,
+                                    tag
+                                )
+                            ) {
+                                done = true;
+                            }
+                            break;
+                        }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e
+                .asInvalidProtocolBufferException()
+                .setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(this);
+        } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
     }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
+
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.page.MediaAsset.Link.class, tools.elide.page.MediaAsset.Link.Builder.class);
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+            tools.elide.page.MediaAsset.class,
+            tools.elide.page.MediaAsset.Builder.class
+        );
     }
 
-    public static final int URI_FIELD_NUMBER = 1;
-    private volatile java.lang.Object uri_;
-    /**
-     * <pre>
-     * URI to consider for an attached media link.
-     * </pre>
-     *
-     * <code>string uri = 1;</code>
-     * @return The uri.
-     */
-    @java.lang.Override
-    public java.lang.String getUri() {
-      java.lang.Object ref = uri_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        uri_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * URI to consider for an attached media link.
-     * </pre>
-     *
-     * <code>string uri = 1;</code>
-     * @return The bytes for uri.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getUriBytes() {
-      java.lang.Object ref = uri_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        uri_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public interface LinkOrBuilder
+        extends
+            // @@protoc_insertion_point(interface_extends:page.MediaAsset.Link)
+            com.google.protobuf.MessageOrBuilder {
+        /**
+         * <pre>
+         * URI to consider for an attached media link.
+         * </pre>
+         *
+         * <code>string uri = 1;</code>
+         * @return The uri.
+         */
+        java.lang.String getUri();
+        /**
+         * <pre>
+         * URI to consider for an attached media link.
+         * </pre>
+         *
+         * <code>string uri = 1;</code>
+         * @return The bytes for uri.
+         */
+        com.google.protobuf.ByteString getUriBytes();
+
+        /**
+         * <pre>
+         * Alternative text to display for this link, if applicable.
+         * </pre>
+         *
+         * <code>string alt = 2;</code>
+         * @return The alt.
+         */
+        java.lang.String getAlt();
+        /**
+         * <pre>
+         * Alternative text to display for this link, if applicable.
+         * </pre>
+         *
+         * <code>string alt = 2;</code>
+         * @return The bytes for alt.
+         */
+        com.google.protobuf.ByteString getAltBytes();
     }
 
-    public static final int ALT_FIELD_NUMBER = 2;
-    private volatile java.lang.Object alt_;
-    /**
-     * <pre>
-     * Alternative text to display for this link, if applicable.
-     * </pre>
-     *
-     * <code>string alt = 2;</code>
-     * @return The alt.
-     */
-    @java.lang.Override
-    public java.lang.String getAlt() {
-      java.lang.Object ref = alt_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        alt_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * Alternative text to display for this link, if applicable.
-     * </pre>
-     *
-     * <code>string alt = 2;</code>
-     * @return The bytes for alt.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getAltBytes() {
-      java.lang.Object ref = alt_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        alt_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uri_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(alt_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, alt_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uri_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(alt_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, alt_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof tools.elide.page.MediaAsset.Link)) {
-        return super.equals(obj);
-      }
-      tools.elide.page.MediaAsset.Link other = (tools.elide.page.MediaAsset.Link) obj;
-
-      if (!getUri()
-          .equals(other.getUri())) return false;
-      if (!getAlt()
-          .equals(other.getAlt())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + URI_FIELD_NUMBER;
-      hash = (53 * hash) + getUri().hashCode();
-      hash = (37 * hash) + ALT_FIELD_NUMBER;
-      hash = (53 * hash) + getAlt().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Link parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Link parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Link parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(tools.elide.page.MediaAsset.Link prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * <pre>
      * Describes concrete information about a media link, attached to some web page or data point.
@@ -540,2213 +230,893 @@ private static final long serialVersionUID = 0L;
      *
      * Protobuf type {@code page.MediaAsset.Link}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:page.MediaAsset.Link)
-        tools.elide.page.MediaAsset.LinkOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
-      }
+    public static final class Link
+        extends com.google.protobuf.GeneratedMessageV3
+        implements
+            // @@protoc_insertion_point(message_implements:page.MediaAsset.Link)
+            LinkOrBuilder {
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Link.class, tools.elide.page.MediaAsset.Link.Builder.class);
-      }
+        private static final long serialVersionUID = 0L;
 
-      // Construct using tools.elide.page.MediaAsset.Link.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        uri_ = "";
-
-        alt_ = "";
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Link getDefaultInstanceForType() {
-        return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Link build() {
-        tools.elide.page.MediaAsset.Link result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Link buildPartial() {
-        tools.elide.page.MediaAsset.Link result = new tools.elide.page.MediaAsset.Link(this);
-        result.uri_ = uri_;
-        result.alt_ = alt_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof tools.elide.page.MediaAsset.Link) {
-          return mergeFrom((tools.elide.page.MediaAsset.Link)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(tools.elide.page.MediaAsset.Link other) {
-        if (other == tools.elide.page.MediaAsset.Link.getDefaultInstance()) return this;
-        if (!other.getUri().isEmpty()) {
-          uri_ = other.uri_;
-          onChanged();
-        }
-        if (!other.getAlt().isEmpty()) {
-          alt_ = other.alt_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        tools.elide.page.MediaAsset.Link parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (tools.elide.page.MediaAsset.Link) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object uri_ = "";
-      /**
-       * <pre>
-       * URI to consider for an attached media link.
-       * </pre>
-       *
-       * <code>string uri = 1;</code>
-       * @return The uri.
-       */
-      public java.lang.String getUri() {
-        java.lang.Object ref = uri_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          uri_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * URI to consider for an attached media link.
-       * </pre>
-       *
-       * <code>string uri = 1;</code>
-       * @return The bytes for uri.
-       */
-      public com.google.protobuf.ByteString
-          getUriBytes() {
-        java.lang.Object ref = uri_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          uri_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * URI to consider for an attached media link.
-       * </pre>
-       *
-       * <code>string uri = 1;</code>
-       * @param value The uri to set.
-       * @return This builder for chaining.
-       */
-      public Builder setUri(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        uri_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * URI to consider for an attached media link.
-       * </pre>
-       *
-       * <code>string uri = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearUri() {
-        
-        uri_ = getDefaultInstance().getUri();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * URI to consider for an attached media link.
-       * </pre>
-       *
-       * <code>string uri = 1;</code>
-       * @param value The bytes for uri to set.
-       * @return This builder for chaining.
-       */
-      public Builder setUriBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        uri_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object alt_ = "";
-      /**
-       * <pre>
-       * Alternative text to display for this link, if applicable.
-       * </pre>
-       *
-       * <code>string alt = 2;</code>
-       * @return The alt.
-       */
-      public java.lang.String getAlt() {
-        java.lang.Object ref = alt_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          alt_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Alternative text to display for this link, if applicable.
-       * </pre>
-       *
-       * <code>string alt = 2;</code>
-       * @return The bytes for alt.
-       */
-      public com.google.protobuf.ByteString
-          getAltBytes() {
-        java.lang.Object ref = alt_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          alt_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Alternative text to display for this link, if applicable.
-       * </pre>
-       *
-       * <code>string alt = 2;</code>
-       * @param value The alt to set.
-       * @return This builder for chaining.
-       */
-      public Builder setAlt(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        alt_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Alternative text to display for this link, if applicable.
-       * </pre>
-       *
-       * <code>string alt = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearAlt() {
-        
-        alt_ = getDefaultInstance().getAlt();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Alternative text to display for this link, if applicable.
-       * </pre>
-       *
-       * <code>string alt = 2;</code>
-       * @param value The bytes for alt to set.
-       * @return This builder for chaining.
-       */
-      public Builder setAltBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        alt_ = value;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:page.MediaAsset.Link)
-    }
-
-    // @@protoc_insertion_point(class_scope:page.MediaAsset.Link)
-    private static final tools.elide.page.MediaAsset.Link DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Link();
-    }
-
-    public static tools.elide.page.MediaAsset.Link getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Link>
-        PARSER = new com.google.protobuf.AbstractParser<Link>() {
-      @java.lang.Override
-      public Link parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Link(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Link> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Link> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Link getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface ImageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:page.MediaAsset.Image)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> 
-        getAssetList();
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    tools.elide.page.MediaAsset.Image.ImageAsset getAsset(int index);
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    int getAssetCount();
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> 
-        getAssetOrBuilderList();
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
-        int index);
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an image asset, attached to some web page or data point.
-   * </pre>
-   *
-   * Protobuf type {@code page.MediaAsset.Image}
-   */
-  public static final class Image extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:page.MediaAsset.Image)
-      ImageOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Image.newBuilder() to construct.
-    private Image(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Image() {
-      asset_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Image();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Image(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                asset_ = new java.util.ArrayList<tools.elide.page.MediaAsset.Image.ImageAsset>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              asset_.add(
-                  input.readMessage(tools.elide.page.MediaAsset.Image.ImageAsset.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          asset_ = java.util.Collections.unmodifiableList(asset_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.page.MediaAsset.Image.class, tools.elide.page.MediaAsset.Image.Builder.class);
-    }
-
-    public interface ImageAssetOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:page.MediaAsset.Image.ImageAsset)
-        com.google.protobuf.MessageOrBuilder {
-
-      /**
-       * <pre>
-       * Specifies the intended resolution of this image asset.
-       * </pre>
-       *
-       * <code>float resolution = 1;</code>
-       * @return The resolution.
-       */
-      float getResolution();
-
-      /**
-       * <pre>
-       * Specifies the kind of image attached as this asset.
-       * </pre>
-       *
-       * <code>string mime = 2;</code>
-       * @return The mime.
-       */
-      java.lang.String getMime();
-      /**
-       * <pre>
-       * Specifies the kind of image attached as this asset.
-       * </pre>
-       *
-       * <code>string mime = 2;</code>
-       * @return The bytes for mime.
-       */
-      com.google.protobuf.ByteString
-          getMimeBytes();
-
-      /**
-       * <pre>
-       * Specifies the native width of this image asset.
-       * </pre>
-       *
-       * <code>uint64 width = 3;</code>
-       * @return The width.
-       */
-      long getWidth();
-
-      /**
-       * <pre>
-       * Specifies the native height of this image asset.
-       * </pre>
-       *
-       * <code>uint64 height = 4;</code>
-       * @return The height.
-       */
-      long getHeight();
-
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return Whether the b64 field is set.
-       */
-      boolean hasB64();
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return The b64.
-       */
-      java.lang.String getB64();
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return The bytes for b64.
-       */
-      com.google.protobuf.ByteString
-          getB64Bytes();
-
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return Whether the uri field is set.
-       */
-      boolean hasUri();
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return The uri.
-       */
-      java.lang.String getUri();
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return The bytes for uri.
-       */
-      com.google.protobuf.ByteString
-          getUriBytes();
-
-      public tools.elide.page.MediaAsset.Image.ImageAsset.ContentCase getContentCase();
-    }
-    /**
-     * <pre>
-     * Describes information about an individual image asset, which is part of an attached image.
-     * </pre>
-     *
-     * Protobuf type {@code page.MediaAsset.Image.ImageAsset}
-     */
-    public static final class ImageAsset extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:page.MediaAsset.Image.ImageAsset)
-        ImageAssetOrBuilder {
-    private static final long serialVersionUID = 0L;
-      // Use ImageAsset.newBuilder() to construct.
-      private ImageAsset(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
-      }
-      private ImageAsset() {
-        mime_ = "";
-      }
-
-      @java.lang.Override
-      @SuppressWarnings({"unused"})
-      protected java.lang.Object newInstance(
-          UnusedPrivateParameter unused) {
-        return new ImageAsset();
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-      getUnknownFields() {
-        return this.unknownFields;
-      }
-      private ImageAsset(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 13: {
-
-                resolution_ = input.readFloat();
-                break;
-              }
-              case 18: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                mime_ = s;
-                break;
-              }
-              case 24: {
-
-                width_ = input.readUInt64();
-                break;
-              }
-              case 32: {
-
-                height_ = input.readUInt64();
-                break;
-              }
-              case 82: {
-                java.lang.String s = input.readStringRequireUtf8();
-                contentCase_ = 10;
-                content_ = s;
-                break;
-              }
-              case 162: {
-                java.lang.String s = input.readStringRequireUtf8();
-                contentCase_ = 20;
-                content_ = s;
-                break;
-              }
-              default: {
-                if (!parseUnknownField(
-                    input, unknownFields, extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Image.ImageAsset.class, tools.elide.page.MediaAsset.Image.ImageAsset.Builder.class);
-      }
-
-      private int contentCase_ = 0;
-      private java.lang.Object content_;
-      public enum ContentCase
-          implements com.google.protobuf.Internal.EnumLite,
-              com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-        B64(10),
-        URI(20),
-        CONTENT_NOT_SET(0);
-        private final int value;
-        private ContentCase(int value) {
-          this.value = value;
-        }
-        /**
-         * @param value The number of the enum to look for.
-         * @return The enum associated with the given number.
-         * @deprecated Use {@link #forNumber(int)} instead.
-         */
-        @java.lang.Deprecated
-        public static ContentCase valueOf(int value) {
-          return forNumber(value);
+        // Use Link.newBuilder() to construct.
+        private Link(
+            com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+        ) {
+            super(builder);
         }
 
-        public static ContentCase forNumber(int value) {
-          switch (value) {
-            case 10: return B64;
-            case 20: return URI;
-            case 0: return CONTENT_NOT_SET;
-            default: return null;
-          }
-        }
-        public int getNumber() {
-          return this.value;
-        }
-      };
-
-      public ContentCase
-      getContentCase() {
-        return ContentCase.forNumber(
-            contentCase_);
-      }
-
-      public static final int RESOLUTION_FIELD_NUMBER = 1;
-      private float resolution_;
-      /**
-       * <pre>
-       * Specifies the intended resolution of this image asset.
-       * </pre>
-       *
-       * <code>float resolution = 1;</code>
-       * @return The resolution.
-       */
-      @java.lang.Override
-      public float getResolution() {
-        return resolution_;
-      }
-
-      public static final int MIME_FIELD_NUMBER = 2;
-      private volatile java.lang.Object mime_;
-      /**
-       * <pre>
-       * Specifies the kind of image attached as this asset.
-       * </pre>
-       *
-       * <code>string mime = 2;</code>
-       * @return The mime.
-       */
-      @java.lang.Override
-      public java.lang.String getMime() {
-        java.lang.Object ref = mime_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          mime_ = s;
-          return s;
-        }
-      }
-      /**
-       * <pre>
-       * Specifies the kind of image attached as this asset.
-       * </pre>
-       *
-       * <code>string mime = 2;</code>
-       * @return The bytes for mime.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString
-          getMimeBytes() {
-        java.lang.Object ref = mime_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          mime_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int WIDTH_FIELD_NUMBER = 3;
-      private long width_;
-      /**
-       * <pre>
-       * Specifies the native width of this image asset.
-       * </pre>
-       *
-       * <code>uint64 width = 3;</code>
-       * @return The width.
-       */
-      @java.lang.Override
-      public long getWidth() {
-        return width_;
-      }
-
-      public static final int HEIGHT_FIELD_NUMBER = 4;
-      private long height_;
-      /**
-       * <pre>
-       * Specifies the native height of this image asset.
-       * </pre>
-       *
-       * <code>uint64 height = 4;</code>
-       * @return The height.
-       */
-      @java.lang.Override
-      public long getHeight() {
-        return height_;
-      }
-
-      public static final int B64_FIELD_NUMBER = 10;
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return Whether the b64 field is set.
-       */
-      public boolean hasB64() {
-        return contentCase_ == 10;
-      }
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return The b64.
-       */
-      public java.lang.String getB64() {
-        java.lang.Object ref = "";
-        if (contentCase_ == 10) {
-          ref = content_;
-        }
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (contentCase_ == 10) {
-            content_ = s;
-          }
-          return s;
-        }
-      }
-      /**
-       * <pre>
-       * Raw Base64 content to be embedded directly in an image tag.
-       * </pre>
-       *
-       * <code>string b64 = 10;</code>
-       * @return The bytes for b64.
-       */
-      public com.google.protobuf.ByteString
-          getB64Bytes() {
-        java.lang.Object ref = "";
-        if (contentCase_ == 10) {
-          ref = content_;
-        }
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (contentCase_ == 10) {
-            content_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      public static final int URI_FIELD_NUMBER = 20;
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return Whether the uri field is set.
-       */
-      public boolean hasUri() {
-        return contentCase_ == 20;
-      }
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return The uri.
-       */
-      public java.lang.String getUri() {
-        java.lang.Object ref = "";
-        if (contentCase_ == 20) {
-          ref = content_;
-        }
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (contentCase_ == 20) {
-            content_ = s;
-          }
-          return s;
-        }
-      }
-      /**
-       * <pre>
-       * URI to be used in reference to this image asset.
-       * </pre>
-       *
-       * <code>string uri = 20;</code>
-       * @return The bytes for uri.
-       */
-      public com.google.protobuf.ByteString
-          getUriBytes() {
-        java.lang.Object ref = "";
-        if (contentCase_ == 20) {
-          ref = content_;
-        }
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (contentCase_ == 20) {
-            content_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      private byte memoizedIsInitialized = -1;
-      @java.lang.Override
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      @java.lang.Override
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        if (java.lang.Float.floatToRawIntBits(resolution_) != 0) {
-          output.writeFloat(1, resolution_);
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(mime_)) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, mime_);
-        }
-        if (width_ != 0L) {
-          output.writeUInt64(3, width_);
-        }
-        if (height_ != 0L) {
-          output.writeUInt64(4, height_);
-        }
-        if (contentCase_ == 10) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 10, content_);
-        }
-        if (contentCase_ == 20) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 20, content_);
-        }
-        unknownFields.writeTo(output);
-      }
-
-      @java.lang.Override
-      public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (java.lang.Float.floatToRawIntBits(resolution_) != 0) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeFloatSize(1, resolution_);
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(mime_)) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, mime_);
-        }
-        if (width_ != 0L) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeUInt64Size(3, width_);
-        }
-        if (height_ != 0L) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeUInt64Size(4, height_);
-        }
-        if (contentCase_ == 10) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, content_);
-        }
-        if (contentCase_ == 20) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, content_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-      }
-
-      @java.lang.Override
-      public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-         return true;
-        }
-        if (!(obj instanceof tools.elide.page.MediaAsset.Image.ImageAsset)) {
-          return super.equals(obj);
-        }
-        tools.elide.page.MediaAsset.Image.ImageAsset other = (tools.elide.page.MediaAsset.Image.ImageAsset) obj;
-
-        if (java.lang.Float.floatToIntBits(getResolution())
-            != java.lang.Float.floatToIntBits(
-                other.getResolution())) return false;
-        if (!getMime()
-            .equals(other.getMime())) return false;
-        if (getWidth()
-            != other.getWidth()) return false;
-        if (getHeight()
-            != other.getHeight()) return false;
-        if (!getContentCase().equals(other.getContentCase())) return false;
-        switch (contentCase_) {
-          case 10:
-            if (!getB64()
-                .equals(other.getB64())) return false;
-            break;
-          case 20:
-            if (!getUri()
-                .equals(other.getUri())) return false;
-            break;
-          case 0:
-          default:
-        }
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-      }
-
-      @java.lang.Override
-      public int hashCode() {
-        if (memoizedHashCode != 0) {
-          return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + RESOLUTION_FIELD_NUMBER;
-        hash = (53 * hash) + java.lang.Float.floatToIntBits(
-            getResolution());
-        hash = (37 * hash) + MIME_FIELD_NUMBER;
-        hash = (53 * hash) + getMime().hashCode();
-        hash = (37 * hash) + WIDTH_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getWidth());
-        hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getHeight());
-        switch (contentCase_) {
-          case 10:
-            hash = (37 * hash) + B64_FIELD_NUMBER;
-            hash = (53 * hash) + getB64().hashCode();
-            break;
-          case 20:
-            hash = (37 * hash) + URI_FIELD_NUMBER;
-            hash = (53 * hash) + getUri().hashCode();
-            break;
-          case 0:
-          default:
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-      }
-
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          java.nio.ByteBuffer data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          java.nio.ByteBuffer data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-
-      @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
-      public static Builder newBuilder(tools.elide.page.MediaAsset.Image.ImageAsset prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-      }
-      @java.lang.Override
-      public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder() : new Builder().mergeFrom(this);
-      }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * <pre>
-       * Describes information about an individual image asset, which is part of an attached image.
-       * </pre>
-       *
-       * Protobuf type {@code page.MediaAsset.Image.ImageAsset}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:page.MediaAsset.Image.ImageAsset)
-          tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
+        private Link() {
+            uri_ = "";
+            alt_ = "";
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  tools.elide.page.MediaAsset.Image.ImageAsset.class, tools.elide.page.MediaAsset.Image.ImageAsset.Builder.class);
-        }
-
-        // Construct using tools.elide.page.MediaAsset.Image.ImageAsset.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
-        }
-        @java.lang.Override
-        public Builder clear() {
-          super.clear();
-          resolution_ = 0F;
-
-          mime_ = "";
-
-          width_ = 0L;
-
-          height_ = 0L;
-
-          contentCase_ = 0;
-          content_ = null;
-          return this;
+        @SuppressWarnings({ "unused" })
+        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+            return new Link();
         }
 
         @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
+        public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+            return this.unknownFields;
         }
 
-        @java.lang.Override
-        public tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstanceForType() {
-          return tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public tools.elide.page.MediaAsset.Image.ImageAsset build() {
-          tools.elide.page.MediaAsset.Image.ImageAsset result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.page.MediaAsset.Image.ImageAsset buildPartial() {
-          tools.elide.page.MediaAsset.Image.ImageAsset result = new tools.elide.page.MediaAsset.Image.ImageAsset(this);
-          result.resolution_ = resolution_;
-          result.mime_ = mime_;
-          result.width_ = width_;
-          result.height_ = height_;
-          if (contentCase_ == 10) {
-            result.content_ = content_;
-          }
-          if (contentCase_ == 20) {
-            result.content_ = content_;
-          }
-          result.contentCase_ = contentCase_;
-          onBuilt();
-          return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-          return super.clone();
-        }
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.setField(field, value);
-        }
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field) {
-          return super.clearField(field);
-        }
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-          return super.clearOneof(oneof);
-        }
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index, java.lang.Object value) {
-          return super.setRepeatedField(field, index, value);
-        }
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.addRepeatedField(field, value);
-        }
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof tools.elide.page.MediaAsset.Image.ImageAsset) {
-            return mergeFrom((tools.elide.page.MediaAsset.Image.ImageAsset)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(tools.elide.page.MediaAsset.Image.ImageAsset other) {
-          if (other == tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance()) return this;
-          if (other.getResolution() != 0F) {
-            setResolution(other.getResolution());
-          }
-          if (!other.getMime().isEmpty()) {
-            mime_ = other.mime_;
-            onChanged();
-          }
-          if (other.getWidth() != 0L) {
-            setWidth(other.getWidth());
-          }
-          if (other.getHeight() != 0L) {
-            setHeight(other.getHeight());
-          }
-          switch (other.getContentCase()) {
-            case B64: {
-              contentCase_ = 10;
-              content_ = other.content_;
-              onChanged();
-              break;
-            }
-            case URI: {
-              contentCase_ = 20;
-              content_ = other.content_;
-              onChanged();
-              break;
-            }
-            case CONTENT_NOT_SET: {
-              break;
-            }
-          }
-          this.mergeUnknownFields(other.unknownFields);
-          onChanged();
-          return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-          return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
+        private Link(
             com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          tools.elide.page.MediaAsset.Image.ImageAsset parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (tools.elide.page.MediaAsset.Image.ImageAsset) e.getUnfinishedMessage();
-            throw e.unwrapIOException();
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-          }
-          return this;
-        }
-        private int contentCase_ = 0;
-        private java.lang.Object content_;
-        public ContentCase
-            getContentCase() {
-          return ContentCase.forNumber(
-              contentCase_);
-        }
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 10:
+                            {
+                                java.lang.String s = input.readStringRequireUtf8();
 
-        public Builder clearContent() {
-          contentCase_ = 0;
-          content_ = null;
-          onChanged();
-          return this;
-        }
+                                uri_ = s;
+                                break;
+                            }
+                        case 18:
+                            {
+                                java.lang.String s = input.readStringRequireUtf8();
 
-
-        private float resolution_ ;
-        /**
-         * <pre>
-         * Specifies the intended resolution of this image asset.
-         * </pre>
-         *
-         * <code>float resolution = 1;</code>
-         * @return The resolution.
-         */
-        @java.lang.Override
-        public float getResolution() {
-          return resolution_;
-        }
-        /**
-         * <pre>
-         * Specifies the intended resolution of this image asset.
-         * </pre>
-         *
-         * <code>float resolution = 1;</code>
-         * @param value The resolution to set.
-         * @return This builder for chaining.
-         */
-        public Builder setResolution(float value) {
-          
-          resolution_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Specifies the intended resolution of this image asset.
-         * </pre>
-         *
-         * <code>float resolution = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearResolution() {
-          
-          resolution_ = 0F;
-          onChanged();
-          return this;
-        }
-
-        private java.lang.Object mime_ = "";
-        /**
-         * <pre>
-         * Specifies the kind of image attached as this asset.
-         * </pre>
-         *
-         * <code>string mime = 2;</code>
-         * @return The mime.
-         */
-        public java.lang.String getMime() {
-          java.lang.Object ref = mime_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            mime_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <pre>
-         * Specifies the kind of image attached as this asset.
-         * </pre>
-         *
-         * <code>string mime = 2;</code>
-         * @return The bytes for mime.
-         */
-        public com.google.protobuf.ByteString
-            getMimeBytes() {
-          java.lang.Object ref = mime_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            mime_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <pre>
-         * Specifies the kind of image attached as this asset.
-         * </pre>
-         *
-         * <code>string mime = 2;</code>
-         * @param value The mime to set.
-         * @return This builder for chaining.
-         */
-        public Builder setMime(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          mime_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Specifies the kind of image attached as this asset.
-         * </pre>
-         *
-         * <code>string mime = 2;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearMime() {
-          
-          mime_ = getDefaultInstance().getMime();
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Specifies the kind of image attached as this asset.
-         * </pre>
-         *
-         * <code>string mime = 2;</code>
-         * @param value The bytes for mime to set.
-         * @return This builder for chaining.
-         */
-        public Builder setMimeBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          mime_ = value;
-          onChanged();
-          return this;
-        }
-
-        private long width_ ;
-        /**
-         * <pre>
-         * Specifies the native width of this image asset.
-         * </pre>
-         *
-         * <code>uint64 width = 3;</code>
-         * @return The width.
-         */
-        @java.lang.Override
-        public long getWidth() {
-          return width_;
-        }
-        /**
-         * <pre>
-         * Specifies the native width of this image asset.
-         * </pre>
-         *
-         * <code>uint64 width = 3;</code>
-         * @param value The width to set.
-         * @return This builder for chaining.
-         */
-        public Builder setWidth(long value) {
-          
-          width_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Specifies the native width of this image asset.
-         * </pre>
-         *
-         * <code>uint64 width = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearWidth() {
-          
-          width_ = 0L;
-          onChanged();
-          return this;
-        }
-
-        private long height_ ;
-        /**
-         * <pre>
-         * Specifies the native height of this image asset.
-         * </pre>
-         *
-         * <code>uint64 height = 4;</code>
-         * @return The height.
-         */
-        @java.lang.Override
-        public long getHeight() {
-          return height_;
-        }
-        /**
-         * <pre>
-         * Specifies the native height of this image asset.
-         * </pre>
-         *
-         * <code>uint64 height = 4;</code>
-         * @param value The height to set.
-         * @return This builder for chaining.
-         */
-        public Builder setHeight(long value) {
-          
-          height_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Specifies the native height of this image asset.
-         * </pre>
-         *
-         * <code>uint64 height = 4;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearHeight() {
-          
-          height_ = 0L;
-          onChanged();
-          return this;
-        }
-
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @return Whether the b64 field is set.
-         */
-        @java.lang.Override
-        public boolean hasB64() {
-          return contentCase_ == 10;
-        }
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @return The b64.
-         */
-        @java.lang.Override
-        public java.lang.String getB64() {
-          java.lang.Object ref = "";
-          if (contentCase_ == 10) {
-            ref = content_;
-          }
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            if (contentCase_ == 10) {
-              content_ = s;
+                                alt_ = s;
+                                break;
+                            }
+                        default:
+                            {
+                                if (
+                                    !parseUnknownField(
+                                        input,
+                                        unknownFields,
+                                        extensionRegistry,
+                                        tag
+                                    )
+                                ) {
+                                    done = true;
+                                }
+                                break;
+                            }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e
+                    .asInvalidProtocolBufferException()
+                    .setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                    .setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
         }
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @return The bytes for b64.
-         */
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
+        }
+
         @java.lang.Override
-        public com.google.protobuf.ByteString
-            getB64Bytes() {
-          java.lang.Object ref = "";
-          if (contentCase_ == 10) {
-            ref = content_;
-          }
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            if (contentCase_ == 10) {
-              content_ = b;
-            }
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.page.MediaAsset.Link.class,
+                tools.elide.page.MediaAsset.Link.Builder.class
+            );
         }
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @param value The b64 to set.
-         * @return This builder for chaining.
-         */
-        public Builder setB64(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  contentCase_ = 10;
-          content_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearB64() {
-          if (contentCase_ == 10) {
-            contentCase_ = 0;
-            content_ = null;
-            onChanged();
-          }
-          return this;
-        }
-        /**
-         * <pre>
-         * Raw Base64 content to be embedded directly in an image tag.
-         * </pre>
-         *
-         * <code>string b64 = 10;</code>
-         * @param value The bytes for b64 to set.
-         * @return This builder for chaining.
-         */
-        public Builder setB64Bytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          contentCase_ = 10;
-          content_ = value;
-          onChanged();
-          return this;
-        }
+
+        public static final int URI_FIELD_NUMBER = 1;
+        private volatile java.lang.Object uri_;
 
         /**
          * <pre>
-         * URI to be used in reference to this image asset.
+         * URI to consider for an attached media link.
          * </pre>
          *
-         * <code>string uri = 20;</code>
-         * @return Whether the uri field is set.
-         */
-        @java.lang.Override
-        public boolean hasUri() {
-          return contentCase_ == 20;
-        }
-        /**
-         * <pre>
-         * URI to be used in reference to this image asset.
-         * </pre>
-         *
-         * <code>string uri = 20;</code>
+         * <code>string uri = 1;</code>
          * @return The uri.
          */
         @java.lang.Override
         public java.lang.String getUri() {
-          java.lang.Object ref = "";
-          if (contentCase_ == 20) {
-            ref = content_;
-          }
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            if (contentCase_ == 20) {
-              content_ = s;
+            java.lang.Object ref = uri_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                uri_ = s;
+                return s;
             }
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
         }
+
         /**
          * <pre>
-         * URI to be used in reference to this image asset.
+         * URI to consider for an attached media link.
          * </pre>
          *
-         * <code>string uri = 20;</code>
+         * <code>string uri = 1;</code>
          * @return The bytes for uri.
          */
         @java.lang.Override
-        public com.google.protobuf.ByteString
-            getUriBytes() {
-          java.lang.Object ref = "";
-          if (contentCase_ == 20) {
-            ref = content_;
-          }
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            if (contentCase_ == 20) {
-              content_ = b;
+        public com.google.protobuf.ByteString getUriBytes() {
+            java.lang.Object ref = uri_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                uri_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
             }
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
         }
+
+        public static final int ALT_FIELD_NUMBER = 2;
+        private volatile java.lang.Object alt_;
+
         /**
          * <pre>
-         * URI to be used in reference to this image asset.
+         * Alternative text to display for this link, if applicable.
          * </pre>
          *
-         * <code>string uri = 20;</code>
-         * @param value The uri to set.
-         * @return This builder for chaining.
+         * <code>string alt = 2;</code>
+         * @return The alt.
          */
-        public Builder setUri(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  contentCase_ = 20;
-          content_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * URI to be used in reference to this image asset.
-         * </pre>
-         *
-         * <code>string uri = 20;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearUri() {
-          if (contentCase_ == 20) {
-            contentCase_ = 0;
-            content_ = null;
-            onChanged();
-          }
-          return this;
-        }
-        /**
-         * <pre>
-         * URI to be used in reference to this image asset.
-         * </pre>
-         *
-         * <code>string uri = 20;</code>
-         * @param value The bytes for uri to set.
-         * @return This builder for chaining.
-         */
-        public Builder setUriBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          contentCase_ = 20;
-          content_ = value;
-          onChanged();
-          return this;
-        }
         @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.setUnknownFields(unknownFields);
+        public java.lang.String getAlt() {
+            java.lang.Object ref = alt_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                alt_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <pre>
+         * Alternative text to display for this link, if applicable.
+         * </pre>
+         *
+         * <code>string alt = 2;</code>
+         * @return The bytes for alt.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getAltBytes() {
+            java.lang.Object ref = alt_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                alt_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
         }
 
         @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.mergeUnknownFields(unknownFields);
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
+                com.google.protobuf.GeneratedMessageV3.writeString(
+                    output,
+                    1,
+                    uri_
+                );
+            }
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(alt_)) {
+                com.google.protobuf.GeneratedMessageV3.writeString(
+                    output,
+                    2,
+                    alt_
+                );
+            }
+            unknownFields.writeTo(output);
         }
 
-
-        // @@protoc_insertion_point(builder_scope:page.MediaAsset.Image.ImageAsset)
-      }
-
-      // @@protoc_insertion_point(class_scope:page.MediaAsset.Image.ImageAsset)
-      private static final tools.elide.page.MediaAsset.Image.ImageAsset DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Image.ImageAsset();
-      }
-
-      public static tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static final com.google.protobuf.Parser<ImageAsset>
-          PARSER = new com.google.protobuf.AbstractParser<ImageAsset>() {
         @java.lang.Override
-        public ImageAsset parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
+                size +=
+                    com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                        1,
+                        uri_
+                    );
+            }
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(alt_)) {
+                size +=
+                    com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                        2,
+                        alt_
+                    );
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof tools.elide.page.MediaAsset.Link)) {
+                return super.equals(obj);
+            }
+            tools.elide.page.MediaAsset.Link other = (tools.elide.page.MediaAsset.Link) obj;
+
+            if (!getUri().equals(other.getUri())) return false;
+            if (!getAlt().equals(other.getAlt())) return false;
+            if (!unknownFields.equals(other.unknownFields)) return false;
+            return true;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + URI_FIELD_NUMBER;
+            hash = (53 * hash) + getUri().hashCode();
+            hash = (37 * hash) + ALT_FIELD_NUMBER;
+            hash = (53 * hash) + getAlt().hashCode();
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            java.nio.ByteBuffer data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            com.google.protobuf.ByteString data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(byte[] data)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ImageAsset(input, extensionRegistry);
+            return PARSER.parseFrom(data);
         }
-      };
 
-      public static com.google.protobuf.Parser<ImageAsset> parser() {
-        return PARSER;
-      }
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
 
-      @java.lang.Override
-      public com.google.protobuf.Parser<ImageAsset> getParserForType() {
-        return PARSER;
-      }
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
-      }
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
 
+        public static tools.elide.page.MediaAsset.Link parseDelimitedFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            com.google.protobuf.CodedInputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Link parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(
+            tools.elide.page.MediaAsset.Link prototype
+        ) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                ? new Builder()
+                : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about a media link, attached to some web page or data point.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Link}
+         */
+        public static final class Builder
+            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+            implements
+                // @@protoc_insertion_point(builder_implements:page.MediaAsset.Link)
+                tools.elide.page.MediaAsset.LinkOrBuilder {
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Link.class,
+                    tools.elide.page.MediaAsset.Link.Builder.class
+                );
+            }
+
+            // Construct using tools.elide.page.MediaAsset.Link.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (
+                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                ) {}
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                uri_ = "";
+
+                alt_ = "";
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Link_descriptor;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Link getDefaultInstanceForType() {
+                return tools.elide.page.MediaAsset.Link.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Link build() {
+                tools.elide.page.MediaAsset.Link result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Link buildPartial() {
+                tools.elide.page.MediaAsset.Link result = new tools.elide.page.MediaAsset.Link(
+                    this
+                );
+                result.uri_ = uri_;
+                result.alt_ = alt_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field
+            ) {
+                return super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof
+            ) {
+                return super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value
+            ) {
+                return super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof tools.elide.page.MediaAsset.Link) {
+                    return mergeFrom((tools.elide.page.MediaAsset.Link) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(tools.elide.page.MediaAsset.Link other) {
+                if (
+                    other ==
+                    tools.elide.page.MediaAsset.Link.getDefaultInstance()
+                ) return this;
+                if (!other.getUri().isEmpty()) {
+                    uri_ = other.uri_;
+                    onChanged();
+                }
+                if (!other.getAlt().isEmpty()) {
+                    alt_ = other.alt_;
+                    onChanged();
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                tools.elide.page.MediaAsset.Link parsedMessage = null;
+                try {
+                    parsedMessage =
+                        PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage =
+                        (tools.elide.page.MediaAsset.Link) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private java.lang.Object uri_ = "";
+
+            /**
+             * <pre>
+             * URI to consider for an attached media link.
+             * </pre>
+             *
+             * <code>string uri = 1;</code>
+             * @return The uri.
+             */
+            public java.lang.String getUri() {
+                java.lang.Object ref = uri_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    uri_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * URI to consider for an attached media link.
+             * </pre>
+             *
+             * <code>string uri = 1;</code>
+             * @return The bytes for uri.
+             */
+            public com.google.protobuf.ByteString getUriBytes() {
+                java.lang.Object ref = uri_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    uri_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * URI to consider for an attached media link.
+             * </pre>
+             *
+             * <code>string uri = 1;</code>
+             * @param value The uri to set.
+             * @return This builder for chaining.
+             */
+            public Builder setUri(java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                uri_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * URI to consider for an attached media link.
+             * </pre>
+             *
+             * <code>string uri = 1;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearUri() {
+                uri_ = getDefaultInstance().getUri();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * URI to consider for an attached media link.
+             * </pre>
+             *
+             * <code>string uri = 1;</code>
+             * @param value The bytes for uri to set.
+             * @return This builder for chaining.
+             */
+            public Builder setUriBytes(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                uri_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object alt_ = "";
+
+            /**
+             * <pre>
+             * Alternative text to display for this link, if applicable.
+             * </pre>
+             *
+             * <code>string alt = 2;</code>
+             * @return The alt.
+             */
+            public java.lang.String getAlt() {
+                java.lang.Object ref = alt_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    alt_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Alternative text to display for this link, if applicable.
+             * </pre>
+             *
+             * <code>string alt = 2;</code>
+             * @return The bytes for alt.
+             */
+            public com.google.protobuf.ByteString getAltBytes() {
+                java.lang.Object ref = alt_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    alt_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Alternative text to display for this link, if applicable.
+             * </pre>
+             *
+             * <code>string alt = 2;</code>
+             * @param value The alt to set.
+             * @return This builder for chaining.
+             */
+            public Builder setAlt(java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                alt_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Alternative text to display for this link, if applicable.
+             * </pre>
+             *
+             * <code>string alt = 2;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearAlt() {
+                alt_ = getDefaultInstance().getAlt();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Alternative text to display for this link, if applicable.
+             * </pre>
+             *
+             * <code>string alt = 2;</code>
+             * @param value The bytes for alt to set.
+             * @return This builder for chaining.
+             */
+            public Builder setAltBytes(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                alt_ = value;
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.setUnknownFields(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+            // @@protoc_insertion_point(builder_scope:page.MediaAsset.Link)
+        }
+
+        // @@protoc_insertion_point(class_scope:page.MediaAsset.Link)
+        private static final tools.elide.page.MediaAsset.Link DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Link();
+        }
+
+        public static tools.elide.page.MediaAsset.Link getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<Link> PARSER = new com.google.protobuf.AbstractParser<Link>() {
+            @java.lang.Override
+            public Link parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Link(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<Link> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Link> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Link getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
     }
 
-    public static final int ASSET_FIELD_NUMBER = 1;
-    private java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> asset_;
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> getAssetList() {
-      return asset_;
-    }
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> 
-        getAssetOrBuilderList() {
-      return asset_;
-    }
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    @java.lang.Override
-    public int getAssetCount() {
-      return asset_.size();
-    }
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Image.ImageAsset getAsset(int index) {
-      return asset_.get(index);
-    }
-    /**
-     * <pre>
-     * Concrete information regarding this image asset.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-     */
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
-        int index) {
-      return asset_.get(index);
+    public interface ImageOrBuilder
+        extends
+            // @@protoc_insertion_point(interface_extends:page.MediaAsset.Image)
+            com.google.protobuf.MessageOrBuilder {
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> getAssetList();
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        tools.elide.page.MediaAsset.Image.ImageAsset getAsset(int index);
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        int getAssetCount();
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> getAssetOrBuilderList();
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
+            int index
+        );
     }
 
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < asset_.size(); i++) {
-        output.writeMessage(1, asset_.get(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < asset_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, asset_.get(i));
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof tools.elide.page.MediaAsset.Image)) {
-        return super.equals(obj);
-      }
-      tools.elide.page.MediaAsset.Image other = (tools.elide.page.MediaAsset.Image) obj;
-
-      if (!getAssetList()
-          .equals(other.getAssetList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      if (getAssetCount() > 0) {
-        hash = (37 * hash) + ASSET_FIELD_NUMBER;
-        hash = (53 * hash) + getAssetList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Image parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Image parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Image parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(tools.elide.page.MediaAsset.Image prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * <pre>
      * Describes concrete information about an image asset, attached to some web page or data point.
@@ -2754,2205 +1124,2721 @@ private static final long serialVersionUID = 0L;
      *
      * Protobuf type {@code page.MediaAsset.Image}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:page.MediaAsset.Image)
-        tools.elide.page.MediaAsset.ImageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
-      }
+    public static final class Image
+        extends com.google.protobuf.GeneratedMessageV3
+        implements
+            // @@protoc_insertion_point(message_implements:page.MediaAsset.Image)
+            ImageOrBuilder {
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Image.class, tools.elide.page.MediaAsset.Image.Builder.class);
-      }
+        private static final long serialVersionUID = 0L;
 
-      // Construct using tools.elide.page.MediaAsset.Image.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getAssetFieldBuilder();
+        // Use Image.newBuilder() to construct.
+        private Image(
+            com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+        ) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        if (assetBuilder_ == null) {
-          asset_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          assetBuilder_.clear();
+
+        private Image() {
+            asset_ = java.util.Collections.emptyList();
         }
-        return this;
-      }
 
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Image getDefaultInstanceForType() {
-        return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Image build() {
-        tools.elide.page.MediaAsset.Image result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        @java.lang.Override
+        @SuppressWarnings({ "unused" })
+        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+            return new Image();
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Image buildPartial() {
-        tools.elide.page.MediaAsset.Image result = new tools.elide.page.MediaAsset.Image(this);
-        int from_bitField0_ = bitField0_;
-        if (assetBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            asset_ = java.util.Collections.unmodifiableList(asset_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.asset_ = asset_;
-        } else {
-          result.asset_ = assetBuilder_.build();
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+            return this.unknownFields;
         }
-        onBuilt();
-        return result;
-      }
 
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof tools.elide.page.MediaAsset.Image) {
-          return mergeFrom((tools.elide.page.MediaAsset.Image)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(tools.elide.page.MediaAsset.Image other) {
-        if (other == tools.elide.page.MediaAsset.Image.getDefaultInstance()) return this;
-        if (assetBuilder_ == null) {
-          if (!other.asset_.isEmpty()) {
-            if (asset_.isEmpty()) {
-              asset_ = other.asset_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureAssetIsMutable();
-              asset_.addAll(other.asset_);
+        private Image(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            onChanged();
-          }
-        } else {
-          if (!other.asset_.isEmpty()) {
-            if (assetBuilder_.isEmpty()) {
-              assetBuilder_.dispose();
-              assetBuilder_ = null;
-              asset_ = other.asset_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              assetBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getAssetFieldBuilder() : null;
-            } else {
-              assetBuilder_.addAllMessages(other.asset_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        tools.elide.page.MediaAsset.Image parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (tools.elide.page.MediaAsset.Image) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> asset_ =
-        java.util.Collections.emptyList();
-      private void ensureAssetIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          asset_ = new java.util.ArrayList<tools.elide.page.MediaAsset.Image.ImageAsset>(asset_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> assetBuilder_;
-
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> getAssetList() {
-        if (assetBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(asset_);
-        } else {
-          return assetBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public int getAssetCount() {
-        if (assetBuilder_ == null) {
-          return asset_.size();
-        } else {
-          return assetBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public tools.elide.page.MediaAsset.Image.ImageAsset getAsset(int index) {
-        if (assetBuilder_ == null) {
-          return asset_.get(index);
-        } else {
-          return assetBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder setAsset(
-          int index, tools.elide.page.MediaAsset.Image.ImageAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.set(index, value);
-          onChanged();
-        } else {
-          assetBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder setAsset(
-          int index, tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder addAsset(tools.elide.page.MediaAsset.Image.ImageAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.add(value);
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder addAsset(
-          int index, tools.elide.page.MediaAsset.Image.ImageAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.add(index, value);
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder addAsset(
-          tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.add(builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder addAsset(
-          int index, tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder addAllAsset(
-          java.lang.Iterable<? extends tools.elide.page.MediaAsset.Image.ImageAsset> values) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, asset_);
-          onChanged();
-        } else {
-          assetBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder clearAsset() {
-        if (assetBuilder_ == null) {
-          asset_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          assetBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public Builder removeAsset(int index) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.remove(index);
-          onChanged();
-        } else {
-          assetBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public tools.elide.page.MediaAsset.Image.ImageAsset.Builder getAssetBuilder(
-          int index) {
-        return getAssetFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
-          int index) {
-        if (assetBuilder_ == null) {
-          return asset_.get(index);  } else {
-          return assetBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> 
-           getAssetOrBuilderList() {
-        if (assetBuilder_ != null) {
-          return assetBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(asset_);
-        }
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public tools.elide.page.MediaAsset.Image.ImageAsset.Builder addAssetBuilder() {
-        return getAssetFieldBuilder().addBuilder(
-            tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public tools.elide.page.MediaAsset.Image.ImageAsset.Builder addAssetBuilder(
-          int index) {
-        return getAssetFieldBuilder().addBuilder(
-            index, tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Concrete information regarding this image asset.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
-       */
-      public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset.Builder> 
-           getAssetBuilderList() {
-        return getAssetFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> 
-          getAssetFieldBuilder() {
-        if (assetBuilder_ == null) {
-          assetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder>(
-                  asset_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          asset_ = null;
-        }
-        return assetBuilder_;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:page.MediaAsset.Image)
-    }
-
-    // @@protoc_insertion_point(class_scope:page.MediaAsset.Image)
-    private static final tools.elide.page.MediaAsset.Image DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Image();
-    }
-
-    public static tools.elide.page.MediaAsset.Image getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Image>
-        PARSER = new com.google.protobuf.AbstractParser<Image>() {
-      @java.lang.Override
-      public Image parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Image(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Image> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Image> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Image getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface VideoOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:page.MediaAsset.Video)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * Describes where the video may be streamed from, or accessed.
-     * </pre>
-     *
-     * <code>.page.VideoProvider provider = 1;</code>
-     * @return The enum numeric value on the wire for provider.
-     */
-    int getProviderValue();
-    /**
-     * <pre>
-     * Describes where the video may be streamed from, or accessed.
-     * </pre>
-     *
-     * <code>.page.VideoProvider provider = 1;</code>
-     * @return The provider.
-     */
-    tools.elide.page.VideoProvider getProvider();
-
-    /**
-     * <pre>
-     * Title to display for this video asset.
-     * </pre>
-     *
-     * <code>string title = 2;</code>
-     * @return The title.
-     */
-    java.lang.String getTitle();
-    /**
-     * <pre>
-     * Title to display for this video asset.
-     * </pre>
-     *
-     * <code>string title = 2;</code>
-     * @return The bytes for title.
-     */
-    com.google.protobuf.ByteString
-        getTitleBytes();
-
-    /**
-     * <pre>
-     * Description for this video asset.
-     * </pre>
-     *
-     * <code>string description = 3;</code>
-     * @return The description.
-     */
-    java.lang.String getDescription();
-    /**
-     * <pre>
-     * Description for this video asset.
-     * </pre>
-     *
-     * <code>string description = 3;</code>
-     * @return The bytes for description.
-     */
-    com.google.protobuf.ByteString
-        getDescriptionBytes();
-
-    /**
-     * <pre>
-     * Duration of the video asset, in milliseconds.
-     * </pre>
-     *
-     * <code>uint64 run_time = 4;</code>
-     * @return The runTime.
-     */
-    long getRunTime();
-
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> 
-        getAssetList();
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    tools.elide.page.MediaAsset.Video.VideoAsset getAsset(int index);
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    int getAssetCount();
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> 
-        getAssetOrBuilderList();
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
-        int index);
-  }
-  /**
-   * <pre>
-   * Describes concrete information about a video asset, attached to some web page or data point.
-   * </pre>
-   *
-   * Protobuf type {@code page.MediaAsset.Video}
-   */
-  public static final class Video extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:page.MediaAsset.Video)
-      VideoOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Video.newBuilder() to construct.
-    private Video(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Video() {
-      provider_ = 0;
-      title_ = "";
-      description_ = "";
-      asset_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Video();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Video(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-              int rawValue = input.readEnum();
-
-              provider_ = rawValue;
-              break;
-            }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              title_ = s;
-              break;
-            }
-            case 26: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              description_ = s;
-              break;
-            }
-            case 32: {
-
-              runTime_ = input.readUInt64();
-              break;
-            }
-            case 42: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                asset_ = new java.util.ArrayList<tools.elide.page.MediaAsset.Video.VideoAsset>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              asset_.add(
-                  input.readMessage(tools.elide.page.MediaAsset.Video.VideoAsset.parser(), extensionRegistry));
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          asset_ = java.util.Collections.unmodifiableList(asset_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.page.MediaAsset.Video.class, tools.elide.page.MediaAsset.Video.Builder.class);
-    }
-
-    public interface VideoAssetOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:page.MediaAsset.Video.VideoAsset)
-        com.google.protobuf.MessageOrBuilder {
-
-      /**
-       * <pre>
-       * Resolutions at which a video might be available.
-       * </pre>
-       *
-       * <code>.page.VideoResolution resolution = 1;</code>
-       * @return The enum numeric value on the wire for resolution.
-       */
-      int getResolutionValue();
-      /**
-       * <pre>
-       * Resolutions at which a video might be available.
-       * </pre>
-       *
-       * <code>.page.VideoResolution resolution = 1;</code>
-       * @return The resolution.
-       */
-      tools.elide.page.VideoResolution getResolution();
-
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       * @return Whether the thumb field is set.
-       */
-      boolean hasThumb();
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       * @return The thumb.
-       */
-      tools.elide.page.MediaAsset.Image getThumb();
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       */
-      tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder();
-
-      /**
-       * <pre>
-       * URI where the video may be streamed or accessed.
-       * </pre>
-       *
-       * <code>string uri = 3;</code>
-       * @return The uri.
-       */
-      java.lang.String getUri();
-      /**
-       * <pre>
-       * URI where the video may be streamed or accessed.
-       * </pre>
-       *
-       * <code>string uri = 3;</code>
-       * @return The bytes for uri.
-       */
-      com.google.protobuf.ByteString
-          getUriBytes();
-    }
-    /**
-     * <pre>
-     * Describes information about an individual video asset, which is part of an attached video.
-     * </pre>
-     *
-     * Protobuf type {@code page.MediaAsset.Video.VideoAsset}
-     */
-    public static final class VideoAsset extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:page.MediaAsset.Video.VideoAsset)
-        VideoAssetOrBuilder {
-    private static final long serialVersionUID = 0L;
-      // Use VideoAsset.newBuilder() to construct.
-      private VideoAsset(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
-      }
-      private VideoAsset() {
-        resolution_ = 0;
-        uri_ = "";
-      }
-
-      @java.lang.Override
-      @SuppressWarnings({"unused"})
-      protected java.lang.Object newInstance(
-          UnusedPrivateParameter unused) {
-        return new VideoAsset();
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-      getUnknownFields() {
-        return this.unknownFields;
-      }
-      private VideoAsset(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 8: {
-                int rawValue = input.readEnum();
-
-                resolution_ = rawValue;
-                break;
-              }
-              case 18: {
-                tools.elide.page.MediaAsset.Image.Builder subBuilder = null;
-                if (thumb_ != null) {
-                  subBuilder = thumb_.toBuilder();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 10:
+                            {
+                                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                                    asset_ =
+                                        new java.util.ArrayList<tools.elide.page.MediaAsset.Image.ImageAsset>();
+                                    mutable_bitField0_ |= 0x00000001;
+                                }
+                                asset_.add(
+                                    input.readMessage(
+                                        tools.elide.page.MediaAsset.Image.ImageAsset.parser(),
+                                        extensionRegistry
+                                    )
+                                );
+                                break;
+                            }
+                        default:
+                            {
+                                if (
+                                    !parseUnknownField(
+                                        input,
+                                        unknownFields,
+                                        extensionRegistry,
+                                        tag
+                                    )
+                                ) {
+                                    done = true;
+                                }
+                                break;
+                            }
+                    }
                 }
-                thumb_ = input.readMessage(tools.elide.page.MediaAsset.Image.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(thumb_);
-                  thumb_ = subBuilder.buildPartial();
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e
+                    .asInvalidProtocolBufferException()
+                    .setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                    .setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000001) != 0)) {
+                    asset_ = java.util.Collections.unmodifiableList(asset_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
+        }
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.page.MediaAsset.Image.class,
+                tools.elide.page.MediaAsset.Image.Builder.class
+            );
+        }
+
+        public interface ImageAssetOrBuilder
+            extends
+                // @@protoc_insertion_point(interface_extends:page.MediaAsset.Image.ImageAsset)
+                com.google.protobuf.MessageOrBuilder {
+            /**
+             * <pre>
+             * Specifies the intended resolution of this image asset.
+             * </pre>
+             *
+             * <code>float resolution = 1;</code>
+             * @return The resolution.
+             */
+            float getResolution();
+
+            /**
+             * <pre>
+             * Specifies the kind of image attached as this asset.
+             * </pre>
+             *
+             * <code>string mime = 2;</code>
+             * @return The mime.
+             */
+            java.lang.String getMime();
+            /**
+             * <pre>
+             * Specifies the kind of image attached as this asset.
+             * </pre>
+             *
+             * <code>string mime = 2;</code>
+             * @return The bytes for mime.
+             */
+            com.google.protobuf.ByteString getMimeBytes();
+
+            /**
+             * <pre>
+             * Specifies the native width of this image asset.
+             * </pre>
+             *
+             * <code>uint64 width = 3;</code>
+             * @return The width.
+             */
+            long getWidth();
+
+            /**
+             * <pre>
+             * Specifies the native height of this image asset.
+             * </pre>
+             *
+             * <code>uint64 height = 4;</code>
+             * @return The height.
+             */
+            long getHeight();
+
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return Whether the b64 field is set.
+             */
+            boolean hasB64();
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return The b64.
+             */
+            java.lang.String getB64();
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return The bytes for b64.
+             */
+            com.google.protobuf.ByteString getB64Bytes();
+
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return Whether the uri field is set.
+             */
+            boolean hasUri();
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return The uri.
+             */
+            java.lang.String getUri();
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return The bytes for uri.
+             */
+            com.google.protobuf.ByteString getUriBytes();
+
+            public tools.elide.page.MediaAsset.Image.ImageAsset.ContentCase getContentCase();
+        }
+
+        /**
+         * <pre>
+         * Describes information about an individual image asset, which is part of an attached image.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Image.ImageAsset}
+         */
+        public static final class ImageAsset
+            extends com.google.protobuf.GeneratedMessageV3
+            implements
+                // @@protoc_insertion_point(message_implements:page.MediaAsset.Image.ImageAsset)
+                ImageAssetOrBuilder {
+
+            private static final long serialVersionUID = 0L;
+
+            // Use ImageAsset.newBuilder() to construct.
+            private ImageAsset(
+                com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+            ) {
+                super(builder);
+            }
+
+            private ImageAsset() {
+                mime_ = "";
+            }
+
+            @java.lang.Override
+            @SuppressWarnings({ "unused" })
+            protected java.lang.Object newInstance(
+                UnusedPrivateParameter unused
+            ) {
+                return new ImageAsset();
+            }
+
+            @java.lang.Override
+            public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+                return this.unknownFields;
+            }
+
+            private ImageAsset(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                this();
+                if (extensionRegistry == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+                try {
+                    boolean done = false;
+                    while (!done) {
+                        int tag = input.readTag();
+                        switch (tag) {
+                            case 0:
+                                done = true;
+                                break;
+                            case 13:
+                                {
+                                    resolution_ = input.readFloat();
+                                    break;
+                                }
+                            case 18:
+                                {
+                                    java.lang.String s = input.readStringRequireUtf8();
+
+                                    mime_ = s;
+                                    break;
+                                }
+                            case 24:
+                                {
+                                    width_ = input.readUInt64();
+                                    break;
+                                }
+                            case 32:
+                                {
+                                    height_ = input.readUInt64();
+                                    break;
+                                }
+                            case 82:
+                                {
+                                    java.lang.String s = input.readStringRequireUtf8();
+                                    contentCase_ = 10;
+                                    content_ = s;
+                                    break;
+                                }
+                            case 162:
+                                {
+                                    java.lang.String s = input.readStringRequireUtf8();
+                                    contentCase_ = 20;
+                                    content_ = s;
+                                    break;
+                                }
+                            default:
+                                {
+                                    if (
+                                        !parseUnknownField(
+                                            input,
+                                            unknownFields,
+                                            extensionRegistry,
+                                            tag
+                                        )
+                                    ) {
+                                        done = true;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    throw e.setUnfinishedMessage(this);
+                } catch (com.google.protobuf.UninitializedMessageException e) {
+                    throw e
+                        .asInvalidProtocolBufferException()
+                        .setUnfinishedMessage(this);
+                } catch (java.io.IOException e) {
+                    throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e
+                    )
+                        .setUnfinishedMessage(this);
+                } finally {
+                    this.unknownFields = unknownFields.build();
+                    makeExtensionsImmutable();
+                }
+            }
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Image.ImageAsset.class,
+                    tools.elide.page.MediaAsset.Image.ImageAsset.Builder.class
+                );
+            }
+
+            private int contentCase_ = 0;
+            private java.lang.Object content_;
+
+            public enum ContentCase implements
+                com.google.protobuf.Internal.EnumLite,
+                com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+                B64(10),
+                URI(20),
+                CONTENT_NOT_SET(0);
+
+                private final int value;
+
+                private ContentCase(int value) {
+                    this.value = value;
                 }
 
-                break;
-              }
-              case 26: {
-                java.lang.String s = input.readStringRequireUtf8();
-
-                uri_ = s;
-                break;
-              }
-              default: {
-                if (!parseUnknownField(
-                    input, unknownFields, extensionRegistry, tag)) {
-                  done = true;
+                /**
+                 * @param value The number of the enum to look for.
+                 * @return The enum associated with the given number.
+                 * @deprecated Use {@link #forNumber(int)} instead.
+                 */
+                @java.lang.Deprecated
+                public static ContentCase valueOf(int value) {
+                    return forNumber(value);
                 }
-                break;
-              }
+
+                public static ContentCase forNumber(int value) {
+                    switch (value) {
+                        case 10:
+                            return B64;
+                        case 20:
+                            return URI;
+                        case 0:
+                            return CONTENT_NOT_SET;
+                        default:
+                            return null;
+                    }
+                }
+
+                public int getNumber() {
+                    return this.value;
+                }
             }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+
+            public ContentCase getContentCase() {
+                return ContentCase.forNumber(contentCase_);
+            }
+
+            public static final int RESOLUTION_FIELD_NUMBER = 1;
+            private float resolution_;
+
+            /**
+             * <pre>
+             * Specifies the intended resolution of this image asset.
+             * </pre>
+             *
+             * <code>float resolution = 1;</code>
+             * @return The resolution.
+             */
+            @java.lang.Override
+            public float getResolution() {
+                return resolution_;
+            }
+
+            public static final int MIME_FIELD_NUMBER = 2;
+            private volatile java.lang.Object mime_;
+
+            /**
+             * <pre>
+             * Specifies the kind of image attached as this asset.
+             * </pre>
+             *
+             * <code>string mime = 2;</code>
+             * @return The mime.
+             */
+            @java.lang.Override
+            public java.lang.String getMime() {
+                java.lang.Object ref = mime_;
+                if (ref instanceof java.lang.String) {
+                    return (java.lang.String) ref;
+                } else {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    mime_ = s;
+                    return s;
+                }
+            }
+
+            /**
+             * <pre>
+             * Specifies the kind of image attached as this asset.
+             * </pre>
+             *
+             * <code>string mime = 2;</code>
+             * @return The bytes for mime.
+             */
+            @java.lang.Override
+            public com.google.protobuf.ByteString getMimeBytes() {
+                java.lang.Object ref = mime_;
+                if (ref instanceof java.lang.String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    mime_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            public static final int WIDTH_FIELD_NUMBER = 3;
+            private long width_;
+
+            /**
+             * <pre>
+             * Specifies the native width of this image asset.
+             * </pre>
+             *
+             * <code>uint64 width = 3;</code>
+             * @return The width.
+             */
+            @java.lang.Override
+            public long getWidth() {
+                return width_;
+            }
+
+            public static final int HEIGHT_FIELD_NUMBER = 4;
+            private long height_;
+
+            /**
+             * <pre>
+             * Specifies the native height of this image asset.
+             * </pre>
+             *
+             * <code>uint64 height = 4;</code>
+             * @return The height.
+             */
+            @java.lang.Override
+            public long getHeight() {
+                return height_;
+            }
+
+            public static final int B64_FIELD_NUMBER = 10;
+
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return Whether the b64 field is set.
+             */
+            public boolean hasB64() {
+                return contentCase_ == 10;
+            }
+
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return The b64.
+             */
+            public java.lang.String getB64() {
+                java.lang.Object ref = "";
+                if (contentCase_ == 10) {
+                    ref = content_;
+                }
+                if (ref instanceof java.lang.String) {
+                    return (java.lang.String) ref;
+                } else {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    if (contentCase_ == 10) {
+                        content_ = s;
+                    }
+                    return s;
+                }
+            }
+
+            /**
+             * <pre>
+             * Raw Base64 content to be embedded directly in an image tag.
+             * </pre>
+             *
+             * <code>string b64 = 10;</code>
+             * @return The bytes for b64.
+             */
+            public com.google.protobuf.ByteString getB64Bytes() {
+                java.lang.Object ref = "";
+                if (contentCase_ == 10) {
+                    ref = content_;
+                }
+                if (ref instanceof java.lang.String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    if (contentCase_ == 10) {
+                        content_ = b;
+                    }
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            public static final int URI_FIELD_NUMBER = 20;
+
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return Whether the uri field is set.
+             */
+            public boolean hasUri() {
+                return contentCase_ == 20;
+            }
+
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return The uri.
+             */
+            public java.lang.String getUri() {
+                java.lang.Object ref = "";
+                if (contentCase_ == 20) {
+                    ref = content_;
+                }
+                if (ref instanceof java.lang.String) {
+                    return (java.lang.String) ref;
+                } else {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    if (contentCase_ == 20) {
+                        content_ = s;
+                    }
+                    return s;
+                }
+            }
+
+            /**
+             * <pre>
+             * URI to be used in reference to this image asset.
+             * </pre>
+             *
+             * <code>string uri = 20;</code>
+             * @return The bytes for uri.
+             */
+            public com.google.protobuf.ByteString getUriBytes() {
+                java.lang.Object ref = "";
+                if (contentCase_ == 20) {
+                    ref = content_;
+                }
+                if (ref instanceof java.lang.String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    if (contentCase_ == 20) {
+                        content_ = b;
+                    }
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            private byte memoizedIsInitialized = -1;
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                byte isInitialized = memoizedIsInitialized;
+                if (isInitialized == 1) return true;
+                if (isInitialized == 0) return false;
+
+                memoizedIsInitialized = 1;
+                return true;
+            }
+
+            @java.lang.Override
+            public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+                if (java.lang.Float.floatToRawIntBits(resolution_) != 0) {
+                    output.writeFloat(1, resolution_);
+                }
+                if (
+                    !com.google.protobuf.GeneratedMessageV3.isStringEmpty(mime_)
+                ) {
+                    com.google.protobuf.GeneratedMessageV3.writeString(
+                        output,
+                        2,
+                        mime_
+                    );
+                }
+                if (width_ != 0L) {
+                    output.writeUInt64(3, width_);
+                }
+                if (height_ != 0L) {
+                    output.writeUInt64(4, height_);
+                }
+                if (contentCase_ == 10) {
+                    com.google.protobuf.GeneratedMessageV3.writeString(
+                        output,
+                        10,
+                        content_
+                    );
+                }
+                if (contentCase_ == 20) {
+                    com.google.protobuf.GeneratedMessageV3.writeString(
+                        output,
+                        20,
+                        content_
+                    );
+                }
+                unknownFields.writeTo(output);
+            }
+
+            @java.lang.Override
+            public int getSerializedSize() {
+                int size = memoizedSize;
+                if (size != -1) return size;
+
+                size = 0;
+                if (java.lang.Float.floatToRawIntBits(resolution_) != 0) {
+                    size +=
+                        com.google.protobuf.CodedOutputStream.computeFloatSize(
+                            1,
+                            resolution_
+                        );
+                }
+                if (
+                    !com.google.protobuf.GeneratedMessageV3.isStringEmpty(mime_)
+                ) {
+                    size +=
+                        com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                            2,
+                            mime_
+                        );
+                }
+                if (width_ != 0L) {
+                    size +=
+                        com.google.protobuf.CodedOutputStream.computeUInt64Size(
+                            3,
+                            width_
+                        );
+                }
+                if (height_ != 0L) {
+                    size +=
+                        com.google.protobuf.CodedOutputStream.computeUInt64Size(
+                            4,
+                            height_
+                        );
+                }
+                if (contentCase_ == 10) {
+                    size +=
+                        com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                            10,
+                            content_
+                        );
+                }
+                if (contentCase_ == 20) {
+                    size +=
+                        com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                            20,
+                            content_
+                        );
+                }
+                size += unknownFields.getSerializedSize();
+                memoizedSize = size;
+                return size;
+            }
+
+            @java.lang.Override
+            public boolean equals(final java.lang.Object obj) {
+                if (obj == this) {
+                    return true;
+                }
+                if (
+                    !(
+                        obj instanceof tools.elide.page.MediaAsset.Image.ImageAsset
+                    )
+                ) {
+                    return super.equals(obj);
+                }
+                tools.elide.page.MediaAsset.Image.ImageAsset other = (tools.elide.page.MediaAsset.Image.ImageAsset) obj;
+
+                if (
+                    java.lang.Float.floatToIntBits(getResolution()) !=
+                    java.lang.Float.floatToIntBits(other.getResolution())
+                ) return false;
+                if (!getMime().equals(other.getMime())) return false;
+                if (getWidth() != other.getWidth()) return false;
+                if (getHeight() != other.getHeight()) return false;
+                if (
+                    !getContentCase().equals(other.getContentCase())
+                ) return false;
+                switch (contentCase_) {
+                    case 10:
+                        if (!getB64().equals(other.getB64())) return false;
+                        break;
+                    case 20:
+                        if (!getUri().equals(other.getUri())) return false;
+                        break;
+                    case 0:
+                    default:
+                }
+                if (!unknownFields.equals(other.unknownFields)) return false;
+                return true;
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                if (memoizedHashCode != 0) {
+                    return memoizedHashCode;
+                }
+                int hash = 41;
+                hash = (19 * hash) + getDescriptor().hashCode();
+                hash = (37 * hash) + RESOLUTION_FIELD_NUMBER;
+                hash =
+                    (53 * hash) +
+                    java.lang.Float.floatToIntBits(getResolution());
+                hash = (37 * hash) + MIME_FIELD_NUMBER;
+                hash = (53 * hash) + getMime().hashCode();
+                hash = (37 * hash) + WIDTH_FIELD_NUMBER;
+                hash =
+                    (53 * hash) +
+                    com.google.protobuf.Internal.hashLong(getWidth());
+                hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
+                hash =
+                    (53 * hash) +
+                    com.google.protobuf.Internal.hashLong(getHeight());
+                switch (contentCase_) {
+                    case 10:
+                        hash = (37 * hash) + B64_FIELD_NUMBER;
+                        hash = (53 * hash) + getB64().hashCode();
+                        break;
+                    case 20:
+                        hash = (37 * hash) + URI_FIELD_NUMBER;
+                        hash = (53 * hash) + getUri().hashCode();
+                        break;
+                    case 0:
+                    default:
+                }
+                hash = (29 * hash) + unknownFields.hashCode();
+                memoizedHashCode = hash;
+                return hash;
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                java.nio.ByteBuffer data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                com.google.protobuf.ByteString data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                byte[] data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                java.io.InputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseDelimitedFrom(
+                java.io.InputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                com.google.protobuf.CodedInputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            @java.lang.Override
+            public Builder newBuilderForType() {
+                return newBuilder();
+            }
+
+            public static Builder newBuilder() {
+                return DEFAULT_INSTANCE.toBuilder();
+            }
+
+            public static Builder newBuilder(
+                tools.elide.page.MediaAsset.Image.ImageAsset prototype
+            ) {
+                return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+            }
+
+            @java.lang.Override
+            public Builder toBuilder() {
+                return this == DEFAULT_INSTANCE
+                    ? new Builder()
+                    : new Builder().mergeFrom(this);
+            }
+
+            @java.lang.Override
+            protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                Builder builder = new Builder(parent);
+                return builder;
+            }
+
+            /**
+             * <pre>
+             * Describes information about an individual image asset, which is part of an attached image.
+             * </pre>
+             *
+             * Protobuf type {@code page.MediaAsset.Image.ImageAsset}
+             */
+            public static final class Builder
+                extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+                implements
+                    // @@protoc_insertion_point(builder_implements:page.MediaAsset.Image.ImageAsset)
+                    tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder {
+
+                public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
+                }
+
+                @java.lang.Override
+                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                        tools.elide.page.MediaAsset.Image.ImageAsset.class,
+                        tools.elide.page.MediaAsset.Image.ImageAsset.Builder.class
+                    );
+                }
+
+                // Construct using tools.elide.page.MediaAsset.Image.ImageAsset.newBuilder()
+                private Builder() {
+                    maybeForceBuilderInitialization();
+                }
+
+                private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+                ) {
+                    super(parent);
+                    maybeForceBuilderInitialization();
+                }
+
+                private void maybeForceBuilderInitialization() {
+                    if (
+                        com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                    ) {}
+                }
+
+                @java.lang.Override
+                public Builder clear() {
+                    super.clear();
+                    resolution_ = 0F;
+
+                    mime_ = "";
+
+                    width_ = 0L;
+
+                    height_ = 0L;
+
+                    contentCase_ = 0;
+                    content_ = null;
+                    return this;
+                }
+
+                @java.lang.Override
+                public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_ImageAsset_descriptor;
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstanceForType() {
+                    return tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance();
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Image.ImageAsset build() {
+                    tools.elide.page.MediaAsset.Image.ImageAsset result = buildPartial();
+                    if (!result.isInitialized()) {
+                        throw newUninitializedMessageException(result);
+                    }
+                    return result;
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Image.ImageAsset buildPartial() {
+                    tools.elide.page.MediaAsset.Image.ImageAsset result = new tools.elide.page.MediaAsset.Image.ImageAsset(
+                        this
+                    );
+                    result.resolution_ = resolution_;
+                    result.mime_ = mime_;
+                    result.width_ = width_;
+                    result.height_ = height_;
+                    if (contentCase_ == 10) {
+                        result.content_ = content_;
+                    }
+                    if (contentCase_ == 20) {
+                        result.content_ = content_;
+                    }
+                    result.contentCase_ = contentCase_;
+                    onBuilt();
+                    return result;
+                }
+
+                @java.lang.Override
+                public Builder clone() {
+                    return super.clone();
+                }
+
+                @java.lang.Override
+                public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value
+                ) {
+                    return super.setField(field, value);
+                }
+
+                @java.lang.Override
+                public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field
+                ) {
+                    return super.clearField(field);
+                }
+
+                @java.lang.Override
+                public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof
+                ) {
+                    return super.clearOneof(oneof);
+                }
+
+                @java.lang.Override
+                public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index,
+                    java.lang.Object value
+                ) {
+                    return super.setRepeatedField(field, index, value);
+                }
+
+                @java.lang.Override
+                public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value
+                ) {
+                    return super.addRepeatedField(field, value);
+                }
+
+                @java.lang.Override
+                public Builder mergeFrom(com.google.protobuf.Message other) {
+                    if (
+                        other instanceof tools.elide.page.MediaAsset.Image.ImageAsset
+                    ) {
+                        return mergeFrom(
+                            (tools.elide.page.MediaAsset.Image.ImageAsset) other
+                        );
+                    } else {
+                        super.mergeFrom(other);
+                        return this;
+                    }
+                }
+
+                public Builder mergeFrom(
+                    tools.elide.page.MediaAsset.Image.ImageAsset other
+                ) {
+                    if (
+                        other ==
+                        tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance()
+                    ) return this;
+                    if (other.getResolution() != 0F) {
+                        setResolution(other.getResolution());
+                    }
+                    if (!other.getMime().isEmpty()) {
+                        mime_ = other.mime_;
+                        onChanged();
+                    }
+                    if (other.getWidth() != 0L) {
+                        setWidth(other.getWidth());
+                    }
+                    if (other.getHeight() != 0L) {
+                        setHeight(other.getHeight());
+                    }
+                    switch (other.getContentCase()) {
+                        case B64:
+                            {
+                                contentCase_ = 10;
+                                content_ = other.content_;
+                                onChanged();
+                                break;
+                            }
+                        case URI:
+                            {
+                                contentCase_ = 20;
+                                content_ = other.content_;
+                                onChanged();
+                                break;
+                            }
+                        case CONTENT_NOT_SET:
+                            {
+                                break;
+                            }
+                    }
+                    this.mergeUnknownFields(other.unknownFields);
+                    onChanged();
+                    return this;
+                }
+
+                @java.lang.Override
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                @java.lang.Override
+                public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry
+                ) throws java.io.IOException {
+                    tools.elide.page.MediaAsset.Image.ImageAsset parsedMessage =
+                        null;
+                    try {
+                        parsedMessage =
+                            PARSER.parsePartialFrom(input, extensionRegistry);
+                    } catch (
+                        com.google.protobuf.InvalidProtocolBufferException e
+                    ) {
+                        parsedMessage =
+                            (tools.elide.page.MediaAsset.Image.ImageAsset) e.getUnfinishedMessage();
+                        throw e.unwrapIOException();
+                    } finally {
+                        if (parsedMessage != null) {
+                            mergeFrom(parsedMessage);
+                        }
+                    }
+                    return this;
+                }
+
+                private int contentCase_ = 0;
+                private java.lang.Object content_;
+
+                public ContentCase getContentCase() {
+                    return ContentCase.forNumber(contentCase_);
+                }
+
+                public Builder clearContent() {
+                    contentCase_ = 0;
+                    content_ = null;
+                    onChanged();
+                    return this;
+                }
+
+                private float resolution_;
+
+                /**
+                 * <pre>
+                 * Specifies the intended resolution of this image asset.
+                 * </pre>
+                 *
+                 * <code>float resolution = 1;</code>
+                 * @return The resolution.
+                 */
+                @java.lang.Override
+                public float getResolution() {
+                    return resolution_;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the intended resolution of this image asset.
+                 * </pre>
+                 *
+                 * <code>float resolution = 1;</code>
+                 * @param value The resolution to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setResolution(float value) {
+                    resolution_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the intended resolution of this image asset.
+                 * </pre>
+                 *
+                 * <code>float resolution = 1;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearResolution() {
+                    resolution_ = 0F;
+                    onChanged();
+                    return this;
+                }
+
+                private java.lang.Object mime_ = "";
+
+                /**
+                 * <pre>
+                 * Specifies the kind of image attached as this asset.
+                 * </pre>
+                 *
+                 * <code>string mime = 2;</code>
+                 * @return The mime.
+                 */
+                public java.lang.String getMime() {
+                    java.lang.Object ref = mime_;
+                    if (!(ref instanceof java.lang.String)) {
+                        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                        java.lang.String s = bs.toStringUtf8();
+                        mime_ = s;
+                        return s;
+                    } else {
+                        return (java.lang.String) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the kind of image attached as this asset.
+                 * </pre>
+                 *
+                 * <code>string mime = 2;</code>
+                 * @return The bytes for mime.
+                 */
+                public com.google.protobuf.ByteString getMimeBytes() {
+                    java.lang.Object ref = mime_;
+                    if (ref instanceof String) {
+                        com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref
+                        );
+                        mime_ = b;
+                        return b;
+                    } else {
+                        return (com.google.protobuf.ByteString) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the kind of image attached as this asset.
+                 * </pre>
+                 *
+                 * <code>string mime = 2;</code>
+                 * @param value The mime to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setMime(java.lang.String value) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+
+                    mime_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the kind of image attached as this asset.
+                 * </pre>
+                 *
+                 * <code>string mime = 2;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearMime() {
+                    mime_ = getDefaultInstance().getMime();
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the kind of image attached as this asset.
+                 * </pre>
+                 *
+                 * <code>string mime = 2;</code>
+                 * @param value The bytes for mime to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setMimeBytes(
+                    com.google.protobuf.ByteString value
+                ) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    checkByteStringIsUtf8(value);
+
+                    mime_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                private long width_;
+
+                /**
+                 * <pre>
+                 * Specifies the native width of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 width = 3;</code>
+                 * @return The width.
+                 */
+                @java.lang.Override
+                public long getWidth() {
+                    return width_;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the native width of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 width = 3;</code>
+                 * @param value The width to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setWidth(long value) {
+                    width_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the native width of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 width = 3;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearWidth() {
+                    width_ = 0L;
+                    onChanged();
+                    return this;
+                }
+
+                private long height_;
+
+                /**
+                 * <pre>
+                 * Specifies the native height of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 height = 4;</code>
+                 * @return The height.
+                 */
+                @java.lang.Override
+                public long getHeight() {
+                    return height_;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the native height of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 height = 4;</code>
+                 * @param value The height to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setHeight(long value) {
+                    height_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Specifies the native height of this image asset.
+                 * </pre>
+                 *
+                 * <code>uint64 height = 4;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearHeight() {
+                    height_ = 0L;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @return Whether the b64 field is set.
+                 */
+                @java.lang.Override
+                public boolean hasB64() {
+                    return contentCase_ == 10;
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @return The b64.
+                 */
+                @java.lang.Override
+                public java.lang.String getB64() {
+                    java.lang.Object ref = "";
+                    if (contentCase_ == 10) {
+                        ref = content_;
+                    }
+                    if (!(ref instanceof java.lang.String)) {
+                        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                        java.lang.String s = bs.toStringUtf8();
+                        if (contentCase_ == 10) {
+                            content_ = s;
+                        }
+                        return s;
+                    } else {
+                        return (java.lang.String) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @return The bytes for b64.
+                 */
+                @java.lang.Override
+                public com.google.protobuf.ByteString getB64Bytes() {
+                    java.lang.Object ref = "";
+                    if (contentCase_ == 10) {
+                        ref = content_;
+                    }
+                    if (ref instanceof String) {
+                        com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref
+                        );
+                        if (contentCase_ == 10) {
+                            content_ = b;
+                        }
+                        return b;
+                    } else {
+                        return (com.google.protobuf.ByteString) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @param value The b64 to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setB64(java.lang.String value) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    contentCase_ = 10;
+                    content_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearB64() {
+                    if (contentCase_ == 10) {
+                        contentCase_ = 0;
+                        content_ = null;
+                        onChanged();
+                    }
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Raw Base64 content to be embedded directly in an image tag.
+                 * </pre>
+                 *
+                 * <code>string b64 = 10;</code>
+                 * @param value The bytes for b64 to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setB64Bytes(
+                    com.google.protobuf.ByteString value
+                ) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    checkByteStringIsUtf8(value);
+                    contentCase_ = 10;
+                    content_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @return Whether the uri field is set.
+                 */
+                @java.lang.Override
+                public boolean hasUri() {
+                    return contentCase_ == 20;
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @return The uri.
+                 */
+                @java.lang.Override
+                public java.lang.String getUri() {
+                    java.lang.Object ref = "";
+                    if (contentCase_ == 20) {
+                        ref = content_;
+                    }
+                    if (!(ref instanceof java.lang.String)) {
+                        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                        java.lang.String s = bs.toStringUtf8();
+                        if (contentCase_ == 20) {
+                            content_ = s;
+                        }
+                        return s;
+                    } else {
+                        return (java.lang.String) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @return The bytes for uri.
+                 */
+                @java.lang.Override
+                public com.google.protobuf.ByteString getUriBytes() {
+                    java.lang.Object ref = "";
+                    if (contentCase_ == 20) {
+                        ref = content_;
+                    }
+                    if (ref instanceof String) {
+                        com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref
+                        );
+                        if (contentCase_ == 20) {
+                            content_ = b;
+                        }
+                        return b;
+                    } else {
+                        return (com.google.protobuf.ByteString) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @param value The uri to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setUri(java.lang.String value) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    contentCase_ = 20;
+                    content_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearUri() {
+                    if (contentCase_ == 20) {
+                        contentCase_ = 0;
+                        content_ = null;
+                        onChanged();
+                    }
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * URI to be used in reference to this image asset.
+                 * </pre>
+                 *
+                 * <code>string uri = 20;</code>
+                 * @param value The bytes for uri to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setUriBytes(
+                    com.google.protobuf.ByteString value
+                ) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    checkByteStringIsUtf8(value);
+                    contentCase_ = 20;
+                    content_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                @java.lang.Override
+                public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields
+                ) {
+                    return super.setUnknownFields(unknownFields);
+                }
+
+                @java.lang.Override
+                public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields
+                ) {
+                    return super.mergeUnknownFields(unknownFields);
+                }
+                // @@protoc_insertion_point(builder_scope:page.MediaAsset.Image.ImageAsset)
+            }
+
+            // @@protoc_insertion_point(class_scope:page.MediaAsset.Image.ImageAsset)
+            private static final tools.elide.page.MediaAsset.Image.ImageAsset DEFAULT_INSTANCE;
+
+            static {
+                DEFAULT_INSTANCE =
+                    new tools.elide.page.MediaAsset.Image.ImageAsset();
+            }
+
+            public static tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstance() {
+                return DEFAULT_INSTANCE;
+            }
+
+            private static final com.google.protobuf.Parser<ImageAsset> PARSER = new com.google.protobuf.AbstractParser<ImageAsset>() {
+                @java.lang.Override
+                public ImageAsset parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry
+                ) throws com.google.protobuf.InvalidProtocolBufferException {
+                    return new ImageAsset(input, extensionRegistry);
+                }
+            };
+
+            public static com.google.protobuf.Parser<ImageAsset> parser() {
+                return PARSER;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Parser<ImageAsset> getParserForType() {
+                return PARSER;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Image.ImageAsset getDefaultInstanceForType() {
+                return DEFAULT_INSTANCE;
+            }
         }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
-      }
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Video.VideoAsset.class, tools.elide.page.MediaAsset.Video.VideoAsset.Builder.class);
-      }
+        public static final int ASSET_FIELD_NUMBER = 1;
+        private java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> asset_;
 
-      public static final int RESOLUTION_FIELD_NUMBER = 1;
-      private int resolution_;
-      /**
-       * <pre>
-       * Resolutions at which a video might be available.
-       * </pre>
-       *
-       * <code>.page.VideoResolution resolution = 1;</code>
-       * @return The enum numeric value on the wire for resolution.
-       */
-      @java.lang.Override public int getResolutionValue() {
-        return resolution_;
-      }
-      /**
-       * <pre>
-       * Resolutions at which a video might be available.
-       * </pre>
-       *
-       * <code>.page.VideoResolution resolution = 1;</code>
-       * @return The resolution.
-       */
-      @java.lang.Override public tools.elide.page.VideoResolution getResolution() {
-        @SuppressWarnings("deprecation")
-        tools.elide.page.VideoResolution result = tools.elide.page.VideoResolution.valueOf(resolution_);
-        return result == null ? tools.elide.page.VideoResolution.UNRECOGNIZED : result;
-      }
-
-      public static final int THUMB_FIELD_NUMBER = 2;
-      private tools.elide.page.MediaAsset.Image thumb_;
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       * @return Whether the thumb field is set.
-       */
-      @java.lang.Override
-      public boolean hasThumb() {
-        return thumb_ != null;
-      }
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       * @return The thumb.
-       */
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Image getThumb() {
-        return thumb_ == null ? tools.elide.page.MediaAsset.Image.getDefaultInstance() : thumb_;
-      }
-      /**
-       * <pre>
-       * Image asset to be used as a thumbnail for this video asset.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Image thumb = 2;</code>
-       */
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder() {
-        return getThumb();
-      }
-
-      public static final int URI_FIELD_NUMBER = 3;
-      private volatile java.lang.Object uri_;
-      /**
-       * <pre>
-       * URI where the video may be streamed or accessed.
-       * </pre>
-       *
-       * <code>string uri = 3;</code>
-       * @return The uri.
-       */
-      @java.lang.Override
-      public java.lang.String getUri() {
-        java.lang.Object ref = uri_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          uri_ = s;
-          return s;
-        }
-      }
-      /**
-       * <pre>
-       * URI where the video may be streamed or accessed.
-       * </pre>
-       *
-       * <code>string uri = 3;</code>
-       * @return The bytes for uri.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString
-          getUriBytes() {
-        java.lang.Object ref = uri_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          uri_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      private byte memoizedIsInitialized = -1;
-      @java.lang.Override
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      @java.lang.Override
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        if (resolution_ != tools.elide.page.VideoResolution.LOW.getNumber()) {
-          output.writeEnum(1, resolution_);
-        }
-        if (thumb_ != null) {
-          output.writeMessage(2, getThumb());
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, uri_);
-        }
-        unknownFields.writeTo(output);
-      }
-
-      @java.lang.Override
-      public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (resolution_ != tools.elide.page.VideoResolution.LOW.getNumber()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeEnumSize(1, resolution_);
-        }
-        if (thumb_ != null) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, getThumb());
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, uri_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-      }
-
-      @java.lang.Override
-      public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-         return true;
-        }
-        if (!(obj instanceof tools.elide.page.MediaAsset.Video.VideoAsset)) {
-          return super.equals(obj);
-        }
-        tools.elide.page.MediaAsset.Video.VideoAsset other = (tools.elide.page.MediaAsset.Video.VideoAsset) obj;
-
-        if (resolution_ != other.resolution_) return false;
-        if (hasThumb() != other.hasThumb()) return false;
-        if (hasThumb()) {
-          if (!getThumb()
-              .equals(other.getThumb())) return false;
-        }
-        if (!getUri()
-            .equals(other.getUri())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-      }
-
-      @java.lang.Override
-      public int hashCode() {
-        if (memoizedHashCode != 0) {
-          return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + RESOLUTION_FIELD_NUMBER;
-        hash = (53 * hash) + resolution_;
-        if (hasThumb()) {
-          hash = (37 * hash) + THUMB_FIELD_NUMBER;
-          hash = (53 * hash) + getThumb().hashCode();
-        }
-        hash = (37 * hash) + URI_FIELD_NUMBER;
-        hash = (53 * hash) + getUri().hashCode();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-      }
-
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          java.nio.ByteBuffer data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          java.nio.ByteBuffer data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-
-      @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
-      public static Builder newBuilder(tools.elide.page.MediaAsset.Video.VideoAsset prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-      }
-      @java.lang.Override
-      public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder() : new Builder().mergeFrom(this);
-      }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * <pre>
-       * Describes information about an individual video asset, which is part of an attached video.
-       * </pre>
-       *
-       * Protobuf type {@code page.MediaAsset.Video.VideoAsset}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:page.MediaAsset.Video.VideoAsset)
-          tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
-        }
-
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  tools.elide.page.MediaAsset.Video.VideoAsset.class, tools.elide.page.MediaAsset.Video.VideoAsset.Builder.class);
+        public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> getAssetList() {
+            return asset_;
         }
 
-        // Construct using tools.elide.page.MediaAsset.Video.VideoAsset.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
+        @java.lang.Override
+        public java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> getAssetOrBuilderList() {
+            return asset_;
         }
 
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
-        }
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
         @java.lang.Override
-        public Builder clear() {
-          super.clear();
-          resolution_ = 0;
-
-          if (thumbBuilder_ == null) {
-            thumb_ = null;
-          } else {
-            thumb_ = null;
-            thumbBuilder_ = null;
-          }
-          uri_ = "";
-
-          return this;
+        public int getAssetCount() {
+            return asset_.size();
         }
 
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
         @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
+        public tools.elide.page.MediaAsset.Image.ImageAsset getAsset(
+            int index
+        ) {
+            return asset_.get(index);
         }
 
+        /**
+         * <pre>
+         * Concrete information regarding this image asset.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+         */
         @java.lang.Override
-        public tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstanceForType() {
-          return tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance();
+        public tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
+            int index
+        ) {
+            return asset_.get(index);
         }
 
-        @java.lang.Override
-        public tools.elide.page.MediaAsset.Video.VideoAsset build() {
-          tools.elide.page.MediaAsset.Video.VideoAsset result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.page.MediaAsset.Video.VideoAsset buildPartial() {
-          tools.elide.page.MediaAsset.Video.VideoAsset result = new tools.elide.page.MediaAsset.Video.VideoAsset(this);
-          result.resolution_ = resolution_;
-          if (thumbBuilder_ == null) {
-            result.thumb_ = thumb_;
-          } else {
-            result.thumb_ = thumbBuilder_.build();
-          }
-          result.uri_ = uri_;
-          onBuilt();
-          return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-          return super.clone();
-        }
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.setField(field, value);
-        }
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field) {
-          return super.clearField(field);
-        }
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-          return super.clearOneof(oneof);
-        }
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index, java.lang.Object value) {
-          return super.setRepeatedField(field, index, value);
-        }
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.addRepeatedField(field, value);
-        }
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof tools.elide.page.MediaAsset.Video.VideoAsset) {
-            return mergeFrom((tools.elide.page.MediaAsset.Video.VideoAsset)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(tools.elide.page.MediaAsset.Video.VideoAsset other) {
-          if (other == tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance()) return this;
-          if (other.resolution_ != 0) {
-            setResolutionValue(other.getResolutionValue());
-          }
-          if (other.hasThumb()) {
-            mergeThumb(other.getThumb());
-          }
-          if (!other.getUri().isEmpty()) {
-            uri_ = other.uri_;
-            onChanged();
-          }
-          this.mergeUnknownFields(other.unknownFields);
-          onChanged();
-          return this;
-        }
+        private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
         public final boolean isInitialized() {
-          return true;
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
         }
 
         @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-          tools.elide.page.MediaAsset.Video.VideoAsset parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (tools.elide.page.MediaAsset.Video.VideoAsset) e.getUnfinishedMessage();
-            throw e.unwrapIOException();
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
+            for (int i = 0; i < asset_.size(); i++) {
+                output.writeMessage(1, asset_.get(i));
             }
-          }
-          return this;
+            unknownFields.writeTo(output);
         }
 
-        private int resolution_ = 0;
-        /**
-         * <pre>
-         * Resolutions at which a video might be available.
-         * </pre>
-         *
-         * <code>.page.VideoResolution resolution = 1;</code>
-         * @return The enum numeric value on the wire for resolution.
-         */
-        @java.lang.Override public int getResolutionValue() {
-          return resolution_;
-        }
-        /**
-         * <pre>
-         * Resolutions at which a video might be available.
-         * </pre>
-         *
-         * <code>.page.VideoResolution resolution = 1;</code>
-         * @param value The enum numeric value on the wire for resolution to set.
-         * @return This builder for chaining.
-         */
-        public Builder setResolutionValue(int value) {
-          
-          resolution_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Resolutions at which a video might be available.
-         * </pre>
-         *
-         * <code>.page.VideoResolution resolution = 1;</code>
-         * @return The resolution.
-         */
         @java.lang.Override
-        public tools.elide.page.VideoResolution getResolution() {
-          @SuppressWarnings("deprecation")
-          tools.elide.page.VideoResolution result = tools.elide.page.VideoResolution.valueOf(resolution_);
-          return result == null ? tools.elide.page.VideoResolution.UNRECOGNIZED : result;
-        }
-        /**
-         * <pre>
-         * Resolutions at which a video might be available.
-         * </pre>
-         *
-         * <code>.page.VideoResolution resolution = 1;</code>
-         * @param value The resolution to set.
-         * @return This builder for chaining.
-         */
-        public Builder setResolution(tools.elide.page.VideoResolution value) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          
-          resolution_ = value.getNumber();
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Resolutions at which a video might be available.
-         * </pre>
-         *
-         * <code>.page.VideoResolution resolution = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearResolution() {
-          
-          resolution_ = 0;
-          onChanged();
-          return this;
-        }
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
 
-        private tools.elide.page.MediaAsset.Image thumb_;
-        private com.google.protobuf.SingleFieldBuilderV3<
-            tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> thumbBuilder_;
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         * @return Whether the thumb field is set.
-         */
-        public boolean hasThumb() {
-          return thumbBuilder_ != null || thumb_ != null;
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         * @return The thumb.
-         */
-        public tools.elide.page.MediaAsset.Image getThumb() {
-          if (thumbBuilder_ == null) {
-            return thumb_ == null ? tools.elide.page.MediaAsset.Image.getDefaultInstance() : thumb_;
-          } else {
-            return thumbBuilder_.getMessage();
-          }
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public Builder setThumb(tools.elide.page.MediaAsset.Image value) {
-          if (thumbBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
+            size = 0;
+            for (int i = 0; i < asset_.size(); i++) {
+                size +=
+                    com.google.protobuf.CodedOutputStream.computeMessageSize(
+                        1,
+                        asset_.get(i)
+                    );
             }
-            thumb_ = value;
-            onChanged();
-          } else {
-            thumbBuilder_.setMessage(value);
-          }
-
-          return this;
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
         }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public Builder setThumb(
-            tools.elide.page.MediaAsset.Image.Builder builderForValue) {
-          if (thumbBuilder_ == null) {
-            thumb_ = builderForValue.build();
-            onChanged();
-          } else {
-            thumbBuilder_.setMessage(builderForValue.build());
-          }
 
-          return this;
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public Builder mergeThumb(tools.elide.page.MediaAsset.Image value) {
-          if (thumbBuilder_ == null) {
-            if (thumb_ != null) {
-              thumb_ =
-                tools.elide.page.MediaAsset.Image.newBuilder(thumb_).mergeFrom(value).buildPartial();
-            } else {
-              thumb_ = value;
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
             }
-            onChanged();
-          } else {
-            thumbBuilder_.mergeFrom(value);
-          }
+            if (!(obj instanceof tools.elide.page.MediaAsset.Image)) {
+                return super.equals(obj);
+            }
+            tools.elide.page.MediaAsset.Image other = (tools.elide.page.MediaAsset.Image) obj;
 
-          return this;
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public Builder clearThumb() {
-          if (thumbBuilder_ == null) {
-            thumb_ = null;
-            onChanged();
-          } else {
-            thumb_ = null;
-            thumbBuilder_ = null;
-          }
-
-          return this;
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public tools.elide.page.MediaAsset.Image.Builder getThumbBuilder() {
-          
-          onChanged();
-          return getThumbFieldBuilder().getBuilder();
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        public tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder() {
-          if (thumbBuilder_ != null) {
-            return thumbBuilder_.getMessageOrBuilder();
-          } else {
-            return thumb_ == null ?
-                tools.elide.page.MediaAsset.Image.getDefaultInstance() : thumb_;
-          }
-        }
-        /**
-         * <pre>
-         * Image asset to be used as a thumbnail for this video asset.
-         * </pre>
-         *
-         * <code>.page.MediaAsset.Image thumb = 2;</code>
-         */
-        private com.google.protobuf.SingleFieldBuilderV3<
-            tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> 
-            getThumbFieldBuilder() {
-          if (thumbBuilder_ == null) {
-            thumbBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder>(
-                    getThumb(),
-                    getParentForChildren(),
-                    isClean());
-            thumb_ = null;
-          }
-          return thumbBuilder_;
-        }
-
-        private java.lang.Object uri_ = "";
-        /**
-         * <pre>
-         * URI where the video may be streamed or accessed.
-         * </pre>
-         *
-         * <code>string uri = 3;</code>
-         * @return The uri.
-         */
-        public java.lang.String getUri() {
-          java.lang.Object ref = uri_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            uri_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <pre>
-         * URI where the video may be streamed or accessed.
-         * </pre>
-         *
-         * <code>string uri = 3;</code>
-         * @return The bytes for uri.
-         */
-        public com.google.protobuf.ByteString
-            getUriBytes() {
-          java.lang.Object ref = uri_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            uri_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <pre>
-         * URI where the video may be streamed or accessed.
-         * </pre>
-         *
-         * <code>string uri = 3;</code>
-         * @param value The uri to set.
-         * @return This builder for chaining.
-         */
-        public Builder setUri(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          uri_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * URI where the video may be streamed or accessed.
-         * </pre>
-         *
-         * <code>string uri = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearUri() {
-          
-          uri_ = getDefaultInstance().getUri();
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * URI where the video may be streamed or accessed.
-         * </pre>
-         *
-         * <code>string uri = 3;</code>
-         * @param value The bytes for uri to set.
-         * @return This builder for chaining.
-         */
-        public Builder setUriBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-          
-          uri_ = value;
-          onChanged();
-          return this;
-        }
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.setUnknownFields(unknownFields);
+            if (!getAssetList().equals(other.getAssetList())) return false;
+            if (!unknownFields.equals(other.unknownFields)) return false;
+            return true;
         }
 
         @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.mergeUnknownFields(unknownFields);
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            if (getAssetCount() > 0) {
+                hash = (37 * hash) + ASSET_FIELD_NUMBER;
+                hash = (53 * hash) + getAssetList().hashCode();
+            }
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
         }
 
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            java.nio.ByteBuffer data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
 
-        // @@protoc_insertion_point(builder_scope:page.MediaAsset.Video.VideoAsset)
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
 
-      // @@protoc_insertion_point(class_scope:page.MediaAsset.Video.VideoAsset)
-      private static final tools.elide.page.MediaAsset.Video.VideoAsset DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Video.VideoAsset();
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            com.google.protobuf.ByteString data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
 
-      public static tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
 
-      private static final com.google.protobuf.Parser<VideoAsset>
-          PARSER = new com.google.protobuf.AbstractParser<VideoAsset>() {
-        @java.lang.Override
-        public VideoAsset parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        public static tools.elide.page.MediaAsset.Image parseFrom(byte[] data)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new VideoAsset(input, extensionRegistry);
+            return PARSER.parseFrom(data);
         }
-      };
 
-      public static com.google.protobuf.Parser<VideoAsset> parser() {
-        return PARSER;
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
 
-      @java.lang.Override
-      public com.google.protobuf.Parser<VideoAsset> getParserForType() {
-        return PARSER;
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
-      }
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
 
+        public static tools.elide.page.MediaAsset.Image parseDelimitedFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Image parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            com.google.protobuf.CodedInputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Image parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(
+            tools.elide.page.MediaAsset.Image prototype
+        ) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                ? new Builder()
+                : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an image asset, attached to some web page or data point.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Image}
+         */
+        public static final class Builder
+            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+            implements
+                // @@protoc_insertion_point(builder_implements:page.MediaAsset.Image)
+                tools.elide.page.MediaAsset.ImageOrBuilder {
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Image.class,
+                    tools.elide.page.MediaAsset.Image.Builder.class
+                );
+            }
+
+            // Construct using tools.elide.page.MediaAsset.Image.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (
+                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                ) {
+                    getAssetFieldBuilder();
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                if (assetBuilder_ == null) {
+                    asset_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                } else {
+                    assetBuilder_.clear();
+                }
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Image_descriptor;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Image getDefaultInstanceForType() {
+                return tools.elide.page.MediaAsset.Image.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Image build() {
+                tools.elide.page.MediaAsset.Image result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Image buildPartial() {
+                tools.elide.page.MediaAsset.Image result = new tools.elide.page.MediaAsset.Image(
+                    this
+                );
+                int from_bitField0_ = bitField0_;
+                if (assetBuilder_ == null) {
+                    if (((bitField0_ & 0x00000001) != 0)) {
+                        asset_ = java.util.Collections.unmodifiableList(asset_);
+                        bitField0_ = (bitField0_ & ~0x00000001);
+                    }
+                    result.asset_ = asset_;
+                } else {
+                    result.asset_ = assetBuilder_.build();
+                }
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field
+            ) {
+                return super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof
+            ) {
+                return super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value
+            ) {
+                return super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof tools.elide.page.MediaAsset.Image) {
+                    return mergeFrom((tools.elide.page.MediaAsset.Image) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(tools.elide.page.MediaAsset.Image other) {
+                if (
+                    other ==
+                    tools.elide.page.MediaAsset.Image.getDefaultInstance()
+                ) return this;
+                if (assetBuilder_ == null) {
+                    if (!other.asset_.isEmpty()) {
+                        if (asset_.isEmpty()) {
+                            asset_ = other.asset_;
+                            bitField0_ = (bitField0_ & ~0x00000001);
+                        } else {
+                            ensureAssetIsMutable();
+                            asset_.addAll(other.asset_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.asset_.isEmpty()) {
+                        if (assetBuilder_.isEmpty()) {
+                            assetBuilder_.dispose();
+                            assetBuilder_ = null;
+                            asset_ = other.asset_;
+                            bitField0_ = (bitField0_ & ~0x00000001);
+                            assetBuilder_ =
+                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                    ? getAssetFieldBuilder()
+                                    : null;
+                        } else {
+                            assetBuilder_.addAllMessages(other.asset_);
+                        }
+                    }
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                tools.elide.page.MediaAsset.Image parsedMessage = null;
+                try {
+                    parsedMessage =
+                        PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage =
+                        (tools.elide.page.MediaAsset.Image) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> asset_ = java.util.Collections.emptyList();
+
+            private void ensureAssetIsMutable() {
+                if (!((bitField0_ & 0x00000001) != 0)) {
+                    asset_ =
+                        new java.util.ArrayList<tools.elide.page.MediaAsset.Image.ImageAsset>(
+                            asset_
+                        );
+                    bitField0_ |= 0x00000001;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> assetBuilder_;
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset> getAssetList() {
+                if (assetBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(asset_);
+                } else {
+                    return assetBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public int getAssetCount() {
+                if (assetBuilder_ == null) {
+                    return asset_.size();
+                } else {
+                    return assetBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public tools.elide.page.MediaAsset.Image.ImageAsset getAsset(
+                int index
+            ) {
+                if (assetBuilder_ == null) {
+                    return asset_.get(index);
+                } else {
+                    return assetBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder setAsset(
+                int index,
+                tools.elide.page.MediaAsset.Image.ImageAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.set(index, value);
+                    onChanged();
+                } else {
+                    assetBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder setAsset(
+                int index,
+                tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder addAsset(
+                tools.elide.page.MediaAsset.Image.ImageAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.add(value);
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder addAsset(
+                int index,
+                tools.elide.page.MediaAsset.Image.ImageAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.add(index, value);
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder addAsset(
+                tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder addAsset(
+                int index,
+                tools.elide.page.MediaAsset.Image.ImageAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder addAllAsset(
+                java.lang.Iterable<? extends tools.elide.page.MediaAsset.Image.ImageAsset> values
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                        values,
+                        asset_
+                    );
+                    onChanged();
+                } else {
+                    assetBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder clearAsset() {
+                if (assetBuilder_ == null) {
+                    asset_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                    onChanged();
+                } else {
+                    assetBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public Builder removeAsset(int index) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.remove(index);
+                    onChanged();
+                } else {
+                    assetBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public tools.elide.page.MediaAsset.Image.ImageAsset.Builder getAssetBuilder(
+                int index
+            ) {
+                return getAssetFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder getAssetOrBuilder(
+                int index
+            ) {
+                if (assetBuilder_ == null) {
+                    return asset_.get(index);
+                } else {
+                    return assetBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public java.util.List<? extends tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> getAssetOrBuilderList() {
+                if (assetBuilder_ != null) {
+                    return assetBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(asset_);
+                }
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public tools.elide.page.MediaAsset.Image.ImageAsset.Builder addAssetBuilder() {
+                return getAssetFieldBuilder()
+                    .addBuilder(
+                        tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance()
+                    );
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public tools.elide.page.MediaAsset.Image.ImageAsset.Builder addAssetBuilder(
+                int index
+            ) {
+                return getAssetFieldBuilder()
+                    .addBuilder(
+                        index,
+                        tools.elide.page.MediaAsset.Image.ImageAsset.getDefaultInstance()
+                    );
+            }
+
+            /**
+             * <pre>
+             * Concrete information regarding this image asset.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Image.ImageAsset asset = 1;</code>
+             */
+            public java.util.List<tools.elide.page.MediaAsset.Image.ImageAsset.Builder> getAssetBuilderList() {
+                return getAssetFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder> getAssetFieldBuilder() {
+                if (assetBuilder_ == null) {
+                    assetBuilder_ =
+                        new com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Image.ImageAsset, tools.elide.page.MediaAsset.Image.ImageAsset.Builder, tools.elide.page.MediaAsset.Image.ImageAssetOrBuilder>(
+                            asset_,
+                            ((bitField0_ & 0x00000001) != 0),
+                            getParentForChildren(),
+                            isClean()
+                        );
+                    asset_ = null;
+                }
+                return assetBuilder_;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.setUnknownFields(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+            // @@protoc_insertion_point(builder_scope:page.MediaAsset.Image)
+        }
+
+        // @@protoc_insertion_point(class_scope:page.MediaAsset.Image)
+        private static final tools.elide.page.MediaAsset.Image DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Image();
+        }
+
+        public static tools.elide.page.MediaAsset.Image getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<Image> PARSER = new com.google.protobuf.AbstractParser<Image>() {
+            @java.lang.Override
+            public Image parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Image(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<Image> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Image> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Image getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
     }
 
-    public static final int PROVIDER_FIELD_NUMBER = 1;
-    private int provider_;
-    /**
-     * <pre>
-     * Describes where the video may be streamed from, or accessed.
-     * </pre>
-     *
-     * <code>.page.VideoProvider provider = 1;</code>
-     * @return The enum numeric value on the wire for provider.
-     */
-    @java.lang.Override public int getProviderValue() {
-      return provider_;
-    }
-    /**
-     * <pre>
-     * Describes where the video may be streamed from, or accessed.
-     * </pre>
-     *
-     * <code>.page.VideoProvider provider = 1;</code>
-     * @return The provider.
-     */
-    @java.lang.Override public tools.elide.page.VideoProvider getProvider() {
-      @SuppressWarnings("deprecation")
-      tools.elide.page.VideoProvider result = tools.elide.page.VideoProvider.valueOf(provider_);
-      return result == null ? tools.elide.page.VideoProvider.UNRECOGNIZED : result;
+    public interface VideoOrBuilder
+        extends
+            // @@protoc_insertion_point(interface_extends:page.MediaAsset.Video)
+            com.google.protobuf.MessageOrBuilder {
+        /**
+         * <pre>
+         * Describes where the video may be streamed from, or accessed.
+         * </pre>
+         *
+         * <code>.page.VideoProvider provider = 1;</code>
+         * @return The enum numeric value on the wire for provider.
+         */
+        int getProviderValue();
+        /**
+         * <pre>
+         * Describes where the video may be streamed from, or accessed.
+         * </pre>
+         *
+         * <code>.page.VideoProvider provider = 1;</code>
+         * @return The provider.
+         */
+        tools.elide.page.VideoProvider getProvider();
+
+        /**
+         * <pre>
+         * Title to display for this video asset.
+         * </pre>
+         *
+         * <code>string title = 2;</code>
+         * @return The title.
+         */
+        java.lang.String getTitle();
+        /**
+         * <pre>
+         * Title to display for this video asset.
+         * </pre>
+         *
+         * <code>string title = 2;</code>
+         * @return The bytes for title.
+         */
+        com.google.protobuf.ByteString getTitleBytes();
+
+        /**
+         * <pre>
+         * Description for this video asset.
+         * </pre>
+         *
+         * <code>string description = 3;</code>
+         * @return The description.
+         */
+        java.lang.String getDescription();
+        /**
+         * <pre>
+         * Description for this video asset.
+         * </pre>
+         *
+         * <code>string description = 3;</code>
+         * @return The bytes for description.
+         */
+        com.google.protobuf.ByteString getDescriptionBytes();
+
+        /**
+         * <pre>
+         * Duration of the video asset, in milliseconds.
+         * </pre>
+         *
+         * <code>uint64 run_time = 4;</code>
+         * @return The runTime.
+         */
+        long getRunTime();
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> getAssetList();
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        tools.elide.page.MediaAsset.Video.VideoAsset getAsset(int index);
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        int getAssetCount();
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> getAssetOrBuilderList();
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
+            int index
+        );
     }
 
-    public static final int TITLE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object title_;
-    /**
-     * <pre>
-     * Title to display for this video asset.
-     * </pre>
-     *
-     * <code>string title = 2;</code>
-     * @return The title.
-     */
-    @java.lang.Override
-    public java.lang.String getTitle() {
-      java.lang.Object ref = title_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        title_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * Title to display for this video asset.
-     * </pre>
-     *
-     * <code>string title = 2;</code>
-     * @return The bytes for title.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getTitleBytes() {
-      java.lang.Object ref = title_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        title_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int DESCRIPTION_FIELD_NUMBER = 3;
-    private volatile java.lang.Object description_;
-    /**
-     * <pre>
-     * Description for this video asset.
-     * </pre>
-     *
-     * <code>string description = 3;</code>
-     * @return The description.
-     */
-    @java.lang.Override
-    public java.lang.String getDescription() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        description_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * Description for this video asset.
-     * </pre>
-     *
-     * <code>string description = 3;</code>
-     * @return The bytes for description.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getDescriptionBytes() {
-      java.lang.Object ref = description_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        description_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int RUN_TIME_FIELD_NUMBER = 4;
-    private long runTime_;
-    /**
-     * <pre>
-     * Duration of the video asset, in milliseconds.
-     * </pre>
-     *
-     * <code>uint64 run_time = 4;</code>
-     * @return The runTime.
-     */
-    @java.lang.Override
-    public long getRunTime() {
-      return runTime_;
-    }
-
-    public static final int ASSET_FIELD_NUMBER = 5;
-    private java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> asset_;
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    @java.lang.Override
-    public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> getAssetList() {
-      return asset_;
-    }
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    @java.lang.Override
-    public java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> 
-        getAssetOrBuilderList() {
-      return asset_;
-    }
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    @java.lang.Override
-    public int getAssetCount() {
-      return asset_.size();
-    }
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Video.VideoAsset getAsset(int index) {
-      return asset_.get(index);
-    }
-    /**
-     * <pre>
-     * Describes the assets that back this video media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-     */
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
-        int index) {
-      return asset_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (provider_ != tools.elide.page.VideoProvider.PRIVATE.getNumber()) {
-        output.writeEnum(1, provider_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, title_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, description_);
-      }
-      if (runTime_ != 0L) {
-        output.writeUInt64(4, runTime_);
-      }
-      for (int i = 0; i < asset_.size(); i++) {
-        output.writeMessage(5, asset_.get(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (provider_ != tools.elide.page.VideoProvider.PRIVATE.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, provider_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, title_);
-      }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, description_);
-      }
-      if (runTime_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(4, runTime_);
-      }
-      for (int i = 0; i < asset_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, asset_.get(i));
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof tools.elide.page.MediaAsset.Video)) {
-        return super.equals(obj);
-      }
-      tools.elide.page.MediaAsset.Video other = (tools.elide.page.MediaAsset.Video) obj;
-
-      if (provider_ != other.provider_) return false;
-      if (!getTitle()
-          .equals(other.getTitle())) return false;
-      if (!getDescription()
-          .equals(other.getDescription())) return false;
-      if (getRunTime()
-          != other.getRunTime()) return false;
-      if (!getAssetList()
-          .equals(other.getAssetList())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PROVIDER_FIELD_NUMBER;
-      hash = (53 * hash) + provider_;
-      hash = (37 * hash) + TITLE_FIELD_NUMBER;
-      hash = (53 * hash) + getTitle().hashCode();
-      hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-      hash = (53 * hash) + getDescription().hashCode();
-      hash = (37 * hash) + RUN_TIME_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getRunTime());
-      if (getAssetCount() > 0) {
-        hash = (37 * hash) + ASSET_FIELD_NUMBER;
-        hash = (53 * hash) + getAssetList().hashCode();
-      }
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Video parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Video parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Video parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(tools.elide.page.MediaAsset.Video prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * <pre>
      * Describes concrete information about a video asset, attached to some web page or data point.
@@ -4960,1428 +3846,2801 @@ private static final long serialVersionUID = 0L;
      *
      * Protobuf type {@code page.MediaAsset.Video}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:page.MediaAsset.Video)
-        tools.elide.page.MediaAsset.VideoOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
-      }
+    public static final class Video
+        extends com.google.protobuf.GeneratedMessageV3
+        implements
+            // @@protoc_insertion_point(message_implements:page.MediaAsset.Video)
+            VideoOrBuilder {
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Video.class, tools.elide.page.MediaAsset.Video.Builder.class);
-      }
+        private static final long serialVersionUID = 0L;
 
-      // Construct using tools.elide.page.MediaAsset.Video.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-          getAssetFieldBuilder();
+        // Use Video.newBuilder() to construct.
+        private Video(
+            com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+        ) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        provider_ = 0;
 
-        title_ = "";
-
-        description_ = "";
-
-        runTime_ = 0L;
-
-        if (assetBuilder_ == null) {
-          asset_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          assetBuilder_.clear();
+        private Video() {
+            provider_ = 0;
+            title_ = "";
+            description_ = "";
+            asset_ = java.util.Collections.emptyList();
         }
-        return this;
-      }
 
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
-      }
+        @java.lang.Override
+        @SuppressWarnings({ "unused" })
+        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+            return new Video();
+        }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Video getDefaultInstanceForType() {
-        return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-      }
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+            return this.unknownFields;
+        }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Video build() {
-        tools.elide.page.MediaAsset.Video result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Video buildPartial() {
-        tools.elide.page.MediaAsset.Video result = new tools.elide.page.MediaAsset.Video(this);
-        int from_bitField0_ = bitField0_;
-        result.provider_ = provider_;
-        result.title_ = title_;
-        result.description_ = description_;
-        result.runTime_ = runTime_;
-        if (assetBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            asset_ = java.util.Collections.unmodifiableList(asset_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.asset_ = asset_;
-        } else {
-          result.asset_ = assetBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof tools.elide.page.MediaAsset.Video) {
-          return mergeFrom((tools.elide.page.MediaAsset.Video)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(tools.elide.page.MediaAsset.Video other) {
-        if (other == tools.elide.page.MediaAsset.Video.getDefaultInstance()) return this;
-        if (other.provider_ != 0) {
-          setProviderValue(other.getProviderValue());
-        }
-        if (!other.getTitle().isEmpty()) {
-          title_ = other.title_;
-          onChanged();
-        }
-        if (!other.getDescription().isEmpty()) {
-          description_ = other.description_;
-          onChanged();
-        }
-        if (other.getRunTime() != 0L) {
-          setRunTime(other.getRunTime());
-        }
-        if (assetBuilder_ == null) {
-          if (!other.asset_.isEmpty()) {
-            if (asset_.isEmpty()) {
-              asset_ = other.asset_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureAssetIsMutable();
-              asset_.addAll(other.asset_);
+        private Video(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
             }
-            onChanged();
-          }
-        } else {
-          if (!other.asset_.isEmpty()) {
-            if (assetBuilder_.isEmpty()) {
-              assetBuilder_.dispose();
-              assetBuilder_ = null;
-              asset_ = other.asset_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              assetBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getAssetFieldBuilder() : null;
-            } else {
-              assetBuilder_.addAllMessages(other.asset_);
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8:
+                            {
+                                int rawValue = input.readEnum();
+
+                                provider_ = rawValue;
+                                break;
+                            }
+                        case 18:
+                            {
+                                java.lang.String s = input.readStringRequireUtf8();
+
+                                title_ = s;
+                                break;
+                            }
+                        case 26:
+                            {
+                                java.lang.String s = input.readStringRequireUtf8();
+
+                                description_ = s;
+                                break;
+                            }
+                        case 32:
+                            {
+                                runTime_ = input.readUInt64();
+                                break;
+                            }
+                        case 42:
+                            {
+                                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                                    asset_ =
+                                        new java.util.ArrayList<tools.elide.page.MediaAsset.Video.VideoAsset>();
+                                    mutable_bitField0_ |= 0x00000001;
+                                }
+                                asset_.add(
+                                    input.readMessage(
+                                        tools.elide.page.MediaAsset.Video.VideoAsset.parser(),
+                                        extensionRegistry
+                                    )
+                                );
+                                break;
+                            }
+                        default:
+                            {
+                                if (
+                                    !parseUnknownField(
+                                        input,
+                                        unknownFields,
+                                        extensionRegistry,
+                                        tag
+                                    )
+                                ) {
+                                    done = true;
+                                }
+                                break;
+                            }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e
+                    .asInvalidProtocolBufferException()
+                    .setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                    .setUnfinishedMessage(this);
+            } finally {
+                if (((mutable_bitField0_ & 0x00000001) != 0)) {
+                    asset_ = java.util.Collections.unmodifiableList(asset_);
+                }
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
             }
-          }
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
 
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        tools.elide.page.MediaAsset.Video parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (tools.elide.page.MediaAsset.Video) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
         }
-        return this;
-      }
-      private int bitField0_;
 
-      private int provider_ = 0;
-      /**
-       * <pre>
-       * Describes where the video may be streamed from, or accessed.
-       * </pre>
-       *
-       * <code>.page.VideoProvider provider = 1;</code>
-       * @return The enum numeric value on the wire for provider.
-       */
-      @java.lang.Override public int getProviderValue() {
-        return provider_;
-      }
-      /**
-       * <pre>
-       * Describes where the video may be streamed from, or accessed.
-       * </pre>
-       *
-       * <code>.page.VideoProvider provider = 1;</code>
-       * @param value The enum numeric value on the wire for provider to set.
-       * @return This builder for chaining.
-       */
-      public Builder setProviderValue(int value) {
-        
-        provider_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes where the video may be streamed from, or accessed.
-       * </pre>
-       *
-       * <code>.page.VideoProvider provider = 1;</code>
-       * @return The provider.
-       */
-      @java.lang.Override
-      public tools.elide.page.VideoProvider getProvider() {
-        @SuppressWarnings("deprecation")
-        tools.elide.page.VideoProvider result = tools.elide.page.VideoProvider.valueOf(provider_);
-        return result == null ? tools.elide.page.VideoProvider.UNRECOGNIZED : result;
-      }
-      /**
-       * <pre>
-       * Describes where the video may be streamed from, or accessed.
-       * </pre>
-       *
-       * <code>.page.VideoProvider provider = 1;</code>
-       * @param value The provider to set.
-       * @return This builder for chaining.
-       */
-      public Builder setProvider(tools.elide.page.VideoProvider value) {
-        if (value == null) {
-          throw new NullPointerException();
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.page.MediaAsset.Video.class,
+                tools.elide.page.MediaAsset.Video.Builder.class
+            );
         }
-        
-        provider_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes where the video may be streamed from, or accessed.
-       * </pre>
-       *
-       * <code>.page.VideoProvider provider = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearProvider() {
-        
-        provider_ = 0;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object title_ = "";
-      /**
-       * <pre>
-       * Title to display for this video asset.
-       * </pre>
-       *
-       * <code>string title = 2;</code>
-       * @return The title.
-       */
-      public java.lang.String getTitle() {
-        java.lang.Object ref = title_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          title_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
+        public interface VideoAssetOrBuilder
+            extends
+                // @@protoc_insertion_point(interface_extends:page.MediaAsset.Video.VideoAsset)
+                com.google.protobuf.MessageOrBuilder {
+            /**
+             * <pre>
+             * Resolutions at which a video might be available.
+             * </pre>
+             *
+             * <code>.page.VideoResolution resolution = 1;</code>
+             * @return The enum numeric value on the wire for resolution.
+             */
+            int getResolutionValue();
+            /**
+             * <pre>
+             * Resolutions at which a video might be available.
+             * </pre>
+             *
+             * <code>.page.VideoResolution resolution = 1;</code>
+             * @return The resolution.
+             */
+            tools.elide.page.VideoResolution getResolution();
+
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             * @return Whether the thumb field is set.
+             */
+            boolean hasThumb();
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             * @return The thumb.
+             */
+            tools.elide.page.MediaAsset.Image getThumb();
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             */
+            tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder();
+
+            /**
+             * <pre>
+             * URI where the video may be streamed or accessed.
+             * </pre>
+             *
+             * <code>string uri = 3;</code>
+             * @return The uri.
+             */
+            java.lang.String getUri();
+            /**
+             * <pre>
+             * URI where the video may be streamed or accessed.
+             * </pre>
+             *
+             * <code>string uri = 3;</code>
+             * @return The bytes for uri.
+             */
+            com.google.protobuf.ByteString getUriBytes();
         }
-      }
-      /**
-       * <pre>
-       * Title to display for this video asset.
-       * </pre>
-       *
-       * <code>string title = 2;</code>
-       * @return The bytes for title.
-       */
-      public com.google.protobuf.ByteString
-          getTitleBytes() {
-        java.lang.Object ref = title_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          title_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Title to display for this video asset.
-       * </pre>
-       *
-       * <code>string title = 2;</code>
-       * @param value The title to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTitle(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        title_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Title to display for this video asset.
-       * </pre>
-       *
-       * <code>string title = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearTitle() {
-        
-        title_ = getDefaultInstance().getTitle();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Title to display for this video asset.
-       * </pre>
-       *
-       * <code>string title = 2;</code>
-       * @param value The bytes for title to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTitleBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        title_ = value;
-        onChanged();
-        return this;
-      }
 
-      private java.lang.Object description_ = "";
-      /**
-       * <pre>
-       * Description for this video asset.
-       * </pre>
-       *
-       * <code>string description = 3;</code>
-       * @return The description.
-       */
-      public java.lang.String getDescription() {
-        java.lang.Object ref = description_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          description_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Description for this video asset.
-       * </pre>
-       *
-       * <code>string description = 3;</code>
-       * @return The bytes for description.
-       */
-      public com.google.protobuf.ByteString
-          getDescriptionBytes() {
-        java.lang.Object ref = description_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          description_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Description for this video asset.
-       * </pre>
-       *
-       * <code>string description = 3;</code>
-       * @param value The description to set.
-       * @return This builder for chaining.
-       */
-      public Builder setDescription(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        description_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Description for this video asset.
-       * </pre>
-       *
-       * <code>string description = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearDescription() {
-        
-        description_ = getDefaultInstance().getDescription();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Description for this video asset.
-       * </pre>
-       *
-       * <code>string description = 3;</code>
-       * @param value The bytes for description to set.
-       * @return This builder for chaining.
-       */
-      public Builder setDescriptionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        description_ = value;
-        onChanged();
-        return this;
-      }
+        /**
+         * <pre>
+         * Describes information about an individual video asset, which is part of an attached video.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Video.VideoAsset}
+         */
+        public static final class VideoAsset
+            extends com.google.protobuf.GeneratedMessageV3
+            implements
+                // @@protoc_insertion_point(message_implements:page.MediaAsset.Video.VideoAsset)
+                VideoAssetOrBuilder {
 
-      private long runTime_ ;
-      /**
-       * <pre>
-       * Duration of the video asset, in milliseconds.
-       * </pre>
-       *
-       * <code>uint64 run_time = 4;</code>
-       * @return The runTime.
-       */
-      @java.lang.Override
-      public long getRunTime() {
-        return runTime_;
-      }
-      /**
-       * <pre>
-       * Duration of the video asset, in milliseconds.
-       * </pre>
-       *
-       * <code>uint64 run_time = 4;</code>
-       * @param value The runTime to set.
-       * @return This builder for chaining.
-       */
-      public Builder setRunTime(long value) {
-        
-        runTime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Duration of the video asset, in milliseconds.
-       * </pre>
-       *
-       * <code>uint64 run_time = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearRunTime() {
-        
-        runTime_ = 0L;
-        onChanged();
-        return this;
-      }
+            private static final long serialVersionUID = 0L;
 
-      private java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> asset_ =
-        java.util.Collections.emptyList();
-      private void ensureAssetIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          asset_ = new java.util.ArrayList<tools.elide.page.MediaAsset.Video.VideoAsset>(asset_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> assetBuilder_;
-
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> getAssetList() {
-        if (assetBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(asset_);
-        } else {
-          return assetBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public int getAssetCount() {
-        if (assetBuilder_ == null) {
-          return asset_.size();
-        } else {
-          return assetBuilder_.getCount();
-        }
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public tools.elide.page.MediaAsset.Video.VideoAsset getAsset(int index) {
-        if (assetBuilder_ == null) {
-          return asset_.get(index);
-        } else {
-          return assetBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder setAsset(
-          int index, tools.elide.page.MediaAsset.Video.VideoAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.set(index, value);
-          onChanged();
-        } else {
-          assetBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder setAsset(
-          int index, tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder addAsset(tools.elide.page.MediaAsset.Video.VideoAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.add(value);
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder addAsset(
-          int index, tools.elide.page.MediaAsset.Video.VideoAsset value) {
-        if (assetBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureAssetIsMutable();
-          asset_.add(index, value);
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder addAsset(
-          tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.add(builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder addAsset(
-          int index, tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          assetBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder addAllAsset(
-          java.lang.Iterable<? extends tools.elide.page.MediaAsset.Video.VideoAsset> values) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, asset_);
-          onChanged();
-        } else {
-          assetBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder clearAsset() {
-        if (assetBuilder_ == null) {
-          asset_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          assetBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public Builder removeAsset(int index) {
-        if (assetBuilder_ == null) {
-          ensureAssetIsMutable();
-          asset_.remove(index);
-          onChanged();
-        } else {
-          assetBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public tools.elide.page.MediaAsset.Video.VideoAsset.Builder getAssetBuilder(
-          int index) {
-        return getAssetFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
-          int index) {
-        if (assetBuilder_ == null) {
-          return asset_.get(index);  } else {
-          return assetBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> 
-           getAssetOrBuilderList() {
-        if (assetBuilder_ != null) {
-          return assetBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(asset_);
-        }
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public tools.elide.page.MediaAsset.Video.VideoAsset.Builder addAssetBuilder() {
-        return getAssetFieldBuilder().addBuilder(
-            tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public tools.elide.page.MediaAsset.Video.VideoAsset.Builder addAssetBuilder(
-          int index) {
-        return getAssetFieldBuilder().addBuilder(
-            index, tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Describes the assets that back this video media.
-       * </pre>
-       *
-       * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
-       */
-      public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset.Builder> 
-           getAssetBuilderList() {
-        return getAssetFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> 
-          getAssetFieldBuilder() {
-        if (assetBuilder_ == null) {
-          assetBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder>(
-                  asset_,
-                  ((bitField0_ & 0x00000001) != 0),
-                  getParentForChildren(),
-                  isClean());
-          asset_ = null;
-        }
-        return assetBuilder_;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:page.MediaAsset.Video)
-    }
-
-    // @@protoc_insertion_point(class_scope:page.MediaAsset.Video)
-    private static final tools.elide.page.MediaAsset.Video DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Video();
-    }
-
-    public static tools.elide.page.MediaAsset.Video getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Video>
-        PARSER = new com.google.protobuf.AbstractParser<Video>() {
-      @java.lang.Override
-      public Video parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Video(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Video> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Video> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Video getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface DocumentOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:page.MediaAsset.Document)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <pre>
-     * Specifies the type of document.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-     * @return The enum numeric value on the wire for type.
-     */
-    int getTypeValue();
-    /**
-     * <pre>
-     * Specifies the type of document.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-     * @return The type.
-     */
-    tools.elide.page.MediaAsset.Document.DocumentType getType();
-  }
-  /**
-   * <pre>
-   * Specifies information about a digital document of some kind, that is being referenced as an asset.
-   * </pre>
-   *
-   * Protobuf type {@code page.MediaAsset.Document}
-   */
-  public static final class Document extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:page.MediaAsset.Document)
-      DocumentOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use Document.newBuilder() to construct.
-    private Document(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private Document() {
-      type_ = 0;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Document();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Document(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-              int rawValue = input.readEnum();
-
-              type_ = rawValue;
-              break;
+            // Use VideoAsset.newBuilder() to construct.
+            private VideoAsset(
+                com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+            ) {
+                super(builder);
             }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
+
+            private VideoAsset() {
+                resolution_ = 0;
+                uri_ = "";
             }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
-    }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.page.MediaAsset.Document.class, tools.elide.page.MediaAsset.Document.Builder.class);
-    }
+            @java.lang.Override
+            @SuppressWarnings({ "unused" })
+            protected java.lang.Object newInstance(
+                UnusedPrivateParameter unused
+            ) {
+                return new VideoAsset();
+            }
 
-    /**
-     * <pre>
-     * Enumerates common types of digital documents.
-     * </pre>
-     *
-     * Protobuf enum {@code page.MediaAsset.Document.DocumentType}
-     */
-    public enum DocumentType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <pre>
-       * Default: generic document type.
-       * </pre>
-       *
-       * <code>GENERIC_DOCUMENT = 0;</code>
-       */
-      GENERIC_DOCUMENT(0),
-      /**
-       * <pre>
-       * Plain text document.
-       * </pre>
-       *
-       * <code>TEXT_PLAIN = 1;</code>
-       */
-      TEXT_PLAIN(1),
-      /**
-       * <pre>
-       * Rich text document.
-       * </pre>
-       *
-       * <code>TEXT_RICH = 2;</code>
-       */
-      TEXT_RICH(2),
-      /**
-       * <pre>
-       * Markdown-formatted document.
-       * </pre>
-       *
-       * <code>TEXT_MARKDOWN = 3;</code>
-       */
-      TEXT_MARKDOWN(3),
-      /**
-       * <pre>
-       * HTML-formatted document.
-       * </pre>
-       *
-       * <code>TEXT_HTML = 4;</code>
-       */
-      TEXT_HTML(4),
-      /**
-       * <pre>
-       * Comma Separated Values in text format.
-       * </pre>
-       *
-       * <code>TEXT_CSV = 5;</code>
-       */
-      TEXT_CSV(5),
-      /**
-       * <pre>
-       * Portable Document Format.
-       * </pre>
-       *
-       * <code>PDF = 6;</code>
-       */
-      PDF(6),
-      /**
-       * <pre>
-       * Word (old format, extension `.doc`).
-       * </pre>
-       *
-       * <code>WORD_DOC = 7;</code>
-       */
-      WORD_DOC(7),
-      /**
-       * <pre>
-       * Word (new format, extension `.docx`).
-       * </pre>
-       *
-       * <code>WORD_DOCX = 8;</code>
-       */
-      WORD_DOCX(8),
-      UNRECOGNIZED(-1),
-      ;
+            @java.lang.Override
+            public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+                return this.unknownFields;
+            }
 
-      /**
-       * <pre>
-       * Default: generic document type.
-       * </pre>
-       *
-       * <code>GENERIC_DOCUMENT = 0;</code>
-       */
-      public static final int GENERIC_DOCUMENT_VALUE = 0;
-      /**
-       * <pre>
-       * Plain text document.
-       * </pre>
-       *
-       * <code>TEXT_PLAIN = 1;</code>
-       */
-      public static final int TEXT_PLAIN_VALUE = 1;
-      /**
-       * <pre>
-       * Rich text document.
-       * </pre>
-       *
-       * <code>TEXT_RICH = 2;</code>
-       */
-      public static final int TEXT_RICH_VALUE = 2;
-      /**
-       * <pre>
-       * Markdown-formatted document.
-       * </pre>
-       *
-       * <code>TEXT_MARKDOWN = 3;</code>
-       */
-      public static final int TEXT_MARKDOWN_VALUE = 3;
-      /**
-       * <pre>
-       * HTML-formatted document.
-       * </pre>
-       *
-       * <code>TEXT_HTML = 4;</code>
-       */
-      public static final int TEXT_HTML_VALUE = 4;
-      /**
-       * <pre>
-       * Comma Separated Values in text format.
-       * </pre>
-       *
-       * <code>TEXT_CSV = 5;</code>
-       */
-      public static final int TEXT_CSV_VALUE = 5;
-      /**
-       * <pre>
-       * Portable Document Format.
-       * </pre>
-       *
-       * <code>PDF = 6;</code>
-       */
-      public static final int PDF_VALUE = 6;
-      /**
-       * <pre>
-       * Word (old format, extension `.doc`).
-       * </pre>
-       *
-       * <code>WORD_DOC = 7;</code>
-       */
-      public static final int WORD_DOC_VALUE = 7;
-      /**
-       * <pre>
-       * Word (new format, extension `.docx`).
-       * </pre>
-       *
-       * <code>WORD_DOCX = 8;</code>
-       */
-      public static final int WORD_DOCX_VALUE = 8;
+            private VideoAsset(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                this();
+                if (extensionRegistry == null) {
+                    throw new java.lang.NullPointerException();
+                }
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+                try {
+                    boolean done = false;
+                    while (!done) {
+                        int tag = input.readTag();
+                        switch (tag) {
+                            case 0:
+                                done = true;
+                                break;
+                            case 8:
+                                {
+                                    int rawValue = input.readEnum();
 
+                                    resolution_ = rawValue;
+                                    break;
+                                }
+                            case 18:
+                                {
+                                    tools.elide.page.MediaAsset.Image.Builder subBuilder =
+                                        null;
+                                    if (thumb_ != null) {
+                                        subBuilder = thumb_.toBuilder();
+                                    }
+                                    thumb_ =
+                                        input.readMessage(
+                                            tools.elide.page.MediaAsset.Image.parser(),
+                                            extensionRegistry
+                                        );
+                                    if (subBuilder != null) {
+                                        subBuilder.mergeFrom(thumb_);
+                                        thumb_ = subBuilder.buildPartial();
+                                    }
 
-      public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
-        }
-        return value;
-      }
+                                    break;
+                                }
+                            case 26:
+                                {
+                                    java.lang.String s = input.readStringRequireUtf8();
 
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static DocumentType valueOf(int value) {
-        return forNumber(value);
-      }
+                                    uri_ = s;
+                                    break;
+                                }
+                            default:
+                                {
+                                    if (
+                                        !parseUnknownField(
+                                            input,
+                                            unknownFields,
+                                            extensionRegistry,
+                                            tag
+                                        )
+                                    ) {
+                                        done = true;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    throw e.setUnfinishedMessage(this);
+                } catch (com.google.protobuf.UninitializedMessageException e) {
+                    throw e
+                        .asInvalidProtocolBufferException()
+                        .setUnfinishedMessage(this);
+                } catch (java.io.IOException e) {
+                    throw new com.google.protobuf.InvalidProtocolBufferException(
+                        e
+                    )
+                        .setUnfinishedMessage(this);
+                } finally {
+                    this.unknownFields = unknownFields.build();
+                    makeExtensionsImmutable();
+                }
+            }
 
-      /**
-       * @param value The numeric wire value of the corresponding enum entry.
-       * @return The enum associated with the given numeric wire value.
-       */
-      public static DocumentType forNumber(int value) {
-        switch (value) {
-          case 0: return GENERIC_DOCUMENT;
-          case 1: return TEXT_PLAIN;
-          case 2: return TEXT_RICH;
-          case 3: return TEXT_MARKDOWN;
-          case 4: return TEXT_HTML;
-          case 5: return TEXT_CSV;
-          case 6: return PDF;
-          case 7: return WORD_DOC;
-          case 8: return WORD_DOCX;
-          default: return null;
-        }
-      }
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
+            }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<DocumentType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          DocumentType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<DocumentType>() {
-              public DocumentType findValueByNumber(int number) {
-                return DocumentType.forNumber(number);
-              }
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Video.VideoAsset.class,
+                    tools.elide.page.MediaAsset.Video.VideoAsset.Builder.class
+                );
+            }
+
+            public static final int RESOLUTION_FIELD_NUMBER = 1;
+            private int resolution_;
+
+            /**
+             * <pre>
+             * Resolutions at which a video might be available.
+             * </pre>
+             *
+             * <code>.page.VideoResolution resolution = 1;</code>
+             * @return The enum numeric value on the wire for resolution.
+             */
+            @java.lang.Override
+            public int getResolutionValue() {
+                return resolution_;
+            }
+
+            /**
+             * <pre>
+             * Resolutions at which a video might be available.
+             * </pre>
+             *
+             * <code>.page.VideoResolution resolution = 1;</code>
+             * @return The resolution.
+             */
+            @java.lang.Override
+            public tools.elide.page.VideoResolution getResolution() {
+                @SuppressWarnings("deprecation")
+                tools.elide.page.VideoResolution result = tools.elide.page.VideoResolution.valueOf(
+                    resolution_
+                );
+                return result == null
+                    ? tools.elide.page.VideoResolution.UNRECOGNIZED
+                    : result;
+            }
+
+            public static final int THUMB_FIELD_NUMBER = 2;
+            private tools.elide.page.MediaAsset.Image thumb_;
+
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             * @return Whether the thumb field is set.
+             */
+            @java.lang.Override
+            public boolean hasThumb() {
+                return thumb_ != null;
+            }
+
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             * @return The thumb.
+             */
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Image getThumb() {
+                return thumb_ == null
+                    ? tools.elide.page.MediaAsset.Image.getDefaultInstance()
+                    : thumb_;
+            }
+
+            /**
+             * <pre>
+             * Image asset to be used as a thumbnail for this video asset.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Image thumb = 2;</code>
+             */
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder() {
+                return getThumb();
+            }
+
+            public static final int URI_FIELD_NUMBER = 3;
+            private volatile java.lang.Object uri_;
+
+            /**
+             * <pre>
+             * URI where the video may be streamed or accessed.
+             * </pre>
+             *
+             * <code>string uri = 3;</code>
+             * @return The uri.
+             */
+            @java.lang.Override
+            public java.lang.String getUri() {
+                java.lang.Object ref = uri_;
+                if (ref instanceof java.lang.String) {
+                    return (java.lang.String) ref;
+                } else {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    uri_ = s;
+                    return s;
+                }
+            }
+
+            /**
+             * <pre>
+             * URI where the video may be streamed or accessed.
+             * </pre>
+             *
+             * <code>string uri = 3;</code>
+             * @return The bytes for uri.
+             */
+            @java.lang.Override
+            public com.google.protobuf.ByteString getUriBytes() {
+                java.lang.Object ref = uri_;
+                if (ref instanceof java.lang.String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    uri_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            private byte memoizedIsInitialized = -1;
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                byte isInitialized = memoizedIsInitialized;
+                if (isInitialized == 1) return true;
+                if (isInitialized == 0) return false;
+
+                memoizedIsInitialized = 1;
+                return true;
+            }
+
+            @java.lang.Override
+            public void writeTo(com.google.protobuf.CodedOutputStream output)
+                throws java.io.IOException {
+                if (
+                    resolution_ !=
+                    tools.elide.page.VideoResolution.LOW.getNumber()
+                ) {
+                    output.writeEnum(1, resolution_);
+                }
+                if (thumb_ != null) {
+                    output.writeMessage(2, getThumb());
+                }
+                if (
+                    !com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)
+                ) {
+                    com.google.protobuf.GeneratedMessageV3.writeString(
+                        output,
+                        3,
+                        uri_
+                    );
+                }
+                unknownFields.writeTo(output);
+            }
+
+            @java.lang.Override
+            public int getSerializedSize() {
+                int size = memoizedSize;
+                if (size != -1) return size;
+
+                size = 0;
+                if (
+                    resolution_ !=
+                    tools.elide.page.VideoResolution.LOW.getNumber()
+                ) {
+                    size +=
+                        com.google.protobuf.CodedOutputStream.computeEnumSize(
+                            1,
+                            resolution_
+                        );
+                }
+                if (thumb_ != null) {
+                    size +=
+                        com.google.protobuf.CodedOutputStream.computeMessageSize(
+                            2,
+                            getThumb()
+                        );
+                }
+                if (
+                    !com.google.protobuf.GeneratedMessageV3.isStringEmpty(uri_)
+                ) {
+                    size +=
+                        com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                            3,
+                            uri_
+                        );
+                }
+                size += unknownFields.getSerializedSize();
+                memoizedSize = size;
+                return size;
+            }
+
+            @java.lang.Override
+            public boolean equals(final java.lang.Object obj) {
+                if (obj == this) {
+                    return true;
+                }
+                if (
+                    !(
+                        obj instanceof tools.elide.page.MediaAsset.Video.VideoAsset
+                    )
+                ) {
+                    return super.equals(obj);
+                }
+                tools.elide.page.MediaAsset.Video.VideoAsset other = (tools.elide.page.MediaAsset.Video.VideoAsset) obj;
+
+                if (resolution_ != other.resolution_) return false;
+                if (hasThumb() != other.hasThumb()) return false;
+                if (hasThumb()) {
+                    if (!getThumb().equals(other.getThumb())) return false;
+                }
+                if (!getUri().equals(other.getUri())) return false;
+                if (!unknownFields.equals(other.unknownFields)) return false;
+                return true;
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                if (memoizedHashCode != 0) {
+                    return memoizedHashCode;
+                }
+                int hash = 41;
+                hash = (19 * hash) + getDescriptor().hashCode();
+                hash = (37 * hash) + RESOLUTION_FIELD_NUMBER;
+                hash = (53 * hash) + resolution_;
+                if (hasThumb()) {
+                    hash = (37 * hash) + THUMB_FIELD_NUMBER;
+                    hash = (53 * hash) + getThumb().hashCode();
+                }
+                hash = (37 * hash) + URI_FIELD_NUMBER;
+                hash = (53 * hash) + getUri().hashCode();
+                hash = (29 * hash) + unknownFields.hashCode();
+                memoizedHashCode = hash;
+                return hash;
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                java.nio.ByteBuffer data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                java.nio.ByteBuffer data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                com.google.protobuf.ByteString data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                byte[] data
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return PARSER.parseFrom(data, extensionRegistry);
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                java.io.InputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseDelimitedFrom(
+                java.io.InputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                com.google.protobuf.CodedInputStream input
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input
+                );
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                    PARSER,
+                    input,
+                    extensionRegistry
+                );
+            }
+
+            @java.lang.Override
+            public Builder newBuilderForType() {
+                return newBuilder();
+            }
+
+            public static Builder newBuilder() {
+                return DEFAULT_INSTANCE.toBuilder();
+            }
+
+            public static Builder newBuilder(
+                tools.elide.page.MediaAsset.Video.VideoAsset prototype
+            ) {
+                return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+            }
+
+            @java.lang.Override
+            public Builder toBuilder() {
+                return this == DEFAULT_INSTANCE
+                    ? new Builder()
+                    : new Builder().mergeFrom(this);
+            }
+
+            @java.lang.Override
+            protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                Builder builder = new Builder(parent);
+                return builder;
+            }
+
+            /**
+             * <pre>
+             * Describes information about an individual video asset, which is part of an attached video.
+             * </pre>
+             *
+             * Protobuf type {@code page.MediaAsset.Video.VideoAsset}
+             */
+            public static final class Builder
+                extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+                implements
+                    // @@protoc_insertion_point(builder_implements:page.MediaAsset.Video.VideoAsset)
+                    tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder {
+
+                public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
+                }
+
+                @java.lang.Override
+                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                        tools.elide.page.MediaAsset.Video.VideoAsset.class,
+                        tools.elide.page.MediaAsset.Video.VideoAsset.Builder.class
+                    );
+                }
+
+                // Construct using tools.elide.page.MediaAsset.Video.VideoAsset.newBuilder()
+                private Builder() {
+                    maybeForceBuilderInitialization();
+                }
+
+                private Builder(
+                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+                ) {
+                    super(parent);
+                    maybeForceBuilderInitialization();
+                }
+
+                private void maybeForceBuilderInitialization() {
+                    if (
+                        com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                    ) {}
+                }
+
+                @java.lang.Override
+                public Builder clear() {
+                    super.clear();
+                    resolution_ = 0;
+
+                    if (thumbBuilder_ == null) {
+                        thumb_ = null;
+                    } else {
+                        thumb_ = null;
+                        thumbBuilder_ = null;
+                    }
+                    uri_ = "";
+
+                    return this;
+                }
+
+                @java.lang.Override
+                public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                    return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_VideoAsset_descriptor;
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstanceForType() {
+                    return tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance();
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Video.VideoAsset build() {
+                    tools.elide.page.MediaAsset.Video.VideoAsset result = buildPartial();
+                    if (!result.isInitialized()) {
+                        throw newUninitializedMessageException(result);
+                    }
+                    return result;
+                }
+
+                @java.lang.Override
+                public tools.elide.page.MediaAsset.Video.VideoAsset buildPartial() {
+                    tools.elide.page.MediaAsset.Video.VideoAsset result = new tools.elide.page.MediaAsset.Video.VideoAsset(
+                        this
+                    );
+                    result.resolution_ = resolution_;
+                    if (thumbBuilder_ == null) {
+                        result.thumb_ = thumb_;
+                    } else {
+                        result.thumb_ = thumbBuilder_.build();
+                    }
+                    result.uri_ = uri_;
+                    onBuilt();
+                    return result;
+                }
+
+                @java.lang.Override
+                public Builder clone() {
+                    return super.clone();
+                }
+
+                @java.lang.Override
+                public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value
+                ) {
+                    return super.setField(field, value);
+                }
+
+                @java.lang.Override
+                public Builder clearField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field
+                ) {
+                    return super.clearField(field);
+                }
+
+                @java.lang.Override
+                public Builder clearOneof(
+                    com.google.protobuf.Descriptors.OneofDescriptor oneof
+                ) {
+                    return super.clearOneof(oneof);
+                }
+
+                @java.lang.Override
+                public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index,
+                    java.lang.Object value
+                ) {
+                    return super.setRepeatedField(field, index, value);
+                }
+
+                @java.lang.Override
+                public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value
+                ) {
+                    return super.addRepeatedField(field, value);
+                }
+
+                @java.lang.Override
+                public Builder mergeFrom(com.google.protobuf.Message other) {
+                    if (
+                        other instanceof tools.elide.page.MediaAsset.Video.VideoAsset
+                    ) {
+                        return mergeFrom(
+                            (tools.elide.page.MediaAsset.Video.VideoAsset) other
+                        );
+                    } else {
+                        super.mergeFrom(other);
+                        return this;
+                    }
+                }
+
+                public Builder mergeFrom(
+                    tools.elide.page.MediaAsset.Video.VideoAsset other
+                ) {
+                    if (
+                        other ==
+                        tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance()
+                    ) return this;
+                    if (other.resolution_ != 0) {
+                        setResolutionValue(other.getResolutionValue());
+                    }
+                    if (other.hasThumb()) {
+                        mergeThumb(other.getThumb());
+                    }
+                    if (!other.getUri().isEmpty()) {
+                        uri_ = other.uri_;
+                        onChanged();
+                    }
+                    this.mergeUnknownFields(other.unknownFields);
+                    onChanged();
+                    return this;
+                }
+
+                @java.lang.Override
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                @java.lang.Override
+                public Builder mergeFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry
+                ) throws java.io.IOException {
+                    tools.elide.page.MediaAsset.Video.VideoAsset parsedMessage =
+                        null;
+                    try {
+                        parsedMessage =
+                            PARSER.parsePartialFrom(input, extensionRegistry);
+                    } catch (
+                        com.google.protobuf.InvalidProtocolBufferException e
+                    ) {
+                        parsedMessage =
+                            (tools.elide.page.MediaAsset.Video.VideoAsset) e.getUnfinishedMessage();
+                        throw e.unwrapIOException();
+                    } finally {
+                        if (parsedMessage != null) {
+                            mergeFrom(parsedMessage);
+                        }
+                    }
+                    return this;
+                }
+
+                private int resolution_ = 0;
+
+                /**
+                 * <pre>
+                 * Resolutions at which a video might be available.
+                 * </pre>
+                 *
+                 * <code>.page.VideoResolution resolution = 1;</code>
+                 * @return The enum numeric value on the wire for resolution.
+                 */
+                @java.lang.Override
+                public int getResolutionValue() {
+                    return resolution_;
+                }
+
+                /**
+                 * <pre>
+                 * Resolutions at which a video might be available.
+                 * </pre>
+                 *
+                 * <code>.page.VideoResolution resolution = 1;</code>
+                 * @param value The enum numeric value on the wire for resolution to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setResolutionValue(int value) {
+                    resolution_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Resolutions at which a video might be available.
+                 * </pre>
+                 *
+                 * <code>.page.VideoResolution resolution = 1;</code>
+                 * @return The resolution.
+                 */
+                @java.lang.Override
+                public tools.elide.page.VideoResolution getResolution() {
+                    @SuppressWarnings("deprecation")
+                    tools.elide.page.VideoResolution result = tools.elide.page.VideoResolution.valueOf(
+                        resolution_
+                    );
+                    return result == null
+                        ? tools.elide.page.VideoResolution.UNRECOGNIZED
+                        : result;
+                }
+
+                /**
+                 * <pre>
+                 * Resolutions at which a video might be available.
+                 * </pre>
+                 *
+                 * <code>.page.VideoResolution resolution = 1;</code>
+                 * @param value The resolution to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setResolution(
+                    tools.elide.page.VideoResolution value
+                ) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+
+                    resolution_ = value.getNumber();
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Resolutions at which a video might be available.
+                 * </pre>
+                 *
+                 * <code>.page.VideoResolution resolution = 1;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearResolution() {
+                    resolution_ = 0;
+                    onChanged();
+                    return this;
+                }
+
+                private tools.elide.page.MediaAsset.Image thumb_;
+                private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> thumbBuilder_;
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 * @return Whether the thumb field is set.
+                 */
+                public boolean hasThumb() {
+                    return thumbBuilder_ != null || thumb_ != null;
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 * @return The thumb.
+                 */
+                public tools.elide.page.MediaAsset.Image getThumb() {
+                    if (thumbBuilder_ == null) {
+                        return thumb_ == null
+                            ? tools.elide.page.MediaAsset.Image.getDefaultInstance()
+                            : thumb_;
+                    } else {
+                        return thumbBuilder_.getMessage();
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public Builder setThumb(
+                    tools.elide.page.MediaAsset.Image value
+                ) {
+                    if (thumbBuilder_ == null) {
+                        if (value == null) {
+                            throw new NullPointerException();
+                        }
+                        thumb_ = value;
+                        onChanged();
+                    } else {
+                        thumbBuilder_.setMessage(value);
+                    }
+
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public Builder setThumb(
+                    tools.elide.page.MediaAsset.Image.Builder builderForValue
+                ) {
+                    if (thumbBuilder_ == null) {
+                        thumb_ = builderForValue.build();
+                        onChanged();
+                    } else {
+                        thumbBuilder_.setMessage(builderForValue.build());
+                    }
+
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public Builder mergeThumb(
+                    tools.elide.page.MediaAsset.Image value
+                ) {
+                    if (thumbBuilder_ == null) {
+                        if (thumb_ != null) {
+                            thumb_ =
+                                tools.elide.page.MediaAsset.Image
+                                    .newBuilder(thumb_)
+                                    .mergeFrom(value)
+                                    .buildPartial();
+                        } else {
+                            thumb_ = value;
+                        }
+                        onChanged();
+                    } else {
+                        thumbBuilder_.mergeFrom(value);
+                    }
+
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public Builder clearThumb() {
+                    if (thumbBuilder_ == null) {
+                        thumb_ = null;
+                        onChanged();
+                    } else {
+                        thumb_ = null;
+                        thumbBuilder_ = null;
+                    }
+
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public tools.elide.page.MediaAsset.Image.Builder getThumbBuilder() {
+                    onChanged();
+                    return getThumbFieldBuilder().getBuilder();
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                public tools.elide.page.MediaAsset.ImageOrBuilder getThumbOrBuilder() {
+                    if (thumbBuilder_ != null) {
+                        return thumbBuilder_.getMessageOrBuilder();
+                    } else {
+                        return thumb_ == null
+                            ? tools.elide.page.MediaAsset.Image.getDefaultInstance()
+                            : thumb_;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * Image asset to be used as a thumbnail for this video asset.
+                 * </pre>
+                 *
+                 * <code>.page.MediaAsset.Image thumb = 2;</code>
+                 */
+                private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> getThumbFieldBuilder() {
+                    if (thumbBuilder_ == null) {
+                        thumbBuilder_ =
+                            new com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder>(
+                                getThumb(),
+                                getParentForChildren(),
+                                isClean()
+                            );
+                        thumb_ = null;
+                    }
+                    return thumbBuilder_;
+                }
+
+                private java.lang.Object uri_ = "";
+
+                /**
+                 * <pre>
+                 * URI where the video may be streamed or accessed.
+                 * </pre>
+                 *
+                 * <code>string uri = 3;</code>
+                 * @return The uri.
+                 */
+                public java.lang.String getUri() {
+                    java.lang.Object ref = uri_;
+                    if (!(ref instanceof java.lang.String)) {
+                        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                        java.lang.String s = bs.toStringUtf8();
+                        uri_ = s;
+                        return s;
+                    } else {
+                        return (java.lang.String) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * URI where the video may be streamed or accessed.
+                 * </pre>
+                 *
+                 * <code>string uri = 3;</code>
+                 * @return The bytes for uri.
+                 */
+                public com.google.protobuf.ByteString getUriBytes() {
+                    java.lang.Object ref = uri_;
+                    if (ref instanceof String) {
+                        com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref
+                        );
+                        uri_ = b;
+                        return b;
+                    } else {
+                        return (com.google.protobuf.ByteString) ref;
+                    }
+                }
+
+                /**
+                 * <pre>
+                 * URI where the video may be streamed or accessed.
+                 * </pre>
+                 *
+                 * <code>string uri = 3;</code>
+                 * @param value The uri to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setUri(java.lang.String value) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+
+                    uri_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * URI where the video may be streamed or accessed.
+                 * </pre>
+                 *
+                 * <code>string uri = 3;</code>
+                 * @return This builder for chaining.
+                 */
+                public Builder clearUri() {
+                    uri_ = getDefaultInstance().getUri();
+                    onChanged();
+                    return this;
+                }
+
+                /**
+                 * <pre>
+                 * URI where the video may be streamed or accessed.
+                 * </pre>
+                 *
+                 * <code>string uri = 3;</code>
+                 * @param value The bytes for uri to set.
+                 * @return This builder for chaining.
+                 */
+                public Builder setUriBytes(
+                    com.google.protobuf.ByteString value
+                ) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    checkByteStringIsUtf8(value);
+
+                    uri_ = value;
+                    onChanged();
+                    return this;
+                }
+
+                @java.lang.Override
+                public final Builder setUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields
+                ) {
+                    return super.setUnknownFields(unknownFields);
+                }
+
+                @java.lang.Override
+                public final Builder mergeUnknownFields(
+                    final com.google.protobuf.UnknownFieldSet unknownFields
+                ) {
+                    return super.mergeUnknownFields(unknownFields);
+                }
+                // @@protoc_insertion_point(builder_scope:page.MediaAsset.Video.VideoAsset)
+            }
+
+            // @@protoc_insertion_point(class_scope:page.MediaAsset.Video.VideoAsset)
+            private static final tools.elide.page.MediaAsset.Video.VideoAsset DEFAULT_INSTANCE;
+
+            static {
+                DEFAULT_INSTANCE =
+                    new tools.elide.page.MediaAsset.Video.VideoAsset();
+            }
+
+            public static tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstance() {
+                return DEFAULT_INSTANCE;
+            }
+
+            private static final com.google.protobuf.Parser<VideoAsset> PARSER = new com.google.protobuf.AbstractParser<VideoAsset>() {
+                @java.lang.Override
+                public VideoAsset parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry
+                ) throws com.google.protobuf.InvalidProtocolBufferException {
+                    return new VideoAsset(input, extensionRegistry);
+                }
             };
 
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalStateException(
-              "Can't get the descriptor of an unrecognized enum value.");
+            public static com.google.protobuf.Parser<VideoAsset> parser() {
+                return PARSER;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Parser<VideoAsset> getParserForType() {
+                return PARSER;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Video.VideoAsset getDefaultInstanceForType() {
+                return DEFAULT_INSTANCE;
+            }
         }
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tools.elide.page.MediaAsset.Document.getDescriptor().getEnumTypes().get(0);
-      }
 
-      private static final DocumentType[] VALUES = values();
+        public static final int PROVIDER_FIELD_NUMBER = 1;
+        private int provider_;
 
-      public static DocumentType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+        /**
+         * <pre>
+         * Describes where the video may be streamed from, or accessed.
+         * </pre>
+         *
+         * <code>.page.VideoProvider provider = 1;</code>
+         * @return The enum numeric value on the wire for provider.
+         */
+        @java.lang.Override
+        public int getProviderValue() {
+            return provider_;
         }
-        if (desc.getIndex() == -1) {
-          return UNRECOGNIZED;
+
+        /**
+         * <pre>
+         * Describes where the video may be streamed from, or accessed.
+         * </pre>
+         *
+         * <code>.page.VideoProvider provider = 1;</code>
+         * @return The provider.
+         */
+        @java.lang.Override
+        public tools.elide.page.VideoProvider getProvider() {
+            @SuppressWarnings("deprecation")
+            tools.elide.page.VideoProvider result = tools.elide.page.VideoProvider.valueOf(
+                provider_
+            );
+            return result == null
+                ? tools.elide.page.VideoProvider.UNRECOGNIZED
+                : result;
         }
-        return VALUES[desc.getIndex()];
-      }
 
-      private final int value;
+        public static final int TITLE_FIELD_NUMBER = 2;
+        private volatile java.lang.Object title_;
 
-      private DocumentType(int value) {
-        this.value = value;
-      }
+        /**
+         * <pre>
+         * Title to display for this video asset.
+         * </pre>
+         *
+         * <code>string title = 2;</code>
+         * @return The title.
+         */
+        @java.lang.Override
+        public java.lang.String getTitle() {
+            java.lang.Object ref = title_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                title_ = s;
+                return s;
+            }
+        }
 
-      // @@protoc_insertion_point(enum_scope:page.MediaAsset.Document.DocumentType)
+        /**
+         * <pre>
+         * Title to display for this video asset.
+         * </pre>
+         *
+         * <code>string title = 2;</code>
+         * @return The bytes for title.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getTitleBytes() {
+            java.lang.Object ref = title_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                title_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int DESCRIPTION_FIELD_NUMBER = 3;
+        private volatile java.lang.Object description_;
+
+        /**
+         * <pre>
+         * Description for this video asset.
+         * </pre>
+         *
+         * <code>string description = 3;</code>
+         * @return The description.
+         */
+        @java.lang.Override
+        public java.lang.String getDescription() {
+            java.lang.Object ref = description_;
+            if (ref instanceof java.lang.String) {
+                return (java.lang.String) ref;
+            } else {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                description_ = s;
+                return s;
+            }
+        }
+
+        /**
+         * <pre>
+         * Description for this video asset.
+         * </pre>
+         *
+         * <code>string description = 3;</code>
+         * @return The bytes for description.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getDescriptionBytes() {
+            java.lang.Object ref = description_;
+            if (ref instanceof java.lang.String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                description_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        public static final int RUN_TIME_FIELD_NUMBER = 4;
+        private long runTime_;
+
+        /**
+         * <pre>
+         * Duration of the video asset, in milliseconds.
+         * </pre>
+         *
+         * <code>uint64 run_time = 4;</code>
+         * @return The runTime.
+         */
+        @java.lang.Override
+        public long getRunTime() {
+            return runTime_;
+        }
+
+        public static final int ASSET_FIELD_NUMBER = 5;
+        private java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> asset_;
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        @java.lang.Override
+        public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> getAssetList() {
+            return asset_;
+        }
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        @java.lang.Override
+        public java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> getAssetOrBuilderList() {
+            return asset_;
+        }
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        @java.lang.Override
+        public int getAssetCount() {
+            return asset_.size();
+        }
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Video.VideoAsset getAsset(
+            int index
+        ) {
+            return asset_.get(index);
+        }
+
+        /**
+         * <pre>
+         * Describes the assets that back this video media.
+         * </pre>
+         *
+         * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
+            int index
+        ) {
+            return asset_.get(index);
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+            if (
+                provider_ != tools.elide.page.VideoProvider.PRIVATE.getNumber()
+            ) {
+                output.writeEnum(1, provider_);
+            }
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
+                com.google.protobuf.GeneratedMessageV3.writeString(
+                    output,
+                    2,
+                    title_
+                );
+            }
+            if (
+                !com.google.protobuf.GeneratedMessageV3.isStringEmpty(
+                    description_
+                )
+            ) {
+                com.google.protobuf.GeneratedMessageV3.writeString(
+                    output,
+                    3,
+                    description_
+                );
+            }
+            if (runTime_ != 0L) {
+                output.writeUInt64(4, runTime_);
+            }
+            for (int i = 0; i < asset_.size(); i++) {
+                output.writeMessage(5, asset_.get(i));
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (
+                provider_ != tools.elide.page.VideoProvider.PRIVATE.getNumber()
+            ) {
+                size +=
+                    com.google.protobuf.CodedOutputStream.computeEnumSize(
+                        1,
+                        provider_
+                    );
+            }
+            if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(title_)) {
+                size +=
+                    com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                        2,
+                        title_
+                    );
+            }
+            if (
+                !com.google.protobuf.GeneratedMessageV3.isStringEmpty(
+                    description_
+                )
+            ) {
+                size +=
+                    com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                        3,
+                        description_
+                    );
+            }
+            if (runTime_ != 0L) {
+                size +=
+                    com.google.protobuf.CodedOutputStream.computeUInt64Size(
+                        4,
+                        runTime_
+                    );
+            }
+            for (int i = 0; i < asset_.size(); i++) {
+                size +=
+                    com.google.protobuf.CodedOutputStream.computeMessageSize(
+                        5,
+                        asset_.get(i)
+                    );
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof tools.elide.page.MediaAsset.Video)) {
+                return super.equals(obj);
+            }
+            tools.elide.page.MediaAsset.Video other = (tools.elide.page.MediaAsset.Video) obj;
+
+            if (provider_ != other.provider_) return false;
+            if (!getTitle().equals(other.getTitle())) return false;
+            if (!getDescription().equals(other.getDescription())) return false;
+            if (getRunTime() != other.getRunTime()) return false;
+            if (!getAssetList().equals(other.getAssetList())) return false;
+            if (!unknownFields.equals(other.unknownFields)) return false;
+            return true;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + PROVIDER_FIELD_NUMBER;
+            hash = (53 * hash) + provider_;
+            hash = (37 * hash) + TITLE_FIELD_NUMBER;
+            hash = (53 * hash) + getTitle().hashCode();
+            hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+            hash = (53 * hash) + getDescription().hashCode();
+            hash = (37 * hash) + RUN_TIME_FIELD_NUMBER;
+            hash =
+                (53 * hash) +
+                com.google.protobuf.Internal.hashLong(getRunTime());
+            if (getAssetCount() > 0) {
+                hash = (37 * hash) + ASSET_FIELD_NUMBER;
+                hash = (53 * hash) + getAssetList().hashCode();
+            }
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            java.nio.ByteBuffer data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            com.google.protobuf.ByteString data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseDelimitedFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            com.google.protobuf.CodedInputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Video parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(
+            tools.elide.page.MediaAsset.Video prototype
+        ) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                ? new Builder()
+                : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about a video asset, attached to some web page or data point.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Video}
+         */
+        public static final class Builder
+            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+            implements
+                // @@protoc_insertion_point(builder_implements:page.MediaAsset.Video)
+                tools.elide.page.MediaAsset.VideoOrBuilder {
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Video.class,
+                    tools.elide.page.MediaAsset.Video.Builder.class
+                );
+            }
+
+            // Construct using tools.elide.page.MediaAsset.Video.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (
+                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                ) {
+                    getAssetFieldBuilder();
+                }
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                provider_ = 0;
+
+                title_ = "";
+
+                description_ = "";
+
+                runTime_ = 0L;
+
+                if (assetBuilder_ == null) {
+                    asset_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                } else {
+                    assetBuilder_.clear();
+                }
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Video_descriptor;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Video getDefaultInstanceForType() {
+                return tools.elide.page.MediaAsset.Video.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Video build() {
+                tools.elide.page.MediaAsset.Video result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Video buildPartial() {
+                tools.elide.page.MediaAsset.Video result = new tools.elide.page.MediaAsset.Video(
+                    this
+                );
+                int from_bitField0_ = bitField0_;
+                result.provider_ = provider_;
+                result.title_ = title_;
+                result.description_ = description_;
+                result.runTime_ = runTime_;
+                if (assetBuilder_ == null) {
+                    if (((bitField0_ & 0x00000001) != 0)) {
+                        asset_ = java.util.Collections.unmodifiableList(asset_);
+                        bitField0_ = (bitField0_ & ~0x00000001);
+                    }
+                    result.asset_ = asset_;
+                } else {
+                    result.asset_ = assetBuilder_.build();
+                }
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field
+            ) {
+                return super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof
+            ) {
+                return super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value
+            ) {
+                return super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof tools.elide.page.MediaAsset.Video) {
+                    return mergeFrom((tools.elide.page.MediaAsset.Video) other);
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(tools.elide.page.MediaAsset.Video other) {
+                if (
+                    other ==
+                    tools.elide.page.MediaAsset.Video.getDefaultInstance()
+                ) return this;
+                if (other.provider_ != 0) {
+                    setProviderValue(other.getProviderValue());
+                }
+                if (!other.getTitle().isEmpty()) {
+                    title_ = other.title_;
+                    onChanged();
+                }
+                if (!other.getDescription().isEmpty()) {
+                    description_ = other.description_;
+                    onChanged();
+                }
+                if (other.getRunTime() != 0L) {
+                    setRunTime(other.getRunTime());
+                }
+                if (assetBuilder_ == null) {
+                    if (!other.asset_.isEmpty()) {
+                        if (asset_.isEmpty()) {
+                            asset_ = other.asset_;
+                            bitField0_ = (bitField0_ & ~0x00000001);
+                        } else {
+                            ensureAssetIsMutable();
+                            asset_.addAll(other.asset_);
+                        }
+                        onChanged();
+                    }
+                } else {
+                    if (!other.asset_.isEmpty()) {
+                        if (assetBuilder_.isEmpty()) {
+                            assetBuilder_.dispose();
+                            assetBuilder_ = null;
+                            asset_ = other.asset_;
+                            bitField0_ = (bitField0_ & ~0x00000001);
+                            assetBuilder_ =
+                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                    ? getAssetFieldBuilder()
+                                    : null;
+                        } else {
+                            assetBuilder_.addAllMessages(other.asset_);
+                        }
+                    }
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                tools.elide.page.MediaAsset.Video parsedMessage = null;
+                try {
+                    parsedMessage =
+                        PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage =
+                        (tools.elide.page.MediaAsset.Video) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int bitField0_;
+
+            private int provider_ = 0;
+
+            /**
+             * <pre>
+             * Describes where the video may be streamed from, or accessed.
+             * </pre>
+             *
+             * <code>.page.VideoProvider provider = 1;</code>
+             * @return The enum numeric value on the wire for provider.
+             */
+            @java.lang.Override
+            public int getProviderValue() {
+                return provider_;
+            }
+
+            /**
+             * <pre>
+             * Describes where the video may be streamed from, or accessed.
+             * </pre>
+             *
+             * <code>.page.VideoProvider provider = 1;</code>
+             * @param value The enum numeric value on the wire for provider to set.
+             * @return This builder for chaining.
+             */
+            public Builder setProviderValue(int value) {
+                provider_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes where the video may be streamed from, or accessed.
+             * </pre>
+             *
+             * <code>.page.VideoProvider provider = 1;</code>
+             * @return The provider.
+             */
+            @java.lang.Override
+            public tools.elide.page.VideoProvider getProvider() {
+                @SuppressWarnings("deprecation")
+                tools.elide.page.VideoProvider result = tools.elide.page.VideoProvider.valueOf(
+                    provider_
+                );
+                return result == null
+                    ? tools.elide.page.VideoProvider.UNRECOGNIZED
+                    : result;
+            }
+
+            /**
+             * <pre>
+             * Describes where the video may be streamed from, or accessed.
+             * </pre>
+             *
+             * <code>.page.VideoProvider provider = 1;</code>
+             * @param value The provider to set.
+             * @return This builder for chaining.
+             */
+            public Builder setProvider(tools.elide.page.VideoProvider value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                provider_ = value.getNumber();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes where the video may be streamed from, or accessed.
+             * </pre>
+             *
+             * <code>.page.VideoProvider provider = 1;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearProvider() {
+                provider_ = 0;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object title_ = "";
+
+            /**
+             * <pre>
+             * Title to display for this video asset.
+             * </pre>
+             *
+             * <code>string title = 2;</code>
+             * @return The title.
+             */
+            public java.lang.String getTitle() {
+                java.lang.Object ref = title_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    title_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Title to display for this video asset.
+             * </pre>
+             *
+             * <code>string title = 2;</code>
+             * @return The bytes for title.
+             */
+            public com.google.protobuf.ByteString getTitleBytes() {
+                java.lang.Object ref = title_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    title_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Title to display for this video asset.
+             * </pre>
+             *
+             * <code>string title = 2;</code>
+             * @param value The title to set.
+             * @return This builder for chaining.
+             */
+            public Builder setTitle(java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                title_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Title to display for this video asset.
+             * </pre>
+             *
+             * <code>string title = 2;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearTitle() {
+                title_ = getDefaultInstance().getTitle();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Title to display for this video asset.
+             * </pre>
+             *
+             * <code>string title = 2;</code>
+             * @param value The bytes for title to set.
+             * @return This builder for chaining.
+             */
+            public Builder setTitleBytes(com.google.protobuf.ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                title_ = value;
+                onChanged();
+                return this;
+            }
+
+            private java.lang.Object description_ = "";
+
+            /**
+             * <pre>
+             * Description for this video asset.
+             * </pre>
+             *
+             * <code>string description = 3;</code>
+             * @return The description.
+             */
+            public java.lang.String getDescription() {
+                java.lang.Object ref = description_;
+                if (!(ref instanceof java.lang.String)) {
+                    com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                    java.lang.String s = bs.toStringUtf8();
+                    description_ = s;
+                    return s;
+                } else {
+                    return (java.lang.String) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Description for this video asset.
+             * </pre>
+             *
+             * <code>string description = 3;</code>
+             * @return The bytes for description.
+             */
+            public com.google.protobuf.ByteString getDescriptionBytes() {
+                java.lang.Object ref = description_;
+                if (ref instanceof String) {
+                    com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref
+                    );
+                    description_ = b;
+                    return b;
+                } else {
+                    return (com.google.protobuf.ByteString) ref;
+                }
+            }
+
+            /**
+             * <pre>
+             * Description for this video asset.
+             * </pre>
+             *
+             * <code>string description = 3;</code>
+             * @param value The description to set.
+             * @return This builder for chaining.
+             */
+            public Builder setDescription(java.lang.String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                description_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Description for this video asset.
+             * </pre>
+             *
+             * <code>string description = 3;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearDescription() {
+                description_ = getDefaultInstance().getDescription();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Description for this video asset.
+             * </pre>
+             *
+             * <code>string description = 3;</code>
+             * @param value The bytes for description to set.
+             * @return This builder for chaining.
+             */
+            public Builder setDescriptionBytes(
+                com.google.protobuf.ByteString value
+            ) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                checkByteStringIsUtf8(value);
+
+                description_ = value;
+                onChanged();
+                return this;
+            }
+
+            private long runTime_;
+
+            /**
+             * <pre>
+             * Duration of the video asset, in milliseconds.
+             * </pre>
+             *
+             * <code>uint64 run_time = 4;</code>
+             * @return The runTime.
+             */
+            @java.lang.Override
+            public long getRunTime() {
+                return runTime_;
+            }
+
+            /**
+             * <pre>
+             * Duration of the video asset, in milliseconds.
+             * </pre>
+             *
+             * <code>uint64 run_time = 4;</code>
+             * @param value The runTime to set.
+             * @return This builder for chaining.
+             */
+            public Builder setRunTime(long value) {
+                runTime_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Duration of the video asset, in milliseconds.
+             * </pre>
+             *
+             * <code>uint64 run_time = 4;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearRunTime() {
+                runTime_ = 0L;
+                onChanged();
+                return this;
+            }
+
+            private java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> asset_ = java.util.Collections.emptyList();
+
+            private void ensureAssetIsMutable() {
+                if (!((bitField0_ & 0x00000001) != 0)) {
+                    asset_ =
+                        new java.util.ArrayList<tools.elide.page.MediaAsset.Video.VideoAsset>(
+                            asset_
+                        );
+                    bitField0_ |= 0x00000001;
+                }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> assetBuilder_;
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset> getAssetList() {
+                if (assetBuilder_ == null) {
+                    return java.util.Collections.unmodifiableList(asset_);
+                } else {
+                    return assetBuilder_.getMessageList();
+                }
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public int getAssetCount() {
+                if (assetBuilder_ == null) {
+                    return asset_.size();
+                } else {
+                    return assetBuilder_.getCount();
+                }
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public tools.elide.page.MediaAsset.Video.VideoAsset getAsset(
+                int index
+            ) {
+                if (assetBuilder_ == null) {
+                    return asset_.get(index);
+                } else {
+                    return assetBuilder_.getMessage(index);
+                }
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder setAsset(
+                int index,
+                tools.elide.page.MediaAsset.Video.VideoAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.set(index, value);
+                    onChanged();
+                } else {
+                    assetBuilder_.setMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder setAsset(
+                int index,
+                tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.set(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.setMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder addAsset(
+                tools.elide.page.MediaAsset.Video.VideoAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.add(value);
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder addAsset(
+                int index,
+                tools.elide.page.MediaAsset.Video.VideoAsset value
+            ) {
+                if (assetBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    ensureAssetIsMutable();
+                    asset_.add(index, value);
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(index, value);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder addAsset(
+                tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.add(builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder addAsset(
+                int index,
+                tools.elide.page.MediaAsset.Video.VideoAsset.Builder builderForValue
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.add(index, builderForValue.build());
+                    onChanged();
+                } else {
+                    assetBuilder_.addMessage(index, builderForValue.build());
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder addAllAsset(
+                java.lang.Iterable<? extends tools.elide.page.MediaAsset.Video.VideoAsset> values
+            ) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                        values,
+                        asset_
+                    );
+                    onChanged();
+                } else {
+                    assetBuilder_.addAllMessages(values);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder clearAsset() {
+                if (assetBuilder_ == null) {
+                    asset_ = java.util.Collections.emptyList();
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                    onChanged();
+                } else {
+                    assetBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public Builder removeAsset(int index) {
+                if (assetBuilder_ == null) {
+                    ensureAssetIsMutable();
+                    asset_.remove(index);
+                    onChanged();
+                } else {
+                    assetBuilder_.remove(index);
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public tools.elide.page.MediaAsset.Video.VideoAsset.Builder getAssetBuilder(
+                int index
+            ) {
+                return getAssetFieldBuilder().getBuilder(index);
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder getAssetOrBuilder(
+                int index
+            ) {
+                if (assetBuilder_ == null) {
+                    return asset_.get(index);
+                } else {
+                    return assetBuilder_.getMessageOrBuilder(index);
+                }
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public java.util.List<? extends tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> getAssetOrBuilderList() {
+                if (assetBuilder_ != null) {
+                    return assetBuilder_.getMessageOrBuilderList();
+                } else {
+                    return java.util.Collections.unmodifiableList(asset_);
+                }
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public tools.elide.page.MediaAsset.Video.VideoAsset.Builder addAssetBuilder() {
+                return getAssetFieldBuilder()
+                    .addBuilder(
+                        tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance()
+                    );
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public tools.elide.page.MediaAsset.Video.VideoAsset.Builder addAssetBuilder(
+                int index
+            ) {
+                return getAssetFieldBuilder()
+                    .addBuilder(
+                        index,
+                        tools.elide.page.MediaAsset.Video.VideoAsset.getDefaultInstance()
+                    );
+            }
+
+            /**
+             * <pre>
+             * Describes the assets that back this video media.
+             * </pre>
+             *
+             * <code>repeated .page.MediaAsset.Video.VideoAsset asset = 5;</code>
+             */
+            public java.util.List<tools.elide.page.MediaAsset.Video.VideoAsset.Builder> getAssetBuilderList() {
+                return getAssetFieldBuilder().getBuilderList();
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder> getAssetFieldBuilder() {
+                if (assetBuilder_ == null) {
+                    assetBuilder_ =
+                        new com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset.Video.VideoAsset, tools.elide.page.MediaAsset.Video.VideoAsset.Builder, tools.elide.page.MediaAsset.Video.VideoAssetOrBuilder>(
+                            asset_,
+                            ((bitField0_ & 0x00000001) != 0),
+                            getParentForChildren(),
+                            isClean()
+                        );
+                    asset_ = null;
+                }
+                return assetBuilder_;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.setUnknownFields(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+            // @@protoc_insertion_point(builder_scope:page.MediaAsset.Video)
+        }
+
+        // @@protoc_insertion_point(class_scope:page.MediaAsset.Video)
+        private static final tools.elide.page.MediaAsset.Video DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Video();
+        }
+
+        public static tools.elide.page.MediaAsset.Video getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<Video> PARSER = new com.google.protobuf.AbstractParser<Video>() {
+            @java.lang.Override
+            public Video parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Video(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<Video> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Video> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Video getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
     }
 
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
-    /**
-     * <pre>
-     * Specifies the type of document.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-     * @return The enum numeric value on the wire for type.
-     */
-    @java.lang.Override public int getTypeValue() {
-      return type_;
-    }
-    /**
-     * <pre>
-     * Specifies the type of document.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-     * @return The type.
-     */
-    @java.lang.Override public tools.elide.page.MediaAsset.Document.DocumentType getType() {
-      @SuppressWarnings("deprecation")
-      tools.elide.page.MediaAsset.Document.DocumentType result = tools.elide.page.MediaAsset.Document.DocumentType.valueOf(type_);
-      return result == null ? tools.elide.page.MediaAsset.Document.DocumentType.UNRECOGNIZED : result;
+    public interface DocumentOrBuilder
+        extends
+            // @@protoc_insertion_point(interface_extends:page.MediaAsset.Document)
+            com.google.protobuf.MessageOrBuilder {
+        /**
+         * <pre>
+         * Specifies the type of document.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+         * @return The enum numeric value on the wire for type.
+         */
+        int getTypeValue();
+        /**
+         * <pre>
+         * Specifies the type of document.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+         * @return The type.
+         */
+        tools.elide.page.MediaAsset.Document.DocumentType getType();
     }
 
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (type_ != tools.elide.page.MediaAsset.Document.DocumentType.GENERIC_DOCUMENT.getNumber()) {
-        output.writeEnum(1, type_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (type_ != tools.elide.page.MediaAsset.Document.DocumentType.GENERIC_DOCUMENT.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(1, type_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof tools.elide.page.MediaAsset.Document)) {
-        return super.equals(obj);
-      }
-      tools.elide.page.MediaAsset.Document other = (tools.elide.page.MediaAsset.Document) obj;
-
-      if (type_ != other.type_) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + type_;
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Document parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Document parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static tools.elide.page.MediaAsset.Document parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(tools.elide.page.MediaAsset.Document prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
     /**
      * <pre>
      * Specifies information about a digital document of some kind, that is being referenced as an asset.
@@ -6389,892 +6648,966 @@ private static final long serialVersionUID = 0L;
      *
      * Protobuf type {@code page.MediaAsset.Document}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:page.MediaAsset.Document)
-        tools.elide.page.MediaAsset.DocumentOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
-      }
+    public static final class Document
+        extends com.google.protobuf.GeneratedMessageV3
+        implements
+            // @@protoc_insertion_point(message_implements:page.MediaAsset.Document)
+            DocumentOrBuilder {
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tools.elide.page.MediaAsset.Document.class, tools.elide.page.MediaAsset.Document.Builder.class);
-      }
+        private static final long serialVersionUID = 0L;
 
-      // Construct using tools.elide.page.MediaAsset.Document.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
+        // Use Document.newBuilder() to construct.
+        private Document(
+            com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+        ) {
+            super(builder);
         }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        type_ = 0;
 
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Document getDefaultInstanceForType() {
-        return tools.elide.page.MediaAsset.Document.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Document build() {
-        tools.elide.page.MediaAsset.Document result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
+        private Document() {
+            type_ = 0;
         }
-        return result;
-      }
 
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Document buildPartial() {
-        tools.elide.page.MediaAsset.Document result = new tools.elide.page.MediaAsset.Document(this);
-        result.type_ = type_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof tools.elide.page.MediaAsset.Document) {
-          return mergeFrom((tools.elide.page.MediaAsset.Document)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
+        @java.lang.Override
+        @SuppressWarnings({ "unused" })
+        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+            return new Document();
         }
-      }
 
-      public Builder mergeFrom(tools.elide.page.MediaAsset.Document other) {
-        if (other == tools.elide.page.MediaAsset.Document.getDefaultInstance()) return this;
-        if (other.type_ != 0) {
-          setTypeValue(other.getTypeValue());
+        @java.lang.Override
+        public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+            return this.unknownFields;
         }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
 
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
+        private Document(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            this();
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8:
+                            {
+                                int rawValue = input.readEnum();
 
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        tools.elide.page.MediaAsset.Document parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (tools.elide.page.MediaAsset.Document) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
+                                type_ = rawValue;
+                                break;
+                            }
+                        default:
+                            {
+                                if (
+                                    !parseUnknownField(
+                                        input,
+                                        unknownFields,
+                                        extensionRegistry,
+                                        tag
+                                    )
+                                ) {
+                                    done = true;
+                                }
+                                break;
+                            }
+                    }
+                }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e
+                    .asInvalidProtocolBufferException()
+                    .setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                    .setUnfinishedMessage(this);
+            } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+            }
         }
-        return this;
-      }
 
-      private int type_ = 0;
-      /**
-       * <pre>
-       * Specifies the type of document.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-       * @return The enum numeric value on the wire for type.
-       */
-      @java.lang.Override public int getTypeValue() {
-        return type_;
-      }
-      /**
-       * <pre>
-       * Specifies the type of document.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-       * @param value The enum numeric value on the wire for type to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTypeValue(int value) {
-        
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Specifies the type of document.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-       * @return The type.
-       */
-      @java.lang.Override
-      public tools.elide.page.MediaAsset.Document.DocumentType getType() {
-        @SuppressWarnings("deprecation")
-        tools.elide.page.MediaAsset.Document.DocumentType result = tools.elide.page.MediaAsset.Document.DocumentType.valueOf(type_);
-        return result == null ? tools.elide.page.MediaAsset.Document.DocumentType.UNRECOGNIZED : result;
-      }
-      /**
-       * <pre>
-       * Specifies the type of document.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-       * @param value The type to set.
-       * @return This builder for chaining.
-       */
-      public Builder setType(tools.elide.page.MediaAsset.Document.DocumentType value) {
-        if (value == null) {
-          throw new NullPointerException();
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
         }
-        
-        type_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Specifies the type of document.
-       * </pre>
-       *
-       * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
 
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:page.MediaAsset.Document)
-    }
-
-    // @@protoc_insertion_point(class_scope:page.MediaAsset.Document)
-    private static final tools.elide.page.MediaAsset.Document DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Document();
-    }
-
-    public static tools.elide.page.MediaAsset.Document getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<Document>
-        PARSER = new com.google.protobuf.AbstractParser<Document>() {
-      @java.lang.Override
-      public Document parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Document(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<Document> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Document> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset.Document getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  private int mediaCase_ = 0;
-  private java.lang.Object media_;
-  public enum MediaCase
-      implements com.google.protobuf.Internal.EnumLite,
-          com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-    LINK(10),
-    IMAGE(20),
-    VIDEO(30),
-    MEDIA_NOT_SET(0);
-    private final int value;
-    private MediaCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @param value The number of the enum to look for.
-     * @return The enum associated with the given number.
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static MediaCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static MediaCase forNumber(int value) {
-      switch (value) {
-        case 10: return LINK;
-        case 20: return IMAGE;
-        case 30: return VIDEO;
-        case 0: return MEDIA_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public MediaCase
-  getMediaCase() {
-    return MediaCase.forNumber(
-        mediaCase_);
-  }
-
-  public static final int KIND_FIELD_NUMBER = 1;
-  private int kind_;
-  /**
-   * <pre>
-   * Describes, in broad terms, the kind of media being attached.
-   * </pre>
-   *
-   * <code>.page.MediaType kind = 1;</code>
-   * @return The enum numeric value on the wire for kind.
-   */
-  @java.lang.Override public int getKindValue() {
-    return kind_;
-  }
-  /**
-   * <pre>
-   * Describes, in broad terms, the kind of media being attached.
-   * </pre>
-   *
-   * <code>.page.MediaType kind = 1;</code>
-   * @return The kind.
-   */
-  @java.lang.Override public tools.elide.page.MediaType getKind() {
-    @SuppressWarnings("deprecation")
-    tools.elide.page.MediaType result = tools.elide.page.MediaType.valueOf(kind_);
-    return result == null ? tools.elide.page.MediaType.UNRECOGNIZED : result;
-  }
-
-  public static final int LINK_FIELD_NUMBER = 10;
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   * @return Whether the link field is set.
-   */
-  @java.lang.Override
-  public boolean hasLink() {
-    return mediaCase_ == 10;
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   * @return The link.
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.Link getLink() {
-    if (mediaCase_ == 10) {
-       return (tools.elide.page.MediaAsset.Link) media_;
-    }
-    return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached media link.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Link link = 10;</code>
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.LinkOrBuilder getLinkOrBuilder() {
-    if (mediaCase_ == 10) {
-       return (tools.elide.page.MediaAsset.Link) media_;
-    }
-    return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-  }
-
-  public static final int IMAGE_FIELD_NUMBER = 20;
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   * @return Whether the image field is set.
-   */
-  @java.lang.Override
-  public boolean hasImage() {
-    return mediaCase_ == 20;
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   * @return The image.
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.Image getImage() {
-    if (mediaCase_ == 20) {
-       return (tools.elide.page.MediaAsset.Image) media_;
-    }
-    return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached image.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Image image = 20;</code>
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.ImageOrBuilder getImageOrBuilder() {
-    if (mediaCase_ == 20) {
-       return (tools.elide.page.MediaAsset.Image) media_;
-    }
-    return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-  }
-
-  public static final int VIDEO_FIELD_NUMBER = 30;
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   * @return Whether the video field is set.
-   */
-  @java.lang.Override
-  public boolean hasVideo() {
-    return mediaCase_ == 30;
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   * @return The video.
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.Video getVideo() {
-    if (mediaCase_ == 30) {
-       return (tools.elide.page.MediaAsset.Video) media_;
-    }
-    return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-  }
-  /**
-   * <pre>
-   * Describes concrete information about an attached video.
-   * </pre>
-   *
-   * <code>.page.MediaAsset.Video video = 30;</code>
-   */
-  @java.lang.Override
-  public tools.elide.page.MediaAsset.VideoOrBuilder getVideoOrBuilder() {
-    if (mediaCase_ == 30) {
-       return (tools.elide.page.MediaAsset.Video) media_;
-    }
-    return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (kind_ != tools.elide.page.MediaType.IMAGE.getNumber()) {
-      output.writeEnum(1, kind_);
-    }
-    if (mediaCase_ == 10) {
-      output.writeMessage(10, (tools.elide.page.MediaAsset.Link) media_);
-    }
-    if (mediaCase_ == 20) {
-      output.writeMessage(20, (tools.elide.page.MediaAsset.Image) media_);
-    }
-    if (mediaCase_ == 30) {
-      output.writeMessage(30, (tools.elide.page.MediaAsset.Video) media_);
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (kind_ != tools.elide.page.MediaType.IMAGE.getNumber()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, kind_);
-    }
-    if (mediaCase_ == 10) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(10, (tools.elide.page.MediaAsset.Link) media_);
-    }
-    if (mediaCase_ == 20) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(20, (tools.elide.page.MediaAsset.Image) media_);
-    }
-    if (mediaCase_ == 30) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(30, (tools.elide.page.MediaAsset.Video) media_);
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof tools.elide.page.MediaAsset)) {
-      return super.equals(obj);
-    }
-    tools.elide.page.MediaAsset other = (tools.elide.page.MediaAsset) obj;
-
-    if (kind_ != other.kind_) return false;
-    if (!getMediaCase().equals(other.getMediaCase())) return false;
-    switch (mediaCase_) {
-      case 10:
-        if (!getLink()
-            .equals(other.getLink())) return false;
-        break;
-      case 20:
-        if (!getImage()
-            .equals(other.getImage())) return false;
-        break;
-      case 30:
-        if (!getVideo()
-            .equals(other.getVideo())) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!unknownFields.equals(other.unknownFields)) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + KIND_FIELD_NUMBER;
-    hash = (53 * hash) + kind_;
-    switch (mediaCase_) {
-      case 10:
-        hash = (37 * hash) + LINK_FIELD_NUMBER;
-        hash = (53 * hash) + getLink().hashCode();
-        break;
-      case 20:
-        hash = (37 * hash) + IMAGE_FIELD_NUMBER;
-        hash = (53 * hash) + getImage().hashCode();
-        break;
-      case 30:
-        hash = (37 * hash) + VIDEO_FIELD_NUMBER;
-        hash = (53 * hash) + getVideo().hashCode();
-        break;
-      case 0:
-      default:
-    }
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static tools.elide.page.MediaAsset parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.page.MediaAsset parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static tools.elide.page.MediaAsset parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.page.MediaAsset parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(tools.elide.page.MediaAsset prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * <pre>
-   * Defines the structure of attached content media, which is intended for emission in a given web page
-   * via some sort of render process, depending on the context in which this media is used.
-   * </pre>
-   *
-   * Protobuf type {@code page.MediaAsset}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:page.MediaAsset)
-      tools.elide.page.MediaAssetOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.page.MediaAsset.class, tools.elide.page.MediaAsset.Builder.class);
-    }
-
-    // Construct using tools.elide.page.MediaAsset.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      kind_ = 0;
-
-      mediaCase_ = 0;
-      media_ = null;
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset getDefaultInstanceForType() {
-      return tools.elide.page.MediaAsset.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset build() {
-      tools.elide.page.MediaAsset result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public tools.elide.page.MediaAsset buildPartial() {
-      tools.elide.page.MediaAsset result = new tools.elide.page.MediaAsset(this);
-      result.kind_ = kind_;
-      if (mediaCase_ == 10) {
-        if (linkBuilder_ == null) {
-          result.media_ = media_;
-        } else {
-          result.media_ = linkBuilder_.build();
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.page.MediaAsset.Document.class,
+                tools.elide.page.MediaAsset.Document.Builder.class
+            );
         }
-      }
-      if (mediaCase_ == 20) {
-        if (imageBuilder_ == null) {
-          result.media_ = media_;
-        } else {
-          result.media_ = imageBuilder_.build();
+
+        /**
+         * <pre>
+         * Enumerates common types of digital documents.
+         * </pre>
+         *
+         * Protobuf enum {@code page.MediaAsset.Document.DocumentType}
+         */
+        public enum DocumentType implements
+            com.google.protobuf.ProtocolMessageEnum {
+            /**
+             * <pre>
+             * Default: generic document type.
+             * </pre>
+             *
+             * <code>GENERIC_DOCUMENT = 0;</code>
+             */
+            GENERIC_DOCUMENT(0),
+            /**
+             * <pre>
+             * Plain text document.
+             * </pre>
+             *
+             * <code>TEXT_PLAIN = 1;</code>
+             */
+            TEXT_PLAIN(1),
+            /**
+             * <pre>
+             * Rich text document.
+             * </pre>
+             *
+             * <code>TEXT_RICH = 2;</code>
+             */
+            TEXT_RICH(2),
+            /**
+             * <pre>
+             * Markdown-formatted document.
+             * </pre>
+             *
+             * <code>TEXT_MARKDOWN = 3;</code>
+             */
+            TEXT_MARKDOWN(3),
+            /**
+             * <pre>
+             * HTML-formatted document.
+             * </pre>
+             *
+             * <code>TEXT_HTML = 4;</code>
+             */
+            TEXT_HTML(4),
+            /**
+             * <pre>
+             * Comma Separated Values in text format.
+             * </pre>
+             *
+             * <code>TEXT_CSV = 5;</code>
+             */
+            TEXT_CSV(5),
+            /**
+             * <pre>
+             * Portable Document Format.
+             * </pre>
+             *
+             * <code>PDF = 6;</code>
+             */
+            PDF(6),
+            /**
+             * <pre>
+             * Word (old format, extension `.doc`).
+             * </pre>
+             *
+             * <code>WORD_DOC = 7;</code>
+             */
+            WORD_DOC(7),
+            /**
+             * <pre>
+             * Word (new format, extension `.docx`).
+             * </pre>
+             *
+             * <code>WORD_DOCX = 8;</code>
+             */
+            WORD_DOCX(8),
+            UNRECOGNIZED(-1);
+
+            /**
+             * <pre>
+             * Default: generic document type.
+             * </pre>
+             *
+             * <code>GENERIC_DOCUMENT = 0;</code>
+             */
+            public static final int GENERIC_DOCUMENT_VALUE = 0;
+            /**
+             * <pre>
+             * Plain text document.
+             * </pre>
+             *
+             * <code>TEXT_PLAIN = 1;</code>
+             */
+            public static final int TEXT_PLAIN_VALUE = 1;
+            /**
+             * <pre>
+             * Rich text document.
+             * </pre>
+             *
+             * <code>TEXT_RICH = 2;</code>
+             */
+            public static final int TEXT_RICH_VALUE = 2;
+            /**
+             * <pre>
+             * Markdown-formatted document.
+             * </pre>
+             *
+             * <code>TEXT_MARKDOWN = 3;</code>
+             */
+            public static final int TEXT_MARKDOWN_VALUE = 3;
+            /**
+             * <pre>
+             * HTML-formatted document.
+             * </pre>
+             *
+             * <code>TEXT_HTML = 4;</code>
+             */
+            public static final int TEXT_HTML_VALUE = 4;
+            /**
+             * <pre>
+             * Comma Separated Values in text format.
+             * </pre>
+             *
+             * <code>TEXT_CSV = 5;</code>
+             */
+            public static final int TEXT_CSV_VALUE = 5;
+            /**
+             * <pre>
+             * Portable Document Format.
+             * </pre>
+             *
+             * <code>PDF = 6;</code>
+             */
+            public static final int PDF_VALUE = 6;
+            /**
+             * <pre>
+             * Word (old format, extension `.doc`).
+             * </pre>
+             *
+             * <code>WORD_DOC = 7;</code>
+             */
+            public static final int WORD_DOC_VALUE = 7;
+            /**
+             * <pre>
+             * Word (new format, extension `.docx`).
+             * </pre>
+             *
+             * <code>WORD_DOCX = 8;</code>
+             */
+            public static final int WORD_DOCX_VALUE = 8;
+
+            public final int getNumber() {
+                if (this == UNRECOGNIZED) {
+                    throw new java.lang.IllegalArgumentException(
+                        "Can't get the number of an unknown enum value."
+                    );
+                }
+                return value;
+            }
+
+            /**
+             * @param value The numeric wire value of the corresponding enum entry.
+             * @return The enum associated with the given numeric wire value.
+             * @deprecated Use {@link #forNumber(int)} instead.
+             */
+            @java.lang.Deprecated
+            public static DocumentType valueOf(int value) {
+                return forNumber(value);
+            }
+
+            /**
+             * @param value The numeric wire value of the corresponding enum entry.
+             * @return The enum associated with the given numeric wire value.
+             */
+            public static DocumentType forNumber(int value) {
+                switch (value) {
+                    case 0:
+                        return GENERIC_DOCUMENT;
+                    case 1:
+                        return TEXT_PLAIN;
+                    case 2:
+                        return TEXT_RICH;
+                    case 3:
+                        return TEXT_MARKDOWN;
+                    case 4:
+                        return TEXT_HTML;
+                    case 5:
+                        return TEXT_CSV;
+                    case 6:
+                        return PDF;
+                    case 7:
+                        return WORD_DOC;
+                    case 8:
+                        return WORD_DOCX;
+                    default:
+                        return null;
+                }
+            }
+
+            public static com.google.protobuf.Internal.EnumLiteMap<DocumentType> internalGetValueMap() {
+                return internalValueMap;
+            }
+
+            private static final com.google.protobuf.Internal.EnumLiteMap<DocumentType> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<DocumentType>() {
+                public DocumentType findValueByNumber(int number) {
+                    return DocumentType.forNumber(number);
+                }
+            };
+
+            public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
+                if (this == UNRECOGNIZED) {
+                    throw new java.lang.IllegalStateException(
+                        "Can't get the descriptor of an unrecognized enum value."
+                    );
+                }
+                return getDescriptor().getValues().get(ordinal());
+            }
+
+            public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
+                return getDescriptor();
+            }
+
+            public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
+                return tools.elide.page.MediaAsset.Document
+                    .getDescriptor()
+                    .getEnumTypes()
+                    .get(0);
+            }
+
+            private static final DocumentType[] VALUES = values();
+
+            public static DocumentType valueOf(
+                com.google.protobuf.Descriptors.EnumValueDescriptor desc
+            ) {
+                if (desc.getType() != getDescriptor()) {
+                    throw new java.lang.IllegalArgumentException(
+                        "EnumValueDescriptor is not for this type."
+                    );
+                }
+                if (desc.getIndex() == -1) {
+                    return UNRECOGNIZED;
+                }
+                return VALUES[desc.getIndex()];
+            }
+
+            private final int value;
+
+            private DocumentType(int value) {
+                this.value = value;
+            }
+            // @@protoc_insertion_point(enum_scope:page.MediaAsset.Document.DocumentType)
         }
-      }
-      if (mediaCase_ == 30) {
-        if (videoBuilder_ == null) {
-          result.media_ = media_;
-        } else {
-          result.media_ = videoBuilder_.build();
+
+        public static final int TYPE_FIELD_NUMBER = 1;
+        private int type_;
+
+        /**
+         * <pre>
+         * Specifies the type of document.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+         * @return The enum numeric value on the wire for type.
+         */
+        @java.lang.Override
+        public int getTypeValue() {
+            return type_;
         }
-      }
-      result.mediaCase_ = mediaCase_;
-      onBuilt();
-      return result;
+
+        /**
+         * <pre>
+         * Specifies the type of document.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+         * @return The type.
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Document.DocumentType getType() {
+            @SuppressWarnings("deprecation")
+            tools.elide.page.MediaAsset.Document.DocumentType result = tools.elide.page.MediaAsset.Document.DocumentType.valueOf(
+                type_
+            );
+            return result == null
+                ? tools.elide.page.MediaAsset.Document.DocumentType.UNRECOGNIZED
+                : result;
+        }
+
+        private byte memoizedIsInitialized = -1;
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+        }
+
+        @java.lang.Override
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+            if (
+                type_ !=
+                tools.elide.page.MediaAsset.Document.DocumentType.GENERIC_DOCUMENT.getNumber()
+            ) {
+                output.writeEnum(1, type_);
+            }
+            unknownFields.writeTo(output);
+        }
+
+        @java.lang.Override
+        public int getSerializedSize() {
+            int size = memoizedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (
+                type_ !=
+                tools.elide.page.MediaAsset.Document.DocumentType.GENERIC_DOCUMENT.getNumber()
+            ) {
+                size +=
+                    com.google.protobuf.CodedOutputStream.computeEnumSize(
+                        1,
+                        type_
+                    );
+            }
+            size += unknownFields.getSerializedSize();
+            memoizedSize = size;
+            return size;
+        }
+
+        @java.lang.Override
+        public boolean equals(final java.lang.Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if (!(obj instanceof tools.elide.page.MediaAsset.Document)) {
+                return super.equals(obj);
+            }
+            tools.elide.page.MediaAsset.Document other = (tools.elide.page.MediaAsset.Document) obj;
+
+            if (type_ != other.type_) return false;
+            if (!unknownFields.equals(other.unknownFields)) return false;
+            return true;
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            if (memoizedHashCode != 0) {
+                return memoizedHashCode;
+            }
+            int hash = 41;
+            hash = (19 * hash) + getDescriptor().hashCode();
+            hash = (37 * hash) + TYPE_FIELD_NUMBER;
+            hash = (53 * hash) + type_;
+            hash = (29 * hash) + unknownFields.hashCode();
+            memoizedHashCode = hash;
+            return hash;
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            java.nio.ByteBuffer data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            com.google.protobuf.ByteString data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            byte[] data
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseDelimitedFrom(
+            java.io.InputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            com.google.protobuf.CodedInputStream input
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input
+            );
+        }
+
+        public static tools.elide.page.MediaAsset.Document parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+                PARSER,
+                input,
+                extensionRegistry
+            );
+        }
+
+        @java.lang.Override
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder() {
+            return DEFAULT_INSTANCE.toBuilder();
+        }
+
+        public static Builder newBuilder(
+            tools.elide.page.MediaAsset.Document prototype
+        ) {
+            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+        }
+
+        @java.lang.Override
+        public Builder toBuilder() {
+            return this == DEFAULT_INSTANCE
+                ? new Builder()
+                : new Builder().mergeFrom(this);
+        }
+
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            Builder builder = new Builder(parent);
+            return builder;
+        }
+
+        /**
+         * <pre>
+         * Specifies information about a digital document of some kind, that is being referenced as an asset.
+         * </pre>
+         *
+         * Protobuf type {@code page.MediaAsset.Document}
+         */
+        public static final class Builder
+            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+            implements
+                // @@protoc_insertion_point(builder_implements:page.MediaAsset.Document)
+                tools.elide.page.MediaAsset.DocumentOrBuilder {
+
+            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
+            }
+
+            @java.lang.Override
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                    tools.elide.page.MediaAsset.Document.class,
+                    tools.elide.page.MediaAsset.Document.Builder.class
+                );
+            }
+
+            // Construct using tools.elide.page.MediaAsset.Document.newBuilder()
+            private Builder() {
+                maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+            ) {
+                super(parent);
+                maybeForceBuilderInitialization();
+            }
+
+            private void maybeForceBuilderInitialization() {
+                if (
+                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                ) {}
+            }
+
+            @java.lang.Override
+            public Builder clear() {
+                super.clear();
+                type_ = 0;
+
+                return this;
+            }
+
+            @java.lang.Override
+            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+                return tools.elide.page.WebMedia.internal_static_page_MediaAsset_Document_descriptor;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Document getDefaultInstanceForType() {
+                return tools.elide.page.MediaAsset.Document.getDefaultInstance();
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Document build() {
+                tools.elide.page.MediaAsset.Document result = buildPartial();
+                if (!result.isInitialized()) {
+                    throw newUninitializedMessageException(result);
+                }
+                return result;
+            }
+
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Document buildPartial() {
+                tools.elide.page.MediaAsset.Document result = new tools.elide.page.MediaAsset.Document(
+                    this
+                );
+                result.type_ = type_;
+                onBuilt();
+                return result;
+            }
+
+            @java.lang.Override
+            public Builder clone() {
+                return super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field
+            ) {
+                return super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof
+            ) {
+                return super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value
+            ) {
+                return super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value
+            ) {
+                return super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof tools.elide.page.MediaAsset.Document) {
+                    return mergeFrom(
+                        (tools.elide.page.MediaAsset.Document) other
+                    );
+                } else {
+                    super.mergeFrom(other);
+                    return this;
+                }
+            }
+
+            public Builder mergeFrom(
+                tools.elide.page.MediaAsset.Document other
+            ) {
+                if (
+                    other ==
+                    tools.elide.page.MediaAsset.Document.getDefaultInstance()
+                ) return this;
+                if (other.type_ != 0) {
+                    setTypeValue(other.getTypeValue());
+                }
+                this.mergeUnknownFields(other.unknownFields);
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            @java.lang.Override
+            public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws java.io.IOException {
+                tools.elide.page.MediaAsset.Document parsedMessage = null;
+                try {
+                    parsedMessage =
+                        PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    parsedMessage =
+                        (tools.elide.page.MediaAsset.Document) e.getUnfinishedMessage();
+                    throw e.unwrapIOException();
+                } finally {
+                    if (parsedMessage != null) {
+                        mergeFrom(parsedMessage);
+                    }
+                }
+                return this;
+            }
+
+            private int type_ = 0;
+
+            /**
+             * <pre>
+             * Specifies the type of document.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+             * @return The enum numeric value on the wire for type.
+             */
+            @java.lang.Override
+            public int getTypeValue() {
+                return type_;
+            }
+
+            /**
+             * <pre>
+             * Specifies the type of document.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+             * @param value The enum numeric value on the wire for type to set.
+             * @return This builder for chaining.
+             */
+            public Builder setTypeValue(int value) {
+                type_ = value;
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Specifies the type of document.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+             * @return The type.
+             */
+            @java.lang.Override
+            public tools.elide.page.MediaAsset.Document.DocumentType getType() {
+                @SuppressWarnings("deprecation")
+                tools.elide.page.MediaAsset.Document.DocumentType result = tools.elide.page.MediaAsset.Document.DocumentType.valueOf(
+                    type_
+                );
+                return result == null
+                    ? tools.elide.page.MediaAsset.Document.DocumentType.UNRECOGNIZED
+                    : result;
+            }
+
+            /**
+             * <pre>
+             * Specifies the type of document.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+             * @param value The type to set.
+             * @return This builder for chaining.
+             */
+            public Builder setType(
+                tools.elide.page.MediaAsset.Document.DocumentType value
+            ) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+
+                type_ = value.getNumber();
+                onChanged();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Specifies the type of document.
+             * </pre>
+             *
+             * <code>.page.MediaAsset.Document.DocumentType type = 1;</code>
+             * @return This builder for chaining.
+             */
+            public Builder clearType() {
+                type_ = 0;
+                onChanged();
+                return this;
+            }
+
+            @java.lang.Override
+            public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.setUnknownFields(unknownFields);
+            }
+
+            @java.lang.Override
+            public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields
+            ) {
+                return super.mergeUnknownFields(unknownFields);
+            }
+            // @@protoc_insertion_point(builder_scope:page.MediaAsset.Document)
+        }
+
+        // @@protoc_insertion_point(class_scope:page.MediaAsset.Document)
+        private static final tools.elide.page.MediaAsset.Document DEFAULT_INSTANCE;
+
+        static {
+            DEFAULT_INSTANCE = new tools.elide.page.MediaAsset.Document();
+        }
+
+        public static tools.elide.page.MediaAsset.Document getDefaultInstance() {
+            return DEFAULT_INSTANCE;
+        }
+
+        private static final com.google.protobuf.Parser<Document> PARSER = new com.google.protobuf.AbstractParser<Document>() {
+            @java.lang.Override
+            public Document parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry
+            ) throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Document(input, extensionRegistry);
+            }
+        };
+
+        public static com.google.protobuf.Parser<Document> parser() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Parser<Document> getParserForType() {
+            return PARSER;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Document getDefaultInstanceForType() {
+            return DEFAULT_INSTANCE;
+        }
     }
 
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof tools.elide.page.MediaAsset) {
-        return mergeFrom((tools.elide.page.MediaAsset)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(tools.elide.page.MediaAsset other) {
-      if (other == tools.elide.page.MediaAsset.getDefaultInstance()) return this;
-      if (other.kind_ != 0) {
-        setKindValue(other.getKindValue());
-      }
-      switch (other.getMediaCase()) {
-        case LINK: {
-          mergeLink(other.getLink());
-          break;
-        }
-        case IMAGE: {
-          mergeImage(other.getImage());
-          break;
-        }
-        case VIDEO: {
-          mergeVideo(other.getVideo());
-          break;
-        }
-        case MEDIA_NOT_SET: {
-          break;
-        }
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      tools.elide.page.MediaAsset parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (tools.elide.page.MediaAsset) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
     private int mediaCase_ = 0;
     private java.lang.Object media_;
-    public MediaCase
-        getMediaCase() {
-      return MediaCase.forNumber(
-          mediaCase_);
+
+    public enum MediaCase implements
+        com.google.protobuf.Internal.EnumLite,
+        com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+        LINK(10),
+        IMAGE(20),
+        VIDEO(30),
+        MEDIA_NOT_SET(0);
+
+        private final int value;
+
+        private MediaCase(int value) {
+            this.value = value;
+        }
+
+        /**
+         * @param value The number of the enum to look for.
+         * @return The enum associated with the given number.
+         * @deprecated Use {@link #forNumber(int)} instead.
+         */
+        @java.lang.Deprecated
+        public static MediaCase valueOf(int value) {
+            return forNumber(value);
+        }
+
+        public static MediaCase forNumber(int value) {
+            switch (value) {
+                case 10:
+                    return LINK;
+                case 20:
+                    return IMAGE;
+                case 30:
+                    return VIDEO;
+                case 0:
+                    return MEDIA_NOT_SET;
+                default:
+                    return null;
+            }
+        }
+
+        public int getNumber() {
+            return this.value;
+        }
     }
 
-    public Builder clearMedia() {
-      mediaCase_ = 0;
-      media_ = null;
-      onChanged();
-      return this;
+    public MediaCase getMediaCase() {
+        return MediaCase.forNumber(mediaCase_);
     }
 
+    public static final int KIND_FIELD_NUMBER = 1;
+    private int kind_;
 
-    private int kind_ = 0;
     /**
      * <pre>
      * Describes, in broad terms, the kind of media being attached.
@@ -7283,24 +7616,11 @@ private static final long serialVersionUID = 0L;
      * <code>.page.MediaType kind = 1;</code>
      * @return The enum numeric value on the wire for kind.
      */
-    @java.lang.Override public int getKindValue() {
-      return kind_;
+    @java.lang.Override
+    public int getKindValue() {
+        return kind_;
     }
-    /**
-     * <pre>
-     * Describes, in broad terms, the kind of media being attached.
-     * </pre>
-     *
-     * <code>.page.MediaType kind = 1;</code>
-     * @param value The enum numeric value on the wire for kind to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKindValue(int value) {
-      
-      kind_ = value;
-      onChanged();
-      return this;
-    }
+
     /**
      * <pre>
      * Describes, in broad terms, the kind of media being attached.
@@ -7311,45 +7631,17 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaType getKind() {
-      @SuppressWarnings("deprecation")
-      tools.elide.page.MediaType result = tools.elide.page.MediaType.valueOf(kind_);
-      return result == null ? tools.elide.page.MediaType.UNRECOGNIZED : result;
-    }
-    /**
-     * <pre>
-     * Describes, in broad terms, the kind of media being attached.
-     * </pre>
-     *
-     * <code>.page.MediaType kind = 1;</code>
-     * @param value The kind to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKind(tools.elide.page.MediaType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      
-      kind_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes, in broad terms, the kind of media being attached.
-     * </pre>
-     *
-     * <code>.page.MediaType kind = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearKind() {
-      
-      kind_ = 0;
-      onChanged();
-      return this;
+        @SuppressWarnings("deprecation")
+        tools.elide.page.MediaType result = tools.elide.page.MediaType.valueOf(
+            kind_
+        );
+        return result == null
+            ? tools.elide.page.MediaType.UNRECOGNIZED
+            : result;
     }
 
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder> linkBuilder_;
+    public static final int LINK_FIELD_NUMBER = 10;
+
     /**
      * <pre>
      * Describes concrete information about an attached media link.
@@ -7360,8 +7652,9 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean hasLink() {
-      return mediaCase_ == 10;
+        return mediaCase_ == 10;
     }
+
     /**
      * <pre>
      * Describes concrete information about an attached media link.
@@ -7372,116 +7665,12 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.Link getLink() {
-      if (linkBuilder_ == null) {
         if (mediaCase_ == 10) {
-          return (tools.elide.page.MediaAsset.Link) media_;
+            return (tools.elide.page.MediaAsset.Link) media_;
         }
         return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-      } else {
-        if (mediaCase_ == 10) {
-          return linkBuilder_.getMessage();
-        }
-        return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-      }
     }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    public Builder setLink(tools.elide.page.MediaAsset.Link value) {
-      if (linkBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        media_ = value;
-        onChanged();
-      } else {
-        linkBuilder_.setMessage(value);
-      }
-      mediaCase_ = 10;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    public Builder setLink(
-        tools.elide.page.MediaAsset.Link.Builder builderForValue) {
-      if (linkBuilder_ == null) {
-        media_ = builderForValue.build();
-        onChanged();
-      } else {
-        linkBuilder_.setMessage(builderForValue.build());
-      }
-      mediaCase_ = 10;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    public Builder mergeLink(tools.elide.page.MediaAsset.Link value) {
-      if (linkBuilder_ == null) {
-        if (mediaCase_ == 10 &&
-            media_ != tools.elide.page.MediaAsset.Link.getDefaultInstance()) {
-          media_ = tools.elide.page.MediaAsset.Link.newBuilder((tools.elide.page.MediaAsset.Link) media_)
-              .mergeFrom(value).buildPartial();
-        } else {
-          media_ = value;
-        }
-        onChanged();
-      } else {
-        if (mediaCase_ == 10) {
-          linkBuilder_.mergeFrom(value);
-        } else {
-          linkBuilder_.setMessage(value);
-        }
-      }
-      mediaCase_ = 10;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    public Builder clearLink() {
-      if (linkBuilder_ == null) {
-        if (mediaCase_ == 10) {
-          mediaCase_ = 0;
-          media_ = null;
-          onChanged();
-        }
-      } else {
-        if (mediaCase_ == 10) {
-          mediaCase_ = 0;
-          media_ = null;
-        }
-        linkBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    public tools.elide.page.MediaAsset.Link.Builder getLinkBuilder() {
-      return getLinkFieldBuilder().getBuilder();
-    }
+
     /**
      * <pre>
      * Describes concrete information about an attached media link.
@@ -7491,43 +7680,14 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.LinkOrBuilder getLinkOrBuilder() {
-      if ((mediaCase_ == 10) && (linkBuilder_ != null)) {
-        return linkBuilder_.getMessageOrBuilder();
-      } else {
         if (mediaCase_ == 10) {
-          return (tools.elide.page.MediaAsset.Link) media_;
+            return (tools.elide.page.MediaAsset.Link) media_;
         }
         return tools.elide.page.MediaAsset.Link.getDefaultInstance();
-      }
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached media link.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Link link = 10;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder> 
-        getLinkFieldBuilder() {
-      if (linkBuilder_ == null) {
-        if (!(mediaCase_ == 10)) {
-          media_ = tools.elide.page.MediaAsset.Link.getDefaultInstance();
-        }
-        linkBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder>(
-                (tools.elide.page.MediaAsset.Link) media_,
-                getParentForChildren(),
-                isClean());
-        media_ = null;
-      }
-      mediaCase_ = 10;
-      onChanged();;
-      return linkBuilder_;
     }
 
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> imageBuilder_;
+    public static final int IMAGE_FIELD_NUMBER = 20;
+
     /**
      * <pre>
      * Describes concrete information about an attached image.
@@ -7538,8 +7698,9 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean hasImage() {
-      return mediaCase_ == 20;
+        return mediaCase_ == 20;
     }
+
     /**
      * <pre>
      * Describes concrete information about an attached image.
@@ -7550,116 +7711,12 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.Image getImage() {
-      if (imageBuilder_ == null) {
         if (mediaCase_ == 20) {
-          return (tools.elide.page.MediaAsset.Image) media_;
+            return (tools.elide.page.MediaAsset.Image) media_;
         }
         return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-      } else {
-        if (mediaCase_ == 20) {
-          return imageBuilder_.getMessage();
-        }
-        return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-      }
     }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    public Builder setImage(tools.elide.page.MediaAsset.Image value) {
-      if (imageBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        media_ = value;
-        onChanged();
-      } else {
-        imageBuilder_.setMessage(value);
-      }
-      mediaCase_ = 20;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    public Builder setImage(
-        tools.elide.page.MediaAsset.Image.Builder builderForValue) {
-      if (imageBuilder_ == null) {
-        media_ = builderForValue.build();
-        onChanged();
-      } else {
-        imageBuilder_.setMessage(builderForValue.build());
-      }
-      mediaCase_ = 20;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    public Builder mergeImage(tools.elide.page.MediaAsset.Image value) {
-      if (imageBuilder_ == null) {
-        if (mediaCase_ == 20 &&
-            media_ != tools.elide.page.MediaAsset.Image.getDefaultInstance()) {
-          media_ = tools.elide.page.MediaAsset.Image.newBuilder((tools.elide.page.MediaAsset.Image) media_)
-              .mergeFrom(value).buildPartial();
-        } else {
-          media_ = value;
-        }
-        onChanged();
-      } else {
-        if (mediaCase_ == 20) {
-          imageBuilder_.mergeFrom(value);
-        } else {
-          imageBuilder_.setMessage(value);
-        }
-      }
-      mediaCase_ = 20;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    public Builder clearImage() {
-      if (imageBuilder_ == null) {
-        if (mediaCase_ == 20) {
-          mediaCase_ = 0;
-          media_ = null;
-          onChanged();
-        }
-      } else {
-        if (mediaCase_ == 20) {
-          mediaCase_ = 0;
-          media_ = null;
-        }
-        imageBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    public tools.elide.page.MediaAsset.Image.Builder getImageBuilder() {
-      return getImageFieldBuilder().getBuilder();
-    }
+
     /**
      * <pre>
      * Describes concrete information about an attached image.
@@ -7669,43 +7726,14 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.ImageOrBuilder getImageOrBuilder() {
-      if ((mediaCase_ == 20) && (imageBuilder_ != null)) {
-        return imageBuilder_.getMessageOrBuilder();
-      } else {
         if (mediaCase_ == 20) {
-          return (tools.elide.page.MediaAsset.Image) media_;
+            return (tools.elide.page.MediaAsset.Image) media_;
         }
         return tools.elide.page.MediaAsset.Image.getDefaultInstance();
-      }
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached image.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Image image = 20;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> 
-        getImageFieldBuilder() {
-      if (imageBuilder_ == null) {
-        if (!(mediaCase_ == 20)) {
-          media_ = tools.elide.page.MediaAsset.Image.getDefaultInstance();
-        }
-        imageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder>(
-                (tools.elide.page.MediaAsset.Image) media_,
-                getParentForChildren(),
-                isClean());
-        media_ = null;
-      }
-      mediaCase_ = 20;
-      onChanged();;
-      return imageBuilder_;
     }
 
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder> videoBuilder_;
+    public static final int VIDEO_FIELD_NUMBER = 30;
+
     /**
      * <pre>
      * Describes concrete information about an attached video.
@@ -7716,8 +7744,9 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean hasVideo() {
-      return mediaCase_ == 30;
+        return mediaCase_ == 30;
     }
+
     /**
      * <pre>
      * Describes concrete information about an attached video.
@@ -7728,116 +7757,12 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.Video getVideo() {
-      if (videoBuilder_ == null) {
         if (mediaCase_ == 30) {
-          return (tools.elide.page.MediaAsset.Video) media_;
+            return (tools.elide.page.MediaAsset.Video) media_;
         }
         return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-      } else {
-        if (mediaCase_ == 30) {
-          return videoBuilder_.getMessage();
-        }
-        return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-      }
     }
-    /**
-     * <pre>
-     * Describes concrete information about an attached video.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Video video = 30;</code>
-     */
-    public Builder setVideo(tools.elide.page.MediaAsset.Video value) {
-      if (videoBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        media_ = value;
-        onChanged();
-      } else {
-        videoBuilder_.setMessage(value);
-      }
-      mediaCase_ = 30;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached video.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Video video = 30;</code>
-     */
-    public Builder setVideo(
-        tools.elide.page.MediaAsset.Video.Builder builderForValue) {
-      if (videoBuilder_ == null) {
-        media_ = builderForValue.build();
-        onChanged();
-      } else {
-        videoBuilder_.setMessage(builderForValue.build());
-      }
-      mediaCase_ = 30;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached video.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Video video = 30;</code>
-     */
-    public Builder mergeVideo(tools.elide.page.MediaAsset.Video value) {
-      if (videoBuilder_ == null) {
-        if (mediaCase_ == 30 &&
-            media_ != tools.elide.page.MediaAsset.Video.getDefaultInstance()) {
-          media_ = tools.elide.page.MediaAsset.Video.newBuilder((tools.elide.page.MediaAsset.Video) media_)
-              .mergeFrom(value).buildPartial();
-        } else {
-          media_ = value;
-        }
-        onChanged();
-      } else {
-        if (mediaCase_ == 30) {
-          videoBuilder_.mergeFrom(value);
-        } else {
-          videoBuilder_.setMessage(value);
-        }
-      }
-      mediaCase_ = 30;
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached video.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Video video = 30;</code>
-     */
-    public Builder clearVideo() {
-      if (videoBuilder_ == null) {
-        if (mediaCase_ == 30) {
-          mediaCase_ = 0;
-          media_ = null;
-          onChanged();
-        }
-      } else {
-        if (mediaCase_ == 30) {
-          mediaCase_ = 0;
-          media_ = null;
-        }
-        videoBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <pre>
-     * Describes concrete information about an attached video.
-     * </pre>
-     *
-     * <code>.page.MediaAsset.Video video = 30;</code>
-     */
-    public tools.elide.page.MediaAsset.Video.Builder getVideoBuilder() {
-      return getVideoFieldBuilder().getBuilder();
-    }
+
     /**
      * <pre>
      * Describes concrete information about an attached video.
@@ -7847,90 +7772,1210 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.page.MediaAsset.VideoOrBuilder getVideoOrBuilder() {
-      if ((mediaCase_ == 30) && (videoBuilder_ != null)) {
-        return videoBuilder_.getMessageOrBuilder();
-      } else {
         if (mediaCase_ == 30) {
-          return (tools.elide.page.MediaAsset.Video) media_;
+            return (tools.elide.page.MediaAsset.Video) media_;
         }
         return tools.elide.page.MediaAsset.Video.getDefaultInstance();
-      }
     }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+        throws java.io.IOException {
+        if (kind_ != tools.elide.page.MediaType.IMAGE.getNumber()) {
+            output.writeEnum(1, kind_);
+        }
+        if (mediaCase_ == 10) {
+            output.writeMessage(10, (tools.elide.page.MediaAsset.Link) media_);
+        }
+        if (mediaCase_ == 20) {
+            output.writeMessage(20, (tools.elide.page.MediaAsset.Image) media_);
+        }
+        if (mediaCase_ == 30) {
+            output.writeMessage(30, (tools.elide.page.MediaAsset.Video) media_);
+        }
+        unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (kind_ != tools.elide.page.MediaType.IMAGE.getNumber()) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeEnumSize(1, kind_);
+        }
+        if (mediaCase_ == 10) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeMessageSize(
+                    10,
+                    (tools.elide.page.MediaAsset.Link) media_
+                );
+        }
+        if (mediaCase_ == 20) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeMessageSize(
+                    20,
+                    (tools.elide.page.MediaAsset.Image) media_
+                );
+        }
+        if (mediaCase_ == 30) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeMessageSize(
+                    30,
+                    (tools.elide.page.MediaAsset.Video) media_
+                );
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof tools.elide.page.MediaAsset)) {
+            return super.equals(obj);
+        }
+        tools.elide.page.MediaAsset other = (tools.elide.page.MediaAsset) obj;
+
+        if (kind_ != other.kind_) return false;
+        if (!getMediaCase().equals(other.getMediaCase())) return false;
+        switch (mediaCase_) {
+            case 10:
+                if (!getLink().equals(other.getLink())) return false;
+                break;
+            case 20:
+                if (!getImage().equals(other.getImage())) return false;
+                break;
+            case 30:
+                if (!getVideo().equals(other.getVideo())) return false;
+                break;
+            case 0:
+            default:
+        }
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + KIND_FIELD_NUMBER;
+        hash = (53 * hash) + kind_;
+        switch (mediaCase_) {
+            case 10:
+                hash = (37 * hash) + LINK_FIELD_NUMBER;
+                hash = (53 * hash) + getLink().hashCode();
+                break;
+            case 20:
+                hash = (37 * hash) + IMAGE_FIELD_NUMBER;
+                hash = (53 * hash) + getImage().hashCode();
+                break;
+            case 30:
+                hash = (37 * hash) + VIDEO_FIELD_NUMBER;
+                hash = (53 * hash) + getVideo().hashCode();
+                break;
+            case 0:
+            default:
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        java.nio.ByteBuffer data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        com.google.protobuf.ByteString data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    public static tools.elide.page.MediaAsset parseDelimitedFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.page.MediaAsset parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        com.google.protobuf.CodedInputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.page.MediaAsset parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(tools.elide.page.MediaAsset prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder()
+            : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+    ) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
     /**
      * <pre>
-     * Describes concrete information about an attached video.
+     * Defines the structure of attached content media, which is intended for emission in a given web page
+     * via some sort of render process, depending on the context in which this media is used.
      * </pre>
      *
-     * <code>.page.MediaAsset.Video video = 30;</code>
+     * Protobuf type {@code page.MediaAsset}
      */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder> 
-        getVideoFieldBuilder() {
-      if (videoBuilder_ == null) {
-        if (!(mediaCase_ == 30)) {
-          media_ = tools.elide.page.MediaAsset.Video.getDefaultInstance();
+    public static final class Builder
+        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+        implements
+            // @@protoc_insertion_point(builder_implements:page.MediaAsset)
+            tools.elide.page.MediaAssetOrBuilder {
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
         }
-        videoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder>(
-                (tools.elide.page.MediaAsset.Video) media_,
-                getParentForChildren(),
-                isClean());
-        media_ = null;
-      }
-      mediaCase_ = 30;
-      onChanged();;
-      return videoBuilder_;
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.page.MediaAsset.class,
+                tools.elide.page.MediaAsset.Builder.class
+            );
+        }
+
+        // Construct using tools.elide.page.MediaAsset.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+            ) {}
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            kind_ = 0;
+
+            mediaCase_ = 0;
+            media_ = null;
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+            return tools.elide.page.WebMedia.internal_static_page_MediaAsset_descriptor;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset getDefaultInstanceForType() {
+            return tools.elide.page.MediaAsset.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset build() {
+            tools.elide.page.MediaAsset result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public tools.elide.page.MediaAsset buildPartial() {
+            tools.elide.page.MediaAsset result = new tools.elide.page.MediaAsset(
+                this
+            );
+            result.kind_ = kind_;
+            if (mediaCase_ == 10) {
+                if (linkBuilder_ == null) {
+                    result.media_ = media_;
+                } else {
+                    result.media_ = linkBuilder_.build();
+                }
+            }
+            if (mediaCase_ == 20) {
+                if (imageBuilder_ == null) {
+                    result.media_ = media_;
+                } else {
+                    result.media_ = imageBuilder_.build();
+                }
+            }
+            if (mediaCase_ == 30) {
+                if (videoBuilder_ == null) {
+                    result.media_ = media_;
+                } else {
+                    result.media_ = videoBuilder_.build();
+                }
+            }
+            result.mediaCase_ = mediaCase_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field
+        ) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof
+        ) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index,
+            java.lang.Object value
+        ) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof tools.elide.page.MediaAsset) {
+                return mergeFrom((tools.elide.page.MediaAsset) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(tools.elide.page.MediaAsset other) {
+            if (
+                other == tools.elide.page.MediaAsset.getDefaultInstance()
+            ) return this;
+            if (other.kind_ != 0) {
+                setKindValue(other.getKindValue());
+            }
+            switch (other.getMediaCase()) {
+                case LINK:
+                    {
+                        mergeLink(other.getLink());
+                        break;
+                    }
+                case IMAGE:
+                    {
+                        mergeImage(other.getImage());
+                        break;
+                    }
+                case VIDEO:
+                    {
+                        mergeVideo(other.getVideo());
+                        break;
+                    }
+                case MEDIA_NOT_SET:
+                    {
+                        break;
+                    }
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            tools.elide.page.MediaAsset parsedMessage = null;
+            try {
+                parsedMessage =
+                    PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage =
+                    (tools.elide.page.MediaAsset) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int mediaCase_ = 0;
+        private java.lang.Object media_;
+
+        public MediaCase getMediaCase() {
+            return MediaCase.forNumber(mediaCase_);
+        }
+
+        public Builder clearMedia() {
+            mediaCase_ = 0;
+            media_ = null;
+            onChanged();
+            return this;
+        }
+
+        private int kind_ = 0;
+
+        /**
+         * <pre>
+         * Describes, in broad terms, the kind of media being attached.
+         * </pre>
+         *
+         * <code>.page.MediaType kind = 1;</code>
+         * @return The enum numeric value on the wire for kind.
+         */
+        @java.lang.Override
+        public int getKindValue() {
+            return kind_;
+        }
+
+        /**
+         * <pre>
+         * Describes, in broad terms, the kind of media being attached.
+         * </pre>
+         *
+         * <code>.page.MediaType kind = 1;</code>
+         * @param value The enum numeric value on the wire for kind to set.
+         * @return This builder for chaining.
+         */
+        public Builder setKindValue(int value) {
+            kind_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes, in broad terms, the kind of media being attached.
+         * </pre>
+         *
+         * <code>.page.MediaType kind = 1;</code>
+         * @return The kind.
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaType getKind() {
+            @SuppressWarnings("deprecation")
+            tools.elide.page.MediaType result = tools.elide.page.MediaType.valueOf(
+                kind_
+            );
+            return result == null
+                ? tools.elide.page.MediaType.UNRECOGNIZED
+                : result;
+        }
+
+        /**
+         * <pre>
+         * Describes, in broad terms, the kind of media being attached.
+         * </pre>
+         *
+         * <code>.page.MediaType kind = 1;</code>
+         * @param value The kind to set.
+         * @return This builder for chaining.
+         */
+        public Builder setKind(tools.elide.page.MediaType value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            kind_ = value.getNumber();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes, in broad terms, the kind of media being attached.
+         * </pre>
+         *
+         * <code>.page.MediaType kind = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearKind() {
+            kind_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder> linkBuilder_;
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         * @return Whether the link field is set.
+         */
+        @java.lang.Override
+        public boolean hasLink() {
+            return mediaCase_ == 10;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         * @return The link.
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Link getLink() {
+            if (linkBuilder_ == null) {
+                if (mediaCase_ == 10) {
+                    return (tools.elide.page.MediaAsset.Link) media_;
+                }
+                return tools.elide.page.MediaAsset.Link.getDefaultInstance();
+            } else {
+                if (mediaCase_ == 10) {
+                    return linkBuilder_.getMessage();
+                }
+                return tools.elide.page.MediaAsset.Link.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        public Builder setLink(tools.elide.page.MediaAsset.Link value) {
+            if (linkBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                media_ = value;
+                onChanged();
+            } else {
+                linkBuilder_.setMessage(value);
+            }
+            mediaCase_ = 10;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        public Builder setLink(
+            tools.elide.page.MediaAsset.Link.Builder builderForValue
+        ) {
+            if (linkBuilder_ == null) {
+                media_ = builderForValue.build();
+                onChanged();
+            } else {
+                linkBuilder_.setMessage(builderForValue.build());
+            }
+            mediaCase_ = 10;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        public Builder mergeLink(tools.elide.page.MediaAsset.Link value) {
+            if (linkBuilder_ == null) {
+                if (
+                    mediaCase_ == 10 &&
+                    media_ !=
+                    tools.elide.page.MediaAsset.Link.getDefaultInstance()
+                ) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Link
+                            .newBuilder(
+                                (tools.elide.page.MediaAsset.Link) media_
+                            )
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    media_ = value;
+                }
+                onChanged();
+            } else {
+                if (mediaCase_ == 10) {
+                    linkBuilder_.mergeFrom(value);
+                } else {
+                    linkBuilder_.setMessage(value);
+                }
+            }
+            mediaCase_ = 10;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        public Builder clearLink() {
+            if (linkBuilder_ == null) {
+                if (mediaCase_ == 10) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                    onChanged();
+                }
+            } else {
+                if (mediaCase_ == 10) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                }
+                linkBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        public tools.elide.page.MediaAsset.Link.Builder getLinkBuilder() {
+            return getLinkFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.LinkOrBuilder getLinkOrBuilder() {
+            if ((mediaCase_ == 10) && (linkBuilder_ != null)) {
+                return linkBuilder_.getMessageOrBuilder();
+            } else {
+                if (mediaCase_ == 10) {
+                    return (tools.elide.page.MediaAsset.Link) media_;
+                }
+                return tools.elide.page.MediaAsset.Link.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached media link.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Link link = 10;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder> getLinkFieldBuilder() {
+            if (linkBuilder_ == null) {
+                if (!(mediaCase_ == 10)) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Link.getDefaultInstance();
+                }
+                linkBuilder_ =
+                    new com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Link, tools.elide.page.MediaAsset.Link.Builder, tools.elide.page.MediaAsset.LinkOrBuilder>(
+                        (tools.elide.page.MediaAsset.Link) media_,
+                        getParentForChildren(),
+                        isClean()
+                    );
+                media_ = null;
+            }
+            mediaCase_ = 10;
+            onChanged();
+            return linkBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> imageBuilder_;
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         * @return Whether the image field is set.
+         */
+        @java.lang.Override
+        public boolean hasImage() {
+            return mediaCase_ == 20;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         * @return The image.
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Image getImage() {
+            if (imageBuilder_ == null) {
+                if (mediaCase_ == 20) {
+                    return (tools.elide.page.MediaAsset.Image) media_;
+                }
+                return tools.elide.page.MediaAsset.Image.getDefaultInstance();
+            } else {
+                if (mediaCase_ == 20) {
+                    return imageBuilder_.getMessage();
+                }
+                return tools.elide.page.MediaAsset.Image.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        public Builder setImage(tools.elide.page.MediaAsset.Image value) {
+            if (imageBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                media_ = value;
+                onChanged();
+            } else {
+                imageBuilder_.setMessage(value);
+            }
+            mediaCase_ = 20;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        public Builder setImage(
+            tools.elide.page.MediaAsset.Image.Builder builderForValue
+        ) {
+            if (imageBuilder_ == null) {
+                media_ = builderForValue.build();
+                onChanged();
+            } else {
+                imageBuilder_.setMessage(builderForValue.build());
+            }
+            mediaCase_ = 20;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        public Builder mergeImage(tools.elide.page.MediaAsset.Image value) {
+            if (imageBuilder_ == null) {
+                if (
+                    mediaCase_ == 20 &&
+                    media_ !=
+                    tools.elide.page.MediaAsset.Image.getDefaultInstance()
+                ) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Image
+                            .newBuilder(
+                                (tools.elide.page.MediaAsset.Image) media_
+                            )
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    media_ = value;
+                }
+                onChanged();
+            } else {
+                if (mediaCase_ == 20) {
+                    imageBuilder_.mergeFrom(value);
+                } else {
+                    imageBuilder_.setMessage(value);
+                }
+            }
+            mediaCase_ = 20;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        public Builder clearImage() {
+            if (imageBuilder_ == null) {
+                if (mediaCase_ == 20) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                    onChanged();
+                }
+            } else {
+                if (mediaCase_ == 20) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                }
+                imageBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        public tools.elide.page.MediaAsset.Image.Builder getImageBuilder() {
+            return getImageFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.ImageOrBuilder getImageOrBuilder() {
+            if ((mediaCase_ == 20) && (imageBuilder_ != null)) {
+                return imageBuilder_.getMessageOrBuilder();
+            } else {
+                if (mediaCase_ == 20) {
+                    return (tools.elide.page.MediaAsset.Image) media_;
+                }
+                return tools.elide.page.MediaAsset.Image.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached image.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Image image = 20;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder> getImageFieldBuilder() {
+            if (imageBuilder_ == null) {
+                if (!(mediaCase_ == 20)) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Image.getDefaultInstance();
+                }
+                imageBuilder_ =
+                    new com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Image, tools.elide.page.MediaAsset.Image.Builder, tools.elide.page.MediaAsset.ImageOrBuilder>(
+                        (tools.elide.page.MediaAsset.Image) media_,
+                        getParentForChildren(),
+                        isClean()
+                    );
+                media_ = null;
+            }
+            mediaCase_ = 20;
+            onChanged();
+            return imageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder> videoBuilder_;
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         * @return Whether the video field is set.
+         */
+        @java.lang.Override
+        public boolean hasVideo() {
+            return mediaCase_ == 30;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         * @return The video.
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.Video getVideo() {
+            if (videoBuilder_ == null) {
+                if (mediaCase_ == 30) {
+                    return (tools.elide.page.MediaAsset.Video) media_;
+                }
+                return tools.elide.page.MediaAsset.Video.getDefaultInstance();
+            } else {
+                if (mediaCase_ == 30) {
+                    return videoBuilder_.getMessage();
+                }
+                return tools.elide.page.MediaAsset.Video.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        public Builder setVideo(tools.elide.page.MediaAsset.Video value) {
+            if (videoBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                media_ = value;
+                onChanged();
+            } else {
+                videoBuilder_.setMessage(value);
+            }
+            mediaCase_ = 30;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        public Builder setVideo(
+            tools.elide.page.MediaAsset.Video.Builder builderForValue
+        ) {
+            if (videoBuilder_ == null) {
+                media_ = builderForValue.build();
+                onChanged();
+            } else {
+                videoBuilder_.setMessage(builderForValue.build());
+            }
+            mediaCase_ = 30;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        public Builder mergeVideo(tools.elide.page.MediaAsset.Video value) {
+            if (videoBuilder_ == null) {
+                if (
+                    mediaCase_ == 30 &&
+                    media_ !=
+                    tools.elide.page.MediaAsset.Video.getDefaultInstance()
+                ) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Video
+                            .newBuilder(
+                                (tools.elide.page.MediaAsset.Video) media_
+                            )
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    media_ = value;
+                }
+                onChanged();
+            } else {
+                if (mediaCase_ == 30) {
+                    videoBuilder_.mergeFrom(value);
+                } else {
+                    videoBuilder_.setMessage(value);
+                }
+            }
+            mediaCase_ = 30;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        public Builder clearVideo() {
+            if (videoBuilder_ == null) {
+                if (mediaCase_ == 30) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                    onChanged();
+                }
+            } else {
+                if (mediaCase_ == 30) {
+                    mediaCase_ = 0;
+                    media_ = null;
+                }
+                videoBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        public tools.elide.page.MediaAsset.Video.Builder getVideoBuilder() {
+            return getVideoFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        @java.lang.Override
+        public tools.elide.page.MediaAsset.VideoOrBuilder getVideoOrBuilder() {
+            if ((mediaCase_ == 30) && (videoBuilder_ != null)) {
+                return videoBuilder_.getMessageOrBuilder();
+            } else {
+                if (mediaCase_ == 30) {
+                    return (tools.elide.page.MediaAsset.Video) media_;
+                }
+                return tools.elide.page.MediaAsset.Video.getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Describes concrete information about an attached video.
+         * </pre>
+         *
+         * <code>.page.MediaAsset.Video video = 30;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder> getVideoFieldBuilder() {
+            if (videoBuilder_ == null) {
+                if (!(mediaCase_ == 30)) {
+                    media_ =
+                        tools.elide.page.MediaAsset.Video.getDefaultInstance();
+                }
+                videoBuilder_ =
+                    new com.google.protobuf.SingleFieldBuilderV3<tools.elide.page.MediaAsset.Video, tools.elide.page.MediaAsset.Video.Builder, tools.elide.page.MediaAsset.VideoOrBuilder>(
+                        (tools.elide.page.MediaAsset.Video) media_,
+                        getParentForChildren(),
+                        isClean()
+                    );
+                media_ = null;
+            }
+            mediaCase_ = 30;
+            onChanged();
+            return videoBuilder_;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+        // @@protoc_insertion_point(builder_scope:page.MediaAsset)
     }
+
+    // @@protoc_insertion_point(class_scope:page.MediaAsset)
+    private static final tools.elide.page.MediaAsset DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new tools.elide.page.MediaAsset();
+    }
+
+    public static tools.elide.page.MediaAsset getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<MediaAsset> PARSER = new com.google.protobuf.AbstractParser<MediaAsset>() {
+        @java.lang.Override
+        public MediaAsset parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return new MediaAsset(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<MediaAsset> parser() {
+        return PARSER;
+    }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public com.google.protobuf.Parser<MediaAsset> getParserForType() {
+        return PARSER;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public tools.elide.page.MediaAsset getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
     }
-
-
-    // @@protoc_insertion_point(builder_scope:page.MediaAsset)
-  }
-
-  // @@protoc_insertion_point(class_scope:page.MediaAsset)
-  private static final tools.elide.page.MediaAsset DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new tools.elide.page.MediaAsset();
-  }
-
-  public static tools.elide.page.MediaAsset getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<MediaAsset>
-      PARSER = new com.google.protobuf.AbstractParser<MediaAsset>() {
-    @java.lang.Override
-    public MediaAsset parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new MediaAsset(input, extensionRegistry);
-    }
-  };
-
-  public static com.google.protobuf.Parser<MediaAsset> parser() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.google.protobuf.Parser<MediaAsset> getParserForType() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public tools.elide.page.MediaAsset getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
-
 }
-

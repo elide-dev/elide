@@ -3,7 +3,7 @@
 
 package tools.elide.model;
 
-public interface SpannerOptionsOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:model.SpannerOptions)
-    com.google.protobuf.MessageOrBuilder {
-}
+public interface SpannerOptionsOrBuilder
+    extends
+        // @@protoc_insertion_point(interface_extends:model.SpannerOptions)
+        com.google.protobuf.MessageOrBuilder {}

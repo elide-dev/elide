@@ -1,8 +1,6 @@
 {
   "enabled": true,
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "enabledManagers": [
     "bazel",
     "cloudbuild",
@@ -17,9 +15,7 @@
     "gradle",
     "gradle-wrapper"
   ],
-  "baseBranches": [
-    "v3"
-  ],
+  "baseBranches": ["v3"],
   "pinDigests": true,
   "rangeStrategy": "pin",
   "updateLockFiles": true,
@@ -43,7 +39,5 @@
       "groupName": "Firebase"
     }
   ],
-  "postUpdateOptions": [
-    "yarnDedupeHighest"
-  ]
+  "postUpdateOptions": ["yarnDedupeHighest"]
 }

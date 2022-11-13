@@ -16,61 +16,61 @@ package lib.uuid
 import kotlin.js.*
 import lib.tsstdlib.ArrayLike
 
-external interface RandomOptions {
-    var random: ArrayLike<Number>?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface RandomOptions {
+  public var random: ArrayLike<Number>?
+    get() = definedExternally
+    set(value) = definedExternally
 }
 
-external interface RngOptions {
-    var rng: (() -> ArrayLike<Number>)?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface RngOptions {
+  public var rng: (() -> ArrayLike<Number>)?
+    get() = definedExternally
+    set(value) = definedExternally
 }
 
-external interface V1BaseOptions {
-    var node: ArrayLike<Number>?
-        get() = definedExternally
-        set(value) = definedExternally
-    var clockseq: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var msecs: dynamic /* Number? | Date? */
-        get() = definedExternally
-        set(value) = definedExternally
-    var nsecs: Number?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface V1BaseOptions {
+  public var node: ArrayLike<Number>?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var clockseq: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var msecs: dynamic /* Number? | Date? */
+    get() = definedExternally
+    set(value) = definedExternally
+  public var nsecs: Number?
+    get() = definedExternally
+    set(value) = definedExternally
 }
 
-external interface V1RandomOptions : V1BaseOptions, RandomOptions
+public external interface V1RandomOptions : V1BaseOptions, RandomOptions
 
-external interface V1RngOptions : V1BaseOptions, RngOptions
+public external interface V1RngOptions : V1BaseOptions, RngOptions
 
-external interface v3Static {
-  var DNS: String
-  var URL: String
+public external interface v3Static {
+  public var DNS: String
+  public var URL: String
 }
 
-external interface v5Static {
-  var DNS: String
-  var URL: String
+public external interface v5Static {
+  public var DNS: String
+  public var URL: String
 }
 
-external var NIL: String
+public external var NIL: String
 
-external var parse: (uuid: String) -> ArrayLike<Number>
+public external var parse: (uuid: String) -> ArrayLike<Number>
 
-external var stringify: (buffer: ArrayLike<Number>, offset: Number) -> String
+public external var stringify: (buffer: ArrayLike<Number>, offset: Number) -> String
 
-external var v1: (options: dynamic /* V1RandomOptions | V1RngOptions */) -> String /* v1String */
+public external var v1: (options: dynamic /* V1RandomOptions | V1RngOptions */) -> String /* v1String */
 
-external var v3: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v3String */
+public external var v3: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v3String */
 
-external var v4: (options: dynamic /* RandomOptions | RngOptions */) -> String /* v4String */
+public external var v4: (options: dynamic /* RandomOptions | RngOptions */) -> String /* v4String */
 
-external var v5: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v5String */
+public external var v5: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v5String */
 
-external var validate: (uuid: String) -> Boolean
+public external var validate: (uuid: String) -> Boolean
 
-external var version: (uuid: String) -> Number
+public external var version: (uuid: String) -> Number

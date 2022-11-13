@@ -1,2 +1,1 @@
-
-*Base images for use with Docker.*
+_Base images for use with Docker._

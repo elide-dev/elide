@@ -22,15 +22,15 @@ jobs:
       ## Setup: Java
       - uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # tag=v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
+          distribution: "zulu"
+          java-version: "11"
 
       ## Setup: GraalVM
       - uses: elide-tools/setup-graalvm@48f2bf339ab7d35e31029b1822a213681fdfc42e # tag=5.0
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          graalvm: "21.0.0.2"
+          java: "java11"
+          arch: "amd64"
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages

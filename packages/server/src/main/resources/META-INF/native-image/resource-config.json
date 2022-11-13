@@ -1,0 +1,91 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.grpc.LoadBalancerProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.grpc.ManagedChannelProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.grpc.NameResolverProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.context.env.PropertySourceLoader\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.core.type.TypeInformationProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.http.HttpRequestFactory\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.http.HttpResponseFactory\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.http.server.netty.handler.accesslog.element.LogElementBuilder\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.inject.BeanConfiguration\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/kotlin.test.AsserterContributor\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/org.junit.platform.engine.TestEngine\\E"
+      },
+      {
+        "pattern": "\\QMETA-INF/services/org.junit.platform.launcher.TestExecutionListener\\E"
+      },
+      {
+        "pattern": "\\Qassets/app.assets.pb\\E"
+      },
+      {
+        "pattern": "\\Qbootstrap-test.properties\\E"
+      },
+      {
+        "pattern": "\\Qbootstrap.properties\\E"
+      },
+      {
+        "pattern": "\\Qlogback.xml\\E"
+      },
+      {
+        "pattern": "\\Qmanifests/app.assets.pb.json\\E"
+      },
+      {
+        "pattern": "\\Qmanifests/app.assets.pb\\E"
+      },
+      {
+        "pattern": "\\Qmicronaut-version.properties\\E"
+      },
+      {
+        "pattern": "\\Qorg/conscrypt/conscrypt.properties\\E"
+      },
+      {
+        "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+      },
+      {
+        "pattern": "\\Qstatic/something.txt\\E"
+      }
+    ]
+  },
+  "bundles": []
+}

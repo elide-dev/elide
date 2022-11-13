@@ -12,544 +12,121 @@ package tools.elide.model;
  *
  * Protobuf type {@code model.DatapointOptions}
  */
-public final class DatapointOptions extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:model.DatapointOptions)
-    DatapointOptionsOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use DatapointOptions.newBuilder() to construct.
-  private DatapointOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private DatapointOptions() {
-    visibility_ = 0;
-  }
+public final class DatapointOptions
+    extends com.google.protobuf.GeneratedMessageV3
+    implements
+        // @@protoc_insertion_point(message_implements:model.DatapointOptions)
+        DatapointOptionsOrBuilder {
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new DatapointOptions();
-  }
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private DatapointOptions(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
+    // Use DatapointOptions.newBuilder() to construct.
+    private DatapointOptions(
+        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+    ) {
+        super(builder);
     }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            int rawValue = input.readEnum();
 
-            visibility_ = rawValue;
-            break;
-          }
-          case 16: {
-
-            required_ = input.readBool();
-            break;
-          }
-          case 24: {
-
-            concrete_ = input.readBool();
-            break;
-          }
-          case 32: {
-
-            ephemeral_ = input.readBool();
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            tools.elide.model.DatapointOptions.class, tools.elide.model.DatapointOptions.Builder.class);
-  }
-
-  public static final int VISIBILITY_FIELD_NUMBER = 1;
-  private int visibility_;
-  /**
-   * <pre>
-   * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
-   * invoking code, protected from rewriting, and so on.
-   * </pre>
-   *
-   * <code>.model.Visibility visibility = 1;</code>
-   * @return The enum numeric value on the wire for visibility.
-   */
-  @java.lang.Override public int getVisibilityValue() {
-    return visibility_;
-  }
-  /**
-   * <pre>
-   * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
-   * invoking code, protected from rewriting, and so on.
-   * </pre>
-   *
-   * <code>.model.Visibility visibility = 1;</code>
-   * @return The visibility.
-   */
-  @java.lang.Override public tools.elide.model.Visibility getVisibility() {
-    @SuppressWarnings("deprecation")
-    tools.elide.model.Visibility result = tools.elide.model.Visibility.valueOf(visibility_);
-    return result == null ? tools.elide.model.Visibility.UNRECOGNIZED : result;
-  }
-
-  public static final int REQUIRED_FIELD_NUMBER = 2;
-  private boolean required_;
-  /**
-   * <pre>
-   * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
-   * This setting is applied in various circumstances, usually when data crosses API boundaries.
-   * </pre>
-   *
-   * <code>bool required = 2;</code>
-   * @return The required.
-   */
-  @java.lang.Override
-  public boolean getRequired() {
-    return required_;
-  }
-
-  public static final int CONCRETE_FIELD_NUMBER = 3;
-  private boolean concrete_;
-  /**
-   * <pre>
-   * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
-   * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
-   * generic types in a one-of field, for instance, in `MenuProduct`.
-   * </pre>
-   *
-   * <code>bool concrete = 3;</code>
-   * @return The concrete.
-   */
-  @java.lang.Override
-  public boolean getConcrete() {
-    return concrete_;
-  }
-
-  public static final int EPHEMERAL_FIELD_NUMBER = 4;
-  private boolean ephemeral_;
-  /**
-   * <pre>
-   * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
-   * a calculated value for use in systems upstream from the data storage layer.
-   * </pre>
-   *
-   * <code>bool ephemeral = 4;</code>
-   * @return The ephemeral.
-   */
-  @java.lang.Override
-  public boolean getEphemeral() {
-    return ephemeral_;
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (visibility_ != tools.elide.model.Visibility.PUBLIC.getNumber()) {
-      output.writeEnum(1, visibility_);
-    }
-    if (required_ != false) {
-      output.writeBool(2, required_);
-    }
-    if (concrete_ != false) {
-      output.writeBool(3, concrete_);
-    }
-    if (ephemeral_ != false) {
-      output.writeBool(4, ephemeral_);
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (visibility_ != tools.elide.model.Visibility.PUBLIC.getNumber()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, visibility_);
-    }
-    if (required_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(2, required_);
-    }
-    if (concrete_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(3, concrete_);
-    }
-    if (ephemeral_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, ephemeral_);
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof tools.elide.model.DatapointOptions)) {
-      return super.equals(obj);
-    }
-    tools.elide.model.DatapointOptions other = (tools.elide.model.DatapointOptions) obj;
-
-    if (visibility_ != other.visibility_) return false;
-    if (getRequired()
-        != other.getRequired()) return false;
-    if (getConcrete()
-        != other.getConcrete()) return false;
-    if (getEphemeral()
-        != other.getEphemeral()) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + VISIBILITY_FIELD_NUMBER;
-    hash = (53 * hash) + visibility_;
-    hash = (37 * hash) + REQUIRED_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getRequired());
-    hash = (37 * hash) + CONCRETE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getConcrete());
-    hash = (37 * hash) + EPHEMERAL_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getEphemeral());
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static tools.elide.model.DatapointOptions parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.model.DatapointOptions parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.DatapointOptions parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.DatapointOptions parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(tools.elide.model.DatapointOptions prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * <pre>
-   * Options specified for a given datamodel point (which can be a message, a field, an enum, and so on), which describe
-   * how the object or field may be validated in various circumstances, and how it should be handled with regard to
-   * exposure visibility to invoking code.
-   * </pre>
-   *
-   * Protobuf type {@code model.DatapointOptions}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:model.DatapointOptions)
-      tools.elide.model.DatapointOptionsOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
+    private DatapointOptions() {
+        visibility_ = 0;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.model.DatapointOptions.class, tools.elide.model.DatapointOptions.Builder.class);
-    }
-
-    // Construct using tools.elide.model.DatapointOptions.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      visibility_ = 0;
-
-      required_ = false;
-
-      concrete_ = false;
-
-      ephemeral_ = false;
-
-      return this;
+    @SuppressWarnings({ "unused" })
+    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+        return new DatapointOptions();
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
+    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+        return this.unknownFields;
     }
 
-    @java.lang.Override
-    public tools.elide.model.DatapointOptions getDefaultInstanceForType() {
-      return tools.elide.model.DatapointOptions.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public tools.elide.model.DatapointOptions build() {
-      tools.elide.model.DatapointOptions result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public tools.elide.model.DatapointOptions buildPartial() {
-      tools.elide.model.DatapointOptions result = new tools.elide.model.DatapointOptions(this);
-      result.visibility_ = visibility_;
-      result.required_ = required_;
-      result.concrete_ = concrete_;
-      result.ephemeral_ = ephemeral_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof tools.elide.model.DatapointOptions) {
-        return mergeFrom((tools.elide.model.DatapointOptions)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(tools.elide.model.DatapointOptions other) {
-      if (other == tools.elide.model.DatapointOptions.getDefaultInstance()) return this;
-      if (other.visibility_ != 0) {
-        setVisibilityValue(other.getVisibilityValue());
-      }
-      if (other.getRequired() != false) {
-        setRequired(other.getRequired());
-      }
-      if (other.getConcrete() != false) {
-        setConcrete(other.getConcrete());
-      }
-      if (other.getEphemeral() != false) {
-        setEphemeral(other.getEphemeral());
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
+    private DatapointOptions(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      tools.elide.model.DatapointOptions parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (tools.elide.model.DatapointOptions) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      }
-      return this;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 8:
+                        {
+                            int rawValue = input.readEnum();
+
+                            visibility_ = rawValue;
+                            break;
+                        }
+                    case 16:
+                        {
+                            required_ = input.readBool();
+                            break;
+                        }
+                    case 24:
+                        {
+                            concrete_ = input.readBool();
+                            break;
+                        }
+                    case 32:
+                        {
+                            ephemeral_ = input.readBool();
+                            break;
+                        }
+                    default:
+                        {
+                            if (
+                                !parseUnknownField(
+                                    input,
+                                    unknownFields,
+                                    extensionRegistry,
+                                    tag
+                                )
+                            ) {
+                                done = true;
+                            }
+                            break;
+                        }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e
+                .asInvalidProtocolBufferException()
+                .setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(this);
+        } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
     }
 
-    private int visibility_ = 0;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
+            tools.elide.model.DatapointOptions.class,
+            tools.elide.model.DatapointOptions.Builder.class
+        );
+    }
+
+    public static final int VISIBILITY_FIELD_NUMBER = 1;
+    private int visibility_;
+
     /**
      * <pre>
      * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
@@ -559,25 +136,11 @@ private static final long serialVersionUID = 0L;
      * <code>.model.Visibility visibility = 1;</code>
      * @return The enum numeric value on the wire for visibility.
      */
-    @java.lang.Override public int getVisibilityValue() {
-      return visibility_;
+    @java.lang.Override
+    public int getVisibilityValue() {
+        return visibility_;
     }
-    /**
-     * <pre>
-     * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
-     * invoking code, protected from rewriting, and so on.
-     * </pre>
-     *
-     * <code>.model.Visibility visibility = 1;</code>
-     * @param value The enum numeric value on the wire for visibility to set.
-     * @return This builder for chaining.
-     */
-    public Builder setVisibilityValue(int value) {
-      
-      visibility_ = value;
-      onChanged();
-      return this;
-    }
+
     /**
      * <pre>
      * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
@@ -589,46 +152,18 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.model.Visibility getVisibility() {
-      @SuppressWarnings("deprecation")
-      tools.elide.model.Visibility result = tools.elide.model.Visibility.valueOf(visibility_);
-      return result == null ? tools.elide.model.Visibility.UNRECOGNIZED : result;
-    }
-    /**
-     * <pre>
-     * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
-     * invoking code, protected from rewriting, and so on.
-     * </pre>
-     *
-     * <code>.model.Visibility visibility = 1;</code>
-     * @param value The visibility to set.
-     * @return This builder for chaining.
-     */
-    public Builder setVisibility(tools.elide.model.Visibility value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      
-      visibility_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
-     * invoking code, protected from rewriting, and so on.
-     * </pre>
-     *
-     * <code>.model.Visibility visibility = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearVisibility() {
-      
-      visibility_ = 0;
-      onChanged();
-      return this;
+        @SuppressWarnings("deprecation")
+        tools.elide.model.Visibility result = tools.elide.model.Visibility.valueOf(
+            visibility_
+        );
+        return result == null
+            ? tools.elide.model.Visibility.UNRECOGNIZED
+            : result;
     }
 
-    private boolean required_ ;
+    public static final int REQUIRED_FIELD_NUMBER = 2;
+    private boolean required_;
+
     /**
      * <pre>
      * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
@@ -640,41 +175,12 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean getRequired() {
-      return required_;
-    }
-    /**
-     * <pre>
-     * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
-     * This setting is applied in various circumstances, usually when data crosses API boundaries.
-     * </pre>
-     *
-     * <code>bool required = 2;</code>
-     * @param value The required to set.
-     * @return This builder for chaining.
-     */
-    public Builder setRequired(boolean value) {
-      
-      required_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
-     * This setting is applied in various circumstances, usually when data crosses API boundaries.
-     * </pre>
-     *
-     * <code>bool required = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearRequired() {
-      
-      required_ = false;
-      onChanged();
-      return this;
+        return required_;
     }
 
-    private boolean concrete_ ;
+    public static final int CONCRETE_FIELD_NUMBER = 3;
+    private boolean concrete_;
+
     /**
      * <pre>
      * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
@@ -687,43 +193,12 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean getConcrete() {
-      return concrete_;
-    }
-    /**
-     * <pre>
-     * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
-     * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
-     * generic types in a one-of field, for instance, in `MenuProduct`.
-     * </pre>
-     *
-     * <code>bool concrete = 3;</code>
-     * @param value The concrete to set.
-     * @return This builder for chaining.
-     */
-    public Builder setConcrete(boolean value) {
-      
-      concrete_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
-     * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
-     * generic types in a one-of field, for instance, in `MenuProduct`.
-     * </pre>
-     *
-     * <code>bool concrete = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearConcrete() {
-      
-      concrete_ = false;
-      onChanged();
-      return this;
+        return concrete_;
     }
 
-    private boolean ephemeral_ ;
+    public static final int EPHEMERAL_FIELD_NUMBER = 4;
+    private boolean ephemeral_;
+
     /**
      * <pre>
      * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
@@ -735,89 +210,721 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean getEphemeral() {
-      return ephemeral_;
+        return ephemeral_;
     }
-    /**
-     * <pre>
-     * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
-     * a calculated value for use in systems upstream from the data storage layer.
-     * </pre>
-     *
-     * <code>bool ephemeral = 4;</code>
-     * @param value The ephemeral to set.
-     * @return This builder for chaining.
-     */
-    public Builder setEphemeral(boolean value) {
-      
-      ephemeral_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
-     * a calculated value for use in systems upstream from the data storage layer.
-     * </pre>
-     *
-     * <code>bool ephemeral = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearEphemeral() {
-      
-      ephemeral_ = false;
-      onChanged();
-      return this;
-    }
+
+    private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+        throws java.io.IOException {
+        if (visibility_ != tools.elide.model.Visibility.PUBLIC.getNumber()) {
+            output.writeEnum(1, visibility_);
+        }
+        if (required_ != false) {
+            output.writeBool(2, required_);
+        }
+        if (concrete_ != false) {
+            output.writeBool(3, concrete_);
+        }
+        if (ephemeral_ != false) {
+            output.writeBool(4, ephemeral_);
+        }
+        unknownFields.writeTo(output);
     }
 
-
-    // @@protoc_insertion_point(builder_scope:model.DatapointOptions)
-  }
-
-  // @@protoc_insertion_point(class_scope:model.DatapointOptions)
-  private static final tools.elide.model.DatapointOptions DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new tools.elide.model.DatapointOptions();
-  }
-
-  public static tools.elide.model.DatapointOptions getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<DatapointOptions>
-      PARSER = new com.google.protobuf.AbstractParser<DatapointOptions>() {
     @java.lang.Override
-    public DatapointOptions parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (visibility_ != tools.elide.model.Visibility.PUBLIC.getNumber()) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeEnumSize(
+                    1,
+                    visibility_
+                );
+        }
+        if (required_ != false) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeBoolSize(
+                    2,
+                    required_
+                );
+        }
+        if (concrete_ != false) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeBoolSize(
+                    3,
+                    concrete_
+                );
+        }
+        if (ephemeral_ != false) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeBoolSize(
+                    4,
+                    ephemeral_
+                );
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof tools.elide.model.DatapointOptions)) {
+            return super.equals(obj);
+        }
+        tools.elide.model.DatapointOptions other = (tools.elide.model.DatapointOptions) obj;
+
+        if (visibility_ != other.visibility_) return false;
+        if (getRequired() != other.getRequired()) return false;
+        if (getConcrete() != other.getConcrete()) return false;
+        if (getEphemeral() != other.getEphemeral()) return false;
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + VISIBILITY_FIELD_NUMBER;
+        hash = (53 * hash) + visibility_;
+        hash = (37 * hash) + REQUIRED_FIELD_NUMBER;
+        hash =
+            (53 * hash) +
+            com.google.protobuf.Internal.hashBoolean(getRequired());
+        hash = (37 * hash) + CONCRETE_FIELD_NUMBER;
+        hash =
+            (53 * hash) +
+            com.google.protobuf.Internal.hashBoolean(getConcrete());
+        hash = (37 * hash) + EPHEMERAL_FIELD_NUMBER;
+        hash =
+            (53 * hash) +
+            com.google.protobuf.Internal.hashBoolean(getEphemeral());
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        java.nio.ByteBuffer data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        com.google.protobuf.ByteString data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new DatapointOptions(input, extensionRegistry);
+        return PARSER.parseFrom(data);
     }
-  };
 
-  public static com.google.protobuf.Parser<DatapointOptions> parser() {
-    return PARSER;
-  }
+    public static tools.elide.model.DatapointOptions parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<DatapointOptions> getParserForType() {
-    return PARSER;
-  }
+    public static tools.elide.model.DatapointOptions parseFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
 
-  @java.lang.Override
-  public tools.elide.model.DatapointOptions getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public static tools.elide.model.DatapointOptions parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
 
+    public static tools.elide.model.DatapointOptions parseDelimitedFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.model.DatapointOptions parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        com.google.protobuf.CodedInputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.model.DatapointOptions parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(
+        tools.elide.model.DatapointOptions prototype
+    ) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder()
+            : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+    ) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * <pre>
+     * Options specified for a given datamodel point (which can be a message, a field, an enum, and so on), which describe
+     * how the object or field may be validated in various circumstances, and how it should be handled with regard to
+     * exposure visibility to invoking code.
+     * </pre>
+     *
+     * Protobuf type {@code model.DatapointOptions}
+     */
+    public static final class Builder
+        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+        implements
+            // @@protoc_insertion_point(builder_implements:model.DatapointOptions)
+            tools.elide.model.DatapointOptionsOrBuilder {
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.model.DatapointOptions.class,
+                tools.elide.model.DatapointOptions.Builder.class
+            );
+        }
+
+        // Construct using tools.elide.model.DatapointOptions.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+            ) {}
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            visibility_ = 0;
+
+            required_ = false;
+
+            concrete_ = false;
+
+            ephemeral_ = false;
+
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+            return tools.elide.model.Datamodel.internal_static_model_DatapointOptions_descriptor;
+        }
+
+        @java.lang.Override
+        public tools.elide.model.DatapointOptions getDefaultInstanceForType() {
+            return tools.elide.model.DatapointOptions.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public tools.elide.model.DatapointOptions build() {
+            tools.elide.model.DatapointOptions result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public tools.elide.model.DatapointOptions buildPartial() {
+            tools.elide.model.DatapointOptions result = new tools.elide.model.DatapointOptions(
+                this
+            );
+            result.visibility_ = visibility_;
+            result.required_ = required_;
+            result.concrete_ = concrete_;
+            result.ephemeral_ = ephemeral_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field
+        ) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof
+        ) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index,
+            java.lang.Object value
+        ) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof tools.elide.model.DatapointOptions) {
+                return mergeFrom((tools.elide.model.DatapointOptions) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(tools.elide.model.DatapointOptions other) {
+            if (
+                other == tools.elide.model.DatapointOptions.getDefaultInstance()
+            ) return this;
+            if (other.visibility_ != 0) {
+                setVisibilityValue(other.getVisibilityValue());
+            }
+            if (other.getRequired() != false) {
+                setRequired(other.getRequired());
+            }
+            if (other.getConcrete() != false) {
+                setConcrete(other.getConcrete());
+            }
+            if (other.getEphemeral() != false) {
+                setEphemeral(other.getEphemeral());
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            tools.elide.model.DatapointOptions parsedMessage = null;
+            try {
+                parsedMessage =
+                    PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage =
+                    (tools.elide.model.DatapointOptions) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int visibility_ = 0;
+
+        /**
+         * <pre>
+         * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+         * invoking code, protected from rewriting, and so on.
+         * </pre>
+         *
+         * <code>.model.Visibility visibility = 1;</code>
+         * @return The enum numeric value on the wire for visibility.
+         */
+        @java.lang.Override
+        public int getVisibilityValue() {
+            return visibility_;
+        }
+
+        /**
+         * <pre>
+         * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+         * invoking code, protected from rewriting, and so on.
+         * </pre>
+         *
+         * <code>.model.Visibility visibility = 1;</code>
+         * @param value The enum numeric value on the wire for visibility to set.
+         * @return This builder for chaining.
+         */
+        public Builder setVisibilityValue(int value) {
+            visibility_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+         * invoking code, protected from rewriting, and so on.
+         * </pre>
+         *
+         * <code>.model.Visibility visibility = 1;</code>
+         * @return The visibility.
+         */
+        @java.lang.Override
+        public tools.elide.model.Visibility getVisibility() {
+            @SuppressWarnings("deprecation")
+            tools.elide.model.Visibility result = tools.elide.model.Visibility.valueOf(
+                visibility_
+            );
+            return result == null
+                ? tools.elide.model.Visibility.UNRECOGNIZED
+                : result;
+        }
+
+        /**
+         * <pre>
+         * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+         * invoking code, protected from rewriting, and so on.
+         * </pre>
+         *
+         * <code>.model.Visibility visibility = 1;</code>
+         * @param value The visibility to set.
+         * @return This builder for chaining.
+         */
+        public Builder setVisibility(tools.elide.model.Visibility value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            visibility_ = value.getNumber();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Sets the visibility options for this data point. Depending on these options, a property or model may be exposed to
+         * invoking code, protected from rewriting, and so on.
+         * </pre>
+         *
+         * <code>.model.Visibility visibility = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearVisibility() {
+            visibility_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private boolean required_;
+
+        /**
+         * <pre>
+         * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
+         * This setting is applied in various circumstances, usually when data crosses API boundaries.
+         * </pre>
+         *
+         * <code>bool required = 2;</code>
+         * @return The required.
+         */
+        @java.lang.Override
+        public boolean getRequired() {
+            return required_;
+        }
+
+        /**
+         * <pre>
+         * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
+         * This setting is applied in various circumstances, usually when data crosses API boundaries.
+         * </pre>
+         *
+         * <code>bool required = 2;</code>
+         * @param value The required to set.
+         * @return This builder for chaining.
+         */
+        public Builder setRequired(boolean value) {
+            required_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Whether this data point (model or field or enum, etc) should be considered "required" for this model to be valid.
+         * This setting is applied in various circumstances, usually when data crosses API boundaries.
+         * </pre>
+         *
+         * <code>bool required = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearRequired() {
+            required_ = false;
+            onChanged();
+            return this;
+        }
+
+        private boolean concrete_;
+
+        /**
+         * <pre>
+         * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
+         * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
+         * generic types in a one-of field, for instance, in `MenuProduct`.
+         * </pre>
+         *
+         * <code>bool concrete = 3;</code>
+         * @return The concrete.
+         */
+        @java.lang.Override
+        public boolean getConcrete() {
+            return concrete_;
+        }
+
+        /**
+         * <pre>
+         * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
+         * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
+         * generic types in a one-of field, for instance, in `MenuProduct`.
+         * </pre>
+         *
+         * <code>bool concrete = 3;</code>
+         * @param value The concrete to set.
+         * @return This builder for chaining.
+         */
+        public Builder setConcrete(boolean value) {
+            concrete_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Whether this property contains a "concrete" sub-message, in which case, its properties are lifted to the parent
+         * entity. During decoding, a property is added to indicate the concrete selection made. This is usually combined with
+         * generic types in a one-of field, for instance, in `MenuProduct`.
+         * </pre>
+         *
+         * <code>bool concrete = 3;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearConcrete() {
+            concrete_ = false;
+            onChanged();
+            return this;
+        }
+
+        private boolean ephemeral_;
+
+        /**
+         * <pre>
+         * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
+         * a calculated value for use in systems upstream from the data storage layer.
+         * </pre>
+         *
+         * <code>bool ephemeral = 4;</code>
+         * @return The ephemeral.
+         */
+        @java.lang.Override
+        public boolean getEphemeral() {
+            return ephemeral_;
+        }
+
+        /**
+         * <pre>
+         * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
+         * a calculated value for use in systems upstream from the data storage layer.
+         * </pre>
+         *
+         * <code>bool ephemeral = 4;</code>
+         * @param value The ephemeral to set.
+         * @return This builder for chaining.
+         */
+        public Builder setEphemeral(boolean value) {
+            ephemeral_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Indicate to the data storage engine that a given field is ephemeral, and should not be stored, but rather held with
+         * a calculated value for use in systems upstream from the data storage layer.
+         * </pre>
+         *
+         * <code>bool ephemeral = 4;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearEphemeral() {
+            ephemeral_ = false;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+        // @@protoc_insertion_point(builder_scope:model.DatapointOptions)
+    }
+
+    // @@protoc_insertion_point(class_scope:model.DatapointOptions)
+    private static final tools.elide.model.DatapointOptions DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new tools.elide.model.DatapointOptions();
+    }
+
+    public static tools.elide.model.DatapointOptions getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DatapointOptions> PARSER = new com.google.protobuf.AbstractParser<DatapointOptions>() {
+        @java.lang.Override
+        public DatapointOptions parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return new DatapointOptions(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<DatapointOptions> parser() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DatapointOptions> getParserForType() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.DatapointOptions getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 }
-

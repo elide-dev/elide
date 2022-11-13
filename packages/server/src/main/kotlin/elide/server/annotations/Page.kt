@@ -18,23 +18,29 @@ import jakarta.inject.Singleton
  * and available settings.
  *
  * @param route HTTP route that should be bound to this page.
+ * @param produces Types produced by this page; defaults to `text/html`.
+ * @param consumes Types consumed by this page; defaults to nothing.
+ * @param precompile Whether this page handler should be considered for pre-compiled sites. Defaults to `true`.
  */
+@Bean
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-@Bean
 @Controller
 @DefaultScope(Singleton::class)
 public annotation class Page(
   /** HTTP route that should be bound to this page. */
   @get:AliasFor(annotation = UriMapping::class, member = "value")
-  val route: String = UriMapping.DEFAULT_URI,
+  public val route: String = UriMapping.DEFAULT_URI,
 
   /** Content-Type produced by this endpoint; defaults to HTML. */
   @get:AliasFor(annotation = Produces::class, member = "value")
-  val produces: Array<String> = [MediaType.TEXT_HTML],
+  public val produces: Array<String> = [MediaType.TEXT_HTML],
 
   /** Content-Type consumed by this endpoint; defaults to JSON. */
   @get:AliasFor(annotation = Consumes::class, member = "value")
-  val consumes: Array<String> = [MediaType.TEXT_HTML],
+  public val consumes: Array<String> = [],
+
+  /** Enable pre-compilation for this page (i.e. via SSG). */
+  public val precompile: Boolean = true,
 )

@@ -4,4 +4,3 @@ exclude:
     - docs
     - vendor
     - third_party
-

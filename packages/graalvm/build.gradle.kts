@@ -1,73 +1,26 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
-import java.net.URI
-
 plugins {
-  java
-  jacoco
-  idea
-  `maven-publish`
-  signing
-  kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.serialization")
-  alias(libs.plugins.micronaut.library)
-  alias(libs.plugins.testLogger)
-  alias(libs.plugins.dokka)
+  id("io.micronaut.library")
+  id("io.micronaut.graalvm")
+  id("dev.elide.build.native.lib")
 }
 
 group = "dev.elide"
 version = rootProject.version as String
 
-kapt {
-  useBuildCache = true
-}
 
 kotlin {
   explicitApi()
-
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-  }
-  publishing {
-    publications {
-      create<MavenPublication>("main") {
-        groupId = "dev.elide"
-        artifactId = "graalvm"
-        version = rootProject.version as String
-
-        from(components["kotlin"])
-      }
-    }
-  }
 }
 
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
-    if (project.hasProperty("elide.graalvm.variant")) {
-      val variant = project.property("elide.graalvm.variant") as String
-      if (variant != "COMMUNITY") {
-        vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-          "ENTERPRISE" -> "GraalVM Enterprise"
-          else -> "GraalVM Community"
-        }))
-      }
-    }
-  }
-}
-
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) {
-      useJUnitJupiter()
-    }
+graalvmNative {
+  agent {
+    enabled.set(false)
   }
 }
 
@@ -75,81 +28,10 @@ micronaut {
   version.set(libs.versions.micronaut.lib.get())
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("javadoc")
-}
-
-tasks.jacocoTestReport {
-  dependsOn(tasks.test)
-  reports {
-    xml.required.set(true)
-  }
-  classDirectories.setFrom(
-    files(classDirectories.files.map {
-      fileTree(it) {
-        exclude(
-          "**/generated/**",
-          "**/com/**",
-          "**/grpc/gateway/**",
-          "**/tools/elide/**",
-        )
-      }
-    })
-  )
-}
-
-signing {
-  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
-    sign(configurations.archives.get())
-    sign(publishing.publications)
-  }
-}
-
-publishing {
-  repositories {
-    maven {
-      name = "elide"
-      url = URI.create(project.properties["elide.publish.repo.maven"] as String)
-
-      if (project.hasProperty("elide.publish.repo.maven.auth")) {
-          credentials {
-              username = (project.properties["elide.publish.repo.maven.username"] as? String
-                  ?: System.getenv("PUBLISH_USER"))?.ifBlank { null }
-              password = (project.properties["elide.publish.repo.maven.password"] as? String
-                  ?: System.getenv("PUBLISH_TOKEN"))?.ifBlank { null }
-          }
-      }
-    }
-  }
-
-  publications.withType<MavenPublication> {
-    artifact(javadocJar.get())
-    pom {
-      name.set("Elide")
-      description.set("Polyglot application framework")
-      url.set("https://github.com/elide-dev/v3")
-
-      licenses {
-        license {
-          name.set("Properity License")
-          url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
-        }
-      }
-      developers {
-        developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
-        }
-      }
-      scm {
-        url.set("https://github.com/elide-dev/v3")
-      }
-    }
-  }
-}
-
 dependencies {
+  // Core platform versions.
+  api(platform(project(":packages:bom")))
+
   // API Deps
   api(libs.jakarta.inject)
   api(libs.graalvm.sdk)
@@ -182,4 +64,5 @@ dependencies {
 
   // Testing
   testImplementation(project(":packages:test"))
+  testImplementation(libs.graalvm.sdk)
 }

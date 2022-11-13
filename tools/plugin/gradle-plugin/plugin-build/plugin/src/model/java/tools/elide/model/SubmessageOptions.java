@@ -10,601 +10,127 @@ package tools.elide.model;
  *
  * Protobuf type {@code model.SubmessageOptions}
  */
-public final class SubmessageOptions extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:model.SubmessageOptions)
-    SubmessageOptionsOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use SubmessageOptions.newBuilder() to construct.
-  private SubmessageOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private SubmessageOptions() {
-    mode_ = 0;
-    concrete_ = "";
-    path_ = "";
-  }
+public final class SubmessageOptions
+    extends com.google.protobuf.GeneratedMessageV3
+    implements
+        // @@protoc_insertion_point(message_implements:model.SubmessageOptions)
+        SubmessageOptionsOrBuilder {
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new SubmessageOptions();
-  }
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  private SubmessageOptions(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
+    // Use SubmessageOptions.newBuilder() to construct.
+    private SubmessageOptions(
+        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
+    ) {
+        super(builder);
     }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            int rawValue = input.readEnum();
 
-            mode_ = rawValue;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            concrete_ = s;
-            break;
-          }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            path_ = s;
-            break;
-          }
-          case 32: {
-
-            embed_ = input.readBool();
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            tools.elide.model.SubmessageOptions.class, tools.elide.model.SubmessageOptions.Builder.class);
-  }
-
-  public static final int MODE_FIELD_NUMBER = 1;
-  private int mode_;
-  /**
-   * <pre>
-   * Collection storage mode for the given sub-message field.
-   * </pre>
-   *
-   * <code>.model.CollectionMode mode = 1;</code>
-   * @return The enum numeric value on the wire for mode.
-   */
-  @java.lang.Override public int getModeValue() {
-    return mode_;
-  }
-  /**
-   * <pre>
-   * Collection storage mode for the given sub-message field.
-   * </pre>
-   *
-   * <code>.model.CollectionMode mode = 1;</code>
-   * @return The mode.
-   */
-  @java.lang.Override public tools.elide.model.CollectionMode getMode() {
-    @SuppressWarnings("deprecation")
-    tools.elide.model.CollectionMode result = tools.elide.model.CollectionMode.valueOf(mode_);
-    return result == null ? tools.elide.model.CollectionMode.UNRECOGNIZED : result;
-  }
-
-  public static final int CONCRETE_FIELD_NUMBER = 2;
-  private volatile java.lang.Object concrete_;
-  /**
-   * <pre>
-   * Concrete type name for this sub-message type.
-   * </pre>
-   *
-   * <code>string concrete = 2;</code>
-   * @return The concrete.
-   */
-  @java.lang.Override
-  public java.lang.String getConcrete() {
-    java.lang.Object ref = concrete_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      concrete_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * Concrete type name for this sub-message type.
-   * </pre>
-   *
-   * <code>string concrete = 2;</code>
-   * @return The bytes for concrete.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getConcreteBytes() {
-    java.lang.Object ref = concrete_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      concrete_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int PATH_FIELD_NUMBER = 3;
-  private volatile java.lang.Object path_;
-  /**
-   * <pre>
-   * Data path for the given sub-message field.
-   * </pre>
-   *
-   * <code>string path = 3;</code>
-   * @return The path.
-   */
-  @java.lang.Override
-  public java.lang.String getPath() {
-    java.lang.Object ref = path_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      path_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * Data path for the given sub-message field.
-   * </pre>
-   *
-   * <code>string path = 3;</code>
-   * @return The bytes for path.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getPathBytes() {
-    java.lang.Object ref = path_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      path_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int EMBED_FIELD_NUMBER = 4;
-  private boolean embed_;
-  /**
-   * <pre>
-   * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
-   * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
-   * </pre>
-   *
-   * <code>bool embed = 4;</code>
-   * @return The embed.
-   */
-  @java.lang.Override
-  public boolean getEmbed() {
-    return embed_;
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (mode_ != tools.elide.model.CollectionMode.NESTED.getNumber()) {
-      output.writeEnum(1, mode_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(concrete_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, concrete_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(path_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, path_);
-    }
-    if (embed_ != false) {
-      output.writeBool(4, embed_);
-    }
-    unknownFields.writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (mode_ != tools.elide.model.CollectionMode.NESTED.getNumber()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, mode_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(concrete_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, concrete_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(path_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, path_);
-    }
-    if (embed_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, embed_);
-    }
-    size += unknownFields.getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof tools.elide.model.SubmessageOptions)) {
-      return super.equals(obj);
-    }
-    tools.elide.model.SubmessageOptions other = (tools.elide.model.SubmessageOptions) obj;
-
-    if (mode_ != other.mode_) return false;
-    if (!getConcrete()
-        .equals(other.getConcrete())) return false;
-    if (!getPath()
-        .equals(other.getPath())) return false;
-    if (getEmbed()
-        != other.getEmbed()) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + MODE_FIELD_NUMBER;
-    hash = (53 * hash) + mode_;
-    hash = (37 * hash) + CONCRETE_FIELD_NUMBER;
-    hash = (53 * hash) + getConcrete().hashCode();
-    hash = (37 * hash) + PATH_FIELD_NUMBER;
-    hash = (53 * hash) + getPath().hashCode();
-    hash = (37 * hash) + EMBED_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getEmbed());
-    hash = (29 * hash) + unknownFields.hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.model.SubmessageOptions parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.SubmessageOptions parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static tools.elide.model.SubmessageOptions parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(tools.elide.model.SubmessageOptions prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * <pre>
-   * Specifies options related to storing a sub-message.
-   * </pre>
-   *
-   * Protobuf type {@code model.SubmessageOptions}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:model.SubmessageOptions)
-      tools.elide.model.SubmessageOptionsOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
+    private SubmessageOptions() {
+        mode_ = 0;
+        concrete_ = "";
+        path_ = "";
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tools.elide.model.SubmessageOptions.class, tools.elide.model.SubmessageOptions.Builder.class);
-    }
-
-    // Construct using tools.elide.model.SubmessageOptions.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      mode_ = 0;
-
-      concrete_ = "";
-
-      path_ = "";
-
-      embed_ = false;
-
-      return this;
+    @SuppressWarnings({ "unused" })
+    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
+        return new SubmessageOptions();
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
+    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+        return this.unknownFields;
     }
 
-    @java.lang.Override
-    public tools.elide.model.SubmessageOptions getDefaultInstanceForType() {
-      return tools.elide.model.SubmessageOptions.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public tools.elide.model.SubmessageOptions build() {
-      tools.elide.model.SubmessageOptions result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public tools.elide.model.SubmessageOptions buildPartial() {
-      tools.elide.model.SubmessageOptions result = new tools.elide.model.SubmessageOptions(this);
-      result.mode_ = mode_;
-      result.concrete_ = concrete_;
-      result.path_ = path_;
-      result.embed_ = embed_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof tools.elide.model.SubmessageOptions) {
-        return mergeFrom((tools.elide.model.SubmessageOptions)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(tools.elide.model.SubmessageOptions other) {
-      if (other == tools.elide.model.SubmessageOptions.getDefaultInstance()) return this;
-      if (other.mode_ != 0) {
-        setModeValue(other.getModeValue());
-      }
-      if (!other.getConcrete().isEmpty()) {
-        concrete_ = other.concrete_;
-        onChanged();
-      }
-      if (!other.getPath().isEmpty()) {
-        path_ = other.path_;
-        onChanged();
-      }
-      if (other.getEmbed() != false) {
-        setEmbed(other.getEmbed());
-      }
-      this.mergeUnknownFields(other.unknownFields);
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
+    private SubmessageOptions(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      tools.elide.model.SubmessageOptions parsedMessage = null;
-      try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (tools.elide.model.SubmessageOptions) e.getUnfinishedMessage();
-        throw e.unwrapIOException();
-      } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
         }
-      }
-      return this;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+            boolean done = false;
+            while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                    case 0:
+                        done = true;
+                        break;
+                    case 8:
+                        {
+                            int rawValue = input.readEnum();
+
+                            mode_ = rawValue;
+                            break;
+                        }
+                    case 18:
+                        {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            concrete_ = s;
+                            break;
+                        }
+                    case 26:
+                        {
+                            java.lang.String s = input.readStringRequireUtf8();
+
+                            path_ = s;
+                            break;
+                        }
+                    case 32:
+                        {
+                            embed_ = input.readBool();
+                            break;
+                        }
+                    default:
+                        {
+                            if (
+                                !parseUnknownField(
+                                    input,
+                                    unknownFields,
+                                    extensionRegistry,
+                                    tag
+                                )
+                            ) {
+                                done = true;
+                            }
+                            break;
+                        }
+                }
+            }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(this);
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e
+                .asInvalidProtocolBufferException()
+                .setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(this);
+        } finally {
+            this.unknownFields = unknownFields.build();
+            makeExtensionsImmutable();
+        }
     }
 
-    private int mode_ = 0;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
+            tools.elide.model.SubmessageOptions.class,
+            tools.elide.model.SubmessageOptions.Builder.class
+        );
+    }
+
+    public static final int MODE_FIELD_NUMBER = 1;
+    private int mode_;
+
     /**
      * <pre>
      * Collection storage mode for the given sub-message field.
@@ -613,24 +139,11 @@ private static final long serialVersionUID = 0L;
      * <code>.model.CollectionMode mode = 1;</code>
      * @return The enum numeric value on the wire for mode.
      */
-    @java.lang.Override public int getModeValue() {
-      return mode_;
+    @java.lang.Override
+    public int getModeValue() {
+        return mode_;
     }
-    /**
-     * <pre>
-     * Collection storage mode for the given sub-message field.
-     * </pre>
-     *
-     * <code>.model.CollectionMode mode = 1;</code>
-     * @param value The enum numeric value on the wire for mode to set.
-     * @return This builder for chaining.
-     */
-    public Builder setModeValue(int value) {
-      
-      mode_ = value;
-      onChanged();
-      return this;
-    }
+
     /**
      * <pre>
      * Collection storage mode for the given sub-message field.
@@ -641,44 +154,18 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public tools.elide.model.CollectionMode getMode() {
-      @SuppressWarnings("deprecation")
-      tools.elide.model.CollectionMode result = tools.elide.model.CollectionMode.valueOf(mode_);
-      return result == null ? tools.elide.model.CollectionMode.UNRECOGNIZED : result;
-    }
-    /**
-     * <pre>
-     * Collection storage mode for the given sub-message field.
-     * </pre>
-     *
-     * <code>.model.CollectionMode mode = 1;</code>
-     * @param value The mode to set.
-     * @return This builder for chaining.
-     */
-    public Builder setMode(tools.elide.model.CollectionMode value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      
-      mode_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Collection storage mode for the given sub-message field.
-     * </pre>
-     *
-     * <code>.model.CollectionMode mode = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearMode() {
-      
-      mode_ = 0;
-      onChanged();
-      return this;
+        @SuppressWarnings("deprecation")
+        tools.elide.model.CollectionMode result = tools.elide.model.CollectionMode.valueOf(
+            mode_
+        );
+        return result == null
+            ? tools.elide.model.CollectionMode.UNRECOGNIZED
+            : result;
     }
 
-    private java.lang.Object concrete_ = "";
+    public static final int CONCRETE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object concrete_;
+
     /**
      * <pre>
      * Concrete type name for this sub-message type.
@@ -687,18 +174,19 @@ private static final long serialVersionUID = 0L;
      * <code>string concrete = 2;</code>
      * @return The concrete.
      */
+    @java.lang.Override
     public java.lang.String getConcrete() {
-      java.lang.Object ref = concrete_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        concrete_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = concrete_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            concrete_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
      * Concrete type name for this sub-message type.
@@ -707,74 +195,23 @@ private static final long serialVersionUID = 0L;
      * <code>string concrete = 2;</code>
      * @return The bytes for concrete.
      */
-    public com.google.protobuf.ByteString
-        getConcreteBytes() {
-      java.lang.Object ref = concrete_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        concrete_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * Concrete type name for this sub-message type.
-     * </pre>
-     *
-     * <code>string concrete = 2;</code>
-     * @param value The concrete to set.
-     * @return This builder for chaining.
-     */
-    public Builder setConcrete(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      concrete_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Concrete type name for this sub-message type.
-     * </pre>
-     *
-     * <code>string concrete = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearConcrete() {
-      
-      concrete_ = getDefaultInstance().getConcrete();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Concrete type name for this sub-message type.
-     * </pre>
-     *
-     * <code>string concrete = 2;</code>
-     * @param value The bytes for concrete to set.
-     * @return This builder for chaining.
-     */
-    public Builder setConcreteBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      concrete_ = value;
-      onChanged();
-      return this;
+    @java.lang.Override
+    public com.google.protobuf.ByteString getConcreteBytes() {
+        java.lang.Object ref = concrete_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref
+            );
+            concrete_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private java.lang.Object path_ = "";
+    public static final int PATH_FIELD_NUMBER = 3;
+    private volatile java.lang.Object path_;
+
     /**
      * <pre>
      * Data path for the given sub-message field.
@@ -783,18 +220,19 @@ private static final long serialVersionUID = 0L;
      * <code>string path = 3;</code>
      * @return The path.
      */
+    @java.lang.Override
     public java.lang.String getPath() {
-      java.lang.Object ref = path_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        path_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = path_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            path_ = s;
+            return s;
+        }
     }
+
     /**
      * <pre>
      * Data path for the given sub-message field.
@@ -803,74 +241,23 @@ private static final long serialVersionUID = 0L;
      * <code>string path = 3;</code>
      * @return The bytes for path.
      */
-    public com.google.protobuf.ByteString
-        getPathBytes() {
-      java.lang.Object ref = path_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        path_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * Data path for the given sub-message field.
-     * </pre>
-     *
-     * <code>string path = 3;</code>
-     * @param value The path to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPath(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      path_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Data path for the given sub-message field.
-     * </pre>
-     *
-     * <code>string path = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPath() {
-      
-      path_ = getDefaultInstance().getPath();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Data path for the given sub-message field.
-     * </pre>
-     *
-     * <code>string path = 3;</code>
-     * @param value The bytes for path to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPathBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      path_ = value;
-      onChanged();
-      return this;
+    @java.lang.Override
+    public com.google.protobuf.ByteString getPathBytes() {
+        java.lang.Object ref = path_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref
+            );
+            path_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private boolean embed_ ;
+    public static final int EMBED_FIELD_NUMBER = 4;
+    private boolean embed_;
+
     /**
      * <pre>
      * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
@@ -882,89 +269,812 @@ private static final long serialVersionUID = 0L;
      */
     @java.lang.Override
     public boolean getEmbed() {
-      return embed_;
+        return embed_;
     }
-    /**
-     * <pre>
-     * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
-     * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
-     * </pre>
-     *
-     * <code>bool embed = 4;</code>
-     * @param value The embed to set.
-     * @return This builder for chaining.
-     */
-    public Builder setEmbed(boolean value) {
-      
-      embed_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
-     * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
-     * </pre>
-     *
-     * <code>bool embed = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearEmbed() {
-      
-      embed_ = false;
-      onChanged();
-      return this;
-    }
+
+    private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+        throws java.io.IOException {
+        if (mode_ != tools.elide.model.CollectionMode.NESTED.getNumber()) {
+            output.writeEnum(1, mode_);
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(concrete_)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(
+                output,
+                2,
+                concrete_
+            );
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(path_)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(
+                output,
+                3,
+                path_
+            );
+        }
+        if (embed_ != false) {
+            output.writeBool(4, embed_);
+        }
+        unknownFields.writeTo(output);
     }
 
-
-    // @@protoc_insertion_point(builder_scope:model.SubmessageOptions)
-  }
-
-  // @@protoc_insertion_point(class_scope:model.SubmessageOptions)
-  private static final tools.elide.model.SubmessageOptions DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new tools.elide.model.SubmessageOptions();
-  }
-
-  public static tools.elide.model.SubmessageOptions getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<SubmessageOptions>
-      PARSER = new com.google.protobuf.AbstractParser<SubmessageOptions>() {
     @java.lang.Override
-    public SubmessageOptions parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (mode_ != tools.elide.model.CollectionMode.NESTED.getNumber()) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeEnumSize(1, mode_);
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(concrete_)) {
+            size +=
+                com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                    2,
+                    concrete_
+                );
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(path_)) {
+            size +=
+                com.google.protobuf.GeneratedMessageV3.computeStringSize(
+                    3,
+                    path_
+                );
+        }
+        if (embed_ != false) {
+            size +=
+                com.google.protobuf.CodedOutputStream.computeBoolSize(
+                    4,
+                    embed_
+                );
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof tools.elide.model.SubmessageOptions)) {
+            return super.equals(obj);
+        }
+        tools.elide.model.SubmessageOptions other = (tools.elide.model.SubmessageOptions) obj;
+
+        if (mode_ != other.mode_) return false;
+        if (!getConcrete().equals(other.getConcrete())) return false;
+        if (!getPath().equals(other.getPath())) return false;
+        if (getEmbed() != other.getEmbed()) return false;
+        if (!unknownFields.equals(other.unknownFields)) return false;
+        return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + MODE_FIELD_NUMBER;
+        hash = (53 * hash) + mode_;
+        hash = (37 * hash) + CONCRETE_FIELD_NUMBER;
+        hash = (53 * hash) + getConcrete().hashCode();
+        hash = (37 * hash) + PATH_FIELD_NUMBER;
+        hash = (53 * hash) + getPath().hashCode();
+        hash = (37 * hash) + EMBED_FIELD_NUMBER;
+        hash =
+            (53 * hash) + com.google.protobuf.Internal.hashBoolean(getEmbed());
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        java.nio.ByteBuffer data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        com.google.protobuf.ByteString data
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new SubmessageOptions(input, extensionRegistry);
+        return PARSER.parseFrom(data);
     }
-  };
 
-  public static com.google.protobuf.Parser<SubmessageOptions> parser() {
-    return PARSER;
-  }
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<SubmessageOptions> getParserForType() {
-    return PARSER;
-  }
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
 
-  @java.lang.Override
-  public tools.elide.model.SubmessageOptions getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
 
+    public static tools.elide.model.SubmessageOptions parseDelimitedFrom(
+        java.io.InputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.model.SubmessageOptions parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        com.google.protobuf.CodedInputStream input
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input
+        );
+    }
+
+    public static tools.elide.model.SubmessageOptions parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry
+    ) throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+            PARSER,
+            input,
+            extensionRegistry
+        );
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(
+        tools.elide.model.SubmessageOptions prototype
+    ) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder()
+            : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+    ) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * <pre>
+     * Specifies options related to storing a sub-message.
+     * </pre>
+     *
+     * Protobuf type {@code model.SubmessageOptions}
+     */
+    public static final class Builder
+        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+        implements
+            // @@protoc_insertion_point(builder_implements:model.SubmessageOptions)
+            tools.elide.model.SubmessageOptionsOrBuilder {
+
+        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
+                tools.elide.model.SubmessageOptions.class,
+                tools.elide.model.SubmessageOptions.Builder.class
+            );
+        }
+
+        // Construct using tools.elide.model.SubmessageOptions.newBuilder()
+        private Builder() {
+            maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
+        ) {
+            super(parent);
+            maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+            if (
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+            ) {}
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            mode_ = 0;
+
+            concrete_ = "";
+
+            path_ = "";
+
+            embed_ = false;
+
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+            return tools.elide.model.Datamodel.internal_static_model_SubmessageOptions_descriptor;
+        }
+
+        @java.lang.Override
+        public tools.elide.model.SubmessageOptions getDefaultInstanceForType() {
+            return tools.elide.model.SubmessageOptions.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public tools.elide.model.SubmessageOptions build() {
+            tools.elide.model.SubmessageOptions result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public tools.elide.model.SubmessageOptions buildPartial() {
+            tools.elide.model.SubmessageOptions result = new tools.elide.model.SubmessageOptions(
+                this
+            );
+            result.mode_ = mode_;
+            result.concrete_ = concrete_;
+            result.path_ = path_;
+            result.embed_ = embed_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field
+        ) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof
+        ) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index,
+            java.lang.Object value
+        ) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value
+        ) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof tools.elide.model.SubmessageOptions) {
+                return mergeFrom((tools.elide.model.SubmessageOptions) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(tools.elide.model.SubmessageOptions other) {
+            if (
+                other ==
+                tools.elide.model.SubmessageOptions.getDefaultInstance()
+            ) return this;
+            if (other.mode_ != 0) {
+                setModeValue(other.getModeValue());
+            }
+            if (!other.getConcrete().isEmpty()) {
+                concrete_ = other.concrete_;
+                onChanged();
+            }
+            if (!other.getPath().isEmpty()) {
+                path_ = other.path_;
+                onChanged();
+            }
+            if (other.getEmbed() != false) {
+                setEmbed(other.getEmbed());
+            }
+            this.mergeUnknownFields(other.unknownFields);
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws java.io.IOException {
+            tools.elide.model.SubmessageOptions parsedMessage = null;
+            try {
+                parsedMessage =
+                    PARSER.parsePartialFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage =
+                    (tools.elide.model.SubmessageOptions) e.getUnfinishedMessage();
+                throw e.unwrapIOException();
+            } finally {
+                if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                }
+            }
+            return this;
+        }
+
+        private int mode_ = 0;
+
+        /**
+         * <pre>
+         * Collection storage mode for the given sub-message field.
+         * </pre>
+         *
+         * <code>.model.CollectionMode mode = 1;</code>
+         * @return The enum numeric value on the wire for mode.
+         */
+        @java.lang.Override
+        public int getModeValue() {
+            return mode_;
+        }
+
+        /**
+         * <pre>
+         * Collection storage mode for the given sub-message field.
+         * </pre>
+         *
+         * <code>.model.CollectionMode mode = 1;</code>
+         * @param value The enum numeric value on the wire for mode to set.
+         * @return This builder for chaining.
+         */
+        public Builder setModeValue(int value) {
+            mode_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Collection storage mode for the given sub-message field.
+         * </pre>
+         *
+         * <code>.model.CollectionMode mode = 1;</code>
+         * @return The mode.
+         */
+        @java.lang.Override
+        public tools.elide.model.CollectionMode getMode() {
+            @SuppressWarnings("deprecation")
+            tools.elide.model.CollectionMode result = tools.elide.model.CollectionMode.valueOf(
+                mode_
+            );
+            return result == null
+                ? tools.elide.model.CollectionMode.UNRECOGNIZED
+                : result;
+        }
+
+        /**
+         * <pre>
+         * Collection storage mode for the given sub-message field.
+         * </pre>
+         *
+         * <code>.model.CollectionMode mode = 1;</code>
+         * @param value The mode to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMode(tools.elide.model.CollectionMode value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            mode_ = value.getNumber();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Collection storage mode for the given sub-message field.
+         * </pre>
+         *
+         * <code>.model.CollectionMode mode = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearMode() {
+            mode_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object concrete_ = "";
+
+        /**
+         * <pre>
+         * Concrete type name for this sub-message type.
+         * </pre>
+         *
+         * <code>string concrete = 2;</code>
+         * @return The concrete.
+         */
+        public java.lang.String getConcrete() {
+            java.lang.Object ref = concrete_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                concrete_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * Concrete type name for this sub-message type.
+         * </pre>
+         *
+         * <code>string concrete = 2;</code>
+         * @return The bytes for concrete.
+         */
+        public com.google.protobuf.ByteString getConcreteBytes() {
+            java.lang.Object ref = concrete_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                concrete_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * Concrete type name for this sub-message type.
+         * </pre>
+         *
+         * <code>string concrete = 2;</code>
+         * @param value The concrete to set.
+         * @return This builder for chaining.
+         */
+        public Builder setConcrete(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            concrete_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Concrete type name for this sub-message type.
+         * </pre>
+         *
+         * <code>string concrete = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearConcrete() {
+            concrete_ = getDefaultInstance().getConcrete();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Concrete type name for this sub-message type.
+         * </pre>
+         *
+         * <code>string concrete = 2;</code>
+         * @param value The bytes for concrete to set.
+         * @return This builder for chaining.
+         */
+        public Builder setConcreteBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            concrete_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object path_ = "";
+
+        /**
+         * <pre>
+         * Data path for the given sub-message field.
+         * </pre>
+         *
+         * <code>string path = 3;</code>
+         * @return The path.
+         */
+        public java.lang.String getPath() {
+            java.lang.Object ref = path_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                path_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * Data path for the given sub-message field.
+         * </pre>
+         *
+         * <code>string path = 3;</code>
+         * @return The bytes for path.
+         */
+        public com.google.protobuf.ByteString getPathBytes() {
+            java.lang.Object ref = path_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref
+                );
+                path_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <pre>
+         * Data path for the given sub-message field.
+         * </pre>
+         *
+         * <code>string path = 3;</code>
+         * @param value The path to set.
+         * @return This builder for chaining.
+         */
+        public Builder setPath(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            path_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Data path for the given sub-message field.
+         * </pre>
+         *
+         * <code>string path = 3;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearPath() {
+            path_ = getDefaultInstance().getPath();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Data path for the given sub-message field.
+         * </pre>
+         *
+         * <code>string path = 3;</code>
+         * @param value The bytes for path to set.
+         * @return This builder for chaining.
+         */
+        public Builder setPathBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            path_ = value;
+            onChanged();
+            return this;
+        }
+
+        private boolean embed_;
+
+        /**
+         * <pre>
+         * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
+         * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
+         * </pre>
+         *
+         * <code>bool embed = 4;</code>
+         * @return The embed.
+         */
+        @java.lang.Override
+        public boolean getEmbed() {
+            return embed_;
+        }
+
+        /**
+         * <pre>
+         * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
+         * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
+         * </pre>
+         *
+         * <code>bool embed = 4;</code>
+         * @param value The embed to set.
+         * @return This builder for chaining.
+         */
+        public Builder setEmbed(boolean value) {
+            embed_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * If the persistence node is in `COLLECTION` mode, this flag will embed it in the parent entity anyway. Useful in
+         * some circumstances where sub-listed data is for indexing, and fetching it repeatedly would be inefficient.
+         * </pre>
+         *
+         * <code>bool embed = 4;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearEmbed() {
+            embed_ = false;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields
+        ) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+        // @@protoc_insertion_point(builder_scope:model.SubmessageOptions)
+    }
+
+    // @@protoc_insertion_point(class_scope:model.SubmessageOptions)
+    private static final tools.elide.model.SubmessageOptions DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new tools.elide.model.SubmessageOptions();
+    }
+
+    public static tools.elide.model.SubmessageOptions getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<SubmessageOptions> PARSER = new com.google.protobuf.AbstractParser<SubmessageOptions>() {
+        @java.lang.Override
+        public SubmessageOptions parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry
+        ) throws com.google.protobuf.InvalidProtocolBufferException {
+            return new SubmessageOptions(input, extensionRegistry);
+        }
+    };
+
+    public static com.google.protobuf.Parser<SubmessageOptions> parser() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SubmessageOptions> getParserForType() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.SubmessageOptions getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 }
-

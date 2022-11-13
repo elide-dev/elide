@@ -1,13 +1,7 @@
 {
     "enabled": true,
-    "extends": [
-        "config:base"
-    ],
-    "enabledManagers": [
-        "github-actions",
-        "gradle",
-        "gradle-wrapper"
-    ],
+    "extends": ["config:base"],
+    "enabledManagers": ["github-actions", "gradle", "gradle-wrapper"],
     "pinDigests": true,
     "rangeStrategy": "pin",
     "updateLockFiles": true,

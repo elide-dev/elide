@@ -26,16 +26,16 @@ closure = "v20221004"
 closure_stylesheets = "1.5.0"
 
 [plugins]
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
-kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
-kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin"}
-kotlin_jvm = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin"}
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle"}
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
+kotlin_jvm = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 node = { id = "com.github.node-gradle.node", version.ref = "nodePlugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
-pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish"}
-versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck"}
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
+versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionCheck" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
 
 [libraries]

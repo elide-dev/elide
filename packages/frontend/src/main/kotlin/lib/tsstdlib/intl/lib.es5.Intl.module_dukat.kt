@@ -12,205 +12,205 @@ package lib.tsstdlib.intl
 
 import kotlin.js.*
 
-external interface CollatorOptions {
-    var usage: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var localeMatcher: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var numeric: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
-    var caseFirst: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var sensitivity: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var ignorePunctuation: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface CollatorOptions {
+  public var usage: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var localeMatcher: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var numeric: Boolean?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var caseFirst: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var sensitivity: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var ignorePunctuation: Boolean?
+    get() = definedExternally
+    set(value) = definedExternally
 }
 
-external interface ResolvedCollatorOptions {
-    var locale: String
-    var usage: String
-    var sensitivity: String
-    var ignorePunctuation: Boolean
-    var collation: String
-    var caseFirst: String
-    var numeric: Boolean
-}
-
-@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
-external interface Collator {
-    fun compare(x: String, y: String): Number
-    fun resolvedOptions(): ResolvedCollatorOptions
-
-    companion object {
-        @nativeInvoke
-        operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: CollatorOptions = definedExternally): Collator
-        fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: CollatorOptions = definedExternally): Array<String>
-    }
-}
-
-external interface NumberFormatOptions {
-    var localeMatcher: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var style: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var currency: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var currencyDisplay: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var useGrouping: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minimumIntegerDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minimumFractionDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var maximumFractionDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minimumSignificantDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var maximumSignificantDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-}
-
-external interface ResolvedNumberFormatOptions {
-    var locale: String
-    var numberingSystem: String
-    var style: String
-    var currency: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var currencyDisplay: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minimumIntegerDigits: Number
-    var minimumFractionDigits: Number
-    var maximumFractionDigits: Number
-    var minimumSignificantDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var maximumSignificantDigits: Number?
-        get() = definedExternally
-        set(value) = definedExternally
-    var useGrouping: Boolean
+public external interface ResolvedCollatorOptions {
+  public var locale: String
+  public var usage: String
+  public var sensitivity: String
+  public var ignorePunctuation: Boolean
+  public var collation: String
+  public var caseFirst: String
+  public var numeric: Boolean
 }
 
 @Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
-external interface NumberFormat {
-    fun format(value: Number): String
-    fun resolvedOptions(): ResolvedNumberFormatOptions
+public external interface Collator {
+  public fun compare(x: String, y: String): Number
+  public fun resolvedOptions(): ResolvedCollatorOptions
 
-    companion object {
-        @nativeInvoke
-        operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: NumberFormatOptions = definedExternally): NumberFormat
-        fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: NumberFormatOptions = definedExternally): Array<String>
-    }
+  public companion object {
+    @nativeInvoke
+    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: CollatorOptions = definedExternally): Collator
+    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: CollatorOptions = definedExternally): Array<String>
+  }
 }
 
-external interface DateTimeFormatOptions {
-    var localeMatcher: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var weekday: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var era: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var year: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var month: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var day: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var hour: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minute: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var second: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var timeZoneName: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var formatMatcher: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var hour12: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
-    var timeZone: String?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface NumberFormatOptions {
+  public var localeMatcher: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var style: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var currency: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var currencyDisplay: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var useGrouping: Boolean?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minimumIntegerDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minimumFractionDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var maximumFractionDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minimumSignificantDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var maximumSignificantDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
 }
 
-external interface ResolvedDateTimeFormatOptions {
-    var locale: String
-    var calendar: String
-    var numberingSystem: String
-    var timeZone: String
-    var hour12: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
-    var weekday: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var era: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var year: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var month: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var day: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var hour: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var minute: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var second: String?
-        get() = definedExternally
-        set(value) = definedExternally
-    var timeZoneName: String?
-        get() = definedExternally
-        set(value) = definedExternally
+public external interface ResolvedNumberFormatOptions {
+  public var locale: String
+  public var numberingSystem: String
+  public var style: String
+  public var currency: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var currencyDisplay: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minimumIntegerDigits: Number
+  public var minimumFractionDigits: Number
+  public var maximumFractionDigits: Number
+  public var minimumSignificantDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var maximumSignificantDigits: Number?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var useGrouping: Boolean
 }
 
 @Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
-external interface DateTimeFormat {
-    fun format(date: Date = definedExternally): String
-    fun format(): String
-    fun format(date: Number = definedExternally): String
-    fun resolvedOptions(): ResolvedDateTimeFormatOptions
+public external interface NumberFormat {
+  public fun format(value: Number): String
+  public fun resolvedOptions(): ResolvedNumberFormatOptions
 
-    companion object {
-        @nativeInvoke
-        operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: DateTimeFormatOptions = definedExternally): DateTimeFormat
-        fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: DateTimeFormatOptions = definedExternally): Array<String>
-    }
+  public companion object {
+    @nativeInvoke
+    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: NumberFormatOptions = definedExternally): NumberFormat
+    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: NumberFormatOptions = definedExternally): Array<String>
+  }
+}
+
+public external interface DateTimeFormatOptions {
+  public var localeMatcher: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var weekday: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var era: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var year: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var month: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var day: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var hour: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minute: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var second: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var timeZoneName: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var formatMatcher: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var hour12: Boolean?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var timeZone: String?
+    get() = definedExternally
+    set(value) = definedExternally
+}
+
+public external interface ResolvedDateTimeFormatOptions {
+  public var locale: String
+  public var calendar: String
+  public var numberingSystem: String
+  public var timeZone: String
+  public var hour12: Boolean?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var weekday: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var era: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var year: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var month: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var day: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var hour: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var minute: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var second: String?
+    get() = definedExternally
+    set(value) = definedExternally
+  public var timeZoneName: String?
+    get() = definedExternally
+    set(value) = definedExternally
+}
+
+@Suppress("NESTED_CLASS_IN_EXTERNAL_INTERFACE")
+public external interface DateTimeFormat {
+  public fun format(date: Date = definedExternally): String
+  public fun format(): String
+  public fun format(date: Number = definedExternally): String
+  public fun resolvedOptions(): ResolvedDateTimeFormatOptions
+
+  public companion object {
+    @nativeInvoke
+    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: DateTimeFormatOptions = definedExternally): DateTimeFormat
+    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: DateTimeFormatOptions = definedExternally): Array<String>
+  }
 }

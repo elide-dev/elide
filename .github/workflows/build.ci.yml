@@ -306,7 +306,7 @@ jobs:
 
       ## Setup: GCloud SDK
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
+        uses: 'google-github-actions/setup-gcloud@v1'
         with:
           version: 389.0.0
           project_id: elide-fw
@@ -452,7 +452,7 @@ jobs:
 
       ## Setup: GCloud SDK
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
+        uses: 'google-github-actions/setup-gcloud@v1'
         with:
           version: 389.0.0
           project_id: elide-fw

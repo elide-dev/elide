@@ -10,144 +10,141 @@ package tools.elide.model;
  *
  * Protobuf enum {@code model.CollectionMode}
  */
-public enum CollectionMode implements com.google.protobuf.ProtocolMessageEnum {
-    /**
-     * <pre>
-     * `NESTED` mode stores the specified collection within the parent document.
-     * </pre>
-     *
-     * <code>NESTED = 0;</code>
-     */
-    NESTED(0),
-    /**
-     * <pre>
-     * `COLLECTION` mode stores the specified collection as a sub-collection under the parent document.
-     * </pre>
-     *
-     * <code>COLLECTION = 1;</code>
-     */
-    COLLECTION(1),
-    /**
-     * <pre>
-     * `GROUP` mode stores the specified collection at the root of the data system.
-     * </pre>
-     *
-     * <code>GROUP = 2;</code>
-     */
-    GROUP(2),
-    UNRECOGNIZED(-1);
+public enum CollectionMode
+    implements com.google.protobuf.ProtocolMessageEnum {
+  /**
+   * <pre>
+   * `NESTED` mode stores the specified collection within the parent document.
+   * </pre>
+   *
+   * <code>NESTED = 0;</code>
+   */
+  NESTED(0),
+  /**
+   * <pre>
+   * `COLLECTION` mode stores the specified collection as a sub-collection under the parent document.
+   * </pre>
+   *
+   * <code>COLLECTION = 1;</code>
+   */
+  COLLECTION(1),
+  /**
+   * <pre>
+   * `GROUP` mode stores the specified collection at the root of the data system.
+   * </pre>
+   *
+   * <code>GROUP = 2;</code>
+   */
+  GROUP(2),
+  UNRECOGNIZED(-1),
+  ;
 
-    /**
-     * <pre>
-     * `NESTED` mode stores the specified collection within the parent document.
-     * </pre>
-     *
-     * <code>NESTED = 0;</code>
-     */
-    public static final int NESTED_VALUE = 0;
-    /**
-     * <pre>
-     * `COLLECTION` mode stores the specified collection as a sub-collection under the parent document.
-     * </pre>
-     *
-     * <code>COLLECTION = 1;</code>
-     */
-    public static final int COLLECTION_VALUE = 1;
-    /**
-     * <pre>
-     * `GROUP` mode stores the specified collection at the root of the data system.
-     * </pre>
-     *
-     * <code>GROUP = 2;</code>
-     */
-    public static final int GROUP_VALUE = 2;
+  /**
+   * <pre>
+   * `NESTED` mode stores the specified collection within the parent document.
+   * </pre>
+   *
+   * <code>NESTED = 0;</code>
+   */
+  public static final int NESTED_VALUE = 0;
+  /**
+   * <pre>
+   * `COLLECTION` mode stores the specified collection as a sub-collection under the parent document.
+   * </pre>
+   *
+   * <code>COLLECTION = 1;</code>
+   */
+  public static final int COLLECTION_VALUE = 1;
+  /**
+   * <pre>
+   * `GROUP` mode stores the specified collection at the root of the data system.
+   * </pre>
+   *
+   * <code>GROUP = 2;</code>
+   */
+  public static final int GROUP_VALUE = 2;
 
-    public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-            throw new java.lang.IllegalArgumentException(
-                "Can't get the number of an unknown enum value."
-            );
-        }
-        return value;
+
+  public final int getNumber() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalArgumentException(
+          "Can't get the number of an unknown enum value.");
     }
+    return value;
+  }
 
-    /**
-     * @param value The numeric wire value of the corresponding enum entry.
-     * @return The enum associated with the given numeric wire value.
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static CollectionMode valueOf(int value) {
-        return forNumber(value);
+  /**
+   * @param value The numeric wire value of the corresponding enum entry.
+   * @return The enum associated with the given numeric wire value.
+   * @deprecated Use {@link #forNumber(int)} instead.
+   */
+  @java.lang.Deprecated
+  public static CollectionMode valueOf(int value) {
+    return forNumber(value);
+  }
+
+  /**
+   * @param value The numeric wire value of the corresponding enum entry.
+   * @return The enum associated with the given numeric wire value.
+   */
+  public static CollectionMode forNumber(int value) {
+    switch (value) {
+      case 0: return NESTED;
+      case 1: return COLLECTION;
+      case 2: return GROUP;
+      default: return null;
     }
+  }
 
-    /**
-     * @param value The numeric wire value of the corresponding enum entry.
-     * @return The enum associated with the given numeric wire value.
-     */
-    public static CollectionMode forNumber(int value) {
-        switch (value) {
-            case 0:
-                return NESTED;
-            case 1:
-                return COLLECTION;
-            case 2:
-                return GROUP;
-            default:
-                return null;
-        }
-    }
-
-    public static com.google.protobuf.Internal.EnumLiteMap<CollectionMode> internalGetValueMap() {
-        return internalValueMap;
-    }
-
-    private static final com.google.protobuf.Internal.EnumLiteMap<CollectionMode> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<CollectionMode>() {
-        public CollectionMode findValueByNumber(int number) {
+  public static com.google.protobuf.Internal.EnumLiteMap<CollectionMode>
+      internalGetValueMap() {
+    return internalValueMap;
+  }
+  private static final com.google.protobuf.Internal.EnumLiteMap<
+      CollectionMode> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<CollectionMode>() {
+          public CollectionMode findValueByNumber(int number) {
             return CollectionMode.forNumber(number);
-        }
-    };
+          }
+        };
 
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
-        if (this == UNRECOGNIZED) {
-            throw new java.lang.IllegalStateException(
-                "Can't get the descriptor of an unrecognized enum value."
-            );
-        }
-        return getDescriptor().getValues().get(ordinal());
+  public final com.google.protobuf.Descriptors.EnumValueDescriptor
+      getValueDescriptor() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalStateException(
+          "Can't get the descriptor of an unrecognized enum value.");
     }
+    return getDescriptor().getValues().get(ordinal());
+  }
+  public final com.google.protobuf.Descriptors.EnumDescriptor
+      getDescriptorForType() {
+    return getDescriptor();
+  }
+  public static final com.google.protobuf.Descriptors.EnumDescriptor
+      getDescriptor() {
+    return tools.elide.model.Datamodel.getDescriptor().getEnumTypes().get(1);
+  }
 
-    public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
-        return getDescriptor();
+  private static final CollectionMode[] VALUES = values();
+
+  public static CollectionMode valueOf(
+      com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+    if (desc.getType() != getDescriptor()) {
+      throw new java.lang.IllegalArgumentException(
+        "EnumValueDescriptor is not for this type.");
     }
-
-    public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
-        return tools.elide.model.Datamodel
-            .getDescriptor()
-            .getEnumTypes()
-            .get(1);
+    if (desc.getIndex() == -1) {
+      return UNRECOGNIZED;
     }
+    return VALUES[desc.getIndex()];
+  }
 
-    private static final CollectionMode[] VALUES = values();
+  private final int value;
 
-    public static CollectionMode valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc
-    ) {
-        if (desc.getType() != getDescriptor()) {
-            throw new java.lang.IllegalArgumentException(
-                "EnumValueDescriptor is not for this type."
-            );
-        }
-        if (desc.getIndex() == -1) {
-            return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-    }
+  private CollectionMode(int value) {
+    this.value = value;
+  }
 
-    private final int value;
-
-    private CollectionMode(int value) {
-        this.value = value;
-    }
-    // @@protoc_insertion_point(enum_scope:model.CollectionMode)
+  // @@protoc_insertion_point(enum_scope:model.CollectionMode)
 }
+

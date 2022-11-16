@@ -10,155 +10,817 @@ package tools.elide.model;
  *
  * Protobuf type {@code model.FieldPersistenceOptions}
  */
-public final class FieldPersistenceOptions
-    extends com.google.protobuf.GeneratedMessageV3
-    implements
-        // @@protoc_insertion_point(message_implements:model.FieldPersistenceOptions)
-        FieldPersistenceOptionsOrBuilder {
+public final class FieldPersistenceOptions extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:model.FieldPersistenceOptions)
+    FieldPersistenceOptionsOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use FieldPersistenceOptions.newBuilder() to construct.
+  private FieldPersistenceOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private FieldPersistenceOptions() {
+    type_ = 0;
+    summary_ = "";
+    visibility_ = 0;
+    description_ = "";
+  }
 
-    private static final long serialVersionUID = 0L;
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new FieldPersistenceOptions();
+  }
 
-    // Use FieldPersistenceOptions.newBuilder() to construct.
-    private FieldPersistenceOptions(
-        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
-    ) {
-        super(builder);
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private FieldPersistenceOptions(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
     }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
+            int rawValue = input.readEnum();
 
-    private FieldPersistenceOptions() {
-        type_ = 0;
-        summary_ = "";
-        visibility_ = 0;
-        description_ = "";
-    }
+            type_ = rawValue;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-    @java.lang.Override
-    @SuppressWarnings({ "unused" })
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new FieldPersistenceOptions();
-    }
+            summary_ = s;
+            break;
+          }
+          case 24: {
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-        return this.unknownFields;
-    }
+            stampUpdate_ = input.readBool();
+            break;
+          }
+          case 32: {
 
-    private FieldPersistenceOptions(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 8:
-                        {
-                            int rawValue = input.readEnum();
+            stampCreate_ = input.readBool();
+            break;
+          }
+          case 40: {
 
-                            type_ = rawValue;
-                            break;
-                        }
-                    case 18:
-                        {
-                            java.lang.String s = input.readStringRequireUtf8();
+            readOnly_ = input.readBool();
+            break;
+          }
+          case 48: {
 
-                            summary_ = s;
-                            break;
-                        }
-                    case 24:
-                        {
-                            stampUpdate_ = input.readBool();
-                            break;
-                        }
-                    case 32:
-                        {
-                            stampCreate_ = input.readBool();
-                            break;
-                        }
-                    case 40:
-                        {
-                            readOnly_ = input.readBool();
-                            break;
-                        }
-                    case 48:
-                        {
-                            immutable_ = input.readBool();
-                            break;
-                        }
-                    case 56:
-                        {
-                            explicit_ = input.readBool();
-                            break;
-                        }
-                    case 64:
-                        {
-                            int rawValue = input.readEnum();
+            immutable_ = input.readBool();
+            break;
+          }
+          case 56: {
 
-                            visibility_ = rawValue;
-                            break;
-                        }
-                    case 74:
-                        {
-                            java.lang.String s = input.readStringRequireUtf8();
+            explicit_ = input.readBool();
+            break;
+          }
+          case 64: {
+            int rawValue = input.readEnum();
 
-                            description_ = s;
-                            break;
-                        }
-                    default:
-                        {
-                            if (
-                                !parseUnknownField(
-                                    input,
-                                    unknownFields,
-                                    extensionRegistry,
-                                    tag
-                                )
-                            ) {
-                                done = true;
-                            }
-                            break;
-                        }
-                }
+            visibility_ = rawValue;
+            break;
+          }
+          case 74: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            description_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
             }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-            throw e
-                .asInvalidProtocolBufferException()
-                .setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                .setUnfinishedMessage(this);
-        } finally {
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            break;
+          }
         }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
     }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
+  }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-        return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            tools.elide.model.FieldPersistenceOptions.class, tools.elide.model.FieldPersistenceOptions.Builder.class);
+  }
+
+  public static final int TYPE_FIELD_NUMBER = 1;
+  private int type_;
+  /**
+   * <pre>
+   * Field type, for special-case fields.
+   * </pre>
+   *
+   * <code>.model.FieldType type = 1;</code>
+   * @return The enum numeric value on the wire for type.
+   */
+  @java.lang.Override public int getTypeValue() {
+    return type_;
+  }
+  /**
+   * <pre>
+   * Field type, for special-case fields.
+   * </pre>
+   *
+   * <code>.model.FieldType type = 1;</code>
+   * @return The type.
+   */
+  @java.lang.Override public tools.elide.model.FieldType getType() {
+    @SuppressWarnings("deprecation")
+    tools.elide.model.FieldType result = tools.elide.model.FieldType.valueOf(type_);
+    return result == null ? tools.elide.model.FieldType.UNRECOGNIZED : result;
+  }
+
+  public static final int SUMMARY_FIELD_NUMBER = 2;
+  private volatile java.lang.Object summary_;
+  /**
+   * <pre>
+   * Summary for this field, which provides a narrative description. It should be suitable for use in external
+   * circumstances, like documentation.
+   * </pre>
+   *
+   * <code>string summary = 2;</code>
+   * @return The summary.
+   */
+  @java.lang.Override
+  public java.lang.String getSummary() {
+    java.lang.Object ref = summary_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      summary_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Summary for this field, which provides a narrative description. It should be suitable for use in external
+   * circumstances, like documentation.
+   * </pre>
+   *
+   * <code>string summary = 2;</code>
+   * @return The bytes for summary.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getSummaryBytes() {
+    java.lang.Object ref = summary_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      summary_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int STAMP_UPDATE_FIELD_NUMBER = 3;
+  private boolean stampUpdate_;
+  /**
+   * <pre>
+   * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
+   * modified in underlying storage. The field should be read-only.
+   * </pre>
+   *
+   * <code>bool stamp_update = 3;</code>
+   * @return The stampUpdate.
+   */
+  @java.lang.Override
+  public boolean getStampUpdate() {
+    return stampUpdate_;
+  }
+
+  public static final int STAMP_CREATE_FIELD_NUMBER = 4;
+  private boolean stampCreate_;
+  /**
+   * <pre>
+   * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
+   * we would like this field to be read-only.
+   * </pre>
+   *
+   * <code>bool stamp_create = 4;</code>
+   * @return The stampCreate.
+   */
+  @java.lang.Override
+  public boolean getStampCreate() {
+    return stampCreate_;
+  }
+
+  public static final int READ_ONLY_FIELD_NUMBER = 5;
+  private boolean readOnly_;
+  /**
+   * <pre>
+   * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
+   * be set by external code at any point in time.
+   * </pre>
+   *
+   * <code>bool read_only = 5;</code>
+   * @return The readOnly.
+   */
+  @java.lang.Override
+  public boolean getReadOnly() {
+    return readOnly_;
+  }
+
+  public static final int IMMUTABLE_FIELD_NUMBER = 6;
+  private boolean immutable_;
+  /**
+   * <pre>
+   * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
+   * not allow this field to be mutated.
+   * </pre>
+   *
+   * <code>bool immutable = 6;</code>
+   * @return The immutable.
+   */
+  @java.lang.Override
+  public boolean getImmutable() {
+    return immutable_;
+  }
+
+  public static final int EXPLICIT_FIELD_NUMBER = 7;
+  private boolean explicit_;
+  /**
+   * <pre>
+   * This field should always be explicitly listed with a value, even if it is set to the default value. This function
+   * is especially useful for enums with default values, when there is a desire to have consistent indexes.
+   * </pre>
+   *
+   * <code>bool explicit = 7;</code>
+   * @return The explicit.
+   */
+  @java.lang.Override
+  public boolean getExplicit() {
+    return explicit_;
+  }
+
+  public static final int VISIBILITY_FIELD_NUMBER = 8;
+  private int visibility_;
+  /**
+   * <pre>
+   * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+   * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+   * certain data may be withheld corresponding to the invoking user or system's access level.
+   * </pre>
+   *
+   * <code>.model.FieldVisibility visibility = 8;</code>
+   * @return The enum numeric value on the wire for visibility.
+   */
+  @java.lang.Override public int getVisibilityValue() {
+    return visibility_;
+  }
+  /**
+   * <pre>
+   * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+   * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+   * certain data may be withheld corresponding to the invoking user or system's access level.
+   * </pre>
+   *
+   * <code>.model.FieldVisibility visibility = 8;</code>
+   * @return The visibility.
+   */
+  @java.lang.Override public tools.elide.model.FieldVisibility getVisibility() {
+    @SuppressWarnings("deprecation")
+    tools.elide.model.FieldVisibility result = tools.elide.model.FieldVisibility.valueOf(visibility_);
+    return result == null ? tools.elide.model.FieldVisibility.UNRECOGNIZED : result;
+  }
+
+  public static final int DESCRIPTION_FIELD_NUMBER = 9;
+  private volatile java.lang.Object description_;
+  /**
+   * <pre>
+   * Provided for backwards compatibility. Do not use.
+   * </pre>
+   *
+   * <code>string description = 9 [deprecated = true];</code>
+   * @deprecated model.FieldPersistenceOptions.description is deprecated.
+   *     See elide/model/model.proto;l=256
+   * @return The description.
+   */
+  @java.lang.Override
+  @java.lang.Deprecated public java.lang.String getDescription() {
+    java.lang.Object ref = description_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      description_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Provided for backwards compatibility. Do not use.
+   * </pre>
+   *
+   * <code>string description = 9 [deprecated = true];</code>
+   * @deprecated model.FieldPersistenceOptions.description is deprecated.
+   *     See elide/model/model.proto;l=256
+   * @return The bytes for description.
+   */
+  @java.lang.Override
+  @java.lang.Deprecated public com.google.protobuf.ByteString
+      getDescriptionBytes() {
+    java.lang.Object ref = description_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      description_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (type_ != tools.elide.model.FieldType.STANDARD.getNumber()) {
+      output.writeEnum(1, type_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(summary_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, summary_);
+    }
+    if (stampUpdate_ != false) {
+      output.writeBool(3, stampUpdate_);
+    }
+    if (stampCreate_ != false) {
+      output.writeBool(4, stampCreate_);
+    }
+    if (readOnly_ != false) {
+      output.writeBool(5, readOnly_);
+    }
+    if (immutable_ != false) {
+      output.writeBool(6, immutable_);
+    }
+    if (explicit_ != false) {
+      output.writeBool(7, explicit_);
+    }
+    if (visibility_ != tools.elide.model.FieldVisibility.DEFAULT_VISIBILITY.getNumber()) {
+      output.writeEnum(8, visibility_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, description_);
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @java.lang.Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (type_ != tools.elide.model.FieldType.STANDARD.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, type_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(summary_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, summary_);
+    }
+    if (stampUpdate_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(3, stampUpdate_);
+    }
+    if (stampCreate_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(4, stampCreate_);
+    }
+    if (readOnly_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(5, readOnly_);
+    }
+    if (immutable_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(6, immutable_);
+    }
+    if (explicit_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(7, explicit_);
+    }
+    if (visibility_ != tools.elide.model.FieldVisibility.DEFAULT_VISIBILITY.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(8, visibility_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, description_);
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof tools.elide.model.FieldPersistenceOptions)) {
+      return super.equals(obj);
+    }
+    tools.elide.model.FieldPersistenceOptions other = (tools.elide.model.FieldPersistenceOptions) obj;
+
+    if (type_ != other.type_) return false;
+    if (!getSummary()
+        .equals(other.getSummary())) return false;
+    if (getStampUpdate()
+        != other.getStampUpdate()) return false;
+    if (getStampCreate()
+        != other.getStampCreate()) return false;
+    if (getReadOnly()
+        != other.getReadOnly()) return false;
+    if (getImmutable()
+        != other.getImmutable()) return false;
+    if (getExplicit()
+        != other.getExplicit()) return false;
+    if (visibility_ != other.visibility_) return false;
+    if (!getDescription()
+        .equals(other.getDescription())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + type_;
+    hash = (37 * hash) + SUMMARY_FIELD_NUMBER;
+    hash = (53 * hash) + getSummary().hashCode();
+    hash = (37 * hash) + STAMP_UPDATE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getStampUpdate());
+    hash = (37 * hash) + STAMP_CREATE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getStampCreate());
+    hash = (37 * hash) + READ_ONLY_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getReadOnly());
+    hash = (37 * hash) + IMMUTABLE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getImmutable());
+    hash = (37 * hash) + EXPLICIT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getExplicit());
+    hash = (37 * hash) + VISIBILITY_FIELD_NUMBER;
+    hash = (53 * hash) + visibility_;
+    hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
+    hash = (53 * hash) + getDescription().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.FieldPersistenceOptions parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(tools.elide.model.FieldPersistenceOptions prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * <pre>
+   * Persistence/data engine options specific to an individual message field.
+   * </pre>
+   *
+   * Protobuf type {@code model.FieldPersistenceOptions}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:model.FieldPersistenceOptions)
+      tools.elide.model.FieldPersistenceOptionsOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-        return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
-            tools.elide.model.FieldPersistenceOptions.class,
-            tools.elide.model.FieldPersistenceOptions.Builder.class
-        );
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tools.elide.model.FieldPersistenceOptions.class, tools.elide.model.FieldPersistenceOptions.Builder.class);
     }
 
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
+    // Construct using tools.elide.model.FieldPersistenceOptions.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      type_ = 0;
+
+      summary_ = "";
+
+      stampUpdate_ = false;
+
+      stampCreate_ = false;
+
+      readOnly_ = false;
+
+      immutable_ = false;
+
+      explicit_ = false;
+
+      visibility_ = 0;
+
+      description_ = "";
+
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.FieldPersistenceOptions getDefaultInstanceForType() {
+      return tools.elide.model.FieldPersistenceOptions.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public tools.elide.model.FieldPersistenceOptions build() {
+      tools.elide.model.FieldPersistenceOptions result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.FieldPersistenceOptions buildPartial() {
+      tools.elide.model.FieldPersistenceOptions result = new tools.elide.model.FieldPersistenceOptions(this);
+      result.type_ = type_;
+      result.summary_ = summary_;
+      result.stampUpdate_ = stampUpdate_;
+      result.stampCreate_ = stampCreate_;
+      result.readOnly_ = readOnly_;
+      result.immutable_ = immutable_;
+      result.explicit_ = explicit_;
+      result.visibility_ = visibility_;
+      result.description_ = description_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof tools.elide.model.FieldPersistenceOptions) {
+        return mergeFrom((tools.elide.model.FieldPersistenceOptions)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(tools.elide.model.FieldPersistenceOptions other) {
+      if (other == tools.elide.model.FieldPersistenceOptions.getDefaultInstance()) return this;
+      if (other.type_ != 0) {
+        setTypeValue(other.getTypeValue());
+      }
+      if (!other.getSummary().isEmpty()) {
+        summary_ = other.summary_;
+        onChanged();
+      }
+      if (other.getStampUpdate() != false) {
+        setStampUpdate(other.getStampUpdate());
+      }
+      if (other.getStampCreate() != false) {
+        setStampCreate(other.getStampCreate());
+      }
+      if (other.getReadOnly() != false) {
+        setReadOnly(other.getReadOnly());
+      }
+      if (other.getImmutable() != false) {
+        setImmutable(other.getImmutable());
+      }
+      if (other.getExplicit() != false) {
+        setExplicit(other.getExplicit());
+      }
+      if (other.visibility_ != 0) {
+        setVisibilityValue(other.getVisibilityValue());
+      }
+      if (!other.getDescription().isEmpty()) {
+        description_ = other.description_;
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      tools.elide.model.FieldPersistenceOptions parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (tools.elide.model.FieldPersistenceOptions) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private int type_ = 0;
     /**
      * <pre>
      * Field type, for special-case fields.
@@ -167,11 +829,24 @@ public final class FieldPersistenceOptions
      * <code>.model.FieldType type = 1;</code>
      * @return The enum numeric value on the wire for type.
      */
-    @java.lang.Override
-    public int getTypeValue() {
-        return type_;
+    @java.lang.Override public int getTypeValue() {
+      return type_;
     }
-
+    /**
+     * <pre>
+     * Field type, for special-case fields.
+     * </pre>
+     *
+     * <code>.model.FieldType type = 1;</code>
+     * @param value The enum numeric value on the wire for type to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTypeValue(int value) {
+      
+      type_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Field type, for special-case fields.
@@ -182,18 +857,44 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public tools.elide.model.FieldType getType() {
-        @SuppressWarnings("deprecation")
-        tools.elide.model.FieldType result = tools.elide.model.FieldType.valueOf(
-            type_
-        );
-        return result == null
-            ? tools.elide.model.FieldType.UNRECOGNIZED
-            : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.model.FieldType result = tools.elide.model.FieldType.valueOf(type_);
+      return result == null ? tools.elide.model.FieldType.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Field type, for special-case fields.
+     * </pre>
+     *
+     * <code>.model.FieldType type = 1;</code>
+     * @param value The type to set.
+     * @return This builder for chaining.
+     */
+    public Builder setType(tools.elide.model.FieldType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      type_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Field type, for special-case fields.
+     * </pre>
+     *
+     * <code>.model.FieldType type = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearType() {
+      
+      type_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int SUMMARY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object summary_;
-
+    private java.lang.Object summary_ = "";
     /**
      * <pre>
      * Summary for this field, which provides a narrative description. It should be suitable for use in external
@@ -203,19 +904,18 @@ public final class FieldPersistenceOptions
      * <code>string summary = 2;</code>
      * @return The summary.
      */
-    @java.lang.Override
     public java.lang.String getSummary() {
-        java.lang.Object ref = summary_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            summary_ = s;
-            return s;
-        }
+      java.lang.Object ref = summary_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        summary_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
-
     /**
      * <pre>
      * Summary for this field, which provides a narrative description. It should be suitable for use in external
@@ -225,23 +925,77 @@ public final class FieldPersistenceOptions
      * <code>string summary = 2;</code>
      * @return The bytes for summary.
      */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getSummaryBytes() {
-        java.lang.Object ref = summary_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref
-            );
-            summary_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+    public com.google.protobuf.ByteString
+        getSummaryBytes() {
+      java.lang.Object ref = summary_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        summary_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * Summary for this field, which provides a narrative description. It should be suitable for use in external
+     * circumstances, like documentation.
+     * </pre>
+     *
+     * <code>string summary = 2;</code>
+     * @param value The summary to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSummary(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      summary_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Summary for this field, which provides a narrative description. It should be suitable for use in external
+     * circumstances, like documentation.
+     * </pre>
+     *
+     * <code>string summary = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSummary() {
+      
+      summary_ = getDefaultInstance().getSummary();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Summary for this field, which provides a narrative description. It should be suitable for use in external
+     * circumstances, like documentation.
+     * </pre>
+     *
+     * <code>string summary = 2;</code>
+     * @param value The bytes for summary to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSummaryBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      summary_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int STAMP_UPDATE_FIELD_NUMBER = 3;
-    private boolean stampUpdate_;
-
+    private boolean stampUpdate_ ;
     /**
      * <pre>
      * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
@@ -253,12 +1007,41 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public boolean getStampUpdate() {
-        return stampUpdate_;
+      return stampUpdate_;
+    }
+    /**
+     * <pre>
+     * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
+     * modified in underlying storage. The field should be read-only.
+     * </pre>
+     *
+     * <code>bool stamp_update = 3;</code>
+     * @param value The stampUpdate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStampUpdate(boolean value) {
+      
+      stampUpdate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
+     * modified in underlying storage. The field should be read-only.
+     * </pre>
+     *
+     * <code>bool stamp_update = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStampUpdate() {
+      
+      stampUpdate_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int STAMP_CREATE_FIELD_NUMBER = 4;
-    private boolean stampCreate_;
-
+    private boolean stampCreate_ ;
     /**
      * <pre>
      * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
@@ -270,12 +1053,41 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public boolean getStampCreate() {
-        return stampCreate_;
+      return stampCreate_;
+    }
+    /**
+     * <pre>
+     * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
+     * we would like this field to be read-only.
+     * </pre>
+     *
+     * <code>bool stamp_create = 4;</code>
+     * @param value The stampCreate to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStampCreate(boolean value) {
+      
+      stampCreate_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
+     * we would like this field to be read-only.
+     * </pre>
+     *
+     * <code>bool stamp_create = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStampCreate() {
+      
+      stampCreate_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int READ_ONLY_FIELD_NUMBER = 5;
-    private boolean readOnly_;
-
+    private boolean readOnly_ ;
     /**
      * <pre>
      * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
@@ -287,12 +1099,41 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public boolean getReadOnly() {
-        return readOnly_;
+      return readOnly_;
+    }
+    /**
+     * <pre>
+     * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
+     * be set by external code at any point in time.
+     * </pre>
+     *
+     * <code>bool read_only = 5;</code>
+     * @param value The readOnly to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReadOnly(boolean value) {
+      
+      readOnly_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
+     * be set by external code at any point in time.
+     * </pre>
+     *
+     * <code>bool read_only = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearReadOnly() {
+      
+      readOnly_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int IMMUTABLE_FIELD_NUMBER = 6;
-    private boolean immutable_;
-
+    private boolean immutable_ ;
     /**
      * <pre>
      * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
@@ -304,12 +1145,41 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public boolean getImmutable() {
-        return immutable_;
+      return immutable_;
+    }
+    /**
+     * <pre>
+     * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
+     * not allow this field to be mutated.
+     * </pre>
+     *
+     * <code>bool immutable = 6;</code>
+     * @param value The immutable to set.
+     * @return This builder for chaining.
+     */
+    public Builder setImmutable(boolean value) {
+      
+      immutable_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
+     * not allow this field to be mutated.
+     * </pre>
+     *
+     * <code>bool immutable = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearImmutable() {
+      
+      immutable_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int EXPLICIT_FIELD_NUMBER = 7;
-    private boolean explicit_;
-
+    private boolean explicit_ ;
     /**
      * <pre>
      * This field should always be explicitly listed with a value, even if it is set to the default value. This function
@@ -321,12 +1191,41 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public boolean getExplicit() {
-        return explicit_;
+      return explicit_;
+    }
+    /**
+     * <pre>
+     * This field should always be explicitly listed with a value, even if it is set to the default value. This function
+     * is especially useful for enums with default values, when there is a desire to have consistent indexes.
+     * </pre>
+     *
+     * <code>bool explicit = 7;</code>
+     * @param value The explicit to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExplicit(boolean value) {
+      
+      explicit_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * This field should always be explicitly listed with a value, even if it is set to the default value. This function
+     * is especially useful for enums with default values, when there is a desire to have consistent indexes.
+     * </pre>
+     *
+     * <code>bool explicit = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearExplicit() {
+      
+      explicit_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int VISIBILITY_FIELD_NUMBER = 8;
-    private int visibility_;
-
+    private int visibility_ = 0;
     /**
      * <pre>
      * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
@@ -337,11 +1236,26 @@ public final class FieldPersistenceOptions
      * <code>.model.FieldVisibility visibility = 8;</code>
      * @return The enum numeric value on the wire for visibility.
      */
-    @java.lang.Override
-    public int getVisibilityValue() {
-        return visibility_;
+    @java.lang.Override public int getVisibilityValue() {
+      return visibility_;
     }
-
+    /**
+     * <pre>
+     * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+     * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+     * certain data may be withheld corresponding to the invoking user or system's access level.
+     * </pre>
+     *
+     * <code>.model.FieldVisibility visibility = 8;</code>
+     * @param value The enum numeric value on the wire for visibility to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVisibilityValue(int value) {
+      
+      visibility_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
@@ -354,18 +1268,48 @@ public final class FieldPersistenceOptions
      */
     @java.lang.Override
     public tools.elide.model.FieldVisibility getVisibility() {
-        @SuppressWarnings("deprecation")
-        tools.elide.model.FieldVisibility result = tools.elide.model.FieldVisibility.valueOf(
-            visibility_
-        );
-        return result == null
-            ? tools.elide.model.FieldVisibility.UNRECOGNIZED
-            : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.model.FieldVisibility result = tools.elide.model.FieldVisibility.valueOf(visibility_);
+      return result == null ? tools.elide.model.FieldVisibility.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+     * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+     * certain data may be withheld corresponding to the invoking user or system's access level.
+     * </pre>
+     *
+     * <code>.model.FieldVisibility visibility = 8;</code>
+     * @param value The visibility to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVisibility(tools.elide.model.FieldVisibility value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      visibility_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
+     * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
+     * certain data may be withheld corresponding to the invoking user or system's access level.
+     * </pre>
+     *
+     * <code>.model.FieldVisibility visibility = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearVisibility() {
+      
+      visibility_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int DESCRIPTION_FIELD_NUMBER = 9;
-    private volatile java.lang.Object description_;
-
+    private java.lang.Object description_ = "";
     /**
      * <pre>
      * Provided for backwards compatibility. Do not use.
@@ -376,20 +1320,18 @@ public final class FieldPersistenceOptions
      *     See elide/model/model.proto;l=256
      * @return The description.
      */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.lang.String getDescription() {
-        java.lang.Object ref = description_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            description_ = s;
-            return s;
-        }
+    @java.lang.Deprecated public java.lang.String getDescription() {
+      java.lang.Object ref = description_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        description_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
-
     /**
      * <pre>
      * Provided for backwards compatibility. Do not use.
@@ -400,1245 +1342,128 @@ public final class FieldPersistenceOptions
      *     See elide/model/model.proto;l=256
      * @return The bytes for description.
      */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public com.google.protobuf.ByteString getDescriptionBytes() {
-        java.lang.Object ref = description_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref
-            );
-            description_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+    @java.lang.Deprecated public com.google.protobuf.ByteString
+        getDescriptionBytes() {
+      java.lang.Object ref = description_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        description_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-        throws java.io.IOException {
-        if (type_ != tools.elide.model.FieldType.STANDARD.getNumber()) {
-            output.writeEnum(1, type_);
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(summary_)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(
-                output,
-                2,
-                summary_
-            );
-        }
-        if (stampUpdate_ != false) {
-            output.writeBool(3, stampUpdate_);
-        }
-        if (stampCreate_ != false) {
-            output.writeBool(4, stampCreate_);
-        }
-        if (readOnly_ != false) {
-            output.writeBool(5, readOnly_);
-        }
-        if (immutable_ != false) {
-            output.writeBool(6, immutable_);
-        }
-        if (explicit_ != false) {
-            output.writeBool(7, explicit_);
-        }
-        if (
-            visibility_ !=
-            tools.elide.model.FieldVisibility.DEFAULT_VISIBILITY.getNumber()
-        ) {
-            output.writeEnum(8, visibility_);
-        }
-        if (
-            !com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)
-        ) {
-            com.google.protobuf.GeneratedMessageV3.writeString(
-                output,
-                9,
-                description_
-            );
-        }
-        unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (type_ != tools.elide.model.FieldType.STANDARD.getNumber()) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(1, type_);
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(summary_)) {
-            size +=
-                com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                    2,
-                    summary_
-                );
-        }
-        if (stampUpdate_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    3,
-                    stampUpdate_
-                );
-        }
-        if (stampCreate_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    4,
-                    stampCreate_
-                );
-        }
-        if (readOnly_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    5,
-                    readOnly_
-                );
-        }
-        if (immutable_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    6,
-                    immutable_
-                );
-        }
-        if (explicit_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    7,
-                    explicit_
-                );
-        }
-        if (
-            visibility_ !=
-            tools.elide.model.FieldVisibility.DEFAULT_VISIBILITY.getNumber()
-        ) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(
-                    8,
-                    visibility_
-                );
-        }
-        if (
-            !com.google.protobuf.GeneratedMessageV3.isStringEmpty(description_)
-        ) {
-            size +=
-                com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                    9,
-                    description_
-                );
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof tools.elide.model.FieldPersistenceOptions)) {
-            return super.equals(obj);
-        }
-        tools.elide.model.FieldPersistenceOptions other = (tools.elide.model.FieldPersistenceOptions) obj;
-
-        if (type_ != other.type_) return false;
-        if (!getSummary().equals(other.getSummary())) return false;
-        if (getStampUpdate() != other.getStampUpdate()) return false;
-        if (getStampCreate() != other.getStampCreate()) return false;
-        if (getReadOnly() != other.getReadOnly()) return false;
-        if (getImmutable() != other.getImmutable()) return false;
-        if (getExplicit() != other.getExplicit()) return false;
-        if (visibility_ != other.visibility_) return false;
-        if (!getDescription().equals(other.getDescription())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + type_;
-        hash = (37 * hash) + SUMMARY_FIELD_NUMBER;
-        hash = (53 * hash) + getSummary().hashCode();
-        hash = (37 * hash) + STAMP_UPDATE_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getStampUpdate());
-        hash = (37 * hash) + STAMP_CREATE_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getStampCreate());
-        hash = (37 * hash) + READ_ONLY_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getReadOnly());
-        hash = (37 * hash) + IMMUTABLE_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getImmutable());
-        hash = (37 * hash) + EXPLICIT_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getExplicit());
-        hash = (37 * hash) + VISIBILITY_FIELD_NUMBER;
-        hash = (53 * hash) + visibility_;
-        hash = (37 * hash) + DESCRIPTION_FIELD_NUMBER;
-        hash = (53 * hash) + getDescription().hashCode();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        java.nio.ByteBuffer data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        com.google.protobuf.ByteString data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        byte[] data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseDelimitedFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        com.google.protobuf.CodedInputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.FieldPersistenceOptions parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(
-        tools.elide.model.FieldPersistenceOptions prototype
-    ) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder()
-            : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-    ) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
      * <pre>
-     * Persistence/data engine options specific to an individual message field.
+     * Provided for backwards compatibility. Do not use.
      * </pre>
      *
-     * Protobuf type {@code model.FieldPersistenceOptions}
+     * <code>string description = 9 [deprecated = true];</code>
+     * @deprecated model.FieldPersistenceOptions.description is deprecated.
+     *     See elide/model/model.proto;l=256
+     * @param value The description to set.
+     * @return This builder for chaining.
      */
-    public static final class Builder
-        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-        implements
-            // @@protoc_insertion_point(builder_implements:model.FieldPersistenceOptions)
-            tools.elide.model.FieldPersistenceOptionsOrBuilder {
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-            return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                tools.elide.model.FieldPersistenceOptions.class,
-                tools.elide.model.FieldPersistenceOptions.Builder.class
-            );
-        }
-
-        // Construct using tools.elide.model.FieldPersistenceOptions.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-        ) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-            ) {}
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            type_ = 0;
-
-            summary_ = "";
-
-            stampUpdate_ = false;
-
-            stampCreate_ = false;
-
-            readOnly_ = false;
-
-            immutable_ = false;
-
-            explicit_ = false;
-
-            visibility_ = 0;
-
-            description_ = "";
-
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-            return tools.elide.model.Datamodel.internal_static_model_FieldPersistenceOptions_descriptor;
-        }
-
-        @java.lang.Override
-        public tools.elide.model.FieldPersistenceOptions getDefaultInstanceForType() {
-            return tools.elide.model.FieldPersistenceOptions.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public tools.elide.model.FieldPersistenceOptions build() {
-            tools.elide.model.FieldPersistenceOptions result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.model.FieldPersistenceOptions buildPartial() {
-            tools.elide.model.FieldPersistenceOptions result = new tools.elide.model.FieldPersistenceOptions(
-                this
-            );
-            result.type_ = type_;
-            result.summary_ = summary_;
-            result.stampUpdate_ = stampUpdate_;
-            result.stampCreate_ = stampCreate_;
-            result.readOnly_ = readOnly_;
-            result.immutable_ = immutable_;
-            result.explicit_ = explicit_;
-            result.visibility_ = visibility_;
-            result.description_ = description_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field
-        ) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof
-        ) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index,
-            java.lang.Object value
-        ) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof tools.elide.model.FieldPersistenceOptions) {
-                return mergeFrom(
-                    (tools.elide.model.FieldPersistenceOptions) other
-                );
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(
-            tools.elide.model.FieldPersistenceOptions other
-        ) {
-            if (
-                other ==
-                tools.elide.model.FieldPersistenceOptions.getDefaultInstance()
-            ) return this;
-            if (other.type_ != 0) {
-                setTypeValue(other.getTypeValue());
-            }
-            if (!other.getSummary().isEmpty()) {
-                summary_ = other.summary_;
-                onChanged();
-            }
-            if (other.getStampUpdate() != false) {
-                setStampUpdate(other.getStampUpdate());
-            }
-            if (other.getStampCreate() != false) {
-                setStampCreate(other.getStampCreate());
-            }
-            if (other.getReadOnly() != false) {
-                setReadOnly(other.getReadOnly());
-            }
-            if (other.getImmutable() != false) {
-                setImmutable(other.getImmutable());
-            }
-            if (other.getExplicit() != false) {
-                setExplicit(other.getExplicit());
-            }
-            if (other.visibility_ != 0) {
-                setVisibilityValue(other.getVisibilityValue());
-            }
-            if (!other.getDescription().isEmpty()) {
-                description_ = other.description_;
-                onChanged();
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            tools.elide.model.FieldPersistenceOptions parsedMessage = null;
-            try {
-                parsedMessage =
-                    PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage =
-                    (tools.elide.model.FieldPersistenceOptions) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int type_ = 0;
-
-        /**
-         * <pre>
-         * Field type, for special-case fields.
-         * </pre>
-         *
-         * <code>.model.FieldType type = 1;</code>
-         * @return The enum numeric value on the wire for type.
-         */
-        @java.lang.Override
-        public int getTypeValue() {
-            return type_;
-        }
-
-        /**
-         * <pre>
-         * Field type, for special-case fields.
-         * </pre>
-         *
-         * <code>.model.FieldType type = 1;</code>
-         * @param value The enum numeric value on the wire for type to set.
-         * @return This builder for chaining.
-         */
-        public Builder setTypeValue(int value) {
-            type_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Field type, for special-case fields.
-         * </pre>
-         *
-         * <code>.model.FieldType type = 1;</code>
-         * @return The type.
-         */
-        @java.lang.Override
-        public tools.elide.model.FieldType getType() {
-            @SuppressWarnings("deprecation")
-            tools.elide.model.FieldType result = tools.elide.model.FieldType.valueOf(
-                type_
-            );
-            return result == null
-                ? tools.elide.model.FieldType.UNRECOGNIZED
-                : result;
-        }
-
-        /**
-         * <pre>
-         * Field type, for special-case fields.
-         * </pre>
-         *
-         * <code>.model.FieldType type = 1;</code>
-         * @param value The type to set.
-         * @return This builder for chaining.
-         */
-        public Builder setType(tools.elide.model.FieldType value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            type_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Field type, for special-case fields.
-         * </pre>
-         *
-         * <code>.model.FieldType type = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearType() {
-            type_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object summary_ = "";
-
-        /**
-         * <pre>
-         * Summary for this field, which provides a narrative description. It should be suitable for use in external
-         * circumstances, like documentation.
-         * </pre>
-         *
-         * <code>string summary = 2;</code>
-         * @return The summary.
-         */
-        public java.lang.String getSummary() {
-            java.lang.Object ref = summary_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                summary_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Summary for this field, which provides a narrative description. It should be suitable for use in external
-         * circumstances, like documentation.
-         * </pre>
-         *
-         * <code>string summary = 2;</code>
-         * @return The bytes for summary.
-         */
-        public com.google.protobuf.ByteString getSummaryBytes() {
-            java.lang.Object ref = summary_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref
-                );
-                summary_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Summary for this field, which provides a narrative description. It should be suitable for use in external
-         * circumstances, like documentation.
-         * </pre>
-         *
-         * <code>string summary = 2;</code>
-         * @param value The summary to set.
-         * @return This builder for chaining.
-         */
-        public Builder setSummary(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            summary_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Summary for this field, which provides a narrative description. It should be suitable for use in external
-         * circumstances, like documentation.
-         * </pre>
-         *
-         * <code>string summary = 2;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearSummary() {
-            summary_ = getDefaultInstance().getSummary();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Summary for this field, which provides a narrative description. It should be suitable for use in external
-         * circumstances, like documentation.
-         * </pre>
-         *
-         * <code>string summary = 2;</code>
-         * @param value The bytes for summary to set.
-         * @return This builder for chaining.
-         */
-        public Builder setSummaryBytes(com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            summary_ = value;
-            onChanged();
-            return this;
-        }
-
-        private boolean stampUpdate_;
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
-         * modified in underlying storage. The field should be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_update = 3;</code>
-         * @return The stampUpdate.
-         */
-        @java.lang.Override
-        public boolean getStampUpdate() {
-            return stampUpdate_;
-        }
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
-         * modified in underlying storage. The field should be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_update = 3;</code>
-         * @param value The stampUpdate to set.
-         * @return This builder for chaining.
-         */
-        public Builder setStampUpdate(boolean value) {
-            stampUpdate_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically updated each time the model that contains it is
-         * modified in underlying storage. The field should be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_update = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearStampUpdate() {
-            stampUpdate_ = false;
-            onChanged();
-            return this;
-        }
-
-        private boolean stampCreate_;
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
-         * we would like this field to be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_create = 4;</code>
-         * @return The stampCreate.
-         */
-        @java.lang.Override
-        public boolean getStampCreate() {
-            return stampCreate_;
-        }
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
-         * we would like this field to be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_create = 4;</code>
-         * @param value The stampCreate to set.
-         * @return This builder for chaining.
-         */
-        public Builder setStampCreate(boolean value) {
-            stampCreate_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * This item is a timestamp, and we would like it to be automatically set when the model is created. After that point,
-         * we would like this field to be read-only.
-         * </pre>
-         *
-         * <code>bool stamp_create = 4;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearStampCreate() {
-            stampCreate_ = false;
-            onChanged();
-            return this;
-        }
-
-        private boolean readOnly_;
-
-        /**
-         * <pre>
-         * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
-         * be set by external code at any point in time.
-         * </pre>
-         *
-         * <code>bool read_only = 5;</code>
-         * @return The readOnly.
-         */
-        @java.lang.Override
-        public boolean getReadOnly() {
-            return readOnly_;
-        }
-
-        /**
-         * <pre>
-         * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
-         * be set by external code at any point in time.
-         * </pre>
-         *
-         * <code>bool read_only = 5;</code>
-         * @param value The readOnly to set.
-         * @return This builder for chaining.
-         */
-        public Builder setReadOnly(boolean value) {
-            readOnly_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * This field should not allow writes, but rather produce its value dynamically. Fields marked in this manner cannot
-         * be set by external code at any point in time.
-         * </pre>
-         *
-         * <code>bool read_only = 5;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearReadOnly() {
-            readOnly_ = false;
-            onChanged();
-            return this;
-        }
-
-        private boolean immutable_;
-
-        /**
-         * <pre>
-         * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
-         * not allow this field to be mutated.
-         * </pre>
-         *
-         * <code>bool immutable = 6;</code>
-         * @return The immutable.
-         */
-        @java.lang.Override
-        public boolean getImmutable() {
-            return immutable_;
-        }
-
-        /**
-         * <pre>
-         * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
-         * not allow this field to be mutated.
-         * </pre>
-         *
-         * <code>bool immutable = 6;</code>
-         * @param value The immutable to set.
-         * @return This builder for chaining.
-         */
-        public Builder setImmutable(boolean value) {
-            immutable_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * This field should allow writes when the model that contains it is written, but then, henceforth, the model should
-         * not allow this field to be mutated.
-         * </pre>
-         *
-         * <code>bool immutable = 6;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearImmutable() {
-            immutable_ = false;
-            onChanged();
-            return this;
-        }
-
-        private boolean explicit_;
-
-        /**
-         * <pre>
-         * This field should always be explicitly listed with a value, even if it is set to the default value. This function
-         * is especially useful for enums with default values, when there is a desire to have consistent indexes.
-         * </pre>
-         *
-         * <code>bool explicit = 7;</code>
-         * @return The explicit.
-         */
-        @java.lang.Override
-        public boolean getExplicit() {
-            return explicit_;
-        }
-
-        /**
-         * <pre>
-         * This field should always be explicitly listed with a value, even if it is set to the default value. This function
-         * is especially useful for enums with default values, when there is a desire to have consistent indexes.
-         * </pre>
-         *
-         * <code>bool explicit = 7;</code>
-         * @param value The explicit to set.
-         * @return This builder for chaining.
-         */
-        public Builder setExplicit(boolean value) {
-            explicit_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * This field should always be explicitly listed with a value, even if it is set to the default value. This function
-         * is especially useful for enums with default values, when there is a desire to have consistent indexes.
-         * </pre>
-         *
-         * <code>bool explicit = 7;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearExplicit() {
-            explicit_ = false;
-            onChanged();
-            return this;
-        }
-
-        private int visibility_ = 0;
-
-        /**
-         * <pre>
-         * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
-         * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
-         * certain data may be withheld corresponding to the invoking user or system's access level.
-         * </pre>
-         *
-         * <code>.model.FieldVisibility visibility = 8;</code>
-         * @return The enum numeric value on the wire for visibility.
-         */
-        @java.lang.Override
-        public int getVisibilityValue() {
-            return visibility_;
-        }
-
-        /**
-         * <pre>
-         * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
-         * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
-         * certain data may be withheld corresponding to the invoking user or system's access level.
-         * </pre>
-         *
-         * <code>.model.FieldVisibility visibility = 8;</code>
-         * @param value The enum numeric value on the wire for visibility to set.
-         * @return This builder for chaining.
-         */
-        public Builder setVisibilityValue(int value) {
-            visibility_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
-         * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
-         * certain data may be withheld corresponding to the invoking user or system's access level.
-         * </pre>
-         *
-         * <code>.model.FieldVisibility visibility = 8;</code>
-         * @return The visibility.
-         */
-        @java.lang.Override
-        public tools.elide.model.FieldVisibility getVisibility() {
-            @SuppressWarnings("deprecation")
-            tools.elide.model.FieldVisibility result = tools.elide.model.FieldVisibility.valueOf(
-                visibility_
-            );
-            return result == null
-                ? tools.elide.model.FieldVisibility.UNRECOGNIZED
-                : result;
-        }
-
-        /**
-         * <pre>
-         * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
-         * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
-         * certain data may be withheld corresponding to the invoking user or system's access level.
-         * </pre>
-         *
-         * <code>.model.FieldVisibility visibility = 8;</code>
-         * @param value The visibility to set.
-         * @return This builder for chaining.
-         */
-        public Builder setVisibility(tools.elide.model.FieldVisibility value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            visibility_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes the visibility level of a given field in a tree of fields. This value applies recursively under message
-         * fields on which it is applied. Depending on the visibility level active when data is deserialized or serialized,
-         * certain data may be withheld corresponding to the invoking user or system's access level.
-         * </pre>
-         *
-         * <code>.model.FieldVisibility visibility = 8;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearVisibility() {
-            visibility_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object description_ = "";
-
-        /**
-         * <pre>
-         * Provided for backwards compatibility. Do not use.
-         * </pre>
-         *
-         * <code>string description = 9 [deprecated = true];</code>
-         * @deprecated model.FieldPersistenceOptions.description is deprecated.
-         *     See elide/model/model.proto;l=256
-         * @return The description.
-         */
-        @java.lang.Deprecated
-        public java.lang.String getDescription() {
-            java.lang.Object ref = description_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                description_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Provided for backwards compatibility. Do not use.
-         * </pre>
-         *
-         * <code>string description = 9 [deprecated = true];</code>
-         * @deprecated model.FieldPersistenceOptions.description is deprecated.
-         *     See elide/model/model.proto;l=256
-         * @return The bytes for description.
-         */
-        @java.lang.Deprecated
-        public com.google.protobuf.ByteString getDescriptionBytes() {
-            java.lang.Object ref = description_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref
-                );
-                description_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Provided for backwards compatibility. Do not use.
-         * </pre>
-         *
-         * <code>string description = 9 [deprecated = true];</code>
-         * @deprecated model.FieldPersistenceOptions.description is deprecated.
-         *     See elide/model/model.proto;l=256
-         * @param value The description to set.
-         * @return This builder for chaining.
-         */
-        @java.lang.Deprecated
-        public Builder setDescription(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            description_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Provided for backwards compatibility. Do not use.
-         * </pre>
-         *
-         * <code>string description = 9 [deprecated = true];</code>
-         * @deprecated model.FieldPersistenceOptions.description is deprecated.
-         *     See elide/model/model.proto;l=256
-         * @return This builder for chaining.
-         */
-        @java.lang.Deprecated
-        public Builder clearDescription() {
-            description_ = getDefaultInstance().getDescription();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Provided for backwards compatibility. Do not use.
-         * </pre>
-         *
-         * <code>string description = 9 [deprecated = true];</code>
-         * @deprecated model.FieldPersistenceOptions.description is deprecated.
-         *     See elide/model/model.proto;l=256
-         * @param value The bytes for description to set.
-         * @return This builder for chaining.
-         */
-        @java.lang.Deprecated
-        public Builder setDescriptionBytes(
-            com.google.protobuf.ByteString value
-        ) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            description_ = value;
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-        // @@protoc_insertion_point(builder_scope:model.FieldPersistenceOptions)
+    @java.lang.Deprecated public Builder setDescription(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      description_ = value;
+      onChanged();
+      return this;
     }
-
-    // @@protoc_insertion_point(class_scope:model.FieldPersistenceOptions)
-    private static final tools.elide.model.FieldPersistenceOptions DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new tools.elide.model.FieldPersistenceOptions();
+    /**
+     * <pre>
+     * Provided for backwards compatibility. Do not use.
+     * </pre>
+     *
+     * <code>string description = 9 [deprecated = true];</code>
+     * @deprecated model.FieldPersistenceOptions.description is deprecated.
+     *     See elide/model/model.proto;l=256
+     * @return This builder for chaining.
+     */
+    @java.lang.Deprecated public Builder clearDescription() {
+      
+      description_ = getDefaultInstance().getDescription();
+      onChanged();
+      return this;
     }
-
-    public static tools.elide.model.FieldPersistenceOptions getDefaultInstance() {
-        return DEFAULT_INSTANCE;
+    /**
+     * <pre>
+     * Provided for backwards compatibility. Do not use.
+     * </pre>
+     *
+     * <code>string description = 9 [deprecated = true];</code>
+     * @deprecated model.FieldPersistenceOptions.description is deprecated.
+     *     See elide/model/model.proto;l=256
+     * @param value The bytes for description to set.
+     * @return This builder for chaining.
+     */
+    @java.lang.Deprecated public Builder setDescriptionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      description_ = value;
+      onChanged();
+      return this;
     }
-
-    private static final com.google.protobuf.Parser<FieldPersistenceOptions> PARSER = new com.google.protobuf.AbstractParser<FieldPersistenceOptions>() {
-        @java.lang.Override
-        public FieldPersistenceOptions parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return new FieldPersistenceOptions(input, extensionRegistry);
-        }
-    };
-
-    public static com.google.protobuf.Parser<FieldPersistenceOptions> parser() {
-        return PARSER;
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<FieldPersistenceOptions> getParserForType() {
-        return PARSER;
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
+
+    // @@protoc_insertion_point(builder_scope:model.FieldPersistenceOptions)
+  }
+
+  // @@protoc_insertion_point(class_scope:model.FieldPersistenceOptions)
+  private static final tools.elide.model.FieldPersistenceOptions DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new tools.elide.model.FieldPersistenceOptions();
+  }
+
+  public static tools.elide.model.FieldPersistenceOptions getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
+
+  private static final com.google.protobuf.Parser<FieldPersistenceOptions>
+      PARSER = new com.google.protobuf.AbstractParser<FieldPersistenceOptions>() {
     @java.lang.Override
-    public tools.elide.model.FieldPersistenceOptions getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+    public FieldPersistenceOptions parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new FieldPersistenceOptions(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<FieldPersistenceOptions> parser() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<FieldPersistenceOptions> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public tools.elide.model.FieldPersistenceOptions getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
+

@@ -18,7 +18,7 @@ jobs:
       - name: Cache Gradle Caches
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # tag=v2
       - name: Run Gradle tasks
-        run: ./gradlew preMerge --continue
+        run: ./gradlew preMerge --continue --dependency-verification=lenient
       - name: Publish on Plugin Portal
-        run: ./gradlew --info --project-dir plugin-build setupPluginUploadFromEnvironment publishPlugins
+        run: ./gradlew --info --project-dir plugin-build setupPluginUploadFromEnvironment publishPlugins --dependency-verification=lenient
         if: success()

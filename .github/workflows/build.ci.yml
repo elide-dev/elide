@@ -105,6 +105,7 @@ jobs:
         env:
           CI: true
         with:
+          cache-read-only: false
           arguments: |
             assemble
             --scan
@@ -394,11 +395,10 @@ jobs:
         project: ["server:helloworld"]
         include:
           - project: "server:hellocss"
-          - project: "server:hellocss"
-          - project: "fullstack:basic"
-          - project: "fullstack:ssr"
-          - project: "fullstack:react"
-          - project: "fullstack:react-ssr"
+          - project: "fullstack:basic:server"
+          - project: "fullstack:ssr:server"
+          - project: "fullstack:react:server"
+          - project: "fullstack:react-ssr:server"
 
     steps:
       ## Setup: GraalVM
@@ -497,11 +497,10 @@ jobs:
         project: ["server:helloworld"]
         include:
           - project: "server:hellocss"
-          - project: "server:hellocss"
-          - project: "fullstack:basic"
-          - project: "fullstack:ssr"
-          - project: "fullstack:react"
-          - project: "fullstack:react-ssr"
+          - project: "fullstack:basic:server"
+          - project: "fullstack:ssr:server"
+          - project: "fullstack:react:server"
+          - project: "fullstack:react-ssr:server"
 
     steps:
       ## Setup: GraalVM

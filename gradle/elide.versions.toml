@@ -175,7 +175,7 @@ kotlin_plugin_jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kot
 kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin_sdk" }
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin_sdk" }
 kotlin_plugin_dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "kotlin_dataframe" }
-kotlinx_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin_sdk" }
+kotlin_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin_sdk" }
 kotlinx_plugin_knit = { id = "org.jetbrains.kotlinx.knit", version.ref = "kotlin_knit" }
 kotlinx_plugin_benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx_benchmark" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
@@ -236,6 +236,7 @@ kotlinx_serialization_protobuf_js = { group = "org.jetbrains.kotlinx", name = "k
 kotlinx_serialization_protobuf_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx_serialization" }
+ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 hibernate_core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
 hibernate_hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hibernate_graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }

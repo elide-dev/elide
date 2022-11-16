@@ -10,150 +10,763 @@ package tools.elide.model;
  *
  * Protobuf type {@code model.TableFieldOptions}
  */
-public final class TableFieldOptions
-    extends com.google.protobuf.GeneratedMessageV3
-    implements
-        // @@protoc_insertion_point(message_implements:model.TableFieldOptions)
-        TableFieldOptionsOrBuilder {
+public final class TableFieldOptions extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:model.TableFieldOptions)
+    TableFieldOptionsOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use TableFieldOptions.newBuilder() to construct.
+  private TableFieldOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private TableFieldOptions() {
+    bqtype_ = 0;
+    sptype_ = 0;
+    name_ = "";
+    id_ = "";
+  }
 
-    private static final long serialVersionUID = 0L;
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new TableFieldOptions();
+  }
 
-    // Use TableFieldOptions.newBuilder() to construct.
-    private TableFieldOptions(
-        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
-    ) {
-        super(builder);
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private TableFieldOptions(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
     }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
 
-    private TableFieldOptions() {
-        bqtype_ = 0;
-        sptype_ = 0;
-        name_ = "";
-        id_ = "";
-    }
+            require_ = input.readBool();
+            break;
+          }
+          case 16: {
 
-    @java.lang.Override
-    @SuppressWarnings({ "unused" })
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new TableFieldOptions();
-    }
+            ignore_ = input.readBool();
+            break;
+          }
+          case 24: {
+            int rawValue = input.readEnum();
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-        return this.unknownFields;
-    }
+            bqtype_ = rawValue;
+            break;
+          }
+          case 32: {
+            int rawValue = input.readEnum();
 
-    private TableFieldOptions(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 8:
-                        {
-                            require_ = input.readBool();
-                            break;
-                        }
-                    case 16:
-                        {
-                            ignore_ = input.readBool();
-                            break;
-                        }
-                    case 24:
-                        {
-                            int rawValue = input.readEnum();
+            sptype_ = rawValue;
+            break;
+          }
+          case 40: {
 
-                            bqtype_ = rawValue;
-                            break;
-                        }
-                    case 32:
-                        {
-                            int rawValue = input.readEnum();
+            repeated_ = input.readBool();
+            break;
+          }
+          case 48: {
 
-                            sptype_ = rawValue;
-                            break;
-                        }
-                    case 40:
-                        {
-                            repeated_ = input.readBool();
-                            break;
-                        }
-                    case 48:
-                        {
-                            size_ = input.readUInt32();
-                            break;
-                        }
-                    case 58:
-                        {
-                            java.lang.String s = input.readStringRequireUtf8();
+            size_ = input.readUInt32();
+            break;
+          }
+          case 58: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-                            name_ = s;
-                            break;
-                        }
-                    case 66:
-                        {
-                            java.lang.String s = input.readStringRequireUtf8();
+            name_ = s;
+            break;
+          }
+          case 66: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-                            id_ = s;
-                            break;
-                        }
-                    default:
-                        {
-                            if (
-                                !parseUnknownField(
-                                    input,
-                                    unknownFields,
-                                    extensionRegistry,
-                                    tag
-                                )
-                            ) {
-                                done = true;
-                            }
-                            break;
-                        }
-                }
+            id_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
             }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-            throw e
-                .asInvalidProtocolBufferException()
-                .setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                .setUnfinishedMessage(this);
-        } finally {
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            break;
+          }
         }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
     }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
+  }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-        return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            tools.elide.model.TableFieldOptions.class, tools.elide.model.TableFieldOptions.Builder.class);
+  }
+
+  public static final int REQUIRE_FIELD_NUMBER = 1;
+  private boolean require_;
+  /**
+   * <pre>
+   * Marks this field as `REQUIRED` in tabular schemas.
+   * </pre>
+   *
+   * <code>bool require = 1;</code>
+   * @return The require.
+   */
+  @java.lang.Override
+  public boolean getRequire() {
+    return require_;
+  }
+
+  public static final int IGNORE_FIELD_NUMBER = 2;
+  private boolean ignore_;
+  /**
+   * <pre>
+   * Marks this field as ignored for serialization in tabular circumstances.
+   * </pre>
+   *
+   * <code>bool ignore = 2;</code>
+   * @return The ignore.
+   */
+  @java.lang.Override
+  public boolean getIgnore() {
+    return ignore_;
+  }
+
+  public static final int BQTYPE_FIELD_NUMBER = 3;
+  private int bqtype_;
+  /**
+   * <pre>
+   * Overrides the BigQuery type associated with the exported form of this message field.
+   * </pre>
+   *
+   * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
+   * @return The enum numeric value on the wire for bqtype.
+   */
+  @java.lang.Override public int getBqtypeValue() {
+    return bqtype_;
+  }
+  /**
+   * <pre>
+   * Overrides the BigQuery type associated with the exported form of this message field.
+   * </pre>
+   *
+   * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
+   * @return The bqtype.
+   */
+  @java.lang.Override public tools.elide.model.BigQueryOptions.BigQueryType getBqtype() {
+    @SuppressWarnings("deprecation")
+    tools.elide.model.BigQueryOptions.BigQueryType result = tools.elide.model.BigQueryOptions.BigQueryType.valueOf(bqtype_);
+    return result == null ? tools.elide.model.BigQueryOptions.BigQueryType.UNRECOGNIZED : result;
+  }
+
+  public static final int SPTYPE_FIELD_NUMBER = 4;
+  private int sptype_;
+  /**
+   * <pre>
+   * Overrides the Spanner type associated with the exported form of this message field.
+   * </pre>
+   *
+   * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
+   * @return The enum numeric value on the wire for sptype.
+   */
+  @java.lang.Override public int getSptypeValue() {
+    return sptype_;
+  }
+  /**
+   * <pre>
+   * Overrides the Spanner type associated with the exported form of this message field.
+   * </pre>
+   *
+   * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
+   * @return The sptype.
+   */
+  @java.lang.Override public tools.elide.model.SpannerOptions.SpannerType getSptype() {
+    @SuppressWarnings("deprecation")
+    tools.elide.model.SpannerOptions.SpannerType result = tools.elide.model.SpannerOptions.SpannerType.valueOf(sptype_);
+    return result == null ? tools.elide.model.SpannerOptions.SpannerType.UNRECOGNIZED : result;
+  }
+
+  public static final int REPEATED_FIELD_NUMBER = 5;
+  private boolean repeated_;
+  /**
+   * <pre>
+   * Converts this field into a `REPEATED`-mode field in BigQuery.
+   * </pre>
+   *
+   * <code>bool repeated = 5;</code>
+   * @return The repeated.
+   */
+  @java.lang.Override
+  public boolean getRepeated() {
+    return repeated_;
+  }
+
+  public static final int SIZE_FIELD_NUMBER = 6;
+  private int size_;
+  /**
+   * <pre>
+   * Size of the field. Pass `0` (the default) for maximum width.
+   * </pre>
+   *
+   * <code>uint32 size = 6;</code>
+   * @return The size.
+   */
+  @java.lang.Override
+  public int getSize() {
+    return size_;
+  }
+
+  public static final int NAME_FIELD_NUMBER = 7;
+  private volatile java.lang.Object name_;
+  /**
+   * <pre>
+   * Name of the field in columnar circumstances.
+   * </pre>
+   *
+   * <code>string name = 7;</code>
+   * @return The name.
+   */
+  @java.lang.Override
+  public java.lang.String getName() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      name_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Name of the field in columnar circumstances.
+   * </pre>
+   *
+   * <code>string name = 7;</code>
+   * @return The bytes for name.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getNameBytes() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      name_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int ID_FIELD_NUMBER = 8;
+  private volatile java.lang.Object id_;
+  /**
+   * <pre>
+   * Unique ID or path assigned to this field in a universally specified data model.
+   * </pre>
+   *
+   * <code>string id = 8;</code>
+   * @return The id.
+   */
+  @java.lang.Override
+  public java.lang.String getId() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      id_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Unique ID or path assigned to this field in a universally specified data model.
+   * </pre>
+   *
+   * <code>string id = 8;</code>
+   * @return The bytes for id.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getIdBytes() {
+    java.lang.Object ref = id_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      id_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (require_ != false) {
+      output.writeBool(1, require_);
+    }
+    if (ignore_ != false) {
+      output.writeBool(2, ignore_);
+    }
+    if (bqtype_ != tools.elide.model.BigQueryOptions.BigQueryType.UNSPECIFIED_TYPE.getNumber()) {
+      output.writeEnum(3, bqtype_);
+    }
+    if (sptype_ != tools.elide.model.SpannerOptions.SpannerType.UNSPECIFIED_TYPE.getNumber()) {
+      output.writeEnum(4, sptype_);
+    }
+    if (repeated_ != false) {
+      output.writeBool(5, repeated_);
+    }
+    if (size_ != 0) {
+      output.writeUInt32(6, size_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, name_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(id_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 8, id_);
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @java.lang.Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (require_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(1, require_);
+    }
+    if (ignore_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(2, ignore_);
+    }
+    if (bqtype_ != tools.elide.model.BigQueryOptions.BigQueryType.UNSPECIFIED_TYPE.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(3, bqtype_);
+    }
+    if (sptype_ != tools.elide.model.SpannerOptions.SpannerType.UNSPECIFIED_TYPE.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(4, sptype_);
+    }
+    if (repeated_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(5, repeated_);
+    }
+    if (size_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(6, size_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, name_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(id_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, id_);
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof tools.elide.model.TableFieldOptions)) {
+      return super.equals(obj);
+    }
+    tools.elide.model.TableFieldOptions other = (tools.elide.model.TableFieldOptions) obj;
+
+    if (getRequire()
+        != other.getRequire()) return false;
+    if (getIgnore()
+        != other.getIgnore()) return false;
+    if (bqtype_ != other.bqtype_) return false;
+    if (sptype_ != other.sptype_) return false;
+    if (getRepeated()
+        != other.getRepeated()) return false;
+    if (getSize()
+        != other.getSize()) return false;
+    if (!getName()
+        .equals(other.getName())) return false;
+    if (!getId()
+        .equals(other.getId())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + REQUIRE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getRequire());
+    hash = (37 * hash) + IGNORE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getIgnore());
+    hash = (37 * hash) + BQTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + bqtype_;
+    hash = (37 * hash) + SPTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + sptype_;
+    hash = (37 * hash) + REPEATED_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getRepeated());
+    hash = (37 * hash) + SIZE_FIELD_NUMBER;
+    hash = (53 * hash) + getSize();
+    hash = (37 * hash) + NAME_FIELD_NUMBER;
+    hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + getId().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.model.TableFieldOptions parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.TableFieldOptions parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.model.TableFieldOptions parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(tools.elide.model.TableFieldOptions prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * <pre>
+   * Specifies options specific to storing this field in a tabular-style data engine.
+   * </pre>
+   *
+   * Protobuf type {@code model.TableFieldOptions}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:model.TableFieldOptions)
+      tools.elide.model.TableFieldOptionsOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-        return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
-            tools.elide.model.TableFieldOptions.class,
-            tools.elide.model.TableFieldOptions.Builder.class
-        );
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tools.elide.model.TableFieldOptions.class, tools.elide.model.TableFieldOptions.Builder.class);
     }
 
-    public static final int REQUIRE_FIELD_NUMBER = 1;
-    private boolean require_;
+    // Construct using tools.elide.model.TableFieldOptions.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      require_ = false;
+
+      ignore_ = false;
+
+      bqtype_ = 0;
+
+      sptype_ = 0;
+
+      repeated_ = false;
+
+      size_ = 0;
+
+      name_ = "";
+
+      id_ = "";
+
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.TableFieldOptions getDefaultInstanceForType() {
+      return tools.elide.model.TableFieldOptions.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public tools.elide.model.TableFieldOptions build() {
+      tools.elide.model.TableFieldOptions result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public tools.elide.model.TableFieldOptions buildPartial() {
+      tools.elide.model.TableFieldOptions result = new tools.elide.model.TableFieldOptions(this);
+      result.require_ = require_;
+      result.ignore_ = ignore_;
+      result.bqtype_ = bqtype_;
+      result.sptype_ = sptype_;
+      result.repeated_ = repeated_;
+      result.size_ = size_;
+      result.name_ = name_;
+      result.id_ = id_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof tools.elide.model.TableFieldOptions) {
+        return mergeFrom((tools.elide.model.TableFieldOptions)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(tools.elide.model.TableFieldOptions other) {
+      if (other == tools.elide.model.TableFieldOptions.getDefaultInstance()) return this;
+      if (other.getRequire() != false) {
+        setRequire(other.getRequire());
+      }
+      if (other.getIgnore() != false) {
+        setIgnore(other.getIgnore());
+      }
+      if (other.bqtype_ != 0) {
+        setBqtypeValue(other.getBqtypeValue());
+      }
+      if (other.sptype_ != 0) {
+        setSptypeValue(other.getSptypeValue());
+      }
+      if (other.getRepeated() != false) {
+        setRepeated(other.getRepeated());
+      }
+      if (other.getSize() != 0) {
+        setSize(other.getSize());
+      }
+      if (!other.getName().isEmpty()) {
+        name_ = other.name_;
+        onChanged();
+      }
+      if (!other.getId().isEmpty()) {
+        id_ = other.id_;
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      tools.elide.model.TableFieldOptions parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (tools.elide.model.TableFieldOptions) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private boolean require_ ;
     /**
      * <pre>
      * Marks this field as `REQUIRED` in tabular schemas.
@@ -164,12 +777,39 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public boolean getRequire() {
-        return require_;
+      return require_;
+    }
+    /**
+     * <pre>
+     * Marks this field as `REQUIRED` in tabular schemas.
+     * </pre>
+     *
+     * <code>bool require = 1;</code>
+     * @param value The require to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRequire(boolean value) {
+      
+      require_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Marks this field as `REQUIRED` in tabular schemas.
+     * </pre>
+     *
+     * <code>bool require = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRequire() {
+      
+      require_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int IGNORE_FIELD_NUMBER = 2;
-    private boolean ignore_;
-
+    private boolean ignore_ ;
     /**
      * <pre>
      * Marks this field as ignored for serialization in tabular circumstances.
@@ -180,12 +820,39 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public boolean getIgnore() {
-        return ignore_;
+      return ignore_;
+    }
+    /**
+     * <pre>
+     * Marks this field as ignored for serialization in tabular circumstances.
+     * </pre>
+     *
+     * <code>bool ignore = 2;</code>
+     * @param value The ignore to set.
+     * @return This builder for chaining.
+     */
+    public Builder setIgnore(boolean value) {
+      
+      ignore_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Marks this field as ignored for serialization in tabular circumstances.
+     * </pre>
+     *
+     * <code>bool ignore = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearIgnore() {
+      
+      ignore_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int BQTYPE_FIELD_NUMBER = 3;
-    private int bqtype_;
-
+    private int bqtype_ = 0;
     /**
      * <pre>
      * Overrides the BigQuery type associated with the exported form of this message field.
@@ -194,11 +861,24 @@ public final class TableFieldOptions
      * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
      * @return The enum numeric value on the wire for bqtype.
      */
-    @java.lang.Override
-    public int getBqtypeValue() {
-        return bqtype_;
+    @java.lang.Override public int getBqtypeValue() {
+      return bqtype_;
     }
-
+    /**
+     * <pre>
+     * Overrides the BigQuery type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
+     * @param value The enum numeric value on the wire for bqtype to set.
+     * @return This builder for chaining.
+     */
+    public Builder setBqtypeValue(int value) {
+      
+      bqtype_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Overrides the BigQuery type associated with the exported form of this message field.
@@ -209,18 +889,44 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public tools.elide.model.BigQueryOptions.BigQueryType getBqtype() {
-        @SuppressWarnings("deprecation")
-        tools.elide.model.BigQueryOptions.BigQueryType result = tools.elide.model.BigQueryOptions.BigQueryType.valueOf(
-            bqtype_
-        );
-        return result == null
-            ? tools.elide.model.BigQueryOptions.BigQueryType.UNRECOGNIZED
-            : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.model.BigQueryOptions.BigQueryType result = tools.elide.model.BigQueryOptions.BigQueryType.valueOf(bqtype_);
+      return result == null ? tools.elide.model.BigQueryOptions.BigQueryType.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Overrides the BigQuery type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
+     * @param value The bqtype to set.
+     * @return This builder for chaining.
+     */
+    public Builder setBqtype(tools.elide.model.BigQueryOptions.BigQueryType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      bqtype_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Overrides the BigQuery type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearBqtype() {
+      
+      bqtype_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int SPTYPE_FIELD_NUMBER = 4;
-    private int sptype_;
-
+    private int sptype_ = 0;
     /**
      * <pre>
      * Overrides the Spanner type associated with the exported form of this message field.
@@ -229,11 +935,24 @@ public final class TableFieldOptions
      * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
      * @return The enum numeric value on the wire for sptype.
      */
-    @java.lang.Override
-    public int getSptypeValue() {
-        return sptype_;
+    @java.lang.Override public int getSptypeValue() {
+      return sptype_;
     }
-
+    /**
+     * <pre>
+     * Overrides the Spanner type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
+     * @param value The enum numeric value on the wire for sptype to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSptypeValue(int value) {
+      
+      sptype_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Overrides the Spanner type associated with the exported form of this message field.
@@ -244,18 +963,44 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public tools.elide.model.SpannerOptions.SpannerType getSptype() {
-        @SuppressWarnings("deprecation")
-        tools.elide.model.SpannerOptions.SpannerType result = tools.elide.model.SpannerOptions.SpannerType.valueOf(
-            sptype_
-        );
-        return result == null
-            ? tools.elide.model.SpannerOptions.SpannerType.UNRECOGNIZED
-            : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.model.SpannerOptions.SpannerType result = tools.elide.model.SpannerOptions.SpannerType.valueOf(sptype_);
+      return result == null ? tools.elide.model.SpannerOptions.SpannerType.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Overrides the Spanner type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
+     * @param value The sptype to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSptype(tools.elide.model.SpannerOptions.SpannerType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      sptype_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Overrides the Spanner type associated with the exported form of this message field.
+     * </pre>
+     *
+     * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSptype() {
+      
+      sptype_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int REPEATED_FIELD_NUMBER = 5;
-    private boolean repeated_;
-
+    private boolean repeated_ ;
     /**
      * <pre>
      * Converts this field into a `REPEATED`-mode field in BigQuery.
@@ -266,12 +1011,39 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public boolean getRepeated() {
-        return repeated_;
+      return repeated_;
+    }
+    /**
+     * <pre>
+     * Converts this field into a `REPEATED`-mode field in BigQuery.
+     * </pre>
+     *
+     * <code>bool repeated = 5;</code>
+     * @param value The repeated to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRepeated(boolean value) {
+      
+      repeated_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Converts this field into a `REPEATED`-mode field in BigQuery.
+     * </pre>
+     *
+     * <code>bool repeated = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRepeated() {
+      
+      repeated_ = false;
+      onChanged();
+      return this;
     }
 
-    public static final int SIZE_FIELD_NUMBER = 6;
-    private int size_;
-
+    private int size_ ;
     /**
      * <pre>
      * Size of the field. Pass `0` (the default) for maximum width.
@@ -282,12 +1054,39 @@ public final class TableFieldOptions
      */
     @java.lang.Override
     public int getSize() {
-        return size_;
+      return size_;
+    }
+    /**
+     * <pre>
+     * Size of the field. Pass `0` (the default) for maximum width.
+     * </pre>
+     *
+     * <code>uint32 size = 6;</code>
+     * @param value The size to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSize(int value) {
+      
+      size_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Size of the field. Pass `0` (the default) for maximum width.
+     * </pre>
+     *
+     * <code>uint32 size = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSize() {
+      
+      size_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int NAME_FIELD_NUMBER = 7;
-    private volatile java.lang.Object name_;
-
+    private java.lang.Object name_ = "";
     /**
      * <pre>
      * Name of the field in columnar circumstances.
@@ -296,19 +1095,18 @@ public final class TableFieldOptions
      * <code>string name = 7;</code>
      * @return The name.
      */
-    @java.lang.Override
     public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            name_ = s;
-            return s;
-        }
+      java.lang.Object ref = name_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
-
     /**
      * <pre>
      * Name of the field in columnar circumstances.
@@ -317,23 +1115,74 @@ public final class TableFieldOptions
      * <code>string name = 7;</code>
      * @return The bytes for name.
      */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref
-            );
-            name_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * Name of the field in columnar circumstances.
+     * </pre>
+     *
+     * <code>string name = 7;</code>
+     * @param value The name to set.
+     * @return This builder for chaining.
+     */
+    public Builder setName(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      name_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Name of the field in columnar circumstances.
+     * </pre>
+     *
+     * <code>string name = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearName() {
+      
+      name_ = getDefaultInstance().getName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Name of the field in columnar circumstances.
+     * </pre>
+     *
+     * <code>string name = 7;</code>
+     * @param value The bytes for name to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      name_ = value;
+      onChanged();
+      return this;
     }
 
-    public static final int ID_FIELD_NUMBER = 8;
-    private volatile java.lang.Object id_;
-
+    private java.lang.Object id_ = "";
     /**
      * <pre>
      * Unique ID or path assigned to this field in a universally specified data model.
@@ -342,19 +1191,18 @@ public final class TableFieldOptions
      * <code>string id = 8;</code>
      * @return The id.
      */
-    @java.lang.Override
     public java.lang.String getId() {
-        java.lang.Object ref = id_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            id_ = s;
-            return s;
-        }
+      java.lang.Object ref = id_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
-
     /**
      * <pre>
      * Unique ID or path assigned to this field in a universally specified data model.
@@ -363,1129 +1211,122 @@ public final class TableFieldOptions
      * <code>string id = 8;</code>
      * @return The bytes for id.
      */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getIdBytes() {
-        java.lang.Object ref = id_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref
-            );
-            id_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-        throws java.io.IOException {
-        if (require_ != false) {
-            output.writeBool(1, require_);
-        }
-        if (ignore_ != false) {
-            output.writeBool(2, ignore_);
-        }
-        if (
-            bqtype_ !=
-            tools.elide.model.BigQueryOptions.BigQueryType.UNSPECIFIED_TYPE.getNumber()
-        ) {
-            output.writeEnum(3, bqtype_);
-        }
-        if (
-            sptype_ !=
-            tools.elide.model.SpannerOptions.SpannerType.UNSPECIFIED_TYPE.getNumber()
-        ) {
-            output.writeEnum(4, sptype_);
-        }
-        if (repeated_ != false) {
-            output.writeBool(5, repeated_);
-        }
-        if (size_ != 0) {
-            output.writeUInt32(6, size_);
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(
-                output,
-                7,
-                name_
-            );
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(id_)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 8, id_);
-        }
-        unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (require_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    1,
-                    require_
-                );
-        }
-        if (ignore_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    2,
-                    ignore_
-                );
-        }
-        if (
-            bqtype_ !=
-            tools.elide.model.BigQueryOptions.BigQueryType.UNSPECIFIED_TYPE.getNumber()
-        ) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(
-                    3,
-                    bqtype_
-                );
-        }
-        if (
-            sptype_ !=
-            tools.elide.model.SpannerOptions.SpannerType.UNSPECIFIED_TYPE.getNumber()
-        ) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(
-                    4,
-                    sptype_
-                );
-        }
-        if (repeated_ != false) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeBoolSize(
-                    5,
-                    repeated_
-                );
-        }
-        if (size_ != 0) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeUInt32Size(
-                    6,
-                    size_
-                );
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-            size +=
-                com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                    7,
-                    name_
-                );
-        }
-        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(id_)) {
-            size +=
-                com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                    8,
-                    id_
-                );
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof tools.elide.model.TableFieldOptions)) {
-            return super.equals(obj);
-        }
-        tools.elide.model.TableFieldOptions other = (tools.elide.model.TableFieldOptions) obj;
-
-        if (getRequire() != other.getRequire()) return false;
-        if (getIgnore() != other.getIgnore()) return false;
-        if (bqtype_ != other.bqtype_) return false;
-        if (sptype_ != other.sptype_) return false;
-        if (getRepeated() != other.getRepeated()) return false;
-        if (getSize() != other.getSize()) return false;
-        if (!getName().equals(other.getName())) return false;
-        if (!getId().equals(other.getId())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + REQUIRE_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getRequire());
-        hash = (37 * hash) + IGNORE_FIELD_NUMBER;
-        hash =
-            (53 * hash) + com.google.protobuf.Internal.hashBoolean(getIgnore());
-        hash = (37 * hash) + BQTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + bqtype_;
-        hash = (37 * hash) + SPTYPE_FIELD_NUMBER;
-        hash = (53 * hash) + sptype_;
-        hash = (37 * hash) + REPEATED_FIELD_NUMBER;
-        hash =
-            (53 * hash) +
-            com.google.protobuf.Internal.hashBoolean(getRepeated());
-        hash = (37 * hash) + SIZE_FIELD_NUMBER;
-        hash = (53 * hash) + getSize();
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
-        hash = (37 * hash) + ID_FIELD_NUMBER;
-        hash = (53 * hash) + getId().hashCode();
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        java.nio.ByteBuffer data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        com.google.protobuf.ByteString data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.model.TableFieldOptions parseDelimitedFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.TableFieldOptions parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        com.google.protobuf.CodedInputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.model.TableFieldOptions parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(
-        tools.elide.model.TableFieldOptions prototype
-    ) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder()
-            : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-    ) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
      * <pre>
-     * Specifies options specific to storing this field in a tabular-style data engine.
+     * Unique ID or path assigned to this field in a universally specified data model.
      * </pre>
      *
-     * Protobuf type {@code model.TableFieldOptions}
+     * <code>string id = 8;</code>
+     * @param value The id to set.
+     * @return This builder for chaining.
      */
-    public static final class Builder
-        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-        implements
-            // @@protoc_insertion_point(builder_implements:model.TableFieldOptions)
-            tools.elide.model.TableFieldOptionsOrBuilder {
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-            return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                tools.elide.model.TableFieldOptions.class,
-                tools.elide.model.TableFieldOptions.Builder.class
-            );
-        }
-
-        // Construct using tools.elide.model.TableFieldOptions.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-        ) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-            ) {}
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            require_ = false;
-
-            ignore_ = false;
-
-            bqtype_ = 0;
-
-            sptype_ = 0;
-
-            repeated_ = false;
-
-            size_ = 0;
-
-            name_ = "";
-
-            id_ = "";
-
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-            return tools.elide.model.Datamodel.internal_static_model_TableFieldOptions_descriptor;
-        }
-
-        @java.lang.Override
-        public tools.elide.model.TableFieldOptions getDefaultInstanceForType() {
-            return tools.elide.model.TableFieldOptions.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public tools.elide.model.TableFieldOptions build() {
-            tools.elide.model.TableFieldOptions result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.model.TableFieldOptions buildPartial() {
-            tools.elide.model.TableFieldOptions result = new tools.elide.model.TableFieldOptions(
-                this
-            );
-            result.require_ = require_;
-            result.ignore_ = ignore_;
-            result.bqtype_ = bqtype_;
-            result.sptype_ = sptype_;
-            result.repeated_ = repeated_;
-            result.size_ = size_;
-            result.name_ = name_;
-            result.id_ = id_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field
-        ) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof
-        ) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index,
-            java.lang.Object value
-        ) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof tools.elide.model.TableFieldOptions) {
-                return mergeFrom((tools.elide.model.TableFieldOptions) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(tools.elide.model.TableFieldOptions other) {
-            if (
-                other ==
-                tools.elide.model.TableFieldOptions.getDefaultInstance()
-            ) return this;
-            if (other.getRequire() != false) {
-                setRequire(other.getRequire());
-            }
-            if (other.getIgnore() != false) {
-                setIgnore(other.getIgnore());
-            }
-            if (other.bqtype_ != 0) {
-                setBqtypeValue(other.getBqtypeValue());
-            }
-            if (other.sptype_ != 0) {
-                setSptypeValue(other.getSptypeValue());
-            }
-            if (other.getRepeated() != false) {
-                setRepeated(other.getRepeated());
-            }
-            if (other.getSize() != 0) {
-                setSize(other.getSize());
-            }
-            if (!other.getName().isEmpty()) {
-                name_ = other.name_;
-                onChanged();
-            }
-            if (!other.getId().isEmpty()) {
-                id_ = other.id_;
-                onChanged();
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            tools.elide.model.TableFieldOptions parsedMessage = null;
-            try {
-                parsedMessage =
-                    PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage =
-                    (tools.elide.model.TableFieldOptions) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private boolean require_;
-
-        /**
-         * <pre>
-         * Marks this field as `REQUIRED` in tabular schemas.
-         * </pre>
-         *
-         * <code>bool require = 1;</code>
-         * @return The require.
-         */
-        @java.lang.Override
-        public boolean getRequire() {
-            return require_;
-        }
-
-        /**
-         * <pre>
-         * Marks this field as `REQUIRED` in tabular schemas.
-         * </pre>
-         *
-         * <code>bool require = 1;</code>
-         * @param value The require to set.
-         * @return This builder for chaining.
-         */
-        public Builder setRequire(boolean value) {
-            require_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Marks this field as `REQUIRED` in tabular schemas.
-         * </pre>
-         *
-         * <code>bool require = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearRequire() {
-            require_ = false;
-            onChanged();
-            return this;
-        }
-
-        private boolean ignore_;
-
-        /**
-         * <pre>
-         * Marks this field as ignored for serialization in tabular circumstances.
-         * </pre>
-         *
-         * <code>bool ignore = 2;</code>
-         * @return The ignore.
-         */
-        @java.lang.Override
-        public boolean getIgnore() {
-            return ignore_;
-        }
-
-        /**
-         * <pre>
-         * Marks this field as ignored for serialization in tabular circumstances.
-         * </pre>
-         *
-         * <code>bool ignore = 2;</code>
-         * @param value The ignore to set.
-         * @return This builder for chaining.
-         */
-        public Builder setIgnore(boolean value) {
-            ignore_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Marks this field as ignored for serialization in tabular circumstances.
-         * </pre>
-         *
-         * <code>bool ignore = 2;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearIgnore() {
-            ignore_ = false;
-            onChanged();
-            return this;
-        }
-
-        private int bqtype_ = 0;
-
-        /**
-         * <pre>
-         * Overrides the BigQuery type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
-         * @return The enum numeric value on the wire for bqtype.
-         */
-        @java.lang.Override
-        public int getBqtypeValue() {
-            return bqtype_;
-        }
-
-        /**
-         * <pre>
-         * Overrides the BigQuery type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
-         * @param value The enum numeric value on the wire for bqtype to set.
-         * @return This builder for chaining.
-         */
-        public Builder setBqtypeValue(int value) {
-            bqtype_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Overrides the BigQuery type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
-         * @return The bqtype.
-         */
-        @java.lang.Override
-        public tools.elide.model.BigQueryOptions.BigQueryType getBqtype() {
-            @SuppressWarnings("deprecation")
-            tools.elide.model.BigQueryOptions.BigQueryType result = tools.elide.model.BigQueryOptions.BigQueryType.valueOf(
-                bqtype_
-            );
-            return result == null
-                ? tools.elide.model.BigQueryOptions.BigQueryType.UNRECOGNIZED
-                : result;
-        }
-
-        /**
-         * <pre>
-         * Overrides the BigQuery type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
-         * @param value The bqtype to set.
-         * @return This builder for chaining.
-         */
-        public Builder setBqtype(
-            tools.elide.model.BigQueryOptions.BigQueryType value
-        ) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            bqtype_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Overrides the BigQuery type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearBqtype() {
-            bqtype_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private int sptype_ = 0;
-
-        /**
-         * <pre>
-         * Overrides the Spanner type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
-         * @return The enum numeric value on the wire for sptype.
-         */
-        @java.lang.Override
-        public int getSptypeValue() {
-            return sptype_;
-        }
-
-        /**
-         * <pre>
-         * Overrides the Spanner type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
-         * @param value The enum numeric value on the wire for sptype to set.
-         * @return This builder for chaining.
-         */
-        public Builder setSptypeValue(int value) {
-            sptype_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Overrides the Spanner type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
-         * @return The sptype.
-         */
-        @java.lang.Override
-        public tools.elide.model.SpannerOptions.SpannerType getSptype() {
-            @SuppressWarnings("deprecation")
-            tools.elide.model.SpannerOptions.SpannerType result = tools.elide.model.SpannerOptions.SpannerType.valueOf(
-                sptype_
-            );
-            return result == null
-                ? tools.elide.model.SpannerOptions.SpannerType.UNRECOGNIZED
-                : result;
-        }
-
-        /**
-         * <pre>
-         * Overrides the Spanner type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
-         * @param value The sptype to set.
-         * @return This builder for chaining.
-         */
-        public Builder setSptype(
-            tools.elide.model.SpannerOptions.SpannerType value
-        ) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            sptype_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Overrides the Spanner type associated with the exported form of this message field.
-         * </pre>
-         *
-         * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearSptype() {
-            sptype_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private boolean repeated_;
-
-        /**
-         * <pre>
-         * Converts this field into a `REPEATED`-mode field in BigQuery.
-         * </pre>
-         *
-         * <code>bool repeated = 5;</code>
-         * @return The repeated.
-         */
-        @java.lang.Override
-        public boolean getRepeated() {
-            return repeated_;
-        }
-
-        /**
-         * <pre>
-         * Converts this field into a `REPEATED`-mode field in BigQuery.
-         * </pre>
-         *
-         * <code>bool repeated = 5;</code>
-         * @param value The repeated to set.
-         * @return This builder for chaining.
-         */
-        public Builder setRepeated(boolean value) {
-            repeated_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Converts this field into a `REPEATED`-mode field in BigQuery.
-         * </pre>
-         *
-         * <code>bool repeated = 5;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearRepeated() {
-            repeated_ = false;
-            onChanged();
-            return this;
-        }
-
-        private int size_;
-
-        /**
-         * <pre>
-         * Size of the field. Pass `0` (the default) for maximum width.
-         * </pre>
-         *
-         * <code>uint32 size = 6;</code>
-         * @return The size.
-         */
-        @java.lang.Override
-        public int getSize() {
-            return size_;
-        }
-
-        /**
-         * <pre>
-         * Size of the field. Pass `0` (the default) for maximum width.
-         * </pre>
-         *
-         * <code>uint32 size = 6;</code>
-         * @param value The size to set.
-         * @return This builder for chaining.
-         */
-        public Builder setSize(int value) {
-            size_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Size of the field. Pass `0` (the default) for maximum width.
-         * </pre>
-         *
-         * <code>uint32 size = 6;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearSize() {
-            size_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object name_ = "";
-
-        /**
-         * <pre>
-         * Name of the field in columnar circumstances.
-         * </pre>
-         *
-         * <code>string name = 7;</code>
-         * @return The name.
-         */
-        public java.lang.String getName() {
-            java.lang.Object ref = name_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                name_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Name of the field in columnar circumstances.
-         * </pre>
-         *
-         * <code>string name = 7;</code>
-         * @return The bytes for name.
-         */
-        public com.google.protobuf.ByteString getNameBytes() {
-            java.lang.Object ref = name_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref
-                );
-                name_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Name of the field in columnar circumstances.
-         * </pre>
-         *
-         * <code>string name = 7;</code>
-         * @param value The name to set.
-         * @return This builder for chaining.
-         */
-        public Builder setName(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            name_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Name of the field in columnar circumstances.
-         * </pre>
-         *
-         * <code>string name = 7;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearName() {
-            name_ = getDefaultInstance().getName();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Name of the field in columnar circumstances.
-         * </pre>
-         *
-         * <code>string name = 7;</code>
-         * @param value The bytes for name to set.
-         * @return This builder for chaining.
-         */
-        public Builder setNameBytes(com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            name_ = value;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object id_ = "";
-
-        /**
-         * <pre>
-         * Unique ID or path assigned to this field in a universally specified data model.
-         * </pre>
-         *
-         * <code>string id = 8;</code>
-         * @return The id.
-         */
-        public java.lang.String getId() {
-            java.lang.Object ref = id_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                id_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Unique ID or path assigned to this field in a universally specified data model.
-         * </pre>
-         *
-         * <code>string id = 8;</code>
-         * @return The bytes for id.
-         */
-        public com.google.protobuf.ByteString getIdBytes() {
-            java.lang.Object ref = id_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref
-                );
-                id_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Unique ID or path assigned to this field in a universally specified data model.
-         * </pre>
-         *
-         * <code>string id = 8;</code>
-         * @param value The id to set.
-         * @return This builder for chaining.
-         */
-        public Builder setId(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            id_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Unique ID or path assigned to this field in a universally specified data model.
-         * </pre>
-         *
-         * <code>string id = 8;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearId() {
-            id_ = getDefaultInstance().getId();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Unique ID or path assigned to this field in a universally specified data model.
-         * </pre>
-         *
-         * <code>string id = 8;</code>
-         * @param value The bytes for id to set.
-         * @return This builder for chaining.
-         */
-        public Builder setIdBytes(com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-
-            id_ = value;
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-        // @@protoc_insertion_point(builder_scope:model.TableFieldOptions)
+    public Builder setId(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      id_ = value;
+      onChanged();
+      return this;
     }
-
-    // @@protoc_insertion_point(class_scope:model.TableFieldOptions)
-    private static final tools.elide.model.TableFieldOptions DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new tools.elide.model.TableFieldOptions();
+    /**
+     * <pre>
+     * Unique ID or path assigned to this field in a universally specified data model.
+     * </pre>
+     *
+     * <code>string id = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearId() {
+      
+      id_ = getDefaultInstance().getId();
+      onChanged();
+      return this;
     }
-
-    public static tools.elide.model.TableFieldOptions getDefaultInstance() {
-        return DEFAULT_INSTANCE;
+    /**
+     * <pre>
+     * Unique ID or path assigned to this field in a universally specified data model.
+     * </pre>
+     *
+     * <code>string id = 8;</code>
+     * @param value The bytes for id to set.
+     * @return This builder for chaining.
+     */
+    public Builder setIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      id_ = value;
+      onChanged();
+      return this;
     }
-
-    private static final com.google.protobuf.Parser<TableFieldOptions> PARSER = new com.google.protobuf.AbstractParser<TableFieldOptions>() {
-        @java.lang.Override
-        public TableFieldOptions parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return new TableFieldOptions(input, extensionRegistry);
-        }
-    };
-
-    public static com.google.protobuf.Parser<TableFieldOptions> parser() {
-        return PARSER;
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<TableFieldOptions> getParserForType() {
-        return PARSER;
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
+
+    // @@protoc_insertion_point(builder_scope:model.TableFieldOptions)
+  }
+
+  // @@protoc_insertion_point(class_scope:model.TableFieldOptions)
+  private static final tools.elide.model.TableFieldOptions DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new tools.elide.model.TableFieldOptions();
+  }
+
+  public static tools.elide.model.TableFieldOptions getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
+
+  private static final com.google.protobuf.Parser<TableFieldOptions>
+      PARSER = new com.google.protobuf.AbstractParser<TableFieldOptions>() {
     @java.lang.Override
-    public tools.elide.model.TableFieldOptions getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+    public TableFieldOptions parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new TableFieldOptions(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<TableFieldOptions> parser() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<TableFieldOptions> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public tools.elide.model.TableFieldOptions getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
+

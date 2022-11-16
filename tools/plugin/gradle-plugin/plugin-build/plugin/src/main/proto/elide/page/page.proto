@@ -60,8 +60,6 @@ import "elide/page/semantic.proto";
 // - *Styles*: Stylesheets and inline head-injected styles ("lifted styles").
 // - *Scripts*: Scripts to include, and inline head-injected logic ("lifted JS").
 message Context {
-  option (core.role) = WIRE;
-
   // Defines the structure of well-known page-level metadata, including the page title, description,
   // keywords, and so on.
   message Metadata {

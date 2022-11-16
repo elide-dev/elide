@@ -4,15 +4,15 @@
 package tools.elide.data;
 
 @kotlin.jvm.JvmName("-initializedataFingerprint")
-public inline fun dataFingerprint(block: tools.elide.data.DataFingerprintKt.Dsl.() -> kotlin.Unit): tools.elide.data.DataFingerprint =
+inline fun dataFingerprint(block: tools.elide.data.DataFingerprintKt.Dsl.() -> kotlin.Unit): tools.elide.data.DataFingerprint =
   tools.elide.data.DataFingerprintKt.Dsl._create(tools.elide.data.DataFingerprint.newBuilder()).apply { block() }._build()
-public object DataFingerprintKt {
+object DataFingerprintKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.data.DataFingerprint.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.data.DataFingerprint.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object DataFingerprintKt {
      *
      * <code>.crypto.HashAlgorithm hash = 1;</code>
      */
-    public var hash: tools.elide.crypto.HashAlgorithm
+     var hash: tools.elide.crypto.HashAlgorithm
       @JvmName("getHash")
       get() = _builder.getHash()
       @JvmName("setHash")
@@ -43,7 +43,7 @@ public object DataFingerprintKt {
      *
      * <code>.crypto.HashAlgorithm hash = 1;</code>
      */
-    public fun clearHash() {
+    fun clearHash() {
       _builder.clearHash()
     }
 
@@ -55,7 +55,7 @@ public object DataFingerprintKt {
      *
      * <code>bytes salt = 2;</code>
      */
-    public var salt: com.google.protobuf.ByteString
+    var salt: com.google.protobuf.ByteString
       @JvmName("getSalt")
       get() = _builder.getSalt()
       @JvmName("setSalt")
@@ -70,7 +70,7 @@ public object DataFingerprintKt {
      *
      * <code>bytes salt = 2;</code>
      */
-    public fun clearSalt() {
+    fun clearSalt() {
       _builder.clearSalt()
     }
 
@@ -81,7 +81,7 @@ public object DataFingerprintKt {
      *
      * <code>bytes fingerprint = 3;</code>
      */
-    public var fingerprint: com.google.protobuf.ByteString
+    var fingerprint: com.google.protobuf.ByteString
       @JvmName("getFingerprint")
       get() = _builder.getFingerprint()
       @JvmName("setFingerprint")
@@ -95,12 +95,12 @@ public object DataFingerprintKt {
      *
      * <code>bytes fingerprint = 3;</code>
      */
-    public fun clearFingerprint() {
+    fun clearFingerprint() {
       _builder.clearFingerprint()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.data.DataFingerprint.copy(block: tools.elide.data.DataFingerprintKt.Dsl.() -> kotlin.Unit): tools.elide.data.DataFingerprint =
+inline fun tools.elide.data.DataFingerprint.copy(block: tools.elide.data.DataFingerprintKt.Dsl.() -> kotlin.Unit): tools.elide.data.DataFingerprint =
   tools.elide.data.DataFingerprintKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

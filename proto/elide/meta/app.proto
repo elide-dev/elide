@@ -1,0 +1,120 @@
+/*
+ * Specifies Elide application configuration, which is embedded at build-time.
+ */
+syntax = "proto3";
+package meta;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_namespace = "Elide\\Meta";
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option ruby_package = "Elide::Meta";
+option java_package = "tools.elide.meta";
+option csharp_namespace = "Elide.Meta";
+
+import "google/protobuf/timestamp.proto";
+
+
+// Enumerates standard types of endpoints.
+enum EndpointType {
+  // Unspecified endpoint type.
+  ENDPOINT_TYPE_UNSPECIFIED = 0;
+
+  // Page endpoint type. Typically returns HTML and references assets.
+  PAGE = 1;
+
+  // Asset endpoint type. Typically used for CSS, JS, images.
+  ASSET = 2;
+
+  // API endpoint type. Typically returns JSON.
+  API = 3;
+}
+
+// Enumerates supported/known HTTP methods for app endpoints.
+enum EndpointMethods {
+  // HTTP GET.
+  GET = 0;
+
+  // HTTP POST.
+  POST = 1;
+
+  // HTTP PUT.
+  PUT = 2;
+
+  // HTTP PATCH.
+  PATCH = 3;
+
+  // HTTP DELETE.
+  DELETE = 5;
+}
+
+// Options which apply to a particular application endpoint.
+message EndpointOptions {
+  // Whether this endpoint requires stateful considerations.
+  bool stateful = 1;
+
+  // Whether this endpoint can be pre-compiled in an SSG context.
+  bool precompilable = 2;
+}
+
+// Specifies information about a single endpoint which is part of an application.
+message Endpoint {
+  // Tag generated for an endpoint.
+  string tag = 1;
+
+  // Name given to an endpoint, if applicable.
+  optional string name = 2;
+
+  // Type of endpoint detected or configured for this payload.
+  EndpointType type = 3;
+
+  // URL base for this endpoint (controller).
+  string base = 4;
+
+  // URL tail for this endpoint (method).
+  optional string tail = 5;
+
+  // Types accepted by this method.
+  repeated string consumes = 6;
+
+  // Types produced by this method.
+  repeated string produces = 7;
+
+  // HTTP methods supported by this endpoint.
+  repeated EndpointMethods method = 8;
+
+  // Options which apply to this endpoint.
+  EndpointOptions options = 9;
+}
+
+// Specifies build-time info which is enclosed in an application binary.
+message BuildInfo {
+  // Timestamp indicating when a build took place.
+  google.protobuf.Timestamp stamp = 1;
+}
+
+// Info regarding an Elide application.
+message AppInfo {
+  // Version string of the application.
+  string version = 1;
+
+  // Name of the application, if known.
+  optional string name = 2;
+
+  // Map of endpoint tags to their info payloads for this application.
+  map<string, Endpoint> endpoints = 3;
+}
+
+// Main application manifest for an app powered by Elide; carries info about the build that produced a given app binary,
+// and application configuration.
+message AppManifest {
+  // App info/configuration.
+  AppInfo app = 1;
+
+  // Build info/configuration.
+  BuildInfo build = 2;
+}

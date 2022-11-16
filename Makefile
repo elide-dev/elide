@@ -98,6 +98,15 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(GRADLE) test $(_ARGS)
 
+publish:  ## Publish a new version of all Elide packages.
+	$(info Publishing packages for version "$(VERSION)"...)
+	$(CMD)$(GRADLE) publish \
+		-Pversion=$(VERSION) \
+		-PbuildSamples=false \
+		-PbuildDocs=false \
+		-x jvmTest \
+		-x jsIrTest;
+
 clean:  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(POSIX_FLAGS) $(TARGET)

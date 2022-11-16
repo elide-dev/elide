@@ -3,126 +3,129 @@
 
 package tools.elide.base;
 
-public interface LanguageSpecOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:base.LanguageSpec)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * Enumerated language specifier.
-     * </pre>
-     *
-     * <code>.base.Language language = 1;</code>
-     * @return Whether the language field is set.
-     */
-    boolean hasLanguage();
-    /**
-     * <pre>
-     * Enumerated language specifier.
-     * </pre>
-     *
-     * <code>.base.Language language = 1;</code>
-     * @return The enum numeric value on the wire for language.
-     */
-    int getLanguageValue();
-    /**
-     * <pre>
-     * Enumerated language specifier.
-     * </pre>
-     *
-     * <code>.base.Language language = 1;</code>
-     * @return The language.
-     */
-    tools.elide.base.Language getLanguage();
+public interface LanguageSpecOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:base.LanguageSpec)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <pre>
-     * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
-     * matter but upper-casing should be preferred for consistency.
-     * </pre>
-     *
-     * <code>string iso_language = 2;</code>
-     * @return Whether the isoLanguage field is set.
-     */
-    boolean hasIsoLanguage();
-    /**
-     * <pre>
-     * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
-     * matter but upper-casing should be preferred for consistency.
-     * </pre>
-     *
-     * <code>string iso_language = 2;</code>
-     * @return The isoLanguage.
-     */
-    java.lang.String getIsoLanguage();
-    /**
-     * <pre>
-     * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
-     * matter but upper-casing should be preferred for consistency.
-     * </pre>
-     *
-     * <code>string iso_language = 2;</code>
-     * @return The bytes for isoLanguage.
-     */
-    com.google.protobuf.ByteString getIsoLanguageBytes();
+  /**
+   * <pre>
+   * Enumerated language specifier.
+   * </pre>
+   *
+   * <code>.base.Language language = 1;</code>
+   * @return Whether the language field is set.
+   */
+  boolean hasLanguage();
+  /**
+   * <pre>
+   * Enumerated language specifier.
+   * </pre>
+   *
+   * <code>.base.Language language = 1;</code>
+   * @return The enum numeric value on the wire for language.
+   */
+  int getLanguageValue();
+  /**
+   * <pre>
+   * Enumerated language specifier.
+   * </pre>
+   *
+   * <code>.base.Language language = 1;</code>
+   * @return The language.
+   */
+  tools.elide.base.Language getLanguage();
 
-    /**
-     * <pre>
-     * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
-     * </pre>
-     *
-     * <code>string iso_country = 3;</code>
-     * @return Whether the isoCountry field is set.
-     */
-    boolean hasIsoCountry();
-    /**
-     * <pre>
-     * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
-     * </pre>
-     *
-     * <code>string iso_country = 3;</code>
-     * @return The isoCountry.
-     */
-    java.lang.String getIsoCountry();
-    /**
-     * <pre>
-     * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
-     * </pre>
-     *
-     * <code>string iso_country = 3;</code>
-     * @return The bytes for isoCountry.
-     */
-    com.google.protobuf.ByteString getIsoCountryBytes();
+  /**
+   * <pre>
+   * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
+   * matter but upper-casing should be preferred for consistency.
+   * </pre>
+   *
+   * <code>string iso_language = 2;</code>
+   * @return Whether the isoLanguage field is set.
+   */
+  boolean hasIsoLanguage();
+  /**
+   * <pre>
+   * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
+   * matter but upper-casing should be preferred for consistency.
+   * </pre>
+   *
+   * <code>string iso_language = 2;</code>
+   * @return The isoLanguage.
+   */
+  java.lang.String getIsoLanguage();
+  /**
+   * <pre>
+   * Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
+   * matter but upper-casing should be preferred for consistency.
+   * </pre>
+   *
+   * <code>string iso_language = 2;</code>
+   * @return The bytes for isoLanguage.
+   */
+  com.google.protobuf.ByteString
+      getIsoLanguageBytes();
 
-    /**
-     * <pre>
-     * Dialect to specify as part of this language spec, based on a simple two-character string.
-     * </pre>
-     *
-     * <code>string dialect = 4;</code>
-     * @return Whether the dialect field is set.
-     */
-    boolean hasDialect();
-    /**
-     * <pre>
-     * Dialect to specify as part of this language spec, based on a simple two-character string.
-     * </pre>
-     *
-     * <code>string dialect = 4;</code>
-     * @return The dialect.
-     */
-    java.lang.String getDialect();
-    /**
-     * <pre>
-     * Dialect to specify as part of this language spec, based on a simple two-character string.
-     * </pre>
-     *
-     * <code>string dialect = 4;</code>
-     * @return The bytes for dialect.
-     */
-    com.google.protobuf.ByteString getDialectBytes();
+  /**
+   * <pre>
+   * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
+   * </pre>
+   *
+   * <code>string iso_country = 3;</code>
+   * @return Whether the isoCountry field is set.
+   */
+  boolean hasIsoCountry();
+  /**
+   * <pre>
+   * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
+   * </pre>
+   *
+   * <code>string iso_country = 3;</code>
+   * @return The isoCountry.
+   */
+  java.lang.String getIsoCountry();
+  /**
+   * <pre>
+   * Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
+   * </pre>
+   *
+   * <code>string iso_country = 3;</code>
+   * @return The bytes for isoCountry.
+   */
+  com.google.protobuf.ByteString
+      getIsoCountryBytes();
 
-    public tools.elide.base.LanguageSpec.SelectionCase getSelectionCase();
+  /**
+   * <pre>
+   * Dialect to specify as part of this language spec, based on a simple two-character string.
+   * </pre>
+   *
+   * <code>string dialect = 4;</code>
+   * @return Whether the dialect field is set.
+   */
+  boolean hasDialect();
+  /**
+   * <pre>
+   * Dialect to specify as part of this language spec, based on a simple two-character string.
+   * </pre>
+   *
+   * <code>string dialect = 4;</code>
+   * @return The dialect.
+   */
+  java.lang.String getDialect();
+  /**
+   * <pre>
+   * Dialect to specify as part of this language spec, based on a simple two-character string.
+   * </pre>
+   *
+   * <code>string dialect = 4;</code>
+   * @return The bytes for dialect.
+   */
+  com.google.protobuf.ByteString
+      getDialectBytes();
 
-    public tools.elide.base.LanguageSpec.ModifierCase getModifierCase();
+  public tools.elide.base.LanguageSpec.SelectionCase getSelectionCase();
+
+  public tools.elide.base.LanguageSpec.ModifierCase getModifierCase();
 }

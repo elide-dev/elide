@@ -4,15 +4,15 @@
 package tools.elide.page;
 
 @kotlin.jvm.JvmName("-initializesemanticMetadata")
-public inline fun semanticMetadata(block: tools.elide.page.SemanticMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.SemanticMetadata =
+inline fun semanticMetadata(block: tools.elide.page.SemanticMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.SemanticMetadata =
   tools.elide.page.SemanticMetadataKt.Dsl._create(tools.elide.page.SemanticMetadata.newBuilder()).apply { block() }._build()
-public object SemanticMetadataKt {
+object SemanticMetadataKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.page.SemanticMetadata.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.page.SemanticMetadata.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object SemanticMetadataKt {
      *
      * <code>.page.Kind kind = 1;</code>
      */
-    public var kind: tools.elide.page.Kind
+     var kind: tools.elide.page.Kind
       @JvmName("getKind")
       get() = _builder.getKind()
       @JvmName("setKind")
@@ -43,7 +43,7 @@ public object SemanticMetadataKt {
      *
      * <code>.page.Kind kind = 1;</code>
      */
-    public fun clearKind() {
+    fun clearKind() {
       _builder.clearKind()
     }
 
@@ -52,7 +52,7 @@ public object SemanticMetadataKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class FormatProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class FormatProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -60,7 +60,7 @@ public object SemanticMetadataKt {
      *
      * <code>repeated .page.Format format = 2;</code>
      */
-     public val format: com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>
+     val format: com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getFormatList()
@@ -75,7 +75,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addFormat")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.add(value: tools.elide.page.Format) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.add(value: tools.elide.page.Format) {
       _builder.addFormat(value)
     }/**
      * <pre>
@@ -88,7 +88,7 @@ public object SemanticMetadataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignFormat")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.plusAssign(value: tools.elide.page.Format) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.plusAssign(value: tools.elide.page.Format) {
       add(value)
     }/**
      * <pre>
@@ -100,7 +100,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllFormat")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Format>) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Format>) {
       _builder.addAllFormat(values)
     }/**
      * <pre>
@@ -113,7 +113,7 @@ public object SemanticMetadataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllFormat")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Format>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Format>) {
       addAll(values)
     }/**
      * <pre>
@@ -126,7 +126,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setFormat")
-    public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.set(index: kotlin.Int, value: tools.elide.page.Format) {
+    operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.set(index: kotlin.Int, value: tools.elide.page.Format) {
       _builder.setFormat(index, value)
     }/**
      * <pre>
@@ -137,7 +137,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearFormat")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Format, FormatProxy>.clear() {
       _builder.clearFormat()
     }
     /**
@@ -145,7 +145,7 @@ public object SemanticMetadataKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class MediaProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class MediaProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Describes page-level semantic media.
@@ -153,7 +153,7 @@ public object SemanticMetadataKt {
      *
      * <code>repeated .page.MediaAsset media = 3;</code>
      */
-     public val media: com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>
+     val media: com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getMediaList()
@@ -168,7 +168,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addMedia")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.add(value: tools.elide.page.MediaAsset) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.add(value: tools.elide.page.MediaAsset) {
       _builder.addMedia(value)
     }
     /**
@@ -182,7 +182,7 @@ public object SemanticMetadataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignMedia")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.plusAssign(value: tools.elide.page.MediaAsset) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.plusAssign(value: tools.elide.page.MediaAsset) {
       add(value)
     }
     /**
@@ -195,7 +195,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllMedia")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.MediaAsset>) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.MediaAsset>) {
       _builder.addAllMedia(values)
     }
     /**
@@ -209,7 +209,7 @@ public object SemanticMetadataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllMedia")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.MediaAsset>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.MediaAsset>) {
       addAll(values)
     }
     /**
@@ -223,7 +223,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setMedia")
-    public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.set(index: kotlin.Int, value: tools.elide.page.MediaAsset) {
+    operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.set(index: kotlin.Int, value: tools.elide.page.MediaAsset) {
       _builder.setMedia(index, value)
     }
     /**
@@ -235,7 +235,7 @@ public object SemanticMetadataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearMedia")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.MediaAsset, MediaProxy>.clear() {
       _builder.clearMedia()
     }
 
@@ -247,7 +247,7 @@ public object SemanticMetadataKt {
      *
      * <code>string content = 4;</code>
      */
-    public var content: kotlin.String
+    var content: kotlin.String
       @JvmName("getContent")
       get() = _builder.getContent()
       @JvmName("setContent")
@@ -261,7 +261,7 @@ public object SemanticMetadataKt {
      *
      * <code>string content = 4;</code>
      */
-    public fun clearContent() {
+    fun clearContent() {
       _builder.clearContent()
     }
     /**
@@ -272,19 +272,19 @@ public object SemanticMetadataKt {
      * <code>string content = 4;</code>
      * @return Whether the content field is set.
      */
-    public fun hasContent(): kotlin.Boolean {
+    fun hasContent(): kotlin.Boolean {
       return _builder.hasContent()
     }
-    public val payloadCase: tools.elide.page.SemanticMetadata.PayloadCase
+    val payloadCase: tools.elide.page.SemanticMetadata.PayloadCase
       @JvmName("getPayloadCase")
       get() = _builder.getPayloadCase()
 
-    public fun clearPayload() {
+    fun clearPayload() {
       _builder.clearPayload()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.SemanticMetadata.copy(block: tools.elide.page.SemanticMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.SemanticMetadata =
+inline fun tools.elide.page.SemanticMetadata.copy(block: tools.elide.page.SemanticMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.SemanticMetadata =
   tools.elide.page.SemanticMetadataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

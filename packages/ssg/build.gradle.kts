@@ -10,7 +10,7 @@ plugins {
 }
 
 dependencies {
-  api(platform(project(":packages:bom")))
+  api(platform(project(":packages:platform")))
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
   implementation(libs.picocli)

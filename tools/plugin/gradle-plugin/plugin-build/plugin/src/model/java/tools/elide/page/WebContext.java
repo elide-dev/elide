@@ -4,563 +4,442 @@
 package tools.elide.page;
 
 public final class WebContext {
+  private WebContext() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistryLite registry) {
+  }
 
-    private WebContext() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+        (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Metadata_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Metadata_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Metadata_OpenGraph_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Metadata_OpenGraph_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Metadata_Twitter_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Metadata_Twitter_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_PageLink_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_PageLink_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_AppManifest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_AppManifest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_AppManifest_Icon_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_AppManifest_Icon_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_AppManifest_RelatedApplication_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_AppManifest_RelatedApplication_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Styles_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Styles_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Styles_Stylesheet_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Styles_Stylesheet_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Fonts_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Fonts_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Fonts_FontReference_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Fonts_FontReference_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Fonts_FontPackage_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Fonts_FontPackage_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Scripts_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Scripts_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Scripts_JavaScript_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Scripts_JavaScript_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_DynamicETag_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_DynamicETag_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_RDFPrefix_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_RDFPrefix_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_Cookie_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_Cookie_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_ClientHints_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_ClientHints_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_page_Context_ResponseHeader_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_page_Context_ResponseHeader_fieldAccessorTable;
 
-    public static void registerAllExtensions(
-        com.google.protobuf.ExtensionRegistryLite registry
-    ) {}
+  public static com.google.protobuf.Descriptors.FileDescriptor
+      getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
+  static {
+    java.lang.String[] descriptorData = {
+      "\n\025elide/page/page.proto\022\004page\032\036google/pr" +
+      "otobuf/duration.proto\032\037google/protobuf/t" +
+      "imestamp.proto\032\035webutil/html/types/html." +
+      "proto\032\025elide/data/data.proto\032\027elide/mode" +
+      "l/model.proto\032\031elide/base/language.proto" +
+      "\032\031elide/page/semantic.proto\"\266-\n\007Context\022" +
+      "$\n\004meta\030\001 \001(\0132\026.page.Context.Metadata\022$\n" +
+      "\006styles\030\002 \001(\0132\024.page.Context.Styles\022\"\n\005f" +
+      "onts\030\003 \001(\0132\023.page.Context.Fonts\022&\n\007scrip" +
+      "ts\030\004 \001(\0132\025.page.Context.Scripts\022+\n\010manif" +
+      "est\030\005 \001(\0132\031.page.Context.AppManifest\022\'\n\004" +
+      "etag\030\006 \001(\0132\031.page.Context.DynamicETag\022$\n" +
+      "\006cookie\030\010 \003(\0132\024.page.Context.Cookie\022,\n\006h" +
+      "eader\030\t \003(\0132\034.page.Context.ResponseHeade" +
+      "r\022\014\n\004vary\030\n \003(\t\022\020\n\010language\030\013 \001(\t\022(\n\005hin" +
+      "ts\030\014 \001(\0132\031.page.Context.ClientHints\022\026\n\016f" +
+      "eature_policy\030\r \003(\t\0223\n\016framing_policy\030\017 " +
+      "\001(\0162\033.page.Context.FramingPolicy\022\034\n\024cont" +
+      "ent_type_nosniff\030\020 \001(\010\022?\n\ncdn_prefix\030\021 \001" +
+      "(\0132+.webutil.html.types.TrustedResourceU" +
+      "rlProto\022\024\n\014dns_prefetch\030\022 \003(\t\022\022\n\npreconn" +
+      "ect\030\023 \003(\t\022\026\n\016xss_protection\030\024 \001(\t\0225\n\017ref" +
+      "errer_policy\030\025 \001(\0162\034.page.Context.Referr" +
+      "erPolicy\032\267\t\n\010Metadata\022\r\n\005title\030\001 \001(\t\022\023\n\013" +
+      "description\030\002 \001(\t\022\017\n\007keyword\030\003 \003(\t\022(\n\010se" +
+      "mantic\030\004 \001(\0132\026.page.SemanticMetadata\022\020\n\010" +
+      "viewport\030\005 \001(\t\022=\n\010manifest\030\006 \001(\0132+.webut" +
+      "il.html.types.TrustedResourceUrlProto\022\r\n" +
+      "\005theme\030\007 \001(\t\022\022\n\ntouch_icon\030\010 \001(\t\022\025\n\rstar" +
+      "tup_image\030\t \001(\t\022$\n\004link\030\n \003(\0132\026.page.Con" +
+      "text.PageLink\022$\n\010language\030\013 \001(\0132\022.base.L" +
+      "anguageSpec\022\016\n\006gtm_id\030\014 \001(\t\022\021\n\tfb_app_id" +
+      "\030\r \001(\t\0224\n\nopen_graph\030\016 \001(\0132 .page.Contex" +
+      "t.Metadata.OpenGraph\022\016\n\006robots\030\017 \001(\t\022\024\n\014" +
+      "color_scheme\030\020 \001(\t\022\'\n\006prefix\030\021 \003(\0132\027.pag" +
+      "e.Context.RDFPrefix\022\021\n\tgooglebot\030\022 \001(\t\022\016" +
+      "\n\006rating\030\023 \001(\t\022\030\n\020delegate_package\030\024 \001(\t" +
+      "\032\355\003\n\tOpenGraph\022\021\n\tsite_name\030\001 \001(\t\022\r\n\005tit" +
+      "le\030\002 \001(\t\022\023\n\013description\030\003 \001(\t\022\"\n\006locale\030" +
+      "\004 \001(\0132\022.base.LanguageSpec\022\014\n\004type\030\005 \001(\t\022" +
+      "\013\n\003url\030\006 \001(\t\022/\n\007twitter\030\010 \001(\0132\036.page.Con" +
+      "text.Metadata.Twitter\022\021\n\tcanonical\030\014 \001(\t" +
+      "\022\016\n\006fb_app\030\r \001(\t\022>\n\005image\030\016 \003(\0132/.page.C" +
+      "ontext.Metadata.OpenGraph.OpenGraphImage" +
+      "\022>\n\005video\030\017 \003(\0132/.page.Context.Metadata." +
+      "OpenGraph.OpenGraphVideo\032J\n\016OpenGraphIma" +
+      "ge\022\013\n\003uri\030\001 \001(\t\022\r\n\005width\030\002 \001(\r\022\016\n\006height" +
+      "\030\003 \001(\r\022\014\n\004type\030\004 \001(\t\032J\n\016OpenGraphVideo\022\013" +
+      "\n\003uri\030\001 \001(\t\022\r\n\005width\030\002 \001(\r\022\016\n\006height\030\003 \001" +
+      "(\r\022\014\n\004type\030\004 \001(\t\032\237\001\n\007Twitter\022\021\n\tsite_nam" +
+      "e\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\023\n\013description\030\003 " +
+      "\001(\t\022\"\n\006locale\030\004 \001(\0132\022.base.LanguageSpec\022" +
+      "\014\n\004card\030\005 \001(\t\022\r\n\005image\030\006 \001(\t\022\013\n\003url\030\007 \001(" +
+      "\t\022\017\n\007creator\030\010 \001(\t\032f\n\010PageLink\022\021\n\treleva" +
+      "nce\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\0229\n\004href\030\003 \001(\0132+." +
+      "webutil.html.types.TrustedResourceUrlPro" +
+      "to\032\341\007\n\013AppManifest\022\014\n\004name\030\001 \001(\t\022\022\n\nshor" +
+      "t_name\030\002 \001(\t\022\021\n\tstart_url\030\003 \001(\t\0226\n\007displ" +
+      "ay\030\004 \001(\0162%.page.Context.AppManifest.Disp" +
+      "layMode\022\030\n\020background_color\030\005 \001(\t\022\023\n\013des" +
+      "cription\030\006 \001(\t\022\021\n\tdirection\030\007 \001(\t\022$\n\010lan" +
+      "guage\030\010 \001(\0132\022.base.LanguageSpec\022>\n\013orien" +
+      "tation\030\t \001(\0162).page.Context.AppManifest." +
+      "OrientationMode\022\r\n\005scope\030\013 \001(\t\022#\n\033prefer" +
+      "_related_applications\030\014 \001(\010\022I\n\023related_a" +
+      "pplication\030\r \003(\0132,.page.Context.AppManif" +
+      "est.RelatedApplication\0220\n\010app_icon\030\016 \003(\013" +
+      "2\036.page.Context.AppManifest.Icon\032a\n\004Icon" +
+      "\0228\n\003src\030\001 \001(\0132+.webutil.html.types.Trust" +
+      "edResourceUrlProto\022\014\n\004size\030\002 \003(\r\022\021\n\tmime" +
+      "_type\030\003 \001(\t\032\371\001\n\022RelatedApplication\022\n\n\002id" +
+      "\030\001 \001(\t\022J\n\010platform\030\002 \001(\01628.page.Context." +
+      "AppManifest.RelatedApplication.AppPlatfo" +
+      "rm\0228\n\003uri\030\003 \001(\0132+.webutil.html.types.Tru" +
+      "stedResourceUrlProto\"Q\n\013AppPlatform\022\034\n\030U" +
+      "NSPECIFIED_APP_PLATFORM\020\000\022\014\n\010APPSTORE\020\001\022" +
+      "\r\n\tPLAYSTORE\020\002\022\007\n\003WEB\020\003\"J\n\013DisplayMode\022\013" +
+      "\n\007BROWSER\020\000\022\016\n\nFULLSCREEN\020\001\022\016\n\nSTANDALON" +
+      "E\020\002\022\016\n\nMINIMAL_UI\020\003\"a\n\017OrientationMode\022\033" +
+      "\n\027UNSPECIFIED_ORIENTATION\020\000\022\007\n\003ANY\020\001\022\013\n\007" +
+      "NATURAL\020\002\022\r\n\tLANDSCAPE\020\003\022\014\n\010PORTRAIT\020\004\032\200" +
+      "\002\n\006Styles\0222\n\006lifted\030\001 \001(\0132\".webutil.html" +
+      ".types.SafeStyleProto\022-\n\004link\030\002 \003(\0132\037.pa" +
+      "ge.Context.Styles.Stylesheet\032\222\001\n\nStylesh" +
+      "eet\0228\n\003uri\030\001 \001(\0132+.webutil.html.types.Tr" +
+      "ustedResourceUrlProto\022\n\n\002id\030\002 \001(\t\022\r\n\005med" +
+      "ia\030\003 \001(\t\022\020\n\010prefetch\030\007 \001(\010\022\017\n\007preload\030\010 " +
+      "\001(\010\022\014\n\004push\030\t \001(\010\032\322\004\n\005Fonts\0220\n\007package\030\001" +
+      " \003(\0132\037.page.Context.Fonts.FontPackage\032\216\002" +
+      "\n\rFontReference\0223\n\004type\030\001 \001(\0162%.page.Con" +
+      "text.Fonts.FontReferenceType\022.\n\006format\030\002" +
+      " \001(\0162\036.page.Context.Fonts.FontFormat\022\014\n\004" +
+      "name\030\003 \001(\t\022\016\n\006weight\030\004 \001(\t\022\017\n\007variant\030\005 " +
+      "\001(\t\0228\n\003uri\030\006 \001(\0132+.webutil.html.types.Tr" +
+      "ustedResourceUrlProto\022\020\n\010prefetch\030\007 \001(\010\022" +
+      "\017\n\007preload\030\010 \001(\010\022\014\n\004push\030\t \001(\010\032Q\n\013FontPa" +
+      "ckage\022\014\n\004name\030\001 \001(\t\0224\n\treference\030\002 \003(\0132!" +
+      ".page.Context.Fonts.FontReference\"3\n\021Fon" +
+      "tReferenceType\022\014\n\010INTERNAL\020\000\022\020\n\014GOOGLE_F" +
+      "ONTS\020\001\"~\n\nFontFormat\022\026\n\022UNSPECIFIED_FORM" +
+      "AT\020\000\022\014\n\010OPENTYPE\020\001\022\014\n\010TRUETYPE\020\002\022\n\n\006VECT" +
+      "OR\020\003\022\013\n\007WEBFONT\020\004\022\014\n\010WEBFONT2\020\005\022\025\n\021EMBED" +
+      "DED_OPENTYPE\020\006\032\265\002\n\007Scripts\0223\n\006lifted\030\001 \001" +
+      "(\0132#.webutil.html.types.SafeScriptProto\022" +
+      ".\n\004link\030\002 \003(\0132 .page.Context.Scripts.Jav" +
+      "aScript\032\304\001\n\nJavaScript\0228\n\003uri\030\001 \001(\0132+.we" +
+      "butil.html.types.TrustedResourceUrlProto" +
+      "\022\n\n\002id\030\002 \001(\t\022\r\n\005defer\030\003 \001(\010\022\r\n\005async\030\004 \001" +
+      "(\010\022\016\n\006module\030\005 \001(\010\022\021\n\tno_module\030\006 \001(\010\022\020\n" +
+      "\010prefetch\030\007 \001(\010\022\017\n\007preload\030\010 \001(\010\022\014\n\004push" +
+      "\030\t \001(\010\032\200\001\n\013DynamicETag\022\017\n\007enabled\030\001 \001(\010\022" +
+      "\016\n\006strong\030\002 \001(\010\022\'\n\010preimage\030\003 \001(\0132\025.data" +
+      ".DataFingerprint\022\'\n\010response\030\004 \001(\0132\025.dat" +
+      "a.DataFingerprint\032+\n\tRDFPrefix\022\016\n\006prefix" +
+      "\030\001 \001(\t\022\016\n\006target\030\002 \001(\t\032\223\003\n\006Cookie\022\014\n\004nam" +
+      "e\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\022\016\n\006domain\030\003 \001(\t\022\014" +
+      "\n\004path\030\004 \001(\t\022\032\n\020immediate_expire\030\005 \001(\010H\000" +
+      "\0225\n\017absolute_expire\030\006 \001(\0132\032.google.proto" +
+      "buf.TimestampH\000\0224\n\017relative_expire\030\007 \001(\013" +
+      "2\031.google.protobuf.DurationH\000\022\023\n\tno_expi" +
+      "re\030\010 \001(\010H\000\022\021\n\thttp_only\030\t \001(\010\022\016\n\006secure\030" +
+      "\n \001(\010\0226\n\tsame_site\030\013 \001(\0162#.page.Context." +
+      "Cookie.SameSitePolicy\">\n\016SameSitePolicy\022" +
+      "\027\n\023NO_SAME_SITE_POLICY\020\000\022\007\n\003LAX\020\001\022\n\n\006STR" +
+      "ICT\020\002B\025\n\023expiration_strategy\032\322\002\n\013ClientH" +
+      "ints\022+\n\tsupported\030\001 \003(\0162\030.page.Context.C" +
+      "lientHint\022+\n\tindicated\030\002 \003(\0162\030.page.Cont" +
+      "ext.ClientHint\022\020\n\010lifetime\030\003 \001(\004\022\r\n\005widt" +
+      "h\030\004 \001(\r\022\026\n\016viewport_width\030\005 \001(\r\022\032\n\022devic" +
+      "e_pixel_ratio\030\006 \001(\r\022\027\n\017round_trip_time\030\007" +
+      " \001(\r\022\020\n\010downlink\030\010 \001(\002\022?\n\031effective_conn" +
+      "ection_type\030\t \001(\0162\034.page.Context.Connect" +
+      "ionHint\022\021\n\tsave_data\030\n \001(\010\022\025\n\rdevice_mem" +
+      "ory\030\013 \001(\002\032<\n\016ResponseHeader\022\014\n\004name\030\001 \001(" +
+      "\t\022\r\n\005value\030\003 \001(\t\022\r\n\005force\030\004 \001(\010\"\217\001\n\nClie" +
+      "ntHint\022\027\n\023UNKNOWN_CLIENT_HINT\020\000\022\007\n\003DPR\020\001" +
+      "\022\007\n\003ECT\020\002\022\007\n\003RTT\020\003\022\014\n\010DOWNLINK\020\004\022\021\n\rDEVI" +
+      "CE_MEMORY\020\005\022\r\n\tSAVE_DATA\020\006\022\t\n\005WIDTH\020\007\022\022\n" +
+      "\016VIEWPORT_WIDTH\020\010\"\\\n\016ConnectionHint\022\033\n\027U" +
+      "NKNOWN_CONNECTION_HINT\020\000\022\014\n\010SLOW_TWO\020\001\022\010" +
+      "\n\004SLOW\020\002\022\013\n\007TYPICAL\020\003\022\010\n\004FAST\020\004\"w\n\031Cross" +
+      "OriginResourcePolicy\022(\n$DEFAULT_CROSS_OR" +
+      "IGIN_RESOURCE_POLICY\020\000\022\r\n\tSAME_SITE\020\001\022\017\n" +
+      "\013SAME_ORIGIN\020\002\022\020\n\014CROSS_ORIGIN\020\003\"E\n\rFram" +
+      "ingPolicy\022\032\n\026DEFAULT_FRAMING_POLICY\020\000\022\016\n" +
+      "\nSAMEORIGIN\020\001\022\010\n\004DENY\020\002\"\332\001\n\016ReferrerPoli" +
+      "cy\022\033\n\027DEFAULT_REFERRER_POLICY\020\000\022\017\n\013NO_RE" +
+      "FERRER\020\001\022\036\n\032NO_REFERRER_WHEN_DOWNGRADE\020\002" +
+      "\022\n\n\006ORIGIN\020\003\022\034\n\030ORIGIN_WHEN_CROSS_ORIGIN" +
+      "\020\004\022\010\n\004SAME\020\005\022\021\n\rSTRICT_ORIGIN\020\007\022#\n\037STRIC" +
+      "T_ORIGIN_WHEN_CROSS_ORIGIN\020\010\022\016\n\nUNSAFE_U" +
+      "RL\020\tB\202\001\n\020tools.elide.pageB\nWebContextH\001P" +
+      "\001Z!github.com/elide-tools/elide/page\330\001\001\370" +
+      "\001\001\242\002\003ELD\252\002\nElide.Page\272\002\005Elide\302\002\003ELD\312\002\005El" +
+      "ide\352\002\013Elide::Pageb\006proto3"
+    };
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.DurationProto.getDescriptor(),
+          com.google.protobuf.TimestampProto.getDescriptor(),
+          com.google.common.html.types.Html.getDescriptor(),
+          tools.elide.data.Data.getDescriptor(),
+          tools.elide.model.Datamodel.getDescriptor(),
+          tools.elide.base.BaseLanguage.getDescriptor(),
+          tools.elide.page.WebSemantics.getDescriptor(),
+        });
+    internal_static_page_Context_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_page_Context_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_descriptor,
+        new java.lang.String[] { "Meta", "Styles", "Fonts", "Scripts", "Manifest", "Etag", "Cookie", "Header", "Vary", "Language", "Hints", "FeaturePolicy", "FramingPolicy", "ContentTypeNosniff", "CdnPrefix", "DnsPrefetch", "Preconnect", "XssProtection", "ReferrerPolicy", });
+    internal_static_page_Context_Metadata_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Metadata_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Metadata_descriptor,
+        new java.lang.String[] { "Title", "Description", "Keyword", "Semantic", "Viewport", "Manifest", "Theme", "TouchIcon", "StartupImage", "Link", "Language", "GtmId", "FbAppId", "OpenGraph", "Robots", "ColorScheme", "Prefix", "Googlebot", "Rating", "DelegatePackage", });
+    internal_static_page_Context_Metadata_OpenGraph_descriptor =
+      internal_static_page_Context_Metadata_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Metadata_OpenGraph_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Metadata_OpenGraph_descriptor,
+        new java.lang.String[] { "SiteName", "Title", "Description", "Locale", "Type", "Url", "Twitter", "Canonical", "FbApp", "Image", "Video", });
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor =
+      internal_static_page_Context_Metadata_OpenGraph_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor,
+        new java.lang.String[] { "Uri", "Width", "Height", "Type", });
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor =
+      internal_static_page_Context_Metadata_OpenGraph_descriptor.getNestedTypes().get(1);
+    internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor,
+        new java.lang.String[] { "Uri", "Width", "Height", "Type", });
+    internal_static_page_Context_Metadata_Twitter_descriptor =
+      internal_static_page_Context_Metadata_descriptor.getNestedTypes().get(1);
+    internal_static_page_Context_Metadata_Twitter_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Metadata_Twitter_descriptor,
+        new java.lang.String[] { "SiteName", "Title", "Description", "Locale", "Card", "Image", "Url", "Creator", });
+    internal_static_page_Context_PageLink_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(1);
+    internal_static_page_Context_PageLink_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_PageLink_descriptor,
+        new java.lang.String[] { "Relevance", "Type", "Href", });
+    internal_static_page_Context_AppManifest_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(2);
+    internal_static_page_Context_AppManifest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_AppManifest_descriptor,
+        new java.lang.String[] { "Name", "ShortName", "StartUrl", "Display", "BackgroundColor", "Description", "Direction", "Language", "Orientation", "Scope", "PreferRelatedApplications", "RelatedApplication", "AppIcon", });
+    internal_static_page_Context_AppManifest_Icon_descriptor =
+      internal_static_page_Context_AppManifest_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_AppManifest_Icon_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_AppManifest_Icon_descriptor,
+        new java.lang.String[] { "Src", "Size", "MimeType", });
+    internal_static_page_Context_AppManifest_RelatedApplication_descriptor =
+      internal_static_page_Context_AppManifest_descriptor.getNestedTypes().get(1);
+    internal_static_page_Context_AppManifest_RelatedApplication_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_AppManifest_RelatedApplication_descriptor,
+        new java.lang.String[] { "Id", "Platform", "Uri", });
+    internal_static_page_Context_Styles_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(3);
+    internal_static_page_Context_Styles_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Styles_descriptor,
+        new java.lang.String[] { "Lifted", "Link", });
+    internal_static_page_Context_Styles_Stylesheet_descriptor =
+      internal_static_page_Context_Styles_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Styles_Stylesheet_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Styles_Stylesheet_descriptor,
+        new java.lang.String[] { "Uri", "Id", "Media", "Prefetch", "Preload", "Push", });
+    internal_static_page_Context_Fonts_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(4);
+    internal_static_page_Context_Fonts_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Fonts_descriptor,
+        new java.lang.String[] { "Package", });
+    internal_static_page_Context_Fonts_FontReference_descriptor =
+      internal_static_page_Context_Fonts_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Fonts_FontReference_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Fonts_FontReference_descriptor,
+        new java.lang.String[] { "Type", "Format", "Name", "Weight", "Variant", "Uri", "Prefetch", "Preload", "Push", });
+    internal_static_page_Context_Fonts_FontPackage_descriptor =
+      internal_static_page_Context_Fonts_descriptor.getNestedTypes().get(1);
+    internal_static_page_Context_Fonts_FontPackage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Fonts_FontPackage_descriptor,
+        new java.lang.String[] { "Name", "Reference", });
+    internal_static_page_Context_Scripts_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(5);
+    internal_static_page_Context_Scripts_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Scripts_descriptor,
+        new java.lang.String[] { "Lifted", "Link", });
+    internal_static_page_Context_Scripts_JavaScript_descriptor =
+      internal_static_page_Context_Scripts_descriptor.getNestedTypes().get(0);
+    internal_static_page_Context_Scripts_JavaScript_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Scripts_JavaScript_descriptor,
+        new java.lang.String[] { "Uri", "Id", "Defer", "Async", "Module", "NoModule", "Prefetch", "Preload", "Push", });
+    internal_static_page_Context_DynamicETag_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(6);
+    internal_static_page_Context_DynamicETag_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_DynamicETag_descriptor,
+        new java.lang.String[] { "Enabled", "Strong", "Preimage", "Response", });
+    internal_static_page_Context_RDFPrefix_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(7);
+    internal_static_page_Context_RDFPrefix_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_RDFPrefix_descriptor,
+        new java.lang.String[] { "Prefix", "Target", });
+    internal_static_page_Context_Cookie_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(8);
+    internal_static_page_Context_Cookie_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_Cookie_descriptor,
+        new java.lang.String[] { "Name", "Value", "Domain", "Path", "ImmediateExpire", "AbsoluteExpire", "RelativeExpire", "NoExpire", "HttpOnly", "Secure", "SameSite", "ExpirationStrategy", });
+    internal_static_page_Context_ClientHints_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(9);
+    internal_static_page_Context_ClientHints_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_ClientHints_descriptor,
+        new java.lang.String[] { "Supported", "Indicated", "Lifetime", "Width", "ViewportWidth", "DevicePixelRatio", "RoundTripTime", "Downlink", "EffectiveConnectionType", "SaveData", "DeviceMemory", });
+    internal_static_page_Context_ResponseHeader_descriptor =
+      internal_static_page_Context_descriptor.getNestedTypes().get(10);
+    internal_static_page_Context_ResponseHeader_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_page_Context_ResponseHeader_descriptor,
+        new java.lang.String[] { "Name", "Value", "Force", });
+    com.google.protobuf.DurationProto.getDescriptor();
+    com.google.protobuf.TimestampProto.getDescriptor();
+    com.google.common.html.types.Html.getDescriptor();
+    tools.elide.data.Data.getDescriptor();
+    tools.elide.model.Datamodel.getDescriptor();
+    tools.elide.base.BaseLanguage.getDescriptor();
+    tools.elide.page.WebSemantics.getDescriptor();
+  }
 
-    public static void registerAllExtensions(
-        com.google.protobuf.ExtensionRegistry registry
-    ) {
-        registerAllExtensions(
-            (com.google.protobuf.ExtensionRegistryLite) registry
-        );
-    }
-
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Metadata_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Metadata_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Metadata_OpenGraph_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Metadata_OpenGraph_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Metadata_Twitter_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Metadata_Twitter_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_PageLink_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_PageLink_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_AppManifest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_AppManifest_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_AppManifest_Icon_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_AppManifest_Icon_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_AppManifest_RelatedApplication_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_AppManifest_RelatedApplication_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Styles_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Styles_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Styles_Stylesheet_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Styles_Stylesheet_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Fonts_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Fonts_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Fonts_FontReference_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Fonts_FontReference_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Fonts_FontPackage_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Fonts_FontPackage_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Scripts_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Scripts_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Scripts_JavaScript_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Scripts_JavaScript_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_DynamicETag_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_DynamicETag_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_RDFPrefix_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_RDFPrefix_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_Cookie_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_Cookie_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_ClientHints_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_ClientHints_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_page_Context_ResponseHeader_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_page_Context_ResponseHeader_fieldAccessorTable;
-
-    public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
-        return descriptor;
-    }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
-    static {
-        java.lang.String[] descriptorData = {
-            "\n\025elide/page/page.proto\022\004page\032\036google/pr" +
-            "otobuf/duration.proto\032\037google/protobuf/t" +
-            "imestamp.proto\032\035webutil/html/types/html." +
-            "proto\032\025elide/data/data.proto\032\027elide/mode" +
-            "l/model.proto\032\031elide/base/language.proto" +
-            "\032\031elide/page/semantic.proto\"\274-\n\007Context\022" +
-            "$\n\004meta\030\001 \001(\0132\026.page.Context.Metadata\022$\n" +
-            "\006styles\030\002 \001(\0132\024.page.Context.Styles\022\"\n\005f" +
-            "onts\030\003 \001(\0132\023.page.Context.Fonts\022&\n\007scrip" +
-            "ts\030\004 \001(\0132\025.page.Context.Scripts\022+\n\010manif" +
-            "est\030\005 \001(\0132\031.page.Context.AppManifest\022\'\n\004" +
-            "etag\030\006 \001(\0132\031.page.Context.DynamicETag\022$\n" +
-            "\006cookie\030\010 \003(\0132\024.page.Context.Cookie\022,\n\006h" +
-            "eader\030\t \003(\0132\034.page.Context.ResponseHeade" +
-            "r\022\014\n\004vary\030\n \003(\t\022\020\n\010language\030\013 \001(\t\022(\n\005hin" +
-            "ts\030\014 \001(\0132\031.page.Context.ClientHints\022\026\n\016f" +
-            "eature_policy\030\r \003(\t\0223\n\016framing_policy\030\017 " +
-            "\001(\0162\033.page.Context.FramingPolicy\022\034\n\024cont" +
-            "ent_type_nosniff\030\020 \001(\010\022?\n\ncdn_prefix\030\021 \001" +
-            "(\0132+.webutil.html.types.TrustedResourceU" +
-            "rlProto\022\024\n\014dns_prefetch\030\022 \003(\t\022\022\n\npreconn" +
-            "ect\030\023 \003(\t\022\026\n\016xss_protection\030\024 \001(\t\0225\n\017ref" +
-            "errer_policy\030\025 \001(\0162\034.page.Context.Referr" +
-            "erPolicy\032\267\t\n\010Metadata\022\r\n\005title\030\001 \001(\t\022\023\n\013" +
-            "description\030\002 \001(\t\022\017\n\007keyword\030\003 \003(\t\022(\n\010se" +
-            "mantic\030\004 \001(\0132\026.page.SemanticMetadata\022\020\n\010" +
-            "viewport\030\005 \001(\t\022=\n\010manifest\030\006 \001(\0132+.webut" +
-            "il.html.types.TrustedResourceUrlProto\022\r\n" +
-            "\005theme\030\007 \001(\t\022\022\n\ntouch_icon\030\010 \001(\t\022\025\n\rstar" +
-            "tup_image\030\t \001(\t\022$\n\004link\030\n \003(\0132\026.page.Con" +
-            "text.PageLink\022$\n\010language\030\013 \001(\0132\022.base.L" +
-            "anguageSpec\022\016\n\006gtm_id\030\014 \001(\t\022\021\n\tfb_app_id" +
-            "\030\r \001(\t\0224\n\nopen_graph\030\016 \001(\0132 .page.Contex" +
-            "t.Metadata.OpenGraph\022\016\n\006robots\030\017 \001(\t\022\024\n\014" +
-            "color_scheme\030\020 \001(\t\022\'\n\006prefix\030\021 \003(\0132\027.pag" +
-            "e.Context.RDFPrefix\022\021\n\tgooglebot\030\022 \001(\t\022\016" +
-            "\n\006rating\030\023 \001(\t\022\030\n\020delegate_package\030\024 \001(\t" +
-            "\032\355\003\n\tOpenGraph\022\021\n\tsite_name\030\001 \001(\t\022\r\n\005tit" +
-            "le\030\002 \001(\t\022\023\n\013description\030\003 \001(\t\022\"\n\006locale\030" +
-            "\004 \001(\0132\022.base.LanguageSpec\022\014\n\004type\030\005 \001(\t\022" +
-            "\013\n\003url\030\006 \001(\t\022/\n\007twitter\030\010 \001(\0132\036.page.Con" +
-            "text.Metadata.Twitter\022\021\n\tcanonical\030\014 \001(\t" +
-            "\022\016\n\006fb_app\030\r \001(\t\022>\n\005image\030\016 \003(\0132/.page.C" +
-            "ontext.Metadata.OpenGraph.OpenGraphImage" +
-            "\022>\n\005video\030\017 \003(\0132/.page.Context.Metadata." +
-            "OpenGraph.OpenGraphVideo\032J\n\016OpenGraphIma" +
-            "ge\022\013\n\003uri\030\001 \001(\t\022\r\n\005width\030\002 \001(\r\022\016\n\006height" +
-            "\030\003 \001(\r\022\014\n\004type\030\004 \001(\t\032J\n\016OpenGraphVideo\022\013" +
-            "\n\003uri\030\001 \001(\t\022\r\n\005width\030\002 \001(\r\022\016\n\006height\030\003 \001" +
-            "(\r\022\014\n\004type\030\004 \001(\t\032\237\001\n\007Twitter\022\021\n\tsite_nam" +
-            "e\030\001 \001(\t\022\r\n\005title\030\002 \001(\t\022\023\n\013description\030\003 " +
-            "\001(\t\022\"\n\006locale\030\004 \001(\0132\022.base.LanguageSpec\022" +
-            "\014\n\004card\030\005 \001(\t\022\r\n\005image\030\006 \001(\t\022\013\n\003url\030\007 \001(" +
-            "\t\022\017\n\007creator\030\010 \001(\t\032f\n\010PageLink\022\021\n\treleva" +
-            "nce\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\0229\n\004href\030\003 \001(\0132+." +
-            "webutil.html.types.TrustedResourceUrlPro" +
-            "to\032\341\007\n\013AppManifest\022\014\n\004name\030\001 \001(\t\022\022\n\nshor" +
-            "t_name\030\002 \001(\t\022\021\n\tstart_url\030\003 \001(\t\0226\n\007displ" +
-            "ay\030\004 \001(\0162%.page.Context.AppManifest.Disp" +
-            "layMode\022\030\n\020background_color\030\005 \001(\t\022\023\n\013des" +
-            "cription\030\006 \001(\t\022\021\n\tdirection\030\007 \001(\t\022$\n\010lan" +
-            "guage\030\010 \001(\0132\022.base.LanguageSpec\022>\n\013orien" +
-            "tation\030\t \001(\0162).page.Context.AppManifest." +
-            "OrientationMode\022\r\n\005scope\030\013 \001(\t\022#\n\033prefer" +
-            "_related_applications\030\014 \001(\010\022I\n\023related_a" +
-            "pplication\030\r \003(\0132,.page.Context.AppManif" +
-            "est.RelatedApplication\0220\n\010app_icon\030\016 \003(\013" +
-            "2\036.page.Context.AppManifest.Icon\032a\n\004Icon" +
-            "\0228\n\003src\030\001 \001(\0132+.webutil.html.types.Trust" +
-            "edResourceUrlProto\022\014\n\004size\030\002 \003(\r\022\021\n\tmime" +
-            "_type\030\003 \001(\t\032\371\001\n\022RelatedApplication\022\n\n\002id" +
-            "\030\001 \001(\t\022J\n\010platform\030\002 \001(\01628.page.Context." +
-            "AppManifest.RelatedApplication.AppPlatfo" +
-            "rm\0228\n\003uri\030\003 \001(\0132+.webutil.html.types.Tru" +
-            "stedResourceUrlProto\"Q\n\013AppPlatform\022\034\n\030U" +
-            "NSPECIFIED_APP_PLATFORM\020\000\022\014\n\010APPSTORE\020\001\022" +
-            "\r\n\tPLAYSTORE\020\002\022\007\n\003WEB\020\003\"J\n\013DisplayMode\022\013" +
-            "\n\007BROWSER\020\000\022\016\n\nFULLSCREEN\020\001\022\016\n\nSTANDALON" +
-            "E\020\002\022\016\n\nMINIMAL_UI\020\003\"a\n\017OrientationMode\022\033" +
-            "\n\027UNSPECIFIED_ORIENTATION\020\000\022\007\n\003ANY\020\001\022\013\n\007" +
-            "NATURAL\020\002\022\r\n\tLANDSCAPE\020\003\022\014\n\010PORTRAIT\020\004\032\200" +
-            "\002\n\006Styles\0222\n\006lifted\030\001 \001(\0132\".webutil.html" +
-            ".types.SafeStyleProto\022-\n\004link\030\002 \003(\0132\037.pa" +
-            "ge.Context.Styles.Stylesheet\032\222\001\n\nStylesh" +
-            "eet\0228\n\003uri\030\001 \001(\0132+.webutil.html.types.Tr" +
-            "ustedResourceUrlProto\022\n\n\002id\030\002 \001(\t\022\r\n\005med" +
-            "ia\030\003 \001(\t\022\020\n\010prefetch\030\007 \001(\010\022\017\n\007preload\030\010 " +
-            "\001(\010\022\014\n\004push\030\t \001(\010\032\322\004\n\005Fonts\0220\n\007package\030\001" +
-            " \003(\0132\037.page.Context.Fonts.FontPackage\032\216\002" +
-            "\n\rFontReference\0223\n\004type\030\001 \001(\0162%.page.Con" +
-            "text.Fonts.FontReferenceType\022.\n\006format\030\002" +
-            " \001(\0162\036.page.Context.Fonts.FontFormat\022\014\n\004" +
-            "name\030\003 \001(\t\022\016\n\006weight\030\004 \001(\t\022\017\n\007variant\030\005 " +
-            "\001(\t\0228\n\003uri\030\006 \001(\0132+.webutil.html.types.Tr" +
-            "ustedResourceUrlProto\022\020\n\010prefetch\030\007 \001(\010\022" +
-            "\017\n\007preload\030\010 \001(\010\022\014\n\004push\030\t \001(\010\032Q\n\013FontPa" +
-            "ckage\022\014\n\004name\030\001 \001(\t\0224\n\treference\030\002 \003(\0132!" +
-            ".page.Context.Fonts.FontReference\"3\n\021Fon" +
-            "tReferenceType\022\014\n\010INTERNAL\020\000\022\020\n\014GOOGLE_F" +
-            "ONTS\020\001\"~\n\nFontFormat\022\026\n\022UNSPECIFIED_FORM" +
-            "AT\020\000\022\014\n\010OPENTYPE\020\001\022\014\n\010TRUETYPE\020\002\022\n\n\006VECT" +
-            "OR\020\003\022\013\n\007WEBFONT\020\004\022\014\n\010WEBFONT2\020\005\022\025\n\021EMBED" +
-            "DED_OPENTYPE\020\006\032\265\002\n\007Scripts\0223\n\006lifted\030\001 \001" +
-            "(\0132#.webutil.html.types.SafeScriptProto\022" +
-            ".\n\004link\030\002 \003(\0132 .page.Context.Scripts.Jav" +
-            "aScript\032\304\001\n\nJavaScript\0228\n\003uri\030\001 \001(\0132+.we" +
-            "butil.html.types.TrustedResourceUrlProto" +
-            "\022\n\n\002id\030\002 \001(\t\022\r\n\005defer\030\003 \001(\010\022\r\n\005async\030\004 \001" +
-            "(\010\022\016\n\006module\030\005 \001(\010\022\021\n\tno_module\030\006 \001(\010\022\020\n" +
-            "\010prefetch\030\007 \001(\010\022\017\n\007preload\030\010 \001(\010\022\014\n\004push" +
-            "\030\t \001(\010\032\200\001\n\013DynamicETag\022\017\n\007enabled\030\001 \001(\010\022" +
-            "\016\n\006strong\030\002 \001(\010\022\'\n\010preimage\030\003 \001(\0132\025.data" +
-            ".DataFingerprint\022\'\n\010response\030\004 \001(\0132\025.dat" +
-            "a.DataFingerprint\032+\n\tRDFPrefix\022\016\n\006prefix" +
-            "\030\001 \001(\t\022\016\n\006target\030\002 \001(\t\032\223\003\n\006Cookie\022\014\n\004nam" +
-            "e\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\022\016\n\006domain\030\003 \001(\t\022\014" +
-            "\n\004path\030\004 \001(\t\022\032\n\020immediate_expire\030\005 \001(\010H\000" +
-            "\0225\n\017absolute_expire\030\006 \001(\0132\032.google.proto" +
-            "buf.TimestampH\000\0224\n\017relative_expire\030\007 \001(\013" +
-            "2\031.google.protobuf.DurationH\000\022\023\n\tno_expi" +
-            "re\030\010 \001(\010H\000\022\021\n\thttp_only\030\t \001(\010\022\016\n\006secure\030" +
-            "\n \001(\010\0226\n\tsame_site\030\013 \001(\0162#.page.Context." +
-            "Cookie.SameSitePolicy\">\n\016SameSitePolicy\022" +
-            "\027\n\023NO_SAME_SITE_POLICY\020\000\022\007\n\003LAX\020\001\022\n\n\006STR" +
-            "ICT\020\002B\025\n\023expiration_strategy\032\322\002\n\013ClientH" +
-            "ints\022+\n\tsupported\030\001 \003(\0162\030.page.Context.C" +
-            "lientHint\022+\n\tindicated\030\002 \003(\0162\030.page.Cont" +
-            "ext.ClientHint\022\020\n\010lifetime\030\003 \001(\004\022\r\n\005widt" +
-            "h\030\004 \001(\r\022\026\n\016viewport_width\030\005 \001(\r\022\032\n\022devic" +
-            "e_pixel_ratio\030\006 \001(\r\022\027\n\017round_trip_time\030\007" +
-            " \001(\r\022\020\n\010downlink\030\010 \001(\002\022?\n\031effective_conn" +
-            "ection_type\030\t \001(\0162\034.page.Context.Connect" +
-            "ionHint\022\021\n\tsave_data\030\n \001(\010\022\025\n\rdevice_mem" +
-            "ory\030\013 \001(\002\032<\n\016ResponseHeader\022\014\n\004name\030\001 \001(" +
-            "\t\022\r\n\005value\030\003 \001(\t\022\r\n\005force\030\004 \001(\010\"\217\001\n\nClie" +
-            "ntHint\022\027\n\023UNKNOWN_CLIENT_HINT\020\000\022\007\n\003DPR\020\001" +
-            "\022\007\n\003ECT\020\002\022\007\n\003RTT\020\003\022\014\n\010DOWNLINK\020\004\022\021\n\rDEVI" +
-            "CE_MEMORY\020\005\022\r\n\tSAVE_DATA\020\006\022\t\n\005WIDTH\020\007\022\022\n" +
-            "\016VIEWPORT_WIDTH\020\010\"\\\n\016ConnectionHint\022\033\n\027U" +
-            "NKNOWN_CONNECTION_HINT\020\000\022\014\n\010SLOW_TWO\020\001\022\010" +
-            "\n\004SLOW\020\002\022\013\n\007TYPICAL\020\003\022\010\n\004FAST\020\004\"w\n\031Cross" +
-            "OriginResourcePolicy\022(\n$DEFAULT_CROSS_OR" +
-            "IGIN_RESOURCE_POLICY\020\000\022\r\n\tSAME_SITE\020\001\022\017\n" +
-            "\013SAME_ORIGIN\020\002\022\020\n\014CROSS_ORIGIN\020\003\"E\n\rFram" +
-            "ingPolicy\022\032\n\026DEFAULT_FRAMING_POLICY\020\000\022\016\n" +
-            "\nSAMEORIGIN\020\001\022\010\n\004DENY\020\002\"\332\001\n\016ReferrerPoli" +
-            "cy\022\033\n\027DEFAULT_REFERRER_POLICY\020\000\022\017\n\013NO_RE" +
-            "FERRER\020\001\022\036\n\032NO_REFERRER_WHEN_DOWNGRADE\020\002" +
-            "\022\n\n\006ORIGIN\020\003\022\034\n\030ORIGIN_WHEN_CROSS_ORIGIN" +
-            "\020\004\022\010\n\004SAME\020\005\022\021\n\rSTRICT_ORIGIN\020\007\022#\n\037STRIC" +
-            "T_ORIGIN_WHEN_CROSS_ORIGIN\020\010\022\016\n\nUNSAFE_U" +
-            "RL\020\t:\004\200\367\002\004B\202\001\n\020tools.elide.pageB\nWebCont" +
-            "extH\001P\001Z!github.com/elide-tools/elide/pa" +
-            "ge\330\001\001\370\001\001\242\002\003ELD\252\002\nElide.Page\272\002\005Elide\302\002\003EL" +
-            "D\312\002\005Elide\352\002\013Elide::Pageb\006proto3",
-        };
-        descriptor =
-            com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
-                descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[] {
-                    com.google.protobuf.DurationProto.getDescriptor(),
-                    com.google.protobuf.TimestampProto.getDescriptor(),
-                    com.google.common.html.types.Html.getDescriptor(),
-                    tools.elide.data.Data.getDescriptor(),
-                    tools.elide.model.Datamodel.getDescriptor(),
-                    tools.elide.base.BaseLanguage.getDescriptor(),
-                    tools.elide.page.WebSemantics.getDescriptor(),
-                }
-            );
-        internal_static_page_Context_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-        internal_static_page_Context_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_descriptor,
-                new java.lang.String[] {
-                    "Meta",
-                    "Styles",
-                    "Fonts",
-                    "Scripts",
-                    "Manifest",
-                    "Etag",
-                    "Cookie",
-                    "Header",
-                    "Vary",
-                    "Language",
-                    "Hints",
-                    "FeaturePolicy",
-                    "FramingPolicy",
-                    "ContentTypeNosniff",
-                    "CdnPrefix",
-                    "DnsPrefetch",
-                    "Preconnect",
-                    "XssProtection",
-                    "ReferrerPolicy",
-                }
-            );
-        internal_static_page_Context_Metadata_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(0);
-        internal_static_page_Context_Metadata_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Metadata_descriptor,
-                new java.lang.String[] {
-                    "Title",
-                    "Description",
-                    "Keyword",
-                    "Semantic",
-                    "Viewport",
-                    "Manifest",
-                    "Theme",
-                    "TouchIcon",
-                    "StartupImage",
-                    "Link",
-                    "Language",
-                    "GtmId",
-                    "FbAppId",
-                    "OpenGraph",
-                    "Robots",
-                    "ColorScheme",
-                    "Prefix",
-                    "Googlebot",
-                    "Rating",
-                    "DelegatePackage",
-                }
-            );
-        internal_static_page_Context_Metadata_OpenGraph_descriptor =
-            internal_static_page_Context_Metadata_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_Metadata_OpenGraph_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Metadata_OpenGraph_descriptor,
-                new java.lang.String[] {
-                    "SiteName",
-                    "Title",
-                    "Description",
-                    "Locale",
-                    "Type",
-                    "Url",
-                    "Twitter",
-                    "Canonical",
-                    "FbApp",
-                    "Image",
-                    "Video",
-                }
-            );
-        internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor =
-            internal_static_page_Context_Metadata_OpenGraph_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Metadata_OpenGraph_OpenGraphImage_descriptor,
-                new java.lang.String[] { "Uri", "Width", "Height", "Type" }
-            );
-        internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor =
-            internal_static_page_Context_Metadata_OpenGraph_descriptor
-                .getNestedTypes()
-                .get(1);
-        internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Metadata_OpenGraph_OpenGraphVideo_descriptor,
-                new java.lang.String[] { "Uri", "Width", "Height", "Type" }
-            );
-        internal_static_page_Context_Metadata_Twitter_descriptor =
-            internal_static_page_Context_Metadata_descriptor
-                .getNestedTypes()
-                .get(1);
-        internal_static_page_Context_Metadata_Twitter_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Metadata_Twitter_descriptor,
-                new java.lang.String[] {
-                    "SiteName",
-                    "Title",
-                    "Description",
-                    "Locale",
-                    "Card",
-                    "Image",
-                    "Url",
-                    "Creator",
-                }
-            );
-        internal_static_page_Context_PageLink_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(1);
-        internal_static_page_Context_PageLink_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_PageLink_descriptor,
-                new java.lang.String[] { "Relevance", "Type", "Href" }
-            );
-        internal_static_page_Context_AppManifest_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(2);
-        internal_static_page_Context_AppManifest_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_AppManifest_descriptor,
-                new java.lang.String[] {
-                    "Name",
-                    "ShortName",
-                    "StartUrl",
-                    "Display",
-                    "BackgroundColor",
-                    "Description",
-                    "Direction",
-                    "Language",
-                    "Orientation",
-                    "Scope",
-                    "PreferRelatedApplications",
-                    "RelatedApplication",
-                    "AppIcon",
-                }
-            );
-        internal_static_page_Context_AppManifest_Icon_descriptor =
-            internal_static_page_Context_AppManifest_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_AppManifest_Icon_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_AppManifest_Icon_descriptor,
-                new java.lang.String[] { "Src", "Size", "MimeType" }
-            );
-        internal_static_page_Context_AppManifest_RelatedApplication_descriptor =
-            internal_static_page_Context_AppManifest_descriptor
-                .getNestedTypes()
-                .get(1);
-        internal_static_page_Context_AppManifest_RelatedApplication_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_AppManifest_RelatedApplication_descriptor,
-                new java.lang.String[] { "Id", "Platform", "Uri" }
-            );
-        internal_static_page_Context_Styles_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(3);
-        internal_static_page_Context_Styles_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Styles_descriptor,
-                new java.lang.String[] { "Lifted", "Link" }
-            );
-        internal_static_page_Context_Styles_Stylesheet_descriptor =
-            internal_static_page_Context_Styles_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_Styles_Stylesheet_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Styles_Stylesheet_descriptor,
-                new java.lang.String[] {
-                    "Uri",
-                    "Id",
-                    "Media",
-                    "Prefetch",
-                    "Preload",
-                    "Push",
-                }
-            );
-        internal_static_page_Context_Fonts_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(4);
-        internal_static_page_Context_Fonts_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Fonts_descriptor,
-                new java.lang.String[] { "Package" }
-            );
-        internal_static_page_Context_Fonts_FontReference_descriptor =
-            internal_static_page_Context_Fonts_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_Fonts_FontReference_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Fonts_FontReference_descriptor,
-                new java.lang.String[] {
-                    "Type",
-                    "Format",
-                    "Name",
-                    "Weight",
-                    "Variant",
-                    "Uri",
-                    "Prefetch",
-                    "Preload",
-                    "Push",
-                }
-            );
-        internal_static_page_Context_Fonts_FontPackage_descriptor =
-            internal_static_page_Context_Fonts_descriptor
-                .getNestedTypes()
-                .get(1);
-        internal_static_page_Context_Fonts_FontPackage_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Fonts_FontPackage_descriptor,
-                new java.lang.String[] { "Name", "Reference" }
-            );
-        internal_static_page_Context_Scripts_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(5);
-        internal_static_page_Context_Scripts_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Scripts_descriptor,
-                new java.lang.String[] { "Lifted", "Link" }
-            );
-        internal_static_page_Context_Scripts_JavaScript_descriptor =
-            internal_static_page_Context_Scripts_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_page_Context_Scripts_JavaScript_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Scripts_JavaScript_descriptor,
-                new java.lang.String[] {
-                    "Uri",
-                    "Id",
-                    "Defer",
-                    "Async",
-                    "Module",
-                    "NoModule",
-                    "Prefetch",
-                    "Preload",
-                    "Push",
-                }
-            );
-        internal_static_page_Context_DynamicETag_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(6);
-        internal_static_page_Context_DynamicETag_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_DynamicETag_descriptor,
-                new java.lang.String[] {
-                    "Enabled",
-                    "Strong",
-                    "Preimage",
-                    "Response",
-                }
-            );
-        internal_static_page_Context_RDFPrefix_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(7);
-        internal_static_page_Context_RDFPrefix_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_RDFPrefix_descriptor,
-                new java.lang.String[] { "Prefix", "Target" }
-            );
-        internal_static_page_Context_Cookie_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(8);
-        internal_static_page_Context_Cookie_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_Cookie_descriptor,
-                new java.lang.String[] {
-                    "Name",
-                    "Value",
-                    "Domain",
-                    "Path",
-                    "ImmediateExpire",
-                    "AbsoluteExpire",
-                    "RelativeExpire",
-                    "NoExpire",
-                    "HttpOnly",
-                    "Secure",
-                    "SameSite",
-                    "ExpirationStrategy",
-                }
-            );
-        internal_static_page_Context_ClientHints_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(9);
-        internal_static_page_Context_ClientHints_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_ClientHints_descriptor,
-                new java.lang.String[] {
-                    "Supported",
-                    "Indicated",
-                    "Lifetime",
-                    "Width",
-                    "ViewportWidth",
-                    "DevicePixelRatio",
-                    "RoundTripTime",
-                    "Downlink",
-                    "EffectiveConnectionType",
-                    "SaveData",
-                    "DeviceMemory",
-                }
-            );
-        internal_static_page_Context_ResponseHeader_descriptor =
-            internal_static_page_Context_descriptor.getNestedTypes().get(10);
-        internal_static_page_Context_ResponseHeader_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_page_Context_ResponseHeader_descriptor,
-                new java.lang.String[] { "Name", "Value", "Force" }
-            );
-        com.google.protobuf.ExtensionRegistry registry = com.google.protobuf.ExtensionRegistry.newInstance();
-        registry.add(tools.elide.model.Datamodel.role);
-        com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
-            descriptor,
-            registry
-        );
-        com.google.protobuf.DurationProto.getDescriptor();
-        com.google.protobuf.TimestampProto.getDescriptor();
-        com.google.common.html.types.Html.getDescriptor();
-        tools.elide.data.Data.getDescriptor();
-        tools.elide.model.Datamodel.getDescriptor();
-        tools.elide.base.BaseLanguage.getDescriptor();
-        tools.elide.page.WebSemantics.getDescriptor();
-    }
-    // @@protoc_insertion_point(outer_class_scope)
+  // @@protoc_insertion_point(outer_class_scope)
 }

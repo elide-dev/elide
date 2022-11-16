@@ -4,85 +4,74 @@
 package tools.elide.struct;
 
 public final class Bloom {
+  private Bloom() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistryLite registry) {
+  }
 
-    private Bloom() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+        (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_struct_BloomFilter_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_struct_BloomFilter_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_struct_BloomFilter_FilterLayer_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable;
 
-    public static void registerAllExtensions(
-        com.google.protobuf.ExtensionRegistryLite registry
-    ) {}
+  public static com.google.protobuf.Descriptors.FileDescriptor
+      getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
+  static {
+    java.lang.String[] descriptorData = {
+      "\n\030elide/struct/bloom.proto\022\006struct\032\031elid" +
+      "e/crypto/crypto.proto\032\027elide/model/model" +
+      ".proto\"\311\001\n\013BloomFilter\022(\n\talgorithm\030\001 \001(" +
+      "\0162\025.crypto.HashAlgorithm\022\016\n\006rounds\030\002 \001(\r" +
+      "\022\r\n\005count\030\003 \001(\004\022\r\n\005limit\030\004 \001(\004\022.\n\005layer\030" +
+      "\005 \003(\0132\037.struct.BloomFilter.FilterLayer\032," +
+      "\n\013FilterLayer\022\016\n\006bitset\030\002 \003(\006\022\r\n\005count\030\004" +
+      " \003(\004:\004\200\367\002\004B\214\001\n\022tools.elide.structH\001P\001Z*g" +
+      "ithub.com/elide-tools/elide/struct;struc" +
+      "t\330\001\001\370\001\001\242\002\003ELD\252\002\014Elide.Struct\272\002\005Elide\302\002\003E" +
+      "LD\312\002\014Elide\\Struct\352\002\rElide::Structb\006proto" +
+      "3"
+    };
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+          tools.elide.crypto.Crypto.getDescriptor(),
+          tools.elide.model.Datamodel.getDescriptor(),
+        });
+    internal_static_struct_BloomFilter_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_struct_BloomFilter_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_struct_BloomFilter_descriptor,
+        new java.lang.String[] { "Algorithm", "Rounds", "Count", "Limit", "Layer", });
+    internal_static_struct_BloomFilter_FilterLayer_descriptor =
+      internal_static_struct_BloomFilter_descriptor.getNestedTypes().get(0);
+    internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_struct_BloomFilter_FilterLayer_descriptor,
+        new java.lang.String[] { "Bitset", "Count", });
+    com.google.protobuf.ExtensionRegistry registry =
+        com.google.protobuf.ExtensionRegistry.newInstance();
+    registry.add(tools.elide.model.Datamodel.role);
+    com.google.protobuf.Descriptors.FileDescriptor
+        .internalUpdateFileDescriptor(descriptor, registry);
+    tools.elide.crypto.Crypto.getDescriptor();
+    tools.elide.model.Datamodel.getDescriptor();
+  }
 
-    public static void registerAllExtensions(
-        com.google.protobuf.ExtensionRegistry registry
-    ) {
-        registerAllExtensions(
-            (com.google.protobuf.ExtensionRegistryLite) registry
-        );
-    }
-
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_struct_BloomFilter_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_struct_BloomFilter_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_struct_BloomFilter_FilterLayer_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable;
-
-    public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
-        return descriptor;
-    }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
-    static {
-        java.lang.String[] descriptorData = {
-            "\n\030elide/struct/bloom.proto\022\006struct\032\031elid" +
-            "e/crypto/crypto.proto\032\027elide/model/model" +
-            ".proto\"\311\001\n\013BloomFilter\022(\n\talgorithm\030\001 \001(" +
-            "\0162\025.crypto.HashAlgorithm\022\016\n\006rounds\030\002 \001(\r" +
-            "\022\r\n\005count\030\003 \001(\004\022\r\n\005limit\030\004 \001(\004\022.\n\005layer\030" +
-            "\005 \003(\0132\037.struct.BloomFilter.FilterLayer\032," +
-            "\n\013FilterLayer\022\016\n\006bitset\030\002 \003(\006\022\r\n\005count\030\004" +
-            " \003(\004:\004\200\367\002\004B\214\001\n\022tools.elide.structH\001P\001Z*g" +
-            "ithub.com/elide-tools/elide/struct;struc" +
-            "t\330\001\001\370\001\001\242\002\003ELD\252\002\014Elide.Struct\272\002\005Elide\302\002\003E" +
-            "LD\312\002\014Elide\\Struct\352\002\rElide::Structb\006proto" +
-            "3",
-        };
-        descriptor =
-            com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
-                descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[] {
-                    tools.elide.crypto.Crypto.getDescriptor(),
-                    tools.elide.model.Datamodel.getDescriptor(),
-                }
-            );
-        internal_static_struct_BloomFilter_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-        internal_static_struct_BloomFilter_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_struct_BloomFilter_descriptor,
-                new java.lang.String[] {
-                    "Algorithm",
-                    "Rounds",
-                    "Count",
-                    "Limit",
-                    "Layer",
-                }
-            );
-        internal_static_struct_BloomFilter_FilterLayer_descriptor =
-            internal_static_struct_BloomFilter_descriptor
-                .getNestedTypes()
-                .get(0);
-        internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable =
-            new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                internal_static_struct_BloomFilter_FilterLayer_descriptor,
-                new java.lang.String[] { "Bitset", "Count" }
-            );
-        com.google.protobuf.ExtensionRegistry registry = com.google.protobuf.ExtensionRegistry.newInstance();
-        registry.add(tools.elide.model.Datamodel.role);
-        com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
-            descriptor,
-            registry
-        );
-        tools.elide.crypto.Crypto.getDescriptor();
-        tools.elide.model.Datamodel.getDescriptor();
-    }
-    // @@protoc_insertion_point(outer_class_scope)
+  // @@protoc_insertion_point(outer_class_scope)
 }

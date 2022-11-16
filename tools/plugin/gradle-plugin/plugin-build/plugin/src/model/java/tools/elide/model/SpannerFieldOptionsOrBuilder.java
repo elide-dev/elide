@@ -3,124 +3,126 @@
 
 package tools.elide.model;
 
-public interface SpannerFieldOptionsOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:model.SpannerFieldOptions)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * Override column name in Spanner only.
-     * </pre>
-     *
-     * <code>string column = 1;</code>
-     * @return The column.
-     */
-    java.lang.String getColumn();
-    /**
-     * <pre>
-     * Override column name in Spanner only.
-     * </pre>
-     *
-     * <code>string column = 1;</code>
-     * @return The bytes for column.
-     */
-    com.google.protobuf.ByteString getColumnBytes();
+public interface SpannerFieldOptionsOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:model.SpannerFieldOptions)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <pre>
-     * Whether to ignore this column in Spanner specifically.
-     * </pre>
-     *
-     * <code>bool ignore = 2;</code>
-     * @return The ignore.
-     */
-    boolean getIgnore();
+  /**
+   * <pre>
+   * Override column name in Spanner only.
+   * </pre>
+   *
+   * <code>string column = 1;</code>
+   * @return The column.
+   */
+  java.lang.String getColumn();
+  /**
+   * <pre>
+   * Override column name in Spanner only.
+   * </pre>
+   *
+   * <code>string column = 1;</code>
+   * @return The bytes for column.
+   */
+  com.google.protobuf.ByteString
+      getColumnBytes();
 
-    /**
-     * <pre>
-     * Override the field type in Spanner only.
-     * </pre>
-     *
-     * <code>.model.SpannerOptions.SpannerType type = 3;</code>
-     * @return The enum numeric value on the wire for type.
-     */
-    int getTypeValue();
-    /**
-     * <pre>
-     * Override the field type in Spanner only.
-     * </pre>
-     *
-     * <code>.model.SpannerOptions.SpannerType type = 3;</code>
-     * @return The type.
-     */
-    tools.elide.model.SpannerOptions.SpannerType getType();
+  /**
+   * <pre>
+   * Whether to ignore this column in Spanner specifically.
+   * </pre>
+   *
+   * <code>bool ignore = 2;</code>
+   * @return The ignore.
+   */
+  boolean getIgnore();
 
-    /**
-     * <pre>
-     * Override the field to store STRUCT objects as JSON.
-     * </pre>
-     *
-     * <code>bool json = 4;</code>
-     * @return The json.
-     */
-    boolean getJson();
+  /**
+   * <pre>
+   * Override the field type in Spanner only.
+   * </pre>
+   *
+   * <code>.model.SpannerOptions.SpannerType type = 3;</code>
+   * @return The enum numeric value on the wire for type.
+   */
+  int getTypeValue();
+  /**
+   * <pre>
+   * Override the field type in Spanner only.
+   * </pre>
+   *
+   * <code>.model.SpannerOptions.SpannerType type = 3;</code>
+   * @return The type.
+   */
+  tools.elide.model.SpannerOptions.SpannerType getType();
 
-    /**
-     * <pre>
-     * Length of this field in the database, when expressed as a string.
-     * </pre>
-     *
-     * <code>uint32 size = 5;</code>
-     * @return The size.
-     */
-    int getSize();
+  /**
+   * <pre>
+   * Override the field to store STRUCT objects as JSON.
+   * </pre>
+   *
+   * <code>bool json = 4;</code>
+   * @return The json.
+   */
+  boolean getJson();
 
-    /**
-     * <pre>
-     * Specifies this column as `NONNULL`, in which case you cannot store `NULL` values in this field.
-     * </pre>
-     *
-     * <code>bool nonnull = 6;</code>
-     * @return The nonnull.
-     */
-    boolean getNonnull();
+  /**
+   * <pre>
+   * Length of this field in the database, when expressed as a string.
+   * </pre>
+   *
+   * <code>uint32 size = 5;</code>
+   * @return The size.
+   */
+  int getSize();
 
-    /**
-     * <pre>
-     * Expression value for this field. Converts this field into a calculated value.
-     * </pre>
-     *
-     * <code>string expression = 7;</code>
-     * @return The expression.
-     */
-    java.lang.String getExpression();
-    /**
-     * <pre>
-     * Expression value for this field. Converts this field into a calculated value.
-     * </pre>
-     *
-     * <code>string expression = 7;</code>
-     * @return The bytes for expression.
-     */
-    com.google.protobuf.ByteString getExpressionBytes();
+  /**
+   * <pre>
+   * Specifies this column as `NONNULL`, in which case you cannot store `NULL` values in this field.
+   * </pre>
+   *
+   * <code>bool nonnull = 6;</code>
+   * @return The nonnull.
+   */
+  boolean getNonnull();
 
-    /**
-     * <pre>
-     * Specifies the `STORED` option for this field. Only applicable if an `expression` is present.
-     * </pre>
-     *
-     * <code>bool stored = 8;</code>
-     * @return The stored.
-     */
-    boolean getStored();
+  /**
+   * <pre>
+   * Expression value for this field. Converts this field into a calculated value.
+   * </pre>
+   *
+   * <code>string expression = 7;</code>
+   * @return The expression.
+   */
+  java.lang.String getExpression();
+  /**
+   * <pre>
+   * Expression value for this field. Converts this field into a calculated value.
+   * </pre>
+   *
+   * <code>string expression = 7;</code>
+   * @return The bytes for expression.
+   */
+  com.google.protobuf.ByteString
+      getExpressionBytes();
 
-    /**
-     * <pre>
-     * Marks a field as a member of a Spanner row's primary key.
-     * </pre>
-     *
-     * <code>bool primary_key = 9;</code>
-     * @return The primaryKey.
-     */
-    boolean getPrimaryKey();
+  /**
+   * <pre>
+   * Specifies the `STORED` option for this field. Only applicable if an `expression` is present.
+   * </pre>
+   *
+   * <code>bool stored = 8;</code>
+   * @return The stored.
+   */
+  boolean getStored();
+
+  /**
+   * <pre>
+   * Marks a field as a member of a Spanner row's primary key.
+   * </pre>
+   *
+   * <code>bool primary_key = 9;</code>
+   * @return The primaryKey.
+   */
+  boolean getPrimaryKey();
 }

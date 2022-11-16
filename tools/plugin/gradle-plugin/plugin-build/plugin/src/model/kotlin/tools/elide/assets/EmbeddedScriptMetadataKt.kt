@@ -4,15 +4,15 @@
 package tools.elide.assets;
 
 @kotlin.jvm.JvmName("-initializeembeddedScriptMetadata")
-public inline fun embeddedScriptMetadata(block: tools.elide.assets.EmbeddedScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata =
+inline fun embeddedScriptMetadata(block: tools.elide.assets.EmbeddedScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata =
   tools.elide.assets.EmbeddedScriptMetadataKt.Dsl._create(tools.elide.assets.EmbeddedScriptMetadata.newBuilder()).apply { block() }._build()
-public object EmbeddedScriptMetadataKt {
+object EmbeddedScriptMetadataKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.assets.EmbeddedScriptMetadata.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.assets.EmbeddedScriptMetadata.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object EmbeddedScriptMetadataKt {
      *
      * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
      */
-    public var javascript: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata
+    var javascript: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata
       @JvmName("getJavascript")
       get() = _builder.getJavascript()
       @JvmName("setJavascript")
@@ -43,7 +43,7 @@ public object EmbeddedScriptMetadataKt {
      *
      * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
      */
-    public fun clearJavascript() {
+    fun clearJavascript() {
       _builder.clearJavascript()
     }
     /**
@@ -54,27 +54,27 @@ public object EmbeddedScriptMetadataKt {
      * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
      * @return Whether the javascript field is set.
      */
-    public fun hasJavascript(): kotlin.Boolean {
+    fun hasJavascript(): kotlin.Boolean {
       return _builder.hasJavascript()
     }
-    public val metadataCase: tools.elide.assets.EmbeddedScriptMetadata.MetadataCase
+    val metadataCase: tools.elide.assets.EmbeddedScriptMetadata.MetadataCase
       @JvmName("getMetadataCase")
       get() = _builder.getMetadataCase()
 
-    public fun clearMetadata() {
+    fun clearMetadata() {
       _builder.clearMetadata()
     }
   }
   @kotlin.jvm.JvmName("-initializejsScriptMetadata")
-  public inline fun jsScriptMetadata(block: tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata =
+  inline fun jsScriptMetadata(block: tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata =
     tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl._create(tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.newBuilder()).apply { block() }._build()
-  public object JsScriptMetadataKt {
+  object JsScriptMetadataKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.Builder): Dsl = Dsl(builder)
@@ -91,7 +91,7 @@ public object EmbeddedScriptMetadataKt {
        *
        * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel level = 1;</code>
        */
-      public var level: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+       var level: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
         @JvmName("getLevel")
         get() = _builder.getLevel()
         @JvmName("setLevel")
@@ -105,18 +105,18 @@ public object EmbeddedScriptMetadataKt {
        *
        * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel level = 1;</code>
        */
-      public fun clearLevel() {
+      fun clearLevel() {
         _builder.clearLevel()
       }
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.assets.EmbeddedScriptMetadata.copy(block: tools.elide.assets.EmbeddedScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata =
+inline fun tools.elide.assets.EmbeddedScriptMetadata.copy(block: tools.elide.assets.EmbeddedScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata =
   tools.elide.assets.EmbeddedScriptMetadataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.copy(block: tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata =
+inline fun tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.copy(block: tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl.() -> kotlin.Unit): tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata =
   tools.elide.assets.EmbeddedScriptMetadataKt.JsScriptMetadataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.assets.EmbeddedScriptMetadataOrBuilder.javascriptOrNull: tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata?

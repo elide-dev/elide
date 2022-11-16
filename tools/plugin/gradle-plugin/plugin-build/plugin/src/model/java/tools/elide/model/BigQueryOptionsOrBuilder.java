@@ -3,7 +3,7 @@
 
 package tools.elide.model;
 
-public interface BigQueryOptionsOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:model.BigQueryOptions)
-        com.google.protobuf.MessageOrBuilder {}
+public interface BigQueryOptionsOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:model.BigQueryOptions)
+    com.google.protobuf.MessageOrBuilder {
+}

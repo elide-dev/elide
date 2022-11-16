@@ -3,318 +3,316 @@
 
 package tools.elide.assets;
 
-public interface AssetBundleOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:assets.AssetBundle)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * Version of the tool that produced this manifest. This is used by the tool to understand which asset bundle features
-     * are supported for a given tool version.
-     * </pre>
-     *
-     * <code>uint32 version = 1;</code>
-     * @return The version.
-     */
-    int getVersion();
+public interface AssetBundleOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:assets.AssetBundle)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <pre>
-     * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
-     * use of the bundle to serve assets.
-     * </pre>
-     *
-     * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
-     * @return Whether the settings field is set.
-     */
-    boolean hasSettings();
-    /**
-     * <pre>
-     * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
-     * use of the bundle to serve assets.
-     * </pre>
-     *
-     * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
-     * @return The settings.
-     */
-    tools.elide.assets.AssetBundle.BundlerSettings getSettings();
-    /**
-     * <pre>
-     * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
-     * use of the bundle to serve assets.
-     * </pre>
-     *
-     * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
-     */
-    tools.elide.assets.AssetBundle.BundlerSettingsOrBuilder getSettingsOrBuilder();
+  /**
+   * <pre>
+   * Version of the tool that produced this manifest. This is used by the tool to understand which asset bundle features
+   * are supported for a given tool version.
+   * </pre>
+   *
+   * <code>uint32 version = 1;</code>
+   * @return The version.
+   */
+  int getVersion();
 
-    /**
-     * <pre>
-     * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-     * checking for updates to the asset bundle itself.
-     * </pre>
-     *
-     * <code>.google.protobuf.Timestamp generated = 3;</code>
-     * @return Whether the generated field is set.
-     */
-    boolean hasGenerated();
-    /**
-     * <pre>
-     * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-     * checking for updates to the asset bundle itself.
-     * </pre>
-     *
-     * <code>.google.protobuf.Timestamp generated = 3;</code>
-     * @return The generated.
-     */
-    com.google.protobuf.Timestamp getGenerated();
-    /**
-     * <pre>
-     * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
-     * checking for updates to the asset bundle itself.
-     * </pre>
-     *
-     * <code>.google.protobuf.Timestamp generated = 3;</code>
-     */
-    com.google.protobuf.TimestampOrBuilder getGeneratedOrBuilder();
+  /**
+   * <pre>
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
+   * </pre>
+   *
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
+   * @return Whether the settings field is set.
+   */
+  boolean hasSettings();
+  /**
+   * <pre>
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
+   * </pre>
+   *
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
+   * @return The settings.
+   */
+  tools.elide.assets.AssetBundle.BundlerSettings getSettings();
+  /**
+   * <pre>
+   * Bundler settings that were active at the time the bundle was assembled, and some of which may extend to the runtime
+   * use of the bundle to serve assets.
+   * </pre>
+   *
+   * <code>.assets.AssetBundle.BundlerSettings settings = 2;</code>
+   */
+  tools.elide.assets.AssetBundle.BundlerSettingsOrBuilder getSettingsOrBuilder();
 
-    /**
-     * <pre>
-     * Raw bytes of a digest matching the algorithm for digests in file names, which represents a unique fingerprint of
-     * the full asset bundle.
-     * </pre>
-     *
-     * <code>bytes digest = 4;</code>
-     * @return The digest.
-     */
-    com.google.protobuf.ByteString getDigest();
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   * @return Whether the generated field is set.
+   */
+  boolean hasGenerated();
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   * @return The generated.
+   */
+  com.google.protobuf.Timestamp getGenerated();
+  /**
+   * <pre>
+   * Timestamp indicating when this asset manifest was generated. This may be used when calculating `ETags` or when
+   * checking for updates to the asset bundle itself.
+   * </pre>
+   *
+   * <code>.google.protobuf.Timestamp generated = 3;</code>
+   */
+  com.google.protobuf.TimestampOrBuilder getGeneratedOrBuilder();
 
-    /**
-     * <pre>
-     * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
-     * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
-     */
-    int getStylesCount();
-    /**
-     * <pre>
-     * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
-     * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
-     */
-    boolean containsStyles(java.lang.String key);
+  /**
+   * <pre>
+   * Raw bytes of a digest matching the algorithm for digests in file names, which represents a unique fingerprint of
+   * the full asset bundle.
+   * </pre>
+   *
+   * <code>bytes digest = 4;</code>
+   * @return The digest.
+   */
+  com.google.protobuf.ByteString getDigest();
 
-    /**
-     * Use {@link #getStylesMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.StyleBundle> getStyles();
+  /**
+   * <pre>
+   * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+   * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
+   */
+  int getStylesCount();
+  /**
+   * <pre>
+   * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+   * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
+   */
+  boolean containsStyles(
+      java.lang.String key);
+  /**
+   * Use {@link #getStylesMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.StyleBundle>
+  getStyles();
+  /**
+   * <pre>
+   * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+   * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
+   */
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.StyleBundle>
+  getStylesMap();
+  /**
+   * <pre>
+   * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+   * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
+   */
 
-    /**
-     * <pre>
-     * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
-     * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
-     */
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.StyleBundle> getStylesMap();
-    /**
-     * <pre>
-     * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
-     * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
-     */
+  /* nullable */
+tools.elide.assets.AssetBundle.StyleBundle getStylesOrDefault(
+      java.lang.String key,
+      /* nullable */
+tools.elide.assets.AssetBundle.StyleBundle defaultValue);
+  /**
+   * <pre>
+   * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
+   * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
+   */
 
-    /* nullable */
-    tools.elide.assets.AssetBundle.StyleBundle getStylesOrDefault(
-        java.lang.String key,
-        /* nullable */
-        tools.elide.assets.AssetBundle.StyleBundle defaultValue
-    );
-    /**
-     * <pre>
-     * Set of styles listed in this asset manifest. Like scripts, this is a map of dotted-path module names mapped to
-     * their stylesheet sources and settings. Generally, the GSS module name is used for stylesheets.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.StyleBundle&gt; styles = 5;</code>
-     */
+  tools.elide.assets.AssetBundle.StyleBundle getStylesOrThrow(
+      java.lang.String key);
 
-    tools.elide.assets.AssetBundle.StyleBundle getStylesOrThrow(
-        java.lang.String key
-    );
+  /**
+   * <pre>
+   * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+   * their script sources and settings. Generally, a Closure module name is used for scripts.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
+   */
+  int getScriptsCount();
+  /**
+   * <pre>
+   * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+   * their script sources and settings. Generally, a Closure module name is used for scripts.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
+   */
+  boolean containsScripts(
+      java.lang.String key);
+  /**
+   * Use {@link #getScriptsMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.ScriptBundle>
+  getScripts();
+  /**
+   * <pre>
+   * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+   * their script sources and settings. Generally, a Closure module name is used for scripts.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
+   */
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.ScriptBundle>
+  getScriptsMap();
+  /**
+   * <pre>
+   * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+   * their script sources and settings. Generally, a Closure module name is used for scripts.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
+   */
 
-    /**
-     * <pre>
-     * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
-     * their script sources and settings. Generally, a Closure module name is used for scripts.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
-     */
-    int getScriptsCount();
-    /**
-     * <pre>
-     * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
-     * their script sources and settings. Generally, a Closure module name is used for scripts.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
-     */
-    boolean containsScripts(java.lang.String key);
+  /* nullable */
+tools.elide.assets.AssetBundle.ScriptBundle getScriptsOrDefault(
+      java.lang.String key,
+      /* nullable */
+tools.elide.assets.AssetBundle.ScriptBundle defaultValue);
+  /**
+   * <pre>
+   * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
+   * their script sources and settings. Generally, a Closure module name is used for scripts.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
+   */
 
-    /**
-     * Use {@link #getScriptsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.ScriptBundle> getScripts();
+  tools.elide.assets.AssetBundle.ScriptBundle getScriptsOrThrow(
+      java.lang.String key);
 
-    /**
-     * <pre>
-     * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
-     * their script sources and settings. Generally, a Closure module name is used for scripts.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
-     */
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.ScriptBundle> getScriptsMap();
-    /**
-     * <pre>
-     * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
-     * their script sources and settings. Generally, a Closure module name is used for scripts.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
-     */
+  /**
+   * <pre>
+   * Generic assets which are mapped within this bundle.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
+   */
+  int getGenericCount();
+  /**
+   * <pre>
+   * Generic assets which are mapped within this bundle.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
+   */
+  boolean containsGeneric(
+      java.lang.String key);
+  /**
+   * Use {@link #getGenericMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.GenericBundle>
+  getGeneric();
+  /**
+   * <pre>
+   * Generic assets which are mapped within this bundle.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
+   */
+  java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.GenericBundle>
+  getGenericMap();
+  /**
+   * <pre>
+   * Generic assets which are mapped within this bundle.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
+   */
 
-    /* nullable */
-    tools.elide.assets.AssetBundle.ScriptBundle getScriptsOrDefault(
-        java.lang.String key,
-        /* nullable */
-        tools.elide.assets.AssetBundle.ScriptBundle defaultValue
-    );
-    /**
-     * <pre>
-     * Set of scripts listed in this asset manifest. Like styles, this is a map of dotted-path module names mapped to
-     * their script sources and settings. Generally, a Closure module name is used for scripts.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.ScriptBundle&gt; scripts = 6;</code>
-     */
+  /* nullable */
+tools.elide.assets.AssetBundle.GenericBundle getGenericOrDefault(
+      java.lang.String key,
+      /* nullable */
+tools.elide.assets.AssetBundle.GenericBundle defaultValue);
+  /**
+   * <pre>
+   * Generic assets which are mapped within this bundle.
+   * </pre>
+   *
+   * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
+   */
 
-    tools.elide.assets.AssetBundle.ScriptBundle getScriptsOrThrow(
-        java.lang.String key
-    );
+  tools.elide.assets.AssetBundle.GenericBundle getGenericOrThrow(
+      java.lang.String key);
 
-    /**
-     * <pre>
-     * Generic assets which are mapped within this bundle.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
-     */
-    int getGenericCount();
-    /**
-     * <pre>
-     * Generic assets which are mapped within this bundle.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
-     */
-    boolean containsGeneric(java.lang.String key);
-
-    /**
-     * Use {@link #getGenericMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.GenericBundle> getGeneric();
-
-    /**
-     * <pre>
-     * Generic assets which are mapped within this bundle.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
-     */
-    java.util.Map<java.lang.String, tools.elide.assets.AssetBundle.GenericBundle> getGenericMap();
-    /**
-     * <pre>
-     * Generic assets which are mapped within this bundle.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
-     */
-
-    /* nullable */
-    tools.elide.assets.AssetBundle.GenericBundle getGenericOrDefault(
-        java.lang.String key,
-        /* nullable */
-        tools.elide.assets.AssetBundle.GenericBundle defaultValue
-    );
-    /**
-     * <pre>
-     * Generic assets which are mapped within this bundle.
-     * </pre>
-     *
-     * <code>map&lt;string, .assets.AssetBundle.GenericBundle&gt; generic = 7;</code>
-     */
-
-    tools.elide.assets.AssetBundle.GenericBundle getGenericOrThrow(
-        java.lang.String key
-    );
-
-    /**
-     * <pre>
-     * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
-     * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-     * </pre>
-     *
-     * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
-     */
-    java.util.List<tools.elide.assets.AssetBundle.AssetContent> getAssetList();
-    /**
-     * <pre>
-     * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
-     * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-     * </pre>
-     *
-     * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
-     */
-    tools.elide.assets.AssetBundle.AssetContent getAsset(int index);
-    /**
-     * <pre>
-     * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
-     * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-     * </pre>
-     *
-     * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
-     */
-    int getAssetCount();
-    /**
-     * <pre>
-     * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
-     * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-     * </pre>
-     *
-     * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
-     */
-    java.util.List<? extends tools.elide.assets.AssetBundle.AssetContentOrBuilder> getAssetOrBuilderList();
-    /**
-     * <pre>
-     * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
-     * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
-     * </pre>
-     *
-     * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
-     */
-    tools.elide.assets.AssetBundle.AssetContentOrBuilder getAssetOrBuilder(
-        int index
-    );
+  /**
+   * <pre>
+   * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+   * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+   * </pre>
+   *
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
+   */
+  java.util.List<tools.elide.assets.AssetBundle.AssetContent> 
+      getAssetList();
+  /**
+   * <pre>
+   * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+   * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+   * </pre>
+   *
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
+   */
+  tools.elide.assets.AssetBundle.AssetContent getAsset(int index);
+  /**
+   * <pre>
+   * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+   * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+   * </pre>
+   *
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
+   */
+  int getAssetCount();
+  /**
+   * <pre>
+   * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+   * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+   * </pre>
+   *
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
+   */
+  java.util.List<? extends tools.elide.assets.AssetBundle.AssetContentOrBuilder> 
+      getAssetOrBuilderList();
+  /**
+   * <pre>
+   * Inlined asset contents, which specify pre-compressed asset data corresponding to a given CSS or JavaScript code
+   * bundle. The server may choose to serve this content rather than performing compression on-the-fly.
+   * </pre>
+   *
+   * <code>repeated .assets.AssetBundle.AssetContent asset = 8;</code>
+   */
+  tools.elide.assets.AssetBundle.AssetContentOrBuilder getAssetOrBuilder(
+      int index);
 }

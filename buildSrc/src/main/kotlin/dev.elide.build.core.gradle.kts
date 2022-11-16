@@ -6,9 +6,7 @@ plugins {
   signing
   idea
 
-  kotlin("plugin.allopen")
-  kotlin("plugin.noarg")
-  id("org.jetbrains.kotlinx.kover")
+  id("dev.elide.build.kotlin")
 
   id("com.adarshr.test-logger")
   id("com.github.ben-manes.versions")

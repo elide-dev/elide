@@ -3,549 +3,563 @@
 
 package tools.elide.page;
 
-public interface ContextOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:page.Context)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * Metadata definitions for this web page render context.
-     * </pre>
-     *
-     * <code>.page.Context.Metadata meta = 1;</code>
-     * @return Whether the meta field is set.
-     */
-    boolean hasMeta();
-    /**
-     * <pre>
-     * Metadata definitions for this web page render context.
-     * </pre>
-     *
-     * <code>.page.Context.Metadata meta = 1;</code>
-     * @return The meta.
-     */
-    tools.elide.page.Context.Metadata getMeta();
-    /**
-     * <pre>
-     * Metadata definitions for this web page render context.
-     * </pre>
-     *
-     * <code>.page.Context.Metadata meta = 1;</code>
-     */
-    tools.elide.page.Context.MetadataOrBuilder getMetaOrBuilder();
+public interface ContextOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:page.Context)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <pre>
-     * CSS definitions and lifted code for the page head.
-     * </pre>
-     *
-     * <code>.page.Context.Styles styles = 2;</code>
-     * @return Whether the styles field is set.
-     */
-    boolean hasStyles();
-    /**
-     * <pre>
-     * CSS definitions and lifted code for the page head.
-     * </pre>
-     *
-     * <code>.page.Context.Styles styles = 2;</code>
-     * @return The styles.
-     */
-    tools.elide.page.Context.Styles getStyles();
-    /**
-     * <pre>
-     * CSS definitions and lifted code for the page head.
-     * </pre>
-     *
-     * <code>.page.Context.Styles styles = 2;</code>
-     */
-    tools.elide.page.Context.StylesOrBuilder getStylesOrBuilder();
+  /**
+   * <pre>
+   * Metadata definitions for this web page render context.
+   * </pre>
+   *
+   * <code>.page.Context.Metadata meta = 1;</code>
+   * @return Whether the meta field is set.
+   */
+  boolean hasMeta();
+  /**
+   * <pre>
+   * Metadata definitions for this web page render context.
+   * </pre>
+   *
+   * <code>.page.Context.Metadata meta = 1;</code>
+   * @return The meta.
+   */
+  tools.elide.page.Context.Metadata getMeta();
+  /**
+   * <pre>
+   * Metadata definitions for this web page render context.
+   * </pre>
+   *
+   * <code>.page.Context.Metadata meta = 1;</code>
+   */
+  tools.elide.page.Context.MetadataOrBuilder getMetaOrBuilder();
 
-    /**
-     * <pre>
-     * Fonts to include/load on the page.
-     * </pre>
-     *
-     * <code>.page.Context.Fonts fonts = 3;</code>
-     * @return Whether the fonts field is set.
-     */
-    boolean hasFonts();
-    /**
-     * <pre>
-     * Fonts to include/load on the page.
-     * </pre>
-     *
-     * <code>.page.Context.Fonts fonts = 3;</code>
-     * @return The fonts.
-     */
-    tools.elide.page.Context.Fonts getFonts();
-    /**
-     * <pre>
-     * Fonts to include/load on the page.
-     * </pre>
-     *
-     * <code>.page.Context.Fonts fonts = 3;</code>
-     */
-    tools.elide.page.Context.FontsOrBuilder getFontsOrBuilder();
+  /**
+   * <pre>
+   * CSS definitions and lifted code for the page head.
+   * </pre>
+   *
+   * <code>.page.Context.Styles styles = 2;</code>
+   * @return Whether the styles field is set.
+   */
+  boolean hasStyles();
+  /**
+   * <pre>
+   * CSS definitions and lifted code for the page head.
+   * </pre>
+   *
+   * <code>.page.Context.Styles styles = 2;</code>
+   * @return The styles.
+   */
+  tools.elide.page.Context.Styles getStyles();
+  /**
+   * <pre>
+   * CSS definitions and lifted code for the page head.
+   * </pre>
+   *
+   * <code>.page.Context.Styles styles = 2;</code>
+   */
+  tools.elide.page.Context.StylesOrBuilder getStylesOrBuilder();
 
-    /**
-     * <pre>
-     * Scripts to include on the page or lift into the head.
-     * </pre>
-     *
-     * <code>.page.Context.Scripts scripts = 4;</code>
-     * @return Whether the scripts field is set.
-     */
-    boolean hasScripts();
-    /**
-     * <pre>
-     * Scripts to include on the page or lift into the head.
-     * </pre>
-     *
-     * <code>.page.Context.Scripts scripts = 4;</code>
-     * @return The scripts.
-     */
-    tools.elide.page.Context.Scripts getScripts();
-    /**
-     * <pre>
-     * Scripts to include on the page or lift into the head.
-     * </pre>
-     *
-     * <code>.page.Context.Scripts scripts = 4;</code>
-     */
-    tools.elide.page.Context.ScriptsOrBuilder getScriptsOrBuilder();
+  /**
+   * <pre>
+   * Fonts to include/load on the page.
+   * </pre>
+   *
+   * <code>.page.Context.Fonts fonts = 3;</code>
+   * @return Whether the fonts field is set.
+   */
+  boolean hasFonts();
+  /**
+   * <pre>
+   * Fonts to include/load on the page.
+   * </pre>
+   *
+   * <code>.page.Context.Fonts fonts = 3;</code>
+   * @return The fonts.
+   */
+  tools.elide.page.Context.Fonts getFonts();
+  /**
+   * <pre>
+   * Fonts to include/load on the page.
+   * </pre>
+   *
+   * <code>.page.Context.Fonts fonts = 3;</code>
+   */
+  tools.elide.page.Context.FontsOrBuilder getFontsOrBuilder();
 
-    /**
-     * <pre>
-     * Application manifest for a given page or web app.
-     * </pre>
-     *
-     * <code>.page.Context.AppManifest manifest = 5;</code>
-     * @return Whether the manifest field is set.
-     */
-    boolean hasManifest();
-    /**
-     * <pre>
-     * Application manifest for a given page or web app.
-     * </pre>
-     *
-     * <code>.page.Context.AppManifest manifest = 5;</code>
-     * @return The manifest.
-     */
-    tools.elide.page.Context.AppManifest getManifest();
-    /**
-     * <pre>
-     * Application manifest for a given page or web app.
-     * </pre>
-     *
-     * <code>.page.Context.AppManifest manifest = 5;</code>
-     */
-    tools.elide.page.Context.AppManifestOrBuilder getManifestOrBuilder();
+  /**
+   * <pre>
+   * Scripts to include on the page or lift into the head.
+   * </pre>
+   *
+   * <code>.page.Context.Scripts scripts = 4;</code>
+   * @return Whether the scripts field is set.
+   */
+  boolean hasScripts();
+  /**
+   * <pre>
+   * Scripts to include on the page or lift into the head.
+   * </pre>
+   *
+   * <code>.page.Context.Scripts scripts = 4;</code>
+   * @return The scripts.
+   */
+  tools.elide.page.Context.Scripts getScripts();
+  /**
+   * <pre>
+   * Scripts to include on the page or lift into the head.
+   * </pre>
+   *
+   * <code>.page.Context.Scripts scripts = 4;</code>
+   */
+  tools.elide.page.Context.ScriptsOrBuilder getScriptsOrBuilder();
 
-    /**
-     * <pre>
-     * `ETag` information to enclose with this page, when rendered.
-     * </pre>
-     *
-     * <code>.page.Context.DynamicETag etag = 6;</code>
-     * @return Whether the etag field is set.
-     */
-    boolean hasEtag();
-    /**
-     * <pre>
-     * `ETag` information to enclose with this page, when rendered.
-     * </pre>
-     *
-     * <code>.page.Context.DynamicETag etag = 6;</code>
-     * @return The etag.
-     */
-    tools.elide.page.Context.DynamicETag getEtag();
-    /**
-     * <pre>
-     * `ETag` information to enclose with this page, when rendered.
-     * </pre>
-     *
-     * <code>.page.Context.DynamicETag etag = 6;</code>
-     */
-    tools.elide.page.Context.DynamicETagOrBuilder getEtagOrBuilder();
+  /**
+   * <pre>
+   * Application manifest for a given page or web app.
+   * </pre>
+   *
+   * <code>.page.Context.AppManifest manifest = 5;</code>
+   * @return Whether the manifest field is set.
+   */
+  boolean hasManifest();
+  /**
+   * <pre>
+   * Application manifest for a given page or web app.
+   * </pre>
+   *
+   * <code>.page.Context.AppManifest manifest = 5;</code>
+   * @return The manifest.
+   */
+  tools.elide.page.Context.AppManifest getManifest();
+  /**
+   * <pre>
+   * Application manifest for a given page or web app.
+   * </pre>
+   *
+   * <code>.page.Context.AppManifest manifest = 5;</code>
+   */
+  tools.elide.page.Context.AppManifestOrBuilder getManifestOrBuilder();
 
-    /**
-     * <pre>
-     * Specifies HTTP cookies to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.Cookie cookie = 8;</code>
-     */
-    java.util.List<tools.elide.page.Context.Cookie> getCookieList();
-    /**
-     * <pre>
-     * Specifies HTTP cookies to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.Cookie cookie = 8;</code>
-     */
-    tools.elide.page.Context.Cookie getCookie(int index);
-    /**
-     * <pre>
-     * Specifies HTTP cookies to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.Cookie cookie = 8;</code>
-     */
-    int getCookieCount();
-    /**
-     * <pre>
-     * Specifies HTTP cookies to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.Cookie cookie = 8;</code>
-     */
-    java.util.List<? extends tools.elide.page.Context.CookieOrBuilder> getCookieOrBuilderList();
-    /**
-     * <pre>
-     * Specifies HTTP cookies to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.Cookie cookie = 8;</code>
-     */
-    tools.elide.page.Context.CookieOrBuilder getCookieOrBuilder(int index);
+  /**
+   * <pre>
+   * `ETag` information to enclose with this page, when rendered.
+   * </pre>
+   *
+   * <code>.page.Context.DynamicETag etag = 6;</code>
+   * @return Whether the etag field is set.
+   */
+  boolean hasEtag();
+  /**
+   * <pre>
+   * `ETag` information to enclose with this page, when rendered.
+   * </pre>
+   *
+   * <code>.page.Context.DynamicETag etag = 6;</code>
+   * @return The etag.
+   */
+  tools.elide.page.Context.DynamicETag getEtag();
+  /**
+   * <pre>
+   * `ETag` information to enclose with this page, when rendered.
+   * </pre>
+   *
+   * <code>.page.Context.DynamicETag etag = 6;</code>
+   */
+  tools.elide.page.Context.DynamicETagOrBuilder getEtagOrBuilder();
 
-    /**
-     * <pre>
-     * Custom headers to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.ResponseHeader header = 9;</code>
-     */
-    java.util.List<tools.elide.page.Context.ResponseHeader> getHeaderList();
-    /**
-     * <pre>
-     * Custom headers to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.ResponseHeader header = 9;</code>
-     */
-    tools.elide.page.Context.ResponseHeader getHeader(int index);
-    /**
-     * <pre>
-     * Custom headers to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.ResponseHeader header = 9;</code>
-     */
-    int getHeaderCount();
-    /**
-     * <pre>
-     * Custom headers to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.ResponseHeader header = 9;</code>
-     */
-    java.util.List<? extends tools.elide.page.Context.ResponseHeaderOrBuilder> getHeaderOrBuilderList();
-    /**
-     * <pre>
-     * Custom headers to affix to the response associated with this context.
-     * </pre>
-     *
-     * <code>repeated .page.Context.ResponseHeader header = 9;</code>
-     */
-    tools.elide.page.Context.ResponseHeaderOrBuilder getHeaderOrBuilder(
-        int index
-    );
+  /**
+   * <pre>
+   * Specifies HTTP cookies to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.Cookie cookie = 8;</code>
+   */
+  java.util.List<tools.elide.page.Context.Cookie> 
+      getCookieList();
+  /**
+   * <pre>
+   * Specifies HTTP cookies to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.Cookie cookie = 8;</code>
+   */
+  tools.elide.page.Context.Cookie getCookie(int index);
+  /**
+   * <pre>
+   * Specifies HTTP cookies to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.Cookie cookie = 8;</code>
+   */
+  int getCookieCount();
+  /**
+   * <pre>
+   * Specifies HTTP cookies to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.Cookie cookie = 8;</code>
+   */
+  java.util.List<? extends tools.elide.page.Context.CookieOrBuilder> 
+      getCookieOrBuilderList();
+  /**
+   * <pre>
+   * Specifies HTTP cookies to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.Cookie cookie = 8;</code>
+   */
+  tools.elide.page.Context.CookieOrBuilder getCookieOrBuilder(
+      int index);
 
-    /**
-     * <pre>
-     * Set of HTTP request headers which cause this response to vary.
-     * </pre>
-     *
-     * <code>repeated string vary = 10;</code>
-     * @return A list containing the vary.
-     */
-    java.util.List<java.lang.String> getVaryList();
-    /**
-     * <pre>
-     * Set of HTTP request headers which cause this response to vary.
-     * </pre>
-     *
-     * <code>repeated string vary = 10;</code>
-     * @return The count of vary.
-     */
-    int getVaryCount();
-    /**
-     * <pre>
-     * Set of HTTP request headers which cause this response to vary.
-     * </pre>
-     *
-     * <code>repeated string vary = 10;</code>
-     * @param index The index of the element to return.
-     * @return The vary at the given index.
-     */
-    java.lang.String getVary(int index);
-    /**
-     * <pre>
-     * Set of HTTP request headers which cause this response to vary.
-     * </pre>
-     *
-     * <code>repeated string vary = 10;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the vary at the given index.
-     */
-    com.google.protobuf.ByteString getVaryBytes(int index);
+  /**
+   * <pre>
+   * Custom headers to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.ResponseHeader header = 9;</code>
+   */
+  java.util.List<tools.elide.page.Context.ResponseHeader> 
+      getHeaderList();
+  /**
+   * <pre>
+   * Custom headers to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.ResponseHeader header = 9;</code>
+   */
+  tools.elide.page.Context.ResponseHeader getHeader(int index);
+  /**
+   * <pre>
+   * Custom headers to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.ResponseHeader header = 9;</code>
+   */
+  int getHeaderCount();
+  /**
+   * <pre>
+   * Custom headers to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.ResponseHeader header = 9;</code>
+   */
+  java.util.List<? extends tools.elide.page.Context.ResponseHeaderOrBuilder> 
+      getHeaderOrBuilderList();
+  /**
+   * <pre>
+   * Custom headers to affix to the response associated with this context.
+   * </pre>
+   *
+   * <code>repeated .page.Context.ResponseHeader header = 9;</code>
+   */
+  tools.elide.page.Context.ResponseHeaderOrBuilder getHeaderOrBuilder(
+      int index);
 
-    /**
-     * <pre>
-     * Language to send in the `Content-Language` header.
-     * </pre>
-     *
-     * <code>string language = 11;</code>
-     * @return The language.
-     */
-    java.lang.String getLanguage();
-    /**
-     * <pre>
-     * Language to send in the `Content-Language` header.
-     * </pre>
-     *
-     * <code>string language = 11;</code>
-     * @return The bytes for language.
-     */
-    com.google.protobuf.ByteString getLanguageBytes();
+  /**
+   * <pre>
+   * Set of HTTP request headers which cause this response to vary.
+   * </pre>
+   *
+   * <code>repeated string vary = 10;</code>
+   * @return A list containing the vary.
+   */
+  java.util.List<java.lang.String>
+      getVaryList();
+  /**
+   * <pre>
+   * Set of HTTP request headers which cause this response to vary.
+   * </pre>
+   *
+   * <code>repeated string vary = 10;</code>
+   * @return The count of vary.
+   */
+  int getVaryCount();
+  /**
+   * <pre>
+   * Set of HTTP request headers which cause this response to vary.
+   * </pre>
+   *
+   * <code>repeated string vary = 10;</code>
+   * @param index The index of the element to return.
+   * @return The vary at the given index.
+   */
+  java.lang.String getVary(int index);
+  /**
+   * <pre>
+   * Set of HTTP request headers which cause this response to vary.
+   * </pre>
+   *
+   * <code>repeated string vary = 10;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the vary at the given index.
+   */
+  com.google.protobuf.ByteString
+      getVaryBytes(int index);
 
-    /**
-     * <pre>
-     * Information provided by client-indicated hints.
-     * </pre>
-     *
-     * <code>.page.Context.ClientHints hints = 12;</code>
-     * @return Whether the hints field is set.
-     */
-    boolean hasHints();
-    /**
-     * <pre>
-     * Information provided by client-indicated hints.
-     * </pre>
-     *
-     * <code>.page.Context.ClientHints hints = 12;</code>
-     * @return The hints.
-     */
-    tools.elide.page.Context.ClientHints getHints();
-    /**
-     * <pre>
-     * Information provided by client-indicated hints.
-     * </pre>
-     *
-     * <code>.page.Context.ClientHints hints = 12;</code>
-     */
-    tools.elide.page.Context.ClientHintsOrBuilder getHintsOrBuilder();
+  /**
+   * <pre>
+   * Language to send in the `Content-Language` header.
+   * </pre>
+   *
+   * <code>string language = 11;</code>
+   * @return The language.
+   */
+  java.lang.String getLanguage();
+  /**
+   * <pre>
+   * Language to send in the `Content-Language` header.
+   * </pre>
+   *
+   * <code>string language = 11;</code>
+   * @return The bytes for language.
+   */
+  com.google.protobuf.ByteString
+      getLanguageBytes();
 
-    /**
-     * <pre>
-     * Specifies feature policies for this HTTP cycle.
-     * </pre>
-     *
-     * <code>repeated string feature_policy = 13;</code>
-     * @return A list containing the featurePolicy.
-     */
-    java.util.List<java.lang.String> getFeaturePolicyList();
-    /**
-     * <pre>
-     * Specifies feature policies for this HTTP cycle.
-     * </pre>
-     *
-     * <code>repeated string feature_policy = 13;</code>
-     * @return The count of featurePolicy.
-     */
-    int getFeaturePolicyCount();
-    /**
-     * <pre>
-     * Specifies feature policies for this HTTP cycle.
-     * </pre>
-     *
-     * <code>repeated string feature_policy = 13;</code>
-     * @param index The index of the element to return.
-     * @return The featurePolicy at the given index.
-     */
-    java.lang.String getFeaturePolicy(int index);
-    /**
-     * <pre>
-     * Specifies feature policies for this HTTP cycle.
-     * </pre>
-     *
-     * <code>repeated string feature_policy = 13;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the featurePolicy at the given index.
-     */
-    com.google.protobuf.ByteString getFeaturePolicyBytes(int index);
+  /**
+   * <pre>
+   * Information provided by client-indicated hints.
+   * </pre>
+   *
+   * <code>.page.Context.ClientHints hints = 12;</code>
+   * @return Whether the hints field is set.
+   */
+  boolean hasHints();
+  /**
+   * <pre>
+   * Information provided by client-indicated hints.
+   * </pre>
+   *
+   * <code>.page.Context.ClientHints hints = 12;</code>
+   * @return The hints.
+   */
+  tools.elide.page.Context.ClientHints getHints();
+  /**
+   * <pre>
+   * Information provided by client-indicated hints.
+   * </pre>
+   *
+   * <code>.page.Context.ClientHints hints = 12;</code>
+   */
+  tools.elide.page.Context.ClientHintsOrBuilder getHintsOrBuilder();
 
-    /**
-     * <pre>
-     * Specifies options when a page is referenced as a frame.
-     * </pre>
-     *
-     * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
-     * @return The enum numeric value on the wire for framingPolicy.
-     */
-    int getFramingPolicyValue();
-    /**
-     * <pre>
-     * Specifies options when a page is referenced as a frame.
-     * </pre>
-     *
-     * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
-     * @return The framingPolicy.
-     */
-    tools.elide.page.Context.FramingPolicy getFramingPolicy();
+  /**
+   * <pre>
+   * Specifies feature policies for this HTTP cycle.
+   * </pre>
+   *
+   * <code>repeated string feature_policy = 13;</code>
+   * @return A list containing the featurePolicy.
+   */
+  java.util.List<java.lang.String>
+      getFeaturePolicyList();
+  /**
+   * <pre>
+   * Specifies feature policies for this HTTP cycle.
+   * </pre>
+   *
+   * <code>repeated string feature_policy = 13;</code>
+   * @return The count of featurePolicy.
+   */
+  int getFeaturePolicyCount();
+  /**
+   * <pre>
+   * Specifies feature policies for this HTTP cycle.
+   * </pre>
+   *
+   * <code>repeated string feature_policy = 13;</code>
+   * @param index The index of the element to return.
+   * @return The featurePolicy at the given index.
+   */
+  java.lang.String getFeaturePolicy(int index);
+  /**
+   * <pre>
+   * Specifies feature policies for this HTTP cycle.
+   * </pre>
+   *
+   * <code>repeated string feature_policy = 13;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the featurePolicy at the given index.
+   */
+  com.google.protobuf.ByteString
+      getFeaturePolicyBytes(int index);
 
-    /**
-     * <pre>
-     * Specifies that the `nosniff` flag should be included in a `X-Content-Type-Options` header.
-     * </pre>
-     *
-     * <code>bool content_type_nosniff = 16;</code>
-     * @return The contentTypeNosniff.
-     */
-    boolean getContentTypeNosniff();
+  /**
+   * <pre>
+   * Specifies options when a page is referenced as a frame.
+   * </pre>
+   *
+   * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
+   * @return The enum numeric value on the wire for framingPolicy.
+   */
+  int getFramingPolicyValue();
+  /**
+   * <pre>
+   * Specifies options when a page is referenced as a frame.
+   * </pre>
+   *
+   * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
+   * @return The framingPolicy.
+   */
+  tools.elide.page.Context.FramingPolicy getFramingPolicy();
 
-    /**
-     * <pre>
-     * Specifies the selected CDN prefix to use.
-     * </pre>
-     *
-     * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
-     * @return Whether the cdnPrefix field is set.
-     */
-    boolean hasCdnPrefix();
-    /**
-     * <pre>
-     * Specifies the selected CDN prefix to use.
-     * </pre>
-     *
-     * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
-     * @return The cdnPrefix.
-     */
-    com.google.common.html.types.TrustedResourceUrlProto getCdnPrefix();
-    /**
-     * <pre>
-     * Specifies the selected CDN prefix to use.
-     * </pre>
-     *
-     * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
-     */
-    com.google.common.html.types.TrustedResourceUrlProtoOrBuilder getCdnPrefixOrBuilder();
+  /**
+   * <pre>
+   * Specifies that the `nosniff` flag should be included in a `X-Content-Type-Options` header.
+   * </pre>
+   *
+   * <code>bool content_type_nosniff = 16;</code>
+   * @return The contentTypeNosniff.
+   */
+  boolean getContentTypeNosniff();
 
-    /**
-     * <pre>
-     * Specifies hostnames to pre-load DNS records for.
-     * </pre>
-     *
-     * <code>repeated string dns_prefetch = 18;</code>
-     * @return A list containing the dnsPrefetch.
-     */
-    java.util.List<java.lang.String> getDnsPrefetchList();
-    /**
-     * <pre>
-     * Specifies hostnames to pre-load DNS records for.
-     * </pre>
-     *
-     * <code>repeated string dns_prefetch = 18;</code>
-     * @return The count of dnsPrefetch.
-     */
-    int getDnsPrefetchCount();
-    /**
-     * <pre>
-     * Specifies hostnames to pre-load DNS records for.
-     * </pre>
-     *
-     * <code>repeated string dns_prefetch = 18;</code>
-     * @param index The index of the element to return.
-     * @return The dnsPrefetch at the given index.
-     */
-    java.lang.String getDnsPrefetch(int index);
-    /**
-     * <pre>
-     * Specifies hostnames to pre-load DNS records for.
-     * </pre>
-     *
-     * <code>repeated string dns_prefetch = 18;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the dnsPrefetch at the given index.
-     */
-    com.google.protobuf.ByteString getDnsPrefetchBytes(int index);
+  /**
+   * <pre>
+   * Specifies the selected CDN prefix to use.
+   * </pre>
+   *
+   * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
+   * @return Whether the cdnPrefix field is set.
+   */
+  boolean hasCdnPrefix();
+  /**
+   * <pre>
+   * Specifies the selected CDN prefix to use.
+   * </pre>
+   *
+   * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
+   * @return The cdnPrefix.
+   */
+  com.google.common.html.types.TrustedResourceUrlProto getCdnPrefix();
+  /**
+   * <pre>
+   * Specifies the selected CDN prefix to use.
+   * </pre>
+   *
+   * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
+   */
+  com.google.common.html.types.TrustedResourceUrlProtoOrBuilder getCdnPrefixOrBuilder();
 
-    /**
-     * <pre>
-     * Specifies hostnames to pre-connect to.
-     * </pre>
-     *
-     * <code>repeated string preconnect = 19;</code>
-     * @return A list containing the preconnect.
-     */
-    java.util.List<java.lang.String> getPreconnectList();
-    /**
-     * <pre>
-     * Specifies hostnames to pre-connect to.
-     * </pre>
-     *
-     * <code>repeated string preconnect = 19;</code>
-     * @return The count of preconnect.
-     */
-    int getPreconnectCount();
-    /**
-     * <pre>
-     * Specifies hostnames to pre-connect to.
-     * </pre>
-     *
-     * <code>repeated string preconnect = 19;</code>
-     * @param index The index of the element to return.
-     * @return The preconnect at the given index.
-     */
-    java.lang.String getPreconnect(int index);
-    /**
-     * <pre>
-     * Specifies hostnames to pre-connect to.
-     * </pre>
-     *
-     * <code>repeated string preconnect = 19;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the preconnect at the given index.
-     */
-    com.google.protobuf.ByteString getPreconnectBytes(int index);
+  /**
+   * <pre>
+   * Specifies hostnames to pre-load DNS records for.
+   * </pre>
+   *
+   * <code>repeated string dns_prefetch = 18;</code>
+   * @return A list containing the dnsPrefetch.
+   */
+  java.util.List<java.lang.String>
+      getDnsPrefetchList();
+  /**
+   * <pre>
+   * Specifies hostnames to pre-load DNS records for.
+   * </pre>
+   *
+   * <code>repeated string dns_prefetch = 18;</code>
+   * @return The count of dnsPrefetch.
+   */
+  int getDnsPrefetchCount();
+  /**
+   * <pre>
+   * Specifies hostnames to pre-load DNS records for.
+   * </pre>
+   *
+   * <code>repeated string dns_prefetch = 18;</code>
+   * @param index The index of the element to return.
+   * @return The dnsPrefetch at the given index.
+   */
+  java.lang.String getDnsPrefetch(int index);
+  /**
+   * <pre>
+   * Specifies hostnames to pre-load DNS records for.
+   * </pre>
+   *
+   * <code>repeated string dns_prefetch = 18;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the dnsPrefetch at the given index.
+   */
+  com.google.protobuf.ByteString
+      getDnsPrefetchBytes(int index);
 
-    /**
-     * <pre>
-     * Old-style Cross-Site Scripting vulnerability protection policy.
-     * </pre>
-     *
-     * <code>string xss_protection = 20;</code>
-     * @return The xssProtection.
-     */
-    java.lang.String getXssProtection();
-    /**
-     * <pre>
-     * Old-style Cross-Site Scripting vulnerability protection policy.
-     * </pre>
-     *
-     * <code>string xss_protection = 20;</code>
-     * @return The bytes for xssProtection.
-     */
-    com.google.protobuf.ByteString getXssProtectionBytes();
+  /**
+   * <pre>
+   * Specifies hostnames to pre-connect to.
+   * </pre>
+   *
+   * <code>repeated string preconnect = 19;</code>
+   * @return A list containing the preconnect.
+   */
+  java.util.List<java.lang.String>
+      getPreconnectList();
+  /**
+   * <pre>
+   * Specifies hostnames to pre-connect to.
+   * </pre>
+   *
+   * <code>repeated string preconnect = 19;</code>
+   * @return The count of preconnect.
+   */
+  int getPreconnectCount();
+  /**
+   * <pre>
+   * Specifies hostnames to pre-connect to.
+   * </pre>
+   *
+   * <code>repeated string preconnect = 19;</code>
+   * @param index The index of the element to return.
+   * @return The preconnect at the given index.
+   */
+  java.lang.String getPreconnect(int index);
+  /**
+   * <pre>
+   * Specifies hostnames to pre-connect to.
+   * </pre>
+   *
+   * <code>repeated string preconnect = 19;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the preconnect at the given index.
+   */
+  com.google.protobuf.ByteString
+      getPreconnectBytes(int index);
 
-    /**
-     * <pre>
-     * Specifies the `Referrer-Policy` to apply to this HTTP cycle, as applicable.
-     * </pre>
-     *
-     * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
-     * @return The enum numeric value on the wire for referrerPolicy.
-     */
-    int getReferrerPolicyValue();
-    /**
-     * <pre>
-     * Specifies the `Referrer-Policy` to apply to this HTTP cycle, as applicable.
-     * </pre>
-     *
-     * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
-     * @return The referrerPolicy.
-     */
-    tools.elide.page.Context.ReferrerPolicy getReferrerPolicy();
+  /**
+   * <pre>
+   * Old-style Cross-Site Scripting vulnerability protection policy.
+   * </pre>
+   *
+   * <code>string xss_protection = 20;</code>
+   * @return The xssProtection.
+   */
+  java.lang.String getXssProtection();
+  /**
+   * <pre>
+   * Old-style Cross-Site Scripting vulnerability protection policy.
+   * </pre>
+   *
+   * <code>string xss_protection = 20;</code>
+   * @return The bytes for xssProtection.
+   */
+  com.google.protobuf.ByteString
+      getXssProtectionBytes();
+
+  /**
+   * <pre>
+   * Specifies the `Referrer-Policy` to apply to this HTTP cycle, as applicable.
+   * </pre>
+   *
+   * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
+   * @return The enum numeric value on the wire for referrerPolicy.
+   */
+  int getReferrerPolicyValue();
+  /**
+   * <pre>
+   * Specifies the `Referrer-Policy` to apply to this HTTP cycle, as applicable.
+   * </pre>
+   *
+   * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
+   * @return The referrerPolicy.
+   */
+  tools.elide.page.Context.ReferrerPolicy getReferrerPolicy();
 }

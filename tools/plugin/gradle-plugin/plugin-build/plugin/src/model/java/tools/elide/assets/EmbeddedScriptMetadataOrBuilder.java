@@ -3,36 +3,36 @@
 
 package tools.elide.assets;
 
-public interface EmbeddedScriptMetadataOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:assets.EmbeddedScriptMetadata)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * JavaScript-related metadata.
-     * </pre>
-     *
-     * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
-     * @return Whether the javascript field is set.
-     */
-    boolean hasJavascript();
-    /**
-     * <pre>
-     * JavaScript-related metadata.
-     * </pre>
-     *
-     * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
-     * @return The javascript.
-     */
-    tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata getJavascript();
-    /**
-     * <pre>
-     * JavaScript-related metadata.
-     * </pre>
-     *
-     * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
-     */
-    tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadataOrBuilder getJavascriptOrBuilder();
+public interface EmbeddedScriptMetadataOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:assets.EmbeddedScriptMetadata)
+    com.google.protobuf.MessageOrBuilder {
 
-    public tools.elide.assets.EmbeddedScriptMetadata.MetadataCase getMetadataCase();
+  /**
+   * <pre>
+   * JavaScript-related metadata.
+   * </pre>
+   *
+   * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
+   * @return Whether the javascript field is set.
+   */
+  boolean hasJavascript();
+  /**
+   * <pre>
+   * JavaScript-related metadata.
+   * </pre>
+   *
+   * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
+   * @return The javascript.
+   */
+  tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata getJavascript();
+  /**
+   * <pre>
+   * JavaScript-related metadata.
+   * </pre>
+   *
+   * <code>.assets.EmbeddedScriptMetadata.JsScriptMetadata javascript = 1;</code>
+   */
+  tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadataOrBuilder getJavascriptOrBuilder();
+
+  public tools.elide.assets.EmbeddedScriptMetadata.MetadataCase getMetadataCase();
 }

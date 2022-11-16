@@ -21,204 +21,597 @@ package tools.elide.struct;
  *
  * Protobuf type {@code struct.BloomFilter}
  */
-public final class BloomFilter
-    extends com.google.protobuf.GeneratedMessageV3
-    implements
-        // @@protoc_insertion_point(message_implements:struct.BloomFilter)
-        BloomFilterOrBuilder {
+public final class BloomFilter extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:struct.BloomFilter)
+    BloomFilterOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use BloomFilter.newBuilder() to construct.
+  private BloomFilter(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private BloomFilter() {
+    algorithm_ = 0;
+    layer_ = java.util.Collections.emptyList();
+  }
 
-    private static final long serialVersionUID = 0L;
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new BloomFilter();
+  }
 
-    // Use BloomFilter.newBuilder() to construct.
-    private BloomFilter(
-        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
-    ) {
-        super(builder);
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private BloomFilter(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
+            int rawValue = input.readEnum();
 
-    private BloomFilter() {
-        algorithm_ = 0;
-        layer_ = java.util.Collections.emptyList();
+            algorithm_ = rawValue;
+            break;
+          }
+          case 16: {
+
+            rounds_ = input.readUInt32();
+            break;
+          }
+          case 24: {
+
+            count_ = input.readUInt64();
+            break;
+          }
+          case 32: {
+
+            limit_ = input.readUInt64();
+            break;
+          }
+          case 42: {
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              layer_ = new java.util.ArrayList<tools.elide.struct.BloomFilter.FilterLayer>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            layer_.add(
+                input.readMessage(tools.elide.struct.BloomFilter.FilterLayer.parser(), extensionRegistry));
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        layer_ = java.util.Collections.unmodifiableList(layer_);
+      }
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            tools.elide.struct.BloomFilter.class, tools.elide.struct.BloomFilter.Builder.class);
+  }
+
+  public interface FilterLayerOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:struct.BloomFilter.FilterLayer)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @return A list containing the bitset.
+     */
+    java.util.List<java.lang.Long> getBitsetList();
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @return The count of bitset.
+     */
+    int getBitsetCount();
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @param index The index of the element to return.
+     * @return The bitset at the given index.
+     */
+    long getBitset(int index);
+
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @return A list containing the count.
+     */
+    java.util.List<java.lang.Long> getCountList();
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @return The count of count.
+     */
+    int getCountCount();
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @param index The index of the element to return.
+     * @return The count at the given index.
+     */
+    long getCount(int index);
+  }
+  /**
+   * <pre>
+   * Specifies a layer in a multi-layer Bloom filter. If no more than 1 layer is specified, the filter is a simple
+   * single-layer bit set (also known as a regular Bloom filter).
+   * </pre>
+   *
+   * Protobuf type {@code struct.BloomFilter.FilterLayer}
+   */
+  public static final class FilterLayer extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:struct.BloomFilter.FilterLayer)
+      FilterLayerOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use FilterLayer.newBuilder() to construct.
+    private FilterLayer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private FilterLayer() {
+      bitset_ = emptyLongList();
+      count_ = emptyLongList();
     }
 
     @java.lang.Override
-    @SuppressWarnings({ "unused" })
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new BloomFilter();
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new FilterLayer();
     }
 
     @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-        return this.unknownFields;
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
     }
-
-    private BloomFilter(
+    private FilterLayer(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 8:
-                        {
-                            int rawValue = input.readEnum();
-
-                            algorithm_ = rawValue;
-                            break;
-                        }
-                    case 16:
-                        {
-                            rounds_ = input.readUInt32();
-                            break;
-                        }
-                    case 24:
-                        {
-                            count_ = input.readUInt64();
-                            break;
-                        }
-                    case 32:
-                        {
-                            limit_ = input.readUInt64();
-                            break;
-                        }
-                    case 42:
-                        {
-                            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                                layer_ =
-                                    new java.util.ArrayList<tools.elide.struct.BloomFilter.FilterLayer>();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            layer_.add(
-                                input.readMessage(
-                                    tools.elide.struct.BloomFilter.FilterLayer.parser(),
-                                    extensionRegistry
-                                )
-                            );
-                            break;
-                        }
-                    default:
-                        {
-                            if (
-                                !parseUnknownField(
-                                    input,
-                                    unknownFields,
-                                    extensionRegistry,
-                                    tag
-                                )
-                            ) {
-                                done = true;
-                            }
-                            break;
-                        }
-                }
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 17: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                bitset_ = newLongList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              bitset_.addLong(input.readFixed64());
+              break;
             }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-            throw e
-                .asInvalidProtocolBufferException()
-                .setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                .setUnfinishedMessage(this);
-        } finally {
-            if (((mutable_bitField0_ & 0x00000001) != 0)) {
-                layer_ = java.util.Collections.unmodifiableList(layer_);
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
+                bitset_ = newLongList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                bitset_.addLong(input.readFixed64());
+              }
+              input.popLimit(limit);
+              break;
             }
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            case 32: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                count_ = newLongList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              count_.addLong(input.readUInt64());
+              break;
+            }
+            case 34: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                count_ = newLongList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                count_.addLong(input.readUInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
         }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          bitset_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          count_.makeImmutable(); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
     }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-        return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-        return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_fieldAccessorTable.ensureFieldAccessorsInitialized(
-            tools.elide.struct.BloomFilter.class,
-            tools.elide.struct.BloomFilter.Builder.class
-        );
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tools.elide.struct.BloomFilter.FilterLayer.class, tools.elide.struct.BloomFilter.FilterLayer.Builder.class);
     }
 
-    public interface FilterLayerOrBuilder
-        extends
-            // @@protoc_insertion_point(interface_extends:struct.BloomFilter.FilterLayer)
-            com.google.protobuf.MessageOrBuilder {
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @return A list containing the bitset.
-         */
-        java.util.List<java.lang.Long> getBitsetList();
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @return The count of bitset.
-         */
-        int getBitsetCount();
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @param index The index of the element to return.
-         * @return The bitset at the given index.
-         */
-        long getBitset(int index);
+    public static final int BITSET_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.LongList bitset_;
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @return A list containing the bitset.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getBitsetList() {
+      return bitset_;
+    }
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @return The count of bitset.
+     */
+    public int getBitsetCount() {
+      return bitset_.size();
+    }
+    /**
+     * <pre>
+     * Raw bit sets for each layer of the filter.
+     * </pre>
+     *
+     * <code>repeated fixed64 bitset = 2;</code>
+     * @param index The index of the element to return.
+     * @return The bitset at the given index.
+     */
+    public long getBitset(int index) {
+      return bitset_.getLong(index);
+    }
+    private int bitsetMemoizedSerializedSize = -1;
 
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @return A list containing the count.
-         */
-        java.util.List<java.lang.Long> getCountList();
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @return The count of count.
-         */
-        int getCountCount();
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @param index The index of the element to return.
-         * @return The count at the given index.
-         */
-        long getCount(int index);
+    public static final int COUNT_FIELD_NUMBER = 4;
+    private com.google.protobuf.Internal.LongList count_;
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @return A list containing the count.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long>
+        getCountList() {
+      return count_;
+    }
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @return The count of count.
+     */
+    public int getCountCount() {
+      return count_.size();
+    }
+    /**
+     * <pre>
+     * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+     * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+     * </pre>
+     *
+     * <code>repeated uint64 count = 4;</code>
+     * @param index The index of the element to return.
+     * @return The count at the given index.
+     */
+    public long getCount(int index) {
+      return count_.getLong(index);
+    }
+    private int countMemoizedSerializedSize = -1;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
 
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (getBitsetList().size() > 0) {
+        output.writeUInt32NoTag(18);
+        output.writeUInt32NoTag(bitsetMemoizedSerializedSize);
+      }
+      for (int i = 0; i < bitset_.size(); i++) {
+        output.writeFixed64NoTag(bitset_.getLong(i));
+      }
+      if (getCountList().size() > 0) {
+        output.writeUInt32NoTag(34);
+        output.writeUInt32NoTag(countMemoizedSerializedSize);
+      }
+      for (int i = 0; i < count_.size(); i++) {
+        output.writeUInt64NoTag(count_.getLong(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        dataSize = 8 * getBitsetList().size();
+        size += dataSize;
+        if (!getBitsetList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        bitsetMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < count_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt64SizeNoTag(count_.getLong(i));
+        }
+        size += dataSize;
+        if (!getCountList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        countMemoizedSerializedSize = dataSize;
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tools.elide.struct.BloomFilter.FilterLayer)) {
+        return super.equals(obj);
+      }
+      tools.elide.struct.BloomFilter.FilterLayer other = (tools.elide.struct.BloomFilter.FilterLayer) obj;
+
+      if (!getBitsetList()
+          .equals(other.getBitsetList())) return false;
+      if (!getCountList()
+          .equals(other.getCountList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getBitsetCount() > 0) {
+        hash = (37 * hash) + BITSET_FIELD_NUMBER;
+        hash = (53 * hash) + getBitsetList().hashCode();
+      }
+      if (getCountCount() > 0) {
+        hash = (37 * hash) + COUNT_FIELD_NUMBER;
+        hash = (53 * hash) + getCountList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tools.elide.struct.BloomFilter.FilterLayer prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      * Specifies a layer in a multi-layer Bloom filter. If no more than 1 layer is specified, the filter is a simple
@@ -227,992 +620,1024 @@ public final class BloomFilter
      *
      * Protobuf type {@code struct.BloomFilter.FilterLayer}
      */
-    public static final class FilterLayer
-        extends com.google.protobuf.GeneratedMessageV3
-        implements
-            // @@protoc_insertion_point(message_implements:struct.BloomFilter.FilterLayer)
-            FilterLayerOrBuilder {
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:struct.BloomFilter.FilterLayer)
+        tools.elide.struct.BloomFilter.FilterLayerOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
+      }
 
-        private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tools.elide.struct.BloomFilter.FilterLayer.class, tools.elide.struct.BloomFilter.FilterLayer.Builder.class);
+      }
 
-        // Use FilterLayer.newBuilder() to construct.
-        private FilterLayer(
-            com.google.protobuf.GeneratedMessageV3.Builder<?> builder
-        ) {
-            super(builder);
+      // Construct using tools.elide.struct.BloomFilter.FilterLayer.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
         }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitset_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        count_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
 
-        private FilterLayer() {
-            bitset_ = emptyLongList();
-            count_ = emptyLongList();
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
+      }
+
+      @java.lang.Override
+      public tools.elide.struct.BloomFilter.FilterLayer getDefaultInstanceForType() {
+        return tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public tools.elide.struct.BloomFilter.FilterLayer build() {
+        tools.elide.struct.BloomFilter.FilterLayer result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
         }
+        return result;
+      }
 
-        @java.lang.Override
-        @SuppressWarnings({ "unused" })
-        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-            return new FilterLayer();
+      @java.lang.Override
+      public tools.elide.struct.BloomFilter.FilterLayer buildPartial() {
+        tools.elide.struct.BloomFilter.FilterLayer result = new tools.elide.struct.BloomFilter.FilterLayer(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          bitset_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000001);
         }
-
-        @java.lang.Override
-        public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-            return this.unknownFields;
+        result.bitset_ = bitset_;
+        if (((bitField0_ & 0x00000002) != 0)) {
+          count_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
+        result.count_ = count_;
+        onBuilt();
+        return result;
+      }
 
-        private FilterLayer(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            this();
-            if (extensionRegistry == null) {
-                throw new java.lang.NullPointerException();
-            }
-            int mutable_bitField0_ = 0;
-            com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
-            try {
-                boolean done = false;
-                while (!done) {
-                    int tag = input.readTag();
-                    switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 17:
-                            {
-                                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                                    bitset_ = newLongList();
-                                    mutable_bitField0_ |= 0x00000001;
-                                }
-                                bitset_.addLong(input.readFixed64());
-                                break;
-                            }
-                        case 18:
-                            {
-                                int length = input.readRawVarint32();
-                                int limit = input.pushLimit(length);
-                                if (
-                                    !((mutable_bitField0_ & 0x00000001) != 0) &&
-                                    input.getBytesUntilLimit() > 0
-                                ) {
-                                    bitset_ = newLongList();
-                                    mutable_bitField0_ |= 0x00000001;
-                                }
-                                while (input.getBytesUntilLimit() > 0) {
-                                    bitset_.addLong(input.readFixed64());
-                                }
-                                input.popLimit(limit);
-                                break;
-                            }
-                        case 32:
-                            {
-                                if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                                    count_ = newLongList();
-                                    mutable_bitField0_ |= 0x00000002;
-                                }
-                                count_.addLong(input.readUInt64());
-                                break;
-                            }
-                        case 34:
-                            {
-                                int length = input.readRawVarint32();
-                                int limit = input.pushLimit(length);
-                                if (
-                                    !((mutable_bitField0_ & 0x00000002) != 0) &&
-                                    input.getBytesUntilLimit() > 0
-                                ) {
-                                    count_ = newLongList();
-                                    mutable_bitField0_ |= 0x00000002;
-                                }
-                                while (input.getBytesUntilLimit() > 0) {
-                                    count_.addLong(input.readUInt64());
-                                }
-                                input.popLimit(limit);
-                                break;
-                            }
-                        default:
-                            {
-                                if (
-                                    !parseUnknownField(
-                                        input,
-                                        unknownFields,
-                                        extensionRegistry,
-                                        tag
-                                    )
-                                ) {
-                                    done = true;
-                                }
-                                break;
-                            }
-                    }
-                }
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                throw e.setUnfinishedMessage(this);
-            } catch (com.google.protobuf.UninitializedMessageException e) {
-                throw e
-                    .asInvalidProtocolBufferException()
-                    .setUnfinishedMessage(this);
-            } catch (java.io.IOException e) {
-                throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                    .setUnfinishedMessage(this);
-            } finally {
-                if (((mutable_bitField0_ & 0x00000001) != 0)) {
-                    bitset_.makeImmutable(); // C
-                }
-                if (((mutable_bitField0_ & 0x00000002) != 0)) {
-                    count_.makeImmutable(); // C
-                }
-                this.unknownFields = unknownFields.build();
-                makeExtensionsImmutable();
-            }
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tools.elide.struct.BloomFilter.FilterLayer) {
+          return mergeFrom((tools.elide.struct.BloomFilter.FilterLayer)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
         }
+      }
 
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
+      public Builder mergeFrom(tools.elide.struct.BloomFilter.FilterLayer other) {
+        if (other == tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance()) return this;
+        if (!other.bitset_.isEmpty()) {
+          if (bitset_.isEmpty()) {
+            bitset_ = other.bitset_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureBitsetIsMutable();
+            bitset_.addAll(other.bitset_);
+          }
+          onChanged();
         }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-            return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                tools.elide.struct.BloomFilter.FilterLayer.class,
-                tools.elide.struct.BloomFilter.FilterLayer.Builder.class
-            );
+        if (!other.count_.isEmpty()) {
+          if (count_.isEmpty()) {
+            count_ = other.count_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureCountIsMutable();
+            count_.addAll(other.count_);
+          }
+          onChanged();
         }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
 
-        public static final int BITSET_FIELD_NUMBER = 2;
-        private com.google.protobuf.Internal.LongList bitset_;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
 
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @return A list containing the bitset.
-         */
-        @java.lang.Override
-        public java.util.List<java.lang.Long> getBitsetList() {
-            return bitset_;
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tools.elide.struct.BloomFilter.FilterLayer parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tools.elide.struct.BloomFilter.FilterLayer) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
         }
-
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @return The count of bitset.
-         */
-        public int getBitsetCount() {
-            return bitset_.size();
-        }
-
-        /**
-         * <pre>
-         * Raw bit sets for each layer of the filter.
-         * </pre>
-         *
-         * <code>repeated fixed64 bitset = 2;</code>
-         * @param index The index of the element to return.
-         * @return The bitset at the given index.
-         */
-        public long getBitset(int index) {
-            return bitset_.getLong(index);
-        }
-
-        private int bitsetMemoizedSerializedSize = -1;
-
-        public static final int COUNT_FIELD_NUMBER = 4;
-        private com.google.protobuf.Internal.LongList count_;
-
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @return A list containing the count.
-         */
-        @java.lang.Override
-        public java.util.List<java.lang.Long> getCountList() {
-            return count_;
-        }
-
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @return The count of count.
-         */
-        public int getCountCount() {
-            return count_.size();
-        }
-
-        /**
-         * <pre>
-         * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-         * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-         * </pre>
-         *
-         * <code>repeated uint64 count = 4;</code>
-         * @param index The index of the element to return.
-         * @return The count at the given index.
-         */
-        public long getCount(int index) {
-            return count_.getLong(index);
-        }
-
-        private int countMemoizedSerializedSize = -1;
-
-        private byte memoizedIsInitialized = -1;
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            byte isInitialized = memoizedIsInitialized;
-            if (isInitialized == 1) return true;
-            if (isInitialized == 0) return false;
-
-            memoizedIsInitialized = 1;
-            return true;
-        }
-
-        @java.lang.Override
-        public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
-            getSerializedSize();
-            if (getBitsetList().size() > 0) {
-                output.writeUInt32NoTag(18);
-                output.writeUInt32NoTag(bitsetMemoizedSerializedSize);
-            }
-            for (int i = 0; i < bitset_.size(); i++) {
-                output.writeFixed64NoTag(bitset_.getLong(i));
-            }
-            if (getCountList().size() > 0) {
-                output.writeUInt32NoTag(34);
-                output.writeUInt32NoTag(countMemoizedSerializedSize);
-            }
-            for (int i = 0; i < count_.size(); i++) {
-                output.writeUInt64NoTag(count_.getLong(i));
-            }
-            unknownFields.writeTo(output);
-        }
-
-        @java.lang.Override
-        public int getSerializedSize() {
-            int size = memoizedSize;
-            if (size != -1) return size;
-
-            size = 0;
-            {
-                int dataSize = 0;
-                dataSize = 8 * getBitsetList().size();
-                size += dataSize;
-                if (!getBitsetList().isEmpty()) {
-                    size += 1;
-                    size +=
-                        com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(
-                            dataSize
-                        );
-                }
-                bitsetMemoizedSerializedSize = dataSize;
-            }
-            {
-                int dataSize = 0;
-                for (int i = 0; i < count_.size(); i++) {
-                    dataSize +=
-                        com.google.protobuf.CodedOutputStream.computeUInt64SizeNoTag(
-                            count_.getLong(i)
-                        );
-                }
-                size += dataSize;
-                if (!getCountList().isEmpty()) {
-                    size += 1;
-                    size +=
-                        com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(
-                            dataSize
-                        );
-                }
-                countMemoizedSerializedSize = dataSize;
-            }
-            size += unknownFields.getSerializedSize();
-            memoizedSize = size;
-            return size;
-        }
-
-        @java.lang.Override
-        public boolean equals(final java.lang.Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof tools.elide.struct.BloomFilter.FilterLayer)) {
-                return super.equals(obj);
-            }
-            tools.elide.struct.BloomFilter.FilterLayer other = (tools.elide.struct.BloomFilter.FilterLayer) obj;
-
-            if (!getBitsetList().equals(other.getBitsetList())) return false;
-            if (!getCountList().equals(other.getCountList())) return false;
-            if (!unknownFields.equals(other.unknownFields)) return false;
-            return true;
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            if (memoizedHashCode != 0) {
-                return memoizedHashCode;
-            }
-            int hash = 41;
-            hash = (19 * hash) + getDescriptor().hashCode();
-            if (getBitsetCount() > 0) {
-                hash = (37 * hash) + BITSET_FIELD_NUMBER;
-                hash = (53 * hash) + getBitsetList().hashCode();
-            }
-            if (getCountCount() > 0) {
-                hash = (37 * hash) + COUNT_FIELD_NUMBER;
-                hash = (53 * hash) + getCountList().hashCode();
-            }
-            hash = (29 * hash) + unknownFields.hashCode();
-            memoizedHashCode = hash;
-            return hash;
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            java.nio.ByteBuffer data
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            com.google.protobuf.ByteString data
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            byte[] data
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return PARSER.parseFrom(data, extensionRegistry);
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            java.io.InputStream input
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                PARSER,
-                input
-            );
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                PARSER,
-                input,
-                extensionRegistry
-            );
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseDelimitedFrom(
-            java.io.InputStream input
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                PARSER,
-                input
-            );
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                PARSER,
-                input,
-                extensionRegistry
-            );
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            com.google.protobuf.CodedInputStream input
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                PARSER,
-                input
-            );
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                PARSER,
-                input,
-                extensionRegistry
-            );
-        }
-
-        @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
-        public static Builder newBuilder() {
-            return DEFAULT_INSTANCE.toBuilder();
-        }
-
-        public static Builder newBuilder(
-            tools.elide.struct.BloomFilter.FilterLayer prototype
-        ) {
-            return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-        }
-
-        @java.lang.Override
-        public Builder toBuilder() {
-            return this == DEFAULT_INSTANCE
-                ? new Builder()
-                : new Builder().mergeFrom(this);
-        }
-
-        @java.lang.Override
-        protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-        ) {
-            Builder builder = new Builder(parent);
-            return builder;
-        }
-
-        /**
-         * <pre>
-         * Specifies a layer in a multi-layer Bloom filter. If no more than 1 layer is specified, the filter is a simple
-         * single-layer bit set (also known as a regular Bloom filter).
-         * </pre>
-         *
-         * Protobuf type {@code struct.BloomFilter.FilterLayer}
-         */
-        public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-            implements
-                // @@protoc_insertion_point(builder_implements:struct.BloomFilter.FilterLayer)
-                tools.elide.struct.BloomFilter.FilterLayerOrBuilder {
-
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
-            }
-
-            @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-                return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                    tools.elide.struct.BloomFilter.FilterLayer.class,
-                    tools.elide.struct.BloomFilter.FilterLayer.Builder.class
-                );
-            }
-
-            // Construct using tools.elide.struct.BloomFilter.FilterLayer.newBuilder()
-            private Builder() {
-                maybeForceBuilderInitialization();
-            }
-
-            private Builder(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-            ) {
-                super(parent);
-                maybeForceBuilderInitialization();
-            }
-
-            private void maybeForceBuilderInitialization() {
-                if (
-                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-                ) {}
-            }
-
-            @java.lang.Override
-            public Builder clear() {
-                super.clear();
-                bitset_ = emptyLongList();
-                bitField0_ = (bitField0_ & ~0x00000001);
-                count_ = emptyLongList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-                return this;
-            }
-
-            @java.lang.Override
-            public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_FilterLayer_descriptor;
-            }
-
-            @java.lang.Override
-            public tools.elide.struct.BloomFilter.FilterLayer getDefaultInstanceForType() {
-                return tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance();
-            }
-
-            @java.lang.Override
-            public tools.elide.struct.BloomFilter.FilterLayer build() {
-                tools.elide.struct.BloomFilter.FilterLayer result = buildPartial();
-                if (!result.isInitialized()) {
-                    throw newUninitializedMessageException(result);
-                }
-                return result;
-            }
-
-            @java.lang.Override
-            public tools.elide.struct.BloomFilter.FilterLayer buildPartial() {
-                tools.elide.struct.BloomFilter.FilterLayer result = new tools.elide.struct.BloomFilter.FilterLayer(
-                    this
-                );
-                int from_bitField0_ = bitField0_;
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    bitset_.makeImmutable();
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.bitset_ = bitset_;
-                if (((bitField0_ & 0x00000002) != 0)) {
-                    count_.makeImmutable();
-                    bitField0_ = (bitField0_ & ~0x00000002);
-                }
-                result.count_ = count_;
-                onBuilt();
-                return result;
-            }
-
-            @java.lang.Override
-            public Builder clone() {
-                return super.clone();
-            }
-
-            @java.lang.Override
-            public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value
-            ) {
-                return super.setField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field
-            ) {
-                return super.clearField(field);
-            }
-
-            @java.lang.Override
-            public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof
-            ) {
-                return super.clearOneof(oneof);
-            }
-
-            @java.lang.Override
-            public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value
-            ) {
-                return super.setRepeatedField(field, index, value);
-            }
-
-            @java.lang.Override
-            public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value
-            ) {
-                return super.addRepeatedField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(com.google.protobuf.Message other) {
-                if (
-                    other instanceof tools.elide.struct.BloomFilter.FilterLayer
-                ) {
-                    return mergeFrom(
-                        (tools.elide.struct.BloomFilter.FilterLayer) other
-                    );
-                } else {
-                    super.mergeFrom(other);
-                    return this;
-                }
-            }
-
-            public Builder mergeFrom(
-                tools.elide.struct.BloomFilter.FilterLayer other
-            ) {
-                if (
-                    other ==
-                    tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance()
-                ) return this;
-                if (!other.bitset_.isEmpty()) {
-                    if (bitset_.isEmpty()) {
-                        bitset_ = other.bitset_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    } else {
-                        ensureBitsetIsMutable();
-                        bitset_.addAll(other.bitset_);
-                    }
-                    onChanged();
-                }
-                if (!other.count_.isEmpty()) {
-                    if (count_.isEmpty()) {
-                        count_ = other.count_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
-                    } else {
-                        ensureCountIsMutable();
-                        count_.addAll(other.count_);
-                    }
-                    onChanged();
-                }
-                this.mergeUnknownFields(other.unknownFields);
-                onChanged();
-                return this;
-            }
-
-            @java.lang.Override
-            public final boolean isInitialized() {
-                return true;
-            }
-
-            @java.lang.Override
-            public Builder mergeFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry
-            ) throws java.io.IOException {
-                tools.elide.struct.BloomFilter.FilterLayer parsedMessage = null;
-                try {
-                    parsedMessage =
-                        PARSER.parsePartialFrom(input, extensionRegistry);
-                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                    parsedMessage =
-                        (tools.elide.struct.BloomFilter.FilterLayer) e.getUnfinishedMessage();
-                    throw e.unwrapIOException();
-                } finally {
-                    if (parsedMessage != null) {
-                        mergeFrom(parsedMessage);
-                    }
-                }
-                return this;
-            }
-
-            private int bitField0_;
-
-            private com.google.protobuf.Internal.LongList bitset_ = emptyLongList();
-
-            private void ensureBitsetIsMutable() {
-                if (!((bitField0_ & 0x00000001) != 0)) {
-                    bitset_ = mutableCopy(bitset_);
-                    bitField0_ |= 0x00000001;
-                }
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @return A list containing the bitset.
-             */
-            public java.util.List<java.lang.Long> getBitsetList() {
-                return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(bitset_)
-                    : bitset_;
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @return The count of bitset.
-             */
-            public int getBitsetCount() {
-                return bitset_.size();
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @param index The index of the element to return.
-             * @return The bitset at the given index.
-             */
-            public long getBitset(int index) {
-                return bitset_.getLong(index);
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @param index The index to set the value at.
-             * @param value The bitset to set.
-             * @return This builder for chaining.
-             */
-            public Builder setBitset(int index, long value) {
-                ensureBitsetIsMutable();
-                bitset_.setLong(index, value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @param value The bitset to add.
-             * @return This builder for chaining.
-             */
-            public Builder addBitset(long value) {
-                ensureBitsetIsMutable();
-                bitset_.addLong(value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @param values The bitset to add.
-             * @return This builder for chaining.
-             */
-            public Builder addAllBitset(
-                java.lang.Iterable<? extends java.lang.Long> values
-            ) {
-                ensureBitsetIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                    values,
-                    bitset_
-                );
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Raw bit sets for each layer of the filter.
-             * </pre>
-             *
-             * <code>repeated fixed64 bitset = 2;</code>
-             * @return This builder for chaining.
-             */
-            public Builder clearBitset() {
-                bitset_ = emptyLongList();
-                bitField0_ = (bitField0_ & ~0x00000001);
-                onChanged();
-                return this;
-            }
-
-            private com.google.protobuf.Internal.LongList count_ = emptyLongList();
-
-            private void ensureCountIsMutable() {
-                if (!((bitField0_ & 0x00000002) != 0)) {
-                    count_ = mutableCopy(count_);
-                    bitField0_ |= 0x00000002;
-                }
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @return A list containing the count.
-             */
-            public java.util.List<java.lang.Long> getCountList() {
-                return ((bitField0_ & 0x00000002) != 0)
-                    ? java.util.Collections.unmodifiableList(count_)
-                    : count_;
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @return The count of count.
-             */
-            public int getCountCount() {
-                return count_.size();
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @param index The index of the element to return.
-             * @return The count at the given index.
-             */
-            public long getCount(int index) {
-                return count_.getLong(index);
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @param index The index to set the value at.
-             * @param value The count to set.
-             * @return This builder for chaining.
-             */
-            public Builder setCount(int index, long value) {
-                ensureCountIsMutable();
-                count_.setLong(index, value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @param value The count to add.
-             * @return This builder for chaining.
-             */
-            public Builder addCount(long value) {
-                ensureCountIsMutable();
-                count_.addLong(value);
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @param values The count to add.
-             * @return This builder for chaining.
-             */
-            public Builder addAllCount(
-                java.lang.Iterable<? extends java.lang.Long> values
-            ) {
-                ensureCountIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                    values,
-                    count_
-                );
-                onChanged();
-                return this;
-            }
-
-            /**
-             * <pre>
-             * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
-             * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
-             * </pre>
-             *
-             * <code>repeated uint64 count = 4;</code>
-             * @return This builder for chaining.
-             */
-            public Builder clearCount() {
-                count_ = emptyLongList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-                onChanged();
-                return this;
-            }
-
-            @java.lang.Override
-            public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields
-            ) {
-                return super.setUnknownFields(unknownFields);
-            }
-
-            @java.lang.Override
-            public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields
-            ) {
-                return super.mergeUnknownFields(unknownFields);
-            }
-            // @@protoc_insertion_point(builder_scope:struct.BloomFilter.FilterLayer)
-        }
-
-        // @@protoc_insertion_point(class_scope:struct.BloomFilter.FilterLayer)
-        private static final tools.elide.struct.BloomFilter.FilterLayer DEFAULT_INSTANCE;
-
-        static {
-            DEFAULT_INSTANCE = new tools.elide.struct.BloomFilter.FilterLayer();
-        }
-
-        public static tools.elide.struct.BloomFilter.FilterLayer getDefaultInstance() {
-            return DEFAULT_INSTANCE;
-        }
-
-        private static final com.google.protobuf.Parser<FilterLayer> PARSER = new com.google.protobuf.AbstractParser<FilterLayer>() {
-            @java.lang.Override
-            public FilterLayer parsePartialFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry
-            ) throws com.google.protobuf.InvalidProtocolBufferException {
-                return new FilterLayer(input, extensionRegistry);
-            }
-        };
-
-        public static com.google.protobuf.Parser<FilterLayer> parser() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Parser<FilterLayer> getParserForType() {
-            return PARSER;
-        }
-
-        @java.lang.Override
-        public tools.elide.struct.BloomFilter.FilterLayer getDefaultInstanceForType() {
-            return DEFAULT_INSTANCE;
-        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.Internal.LongList bitset_ = emptyLongList();
+      private void ensureBitsetIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          bitset_ = mutableCopy(bitset_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @return A list containing the bitset.
+       */
+      public java.util.List<java.lang.Long>
+          getBitsetList() {
+        return ((bitField0_ & 0x00000001) != 0) ?
+                 java.util.Collections.unmodifiableList(bitset_) : bitset_;
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @return The count of bitset.
+       */
+      public int getBitsetCount() {
+        return bitset_.size();
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @param index The index of the element to return.
+       * @return The bitset at the given index.
+       */
+      public long getBitset(int index) {
+        return bitset_.getLong(index);
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The bitset to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBitset(
+          int index, long value) {
+        ensureBitsetIsMutable();
+        bitset_.setLong(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @param value The bitset to add.
+       * @return This builder for chaining.
+       */
+      public Builder addBitset(long value) {
+        ensureBitsetIsMutable();
+        bitset_.addLong(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @param values The bitset to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllBitset(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureBitsetIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, bitset_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Raw bit sets for each layer of the filter.
+       * </pre>
+       *
+       * <code>repeated fixed64 bitset = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBitset() {
+        bitset_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.Internal.LongList count_ = emptyLongList();
+      private void ensureCountIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          count_ = mutableCopy(count_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @return A list containing the count.
+       */
+      public java.util.List<java.lang.Long>
+          getCountList() {
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(count_) : count_;
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @return The count of count.
+       */
+      public int getCountCount() {
+        return count_.size();
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @param index The index of the element to return.
+       * @return The count at the given index.
+       */
+      public long getCount(int index) {
+        return count_.getLong(index);
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @param index The index to set the value at.
+       * @param value The count to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCount(
+          int index, long value) {
+        ensureCountIsMutable();
+        count_.setLong(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @param value The count to add.
+       * @return This builder for chaining.
+       */
+      public Builder addCount(long value) {
+        ensureCountIsMutable();
+        count_.addLong(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @param values The count to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllCount(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureCountIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, count_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Count of items for each bucket in this filter layer. Only present if this is a *Counting Bloom filter*, in which
+       * the bit set indicates presence for each bucket and the count indicates the value for each bucket.
+       * </pre>
+       *
+       * <code>repeated uint64 count = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCount() {
+        count_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:struct.BloomFilter.FilterLayer)
     }
 
-    public static final int ALGORITHM_FIELD_NUMBER = 1;
-    private int algorithm_;
+    // @@protoc_insertion_point(class_scope:struct.BloomFilter.FilterLayer)
+    private static final tools.elide.struct.BloomFilter.FilterLayer DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tools.elide.struct.BloomFilter.FilterLayer();
+    }
 
+    public static tools.elide.struct.BloomFilter.FilterLayer getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<FilterLayer>
+        PARSER = new com.google.protobuf.AbstractParser<FilterLayer>() {
+      @java.lang.Override
+      public FilterLayer parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new FilterLayer(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<FilterLayer> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<FilterLayer> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public tools.elide.struct.BloomFilter.FilterLayer getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public static final int ALGORITHM_FIELD_NUMBER = 1;
+  private int algorithm_;
+  /**
+   * <pre>
+   * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
+   * otherwise the underlying data may be rendered unusable.
+   * </pre>
+   *
+   * <code>.crypto.HashAlgorithm algorithm = 1;</code>
+   * @return The enum numeric value on the wire for algorithm.
+   */
+  @java.lang.Override public int getAlgorithmValue() {
+    return algorithm_;
+  }
+  /**
+   * <pre>
+   * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
+   * otherwise the underlying data may be rendered unusable.
+   * </pre>
+   *
+   * <code>.crypto.HashAlgorithm algorithm = 1;</code>
+   * @return The algorithm.
+   */
+  @java.lang.Override public tools.elide.crypto.HashAlgorithm getAlgorithm() {
+    @SuppressWarnings("deprecation")
+    tools.elide.crypto.HashAlgorithm result = tools.elide.crypto.HashAlgorithm.valueOf(algorithm_);
+    return result == null ? tools.elide.crypto.HashAlgorithm.UNRECOGNIZED : result;
+  }
+
+  public static final int ROUNDS_FIELD_NUMBER = 2;
+  private int rounds_;
+  /**
+   * <pre>
+   * Number of hash rounds to apply when adding data to this filter.
+   * </pre>
+   *
+   * <code>uint32 rounds = 2;</code>
+   * @return The rounds.
+   */
+  @java.lang.Override
+  public int getRounds() {
+    return rounds_;
+  }
+
+  public static final int COUNT_FIELD_NUMBER = 3;
+  private long count_;
+  /**
+   * <pre>
+   * Number of items in the filter, across all layers.
+   * </pre>
+   *
+   * <code>uint64 count = 3;</code>
+   * @return The count.
+   */
+  @java.lang.Override
+  public long getCount() {
+    return count_;
+  }
+
+  public static final int LIMIT_FIELD_NUMBER = 4;
+  private long limit_;
+  /**
+   * <pre>
+   * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
+   * </pre>
+   *
+   * <code>uint64 limit = 4;</code>
+   * @return The limit.
+   */
+  @java.lang.Override
+  public long getLimit() {
+    return limit_;
+  }
+
+  public static final int LAYER_FIELD_NUMBER = 5;
+  private java.util.List<tools.elide.struct.BloomFilter.FilterLayer> layer_;
+  /**
+   * <pre>
+   * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+   * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+   * layer (*Layered*) Bloom filter.
+   * </pre>
+   *
+   * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+   */
+  @java.lang.Override
+  public java.util.List<tools.elide.struct.BloomFilter.FilterLayer> getLayerList() {
+    return layer_;
+  }
+  /**
+   * <pre>
+   * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+   * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+   * layer (*Layered*) Bloom filter.
+   * </pre>
+   *
+   * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+   */
+  @java.lang.Override
+  public java.util.List<? extends tools.elide.struct.BloomFilter.FilterLayerOrBuilder> 
+      getLayerOrBuilderList() {
+    return layer_;
+  }
+  /**
+   * <pre>
+   * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+   * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+   * layer (*Layered*) Bloom filter.
+   * </pre>
+   *
+   * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+   */
+  @java.lang.Override
+  public int getLayerCount() {
+    return layer_.size();
+  }
+  /**
+   * <pre>
+   * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+   * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+   * layer (*Layered*) Bloom filter.
+   * </pre>
+   *
+   * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+   */
+  @java.lang.Override
+  public tools.elide.struct.BloomFilter.FilterLayer getLayer(int index) {
+    return layer_.get(index);
+  }
+  /**
+   * <pre>
+   * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+   * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+   * layer (*Layered*) Bloom filter.
+   * </pre>
+   *
+   * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+   */
+  @java.lang.Override
+  public tools.elide.struct.BloomFilter.FilterLayerOrBuilder getLayerOrBuilder(
+      int index) {
+    return layer_.get(index);
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    if (algorithm_ != tools.elide.crypto.HashAlgorithm.IDENTITY.getNumber()) {
+      output.writeEnum(1, algorithm_);
+    }
+    if (rounds_ != 0) {
+      output.writeUInt32(2, rounds_);
+    }
+    if (count_ != 0L) {
+      output.writeUInt64(3, count_);
+    }
+    if (limit_ != 0L) {
+      output.writeUInt64(4, limit_);
+    }
+    for (int i = 0; i < layer_.size(); i++) {
+      output.writeMessage(5, layer_.get(i));
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @java.lang.Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (algorithm_ != tools.elide.crypto.HashAlgorithm.IDENTITY.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, algorithm_);
+    }
+    if (rounds_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(2, rounds_);
+    }
+    if (count_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(3, count_);
+    }
+    if (limit_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(4, limit_);
+    }
+    for (int i = 0; i < layer_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, layer_.get(i));
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof tools.elide.struct.BloomFilter)) {
+      return super.equals(obj);
+    }
+    tools.elide.struct.BloomFilter other = (tools.elide.struct.BloomFilter) obj;
+
+    if (algorithm_ != other.algorithm_) return false;
+    if (getRounds()
+        != other.getRounds()) return false;
+    if (getCount()
+        != other.getCount()) return false;
+    if (getLimit()
+        != other.getLimit()) return false;
+    if (!getLayerList()
+        .equals(other.getLayerList())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ALGORITHM_FIELD_NUMBER;
+    hash = (53 * hash) + algorithm_;
+    hash = (37 * hash) + ROUNDS_FIELD_NUMBER;
+    hash = (53 * hash) + getRounds();
+    hash = (37 * hash) + COUNT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getCount());
+    hash = (37 * hash) + LIMIT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getLimit());
+    if (getLayerCount() > 0) {
+      hash = (37 * hash) + LAYER_FIELD_NUMBER;
+      hash = (53 * hash) + getLayerList().hashCode();
+    }
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static tools.elide.struct.BloomFilter parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.struct.BloomFilter parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static tools.elide.struct.BloomFilter parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.struct.BloomFilter parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(tools.elide.struct.BloomFilter prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * <pre>
+   * Defines a structure that is operable as a 1-to-n-layer Bloom filter. NIST (the National Institute of Standards and
+   * Technology) defines a *"Bloom filter"* as a "data structure with a probabilistic algorithm to quickly test membership
+   * in a large set using multiple hash functions into a single array of bits."
+   * In essence, a Bloom filter is a very compact set of data, which operates kind of like a cheese cloth. For each unique
+   * data fingerprint applied to the filter, you can imagine throwing colored die at the cheese cloth - what you end up
+   * with is some blend of colors, which is entirely unique and ephemeral, having been constituted entirely by the colors
+   * you chose, and the exact parameters of how you threw them. Albeit a contrived example, one could then imagine simply
+   * examining the result of your work to determine the presence of different colors.
+   * Bloom filters work the same way. Since their invention in by Burton Howard Bloom in 1970, many exotic forms of Bloom
+   * filters have shown up, a few of which this structure supports. For example, one may choose to enhance regular filters
+   * with the count of items considered in the filter, making it a *Counting Bloom filter*. Or, one may choose to combine
+   * multiple filters into one effective filter, which is referred to as a *Layered Bloom filter*.
+   * </pre>
+   *
+   * Protobuf type {@code struct.BloomFilter}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:struct.BloomFilter)
+      tools.elide.struct.BloomFilterOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tools.elide.struct.BloomFilter.class, tools.elide.struct.BloomFilter.Builder.class);
+    }
+
+    // Construct using tools.elide.struct.BloomFilter.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+        getLayerFieldBuilder();
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      algorithm_ = 0;
+
+      rounds_ = 0;
+
+      count_ = 0L;
+
+      limit_ = 0L;
+
+      if (layerBuilder_ == null) {
+        layer_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      } else {
+        layerBuilder_.clear();
+      }
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
+    }
+
+    @java.lang.Override
+    public tools.elide.struct.BloomFilter getDefaultInstanceForType() {
+      return tools.elide.struct.BloomFilter.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public tools.elide.struct.BloomFilter build() {
+      tools.elide.struct.BloomFilter result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public tools.elide.struct.BloomFilter buildPartial() {
+      tools.elide.struct.BloomFilter result = new tools.elide.struct.BloomFilter(this);
+      int from_bitField0_ = bitField0_;
+      result.algorithm_ = algorithm_;
+      result.rounds_ = rounds_;
+      result.count_ = count_;
+      result.limit_ = limit_;
+      if (layerBuilder_ == null) {
+        if (((bitField0_ & 0x00000001) != 0)) {
+          layer_ = java.util.Collections.unmodifiableList(layer_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.layer_ = layer_;
+      } else {
+        result.layer_ = layerBuilder_.build();
+      }
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof tools.elide.struct.BloomFilter) {
+        return mergeFrom((tools.elide.struct.BloomFilter)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(tools.elide.struct.BloomFilter other) {
+      if (other == tools.elide.struct.BloomFilter.getDefaultInstance()) return this;
+      if (other.algorithm_ != 0) {
+        setAlgorithmValue(other.getAlgorithmValue());
+      }
+      if (other.getRounds() != 0) {
+        setRounds(other.getRounds());
+      }
+      if (other.getCount() != 0L) {
+        setCount(other.getCount());
+      }
+      if (other.getLimit() != 0L) {
+        setLimit(other.getLimit());
+      }
+      if (layerBuilder_ == null) {
+        if (!other.layer_.isEmpty()) {
+          if (layer_.isEmpty()) {
+            layer_ = other.layer_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureLayerIsMutable();
+            layer_.addAll(other.layer_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.layer_.isEmpty()) {
+          if (layerBuilder_.isEmpty()) {
+            layerBuilder_.dispose();
+            layerBuilder_ = null;
+            layer_ = other.layer_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            layerBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getLayerFieldBuilder() : null;
+          } else {
+            layerBuilder_.addAllMessages(other.layer_);
+          }
+        }
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      tools.elide.struct.BloomFilter parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (tools.elide.struct.BloomFilter) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+    private int bitField0_;
+
+    private int algorithm_ = 0;
     /**
      * <pre>
      * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
@@ -1222,11 +1647,25 @@ public final class BloomFilter
      * <code>.crypto.HashAlgorithm algorithm = 1;</code>
      * @return The enum numeric value on the wire for algorithm.
      */
-    @java.lang.Override
-    public int getAlgorithmValue() {
-        return algorithm_;
+    @java.lang.Override public int getAlgorithmValue() {
+      return algorithm_;
     }
-
+    /**
+     * <pre>
+     * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
+     * otherwise the underlying data may be rendered unusable.
+     * </pre>
+     *
+     * <code>.crypto.HashAlgorithm algorithm = 1;</code>
+     * @param value The enum numeric value on the wire for algorithm to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAlgorithmValue(int value) {
+      
+      algorithm_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
@@ -1238,18 +1677,46 @@ public final class BloomFilter
      */
     @java.lang.Override
     public tools.elide.crypto.HashAlgorithm getAlgorithm() {
-        @SuppressWarnings("deprecation")
-        tools.elide.crypto.HashAlgorithm result = tools.elide.crypto.HashAlgorithm.valueOf(
-            algorithm_
-        );
-        return result == null
-            ? tools.elide.crypto.HashAlgorithm.UNRECOGNIZED
-            : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.crypto.HashAlgorithm result = tools.elide.crypto.HashAlgorithm.valueOf(algorithm_);
+      return result == null ? tools.elide.crypto.HashAlgorithm.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
+     * otherwise the underlying data may be rendered unusable.
+     * </pre>
+     *
+     * <code>.crypto.HashAlgorithm algorithm = 1;</code>
+     * @param value The algorithm to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAlgorithm(tools.elide.crypto.HashAlgorithm value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      algorithm_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
+     * otherwise the underlying data may be rendered unusable.
+     * </pre>
+     *
+     * <code>.crypto.HashAlgorithm algorithm = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearAlgorithm() {
+      
+      algorithm_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int ROUNDS_FIELD_NUMBER = 2;
-    private int rounds_;
-
+    private int rounds_ ;
     /**
      * <pre>
      * Number of hash rounds to apply when adding data to this filter.
@@ -1260,12 +1727,39 @@ public final class BloomFilter
      */
     @java.lang.Override
     public int getRounds() {
-        return rounds_;
+      return rounds_;
+    }
+    /**
+     * <pre>
+     * Number of hash rounds to apply when adding data to this filter.
+     * </pre>
+     *
+     * <code>uint32 rounds = 2;</code>
+     * @param value The rounds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRounds(int value) {
+      
+      rounds_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Number of hash rounds to apply when adding data to this filter.
+     * </pre>
+     *
+     * <code>uint32 rounds = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRounds() {
+      
+      rounds_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int COUNT_FIELD_NUMBER = 3;
-    private long count_;
-
+    private long count_ ;
     /**
      * <pre>
      * Number of items in the filter, across all layers.
@@ -1276,12 +1770,39 @@ public final class BloomFilter
      */
     @java.lang.Override
     public long getCount() {
-        return count_;
+      return count_;
+    }
+    /**
+     * <pre>
+     * Number of items in the filter, across all layers.
+     * </pre>
+     *
+     * <code>uint64 count = 3;</code>
+     * @param value The count to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCount(long value) {
+      
+      count_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Number of items in the filter, across all layers.
+     * </pre>
+     *
+     * <code>uint64 count = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCount() {
+      
+      count_ = 0L;
+      onChanged();
+      return this;
     }
 
-    public static final int LIMIT_FIELD_NUMBER = 4;
-    private long limit_;
-
+    private long limit_ ;
     /**
      * <pre>
      * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
@@ -1292,11 +1813,49 @@ public final class BloomFilter
      */
     @java.lang.Override
     public long getLimit() {
-        return limit_;
+      return limit_;
+    }
+    /**
+     * <pre>
+     * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
+     * </pre>
+     *
+     * <code>uint64 limit = 4;</code>
+     * @param value The limit to set.
+     * @return This builder for chaining.
+     */
+    public Builder setLimit(long value) {
+      
+      limit_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
+     * </pre>
+     *
+     * <code>uint64 limit = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearLimit() {
+      
+      limit_ = 0L;
+      onChanged();
+      return this;
     }
 
-    public static final int LAYER_FIELD_NUMBER = 5;
-    private java.util.List<tools.elide.struct.BloomFilter.FilterLayer> layer_;
+    private java.util.List<tools.elide.struct.BloomFilter.FilterLayer> layer_ =
+      java.util.Collections.emptyList();
+    private void ensureLayerIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        layer_ = new java.util.ArrayList<tools.elide.struct.BloomFilter.FilterLayer>(layer_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder> layerBuilder_;
 
     /**
      * <pre>
@@ -1307,11 +1866,13 @@ public final class BloomFilter
      *
      * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
      */
-    @java.lang.Override
     public java.util.List<tools.elide.struct.BloomFilter.FilterLayer> getLayerList() {
-        return layer_;
+      if (layerBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(layer_);
+      } else {
+        return layerBuilder_.getMessageList();
+      }
     }
-
     /**
      * <pre>
      * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
@@ -1321,25 +1882,13 @@ public final class BloomFilter
      *
      * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
      */
-    @java.lang.Override
-    public java.util.List<? extends tools.elide.struct.BloomFilter.FilterLayerOrBuilder> getLayerOrBuilderList() {
-        return layer_;
-    }
-
-    /**
-     * <pre>
-     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-     * layer (*Layered*) Bloom filter.
-     * </pre>
-     *
-     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-     */
-    @java.lang.Override
     public int getLayerCount() {
+      if (layerBuilder_ == null) {
         return layer_.size();
+      } else {
+        return layerBuilder_.getCount();
+      }
     }
-
     /**
      * <pre>
      * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
@@ -1349,11 +1898,13 @@ public final class BloomFilter
      *
      * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
      */
-    @java.lang.Override
     public tools.elide.struct.BloomFilter.FilterLayer getLayer(int index) {
+      if (layerBuilder_ == null) {
         return layer_.get(index);
+      } else {
+        return layerBuilder_.getMessage(index);
+      }
     }
-
     /**
      * <pre>
      * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
@@ -1363,1166 +1914,334 @@ public final class BloomFilter
      *
      * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
      */
-    @java.lang.Override
-    public tools.elide.struct.BloomFilter.FilterLayerOrBuilder getLayerOrBuilder(
-        int index
-    ) {
-        return layer_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-        throws java.io.IOException {
-        if (
-            algorithm_ != tools.elide.crypto.HashAlgorithm.IDENTITY.getNumber()
-        ) {
-            output.writeEnum(1, algorithm_);
+    public Builder setLayer(
+        int index, tools.elide.struct.BloomFilter.FilterLayer value) {
+      if (layerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-        if (rounds_ != 0) {
-            output.writeUInt32(2, rounds_);
-        }
-        if (count_ != 0L) {
-            output.writeUInt64(3, count_);
-        }
-        if (limit_ != 0L) {
-            output.writeUInt64(4, limit_);
-        }
-        for (int i = 0; i < layer_.size(); i++) {
-            output.writeMessage(5, layer_.get(i));
-        }
-        unknownFields.writeTo(output);
+        ensureLayerIsMutable();
+        layer_.set(index, value);
+        onChanged();
+      } else {
+        layerBuilder_.setMessage(index, value);
+      }
+      return this;
     }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (
-            algorithm_ != tools.elide.crypto.HashAlgorithm.IDENTITY.getNumber()
-        ) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(
-                    1,
-                    algorithm_
-                );
-        }
-        if (rounds_ != 0) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeUInt32Size(
-                    2,
-                    rounds_
-                );
-        }
-        if (count_ != 0L) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeUInt64Size(
-                    3,
-                    count_
-                );
-        }
-        if (limit_ != 0L) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeUInt64Size(
-                    4,
-                    limit_
-                );
-        }
-        for (int i = 0; i < layer_.size(); i++) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeMessageSize(
-                    5,
-                    layer_.get(i)
-                );
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof tools.elide.struct.BloomFilter)) {
-            return super.equals(obj);
-        }
-        tools.elide.struct.BloomFilter other = (tools.elide.struct.BloomFilter) obj;
-
-        if (algorithm_ != other.algorithm_) return false;
-        if (getRounds() != other.getRounds()) return false;
-        if (getCount() != other.getCount()) return false;
-        if (getLimit() != other.getLimit()) return false;
-        if (!getLayerList().equals(other.getLayerList())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + ALGORITHM_FIELD_NUMBER;
-        hash = (53 * hash) + algorithm_;
-        hash = (37 * hash) + ROUNDS_FIELD_NUMBER;
-        hash = (53 * hash) + getRounds();
-        hash = (37 * hash) + COUNT_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getCount());
-        hash = (37 * hash) + LIMIT_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getLimit());
-        if (getLayerCount() > 0) {
-            hash = (37 * hash) + LAYER_FIELD_NUMBER;
-            hash = (53 * hash) + getLayerList().hashCode();
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        java.nio.ByteBuffer data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        com.google.protobuf.ByteString data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.struct.BloomFilter parseDelimitedFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.struct.BloomFilter parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        com.google.protobuf.CodedInputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.struct.BloomFilter parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(tools.elide.struct.BloomFilter prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder()
-            : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-    ) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
      * <pre>
-     * Defines a structure that is operable as a 1-to-n-layer Bloom filter. NIST (the National Institute of Standards and
-     * Technology) defines a *"Bloom filter"* as a "data structure with a probabilistic algorithm to quickly test membership
-     * in a large set using multiple hash functions into a single array of bits."
-     * In essence, a Bloom filter is a very compact set of data, which operates kind of like a cheese cloth. For each unique
-     * data fingerprint applied to the filter, you can imagine throwing colored die at the cheese cloth - what you end up
-     * with is some blend of colors, which is entirely unique and ephemeral, having been constituted entirely by the colors
-     * you chose, and the exact parameters of how you threw them. Albeit a contrived example, one could then imagine simply
-     * examining the result of your work to determine the presence of different colors.
-     * Bloom filters work the same way. Since their invention in by Burton Howard Bloom in 1970, many exotic forms of Bloom
-     * filters have shown up, a few of which this structure supports. For example, one may choose to enhance regular filters
-     * with the count of items considered in the filter, making it a *Counting Bloom filter*. Or, one may choose to combine
-     * multiple filters into one effective filter, which is referred to as a *Layered Bloom filter*.
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
      * </pre>
      *
-     * Protobuf type {@code struct.BloomFilter}
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
      */
-    public static final class Builder
-        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-        implements
-            // @@protoc_insertion_point(builder_implements:struct.BloomFilter)
-            tools.elide.struct.BloomFilterOrBuilder {
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-            return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                tools.elide.struct.BloomFilter.class,
-                tools.elide.struct.BloomFilter.Builder.class
-            );
-        }
-
-        // Construct using tools.elide.struct.BloomFilter.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-        ) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {
-                getLayerFieldBuilder();
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            algorithm_ = 0;
-
-            rounds_ = 0;
-
-            count_ = 0L;
-
-            limit_ = 0L;
-
-            if (layerBuilder_ == null) {
-                layer_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-                layerBuilder_.clear();
-            }
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-            return tools.elide.struct.Bloom.internal_static_struct_BloomFilter_descriptor;
-        }
-
-        @java.lang.Override
-        public tools.elide.struct.BloomFilter getDefaultInstanceForType() {
-            return tools.elide.struct.BloomFilter.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public tools.elide.struct.BloomFilter build() {
-            tools.elide.struct.BloomFilter result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.struct.BloomFilter buildPartial() {
-            tools.elide.struct.BloomFilter result = new tools.elide.struct.BloomFilter(
-                this
-            );
-            int from_bitField0_ = bitField0_;
-            result.algorithm_ = algorithm_;
-            result.rounds_ = rounds_;
-            result.count_ = count_;
-            result.limit_ = limit_;
-            if (layerBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    layer_ = java.util.Collections.unmodifiableList(layer_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.layer_ = layer_;
-            } else {
-                result.layer_ = layerBuilder_.build();
-            }
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field
-        ) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof
-        ) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index,
-            java.lang.Object value
-        ) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof tools.elide.struct.BloomFilter) {
-                return mergeFrom((tools.elide.struct.BloomFilter) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(tools.elide.struct.BloomFilter other) {
-            if (
-                other == tools.elide.struct.BloomFilter.getDefaultInstance()
-            ) return this;
-            if (other.algorithm_ != 0) {
-                setAlgorithmValue(other.getAlgorithmValue());
-            }
-            if (other.getRounds() != 0) {
-                setRounds(other.getRounds());
-            }
-            if (other.getCount() != 0L) {
-                setCount(other.getCount());
-            }
-            if (other.getLimit() != 0L) {
-                setLimit(other.getLimit());
-            }
-            if (layerBuilder_ == null) {
-                if (!other.layer_.isEmpty()) {
-                    if (layer_.isEmpty()) {
-                        layer_ = other.layer_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                    } else {
-                        ensureLayerIsMutable();
-                        layer_.addAll(other.layer_);
-                    }
-                    onChanged();
-                }
-            } else {
-                if (!other.layer_.isEmpty()) {
-                    if (layerBuilder_.isEmpty()) {
-                        layerBuilder_.dispose();
-                        layerBuilder_ = null;
-                        layer_ = other.layer_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
-                        layerBuilder_ =
-                            com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-                                ? getLayerFieldBuilder()
-                                : null;
-                    } else {
-                        layerBuilder_.addAllMessages(other.layer_);
-                    }
-                }
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            tools.elide.struct.BloomFilter parsedMessage = null;
-            try {
-                parsedMessage =
-                    PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage =
-                    (tools.elide.struct.BloomFilter) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int bitField0_;
-
-        private int algorithm_ = 0;
-
-        /**
-         * <pre>
-         * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
-         * otherwise the underlying data may be rendered unusable.
-         * </pre>
-         *
-         * <code>.crypto.HashAlgorithm algorithm = 1;</code>
-         * @return The enum numeric value on the wire for algorithm.
-         */
-        @java.lang.Override
-        public int getAlgorithmValue() {
-            return algorithm_;
-        }
-
-        /**
-         * <pre>
-         * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
-         * otherwise the underlying data may be rendered unusable.
-         * </pre>
-         *
-         * <code>.crypto.HashAlgorithm algorithm = 1;</code>
-         * @param value The enum numeric value on the wire for algorithm to set.
-         * @return This builder for chaining.
-         */
-        public Builder setAlgorithmValue(int value) {
-            algorithm_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
-         * otherwise the underlying data may be rendered unusable.
-         * </pre>
-         *
-         * <code>.crypto.HashAlgorithm algorithm = 1;</code>
-         * @return The algorithm.
-         */
-        @java.lang.Override
-        public tools.elide.crypto.HashAlgorithm getAlgorithm() {
-            @SuppressWarnings("deprecation")
-            tools.elide.crypto.HashAlgorithm result = tools.elide.crypto.HashAlgorithm.valueOf(
-                algorithm_
-            );
-            return result == null
-                ? tools.elide.crypto.HashAlgorithm.UNRECOGNIZED
-                : result;
-        }
-
-        /**
-         * <pre>
-         * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
-         * otherwise the underlying data may be rendered unusable.
-         * </pre>
-         *
-         * <code>.crypto.HashAlgorithm algorithm = 1;</code>
-         * @param value The algorithm to set.
-         * @return This builder for chaining.
-         */
-        public Builder setAlgorithm(tools.elide.crypto.HashAlgorithm value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            algorithm_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Hash algorithm in use for this Bloom filter. This must be considered an immutable value for a constituted filter,
-         * otherwise the underlying data may be rendered unusable.
-         * </pre>
-         *
-         * <code>.crypto.HashAlgorithm algorithm = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearAlgorithm() {
-            algorithm_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private int rounds_;
-
-        /**
-         * <pre>
-         * Number of hash rounds to apply when adding data to this filter.
-         * </pre>
-         *
-         * <code>uint32 rounds = 2;</code>
-         * @return The rounds.
-         */
-        @java.lang.Override
-        public int getRounds() {
-            return rounds_;
-        }
-
-        /**
-         * <pre>
-         * Number of hash rounds to apply when adding data to this filter.
-         * </pre>
-         *
-         * <code>uint32 rounds = 2;</code>
-         * @param value The rounds to set.
-         * @return This builder for chaining.
-         */
-        public Builder setRounds(int value) {
-            rounds_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Number of hash rounds to apply when adding data to this filter.
-         * </pre>
-         *
-         * <code>uint32 rounds = 2;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearRounds() {
-            rounds_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private long count_;
-
-        /**
-         * <pre>
-         * Number of items in the filter, across all layers.
-         * </pre>
-         *
-         * <code>uint64 count = 3;</code>
-         * @return The count.
-         */
-        @java.lang.Override
-        public long getCount() {
-            return count_;
-        }
-
-        /**
-         * <pre>
-         * Number of items in the filter, across all layers.
-         * </pre>
-         *
-         * <code>uint64 count = 3;</code>
-         * @param value The count to set.
-         * @return This builder for chaining.
-         */
-        public Builder setCount(long value) {
-            count_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Number of items in the filter, across all layers.
-         * </pre>
-         *
-         * <code>uint64 count = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearCount() {
-            count_ = 0L;
-            onChanged();
-            return this;
-        }
-
-        private long limit_;
-
-        /**
-         * <pre>
-         * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
-         * </pre>
-         *
-         * <code>uint64 limit = 4;</code>
-         * @return The limit.
-         */
-        @java.lang.Override
-        public long getLimit() {
-            return limit_;
-        }
-
-        /**
-         * <pre>
-         * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
-         * </pre>
-         *
-         * <code>uint64 limit = 4;</code>
-         * @param value The limit to set.
-         * @return This builder for chaining.
-         */
-        public Builder setLimit(long value) {
-            limit_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Limit setting to enforce for this Bloom filter, before re-calculating contents. Optional.
-         * </pre>
-         *
-         * <code>uint64 limit = 4;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearLimit() {
-            limit_ = 0L;
-            onChanged();
-            return this;
-        }
-
-        private java.util.List<tools.elide.struct.BloomFilter.FilterLayer> layer_ = java.util.Collections.emptyList();
-
-        private void ensureLayerIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                layer_ =
-                    new java.util.ArrayList<tools.elide.struct.BloomFilter.FilterLayer>(
-                        layer_
-                    );
-                bitField0_ |= 0x00000001;
-            }
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder> layerBuilder_;
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public java.util.List<tools.elide.struct.BloomFilter.FilterLayer> getLayerList() {
-            if (layerBuilder_ == null) {
-                return java.util.Collections.unmodifiableList(layer_);
-            } else {
-                return layerBuilder_.getMessageList();
-            }
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public int getLayerCount() {
-            if (layerBuilder_ == null) {
-                return layer_.size();
-            } else {
-                return layerBuilder_.getCount();
-            }
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public tools.elide.struct.BloomFilter.FilterLayer getLayer(int index) {
-            if (layerBuilder_ == null) {
-                return layer_.get(index);
-            } else {
-                return layerBuilder_.getMessage(index);
-            }
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder setLayer(
-            int index,
-            tools.elide.struct.BloomFilter.FilterLayer value
-        ) {
-            if (layerBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureLayerIsMutable();
-                layer_.set(index, value);
-                onChanged();
-            } else {
-                layerBuilder_.setMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder setLayer(
-            int index,
-            tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue
-        ) {
-            if (layerBuilder_ == null) {
-                ensureLayerIsMutable();
-                layer_.set(index, builderForValue.build());
-                onChanged();
-            } else {
-                layerBuilder_.setMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder addLayer(
-            tools.elide.struct.BloomFilter.FilterLayer value
-        ) {
-            if (layerBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureLayerIsMutable();
-                layer_.add(value);
-                onChanged();
-            } else {
-                layerBuilder_.addMessage(value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder addLayer(
-            int index,
-            tools.elide.struct.BloomFilter.FilterLayer value
-        ) {
-            if (layerBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureLayerIsMutable();
-                layer_.add(index, value);
-                onChanged();
-            } else {
-                layerBuilder_.addMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder addLayer(
-            tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue
-        ) {
-            if (layerBuilder_ == null) {
-                ensureLayerIsMutable();
-                layer_.add(builderForValue.build());
-                onChanged();
-            } else {
-                layerBuilder_.addMessage(builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder addLayer(
-            int index,
-            tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue
-        ) {
-            if (layerBuilder_ == null) {
-                ensureLayerIsMutable();
-                layer_.add(index, builderForValue.build());
-                onChanged();
-            } else {
-                layerBuilder_.addMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder addAllLayer(
-            java.lang.Iterable<? extends tools.elide.struct.BloomFilter.FilterLayer> values
-        ) {
-            if (layerBuilder_ == null) {
-                ensureLayerIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                    values,
-                    layer_
-                );
-                onChanged();
-            } else {
-                layerBuilder_.addAllMessages(values);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder clearLayer() {
-            if (layerBuilder_ == null) {
-                layer_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
-                onChanged();
-            } else {
-                layerBuilder_.clear();
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public Builder removeLayer(int index) {
-            if (layerBuilder_ == null) {
-                ensureLayerIsMutable();
-                layer_.remove(index);
-                onChanged();
-            } else {
-                layerBuilder_.remove(index);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public tools.elide.struct.BloomFilter.FilterLayer.Builder getLayerBuilder(
-            int index
-        ) {
-            return getLayerFieldBuilder().getBuilder(index);
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public tools.elide.struct.BloomFilter.FilterLayerOrBuilder getLayerOrBuilder(
-            int index
-        ) {
-            if (layerBuilder_ == null) {
-                return layer_.get(index);
-            } else {
-                return layerBuilder_.getMessageOrBuilder(index);
-            }
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public java.util.List<? extends tools.elide.struct.BloomFilter.FilterLayerOrBuilder> getLayerOrBuilderList() {
-            if (layerBuilder_ != null) {
-                return layerBuilder_.getMessageOrBuilderList();
-            } else {
-                return java.util.Collections.unmodifiableList(layer_);
-            }
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public tools.elide.struct.BloomFilter.FilterLayer.Builder addLayerBuilder() {
-            return getLayerFieldBuilder()
-                .addBuilder(
-                    tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance()
-                );
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public tools.elide.struct.BloomFilter.FilterLayer.Builder addLayerBuilder(
-            int index
-        ) {
-            return getLayerFieldBuilder()
-                .addBuilder(
-                    index,
-                    tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance()
-                );
-        }
-
-        /**
-         * <pre>
-         * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
-         * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
-         * layer (*Layered*) Bloom filter.
-         * </pre>
-         *
-         * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
-         */
-        public java.util.List<tools.elide.struct.BloomFilter.FilterLayer.Builder> getLayerBuilderList() {
-            return getLayerFieldBuilder().getBuilderList();
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder> getLayerFieldBuilder() {
-            if (layerBuilder_ == null) {
-                layerBuilder_ =
-                    new com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder>(
-                        layer_,
-                        ((bitField0_ & 0x00000001) != 0),
-                        getParentForChildren(),
-                        isClean()
-                    );
-                layer_ = null;
-            }
-            return layerBuilder_;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-        // @@protoc_insertion_point(builder_scope:struct.BloomFilter)
+    public Builder setLayer(
+        int index, tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue) {
+      if (layerBuilder_ == null) {
+        ensureLayerIsMutable();
+        layer_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        layerBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
     }
-
-    // @@protoc_insertion_point(class_scope:struct.BloomFilter)
-    private static final tools.elide.struct.BloomFilter DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new tools.elide.struct.BloomFilter();
-    }
-
-    public static tools.elide.struct.BloomFilter getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<BloomFilter> PARSER = new com.google.protobuf.AbstractParser<BloomFilter>() {
-        @java.lang.Override
-        public BloomFilter parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return new BloomFilter(input, extensionRegistry);
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder addLayer(tools.elide.struct.BloomFilter.FilterLayer value) {
+      if (layerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
         }
-    };
-
-    public static com.google.protobuf.Parser<BloomFilter> parser() {
-        return PARSER;
+        ensureLayerIsMutable();
+        layer_.add(value);
+        onChanged();
+      } else {
+        layerBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder addLayer(
+        int index, tools.elide.struct.BloomFilter.FilterLayer value) {
+      if (layerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureLayerIsMutable();
+        layer_.add(index, value);
+        onChanged();
+      } else {
+        layerBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder addLayer(
+        tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue) {
+      if (layerBuilder_ == null) {
+        ensureLayerIsMutable();
+        layer_.add(builderForValue.build());
+        onChanged();
+      } else {
+        layerBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder addLayer(
+        int index, tools.elide.struct.BloomFilter.FilterLayer.Builder builderForValue) {
+      if (layerBuilder_ == null) {
+        ensureLayerIsMutable();
+        layer_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        layerBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder addAllLayer(
+        java.lang.Iterable<? extends tools.elide.struct.BloomFilter.FilterLayer> values) {
+      if (layerBuilder_ == null) {
+        ensureLayerIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, layer_);
+        onChanged();
+      } else {
+        layerBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder clearLayer() {
+      if (layerBuilder_ == null) {
+        layer_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+      } else {
+        layerBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public Builder removeLayer(int index) {
+      if (layerBuilder_ == null) {
+        ensureLayerIsMutable();
+        layer_.remove(index);
+        onChanged();
+      } else {
+        layerBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public tools.elide.struct.BloomFilter.FilterLayer.Builder getLayerBuilder(
+        int index) {
+      return getLayerFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public tools.elide.struct.BloomFilter.FilterLayerOrBuilder getLayerOrBuilder(
+        int index) {
+      if (layerBuilder_ == null) {
+        return layer_.get(index);  } else {
+        return layerBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public java.util.List<? extends tools.elide.struct.BloomFilter.FilterLayerOrBuilder> 
+         getLayerOrBuilderList() {
+      if (layerBuilder_ != null) {
+        return layerBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(layer_);
+      }
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public tools.elide.struct.BloomFilter.FilterLayer.Builder addLayerBuilder() {
+      return getLayerFieldBuilder().addBuilder(
+          tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public tools.elide.struct.BloomFilter.FilterLayer.Builder addLayerBuilder(
+        int index) {
+      return getLayerFieldBuilder().addBuilder(
+          index, tools.elide.struct.BloomFilter.FilterLayer.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Specifies each layer of this Bloom filter structure. If no more than one layer is present, the structure represents
+     * a simple, single-layer regular Bloom filter. If more than one layer are present, the structure represents a multi-
+     * layer (*Layered*) Bloom filter.
+     * </pre>
+     *
+     * <code>repeated .struct.BloomFilter.FilterLayer layer = 5;</code>
+     */
+    public java.util.List<tools.elide.struct.BloomFilter.FilterLayer.Builder> 
+         getLayerBuilderList() {
+      return getLayerFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder> 
+        getLayerFieldBuilder() {
+      if (layerBuilder_ == null) {
+        layerBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            tools.elide.struct.BloomFilter.FilterLayer, tools.elide.struct.BloomFilter.FilterLayer.Builder, tools.elide.struct.BloomFilter.FilterLayerOrBuilder>(
+                layer_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
+        layer_ = null;
+      }
+      return layerBuilder_;
+    }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<BloomFilter> getParserForType() {
-        return PARSER;
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
+
+    // @@protoc_insertion_point(builder_scope:struct.BloomFilter)
+  }
+
+  // @@protoc_insertion_point(class_scope:struct.BloomFilter)
+  private static final tools.elide.struct.BloomFilter DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new tools.elide.struct.BloomFilter();
+  }
+
+  public static tools.elide.struct.BloomFilter getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
+
+  private static final com.google.protobuf.Parser<BloomFilter>
+      PARSER = new com.google.protobuf.AbstractParser<BloomFilter>() {
     @java.lang.Override
-    public tools.elide.struct.BloomFilter getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+    public BloomFilter parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new BloomFilter(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<BloomFilter> parser() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<BloomFilter> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public tools.elide.struct.BloomFilter getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
+

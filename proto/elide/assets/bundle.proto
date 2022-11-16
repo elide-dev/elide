@@ -22,6 +22,7 @@ import "google/protobuf/timestamp.proto";
 import "elide/crypto/crypto.proto";
 import "elide/data/data.proto";
 import "elide/model/model.proto";
+import "elide/page/page.proto";
 import "elide/struct/bloom.proto";
 
 
@@ -120,7 +121,8 @@ message AssetBundle {
       // Original name of the source file, if applicable.
       string filename = 2;
 
-      reserved 3;
+      // URL and DOM settings for this asset.
+      page.Context.Styles.Stylesheet stylesheet = 3;
 
       // Whether a renaming map is available for this stylesheet.
       bool renaming = 4;
@@ -157,7 +159,7 @@ message AssetBundle {
       string filename = 2;
 
       // URL and DOM settings for this asset.
-      reserved 3;
+      page.Context.Scripts.JavaScript script = 3;
     }
 
     // Script module name/path.

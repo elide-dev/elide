@@ -11,148 +11,145 @@ package tools.elide.page;
  *
  * Protobuf enum {@code page.Kind}
  */
-public enum Kind implements com.google.protobuf.ProtocolMessageEnum {
-    /**
-     * <pre>
-     * Default content kind: generic web page or web application.
-     * </pre>
-     *
-     * <code>WEB_PAGE = 0;</code>
-     */
-    WEB_PAGE(0),
-    /**
-     * <pre>
-     * Master products view: listing of multiple products. Produces impression events in analytics
-     * for each section or product displayed to the user.
-     * </pre>
-     *
-     * <code>MASTER = 1;</code>
-     */
-    MASTER(1),
-    /**
-     * <pre>
-     * Detail product view: information about a single product or product group. Produces view events
-     * in analytics for each product or product group displayed to the user.
-     * </pre>
-     *
-     * <code>DETAIL = 2;</code>
-     */
-    DETAIL(2),
-    UNRECOGNIZED(-1);
+public enum Kind
+    implements com.google.protobuf.ProtocolMessageEnum {
+  /**
+   * <pre>
+   * Default content kind: generic web page or web application.
+   * </pre>
+   *
+   * <code>WEB_PAGE = 0;</code>
+   */
+  WEB_PAGE(0),
+  /**
+   * <pre>
+   * Master products view: listing of multiple products. Produces impression events in analytics
+   * for each section or product displayed to the user.
+   * </pre>
+   *
+   * <code>MASTER = 1;</code>
+   */
+  MASTER(1),
+  /**
+   * <pre>
+   * Detail product view: information about a single product or product group. Produces view events
+   * in analytics for each product or product group displayed to the user.
+   * </pre>
+   *
+   * <code>DETAIL = 2;</code>
+   */
+  DETAIL(2),
+  UNRECOGNIZED(-1),
+  ;
 
-    /**
-     * <pre>
-     * Default content kind: generic web page or web application.
-     * </pre>
-     *
-     * <code>WEB_PAGE = 0;</code>
-     */
-    public static final int WEB_PAGE_VALUE = 0;
-    /**
-     * <pre>
-     * Master products view: listing of multiple products. Produces impression events in analytics
-     * for each section or product displayed to the user.
-     * </pre>
-     *
-     * <code>MASTER = 1;</code>
-     */
-    public static final int MASTER_VALUE = 1;
-    /**
-     * <pre>
-     * Detail product view: information about a single product or product group. Produces view events
-     * in analytics for each product or product group displayed to the user.
-     * </pre>
-     *
-     * <code>DETAIL = 2;</code>
-     */
-    public static final int DETAIL_VALUE = 2;
+  /**
+   * <pre>
+   * Default content kind: generic web page or web application.
+   * </pre>
+   *
+   * <code>WEB_PAGE = 0;</code>
+   */
+  public static final int WEB_PAGE_VALUE = 0;
+  /**
+   * <pre>
+   * Master products view: listing of multiple products. Produces impression events in analytics
+   * for each section or product displayed to the user.
+   * </pre>
+   *
+   * <code>MASTER = 1;</code>
+   */
+  public static final int MASTER_VALUE = 1;
+  /**
+   * <pre>
+   * Detail product view: information about a single product or product group. Produces view events
+   * in analytics for each product or product group displayed to the user.
+   * </pre>
+   *
+   * <code>DETAIL = 2;</code>
+   */
+  public static final int DETAIL_VALUE = 2;
 
-    public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-            throw new java.lang.IllegalArgumentException(
-                "Can't get the number of an unknown enum value."
-            );
-        }
-        return value;
+
+  public final int getNumber() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalArgumentException(
+          "Can't get the number of an unknown enum value.");
     }
+    return value;
+  }
 
-    /**
-     * @param value The numeric wire value of the corresponding enum entry.
-     * @return The enum associated with the given numeric wire value.
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static Kind valueOf(int value) {
-        return forNumber(value);
+  /**
+   * @param value The numeric wire value of the corresponding enum entry.
+   * @return The enum associated with the given numeric wire value.
+   * @deprecated Use {@link #forNumber(int)} instead.
+   */
+  @java.lang.Deprecated
+  public static Kind valueOf(int value) {
+    return forNumber(value);
+  }
+
+  /**
+   * @param value The numeric wire value of the corresponding enum entry.
+   * @return The enum associated with the given numeric wire value.
+   */
+  public static Kind forNumber(int value) {
+    switch (value) {
+      case 0: return WEB_PAGE;
+      case 1: return MASTER;
+      case 2: return DETAIL;
+      default: return null;
     }
+  }
 
-    /**
-     * @param value The numeric wire value of the corresponding enum entry.
-     * @return The enum associated with the given numeric wire value.
-     */
-    public static Kind forNumber(int value) {
-        switch (value) {
-            case 0:
-                return WEB_PAGE;
-            case 1:
-                return MASTER;
-            case 2:
-                return DETAIL;
-            default:
-                return null;
-        }
-    }
-
-    public static com.google.protobuf.Internal.EnumLiteMap<Kind> internalGetValueMap() {
-        return internalValueMap;
-    }
-
-    private static final com.google.protobuf.Internal.EnumLiteMap<Kind> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<Kind>() {
-        public Kind findValueByNumber(int number) {
+  public static com.google.protobuf.Internal.EnumLiteMap<Kind>
+      internalGetValueMap() {
+    return internalValueMap;
+  }
+  private static final com.google.protobuf.Internal.EnumLiteMap<
+      Kind> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<Kind>() {
+          public Kind findValueByNumber(int number) {
             return Kind.forNumber(number);
-        }
-    };
+          }
+        };
 
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
-        if (this == UNRECOGNIZED) {
-            throw new java.lang.IllegalStateException(
-                "Can't get the descriptor of an unrecognized enum value."
-            );
-        }
-        return getDescriptor().getValues().get(ordinal());
+  public final com.google.protobuf.Descriptors.EnumValueDescriptor
+      getValueDescriptor() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalStateException(
+          "Can't get the descriptor of an unrecognized enum value.");
     }
+    return getDescriptor().getValues().get(ordinal());
+  }
+  public final com.google.protobuf.Descriptors.EnumDescriptor
+      getDescriptorForType() {
+    return getDescriptor();
+  }
+  public static final com.google.protobuf.Descriptors.EnumDescriptor
+      getDescriptor() {
+    return tools.elide.page.WebSemantics.getDescriptor().getEnumTypes().get(0);
+  }
 
-    public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
-        return getDescriptor();
+  private static final Kind[] VALUES = values();
+
+  public static Kind valueOf(
+      com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+    if (desc.getType() != getDescriptor()) {
+      throw new java.lang.IllegalArgumentException(
+        "EnumValueDescriptor is not for this type.");
     }
-
-    public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
-        return tools.elide.page.WebSemantics
-            .getDescriptor()
-            .getEnumTypes()
-            .get(0);
+    if (desc.getIndex() == -1) {
+      return UNRECOGNIZED;
     }
+    return VALUES[desc.getIndex()];
+  }
 
-    private static final Kind[] VALUES = values();
+  private final int value;
 
-    public static Kind valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc
-    ) {
-        if (desc.getType() != getDescriptor()) {
-            throw new java.lang.IllegalArgumentException(
-                "EnumValueDescriptor is not for this type."
-            );
-        }
-        if (desc.getIndex() == -1) {
-            return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-    }
+  private Kind(int value) {
+    this.value = value;
+  }
 
-    private final int value;
-
-    private Kind(int value) {
-        this.value = value;
-    }
-    // @@protoc_insertion_point(enum_scope:page.Kind)
+  // @@protoc_insertion_point(enum_scope:page.Kind)
 }
+

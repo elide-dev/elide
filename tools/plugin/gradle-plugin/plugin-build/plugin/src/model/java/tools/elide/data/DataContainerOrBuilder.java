@@ -3,63 +3,66 @@
 
 package tools.elide.data;
 
-public interface DataContainerOrBuilder
-    extends
-        // @@protoc_insertion_point(interface_extends:data.DataContainer)
-        com.google.protobuf.MessageOrBuilder {
-    /**
-     * <pre>
-     * Raw bytes for the data referenced by this container.
-     * </pre>
-     *
-     * <code>bytes raw = 1;</code>
-     * @return The raw.
-     */
-    com.google.protobuf.ByteString getRaw();
+public interface DataContainerOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:data.DataContainer)
+    com.google.protobuf.MessageOrBuilder {
 
-    /**
-     * <pre>
-     * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
-     * held by this data container.
-     * </pre>
-     *
-     * <code>repeated .data.DataFingerprint integrity = 2;</code>
-     */
-    java.util.List<tools.elide.data.DataFingerprint> getIntegrityList();
-    /**
-     * <pre>
-     * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
-     * held by this data container.
-     * </pre>
-     *
-     * <code>repeated .data.DataFingerprint integrity = 2;</code>
-     */
-    tools.elide.data.DataFingerprint getIntegrity(int index);
-    /**
-     * <pre>
-     * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
-     * held by this data container.
-     * </pre>
-     *
-     * <code>repeated .data.DataFingerprint integrity = 2;</code>
-     */
-    int getIntegrityCount();
-    /**
-     * <pre>
-     * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
-     * held by this data container.
-     * </pre>
-     *
-     * <code>repeated .data.DataFingerprint integrity = 2;</code>
-     */
-    java.util.List<? extends tools.elide.data.DataFingerprintOrBuilder> getIntegrityOrBuilderList();
-    /**
-     * <pre>
-     * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
-     * held by this data container.
-     * </pre>
-     *
-     * <code>repeated .data.DataFingerprint integrity = 2;</code>
-     */
-    tools.elide.data.DataFingerprintOrBuilder getIntegrityOrBuilder(int index);
+  /**
+   * <pre>
+   * Raw bytes for the data referenced by this container.
+   * </pre>
+   *
+   * <code>bytes raw = 1;</code>
+   * @return The raw.
+   */
+  com.google.protobuf.ByteString getRaw();
+
+  /**
+   * <pre>
+   * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+   * held by this data container.
+   * </pre>
+   *
+   * <code>repeated .data.DataFingerprint integrity = 2;</code>
+   */
+  java.util.List<tools.elide.data.DataFingerprint> 
+      getIntegrityList();
+  /**
+   * <pre>
+   * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+   * held by this data container.
+   * </pre>
+   *
+   * <code>repeated .data.DataFingerprint integrity = 2;</code>
+   */
+  tools.elide.data.DataFingerprint getIntegrity(int index);
+  /**
+   * <pre>
+   * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+   * held by this data container.
+   * </pre>
+   *
+   * <code>repeated .data.DataFingerprint integrity = 2;</code>
+   */
+  int getIntegrityCount();
+  /**
+   * <pre>
+   * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+   * held by this data container.
+   * </pre>
+   *
+   * <code>repeated .data.DataFingerprint integrity = 2;</code>
+   */
+  java.util.List<? extends tools.elide.data.DataFingerprintOrBuilder> 
+      getIntegrityOrBuilderList();
+  /**
+   * <pre>
+   * Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+   * held by this data container.
+   * </pre>
+   *
+   * <code>repeated .data.DataFingerprint integrity = 2;</code>
+   */
+  tools.elide.data.DataFingerprintOrBuilder getIntegrityOrBuilder(
+      int index);
 }

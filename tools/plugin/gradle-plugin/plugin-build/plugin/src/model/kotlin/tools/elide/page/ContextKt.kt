@@ -4,15 +4,15 @@
 package tools.elide.page;
 
 @kotlin.jvm.JvmName("-initializecontext")
-public inline fun context(block: tools.elide.page.ContextKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context =
+inline fun context(block: tools.elide.page.ContextKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context =
   tools.elide.page.ContextKt.Dsl._create(tools.elide.page.Context.newBuilder()).apply { block() }._build()
-public object ContextKt {
+object ContextKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.page.Context.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.page.Context.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Metadata meta = 1;</code>
      */
-    public var meta: tools.elide.page.Context.Metadata
+    var meta: tools.elide.page.Context.Metadata
       @JvmName("getMeta")
       get() = _builder.getMeta()
       @JvmName("setMeta")
@@ -43,7 +43,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Metadata meta = 1;</code>
      */
-    public fun clearMeta() {
+    fun clearMeta() {
       _builder.clearMeta()
     }
     /**
@@ -54,7 +54,7 @@ public object ContextKt {
      * <code>.page.Context.Metadata meta = 1;</code>
      * @return Whether the meta field is set.
      */
-    public fun hasMeta(): kotlin.Boolean {
+    fun hasMeta(): kotlin.Boolean {
       return _builder.hasMeta()
     }
 
@@ -65,7 +65,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Styles styles = 2;</code>
      */
-    public var styles: tools.elide.page.Context.Styles
+    var styles: tools.elide.page.Context.Styles
       @JvmName("getStyles")
       get() = _builder.getStyles()
       @JvmName("setStyles")
@@ -79,7 +79,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Styles styles = 2;</code>
      */
-    public fun clearStyles() {
+    fun clearStyles() {
       _builder.clearStyles()
     }
     /**
@@ -90,7 +90,7 @@ public object ContextKt {
      * <code>.page.Context.Styles styles = 2;</code>
      * @return Whether the styles field is set.
      */
-    public fun hasStyles(): kotlin.Boolean {
+    fun hasStyles(): kotlin.Boolean {
       return _builder.hasStyles()
     }
 
@@ -101,7 +101,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Fonts fonts = 3;</code>
      */
-    public var fonts: tools.elide.page.Context.Fonts
+    var fonts: tools.elide.page.Context.Fonts
       @JvmName("getFonts")
       get() = _builder.getFonts()
       @JvmName("setFonts")
@@ -115,7 +115,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Fonts fonts = 3;</code>
      */
-    public fun clearFonts() {
+    fun clearFonts() {
       _builder.clearFonts()
     }
     /**
@@ -126,7 +126,7 @@ public object ContextKt {
      * <code>.page.Context.Fonts fonts = 3;</code>
      * @return Whether the fonts field is set.
      */
-    public fun hasFonts(): kotlin.Boolean {
+    fun hasFonts(): kotlin.Boolean {
       return _builder.hasFonts()
     }
 
@@ -137,7 +137,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Scripts scripts = 4;</code>
      */
-    public var scripts: tools.elide.page.Context.Scripts
+    var scripts: tools.elide.page.Context.Scripts
       @JvmName("getScripts")
       get() = _builder.getScripts()
       @JvmName("setScripts")
@@ -151,7 +151,7 @@ public object ContextKt {
      *
      * <code>.page.Context.Scripts scripts = 4;</code>
      */
-    public fun clearScripts() {
+    fun clearScripts() {
       _builder.clearScripts()
     }
     /**
@@ -162,7 +162,7 @@ public object ContextKt {
      * <code>.page.Context.Scripts scripts = 4;</code>
      * @return Whether the scripts field is set.
      */
-    public fun hasScripts(): kotlin.Boolean {
+    fun hasScripts(): kotlin.Boolean {
       return _builder.hasScripts()
     }
 
@@ -173,7 +173,7 @@ public object ContextKt {
      *
      * <code>.page.Context.AppManifest manifest = 5;</code>
      */
-    public var manifest: tools.elide.page.Context.AppManifest
+    var manifest: tools.elide.page.Context.AppManifest
       @JvmName("getManifest")
       get() = _builder.getManifest()
       @JvmName("setManifest")
@@ -187,7 +187,7 @@ public object ContextKt {
      *
      * <code>.page.Context.AppManifest manifest = 5;</code>
      */
-    public fun clearManifest() {
+    fun clearManifest() {
       _builder.clearManifest()
     }
     /**
@@ -198,7 +198,7 @@ public object ContextKt {
      * <code>.page.Context.AppManifest manifest = 5;</code>
      * @return Whether the manifest field is set.
      */
-    public fun hasManifest(): kotlin.Boolean {
+    fun hasManifest(): kotlin.Boolean {
       return _builder.hasManifest()
     }
 
@@ -209,7 +209,7 @@ public object ContextKt {
      *
      * <code>.page.Context.DynamicETag etag = 6;</code>
      */
-    public var etag: tools.elide.page.Context.DynamicETag
+    var etag: tools.elide.page.Context.DynamicETag
       @JvmName("getEtag")
       get() = _builder.getEtag()
       @JvmName("setEtag")
@@ -223,7 +223,7 @@ public object ContextKt {
      *
      * <code>.page.Context.DynamicETag etag = 6;</code>
      */
-    public fun clearEtag() {
+    fun clearEtag() {
       _builder.clearEtag()
     }
     /**
@@ -234,7 +234,7 @@ public object ContextKt {
      * <code>.page.Context.DynamicETag etag = 6;</code>
      * @return Whether the etag field is set.
      */
-    public fun hasEtag(): kotlin.Boolean {
+    fun hasEtag(): kotlin.Boolean {
       return _builder.hasEtag()
     }
 
@@ -243,7 +243,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class CookieProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class CookieProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Specifies HTTP cookies to affix to the response associated with this context.
@@ -251,7 +251,7 @@ public object ContextKt {
      *
      * <code>repeated .page.Context.Cookie cookie = 8;</code>
      */
-     public val cookie: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>
+     val cookie: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getCookieList()
@@ -266,7 +266,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addCookie")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.add(value: tools.elide.page.Context.Cookie) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.add(value: tools.elide.page.Context.Cookie) {
       _builder.addCookie(value)
     }
     /**
@@ -280,7 +280,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignCookie")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.plusAssign(value: tools.elide.page.Context.Cookie) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.plusAssign(value: tools.elide.page.Context.Cookie) {
       add(value)
     }
     /**
@@ -293,7 +293,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllCookie")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Cookie>) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Cookie>) {
       _builder.addAllCookie(values)
     }
     /**
@@ -307,7 +307,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllCookie")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Cookie>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Cookie>) {
       addAll(values)
     }
     /**
@@ -321,7 +321,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setCookie")
-    public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Cookie) {
+    operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Cookie) {
       _builder.setCookie(index, value)
     }
     /**
@@ -333,7 +333,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearCookie")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Cookie, CookieProxy>.clear() {
       _builder.clearCookie()
     }
 
@@ -343,7 +343,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class HeaderProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class HeaderProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Custom headers to affix to the response associated with this context.
@@ -351,7 +351,7 @@ public object ContextKt {
      *
      * <code>repeated .page.Context.ResponseHeader header = 9;</code>
      */
-     public val header: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>
+     val header: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getHeaderList()
@@ -366,7 +366,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addHeader")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.add(value: tools.elide.page.Context.ResponseHeader) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.add(value: tools.elide.page.Context.ResponseHeader) {
       _builder.addHeader(value)
     }
     /**
@@ -380,7 +380,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignHeader")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.plusAssign(value: tools.elide.page.Context.ResponseHeader) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.plusAssign(value: tools.elide.page.Context.ResponseHeader) {
       add(value)
     }
     /**
@@ -393,7 +393,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllHeader")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ResponseHeader>) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ResponseHeader>) {
       _builder.addAllHeader(values)
     }
     /**
@@ -407,7 +407,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllHeader")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ResponseHeader>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ResponseHeader>) {
       addAll(values)
     }
     /**
@@ -421,7 +421,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setHeader")
-    public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ResponseHeader) {
+    operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ResponseHeader) {
       _builder.setHeader(index, value)
     }
     /**
@@ -433,7 +433,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearHeader")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ResponseHeader, HeaderProxy>.clear() {
       _builder.clearHeader()
     }
 
@@ -443,7 +443,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class VaryProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class VaryProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Set of HTTP request headers which cause this response to vary.
@@ -452,7 +452,7 @@ public object ContextKt {
      * <code>repeated string vary = 10;</code>
      * @return A list containing the vary.
      */
-    public val vary: com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>
+     val vary: com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getVaryList()
@@ -467,7 +467,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addVary")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.add(value: kotlin.String) {
       _builder.addVary(value)
     }
     /**
@@ -481,7 +481,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignVary")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -494,7 +494,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllVary")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllVary(values)
     }
     /**
@@ -508,7 +508,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllVary")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -522,7 +522,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setVary")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setVary(index, value)
     }/**
      * <pre>
@@ -533,7 +533,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearVary")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, VaryProxy>.clear() {
       _builder.clearVary()
     }
     /**
@@ -543,7 +543,7 @@ public object ContextKt {
      *
      * <code>string language = 11;</code>
      */
-    public var language: kotlin.String
+    var language: kotlin.String
       @JvmName("getLanguage")
       get() = _builder.getLanguage()
       @JvmName("setLanguage")
@@ -557,7 +557,7 @@ public object ContextKt {
      *
      * <code>string language = 11;</code>
      */
-    public fun clearLanguage() {
+    fun clearLanguage() {
       _builder.clearLanguage()
     }
 
@@ -568,7 +568,7 @@ public object ContextKt {
      *
      * <code>.page.Context.ClientHints hints = 12;</code>
      */
-    public var hints: tools.elide.page.Context.ClientHints
+    var hints: tools.elide.page.Context.ClientHints
       @JvmName("getHints")
       get() = _builder.getHints()
       @JvmName("setHints")
@@ -582,7 +582,7 @@ public object ContextKt {
      *
      * <code>.page.Context.ClientHints hints = 12;</code>
      */
-    public fun clearHints() {
+    fun clearHints() {
       _builder.clearHints()
     }
     /**
@@ -593,7 +593,7 @@ public object ContextKt {
      * <code>.page.Context.ClientHints hints = 12;</code>
      * @return Whether the hints field is set.
      */
-    public fun hasHints(): kotlin.Boolean {
+    fun hasHints(): kotlin.Boolean {
       return _builder.hasHints()
     }
 
@@ -602,7 +602,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class FeaturePolicyProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class FeaturePolicyProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Specifies feature policies for this HTTP cycle.
@@ -611,7 +611,7 @@ public object ContextKt {
      * <code>repeated string feature_policy = 13;</code>
      * @return A list containing the featurePolicy.
      */
-    public val featurePolicy: com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>
+     val featurePolicy: com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getFeaturePolicyList()
@@ -626,7 +626,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addFeaturePolicy")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.add(value: kotlin.String) {
       _builder.addFeaturePolicy(value)
     }
     /**
@@ -640,7 +640,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignFeaturePolicy")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -653,7 +653,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllFeaturePolicy")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllFeaturePolicy(values)
     }
     /**
@@ -667,7 +667,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllFeaturePolicy")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -681,7 +681,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setFeaturePolicy")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setFeaturePolicy(index, value)
     }/**
      * <pre>
@@ -692,7 +692,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearFeaturePolicy")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, FeaturePolicyProxy>.clear() {
       _builder.clearFeaturePolicy()
     }
     /**
@@ -702,7 +702,7 @@ public object ContextKt {
      *
      * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
      */
-    public var framingPolicy: tools.elide.page.Context.FramingPolicy
+     var framingPolicy: tools.elide.page.Context.FramingPolicy
       @JvmName("getFramingPolicy")
       get() = _builder.getFramingPolicy()
       @JvmName("setFramingPolicy")
@@ -716,7 +716,7 @@ public object ContextKt {
      *
      * <code>.page.Context.FramingPolicy framing_policy = 15;</code>
      */
-    public fun clearFramingPolicy() {
+    fun clearFramingPolicy() {
       _builder.clearFramingPolicy()
     }
 
@@ -727,7 +727,7 @@ public object ContextKt {
      *
      * <code>bool content_type_nosniff = 16;</code>
      */
-    public var contentTypeNosniff: kotlin.Boolean
+    var contentTypeNosniff: kotlin.Boolean
       @JvmName("getContentTypeNosniff")
       get() = _builder.getContentTypeNosniff()
       @JvmName("setContentTypeNosniff")
@@ -741,7 +741,7 @@ public object ContextKt {
      *
      * <code>bool content_type_nosniff = 16;</code>
      */
-    public fun clearContentTypeNosniff() {
+    fun clearContentTypeNosniff() {
       _builder.clearContentTypeNosniff()
     }
 
@@ -752,7 +752,7 @@ public object ContextKt {
      *
      * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
      */
-    public var cdnPrefix: com.google.common.html.types.TrustedResourceUrlProto
+    var cdnPrefix: com.google.common.html.types.TrustedResourceUrlProto
       @JvmName("getCdnPrefix")
       get() = _builder.getCdnPrefix()
       @JvmName("setCdnPrefix")
@@ -766,7 +766,7 @@ public object ContextKt {
      *
      * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
      */
-    public fun clearCdnPrefix() {
+    fun clearCdnPrefix() {
       _builder.clearCdnPrefix()
     }
     /**
@@ -777,7 +777,7 @@ public object ContextKt {
      * <code>.webutil.html.types.TrustedResourceUrlProto cdn_prefix = 17;</code>
      * @return Whether the cdnPrefix field is set.
      */
-    public fun hasCdnPrefix(): kotlin.Boolean {
+    fun hasCdnPrefix(): kotlin.Boolean {
       return _builder.hasCdnPrefix()
     }
 
@@ -786,7 +786,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class DnsPrefetchProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class DnsPrefetchProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Specifies hostnames to pre-load DNS records for.
@@ -795,7 +795,7 @@ public object ContextKt {
      * <code>repeated string dns_prefetch = 18;</code>
      * @return A list containing the dnsPrefetch.
      */
-    public val dnsPrefetch: com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>
+     val dnsPrefetch: com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getDnsPrefetchList()
@@ -810,7 +810,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addDnsPrefetch")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.add(value: kotlin.String) {
       _builder.addDnsPrefetch(value)
     }
     /**
@@ -824,7 +824,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignDnsPrefetch")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -837,7 +837,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllDnsPrefetch")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllDnsPrefetch(values)
     }
     /**
@@ -851,7 +851,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllDnsPrefetch")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -865,7 +865,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setDnsPrefetch")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setDnsPrefetch(index, value)
     }/**
      * <pre>
@@ -876,7 +876,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearDnsPrefetch")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, DnsPrefetchProxy>.clear() {
       _builder.clearDnsPrefetch()
     }
     /**
@@ -884,7 +884,7 @@ public object ContextKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class PreconnectProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class PreconnectProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Specifies hostnames to pre-connect to.
@@ -893,7 +893,7 @@ public object ContextKt {
      * <code>repeated string preconnect = 19;</code>
      * @return A list containing the preconnect.
      */
-    public val preconnect: com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>
+     val preconnect: com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getPreconnectList()
@@ -908,7 +908,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addPreconnect")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.add(value: kotlin.String) {
       _builder.addPreconnect(value)
     }
     /**
@@ -922,7 +922,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignPreconnect")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -935,7 +935,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllPreconnect")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllPreconnect(values)
     }
     /**
@@ -949,7 +949,7 @@ public object ContextKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllPreconnect")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -963,7 +963,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setPreconnect")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setPreconnect(index, value)
     }/**
      * <pre>
@@ -974,7 +974,7 @@ public object ContextKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearPreconnect")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, PreconnectProxy>.clear() {
       _builder.clearPreconnect()
     }
     /**
@@ -984,7 +984,7 @@ public object ContextKt {
      *
      * <code>string xss_protection = 20;</code>
      */
-    public var xssProtection: kotlin.String
+    var xssProtection: kotlin.String
       @JvmName("getXssProtection")
       get() = _builder.getXssProtection()
       @JvmName("setXssProtection")
@@ -998,7 +998,7 @@ public object ContextKt {
      *
      * <code>string xss_protection = 20;</code>
      */
-    public fun clearXssProtection() {
+    fun clearXssProtection() {
       _builder.clearXssProtection()
     }
 
@@ -1009,7 +1009,7 @@ public object ContextKt {
      *
      * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
      */
-    public var referrerPolicy: tools.elide.page.Context.ReferrerPolicy
+     var referrerPolicy: tools.elide.page.Context.ReferrerPolicy
       @JvmName("getReferrerPolicy")
       get() = _builder.getReferrerPolicy()
       @JvmName("setReferrerPolicy")
@@ -1023,20 +1023,20 @@ public object ContextKt {
      *
      * <code>.page.Context.ReferrerPolicy referrer_policy = 21;</code>
      */
-    public fun clearReferrerPolicy() {
+    fun clearReferrerPolicy() {
       _builder.clearReferrerPolicy()
     }
   }
   @kotlin.jvm.JvmName("-initializemetadata")
-  public inline fun metadata(block: tools.elide.page.ContextKt.MetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata =
+  inline fun metadata(block: tools.elide.page.ContextKt.MetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata =
     tools.elide.page.ContextKt.MetadataKt.Dsl._create(tools.elide.page.Context.Metadata.newBuilder()).apply { block() }._build()
-  public object MetadataKt {
+  object MetadataKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.Metadata.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.Metadata.Builder): Dsl = Dsl(builder)
@@ -1053,7 +1053,7 @@ public object ContextKt {
        *
        * <code>string title = 1;</code>
        */
-      public var title: kotlin.String
+      var title: kotlin.String
         @JvmName("getTitle")
         get() = _builder.getTitle()
         @JvmName("setTitle")
@@ -1067,7 +1067,7 @@ public object ContextKt {
        *
        * <code>string title = 1;</code>
        */
-      public fun clearTitle() {
+      fun clearTitle() {
         _builder.clearTitle()
       }
 
@@ -1078,7 +1078,7 @@ public object ContextKt {
        *
        * <code>string description = 2;</code>
        */
-      public var description: kotlin.String
+      var description: kotlin.String
         @JvmName("getDescription")
         get() = _builder.getDescription()
         @JvmName("setDescription")
@@ -1092,7 +1092,7 @@ public object ContextKt {
        *
        * <code>string description = 2;</code>
        */
-      public fun clearDescription() {
+      fun clearDescription() {
         _builder.clearDescription()
       }
 
@@ -1101,7 +1101,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class KeywordProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class KeywordProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Defines meta tag keywords, to be included in the page.
@@ -1110,7 +1110,7 @@ public object ContextKt {
        * <code>repeated string keyword = 3;</code>
        * @return A list containing the keyword.
        */
-      public val keyword: com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>
+       val keyword: com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getKeywordList()
@@ -1125,7 +1125,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addKeyword")
-      public fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.add(value: kotlin.String) {
+      fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.add(value: kotlin.String) {
         _builder.addKeyword(value)
       }
       /**
@@ -1139,7 +1139,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignKeyword")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.plusAssign(value: kotlin.String) {
+      inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.plusAssign(value: kotlin.String) {
         add(value)
       }
       /**
@@ -1152,7 +1152,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllKeyword")
-      public fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+      fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
         _builder.addAllKeyword(values)
       }
       /**
@@ -1166,7 +1166,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllKeyword")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
         addAll(values)
       }
       /**
@@ -1180,7 +1180,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setKeyword")
-      public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.set(index: kotlin.Int, value: kotlin.String) {
+      operator fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.set(index: kotlin.Int, value: kotlin.String) {
         _builder.setKeyword(index, value)
       }/**
        * <pre>
@@ -1191,7 +1191,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearKeyword")
-      public fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<kotlin.String, KeywordProxy>.clear() {
         _builder.clearKeyword()
       }
       /**
@@ -1201,7 +1201,7 @@ public object ContextKt {
        *
        * <code>.page.SemanticMetadata semantic = 4;</code>
        */
-      public var semantic: tools.elide.page.SemanticMetadata
+      var semantic: tools.elide.page.SemanticMetadata
         @JvmName("getSemantic")
         get() = _builder.getSemantic()
         @JvmName("setSemantic")
@@ -1215,7 +1215,7 @@ public object ContextKt {
        *
        * <code>.page.SemanticMetadata semantic = 4;</code>
        */
-      public fun clearSemantic() {
+      fun clearSemantic() {
         _builder.clearSemantic()
       }
       /**
@@ -1226,7 +1226,7 @@ public object ContextKt {
        * <code>.page.SemanticMetadata semantic = 4;</code>
        * @return Whether the semantic field is set.
        */
-      public fun hasSemantic(): kotlin.Boolean {
+      fun hasSemantic(): kotlin.Boolean {
         return _builder.hasSemantic()
       }
 
@@ -1237,7 +1237,7 @@ public object ContextKt {
        *
        * <code>string viewport = 5;</code>
        */
-      public var viewport: kotlin.String
+      var viewport: kotlin.String
         @JvmName("getViewport")
         get() = _builder.getViewport()
         @JvmName("setViewport")
@@ -1251,7 +1251,7 @@ public object ContextKt {
        *
        * <code>string viewport = 5;</code>
        */
-      public fun clearViewport() {
+      fun clearViewport() {
         _builder.clearViewport()
       }
 
@@ -1262,7 +1262,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.TrustedResourceUrlProto manifest = 6;</code>
        */
-      public var manifest: com.google.common.html.types.TrustedResourceUrlProto
+      var manifest: com.google.common.html.types.TrustedResourceUrlProto
         @JvmName("getManifest")
         get() = _builder.getManifest()
         @JvmName("setManifest")
@@ -1276,7 +1276,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.TrustedResourceUrlProto manifest = 6;</code>
        */
-      public fun clearManifest() {
+      fun clearManifest() {
         _builder.clearManifest()
       }
       /**
@@ -1287,7 +1287,7 @@ public object ContextKt {
        * <code>.webutil.html.types.TrustedResourceUrlProto manifest = 6;</code>
        * @return Whether the manifest field is set.
        */
-      public fun hasManifest(): kotlin.Boolean {
+      fun hasManifest(): kotlin.Boolean {
         return _builder.hasManifest()
       }
 
@@ -1298,7 +1298,7 @@ public object ContextKt {
        *
        * <code>string theme = 7;</code>
        */
-      public var theme: kotlin.String
+      var theme: kotlin.String
         @JvmName("getTheme")
         get() = _builder.getTheme()
         @JvmName("setTheme")
@@ -1312,7 +1312,7 @@ public object ContextKt {
        *
        * <code>string theme = 7;</code>
        */
-      public fun clearTheme() {
+      fun clearTheme() {
         _builder.clearTheme()
       }
 
@@ -1323,7 +1323,7 @@ public object ContextKt {
        *
        * <code>string touch_icon = 8;</code>
        */
-      public var touchIcon: kotlin.String
+      var touchIcon: kotlin.String
         @JvmName("getTouchIcon")
         get() = _builder.getTouchIcon()
         @JvmName("setTouchIcon")
@@ -1337,7 +1337,7 @@ public object ContextKt {
        *
        * <code>string touch_icon = 8;</code>
        */
-      public fun clearTouchIcon() {
+      fun clearTouchIcon() {
         _builder.clearTouchIcon()
       }
 
@@ -1348,7 +1348,7 @@ public object ContextKt {
        *
        * <code>string startup_image = 9;</code>
        */
-      public var startupImage: kotlin.String
+      var startupImage: kotlin.String
         @JvmName("getStartupImage")
         get() = _builder.getStartupImage()
         @JvmName("setStartupImage")
@@ -1362,7 +1362,7 @@ public object ContextKt {
        *
        * <code>string startup_image = 9;</code>
        */
-      public fun clearStartupImage() {
+      fun clearStartupImage() {
         _builder.clearStartupImage()
       }
 
@@ -1371,7 +1371,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Defines a favicon image link to apply to the browser tab.
@@ -1379,7 +1379,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.PageLink link = 10;</code>
        */
-       public val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>
+       val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getLinkList()
@@ -1394,7 +1394,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.add(value: tools.elide.page.Context.PageLink) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.add(value: tools.elide.page.Context.PageLink) {
         _builder.addLink(value)
       }
       /**
@@ -1408,7 +1408,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.plusAssign(value: tools.elide.page.Context.PageLink) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.plusAssign(value: tools.elide.page.Context.PageLink) {
         add(value)
       }
       /**
@@ -1421,7 +1421,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.PageLink>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.PageLink>) {
         _builder.addAllLink(values)
       }
       /**
@@ -1435,7 +1435,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.PageLink>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.PageLink>) {
         addAll(values)
       }
       /**
@@ -1449,7 +1449,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setLink")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.PageLink) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.PageLink) {
         _builder.setLink(index, value)
       }
       /**
@@ -1461,7 +1461,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.PageLink, LinkProxy>.clear() {
         _builder.clearLink()
       }
 
@@ -1473,7 +1473,7 @@ public object ContextKt {
        *
        * <code>.base.LanguageSpec language = 11;</code>
        */
-      public var language: tools.elide.base.LanguageSpec
+      var language: tools.elide.base.LanguageSpec
         @JvmName("getLanguage")
         get() = _builder.getLanguage()
         @JvmName("setLanguage")
@@ -1487,7 +1487,7 @@ public object ContextKt {
        *
        * <code>.base.LanguageSpec language = 11;</code>
        */
-      public fun clearLanguage() {
+      fun clearLanguage() {
         _builder.clearLanguage()
       }
       /**
@@ -1498,7 +1498,7 @@ public object ContextKt {
        * <code>.base.LanguageSpec language = 11;</code>
        * @return Whether the language field is set.
        */
-      public fun hasLanguage(): kotlin.Boolean {
+      fun hasLanguage(): kotlin.Boolean {
         return _builder.hasLanguage()
       }
 
@@ -1509,7 +1509,7 @@ public object ContextKt {
        *
        * <code>string gtm_id = 12;</code>
        */
-      public var gtmId: kotlin.String
+      var gtmId: kotlin.String
         @JvmName("getGtmId")
         get() = _builder.getGtmId()
         @JvmName("setGtmId")
@@ -1523,7 +1523,7 @@ public object ContextKt {
        *
        * <code>string gtm_id = 12;</code>
        */
-      public fun clearGtmId() {
+      fun clearGtmId() {
         _builder.clearGtmId()
       }
 
@@ -1534,7 +1534,7 @@ public object ContextKt {
        *
        * <code>string fb_app_id = 13;</code>
        */
-      public var fbAppId: kotlin.String
+      var fbAppId: kotlin.String
         @JvmName("getFbAppId")
         get() = _builder.getFbAppId()
         @JvmName("setFbAppId")
@@ -1548,7 +1548,7 @@ public object ContextKt {
        *
        * <code>string fb_app_id = 13;</code>
        */
-      public fun clearFbAppId() {
+      fun clearFbAppId() {
         _builder.clearFbAppId()
       }
 
@@ -1559,7 +1559,7 @@ public object ContextKt {
        *
        * <code>.page.Context.Metadata.OpenGraph open_graph = 14;</code>
        */
-      public var openGraph: tools.elide.page.Context.Metadata.OpenGraph
+      var openGraph: tools.elide.page.Context.Metadata.OpenGraph
         @JvmName("getOpenGraph")
         get() = _builder.getOpenGraph()
         @JvmName("setOpenGraph")
@@ -1573,7 +1573,7 @@ public object ContextKt {
        *
        * <code>.page.Context.Metadata.OpenGraph open_graph = 14;</code>
        */
-      public fun clearOpenGraph() {
+      fun clearOpenGraph() {
         _builder.clearOpenGraph()
       }
       /**
@@ -1584,7 +1584,7 @@ public object ContextKt {
        * <code>.page.Context.Metadata.OpenGraph open_graph = 14;</code>
        * @return Whether the openGraph field is set.
        */
-      public fun hasOpenGraph(): kotlin.Boolean {
+      fun hasOpenGraph(): kotlin.Boolean {
         return _builder.hasOpenGraph()
       }
 
@@ -1595,7 +1595,7 @@ public object ContextKt {
        *
        * <code>string robots = 15;</code>
        */
-      public var robots: kotlin.String
+      var robots: kotlin.String
         @JvmName("getRobots")
         get() = _builder.getRobots()
         @JvmName("setRobots")
@@ -1609,7 +1609,7 @@ public object ContextKt {
        *
        * <code>string robots = 15;</code>
        */
-      public fun clearRobots() {
+      fun clearRobots() {
         _builder.clearRobots()
       }
 
@@ -1620,7 +1620,7 @@ public object ContextKt {
        *
        * <code>string color_scheme = 16;</code>
        */
-      public var colorScheme: kotlin.String
+      var colorScheme: kotlin.String
         @JvmName("getColorScheme")
         get() = _builder.getColorScheme()
         @JvmName("setColorScheme")
@@ -1634,7 +1634,7 @@ public object ContextKt {
        *
        * <code>string color_scheme = 16;</code>
        */
-      public fun clearColorScheme() {
+      fun clearColorScheme() {
         _builder.clearColorScheme()
       }
 
@@ -1643,7 +1643,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class PrefixProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class PrefixProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * RDFa prefixes to add. If left unset, the default OpenGraph prefix will be used.
@@ -1651,7 +1651,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.RDFPrefix prefix = 17;</code>
        */
-       public val prefix: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>
+       val prefix: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getPrefixList()
@@ -1666,7 +1666,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addPrefix")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.add(value: tools.elide.page.Context.RDFPrefix) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.add(value: tools.elide.page.Context.RDFPrefix) {
         _builder.addPrefix(value)
       }
       /**
@@ -1680,7 +1680,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignPrefix")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.plusAssign(value: tools.elide.page.Context.RDFPrefix) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.plusAssign(value: tools.elide.page.Context.RDFPrefix) {
         add(value)
       }
       /**
@@ -1693,7 +1693,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllPrefix")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.RDFPrefix>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.RDFPrefix>) {
         _builder.addAllPrefix(values)
       }
       /**
@@ -1707,7 +1707,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllPrefix")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.RDFPrefix>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.RDFPrefix>) {
         addAll(values)
       }
       /**
@@ -1721,7 +1721,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setPrefix")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.RDFPrefix) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.RDFPrefix) {
         _builder.setPrefix(index, value)
       }
       /**
@@ -1733,7 +1733,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearPrefix")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.RDFPrefix, PrefixProxy>.clear() {
         _builder.clearPrefix()
       }
 
@@ -1745,7 +1745,7 @@ public object ContextKt {
        *
        * <code>string googlebot = 18;</code>
        */
-      public var googlebot: kotlin.String
+      var googlebot: kotlin.String
         @JvmName("getGooglebot")
         get() = _builder.getGooglebot()
         @JvmName("setGooglebot")
@@ -1759,7 +1759,7 @@ public object ContextKt {
        *
        * <code>string googlebot = 18;</code>
        */
-      public fun clearGooglebot() {
+      fun clearGooglebot() {
         _builder.clearGooglebot()
       }
 
@@ -1770,7 +1770,7 @@ public object ContextKt {
        *
        * <code>string rating = 19;</code>
        */
-      public var rating: kotlin.String
+      var rating: kotlin.String
         @JvmName("getRating")
         get() = _builder.getRating()
         @JvmName("setRating")
@@ -1784,7 +1784,7 @@ public object ContextKt {
        *
        * <code>string rating = 19;</code>
        */
-      public fun clearRating() {
+      fun clearRating() {
         _builder.clearRating()
       }
 
@@ -1795,7 +1795,7 @@ public object ContextKt {
        *
        * <code>string delegate_package = 20;</code>
        */
-      public var delegatePackage: kotlin.String
+      var delegatePackage: kotlin.String
         @JvmName("getDelegatePackage")
         get() = _builder.getDelegatePackage()
         @JvmName("setDelegatePackage")
@@ -1809,20 +1809,20 @@ public object ContextKt {
        *
        * <code>string delegate_package = 20;</code>
        */
-      public fun clearDelegatePackage() {
+      fun clearDelegatePackage() {
         _builder.clearDelegatePackage()
       }
     }
     @kotlin.jvm.JvmName("-initializeopenGraph")
-    public inline fun openGraph(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph =
+    inline fun openGraph(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph =
       tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl._create(tools.elide.page.Context.Metadata.OpenGraph.newBuilder()).apply { block() }._build()
-    public object OpenGraphKt {
+    object OpenGraphKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Metadata.OpenGraph.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Metadata.OpenGraph.Builder): Dsl = Dsl(builder)
@@ -1839,7 +1839,7 @@ public object ContextKt {
          *
          * <code>string site_name = 1;</code>
          */
-        public var siteName: kotlin.String
+        var siteName: kotlin.String
           @JvmName("getSiteName")
           get() = _builder.getSiteName()
           @JvmName("setSiteName")
@@ -1853,7 +1853,7 @@ public object ContextKt {
          *
          * <code>string site_name = 1;</code>
          */
-        public fun clearSiteName() {
+        fun clearSiteName() {
           _builder.clearSiteName()
         }
 
@@ -1864,7 +1864,7 @@ public object ContextKt {
          *
          * <code>string title = 2;</code>
          */
-        public var title: kotlin.String
+        var title: kotlin.String
           @JvmName("getTitle")
           get() = _builder.getTitle()
           @JvmName("setTitle")
@@ -1878,7 +1878,7 @@ public object ContextKt {
          *
          * <code>string title = 2;</code>
          */
-        public fun clearTitle() {
+        fun clearTitle() {
           _builder.clearTitle()
         }
 
@@ -1889,7 +1889,7 @@ public object ContextKt {
          *
          * <code>string description = 3;</code>
          */
-        public var description: kotlin.String
+        var description: kotlin.String
           @JvmName("getDescription")
           get() = _builder.getDescription()
           @JvmName("setDescription")
@@ -1903,7 +1903,7 @@ public object ContextKt {
          *
          * <code>string description = 3;</code>
          */
-        public fun clearDescription() {
+        fun clearDescription() {
           _builder.clearDescription()
         }
 
@@ -1914,7 +1914,7 @@ public object ContextKt {
          *
          * <code>.base.LanguageSpec locale = 4;</code>
          */
-        public var locale: tools.elide.base.LanguageSpec
+        var locale: tools.elide.base.LanguageSpec
           @JvmName("getLocale")
           get() = _builder.getLocale()
           @JvmName("setLocale")
@@ -1928,7 +1928,7 @@ public object ContextKt {
          *
          * <code>.base.LanguageSpec locale = 4;</code>
          */
-        public fun clearLocale() {
+        fun clearLocale() {
           _builder.clearLocale()
         }
         /**
@@ -1939,7 +1939,7 @@ public object ContextKt {
          * <code>.base.LanguageSpec locale = 4;</code>
          * @return Whether the locale field is set.
          */
-        public fun hasLocale(): kotlin.Boolean {
+        fun hasLocale(): kotlin.Boolean {
           return _builder.hasLocale()
         }
 
@@ -1950,7 +1950,7 @@ public object ContextKt {
          *
          * <code>string type = 5;</code>
          */
-        public var type: kotlin.String
+        var type: kotlin.String
           @JvmName("getType")
           get() = _builder.getType()
           @JvmName("setType")
@@ -1964,7 +1964,7 @@ public object ContextKt {
          *
          * <code>string type = 5;</code>
          */
-        public fun clearType() {
+        fun clearType() {
           _builder.clearType()
         }
 
@@ -1975,7 +1975,7 @@ public object ContextKt {
          *
          * <code>string url = 6;</code>
          */
-        public var url: kotlin.String
+        var url: kotlin.String
           @JvmName("getUrl")
           get() = _builder.getUrl()
           @JvmName("setUrl")
@@ -1989,7 +1989,7 @@ public object ContextKt {
          *
          * <code>string url = 6;</code>
          */
-        public fun clearUrl() {
+        fun clearUrl() {
           _builder.clearUrl()
         }
 
@@ -2000,7 +2000,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Metadata.Twitter twitter = 8;</code>
          */
-        public var twitter: tools.elide.page.Context.Metadata.Twitter
+        var twitter: tools.elide.page.Context.Metadata.Twitter
           @JvmName("getTwitter")
           get() = _builder.getTwitter()
           @JvmName("setTwitter")
@@ -2014,7 +2014,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Metadata.Twitter twitter = 8;</code>
          */
-        public fun clearTwitter() {
+        fun clearTwitter() {
           _builder.clearTwitter()
         }
         /**
@@ -2025,7 +2025,7 @@ public object ContextKt {
          * <code>.page.Context.Metadata.Twitter twitter = 8;</code>
          * @return Whether the twitter field is set.
          */
-        public fun hasTwitter(): kotlin.Boolean {
+        fun hasTwitter(): kotlin.Boolean {
           return _builder.hasTwitter()
         }
 
@@ -2036,7 +2036,7 @@ public object ContextKt {
          *
          * <code>string canonical = 12;</code>
          */
-        public var canonical: kotlin.String
+        var canonical: kotlin.String
           @JvmName("getCanonical")
           get() = _builder.getCanonical()
           @JvmName("setCanonical")
@@ -2050,7 +2050,7 @@ public object ContextKt {
          *
          * <code>string canonical = 12;</code>
          */
-        public fun clearCanonical() {
+        fun clearCanonical() {
           _builder.clearCanonical()
         }
 
@@ -2061,7 +2061,7 @@ public object ContextKt {
          *
          * <code>string fb_app = 13;</code>
          */
-        public var fbApp: kotlin.String
+        var fbApp: kotlin.String
           @JvmName("getFbApp")
           get() = _builder.getFbApp()
           @JvmName("setFbApp")
@@ -2075,7 +2075,7 @@ public object ContextKt {
          *
          * <code>string fb_app = 13;</code>
          */
-        public fun clearFbApp() {
+        fun clearFbApp() {
           _builder.clearFbApp()
         }
 
@@ -2084,7 +2084,7 @@ public object ContextKt {
          * generics.
          */
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-        public class ImageProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+        class ImageProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
         /**
          * <pre>
          * OpenGraph image assets.
@@ -2092,7 +2092,7 @@ public object ContextKt {
          *
          * <code>repeated .page.Context.Metadata.OpenGraph.OpenGraphImage image = 14;</code>
          */
-         public val image: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>
+         val image: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>
           @kotlin.jvm.JvmSynthetic
           get() = com.google.protobuf.kotlin.DslList(
             _builder.getImageList()
@@ -2107,7 +2107,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addImage")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.add(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.add(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
           _builder.addImage(value)
         }
         /**
@@ -2121,7 +2121,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignImage")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.plusAssign(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.plusAssign(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
           add(value)
         }
         /**
@@ -2134,7 +2134,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addAllImage")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage>) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage>) {
           _builder.addAllImage(values)
         }
         /**
@@ -2148,7 +2148,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignAllImage")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage>) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage>) {
           addAll(values)
         }
         /**
@@ -2162,7 +2162,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("setImage")
-        public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
+        operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage) {
           _builder.setImage(index, value)
         }
         /**
@@ -2174,7 +2174,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("clearImage")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.clear() {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage, ImageProxy>.clear() {
           _builder.clearImage()
         }
 
@@ -2184,7 +2184,7 @@ public object ContextKt {
          * generics.
          */
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-        public class VideoProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+        class VideoProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
         /**
          * <pre>
          * OpenGraph video assets.
@@ -2192,7 +2192,7 @@ public object ContextKt {
          *
          * <code>repeated .page.Context.Metadata.OpenGraph.OpenGraphVideo video = 15;</code>
          */
-         public val video: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>
+         val video: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>
           @kotlin.jvm.JvmSynthetic
           get() = com.google.protobuf.kotlin.DslList(
             _builder.getVideoList()
@@ -2207,7 +2207,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addVideo")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.add(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.add(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
           _builder.addVideo(value)
         }
         /**
@@ -2221,7 +2221,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignVideo")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.plusAssign(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.plusAssign(value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
           add(value)
         }
         /**
@@ -2234,7 +2234,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addAllVideo")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo>) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo>) {
           _builder.addAllVideo(values)
         }
         /**
@@ -2248,7 +2248,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignAllVideo")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo>) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo>) {
           addAll(values)
         }
         /**
@@ -2262,7 +2262,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("setVideo")
-        public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
+        operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo) {
           _builder.setVideo(index, value)
         }
         /**
@@ -2274,21 +2274,21 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("clearVideo")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.clear() {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo, VideoProxy>.clear() {
           _builder.clearVideo()
         }
 
       }
       @kotlin.jvm.JvmName("-initializeopenGraphImage")
-      public inline fun openGraphImage(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage =
+      inline fun openGraphImage(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage =
         tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl._create(tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage.newBuilder()).apply { block() }._build()
-      public object OpenGraphImageKt {
+      object OpenGraphImageKt {
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
         @com.google.protobuf.kotlin.ProtoDslMarker
-        public class Dsl private constructor(
+        class Dsl private constructor(
           private val _builder: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage.Builder
         ) {
-          public companion object {
+          companion object {
             @kotlin.jvm.JvmSynthetic
             @kotlin.PublishedApi
             internal fun _create(builder: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage.Builder): Dsl = Dsl(builder)
@@ -2305,7 +2305,7 @@ public object ContextKt {
            *
            * <code>string uri = 1;</code>
            */
-          public var uri: kotlin.String
+          var uri: kotlin.String
             @JvmName("getUri")
             get() = _builder.getUri()
             @JvmName("setUri")
@@ -2319,7 +2319,7 @@ public object ContextKt {
            *
            * <code>string uri = 1;</code>
            */
-          public fun clearUri() {
+          fun clearUri() {
             _builder.clearUri()
           }
 
@@ -2330,7 +2330,7 @@ public object ContextKt {
            *
            * <code>uint32 width = 2;</code>
            */
-          public var width: kotlin.Int
+          var width: kotlin.Int
             @JvmName("getWidth")
             get() = _builder.getWidth()
             @JvmName("setWidth")
@@ -2344,7 +2344,7 @@ public object ContextKt {
            *
            * <code>uint32 width = 2;</code>
            */
-          public fun clearWidth() {
+          fun clearWidth() {
             _builder.clearWidth()
           }
 
@@ -2355,7 +2355,7 @@ public object ContextKt {
            *
            * <code>uint32 height = 3;</code>
            */
-          public var height: kotlin.Int
+          var height: kotlin.Int
             @JvmName("getHeight")
             get() = _builder.getHeight()
             @JvmName("setHeight")
@@ -2369,7 +2369,7 @@ public object ContextKt {
            *
            * <code>uint32 height = 3;</code>
            */
-          public fun clearHeight() {
+          fun clearHeight() {
             _builder.clearHeight()
           }
 
@@ -2380,7 +2380,7 @@ public object ContextKt {
            *
            * <code>string type = 4;</code>
            */
-          public var type: kotlin.String
+          var type: kotlin.String
             @JvmName("getType")
             get() = _builder.getType()
             @JvmName("setType")
@@ -2394,21 +2394,21 @@ public object ContextKt {
            *
            * <code>string type = 4;</code>
            */
-          public fun clearType() {
+          fun clearType() {
             _builder.clearType()
           }
         }
       }
       @kotlin.jvm.JvmName("-initializeopenGraphVideo")
-      public inline fun openGraphVideo(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo =
+      inline fun openGraphVideo(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo =
         tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl._create(tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo.newBuilder()).apply { block() }._build()
-      public object OpenGraphVideoKt {
+      object OpenGraphVideoKt {
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
         @com.google.protobuf.kotlin.ProtoDslMarker
-        public class Dsl private constructor(
+        class Dsl private constructor(
           private val _builder: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo.Builder
         ) {
-          public companion object {
+          companion object {
             @kotlin.jvm.JvmSynthetic
             @kotlin.PublishedApi
             internal fun _create(builder: tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo.Builder): Dsl = Dsl(builder)
@@ -2425,7 +2425,7 @@ public object ContextKt {
            *
            * <code>string uri = 1;</code>
            */
-          public var uri: kotlin.String
+          var uri: kotlin.String
             @JvmName("getUri")
             get() = _builder.getUri()
             @JvmName("setUri")
@@ -2439,7 +2439,7 @@ public object ContextKt {
            *
            * <code>string uri = 1;</code>
            */
-          public fun clearUri() {
+          fun clearUri() {
             _builder.clearUri()
           }
 
@@ -2450,7 +2450,7 @@ public object ContextKt {
            *
            * <code>uint32 width = 2;</code>
            */
-          public var width: kotlin.Int
+          var width: kotlin.Int
             @JvmName("getWidth")
             get() = _builder.getWidth()
             @JvmName("setWidth")
@@ -2464,7 +2464,7 @@ public object ContextKt {
            *
            * <code>uint32 width = 2;</code>
            */
-          public fun clearWidth() {
+          fun clearWidth() {
             _builder.clearWidth()
           }
 
@@ -2475,7 +2475,7 @@ public object ContextKt {
            *
            * <code>uint32 height = 3;</code>
            */
-          public var height: kotlin.Int
+          var height: kotlin.Int
             @JvmName("getHeight")
             get() = _builder.getHeight()
             @JvmName("setHeight")
@@ -2489,7 +2489,7 @@ public object ContextKt {
            *
            * <code>uint32 height = 3;</code>
            */
-          public fun clearHeight() {
+          fun clearHeight() {
             _builder.clearHeight()
           }
 
@@ -2500,7 +2500,7 @@ public object ContextKt {
            *
            * <code>string type = 4;</code>
            */
-          public var type: kotlin.String
+          var type: kotlin.String
             @JvmName("getType")
             get() = _builder.getType()
             @JvmName("setType")
@@ -2514,22 +2514,22 @@ public object ContextKt {
            *
            * <code>string type = 4;</code>
            */
-          public fun clearType() {
+          fun clearType() {
             _builder.clearType()
           }
         }
       }
     }
     @kotlin.jvm.JvmName("-initializetwitter")
-    public inline fun twitter(block: tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.Twitter =
+    inline fun twitter(block: tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.Twitter =
       tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl._create(tools.elide.page.Context.Metadata.Twitter.newBuilder()).apply { block() }._build()
-    public object TwitterKt {
+    object TwitterKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Metadata.Twitter.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Metadata.Twitter.Builder): Dsl = Dsl(builder)
@@ -2546,7 +2546,7 @@ public object ContextKt {
          *
          * <code>string site_name = 1;</code>
          */
-        public var siteName: kotlin.String
+        var siteName: kotlin.String
           @JvmName("getSiteName")
           get() = _builder.getSiteName()
           @JvmName("setSiteName")
@@ -2560,7 +2560,7 @@ public object ContextKt {
          *
          * <code>string site_name = 1;</code>
          */
-        public fun clearSiteName() {
+        fun clearSiteName() {
           _builder.clearSiteName()
         }
 
@@ -2571,7 +2571,7 @@ public object ContextKt {
          *
          * <code>string title = 2;</code>
          */
-        public var title: kotlin.String
+        var title: kotlin.String
           @JvmName("getTitle")
           get() = _builder.getTitle()
           @JvmName("setTitle")
@@ -2585,7 +2585,7 @@ public object ContextKt {
          *
          * <code>string title = 2;</code>
          */
-        public fun clearTitle() {
+        fun clearTitle() {
           _builder.clearTitle()
         }
 
@@ -2596,7 +2596,7 @@ public object ContextKt {
          *
          * <code>string description = 3;</code>
          */
-        public var description: kotlin.String
+        var description: kotlin.String
           @JvmName("getDescription")
           get() = _builder.getDescription()
           @JvmName("setDescription")
@@ -2610,7 +2610,7 @@ public object ContextKt {
          *
          * <code>string description = 3;</code>
          */
-        public fun clearDescription() {
+        fun clearDescription() {
           _builder.clearDescription()
         }
 
@@ -2621,7 +2621,7 @@ public object ContextKt {
          *
          * <code>.base.LanguageSpec locale = 4;</code>
          */
-        public var locale: tools.elide.base.LanguageSpec
+        var locale: tools.elide.base.LanguageSpec
           @JvmName("getLocale")
           get() = _builder.getLocale()
           @JvmName("setLocale")
@@ -2635,7 +2635,7 @@ public object ContextKt {
          *
          * <code>.base.LanguageSpec locale = 4;</code>
          */
-        public fun clearLocale() {
+        fun clearLocale() {
           _builder.clearLocale()
         }
         /**
@@ -2646,7 +2646,7 @@ public object ContextKt {
          * <code>.base.LanguageSpec locale = 4;</code>
          * @return Whether the locale field is set.
          */
-        public fun hasLocale(): kotlin.Boolean {
+        fun hasLocale(): kotlin.Boolean {
           return _builder.hasLocale()
         }
 
@@ -2657,7 +2657,7 @@ public object ContextKt {
          *
          * <code>string card = 5;</code>
          */
-        public var card: kotlin.String
+        var card: kotlin.String
           @JvmName("getCard")
           get() = _builder.getCard()
           @JvmName("setCard")
@@ -2671,7 +2671,7 @@ public object ContextKt {
          *
          * <code>string card = 5;</code>
          */
-        public fun clearCard() {
+        fun clearCard() {
           _builder.clearCard()
         }
 
@@ -2682,7 +2682,7 @@ public object ContextKt {
          *
          * <code>string image = 6;</code>
          */
-        public var image: kotlin.String
+        var image: kotlin.String
           @JvmName("getImage")
           get() = _builder.getImage()
           @JvmName("setImage")
@@ -2696,7 +2696,7 @@ public object ContextKt {
          *
          * <code>string image = 6;</code>
          */
-        public fun clearImage() {
+        fun clearImage() {
           _builder.clearImage()
         }
 
@@ -2707,7 +2707,7 @@ public object ContextKt {
          *
          * <code>string url = 7;</code>
          */
-        public var url: kotlin.String
+        var url: kotlin.String
           @JvmName("getUrl")
           get() = _builder.getUrl()
           @JvmName("setUrl")
@@ -2721,7 +2721,7 @@ public object ContextKt {
          *
          * <code>string url = 7;</code>
          */
-        public fun clearUrl() {
+        fun clearUrl() {
           _builder.clearUrl()
         }
 
@@ -2732,7 +2732,7 @@ public object ContextKt {
          *
          * <code>string creator = 8;</code>
          */
-        public var creator: kotlin.String
+        var creator: kotlin.String
           @JvmName("getCreator")
           get() = _builder.getCreator()
           @JvmName("setCreator")
@@ -2746,22 +2746,22 @@ public object ContextKt {
          *
          * <code>string creator = 8;</code>
          */
-        public fun clearCreator() {
+        fun clearCreator() {
           _builder.clearCreator()
         }
       }
     }
   }
   @kotlin.jvm.JvmName("-initializepageLink")
-  public inline fun pageLink(block: tools.elide.page.ContextKt.PageLinkKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.PageLink =
+  inline fun pageLink(block: tools.elide.page.ContextKt.PageLinkKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.PageLink =
     tools.elide.page.ContextKt.PageLinkKt.Dsl._create(tools.elide.page.Context.PageLink.newBuilder()).apply { block() }._build()
-  public object PageLinkKt {
+  object PageLinkKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.PageLink.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.PageLink.Builder): Dsl = Dsl(builder)
@@ -2778,7 +2778,7 @@ public object ContextKt {
        *
        * <code>string relevance = 1;</code>
        */
-      public var relevance: kotlin.String
+      var relevance: kotlin.String
         @JvmName("getRelevance")
         get() = _builder.getRelevance()
         @JvmName("setRelevance")
@@ -2792,7 +2792,7 @@ public object ContextKt {
        *
        * <code>string relevance = 1;</code>
        */
-      public fun clearRelevance() {
+      fun clearRelevance() {
         _builder.clearRelevance()
       }
 
@@ -2803,7 +2803,7 @@ public object ContextKt {
        *
        * <code>string type = 2;</code>
        */
-      public var type: kotlin.String
+      var type: kotlin.String
         @JvmName("getType")
         get() = _builder.getType()
         @JvmName("setType")
@@ -2817,7 +2817,7 @@ public object ContextKt {
        *
        * <code>string type = 2;</code>
        */
-      public fun clearType() {
+      fun clearType() {
         _builder.clearType()
       }
 
@@ -2828,7 +2828,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.TrustedResourceUrlProto href = 3;</code>
        */
-      public var href: com.google.common.html.types.TrustedResourceUrlProto
+      var href: com.google.common.html.types.TrustedResourceUrlProto
         @JvmName("getHref")
         get() = _builder.getHref()
         @JvmName("setHref")
@@ -2842,7 +2842,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.TrustedResourceUrlProto href = 3;</code>
        */
-      public fun clearHref() {
+      fun clearHref() {
         _builder.clearHref()
       }
       /**
@@ -2853,21 +2853,21 @@ public object ContextKt {
        * <code>.webutil.html.types.TrustedResourceUrlProto href = 3;</code>
        * @return Whether the href field is set.
        */
-      public fun hasHref(): kotlin.Boolean {
+      fun hasHref(): kotlin.Boolean {
         return _builder.hasHref()
       }
     }
   }
   @kotlin.jvm.JvmName("-initializeappManifest")
-  public inline fun appManifest(block: tools.elide.page.ContextKt.AppManifestKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest =
+  inline fun appManifest(block: tools.elide.page.ContextKt.AppManifestKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest =
     tools.elide.page.ContextKt.AppManifestKt.Dsl._create(tools.elide.page.Context.AppManifest.newBuilder()).apply { block() }._build()
-  public object AppManifestKt {
+  object AppManifestKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.AppManifest.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.AppManifest.Builder): Dsl = Dsl(builder)
@@ -2884,7 +2884,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public var name: kotlin.String
+      var name: kotlin.String
         @JvmName("getName")
         get() = _builder.getName()
         @JvmName("setName")
@@ -2898,7 +2898,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public fun clearName() {
+      fun clearName() {
         _builder.clearName()
       }
 
@@ -2909,7 +2909,7 @@ public object ContextKt {
        *
        * <code>string short_name = 2;</code>
        */
-      public var shortName: kotlin.String
+      var shortName: kotlin.String
         @JvmName("getShortName")
         get() = _builder.getShortName()
         @JvmName("setShortName")
@@ -2923,7 +2923,7 @@ public object ContextKt {
        *
        * <code>string short_name = 2;</code>
        */
-      public fun clearShortName() {
+      fun clearShortName() {
         _builder.clearShortName()
       }
 
@@ -2934,7 +2934,7 @@ public object ContextKt {
        *
        * <code>string start_url = 3;</code>
        */
-      public var startUrl: kotlin.String
+      var startUrl: kotlin.String
         @JvmName("getStartUrl")
         get() = _builder.getStartUrl()
         @JvmName("setStartUrl")
@@ -2948,7 +2948,7 @@ public object ContextKt {
        *
        * <code>string start_url = 3;</code>
        */
-      public fun clearStartUrl() {
+      fun clearStartUrl() {
         _builder.clearStartUrl()
       }
 
@@ -2959,7 +2959,7 @@ public object ContextKt {
        *
        * <code>.page.Context.AppManifest.DisplayMode display = 4;</code>
        */
-      public var display: tools.elide.page.Context.AppManifest.DisplayMode
+       var display: tools.elide.page.Context.AppManifest.DisplayMode
         @JvmName("getDisplay")
         get() = _builder.getDisplay()
         @JvmName("setDisplay")
@@ -2973,7 +2973,7 @@ public object ContextKt {
        *
        * <code>.page.Context.AppManifest.DisplayMode display = 4;</code>
        */
-      public fun clearDisplay() {
+      fun clearDisplay() {
         _builder.clearDisplay()
       }
 
@@ -2984,7 +2984,7 @@ public object ContextKt {
        *
        * <code>string background_color = 5;</code>
        */
-      public var backgroundColor: kotlin.String
+      var backgroundColor: kotlin.String
         @JvmName("getBackgroundColor")
         get() = _builder.getBackgroundColor()
         @JvmName("setBackgroundColor")
@@ -2998,7 +2998,7 @@ public object ContextKt {
        *
        * <code>string background_color = 5;</code>
        */
-      public fun clearBackgroundColor() {
+      fun clearBackgroundColor() {
         _builder.clearBackgroundColor()
       }
 
@@ -3009,7 +3009,7 @@ public object ContextKt {
        *
        * <code>string description = 6;</code>
        */
-      public var description: kotlin.String
+      var description: kotlin.String
         @JvmName("getDescription")
         get() = _builder.getDescription()
         @JvmName("setDescription")
@@ -3023,7 +3023,7 @@ public object ContextKt {
        *
        * <code>string description = 6;</code>
        */
-      public fun clearDescription() {
+      fun clearDescription() {
         _builder.clearDescription()
       }
 
@@ -3034,7 +3034,7 @@ public object ContextKt {
        *
        * <code>string direction = 7;</code>
        */
-      public var direction: kotlin.String
+      var direction: kotlin.String
         @JvmName("getDirection")
         get() = _builder.getDirection()
         @JvmName("setDirection")
@@ -3048,7 +3048,7 @@ public object ContextKt {
        *
        * <code>string direction = 7;</code>
        */
-      public fun clearDirection() {
+      fun clearDirection() {
         _builder.clearDirection()
       }
 
@@ -3059,7 +3059,7 @@ public object ContextKt {
        *
        * <code>.base.LanguageSpec language = 8;</code>
        */
-      public var language: tools.elide.base.LanguageSpec
+      var language: tools.elide.base.LanguageSpec
         @JvmName("getLanguage")
         get() = _builder.getLanguage()
         @JvmName("setLanguage")
@@ -3073,7 +3073,7 @@ public object ContextKt {
        *
        * <code>.base.LanguageSpec language = 8;</code>
        */
-      public fun clearLanguage() {
+      fun clearLanguage() {
         _builder.clearLanguage()
       }
       /**
@@ -3084,7 +3084,7 @@ public object ContextKt {
        * <code>.base.LanguageSpec language = 8;</code>
        * @return Whether the language field is set.
        */
-      public fun hasLanguage(): kotlin.Boolean {
+      fun hasLanguage(): kotlin.Boolean {
         return _builder.hasLanguage()
       }
 
@@ -3095,7 +3095,7 @@ public object ContextKt {
        *
        * <code>.page.Context.AppManifest.OrientationMode orientation = 9;</code>
        */
-      public var orientation: tools.elide.page.Context.AppManifest.OrientationMode
+       var orientation: tools.elide.page.Context.AppManifest.OrientationMode
         @JvmName("getOrientation")
         get() = _builder.getOrientation()
         @JvmName("setOrientation")
@@ -3109,7 +3109,7 @@ public object ContextKt {
        *
        * <code>.page.Context.AppManifest.OrientationMode orientation = 9;</code>
        */
-      public fun clearOrientation() {
+      fun clearOrientation() {
         _builder.clearOrientation()
       }
 
@@ -3120,7 +3120,7 @@ public object ContextKt {
        *
        * <code>string scope = 11;</code>
        */
-      public var scope: kotlin.String
+      var scope: kotlin.String
         @JvmName("getScope")
         get() = _builder.getScope()
         @JvmName("setScope")
@@ -3134,7 +3134,7 @@ public object ContextKt {
        *
        * <code>string scope = 11;</code>
        */
-      public fun clearScope() {
+      fun clearScope() {
         _builder.clearScope()
       }
 
@@ -3145,7 +3145,7 @@ public object ContextKt {
        *
        * <code>bool prefer_related_applications = 12;</code>
        */
-      public var preferRelatedApplications: kotlin.Boolean
+      var preferRelatedApplications: kotlin.Boolean
         @JvmName("getPreferRelatedApplications")
         get() = _builder.getPreferRelatedApplications()
         @JvmName("setPreferRelatedApplications")
@@ -3159,7 +3159,7 @@ public object ContextKt {
        *
        * <code>bool prefer_related_applications = 12;</code>
        */
-      public fun clearPreferRelatedApplications() {
+      fun clearPreferRelatedApplications() {
         _builder.clearPreferRelatedApplications()
       }
 
@@ -3168,7 +3168,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class RelatedApplicationProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class RelatedApplicationProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Related native applications that should be considered along with this web application.
@@ -3176,7 +3176,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.AppManifest.RelatedApplication related_application = 13;</code>
        */
-       public val relatedApplication: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>
+       val relatedApplication: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getRelatedApplicationList()
@@ -3191,7 +3191,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addRelatedApplication")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.add(value: tools.elide.page.Context.AppManifest.RelatedApplication) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.add(value: tools.elide.page.Context.AppManifest.RelatedApplication) {
         _builder.addRelatedApplication(value)
       }
       /**
@@ -3205,7 +3205,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignRelatedApplication")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.plusAssign(value: tools.elide.page.Context.AppManifest.RelatedApplication) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.plusAssign(value: tools.elide.page.Context.AppManifest.RelatedApplication) {
         add(value)
       }
       /**
@@ -3218,7 +3218,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllRelatedApplication")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.RelatedApplication>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.RelatedApplication>) {
         _builder.addAllRelatedApplication(values)
       }
       /**
@@ -3232,7 +3232,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllRelatedApplication")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.RelatedApplication>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.RelatedApplication>) {
         addAll(values)
       }
       /**
@@ -3246,7 +3246,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setRelatedApplication")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.AppManifest.RelatedApplication) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.AppManifest.RelatedApplication) {
         _builder.setRelatedApplication(index, value)
       }
       /**
@@ -3258,7 +3258,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearRelatedApplication")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.RelatedApplication, RelatedApplicationProxy>.clear() {
         _builder.clearRelatedApplication()
       }
 
@@ -3268,7 +3268,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class AppIconProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class AppIconProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Application icons listed with this manifest.
@@ -3276,7 +3276,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.AppManifest.Icon app_icon = 14;</code>
        */
-       public val appIcon: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>
+       val appIcon: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getAppIconList()
@@ -3291,7 +3291,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAppIcon")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.add(value: tools.elide.page.Context.AppManifest.Icon) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.add(value: tools.elide.page.Context.AppManifest.Icon) {
         _builder.addAppIcon(value)
       }
       /**
@@ -3305,7 +3305,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAppIcon")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.plusAssign(value: tools.elide.page.Context.AppManifest.Icon) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.plusAssign(value: tools.elide.page.Context.AppManifest.Icon) {
         add(value)
       }
       /**
@@ -3318,7 +3318,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllAppIcon")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.Icon>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.Icon>) {
         _builder.addAllAppIcon(values)
       }
       /**
@@ -3332,7 +3332,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllAppIcon")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.Icon>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.AppManifest.Icon>) {
         addAll(values)
       }
       /**
@@ -3346,7 +3346,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setAppIcon")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.AppManifest.Icon) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.AppManifest.Icon) {
         _builder.setAppIcon(index, value)
       }
       /**
@@ -3358,21 +3358,21 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearAppIcon")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.AppManifest.Icon, AppIconProxy>.clear() {
         _builder.clearAppIcon()
       }
 
     }
     @kotlin.jvm.JvmName("-initializeicon")
-    public inline fun icon(block: tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.Icon =
+    inline fun icon(block: tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.Icon =
       tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl._create(tools.elide.page.Context.AppManifest.Icon.newBuilder()).apply { block() }._build()
-    public object IconKt {
+    object IconKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.AppManifest.Icon.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.AppManifest.Icon.Builder): Dsl = Dsl(builder)
@@ -3389,7 +3389,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto src = 1;</code>
          */
-        public var src: com.google.common.html.types.TrustedResourceUrlProto
+        var src: com.google.common.html.types.TrustedResourceUrlProto
           @JvmName("getSrc")
           get() = _builder.getSrc()
           @JvmName("setSrc")
@@ -3403,7 +3403,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto src = 1;</code>
          */
-        public fun clearSrc() {
+        fun clearSrc() {
           _builder.clearSrc()
         }
         /**
@@ -3414,7 +3414,7 @@ public object ContextKt {
          * <code>.webutil.html.types.TrustedResourceUrlProto src = 1;</code>
          * @return Whether the src field is set.
          */
-        public fun hasSrc(): kotlin.Boolean {
+        fun hasSrc(): kotlin.Boolean {
           return _builder.hasSrc()
         }
 
@@ -3423,7 +3423,7 @@ public object ContextKt {
          * generics.
          */
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-        public class SizeProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+        class SizeProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
         /**
          * <pre>
          * Specifies the sizes that a given icon is available in.
@@ -3431,7 +3431,7 @@ public object ContextKt {
          *
          * <code>repeated uint32 size = 2;</code>
          */
-         public val size: com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>
+         val size: com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>
           @kotlin.jvm.JvmSynthetic
           get() = com.google.protobuf.kotlin.DslList(
             _builder.getSizeList()
@@ -3446,7 +3446,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addSize")
-        public fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.add(value: kotlin.Int) {
+        fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.add(value: kotlin.Int) {
           _builder.addSize(value)
         }/**
          * <pre>
@@ -3459,7 +3459,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignSize")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.plusAssign(value: kotlin.Int) {
+        inline operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.plusAssign(value: kotlin.Int) {
           add(value)
         }/**
          * <pre>
@@ -3471,7 +3471,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addAllSize")
-        public fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.addAll(values: kotlin.collections.Iterable<kotlin.Int>) {
+        fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.addAll(values: kotlin.collections.Iterable<kotlin.Int>) {
           _builder.addAllSize(values)
         }/**
          * <pre>
@@ -3484,7 +3484,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignAllSize")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.Int>) {
+        inline operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.Int>) {
           addAll(values)
         }/**
          * <pre>
@@ -3497,7 +3497,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("setSize")
-        public operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.set(index: kotlin.Int, value: kotlin.Int) {
+        operator fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.set(index: kotlin.Int, value: kotlin.Int) {
           _builder.setSize(index, value)
         }/**
          * <pre>
@@ -3508,7 +3508,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("clearSize")
-        public fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.clear() {
+        fun com.google.protobuf.kotlin.DslList<kotlin.Int, SizeProxy>.clear() {
           _builder.clearSize()
         }
         /**
@@ -3518,7 +3518,7 @@ public object ContextKt {
          *
          * <code>string mime_type = 3;</code>
          */
-        public var mimeType: kotlin.String
+        var mimeType: kotlin.String
           @JvmName("getMimeType")
           get() = _builder.getMimeType()
           @JvmName("setMimeType")
@@ -3532,21 +3532,21 @@ public object ContextKt {
          *
          * <code>string mime_type = 3;</code>
          */
-        public fun clearMimeType() {
+        fun clearMimeType() {
           _builder.clearMimeType()
         }
       }
     }
     @kotlin.jvm.JvmName("-initializerelatedApplication")
-    public inline fun relatedApplication(block: tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.RelatedApplication =
+    inline fun relatedApplication(block: tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.RelatedApplication =
       tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl._create(tools.elide.page.Context.AppManifest.RelatedApplication.newBuilder()).apply { block() }._build()
-    public object RelatedApplicationKt {
+    object RelatedApplicationKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.AppManifest.RelatedApplication.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.AppManifest.RelatedApplication.Builder): Dsl = Dsl(builder)
@@ -3563,7 +3563,7 @@ public object ContextKt {
          *
          * <code>string id = 1;</code>
          */
-        public var id: kotlin.String
+        var id: kotlin.String
           @JvmName("getId")
           get() = _builder.getId()
           @JvmName("setId")
@@ -3577,7 +3577,7 @@ public object ContextKt {
          *
          * <code>string id = 1;</code>
          */
-        public fun clearId() {
+        fun clearId() {
           _builder.clearId()
         }
 
@@ -3588,7 +3588,7 @@ public object ContextKt {
          *
          * <code>.page.Context.AppManifest.RelatedApplication.AppPlatform platform = 2;</code>
          */
-        public var platform: tools.elide.page.Context.AppManifest.RelatedApplication.AppPlatform
+         var platform: tools.elide.page.Context.AppManifest.RelatedApplication.AppPlatform
           @JvmName("getPlatform")
           get() = _builder.getPlatform()
           @JvmName("setPlatform")
@@ -3602,7 +3602,7 @@ public object ContextKt {
          *
          * <code>.page.Context.AppManifest.RelatedApplication.AppPlatform platform = 2;</code>
          */
-        public fun clearPlatform() {
+        fun clearPlatform() {
           _builder.clearPlatform()
         }
 
@@ -3613,7 +3613,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 3;</code>
          */
-        public var uri: com.google.common.html.types.TrustedResourceUrlProto
+        var uri: com.google.common.html.types.TrustedResourceUrlProto
           @JvmName("getUri")
           get() = _builder.getUri()
           @JvmName("setUri")
@@ -3627,7 +3627,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 3;</code>
          */
-        public fun clearUri() {
+        fun clearUri() {
           _builder.clearUri()
         }
         /**
@@ -3638,22 +3638,22 @@ public object ContextKt {
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 3;</code>
          * @return Whether the uri field is set.
          */
-        public fun hasUri(): kotlin.Boolean {
+        fun hasUri(): kotlin.Boolean {
           return _builder.hasUri()
         }
       }
     }
   }
   @kotlin.jvm.JvmName("-initializestyles")
-  public inline fun styles(block: tools.elide.page.ContextKt.StylesKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles =
+  inline fun styles(block: tools.elide.page.ContextKt.StylesKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles =
     tools.elide.page.ContextKt.StylesKt.Dsl._create(tools.elide.page.Context.Styles.newBuilder()).apply { block() }._build()
-  public object StylesKt {
+  object StylesKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.Styles.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.Styles.Builder): Dsl = Dsl(builder)
@@ -3670,7 +3670,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.SafeStyleProto lifted = 1;</code>
        */
-      public var lifted: com.google.common.html.types.SafeStyleProto
+      var lifted: com.google.common.html.types.SafeStyleProto
         @JvmName("getLifted")
         get() = _builder.getLifted()
         @JvmName("setLifted")
@@ -3684,7 +3684,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.SafeStyleProto lifted = 1;</code>
        */
-      public fun clearLifted() {
+      fun clearLifted() {
         _builder.clearLifted()
       }
       /**
@@ -3695,7 +3695,7 @@ public object ContextKt {
        * <code>.webutil.html.types.SafeStyleProto lifted = 1;</code>
        * @return Whether the lifted field is set.
        */
-      public fun hasLifted(): kotlin.Boolean {
+      fun hasLifted(): kotlin.Boolean {
         return _builder.hasLifted()
       }
 
@@ -3704,7 +3704,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * External CSS code to be included in &lt;link&gt; tags.
@@ -3712,7 +3712,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.Styles.Stylesheet link = 2;</code>
        */
-       public val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>
+       val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getLinkList()
@@ -3727,7 +3727,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.add(value: tools.elide.page.Context.Styles.Stylesheet) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.add(value: tools.elide.page.Context.Styles.Stylesheet) {
         _builder.addLink(value)
       }
       /**
@@ -3741,7 +3741,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.plusAssign(value: tools.elide.page.Context.Styles.Stylesheet) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.plusAssign(value: tools.elide.page.Context.Styles.Stylesheet) {
         add(value)
       }
       /**
@@ -3754,7 +3754,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Styles.Stylesheet>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Styles.Stylesheet>) {
         _builder.addAllLink(values)
       }
       /**
@@ -3768,7 +3768,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Styles.Stylesheet>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Styles.Stylesheet>) {
         addAll(values)
       }
       /**
@@ -3782,7 +3782,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setLink")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Styles.Stylesheet) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Styles.Stylesheet) {
         _builder.setLink(index, value)
       }
       /**
@@ -3794,21 +3794,21 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Styles.Stylesheet, LinkProxy>.clear() {
         _builder.clearLink()
       }
 
     }
     @kotlin.jvm.JvmName("-initializestylesheet")
-    public inline fun stylesheet(block: tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles.Stylesheet =
+    inline fun stylesheet(block: tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles.Stylesheet =
       tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl._create(tools.elide.page.Context.Styles.Stylesheet.newBuilder()).apply { block() }._build()
-    public object StylesheetKt {
+    object StylesheetKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Styles.Stylesheet.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Styles.Stylesheet.Builder): Dsl = Dsl(builder)
@@ -3825,7 +3825,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          */
-        public var uri: com.google.common.html.types.TrustedResourceUrlProto
+        var uri: com.google.common.html.types.TrustedResourceUrlProto
           @JvmName("getUri")
           get() = _builder.getUri()
           @JvmName("setUri")
@@ -3839,7 +3839,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          */
-        public fun clearUri() {
+        fun clearUri() {
           _builder.clearUri()
         }
         /**
@@ -3850,7 +3850,7 @@ public object ContextKt {
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          * @return Whether the uri field is set.
          */
-        public fun hasUri(): kotlin.Boolean {
+        fun hasUri(): kotlin.Boolean {
           return _builder.hasUri()
         }
 
@@ -3861,7 +3861,7 @@ public object ContextKt {
          *
          * <code>string id = 2;</code>
          */
-        public var id: kotlin.String
+        var id: kotlin.String
           @JvmName("getId")
           get() = _builder.getId()
           @JvmName("setId")
@@ -3875,7 +3875,7 @@ public object ContextKt {
          *
          * <code>string id = 2;</code>
          */
-        public fun clearId() {
+        fun clearId() {
           _builder.clearId()
         }
 
@@ -3886,7 +3886,7 @@ public object ContextKt {
          *
          * <code>string media = 3;</code>
          */
-        public var media: kotlin.String
+        var media: kotlin.String
           @JvmName("getMedia")
           get() = _builder.getMedia()
           @JvmName("setMedia")
@@ -3900,7 +3900,7 @@ public object ContextKt {
          *
          * <code>string media = 3;</code>
          */
-        public fun clearMedia() {
+        fun clearMedia() {
           _builder.clearMedia()
         }
 
@@ -3911,7 +3911,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public var prefetch: kotlin.Boolean
+        var prefetch: kotlin.Boolean
           @JvmName("getPrefetch")
           get() = _builder.getPrefetch()
           @JvmName("setPrefetch")
@@ -3925,7 +3925,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public fun clearPrefetch() {
+        fun clearPrefetch() {
           _builder.clearPrefetch()
         }
 
@@ -3936,7 +3936,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public var preload: kotlin.Boolean
+        var preload: kotlin.Boolean
           @JvmName("getPreload")
           get() = _builder.getPreload()
           @JvmName("setPreload")
@@ -3950,7 +3950,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public fun clearPreload() {
+        fun clearPreload() {
           _builder.clearPreload()
         }
 
@@ -3961,7 +3961,7 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public var push: kotlin.Boolean
+        var push: kotlin.Boolean
           @JvmName("getPush")
           get() = _builder.getPush()
           @JvmName("setPush")
@@ -3975,22 +3975,22 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public fun clearPush() {
+        fun clearPush() {
           _builder.clearPush()
         }
       }
     }
   }
   @kotlin.jvm.JvmName("-initializefonts")
-  public inline fun fonts(block: tools.elide.page.ContextKt.FontsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts =
+  inline fun fonts(block: tools.elide.page.ContextKt.FontsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts =
     tools.elide.page.ContextKt.FontsKt.Dsl._create(tools.elide.page.Context.Fonts.newBuilder()).apply { block() }._build()
-  public object FontsKt {
+  object FontsKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.Fonts.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.Fonts.Builder): Dsl = Dsl(builder)
@@ -4005,7 +4005,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class Package_Proxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class Package_Proxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Specifies packages of fonts included for reference.
@@ -4013,7 +4013,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.Fonts.FontPackage package = 1;</code>
        */
-       public val package_: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>
+       val package_: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getPackageList()
@@ -4028,7 +4028,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addPackage_")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.add(value: tools.elide.page.Context.Fonts.FontPackage) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.add(value: tools.elide.page.Context.Fonts.FontPackage) {
         _builder.addPackage(value)
       }
       /**
@@ -4042,7 +4042,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignPackage_")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.plusAssign(value: tools.elide.page.Context.Fonts.FontPackage) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.plusAssign(value: tools.elide.page.Context.Fonts.FontPackage) {
         add(value)
       }
       /**
@@ -4055,7 +4055,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllPackage_")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontPackage>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontPackage>) {
         _builder.addAllPackage(values)
       }
       /**
@@ -4069,7 +4069,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllPackage_")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontPackage>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontPackage>) {
         addAll(values)
       }
       /**
@@ -4083,7 +4083,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setPackage_")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Fonts.FontPackage) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Fonts.FontPackage) {
         _builder.setPackage(index, value)
       }
       /**
@@ -4095,21 +4095,21 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearPackage_")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontPackage, Package_Proxy>.clear() {
         _builder.clearPackage()
       }
 
     }
     @kotlin.jvm.JvmName("-initializefontReference")
-    public inline fun fontReference(block: tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontReference =
+    inline fun fontReference(block: tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontReference =
       tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl._create(tools.elide.page.Context.Fonts.FontReference.newBuilder()).apply { block() }._build()
-    public object FontReferenceKt {
+    object FontReferenceKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Fonts.FontReference.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Fonts.FontReference.Builder): Dsl = Dsl(builder)
@@ -4126,7 +4126,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Fonts.FontReferenceType type = 1;</code>
          */
-        public var type: tools.elide.page.Context.Fonts.FontReferenceType
+         var type: tools.elide.page.Context.Fonts.FontReferenceType
           @JvmName("getType")
           get() = _builder.getType()
           @JvmName("setType")
@@ -4140,7 +4140,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Fonts.FontReferenceType type = 1;</code>
          */
-        public fun clearType() {
+        fun clearType() {
           _builder.clearType()
         }
 
@@ -4151,7 +4151,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Fonts.FontFormat format = 2;</code>
          */
-        public var format: tools.elide.page.Context.Fonts.FontFormat
+         var format: tools.elide.page.Context.Fonts.FontFormat
           @JvmName("getFormat")
           get() = _builder.getFormat()
           @JvmName("setFormat")
@@ -4165,7 +4165,7 @@ public object ContextKt {
          *
          * <code>.page.Context.Fonts.FontFormat format = 2;</code>
          */
-        public fun clearFormat() {
+        fun clearFormat() {
           _builder.clearFormat()
         }
 
@@ -4176,7 +4176,7 @@ public object ContextKt {
          *
          * <code>string name = 3;</code>
          */
-        public var name: kotlin.String
+        var name: kotlin.String
           @JvmName("getName")
           get() = _builder.getName()
           @JvmName("setName")
@@ -4190,7 +4190,7 @@ public object ContextKt {
          *
          * <code>string name = 3;</code>
          */
-        public fun clearName() {
+        fun clearName() {
           _builder.clearName()
         }
 
@@ -4201,7 +4201,7 @@ public object ContextKt {
          *
          * <code>string weight = 4;</code>
          */
-        public var weight: kotlin.String
+        var weight: kotlin.String
           @JvmName("getWeight")
           get() = _builder.getWeight()
           @JvmName("setWeight")
@@ -4215,7 +4215,7 @@ public object ContextKt {
          *
          * <code>string weight = 4;</code>
          */
-        public fun clearWeight() {
+        fun clearWeight() {
           _builder.clearWeight()
         }
 
@@ -4226,7 +4226,7 @@ public object ContextKt {
          *
          * <code>string variant = 5;</code>
          */
-        public var variant: kotlin.String
+        var variant: kotlin.String
           @JvmName("getVariant")
           get() = _builder.getVariant()
           @JvmName("setVariant")
@@ -4240,7 +4240,7 @@ public object ContextKt {
          *
          * <code>string variant = 5;</code>
          */
-        public fun clearVariant() {
+        fun clearVariant() {
           _builder.clearVariant()
         }
 
@@ -4251,7 +4251,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 6;</code>
          */
-        public var uri: com.google.common.html.types.TrustedResourceUrlProto
+        var uri: com.google.common.html.types.TrustedResourceUrlProto
           @JvmName("getUri")
           get() = _builder.getUri()
           @JvmName("setUri")
@@ -4265,7 +4265,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 6;</code>
          */
-        public fun clearUri() {
+        fun clearUri() {
           _builder.clearUri()
         }
         /**
@@ -4276,7 +4276,7 @@ public object ContextKt {
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 6;</code>
          * @return Whether the uri field is set.
          */
-        public fun hasUri(): kotlin.Boolean {
+        fun hasUri(): kotlin.Boolean {
           return _builder.hasUri()
         }
 
@@ -4287,7 +4287,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public var prefetch: kotlin.Boolean
+        var prefetch: kotlin.Boolean
           @JvmName("getPrefetch")
           get() = _builder.getPrefetch()
           @JvmName("setPrefetch")
@@ -4301,7 +4301,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public fun clearPrefetch() {
+        fun clearPrefetch() {
           _builder.clearPrefetch()
         }
 
@@ -4312,7 +4312,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public var preload: kotlin.Boolean
+        var preload: kotlin.Boolean
           @JvmName("getPreload")
           get() = _builder.getPreload()
           @JvmName("setPreload")
@@ -4326,7 +4326,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public fun clearPreload() {
+        fun clearPreload() {
           _builder.clearPreload()
         }
 
@@ -4337,7 +4337,7 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public var push: kotlin.Boolean
+        var push: kotlin.Boolean
           @JvmName("getPush")
           get() = _builder.getPush()
           @JvmName("setPush")
@@ -4351,21 +4351,21 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public fun clearPush() {
+        fun clearPush() {
           _builder.clearPush()
         }
       }
     }
     @kotlin.jvm.JvmName("-initializefontPackage")
-    public inline fun fontPackage(block: tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontPackage =
+    inline fun fontPackage(block: tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontPackage =
       tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl._create(tools.elide.page.Context.Fonts.FontPackage.newBuilder()).apply { block() }._build()
-    public object FontPackageKt {
+    object FontPackageKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Fonts.FontPackage.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Fonts.FontPackage.Builder): Dsl = Dsl(builder)
@@ -4382,7 +4382,7 @@ public object ContextKt {
          *
          * <code>string name = 1;</code>
          */
-        public var name: kotlin.String
+        var name: kotlin.String
           @JvmName("getName")
           get() = _builder.getName()
           @JvmName("setName")
@@ -4396,7 +4396,7 @@ public object ContextKt {
          *
          * <code>string name = 1;</code>
          */
-        public fun clearName() {
+        fun clearName() {
           _builder.clearName()
         }
 
@@ -4405,7 +4405,7 @@ public object ContextKt {
          * generics.
          */
         @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-        public class ReferenceProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+        class ReferenceProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
         /**
          * <pre>
          * References to individual constituent font assets.
@@ -4413,7 +4413,7 @@ public object ContextKt {
          *
          * <code>repeated .page.Context.Fonts.FontReference reference = 2;</code>
          */
-         public val reference: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>
+         val reference: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>
           @kotlin.jvm.JvmSynthetic
           get() = com.google.protobuf.kotlin.DslList(
             _builder.getReferenceList()
@@ -4428,7 +4428,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addReference")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.add(value: tools.elide.page.Context.Fonts.FontReference) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.add(value: tools.elide.page.Context.Fonts.FontReference) {
           _builder.addReference(value)
         }
         /**
@@ -4442,7 +4442,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignReference")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.plusAssign(value: tools.elide.page.Context.Fonts.FontReference) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.plusAssign(value: tools.elide.page.Context.Fonts.FontReference) {
           add(value)
         }
         /**
@@ -4455,7 +4455,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("addAllReference")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontReference>) {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontReference>) {
           _builder.addAllReference(values)
         }
         /**
@@ -4469,7 +4469,7 @@ public object ContextKt {
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("plusAssignAllReference")
         @Suppress("NOTHING_TO_INLINE")
-        public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontReference>) {
+        inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Fonts.FontReference>) {
           addAll(values)
         }
         /**
@@ -4483,7 +4483,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("setReference")
-        public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Fonts.FontReference) {
+        operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Fonts.FontReference) {
           _builder.setReference(index, value)
         }
         /**
@@ -4495,7 +4495,7 @@ public object ContextKt {
          */
         @kotlin.jvm.JvmSynthetic
         @kotlin.jvm.JvmName("clearReference")
-        public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.clear() {
+        fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Fonts.FontReference, ReferenceProxy>.clear() {
           _builder.clearReference()
         }
 
@@ -4503,15 +4503,15 @@ public object ContextKt {
     }
   }
   @kotlin.jvm.JvmName("-initializescripts")
-  public inline fun scripts(block: tools.elide.page.ContextKt.ScriptsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts =
+  inline fun scripts(block: tools.elide.page.ContextKt.ScriptsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts =
     tools.elide.page.ContextKt.ScriptsKt.Dsl._create(tools.elide.page.Context.Scripts.newBuilder()).apply { block() }._build()
-  public object ScriptsKt {
+  object ScriptsKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.Scripts.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.Scripts.Builder): Dsl = Dsl(builder)
@@ -4528,7 +4528,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.SafeScriptProto lifted = 1;</code>
        */
-      public var lifted: com.google.common.html.types.SafeScriptProto
+      var lifted: com.google.common.html.types.SafeScriptProto
         @JvmName("getLifted")
         get() = _builder.getLifted()
         @JvmName("setLifted")
@@ -4542,7 +4542,7 @@ public object ContextKt {
        *
        * <code>.webutil.html.types.SafeScriptProto lifted = 1;</code>
        */
-      public fun clearLifted() {
+      fun clearLifted() {
         _builder.clearLifted()
       }
       /**
@@ -4553,7 +4553,7 @@ public object ContextKt {
        * <code>.webutil.html.types.SafeScriptProto lifted = 1;</code>
        * @return Whether the lifted field is set.
        */
-      public fun hasLifted(): kotlin.Boolean {
+      fun hasLifted(): kotlin.Boolean {
         return _builder.hasLifted()
       }
 
@@ -4562,7 +4562,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class LinkProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * External JavaScript code to be included in &lt;link&gt; tags.
@@ -4570,7 +4570,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.Scripts.JavaScript link = 2;</code>
        */
-       public val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>
+       val link: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getLinkList()
@@ -4585,7 +4585,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.add(value: tools.elide.page.Context.Scripts.JavaScript) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.add(value: tools.elide.page.Context.Scripts.JavaScript) {
         _builder.addLink(value)
       }
       /**
@@ -4599,7 +4599,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.plusAssign(value: tools.elide.page.Context.Scripts.JavaScript) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.plusAssign(value: tools.elide.page.Context.Scripts.JavaScript) {
         add(value)
       }
       /**
@@ -4612,7 +4612,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Scripts.JavaScript>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.Scripts.JavaScript>) {
         _builder.addAllLink(values)
       }
       /**
@@ -4626,7 +4626,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllLink")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Scripts.JavaScript>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.Scripts.JavaScript>) {
         addAll(values)
       }
       /**
@@ -4640,7 +4640,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setLink")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Scripts.JavaScript) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.Scripts.JavaScript) {
         _builder.setLink(index, value)
       }
       /**
@@ -4652,21 +4652,21 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearLink")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.Scripts.JavaScript, LinkProxy>.clear() {
         _builder.clearLink()
       }
 
     }
     @kotlin.jvm.JvmName("-initializejavaScript")
-    public inline fun javaScript(block: tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts.JavaScript =
+    inline fun javaScript(block: tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts.JavaScript =
       tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl._create(tools.elide.page.Context.Scripts.JavaScript.newBuilder()).apply { block() }._build()
-    public object JavaScriptKt {
+    object JavaScriptKt {
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
       @com.google.protobuf.kotlin.ProtoDslMarker
-      public class Dsl private constructor(
+      class Dsl private constructor(
         private val _builder: tools.elide.page.Context.Scripts.JavaScript.Builder
       ) {
-        public companion object {
+        companion object {
           @kotlin.jvm.JvmSynthetic
           @kotlin.PublishedApi
           internal fun _create(builder: tools.elide.page.Context.Scripts.JavaScript.Builder): Dsl = Dsl(builder)
@@ -4683,7 +4683,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          */
-        public var uri: com.google.common.html.types.TrustedResourceUrlProto
+        var uri: com.google.common.html.types.TrustedResourceUrlProto
           @JvmName("getUri")
           get() = _builder.getUri()
           @JvmName("setUri")
@@ -4697,7 +4697,7 @@ public object ContextKt {
          *
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          */
-        public fun clearUri() {
+        fun clearUri() {
           _builder.clearUri()
         }
         /**
@@ -4708,7 +4708,7 @@ public object ContextKt {
          * <code>.webutil.html.types.TrustedResourceUrlProto uri = 1;</code>
          * @return Whether the uri field is set.
          */
-        public fun hasUri(): kotlin.Boolean {
+        fun hasUri(): kotlin.Boolean {
           return _builder.hasUri()
         }
 
@@ -4719,7 +4719,7 @@ public object ContextKt {
          *
          * <code>string id = 2;</code>
          */
-        public var id: kotlin.String
+        var id: kotlin.String
           @JvmName("getId")
           get() = _builder.getId()
           @JvmName("setId")
@@ -4733,7 +4733,7 @@ public object ContextKt {
          *
          * <code>string id = 2;</code>
          */
-        public fun clearId() {
+        fun clearId() {
           _builder.clearId()
         }
 
@@ -4744,7 +4744,7 @@ public object ContextKt {
          *
          * <code>bool defer = 3;</code>
          */
-        public var defer: kotlin.Boolean
+        var defer: kotlin.Boolean
           @JvmName("getDefer")
           get() = _builder.getDefer()
           @JvmName("setDefer")
@@ -4758,7 +4758,7 @@ public object ContextKt {
          *
          * <code>bool defer = 3;</code>
          */
-        public fun clearDefer() {
+        fun clearDefer() {
           _builder.clearDefer()
         }
 
@@ -4769,7 +4769,7 @@ public object ContextKt {
          *
          * <code>bool async = 4;</code>
          */
-        public var async: kotlin.Boolean
+        var async: kotlin.Boolean
           @JvmName("getAsync")
           get() = _builder.getAsync()
           @JvmName("setAsync")
@@ -4783,7 +4783,7 @@ public object ContextKt {
          *
          * <code>bool async = 4;</code>
          */
-        public fun clearAsync() {
+        fun clearAsync() {
           _builder.clearAsync()
         }
 
@@ -4794,7 +4794,7 @@ public object ContextKt {
          *
          * <code>bool module = 5;</code>
          */
-        public var module: kotlin.Boolean
+        var module: kotlin.Boolean
           @JvmName("getModule")
           get() = _builder.getModule()
           @JvmName("setModule")
@@ -4808,7 +4808,7 @@ public object ContextKt {
          *
          * <code>bool module = 5;</code>
          */
-        public fun clearModule() {
+        fun clearModule() {
           _builder.clearModule()
         }
 
@@ -4819,7 +4819,7 @@ public object ContextKt {
          *
          * <code>bool no_module = 6;</code>
          */
-        public var noModule: kotlin.Boolean
+        var noModule: kotlin.Boolean
           @JvmName("getNoModule")
           get() = _builder.getNoModule()
           @JvmName("setNoModule")
@@ -4833,7 +4833,7 @@ public object ContextKt {
          *
          * <code>bool no_module = 6;</code>
          */
-        public fun clearNoModule() {
+        fun clearNoModule() {
           _builder.clearNoModule()
         }
 
@@ -4844,7 +4844,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public var prefetch: kotlin.Boolean
+        var prefetch: kotlin.Boolean
           @JvmName("getPrefetch")
           get() = _builder.getPrefetch()
           @JvmName("setPrefetch")
@@ -4858,7 +4858,7 @@ public object ContextKt {
          *
          * <code>bool prefetch = 7;</code>
          */
-        public fun clearPrefetch() {
+        fun clearPrefetch() {
           _builder.clearPrefetch()
         }
 
@@ -4869,7 +4869,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public var preload: kotlin.Boolean
+        var preload: kotlin.Boolean
           @JvmName("getPreload")
           get() = _builder.getPreload()
           @JvmName("setPreload")
@@ -4883,7 +4883,7 @@ public object ContextKt {
          *
          * <code>bool preload = 8;</code>
          */
-        public fun clearPreload() {
+        fun clearPreload() {
           _builder.clearPreload()
         }
 
@@ -4894,7 +4894,7 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public var push: kotlin.Boolean
+        var push: kotlin.Boolean
           @JvmName("getPush")
           get() = _builder.getPush()
           @JvmName("setPush")
@@ -4908,22 +4908,22 @@ public object ContextKt {
          *
          * <code>bool push = 9;</code>
          */
-        public fun clearPush() {
+        fun clearPush() {
           _builder.clearPush()
         }
       }
     }
   }
   @kotlin.jvm.JvmName("-initializedynamicETag")
-  public inline fun dynamicETag(block: tools.elide.page.ContextKt.DynamicETagKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.DynamicETag =
+  inline fun dynamicETag(block: tools.elide.page.ContextKt.DynamicETagKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.DynamicETag =
     tools.elide.page.ContextKt.DynamicETagKt.Dsl._create(tools.elide.page.Context.DynamicETag.newBuilder()).apply { block() }._build()
-  public object DynamicETagKt {
+  object DynamicETagKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.DynamicETag.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.DynamicETag.Builder): Dsl = Dsl(builder)
@@ -4940,7 +4940,7 @@ public object ContextKt {
        *
        * <code>bool enabled = 1;</code>
        */
-      public var enabled: kotlin.Boolean
+      var enabled: kotlin.Boolean
         @JvmName("getEnabled")
         get() = _builder.getEnabled()
         @JvmName("setEnabled")
@@ -4954,7 +4954,7 @@ public object ContextKt {
        *
        * <code>bool enabled = 1;</code>
        */
-      public fun clearEnabled() {
+      fun clearEnabled() {
         _builder.clearEnabled()
       }
 
@@ -4965,7 +4965,7 @@ public object ContextKt {
        *
        * <code>bool strong = 2;</code>
        */
-      public var strong: kotlin.Boolean
+      var strong: kotlin.Boolean
         @JvmName("getStrong")
         get() = _builder.getStrong()
         @JvmName("setStrong")
@@ -4979,7 +4979,7 @@ public object ContextKt {
        *
        * <code>bool strong = 2;</code>
        */
-      public fun clearStrong() {
+      fun clearStrong() {
         _builder.clearStrong()
       }
 
@@ -4990,7 +4990,7 @@ public object ContextKt {
        *
        * <code>.data.DataFingerprint preimage = 3;</code>
        */
-      public var preimage: tools.elide.data.DataFingerprint
+      var preimage: tools.elide.data.DataFingerprint
         @JvmName("getPreimage")
         get() = _builder.getPreimage()
         @JvmName("setPreimage")
@@ -5004,7 +5004,7 @@ public object ContextKt {
        *
        * <code>.data.DataFingerprint preimage = 3;</code>
        */
-      public fun clearPreimage() {
+      fun clearPreimage() {
         _builder.clearPreimage()
       }
       /**
@@ -5015,7 +5015,7 @@ public object ContextKt {
        * <code>.data.DataFingerprint preimage = 3;</code>
        * @return Whether the preimage field is set.
        */
-      public fun hasPreimage(): kotlin.Boolean {
+      fun hasPreimage(): kotlin.Boolean {
         return _builder.hasPreimage()
       }
 
@@ -5026,7 +5026,7 @@ public object ContextKt {
        *
        * <code>.data.DataFingerprint response = 4;</code>
        */
-      public var response: tools.elide.data.DataFingerprint
+      var response: tools.elide.data.DataFingerprint
         @JvmName("getResponse")
         get() = _builder.getResponse()
         @JvmName("setResponse")
@@ -5040,7 +5040,7 @@ public object ContextKt {
        *
        * <code>.data.DataFingerprint response = 4;</code>
        */
-      public fun clearResponse() {
+      fun clearResponse() {
         _builder.clearResponse()
       }
       /**
@@ -5051,21 +5051,21 @@ public object ContextKt {
        * <code>.data.DataFingerprint response = 4;</code>
        * @return Whether the response field is set.
        */
-      public fun hasResponse(): kotlin.Boolean {
+      fun hasResponse(): kotlin.Boolean {
         return _builder.hasResponse()
       }
     }
   }
   @kotlin.jvm.JvmName("-initializerDFPrefix")
-  public inline fun rDFPrefix(block: tools.elide.page.ContextKt.RDFPrefixKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.RDFPrefix =
+  inline fun rDFPrefix(block: tools.elide.page.ContextKt.RDFPrefixKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.RDFPrefix =
     tools.elide.page.ContextKt.RDFPrefixKt.Dsl._create(tools.elide.page.Context.RDFPrefix.newBuilder()).apply { block() }._build()
-  public object RDFPrefixKt {
+  object RDFPrefixKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.RDFPrefix.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.RDFPrefix.Builder): Dsl = Dsl(builder)
@@ -5082,7 +5082,7 @@ public object ContextKt {
        *
        * <code>string prefix = 1;</code>
        */
-      public var prefix: kotlin.String
+      var prefix: kotlin.String
         @JvmName("getPrefix")
         get() = _builder.getPrefix()
         @JvmName("setPrefix")
@@ -5096,7 +5096,7 @@ public object ContextKt {
        *
        * <code>string prefix = 1;</code>
        */
-      public fun clearPrefix() {
+      fun clearPrefix() {
         _builder.clearPrefix()
       }
 
@@ -5107,7 +5107,7 @@ public object ContextKt {
        *
        * <code>string target = 2;</code>
        */
-      public var target: kotlin.String
+      var target: kotlin.String
         @JvmName("getTarget")
         get() = _builder.getTarget()
         @JvmName("setTarget")
@@ -5121,21 +5121,21 @@ public object ContextKt {
        *
        * <code>string target = 2;</code>
        */
-      public fun clearTarget() {
+      fun clearTarget() {
         _builder.clearTarget()
       }
     }
   }
   @kotlin.jvm.JvmName("-initializecookie")
-  public inline fun cookie(block: tools.elide.page.ContextKt.CookieKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Cookie =
+  inline fun cookie(block: tools.elide.page.ContextKt.CookieKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Cookie =
     tools.elide.page.ContextKt.CookieKt.Dsl._create(tools.elide.page.Context.Cookie.newBuilder()).apply { block() }._build()
-  public object CookieKt {
+  object CookieKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.Cookie.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.Cookie.Builder): Dsl = Dsl(builder)
@@ -5152,7 +5152,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public var name: kotlin.String
+      var name: kotlin.String
         @JvmName("getName")
         get() = _builder.getName()
         @JvmName("setName")
@@ -5166,7 +5166,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public fun clearName() {
+      fun clearName() {
         _builder.clearName()
       }
 
@@ -5177,7 +5177,7 @@ public object ContextKt {
        *
        * <code>string value = 2;</code>
        */
-      public var value: kotlin.String
+      var value: kotlin.String
         @JvmName("getValue")
         get() = _builder.getValue()
         @JvmName("setValue")
@@ -5191,7 +5191,7 @@ public object ContextKt {
        *
        * <code>string value = 2;</code>
        */
-      public fun clearValue() {
+      fun clearValue() {
         _builder.clearValue()
       }
 
@@ -5202,7 +5202,7 @@ public object ContextKt {
        *
        * <code>string domain = 3;</code>
        */
-      public var domain: kotlin.String
+      var domain: kotlin.String
         @JvmName("getDomain")
         get() = _builder.getDomain()
         @JvmName("setDomain")
@@ -5216,7 +5216,7 @@ public object ContextKt {
        *
        * <code>string domain = 3;</code>
        */
-      public fun clearDomain() {
+      fun clearDomain() {
         _builder.clearDomain()
       }
 
@@ -5227,7 +5227,7 @@ public object ContextKt {
        *
        * <code>string path = 4;</code>
        */
-      public var path: kotlin.String
+      var path: kotlin.String
         @JvmName("getPath")
         get() = _builder.getPath()
         @JvmName("setPath")
@@ -5241,7 +5241,7 @@ public object ContextKt {
        *
        * <code>string path = 4;</code>
        */
-      public fun clearPath() {
+      fun clearPath() {
         _builder.clearPath()
       }
 
@@ -5252,7 +5252,7 @@ public object ContextKt {
        *
        * <code>bool immediate_expire = 5;</code>
        */
-      public var immediateExpire: kotlin.Boolean
+      var immediateExpire: kotlin.Boolean
         @JvmName("getImmediateExpire")
         get() = _builder.getImmediateExpire()
         @JvmName("setImmediateExpire")
@@ -5266,7 +5266,7 @@ public object ContextKt {
        *
        * <code>bool immediate_expire = 5;</code>
        */
-      public fun clearImmediateExpire() {
+      fun clearImmediateExpire() {
         _builder.clearImmediateExpire()
       }
       /**
@@ -5277,7 +5277,7 @@ public object ContextKt {
        * <code>bool immediate_expire = 5;</code>
        * @return Whether the immediateExpire field is set.
        */
-      public fun hasImmediateExpire(): kotlin.Boolean {
+      fun hasImmediateExpire(): kotlin.Boolean {
         return _builder.hasImmediateExpire()
       }
 
@@ -5288,7 +5288,7 @@ public object ContextKt {
        *
        * <code>.google.protobuf.Timestamp absolute_expire = 6;</code>
        */
-      public var absoluteExpire: com.google.protobuf.Timestamp
+      var absoluteExpire: com.google.protobuf.Timestamp
         @JvmName("getAbsoluteExpire")
         get() = _builder.getAbsoluteExpire()
         @JvmName("setAbsoluteExpire")
@@ -5302,7 +5302,7 @@ public object ContextKt {
        *
        * <code>.google.protobuf.Timestamp absolute_expire = 6;</code>
        */
-      public fun clearAbsoluteExpire() {
+      fun clearAbsoluteExpire() {
         _builder.clearAbsoluteExpire()
       }
       /**
@@ -5313,7 +5313,7 @@ public object ContextKt {
        * <code>.google.protobuf.Timestamp absolute_expire = 6;</code>
        * @return Whether the absoluteExpire field is set.
        */
-      public fun hasAbsoluteExpire(): kotlin.Boolean {
+      fun hasAbsoluteExpire(): kotlin.Boolean {
         return _builder.hasAbsoluteExpire()
       }
 
@@ -5324,7 +5324,7 @@ public object ContextKt {
        *
        * <code>.google.protobuf.Duration relative_expire = 7;</code>
        */
-      public var relativeExpire: com.google.protobuf.Duration
+      var relativeExpire: com.google.protobuf.Duration
         @JvmName("getRelativeExpire")
         get() = _builder.getRelativeExpire()
         @JvmName("setRelativeExpire")
@@ -5338,7 +5338,7 @@ public object ContextKt {
        *
        * <code>.google.protobuf.Duration relative_expire = 7;</code>
        */
-      public fun clearRelativeExpire() {
+      fun clearRelativeExpire() {
         _builder.clearRelativeExpire()
       }
       /**
@@ -5349,7 +5349,7 @@ public object ContextKt {
        * <code>.google.protobuf.Duration relative_expire = 7;</code>
        * @return Whether the relativeExpire field is set.
        */
-      public fun hasRelativeExpire(): kotlin.Boolean {
+      fun hasRelativeExpire(): kotlin.Boolean {
         return _builder.hasRelativeExpire()
       }
 
@@ -5360,7 +5360,7 @@ public object ContextKt {
        *
        * <code>bool no_expire = 8;</code>
        */
-      public var noExpire: kotlin.Boolean
+      var noExpire: kotlin.Boolean
         @JvmName("getNoExpire")
         get() = _builder.getNoExpire()
         @JvmName("setNoExpire")
@@ -5374,7 +5374,7 @@ public object ContextKt {
        *
        * <code>bool no_expire = 8;</code>
        */
-      public fun clearNoExpire() {
+      fun clearNoExpire() {
         _builder.clearNoExpire()
       }
       /**
@@ -5385,7 +5385,7 @@ public object ContextKt {
        * <code>bool no_expire = 8;</code>
        * @return Whether the noExpire field is set.
        */
-      public fun hasNoExpire(): kotlin.Boolean {
+      fun hasNoExpire(): kotlin.Boolean {
         return _builder.hasNoExpire()
       }
 
@@ -5396,7 +5396,7 @@ public object ContextKt {
        *
        * <code>bool http_only = 9;</code>
        */
-      public var httpOnly: kotlin.Boolean
+      var httpOnly: kotlin.Boolean
         @JvmName("getHttpOnly")
         get() = _builder.getHttpOnly()
         @JvmName("setHttpOnly")
@@ -5410,7 +5410,7 @@ public object ContextKt {
        *
        * <code>bool http_only = 9;</code>
        */
-      public fun clearHttpOnly() {
+      fun clearHttpOnly() {
         _builder.clearHttpOnly()
       }
 
@@ -5421,7 +5421,7 @@ public object ContextKt {
        *
        * <code>bool secure = 10;</code>
        */
-      public var secure: kotlin.Boolean
+      var secure: kotlin.Boolean
         @JvmName("getSecure")
         get() = _builder.getSecure()
         @JvmName("setSecure")
@@ -5435,7 +5435,7 @@ public object ContextKt {
        *
        * <code>bool secure = 10;</code>
        */
-      public fun clearSecure() {
+      fun clearSecure() {
         _builder.clearSecure()
       }
 
@@ -5446,7 +5446,7 @@ public object ContextKt {
        *
        * <code>.page.Context.Cookie.SameSitePolicy same_site = 11;</code>
        */
-      public var sameSite: tools.elide.page.Context.Cookie.SameSitePolicy
+       var sameSite: tools.elide.page.Context.Cookie.SameSitePolicy
         @JvmName("getSameSite")
         get() = _builder.getSameSite()
         @JvmName("setSameSite")
@@ -5460,28 +5460,28 @@ public object ContextKt {
        *
        * <code>.page.Context.Cookie.SameSitePolicy same_site = 11;</code>
        */
-      public fun clearSameSite() {
+      fun clearSameSite() {
         _builder.clearSameSite()
       }
-      public val expirationStrategyCase: tools.elide.page.Context.Cookie.ExpirationStrategyCase
+      val expirationStrategyCase: tools.elide.page.Context.Cookie.ExpirationStrategyCase
         @JvmName("getExpirationStrategyCase")
         get() = _builder.getExpirationStrategyCase()
 
-      public fun clearExpirationStrategy() {
+      fun clearExpirationStrategy() {
         _builder.clearExpirationStrategy()
       }
     }
   }
   @kotlin.jvm.JvmName("-initializeclientHints")
-  public inline fun clientHints(block: tools.elide.page.ContextKt.ClientHintsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ClientHints =
+  inline fun clientHints(block: tools.elide.page.ContextKt.ClientHintsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ClientHints =
     tools.elide.page.ContextKt.ClientHintsKt.Dsl._create(tools.elide.page.Context.ClientHints.newBuilder()).apply { block() }._build()
-  public object ClientHintsKt {
+  object ClientHintsKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.ClientHints.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.ClientHints.Builder): Dsl = Dsl(builder)
@@ -5496,7 +5496,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class SupportedProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class SupportedProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Client hints supported by the server for this HTTP cycle.
@@ -5504,7 +5504,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.ClientHint supported = 1;</code>
        */
-       public val supported: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>
+       val supported: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getSupportedList()
@@ -5519,7 +5519,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addSupported")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.add(value: tools.elide.page.Context.ClientHint) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.add(value: tools.elide.page.Context.ClientHint) {
         _builder.addSupported(value)
       }/**
        * <pre>
@@ -5532,7 +5532,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignSupported")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.plusAssign(value: tools.elide.page.Context.ClientHint) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.plusAssign(value: tools.elide.page.Context.ClientHint) {
         add(value)
       }/**
        * <pre>
@@ -5544,7 +5544,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllSupported")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
         _builder.addAllSupported(values)
       }/**
        * <pre>
@@ -5557,7 +5557,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllSupported")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
         addAll(values)
       }/**
        * <pre>
@@ -5570,7 +5570,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setSupported")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ClientHint) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ClientHint) {
         _builder.setSupported(index, value)
       }/**
        * <pre>
@@ -5581,7 +5581,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearSupported")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, SupportedProxy>.clear() {
         _builder.clearSupported()
       }
       /**
@@ -5589,7 +5589,7 @@ public object ContextKt {
        * generics.
        */
       @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-      public class IndicatedProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+      class IndicatedProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
       /**
        * <pre>
        * Client hints indicated by the client for this HTTP cycle.
@@ -5597,7 +5597,7 @@ public object ContextKt {
        *
        * <code>repeated .page.Context.ClientHint indicated = 2;</code>
        */
-       public val indicated: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>
+       val indicated: com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>
         @kotlin.jvm.JvmSynthetic
         get() = com.google.protobuf.kotlin.DslList(
           _builder.getIndicatedList()
@@ -5612,7 +5612,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addIndicated")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.add(value: tools.elide.page.Context.ClientHint) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.add(value: tools.elide.page.Context.ClientHint) {
         _builder.addIndicated(value)
       }/**
        * <pre>
@@ -5625,7 +5625,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignIndicated")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.plusAssign(value: tools.elide.page.Context.ClientHint) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.plusAssign(value: tools.elide.page.Context.ClientHint) {
         add(value)
       }/**
        * <pre>
@@ -5637,7 +5637,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("addAllIndicated")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
         _builder.addAllIndicated(values)
       }/**
        * <pre>
@@ -5650,7 +5650,7 @@ public object ContextKt {
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("plusAssignAllIndicated")
       @Suppress("NOTHING_TO_INLINE")
-      public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
+      inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.page.Context.ClientHint>) {
         addAll(values)
       }/**
        * <pre>
@@ -5663,7 +5663,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("setIndicated")
-      public operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ClientHint) {
+      operator fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.set(index: kotlin.Int, value: tools.elide.page.Context.ClientHint) {
         _builder.setIndicated(index, value)
       }/**
        * <pre>
@@ -5674,7 +5674,7 @@ public object ContextKt {
        */
       @kotlin.jvm.JvmSynthetic
       @kotlin.jvm.JvmName("clearIndicated")
-      public fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.clear() {
+      fun com.google.protobuf.kotlin.DslList<tools.elide.page.Context.ClientHint, IndicatedProxy>.clear() {
         _builder.clearIndicated()
       }
       /**
@@ -5684,7 +5684,7 @@ public object ContextKt {
        *
        * <code>uint64 lifetime = 3;</code>
        */
-      public var lifetime: kotlin.Long
+      var lifetime: kotlin.Long
         @JvmName("getLifetime")
         get() = _builder.getLifetime()
         @JvmName("setLifetime")
@@ -5698,7 +5698,7 @@ public object ContextKt {
        *
        * <code>uint64 lifetime = 3;</code>
        */
-      public fun clearLifetime() {
+      fun clearLifetime() {
         _builder.clearLifetime()
       }
 
@@ -5709,7 +5709,7 @@ public object ContextKt {
        *
        * <code>uint32 width = 4;</code>
        */
-      public var width: kotlin.Int
+      var width: kotlin.Int
         @JvmName("getWidth")
         get() = _builder.getWidth()
         @JvmName("setWidth")
@@ -5723,7 +5723,7 @@ public object ContextKt {
        *
        * <code>uint32 width = 4;</code>
        */
-      public fun clearWidth() {
+      fun clearWidth() {
         _builder.clearWidth()
       }
 
@@ -5734,7 +5734,7 @@ public object ContextKt {
        *
        * <code>uint32 viewport_width = 5;</code>
        */
-      public var viewportWidth: kotlin.Int
+      var viewportWidth: kotlin.Int
         @JvmName("getViewportWidth")
         get() = _builder.getViewportWidth()
         @JvmName("setViewportWidth")
@@ -5748,7 +5748,7 @@ public object ContextKt {
        *
        * <code>uint32 viewport_width = 5;</code>
        */
-      public fun clearViewportWidth() {
+      fun clearViewportWidth() {
         _builder.clearViewportWidth()
       }
 
@@ -5759,7 +5759,7 @@ public object ContextKt {
        *
        * <code>uint32 device_pixel_ratio = 6;</code>
        */
-      public var devicePixelRatio: kotlin.Int
+      var devicePixelRatio: kotlin.Int
         @JvmName("getDevicePixelRatio")
         get() = _builder.getDevicePixelRatio()
         @JvmName("setDevicePixelRatio")
@@ -5773,7 +5773,7 @@ public object ContextKt {
        *
        * <code>uint32 device_pixel_ratio = 6;</code>
        */
-      public fun clearDevicePixelRatio() {
+      fun clearDevicePixelRatio() {
         _builder.clearDevicePixelRatio()
       }
 
@@ -5784,7 +5784,7 @@ public object ContextKt {
        *
        * <code>uint32 round_trip_time = 7;</code>
        */
-      public var roundTripTime: kotlin.Int
+      var roundTripTime: kotlin.Int
         @JvmName("getRoundTripTime")
         get() = _builder.getRoundTripTime()
         @JvmName("setRoundTripTime")
@@ -5798,7 +5798,7 @@ public object ContextKt {
        *
        * <code>uint32 round_trip_time = 7;</code>
        */
-      public fun clearRoundTripTime() {
+      fun clearRoundTripTime() {
         _builder.clearRoundTripTime()
       }
 
@@ -5809,7 +5809,7 @@ public object ContextKt {
        *
        * <code>float downlink = 8;</code>
        */
-      public var downlink: kotlin.Float
+      var downlink: kotlin.Float
         @JvmName("getDownlink")
         get() = _builder.getDownlink()
         @JvmName("setDownlink")
@@ -5823,7 +5823,7 @@ public object ContextKt {
        *
        * <code>float downlink = 8;</code>
        */
-      public fun clearDownlink() {
+      fun clearDownlink() {
         _builder.clearDownlink()
       }
 
@@ -5834,7 +5834,7 @@ public object ContextKt {
        *
        * <code>.page.Context.ConnectionHint effective_connection_type = 9;</code>
        */
-      public var effectiveConnectionType: tools.elide.page.Context.ConnectionHint
+       var effectiveConnectionType: tools.elide.page.Context.ConnectionHint
         @JvmName("getEffectiveConnectionType")
         get() = _builder.getEffectiveConnectionType()
         @JvmName("setEffectiveConnectionType")
@@ -5848,7 +5848,7 @@ public object ContextKt {
        *
        * <code>.page.Context.ConnectionHint effective_connection_type = 9;</code>
        */
-      public fun clearEffectiveConnectionType() {
+      fun clearEffectiveConnectionType() {
         _builder.clearEffectiveConnectionType()
       }
 
@@ -5859,7 +5859,7 @@ public object ContextKt {
        *
        * <code>bool save_data = 10;</code>
        */
-      public var saveData: kotlin.Boolean
+      var saveData: kotlin.Boolean
         @JvmName("getSaveData")
         get() = _builder.getSaveData()
         @JvmName("setSaveData")
@@ -5873,7 +5873,7 @@ public object ContextKt {
        *
        * <code>bool save_data = 10;</code>
        */
-      public fun clearSaveData() {
+      fun clearSaveData() {
         _builder.clearSaveData()
       }
 
@@ -5884,7 +5884,7 @@ public object ContextKt {
        *
        * <code>float device_memory = 11;</code>
        */
-      public var deviceMemory: kotlin.Float
+      var deviceMemory: kotlin.Float
         @JvmName("getDeviceMemory")
         get() = _builder.getDeviceMemory()
         @JvmName("setDeviceMemory")
@@ -5898,21 +5898,21 @@ public object ContextKt {
        *
        * <code>float device_memory = 11;</code>
        */
-      public fun clearDeviceMemory() {
+      fun clearDeviceMemory() {
         _builder.clearDeviceMemory()
       }
     }
   }
   @kotlin.jvm.JvmName("-initializeresponseHeader")
-  public inline fun responseHeader(block: tools.elide.page.ContextKt.ResponseHeaderKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ResponseHeader =
+  inline fun responseHeader(block: tools.elide.page.ContextKt.ResponseHeaderKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ResponseHeader =
     tools.elide.page.ContextKt.ResponseHeaderKt.Dsl._create(tools.elide.page.Context.ResponseHeader.newBuilder()).apply { block() }._build()
-  public object ResponseHeaderKt {
+  object ResponseHeaderKt {
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
     @com.google.protobuf.kotlin.ProtoDslMarker
-    public class Dsl private constructor(
+    class Dsl private constructor(
       private val _builder: tools.elide.page.Context.ResponseHeader.Builder
     ) {
-      public companion object {
+      companion object {
         @kotlin.jvm.JvmSynthetic
         @kotlin.PublishedApi
         internal fun _create(builder: tools.elide.page.Context.ResponseHeader.Builder): Dsl = Dsl(builder)
@@ -5929,7 +5929,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public var name: kotlin.String
+      var name: kotlin.String
         @JvmName("getName")
         get() = _builder.getName()
         @JvmName("setName")
@@ -5943,7 +5943,7 @@ public object ContextKt {
        *
        * <code>string name = 1;</code>
        */
-      public fun clearName() {
+      fun clearName() {
         _builder.clearName()
       }
 
@@ -5954,7 +5954,7 @@ public object ContextKt {
        *
        * <code>string value = 3;</code>
        */
-      public var value: kotlin.String
+      var value: kotlin.String
         @JvmName("getValue")
         get() = _builder.getValue()
         @JvmName("setValue")
@@ -5968,7 +5968,7 @@ public object ContextKt {
        *
        * <code>string value = 3;</code>
        */
-      public fun clearValue() {
+      fun clearValue() {
         _builder.clearValue()
       }
 
@@ -5979,7 +5979,7 @@ public object ContextKt {
        *
        * <code>bool force = 4;</code>
        */
-      public var force: kotlin.Boolean
+      var force: kotlin.Boolean
         @JvmName("getForce")
         get() = _builder.getForce()
         @JvmName("setForce")
@@ -5993,30 +5993,30 @@ public object ContextKt {
        *
        * <code>bool force = 4;</code>
        */
-      public fun clearForce() {
+      fun clearForce() {
         _builder.clearForce()
       }
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.copy(block: tools.elide.page.ContextKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context =
+inline fun tools.elide.page.Context.copy(block: tools.elide.page.ContextKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context =
   tools.elide.page.ContextKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Metadata.copy(block: tools.elide.page.ContextKt.MetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata =
+inline fun tools.elide.page.Context.Metadata.copy(block: tools.elide.page.ContextKt.MetadataKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata =
   tools.elide.page.ContextKt.MetadataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Metadata.OpenGraph.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph =
+inline fun tools.elide.page.Context.Metadata.OpenGraph.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph =
   tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage =
+inline fun tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphImage =
   tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphImageKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo =
+inline fun tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo.copy(block: tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.OpenGraph.OpenGraphVideo =
   tools.elide.page.ContextKt.MetadataKt.OpenGraphKt.OpenGraphVideoKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.Metadata.OpenGraphOrBuilder.localeOrNull: tools.elide.base.LanguageSpec?
@@ -6026,7 +6026,7 @@ val tools.elide.page.Context.Metadata.OpenGraphOrBuilder.twitterOrNull: tools.el
   get() = if (hasTwitter()) getTwitter() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Metadata.Twitter.copy(block: tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.Twitter =
+inline fun tools.elide.page.Context.Metadata.Twitter.copy(block: tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Metadata.Twitter =
   tools.elide.page.ContextKt.MetadataKt.TwitterKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.Metadata.TwitterOrBuilder.localeOrNull: tools.elide.base.LanguageSpec?
@@ -6045,25 +6045,25 @@ val tools.elide.page.Context.MetadataOrBuilder.openGraphOrNull: tools.elide.page
   get() = if (hasOpenGraph()) getOpenGraph() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.PageLink.copy(block: tools.elide.page.ContextKt.PageLinkKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.PageLink =
+inline fun tools.elide.page.Context.PageLink.copy(block: tools.elide.page.ContextKt.PageLinkKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.PageLink =
   tools.elide.page.ContextKt.PageLinkKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.PageLinkOrBuilder.hrefOrNull: com.google.common.html.types.TrustedResourceUrlProto?
   get() = if (hasHref()) getHref() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.AppManifest.copy(block: tools.elide.page.ContextKt.AppManifestKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest =
+inline fun tools.elide.page.Context.AppManifest.copy(block: tools.elide.page.ContextKt.AppManifestKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest =
   tools.elide.page.ContextKt.AppManifestKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.AppManifest.Icon.copy(block: tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.Icon =
+inline fun tools.elide.page.Context.AppManifest.Icon.copy(block: tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.Icon =
   tools.elide.page.ContextKt.AppManifestKt.IconKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.AppManifest.IconOrBuilder.srcOrNull: com.google.common.html.types.TrustedResourceUrlProto?
   get() = if (hasSrc()) getSrc() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.AppManifest.RelatedApplication.copy(block: tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.RelatedApplication =
+inline fun tools.elide.page.Context.AppManifest.RelatedApplication.copy(block: tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.AppManifest.RelatedApplication =
   tools.elide.page.ContextKt.AppManifestKt.RelatedApplicationKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.AppManifest.RelatedApplicationOrBuilder.uriOrNull: com.google.common.html.types.TrustedResourceUrlProto?
@@ -6073,11 +6073,11 @@ val tools.elide.page.Context.AppManifestOrBuilder.languageOrNull: tools.elide.ba
   get() = if (hasLanguage()) getLanguage() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Styles.copy(block: tools.elide.page.ContextKt.StylesKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles =
+inline fun tools.elide.page.Context.Styles.copy(block: tools.elide.page.ContextKt.StylesKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles =
   tools.elide.page.ContextKt.StylesKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Styles.Stylesheet.copy(block: tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles.Stylesheet =
+inline fun tools.elide.page.Context.Styles.Stylesheet.copy(block: tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Styles.Stylesheet =
   tools.elide.page.ContextKt.StylesKt.StylesheetKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.Styles.StylesheetOrBuilder.uriOrNull: com.google.common.html.types.TrustedResourceUrlProto?
@@ -6087,26 +6087,26 @@ val tools.elide.page.Context.StylesOrBuilder.liftedOrNull: com.google.common.htm
   get() = if (hasLifted()) getLifted() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Fonts.copy(block: tools.elide.page.ContextKt.FontsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts =
+inline fun tools.elide.page.Context.Fonts.copy(block: tools.elide.page.ContextKt.FontsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts =
   tools.elide.page.ContextKt.FontsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Fonts.FontReference.copy(block: tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontReference =
+inline fun tools.elide.page.Context.Fonts.FontReference.copy(block: tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontReference =
   tools.elide.page.ContextKt.FontsKt.FontReferenceKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.Fonts.FontReferenceOrBuilder.uriOrNull: com.google.common.html.types.TrustedResourceUrlProto?
   get() = if (hasUri()) getUri() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Fonts.FontPackage.copy(block: tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontPackage =
+inline fun tools.elide.page.Context.Fonts.FontPackage.copy(block: tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Fonts.FontPackage =
   tools.elide.page.ContextKt.FontsKt.FontPackageKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Scripts.copy(block: tools.elide.page.ContextKt.ScriptsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts =
+inline fun tools.elide.page.Context.Scripts.copy(block: tools.elide.page.ContextKt.ScriptsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts =
   tools.elide.page.ContextKt.ScriptsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Scripts.JavaScript.copy(block: tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts.JavaScript =
+inline fun tools.elide.page.Context.Scripts.JavaScript.copy(block: tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Scripts.JavaScript =
   tools.elide.page.ContextKt.ScriptsKt.JavaScriptKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.Scripts.JavaScriptOrBuilder.uriOrNull: com.google.common.html.types.TrustedResourceUrlProto?
@@ -6116,7 +6116,7 @@ val tools.elide.page.Context.ScriptsOrBuilder.liftedOrNull: com.google.common.ht
   get() = if (hasLifted()) getLifted() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.DynamicETag.copy(block: tools.elide.page.ContextKt.DynamicETagKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.DynamicETag =
+inline fun tools.elide.page.Context.DynamicETag.copy(block: tools.elide.page.ContextKt.DynamicETagKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.DynamicETag =
   tools.elide.page.ContextKt.DynamicETagKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.DynamicETagOrBuilder.preimageOrNull: tools.elide.data.DataFingerprint?
@@ -6126,11 +6126,11 @@ val tools.elide.page.Context.DynamicETagOrBuilder.responseOrNull: tools.elide.da
   get() = if (hasResponse()) getResponse() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.RDFPrefix.copy(block: tools.elide.page.ContextKt.RDFPrefixKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.RDFPrefix =
+inline fun tools.elide.page.Context.RDFPrefix.copy(block: tools.elide.page.ContextKt.RDFPrefixKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.RDFPrefix =
   tools.elide.page.ContextKt.RDFPrefixKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.Cookie.copy(block: tools.elide.page.ContextKt.CookieKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Cookie =
+inline fun tools.elide.page.Context.Cookie.copy(block: tools.elide.page.ContextKt.CookieKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.Cookie =
   tools.elide.page.ContextKt.CookieKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.Context.CookieOrBuilder.absoluteExpireOrNull: com.google.protobuf.Timestamp?
@@ -6140,11 +6140,11 @@ val tools.elide.page.Context.CookieOrBuilder.relativeExpireOrNull: com.google.pr
   get() = if (hasRelativeExpire()) getRelativeExpire() else null
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.ClientHints.copy(block: tools.elide.page.ContextKt.ClientHintsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ClientHints =
+inline fun tools.elide.page.Context.ClientHints.copy(block: tools.elide.page.ContextKt.ClientHintsKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ClientHints =
   tools.elide.page.ContextKt.ClientHintsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.page.Context.ResponseHeader.copy(block: tools.elide.page.ContextKt.ResponseHeaderKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ResponseHeader =
+inline fun tools.elide.page.Context.ResponseHeader.copy(block: tools.elide.page.ContextKt.ResponseHeaderKt.Dsl.() -> kotlin.Unit): tools.elide.page.Context.ResponseHeader =
   tools.elide.page.ContextKt.ResponseHeaderKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.page.ContextOrBuilder.metaOrNull: tools.elide.page.Context.Metadata?

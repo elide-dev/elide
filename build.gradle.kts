@@ -133,6 +133,7 @@ subprojects {
   }
 
   sonarqube {
+    // modules which support pure-java coverage
     if (name != "base" && name != "test" && name != "model" && name != "bom" && name != "ssg") {
       properties {
         property("sonar.sources", "src/main/kotlin")
@@ -151,8 +152,9 @@ subprojects {
         }
       }
     } else if (name == "bom" || name == "ssg") {
-      // nothing
+      // nothing (modules which do not support coverage)
     } else {
+      // modules which support kover (KMPP) coverage
       properties {
         property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
         property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")

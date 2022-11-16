@@ -21,6 +21,7 @@ dependencyResolutionManagement {
     mavenCentral()
     google()
     maven("https://plugins.gradle.org/m2/")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   versionCatalogs {
     create("libs") {
@@ -43,6 +44,7 @@ include(
   ":packages:graalvm-js",
   ":packages:graalvm-react",
   ":packages:model",
+  ":packages:platform",
   ":packages:proto",
   ":packages:rpc-js",
   ":packages:rpc-jvm",
@@ -50,6 +52,7 @@ include(
   ":packages:ssg",
   ":packages:test",
   ":tools:bundler",
+  ":tools:processor",
   ":tools:reports",
 )
 

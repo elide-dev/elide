@@ -11,209 +11,865 @@ package tools.elide.page;
  *
  * Protobuf type {@code page.SemanticMetadata}
  */
-public final class SemanticMetadata
-    extends com.google.protobuf.GeneratedMessageV3
-    implements
-        // @@protoc_insertion_point(message_implements:page.SemanticMetadata)
-        SemanticMetadataOrBuilder {
+public final class SemanticMetadata extends
+    com.google.protobuf.GeneratedMessageV3 implements
+    // @@protoc_insertion_point(message_implements:page.SemanticMetadata)
+    SemanticMetadataOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use SemanticMetadata.newBuilder() to construct.
+  private SemanticMetadata(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
+  private SemanticMetadata() {
+    kind_ = 0;
+    format_ = java.util.Collections.emptyList();
+    media_ = java.util.Collections.emptyList();
+  }
 
-    private static final long serialVersionUID = 0L;
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new SemanticMetadata();
+  }
 
-    // Use SemanticMetadata.newBuilder() to construct.
-    private SemanticMetadata(
-        com.google.protobuf.GeneratedMessageV3.Builder<?> builder
-    ) {
-        super(builder);
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private SemanticMetadata(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
+            int rawValue = input.readEnum();
+
+            kind_ = rawValue;
+            break;
+          }
+          case 16: {
+            int rawValue = input.readEnum();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              format_ = new java.util.ArrayList<java.lang.Integer>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            format_.add(rawValue);
+            break;
+          }
+          case 18: {
+            int length = input.readRawVarint32();
+            int oldLimit = input.pushLimit(length);
+            while(input.getBytesUntilLimit() > 0) {
+              int rawValue = input.readEnum();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                format_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              format_.add(rawValue);
+            }
+            input.popLimit(oldLimit);
+            break;
+          }
+          case 26: {
+            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+              media_ = new java.util.ArrayList<tools.elide.page.MediaAsset>();
+              mutable_bitField0_ |= 0x00000002;
+            }
+            media_.add(
+                input.readMessage(tools.elide.page.MediaAsset.parser(), extensionRegistry));
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+            payloadCase_ = 4;
+            payload_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        format_ = java.util.Collections.unmodifiableList(format_);
+      }
+      if (((mutable_bitField0_ & 0x00000002) != 0)) {
+        media_ = java.util.Collections.unmodifiableList(media_);
+      }
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            tools.elide.page.SemanticMetadata.class, tools.elide.page.SemanticMetadata.Builder.class);
+  }
+
+  private int payloadCase_ = 0;
+  private java.lang.Object payload_;
+  public enum PayloadCase
+      implements com.google.protobuf.Internal.EnumLite,
+          com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+    CONTENT(4),
+    PAYLOAD_NOT_SET(0);
+    private final int value;
+    private PayloadCase(int value) {
+      this.value = value;
+    }
+    /**
+     * @param value The number of the enum to look for.
+     * @return The enum associated with the given number.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static PayloadCase valueOf(int value) {
+      return forNumber(value);
     }
 
-    private SemanticMetadata() {
-        kind_ = 0;
-        format_ = java.util.Collections.emptyList();
+    public static PayloadCase forNumber(int value) {
+      switch (value) {
+        case 4: return CONTENT;
+        case 0: return PAYLOAD_NOT_SET;
+        default: return null;
+      }
+    }
+    public int getNumber() {
+      return this.value;
+    }
+  };
+
+  public PayloadCase
+  getPayloadCase() {
+    return PayloadCase.forNumber(
+        payloadCase_);
+  }
+
+  public static final int KIND_FIELD_NUMBER = 1;
+  private int kind_;
+  /**
+   * <pre>
+   * Defines the "kind" of content contained on a given page.
+   * </pre>
+   *
+   * <code>.page.Kind kind = 1;</code>
+   * @return The enum numeric value on the wire for kind.
+   */
+  @java.lang.Override public int getKindValue() {
+    return kind_;
+  }
+  /**
+   * <pre>
+   * Defines the "kind" of content contained on a given page.
+   * </pre>
+   *
+   * <code>.page.Kind kind = 1;</code>
+   * @return The kind.
+   */
+  @java.lang.Override public tools.elide.page.Kind getKind() {
+    @SuppressWarnings("deprecation")
+    tools.elide.page.Kind result = tools.elide.page.Kind.valueOf(kind_);
+    return result == null ? tools.elide.page.Kind.UNRECOGNIZED : result;
+  }
+
+  public static final int FORMAT_FIELD_NUMBER = 2;
+  private java.util.List<java.lang.Integer> format_;
+  private static final com.google.protobuf.Internal.ListAdapter.Converter<
+      java.lang.Integer, tools.elide.page.Format> format_converter_ =
+          new com.google.protobuf.Internal.ListAdapter.Converter<
+              java.lang.Integer, tools.elide.page.Format>() {
+            public tools.elide.page.Format convert(java.lang.Integer from) {
+              @SuppressWarnings("deprecation")
+              tools.elide.page.Format result = tools.elide.page.Format.valueOf(from);
+              return result == null ? tools.elide.page.Format.UNRECOGNIZED : result;
+            }
+          };
+  /**
+   * <pre>
+   * Formats to render semantic metadata in.
+   * </pre>
+   *
+   * <code>repeated .page.Format format = 2;</code>
+   * @return A list containing the format.
+   */
+  @java.lang.Override
+  public java.util.List<tools.elide.page.Format> getFormatList() {
+    return new com.google.protobuf.Internal.ListAdapter<
+        java.lang.Integer, tools.elide.page.Format>(format_, format_converter_);
+  }
+  /**
+   * <pre>
+   * Formats to render semantic metadata in.
+   * </pre>
+   *
+   * <code>repeated .page.Format format = 2;</code>
+   * @return The count of format.
+   */
+  @java.lang.Override
+  public int getFormatCount() {
+    return format_.size();
+  }
+  /**
+   * <pre>
+   * Formats to render semantic metadata in.
+   * </pre>
+   *
+   * <code>repeated .page.Format format = 2;</code>
+   * @param index The index of the element to return.
+   * @return The format at the given index.
+   */
+  @java.lang.Override
+  public tools.elide.page.Format getFormat(int index) {
+    return format_converter_.convert(format_.get(index));
+  }
+  /**
+   * <pre>
+   * Formats to render semantic metadata in.
+   * </pre>
+   *
+   * <code>repeated .page.Format format = 2;</code>
+   * @return A list containing the enum numeric values on the wire for format.
+   */
+  @java.lang.Override
+  public java.util.List<java.lang.Integer>
+  getFormatValueList() {
+    return format_;
+  }
+  /**
+   * <pre>
+   * Formats to render semantic metadata in.
+   * </pre>
+   *
+   * <code>repeated .page.Format format = 2;</code>
+   * @param index The index of the value to return.
+   * @return The enum numeric value on the wire of format at the given index.
+   */
+  @java.lang.Override
+  public int getFormatValue(int index) {
+    return format_.get(index);
+  }
+  private int formatMemoizedSerializedSize;
+
+  public static final int MEDIA_FIELD_NUMBER = 3;
+  private java.util.List<tools.elide.page.MediaAsset> media_;
+  /**
+   * <pre>
+   * Describes page-level semantic media.
+   * </pre>
+   *
+   * <code>repeated .page.MediaAsset media = 3;</code>
+   */
+  @java.lang.Override
+  public java.util.List<tools.elide.page.MediaAsset> getMediaList() {
+    return media_;
+  }
+  /**
+   * <pre>
+   * Describes page-level semantic media.
+   * </pre>
+   *
+   * <code>repeated .page.MediaAsset media = 3;</code>
+   */
+  @java.lang.Override
+  public java.util.List<? extends tools.elide.page.MediaAssetOrBuilder> 
+      getMediaOrBuilderList() {
+    return media_;
+  }
+  /**
+   * <pre>
+   * Describes page-level semantic media.
+   * </pre>
+   *
+   * <code>repeated .page.MediaAsset media = 3;</code>
+   */
+  @java.lang.Override
+  public int getMediaCount() {
+    return media_.size();
+  }
+  /**
+   * <pre>
+   * Describes page-level semantic media.
+   * </pre>
+   *
+   * <code>repeated .page.MediaAsset media = 3;</code>
+   */
+  @java.lang.Override
+  public tools.elide.page.MediaAsset getMedia(int index) {
+    return media_.get(index);
+  }
+  /**
+   * <pre>
+   * Describes page-level semantic media.
+   * </pre>
+   *
+   * <code>repeated .page.MediaAsset media = 3;</code>
+   */
+  @java.lang.Override
+  public tools.elide.page.MediaAssetOrBuilder getMediaOrBuilder(
+      int index) {
+    return media_.get(index);
+  }
+
+  public static final int CONTENT_FIELD_NUMBER = 4;
+  /**
+   * <pre>
+   * Semantic metadata content.
+   * </pre>
+   *
+   * <code>string content = 4;</code>
+   * @return Whether the content field is set.
+   */
+  public boolean hasContent() {
+    return payloadCase_ == 4;
+  }
+  /**
+   * <pre>
+   * Semantic metadata content.
+   * </pre>
+   *
+   * <code>string content = 4;</code>
+   * @return The content.
+   */
+  public java.lang.String getContent() {
+    java.lang.Object ref = "";
+    if (payloadCase_ == 4) {
+      ref = payload_;
+    }
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      if (payloadCase_ == 4) {
+        payload_ = s;
+      }
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Semantic metadata content.
+   * </pre>
+   *
+   * <code>string content = 4;</code>
+   * @return The bytes for content.
+   */
+  public com.google.protobuf.ByteString
+      getContentBytes() {
+    java.lang.Object ref = "";
+    if (payloadCase_ == 4) {
+      ref = payload_;
+    }
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      if (payloadCase_ == 4) {
+        payload_ = b;
+      }
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    getSerializedSize();
+    if (kind_ != tools.elide.page.Kind.WEB_PAGE.getNumber()) {
+      output.writeEnum(1, kind_);
+    }
+    if (getFormatList().size() > 0) {
+      output.writeUInt32NoTag(18);
+      output.writeUInt32NoTag(formatMemoizedSerializedSize);
+    }
+    for (int i = 0; i < format_.size(); i++) {
+      output.writeEnumNoTag(format_.get(i));
+    }
+    for (int i = 0; i < media_.size(); i++) {
+      output.writeMessage(3, media_.get(i));
+    }
+    if (payloadCase_ == 4) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, payload_);
+    }
+    unknownFields.writeTo(output);
+  }
+
+  @java.lang.Override
+  public int getSerializedSize() {
+    int size = memoizedSize;
+    if (size != -1) return size;
+
+    size = 0;
+    if (kind_ != tools.elide.page.Kind.WEB_PAGE.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, kind_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < format_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeEnumSizeNoTag(format_.get(i));
+      }
+      size += dataSize;
+      if (!getFormatList().isEmpty()) {  size += 1;
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32SizeNoTag(dataSize);
+      }formatMemoizedSerializedSize = dataSize;
+    }
+    for (int i = 0; i < media_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, media_.get(i));
+    }
+    if (payloadCase_ == 4) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, payload_);
+    }
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
+    return size;
+  }
+
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof tools.elide.page.SemanticMetadata)) {
+      return super.equals(obj);
+    }
+    tools.elide.page.SemanticMetadata other = (tools.elide.page.SemanticMetadata) obj;
+
+    if (kind_ != other.kind_) return false;
+    if (!format_.equals(other.format_)) return false;
+    if (!getMediaList()
+        .equals(other.getMediaList())) return false;
+    if (!getPayloadCase().equals(other.getPayloadCase())) return false;
+    switch (payloadCase_) {
+      case 4:
+        if (!getContent()
+            .equals(other.getContent())) return false;
+        break;
+      case 0:
+      default:
+    }
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + KIND_FIELD_NUMBER;
+    hash = (53 * hash) + kind_;
+    if (getFormatCount() > 0) {
+      hash = (37 * hash) + FORMAT_FIELD_NUMBER;
+      hash = (53 * hash) + format_.hashCode();
+    }
+    if (getMediaCount() > 0) {
+      hash = (37 * hash) + MEDIA_FIELD_NUMBER;
+      hash = (53 * hash) + getMediaList().hashCode();
+    }
+    switch (payloadCase_) {
+      case 4:
+        hash = (37 * hash) + CONTENT_FIELD_NUMBER;
+        hash = (53 * hash) + getContent().hashCode();
+        break;
+      case 0:
+      default:
+    }
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      com.google.protobuf.ByteString data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      com.google.protobuf.ByteString data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(byte[] data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      byte[] data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.page.SemanticMetadata parseDelimitedFrom(java.io.InputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
+  }
+  public static tools.elide.page.SemanticMetadata parseDelimitedFrom(
+      java.io.InputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      com.google.protobuf.CodedInputStream input)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
+  }
+  public static tools.elide.page.SemanticMetadata parseFrom(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
+  }
+
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
+  public static Builder newBuilder() {
+    return DEFAULT_INSTANCE.toBuilder();
+  }
+  public static Builder newBuilder(tools.elide.page.SemanticMetadata prototype) {
+    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+  }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
+  /**
+   * <pre>
+   * Defines the structure of top-level metadata with regard to semantic content, attached to a given
+   * web page for emission in meta tags in various formats.
+   * </pre>
+   *
+   * Protobuf type {@code page.SemanticMetadata}
+   */
+  public static final class Builder extends
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+      // @@protoc_insertion_point(builder_implements:page.SemanticMetadata)
+      tools.elide.page.SemanticMetadataOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tools.elide.page.SemanticMetadata.class, tools.elide.page.SemanticMetadata.Builder.class);
+    }
+
+    // Construct using tools.elide.page.SemanticMetadata.newBuilder()
+    private Builder() {
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+        getMediaFieldBuilder();
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      kind_ = 0;
+
+      format_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      if (mediaBuilder_ == null) {
         media_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+      } else {
+        mediaBuilder_.clear();
+      }
+      payloadCase_ = 0;
+      payload_ = null;
+      return this;
     }
 
     @java.lang.Override
-    @SuppressWarnings({ "unused" })
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new SemanticMetadata();
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
     }
 
     @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-        return this.unknownFields;
+    public tools.elide.page.SemanticMetadata getDefaultInstanceForType() {
+      return tools.elide.page.SemanticMetadata.getDefaultInstance();
     }
 
-    private SemanticMetadata(
+    @java.lang.Override
+    public tools.elide.page.SemanticMetadata build() {
+      tools.elide.page.SemanticMetadata result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public tools.elide.page.SemanticMetadata buildPartial() {
+      tools.elide.page.SemanticMetadata result = new tools.elide.page.SemanticMetadata(this);
+      int from_bitField0_ = bitField0_;
+      result.kind_ = kind_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        format_ = java.util.Collections.unmodifiableList(format_);
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.format_ = format_;
+      if (mediaBuilder_ == null) {
+        if (((bitField0_ & 0x00000002) != 0)) {
+          media_ = java.util.Collections.unmodifiableList(media_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.media_ = media_;
+      } else {
+        result.media_ = mediaBuilder_.build();
+      }
+      if (payloadCase_ == 4) {
+        result.payload_ = payload_;
+      }
+      result.payloadCase_ = payloadCase_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof tools.elide.page.SemanticMetadata) {
+        return mergeFrom((tools.elide.page.SemanticMetadata)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(tools.elide.page.SemanticMetadata other) {
+      if (other == tools.elide.page.SemanticMetadata.getDefaultInstance()) return this;
+      if (other.kind_ != 0) {
+        setKindValue(other.getKindValue());
+      }
+      if (!other.format_.isEmpty()) {
+        if (format_.isEmpty()) {
+          format_ = other.format_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureFormatIsMutable();
+          format_.addAll(other.format_);
+        }
+        onChanged();
+      }
+      if (mediaBuilder_ == null) {
+        if (!other.media_.isEmpty()) {
+          if (media_.isEmpty()) {
+            media_ = other.media_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureMediaIsMutable();
+            media_.addAll(other.media_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.media_.isEmpty()) {
+          if (mediaBuilder_.isEmpty()) {
+            mediaBuilder_.dispose();
+            mediaBuilder_ = null;
+            media_ = other.media_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            mediaBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getMediaFieldBuilder() : null;
+          } else {
+            mediaBuilder_.addAllMessages(other.media_);
+          }
+        }
+      }
+      switch (other.getPayloadCase()) {
+        case CONTENT: {
+          payloadCase_ = 4;
+          payload_ = other.payload_;
+          onChanged();
+          break;
+        }
+        case PAYLOAD_NOT_SET: {
+          break;
+        }
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      tools.elide.page.SemanticMetadata parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (tools.elide.page.SemanticMetadata) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
         }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-            boolean done = false;
-            while (!done) {
-                int tag = input.readTag();
-                switch (tag) {
-                    case 0:
-                        done = true;
-                        break;
-                    case 8:
-                        {
-                            int rawValue = input.readEnum();
-
-                            kind_ = rawValue;
-                            break;
-                        }
-                    case 16:
-                        {
-                            int rawValue = input.readEnum();
-                            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                                format_ =
-                                    new java.util.ArrayList<java.lang.Integer>();
-                                mutable_bitField0_ |= 0x00000001;
-                            }
-                            format_.add(rawValue);
-                            break;
-                        }
-                    case 18:
-                        {
-                            int length = input.readRawVarint32();
-                            int oldLimit = input.pushLimit(length);
-                            while (input.getBytesUntilLimit() > 0) {
-                                int rawValue = input.readEnum();
-                                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                                    format_ =
-                                        new java.util.ArrayList<java.lang.Integer>();
-                                    mutable_bitField0_ |= 0x00000001;
-                                }
-                                format_.add(rawValue);
-                            }
-                            input.popLimit(oldLimit);
-                            break;
-                        }
-                    case 26:
-                        {
-                            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                                media_ =
-                                    new java.util.ArrayList<tools.elide.page.MediaAsset>();
-                                mutable_bitField0_ |= 0x00000002;
-                            }
-                            media_.add(
-                                input.readMessage(
-                                    tools.elide.page.MediaAsset.parser(),
-                                    extensionRegistry
-                                )
-                            );
-                            break;
-                        }
-                    case 34:
-                        {
-                            java.lang.String s = input.readStringRequireUtf8();
-                            payloadCase_ = 4;
-                            payload_ = s;
-                            break;
-                        }
-                    default:
-                        {
-                            if (
-                                !parseUnknownField(
-                                    input,
-                                    unknownFields,
-                                    extensionRegistry,
-                                    tag
-                                )
-                            ) {
-                                done = true;
-                            }
-                            break;
-                        }
-                }
-            }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw e.setUnfinishedMessage(this);
-        } catch (com.google.protobuf.UninitializedMessageException e) {
-            throw e
-                .asInvalidProtocolBufferException()
-                .setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-            throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                .setUnfinishedMessage(this);
-        } finally {
-            if (((mutable_bitField0_ & 0x00000001) != 0)) {
-                format_ = java.util.Collections.unmodifiableList(format_);
-            }
-            if (((mutable_bitField0_ & 0x00000002) != 0)) {
-                media_ = java.util.Collections.unmodifiableList(media_);
-            }
-            this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
-        }
+      }
+      return this;
     }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-        return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-        return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_fieldAccessorTable.ensureFieldAccessorsInitialized(
-            tools.elide.page.SemanticMetadata.class,
-            tools.elide.page.SemanticMetadata.Builder.class
-        );
-    }
-
     private int payloadCase_ = 0;
     private java.lang.Object payload_;
-
-    public enum PayloadCase implements
-        com.google.protobuf.Internal.EnumLite,
-        com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-        CONTENT(4),
-        PAYLOAD_NOT_SET(0);
-
-        private final int value;
-
-        private PayloadCase(int value) {
-            this.value = value;
-        }
-
-        /**
-         * @param value The number of the enum to look for.
-         * @return The enum associated with the given number.
-         * @deprecated Use {@link #forNumber(int)} instead.
-         */
-        @java.lang.Deprecated
-        public static PayloadCase valueOf(int value) {
-            return forNumber(value);
-        }
-
-        public static PayloadCase forNumber(int value) {
-            switch (value) {
-                case 4:
-                    return CONTENT;
-                case 0:
-                    return PAYLOAD_NOT_SET;
-                default:
-                    return null;
-            }
-        }
-
-        public int getNumber() {
-            return this.value;
-        }
+    public PayloadCase
+        getPayloadCase() {
+      return PayloadCase.forNumber(
+          payloadCase_);
     }
 
-    public PayloadCase getPayloadCase() {
-        return PayloadCase.forNumber(payloadCase_);
+    public Builder clearPayload() {
+      payloadCase_ = 0;
+      payload_ = null;
+      onChanged();
+      return this;
     }
 
-    public static final int KIND_FIELD_NUMBER = 1;
-    private int kind_;
+    private int bitField0_;
 
+    private int kind_ = 0;
     /**
      * <pre>
      * Defines the "kind" of content contained on a given page.
@@ -222,11 +878,24 @@ public final class SemanticMetadata
      * <code>.page.Kind kind = 1;</code>
      * @return The enum numeric value on the wire for kind.
      */
-    @java.lang.Override
-    public int getKindValue() {
-        return kind_;
+    @java.lang.Override public int getKindValue() {
+      return kind_;
     }
-
+    /**
+     * <pre>
+     * Defines the "kind" of content contained on a given page.
+     * </pre>
+     *
+     * <code>.page.Kind kind = 1;</code>
+     * @param value The enum numeric value on the wire for kind to set.
+     * @return This builder for chaining.
+     */
+    public Builder setKindValue(int value) {
+      
+      kind_ = value;
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Defines the "kind" of content contained on a given page.
@@ -237,25 +906,51 @@ public final class SemanticMetadata
      */
     @java.lang.Override
     public tools.elide.page.Kind getKind() {
-        @SuppressWarnings("deprecation")
-        tools.elide.page.Kind result = tools.elide.page.Kind.valueOf(kind_);
-        return result == null ? tools.elide.page.Kind.UNRECOGNIZED : result;
+      @SuppressWarnings("deprecation")
+      tools.elide.page.Kind result = tools.elide.page.Kind.valueOf(kind_);
+      return result == null ? tools.elide.page.Kind.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Defines the "kind" of content contained on a given page.
+     * </pre>
+     *
+     * <code>.page.Kind kind = 1;</code>
+     * @param value The kind to set.
+     * @return This builder for chaining.
+     */
+    public Builder setKind(tools.elide.page.Kind value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      kind_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Defines the "kind" of content contained on a given page.
+     * </pre>
+     *
+     * <code>.page.Kind kind = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearKind() {
+      
+      kind_ = 0;
+      onChanged();
+      return this;
     }
 
-    public static final int FORMAT_FIELD_NUMBER = 2;
-    private java.util.List<java.lang.Integer> format_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, tools.elide.page.Format> format_converter_ = new com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, tools.elide.page.Format>() {
-        public tools.elide.page.Format convert(java.lang.Integer from) {
-            @SuppressWarnings("deprecation")
-            tools.elide.page.Format result = tools.elide.page.Format.valueOf(
-                from
-            );
-            return result == null
-                ? tools.elide.page.Format.UNRECOGNIZED
-                : result;
-        }
-    };
-
+    private java.util.List<java.lang.Integer> format_ =
+      java.util.Collections.emptyList();
+    private void ensureFormatIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        format_ = new java.util.ArrayList<java.lang.Integer>(format_);
+        bitField0_ |= 0x00000001;
+      }
+    }
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -264,14 +959,10 @@ public final class SemanticMetadata
      * <code>repeated .page.Format format = 2;</code>
      * @return A list containing the format.
      */
-    @java.lang.Override
     public java.util.List<tools.elide.page.Format> getFormatList() {
-        return new com.google.protobuf.Internal.ListAdapter<java.lang.Integer, tools.elide.page.Format>(
-            format_,
-            format_converter_
-        );
+      return new com.google.protobuf.Internal.ListAdapter<
+          java.lang.Integer, tools.elide.page.Format>(format_, format_converter_);
     }
-
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -280,11 +971,9 @@ public final class SemanticMetadata
      * <code>repeated .page.Format format = 2;</code>
      * @return The count of format.
      */
-    @java.lang.Override
     public int getFormatCount() {
-        return format_.size();
+      return format_.size();
     }
-
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -294,11 +983,79 @@ public final class SemanticMetadata
      * @param index The index of the element to return.
      * @return The format at the given index.
      */
-    @java.lang.Override
     public tools.elide.page.Format getFormat(int index) {
-        return format_converter_.convert(format_.get(index));
+      return format_converter_.convert(format_.get(index));
     }
-
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param index The index to set the value at.
+     * @param value The format to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFormat(
+        int index, tools.elide.page.Format value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      ensureFormatIsMutable();
+      format_.set(index, value.getNumber());
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param value The format to add.
+     * @return This builder for chaining.
+     */
+    public Builder addFormat(tools.elide.page.Format value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      ensureFormatIsMutable();
+      format_.add(value.getNumber());
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param values The format to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllFormat(
+        java.lang.Iterable<? extends tools.elide.page.Format> values) {
+      ensureFormatIsMutable();
+      for (tools.elide.page.Format value : values) {
+        format_.add(value.getNumber());
+      }
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFormat() {
+      format_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -307,11 +1064,10 @@ public final class SemanticMetadata
      * <code>repeated .page.Format format = 2;</code>
      * @return A list containing the enum numeric values on the wire for format.
      */
-    @java.lang.Override
-    public java.util.List<java.lang.Integer> getFormatValueList() {
-        return format_;
+    public java.util.List<java.lang.Integer>
+    getFormatValueList() {
+      return java.util.Collections.unmodifiableList(format_);
     }
-
     /**
      * <pre>
      * Formats to render semantic metadata in.
@@ -321,15 +1077,71 @@ public final class SemanticMetadata
      * @param index The index of the value to return.
      * @return The enum numeric value on the wire of format at the given index.
      */
-    @java.lang.Override
     public int getFormatValue(int index) {
-        return format_.get(index);
+      return format_.get(index);
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param index The index to set the value at.
+     * @param value The enum numeric value on the wire for format to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFormatValue(
+        int index, int value) {
+      ensureFormatIsMutable();
+      format_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param value The enum numeric value on the wire for format to add.
+     * @return This builder for chaining.
+     */
+    public Builder addFormatValue(int value) {
+      ensureFormatIsMutable();
+      format_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Formats to render semantic metadata in.
+     * </pre>
+     *
+     * <code>repeated .page.Format format = 2;</code>
+     * @param values The enum numeric values on the wire for format to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllFormatValue(
+        java.lang.Iterable<java.lang.Integer> values) {
+      ensureFormatIsMutable();
+      for (int value : values) {
+        format_.add(value);
+      }
+      onChanged();
+      return this;
     }
 
-    private int formatMemoizedSerializedSize;
+    private java.util.List<tools.elide.page.MediaAsset> media_ =
+      java.util.Collections.emptyList();
+    private void ensureMediaIsMutable() {
+      if (!((bitField0_ & 0x00000002) != 0)) {
+        media_ = new java.util.ArrayList<tools.elide.page.MediaAsset>(media_);
+        bitField0_ |= 0x00000002;
+       }
+    }
 
-    public static final int MEDIA_FIELD_NUMBER = 3;
-    private java.util.List<tools.elide.page.MediaAsset> media_;
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder> mediaBuilder_;
 
     /**
      * <pre>
@@ -338,11 +1150,13 @@ public final class SemanticMetadata
      *
      * <code>repeated .page.MediaAsset media = 3;</code>
      */
-    @java.lang.Override
     public java.util.List<tools.elide.page.MediaAsset> getMediaList() {
-        return media_;
+      if (mediaBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(media_);
+      } else {
+        return mediaBuilder_.getMessageList();
+      }
     }
-
     /**
      * <pre>
      * Describes page-level semantic media.
@@ -350,23 +1164,13 @@ public final class SemanticMetadata
      *
      * <code>repeated .page.MediaAsset media = 3;</code>
      */
-    @java.lang.Override
-    public java.util.List<? extends tools.elide.page.MediaAssetOrBuilder> getMediaOrBuilderList() {
-        return media_;
-    }
-
-    /**
-     * <pre>
-     * Describes page-level semantic media.
-     * </pre>
-     *
-     * <code>repeated .page.MediaAsset media = 3;</code>
-     */
-    @java.lang.Override
     public int getMediaCount() {
+      if (mediaBuilder_ == null) {
         return media_.size();
+      } else {
+        return mediaBuilder_.getCount();
+      }
     }
-
     /**
      * <pre>
      * Describes page-level semantic media.
@@ -374,11 +1178,13 @@ public final class SemanticMetadata
      *
      * <code>repeated .page.MediaAsset media = 3;</code>
      */
-    @java.lang.Override
     public tools.elide.page.MediaAsset getMedia(int index) {
+      if (mediaBuilder_ == null) {
         return media_.get(index);
+      } else {
+        return mediaBuilder_.getMessage(index);
+      }
     }
-
     /**
      * <pre>
      * Describes page-level semantic media.
@@ -386,12 +1192,256 @@ public final class SemanticMetadata
      *
      * <code>repeated .page.MediaAsset media = 3;</code>
      */
-    @java.lang.Override
-    public tools.elide.page.MediaAssetOrBuilder getMediaOrBuilder(int index) {
-        return media_.get(index);
+    public Builder setMedia(
+        int index, tools.elide.page.MediaAsset value) {
+      if (mediaBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureMediaIsMutable();
+        media_.set(index, value);
+        onChanged();
+      } else {
+        mediaBuilder_.setMessage(index, value);
+      }
+      return this;
     }
-
-    public static final int CONTENT_FIELD_NUMBER = 4;
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder setMedia(
+        int index, tools.elide.page.MediaAsset.Builder builderForValue) {
+      if (mediaBuilder_ == null) {
+        ensureMediaIsMutable();
+        media_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        mediaBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder addMedia(tools.elide.page.MediaAsset value) {
+      if (mediaBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureMediaIsMutable();
+        media_.add(value);
+        onChanged();
+      } else {
+        mediaBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder addMedia(
+        int index, tools.elide.page.MediaAsset value) {
+      if (mediaBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureMediaIsMutable();
+        media_.add(index, value);
+        onChanged();
+      } else {
+        mediaBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder addMedia(
+        tools.elide.page.MediaAsset.Builder builderForValue) {
+      if (mediaBuilder_ == null) {
+        ensureMediaIsMutable();
+        media_.add(builderForValue.build());
+        onChanged();
+      } else {
+        mediaBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder addMedia(
+        int index, tools.elide.page.MediaAsset.Builder builderForValue) {
+      if (mediaBuilder_ == null) {
+        ensureMediaIsMutable();
+        media_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        mediaBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder addAllMedia(
+        java.lang.Iterable<? extends tools.elide.page.MediaAsset> values) {
+      if (mediaBuilder_ == null) {
+        ensureMediaIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, media_);
+        onChanged();
+      } else {
+        mediaBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder clearMedia() {
+      if (mediaBuilder_ == null) {
+        media_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+      } else {
+        mediaBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public Builder removeMedia(int index) {
+      if (mediaBuilder_ == null) {
+        ensureMediaIsMutable();
+        media_.remove(index);
+        onChanged();
+      } else {
+        mediaBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public tools.elide.page.MediaAsset.Builder getMediaBuilder(
+        int index) {
+      return getMediaFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public tools.elide.page.MediaAssetOrBuilder getMediaOrBuilder(
+        int index) {
+      if (mediaBuilder_ == null) {
+        return media_.get(index);  } else {
+        return mediaBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public java.util.List<? extends tools.elide.page.MediaAssetOrBuilder> 
+         getMediaOrBuilderList() {
+      if (mediaBuilder_ != null) {
+        return mediaBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(media_);
+      }
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public tools.elide.page.MediaAsset.Builder addMediaBuilder() {
+      return getMediaFieldBuilder().addBuilder(
+          tools.elide.page.MediaAsset.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public tools.elide.page.MediaAsset.Builder addMediaBuilder(
+        int index) {
+      return getMediaFieldBuilder().addBuilder(
+          index, tools.elide.page.MediaAsset.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Describes page-level semantic media.
+     * </pre>
+     *
+     * <code>repeated .page.MediaAsset media = 3;</code>
+     */
+    public java.util.List<tools.elide.page.MediaAsset.Builder> 
+         getMediaBuilderList() {
+      return getMediaFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder> 
+        getMediaFieldBuilder() {
+      if (mediaBuilder_ == null) {
+        mediaBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder>(
+                media_,
+                ((bitField0_ & 0x00000002) != 0),
+                getParentForChildren(),
+                isClean());
+        media_ = null;
+      }
+      return mediaBuilder_;
+    }
 
     /**
      * <pre>
@@ -401,10 +1451,10 @@ public final class SemanticMetadata
      * <code>string content = 4;</code>
      * @return Whether the content field is set.
      */
+    @java.lang.Override
     public boolean hasContent() {
-        return payloadCase_ == 4;
+      return payloadCase_ == 4;
     }
-
     /**
      * <pre>
      * Semantic metadata content.
@@ -413,23 +1463,24 @@ public final class SemanticMetadata
      * <code>string content = 4;</code>
      * @return The content.
      */
+    @java.lang.Override
     public java.lang.String getContent() {
-        java.lang.Object ref = "";
+      java.lang.Object ref = "";
+      if (payloadCase_ == 4) {
+        ref = payload_;
+      }
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
         if (payloadCase_ == 4) {
-            ref = payload_;
+          payload_ = s;
         }
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            if (payloadCase_ == 4) {
-                payload_ = s;
-            }
-            return s;
-        }
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
-
     /**
      * <pre>
      * Semantic metadata content.
@@ -438,1348 +1489,130 @@ public final class SemanticMetadata
      * <code>string content = 4;</code>
      * @return The bytes for content.
      */
-    public com.google.protobuf.ByteString getContentBytes() {
-        java.lang.Object ref = "";
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getContentBytes() {
+      java.lang.Object ref = "";
+      if (payloadCase_ == 4) {
+        ref = payload_;
+      }
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         if (payloadCase_ == 4) {
-            ref = payload_;
+          payload_ = b;
         }
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref
-            );
-            if (payloadCase_ == 4) {
-                payload_ = b;
-            }
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-        throws java.io.IOException {
-        getSerializedSize();
-        if (kind_ != tools.elide.page.Kind.WEB_PAGE.getNumber()) {
-            output.writeEnum(1, kind_);
-        }
-        if (getFormatList().size() > 0) {
-            output.writeUInt32NoTag(18);
-            output.writeUInt32NoTag(formatMemoizedSerializedSize);
-        }
-        for (int i = 0; i < format_.size(); i++) {
-            output.writeEnumNoTag(format_.get(i));
-        }
-        for (int i = 0; i < media_.size(); i++) {
-            output.writeMessage(3, media_.get(i));
-        }
-        if (payloadCase_ == 4) {
-            com.google.protobuf.GeneratedMessageV3.writeString(
-                output,
-                4,
-                payload_
-            );
-        }
-        unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (kind_ != tools.elide.page.Kind.WEB_PAGE.getNumber()) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeEnumSize(1, kind_);
-        }
-        {
-            int dataSize = 0;
-            for (int i = 0; i < format_.size(); i++) {
-                dataSize +=
-                    com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag(
-                        format_.get(i)
-                    );
-            }
-            size += dataSize;
-            if (!getFormatList().isEmpty()) {
-                size += 1;
-                size +=
-                    com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(
-                        dataSize
-                    );
-            }
-            formatMemoizedSerializedSize = dataSize;
-        }
-        for (int i = 0; i < media_.size(); i++) {
-            size +=
-                com.google.protobuf.CodedOutputStream.computeMessageSize(
-                    3,
-                    media_.get(i)
-                );
-        }
-        if (payloadCase_ == 4) {
-            size +=
-                com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                    4,
-                    payload_
-                );
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof tools.elide.page.SemanticMetadata)) {
-            return super.equals(obj);
-        }
-        tools.elide.page.SemanticMetadata other = (tools.elide.page.SemanticMetadata) obj;
-
-        if (kind_ != other.kind_) return false;
-        if (!format_.equals(other.format_)) return false;
-        if (!getMediaList().equals(other.getMediaList())) return false;
-        if (!getPayloadCase().equals(other.getPayloadCase())) return false;
-        switch (payloadCase_) {
-            case 4:
-                if (!getContent().equals(other.getContent())) return false;
-                break;
-            case 0:
-            default:
-        }
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-        if (memoizedHashCode != 0) {
-            return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        hash = (37 * hash) + KIND_FIELD_NUMBER;
-        hash = (53 * hash) + kind_;
-        if (getFormatCount() > 0) {
-            hash = (37 * hash) + FORMAT_FIELD_NUMBER;
-            hash = (53 * hash) + format_.hashCode();
-        }
-        if (getMediaCount() > 0) {
-            hash = (37 * hash) + MEDIA_FIELD_NUMBER;
-            hash = (53 * hash) + getMediaList().hashCode();
-        }
-        switch (payloadCase_) {
-            case 4:
-                hash = (37 * hash) + CONTENT_FIELD_NUMBER;
-                hash = (53 * hash) + getContent().hashCode();
-                break;
-            case 0:
-            default:
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        java.nio.ByteBuffer data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        com.google.protobuf.ByteString data
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.page.SemanticMetadata parseDelimitedFrom(
-        java.io.InputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.page.SemanticMetadata parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        com.google.protobuf.CodedInputStream input
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input
-        );
-    }
-
-    public static tools.elide.page.SemanticMetadata parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry
-    ) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-            PARSER,
-            input,
-            extensionRegistry
-        );
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-        return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(
-        tools.elide.page.SemanticMetadata prototype
-    ) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder()
-            : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-    ) {
-        Builder builder = new Builder(parent);
-        return builder;
-    }
-
     /**
      * <pre>
-     * Defines the structure of top-level metadata with regard to semantic content, attached to a given
-     * web page for emission in meta tags in various formats.
+     * Semantic metadata content.
      * </pre>
      *
-     * Protobuf type {@code page.SemanticMetadata}
+     * <code>string content = 4;</code>
+     * @param value The content to set.
+     * @return This builder for chaining.
      */
-    public static final class Builder
-        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-        implements
-            // @@protoc_insertion_point(builder_implements:page.SemanticMetadata)
-            tools.elide.page.SemanticMetadataOrBuilder {
-
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
-            return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_fieldAccessorTable.ensureFieldAccessorsInitialized(
-                tools.elide.page.SemanticMetadata.class,
-                tools.elide.page.SemanticMetadata.Builder.class
-            );
-        }
-
-        // Construct using tools.elide.page.SemanticMetadata.newBuilder()
-        private Builder() {
-            maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent
-        ) {
-            super(parent);
-            maybeForceBuilderInitialization();
-        }
-
-        private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {
-                getMediaFieldBuilder();
-            }
-        }
-
-        @java.lang.Override
-        public Builder clear() {
-            super.clear();
-            kind_ = 0;
-
-            format_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000001);
-            if (mediaBuilder_ == null) {
-                media_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-                mediaBuilder_.clear();
-            }
-            payloadCase_ = 0;
-            payload_ = null;
-            return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-            return tools.elide.page.WebSemantics.internal_static_page_SemanticMetadata_descriptor;
-        }
-
-        @java.lang.Override
-        public tools.elide.page.SemanticMetadata getDefaultInstanceForType() {
-            return tools.elide.page.SemanticMetadata.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public tools.elide.page.SemanticMetadata build() {
-            tools.elide.page.SemanticMetadata result = buildPartial();
-            if (!result.isInitialized()) {
-                throw newUninitializedMessageException(result);
-            }
-            return result;
-        }
-
-        @java.lang.Override
-        public tools.elide.page.SemanticMetadata buildPartial() {
-            tools.elide.page.SemanticMetadata result = new tools.elide.page.SemanticMetadata(
-                this
-            );
-            int from_bitField0_ = bitField0_;
-            result.kind_ = kind_;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                format_ = java.util.Collections.unmodifiableList(format_);
-                bitField0_ = (bitField0_ & ~0x00000001);
-            }
-            result.format_ = format_;
-            if (mediaBuilder_ == null) {
-                if (((bitField0_ & 0x00000002) != 0)) {
-                    media_ = java.util.Collections.unmodifiableList(media_);
-                    bitField0_ = (bitField0_ & ~0x00000002);
-                }
-                result.media_ = media_;
-            } else {
-                result.media_ = mediaBuilder_.build();
-            }
-            if (payloadCase_ == 4) {
-                result.payload_ = payload_;
-            }
-            result.payloadCase_ = payloadCase_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field
-        ) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof
-        ) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index,
-            java.lang.Object value
-        ) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value
-        ) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof tools.elide.page.SemanticMetadata) {
-                return mergeFrom((tools.elide.page.SemanticMetadata) other);
-            } else {
-                super.mergeFrom(other);
-                return this;
-            }
-        }
-
-        public Builder mergeFrom(tools.elide.page.SemanticMetadata other) {
-            if (
-                other == tools.elide.page.SemanticMetadata.getDefaultInstance()
-            ) return this;
-            if (other.kind_ != 0) {
-                setKindValue(other.getKindValue());
-            }
-            if (!other.format_.isEmpty()) {
-                if (format_.isEmpty()) {
-                    format_ = other.format_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                } else {
-                    ensureFormatIsMutable();
-                    format_.addAll(other.format_);
-                }
-                onChanged();
-            }
-            if (mediaBuilder_ == null) {
-                if (!other.media_.isEmpty()) {
-                    if (media_.isEmpty()) {
-                        media_ = other.media_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
-                    } else {
-                        ensureMediaIsMutable();
-                        media_.addAll(other.media_);
-                    }
-                    onChanged();
-                }
-            } else {
-                if (!other.media_.isEmpty()) {
-                    if (mediaBuilder_.isEmpty()) {
-                        mediaBuilder_.dispose();
-                        mediaBuilder_ = null;
-                        media_ = other.media_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
-                        mediaBuilder_ =
-                            com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-                                ? getMediaFieldBuilder()
-                                : null;
-                    } else {
-                        mediaBuilder_.addAllMessages(other.media_);
-                    }
-                }
-            }
-            switch (other.getPayloadCase()) {
-                case CONTENT:
-                    {
-                        payloadCase_ = 4;
-                        payload_ = other.payload_;
-                        onChanged();
-                        break;
-                    }
-                case PAYLOAD_NOT_SET:
-                    {
-                        break;
-                    }
-            }
-            this.mergeUnknownFields(other.unknownFields);
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-            return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws java.io.IOException {
-            tools.elide.page.SemanticMetadata parsedMessage = null;
-            try {
-                parsedMessage =
-                    PARSER.parsePartialFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage =
-                    (tools.elide.page.SemanticMetadata) e.getUnfinishedMessage();
-                throw e.unwrapIOException();
-            } finally {
-                if (parsedMessage != null) {
-                    mergeFrom(parsedMessage);
-                }
-            }
-            return this;
-        }
-
-        private int payloadCase_ = 0;
-        private java.lang.Object payload_;
-
-        public PayloadCase getPayloadCase() {
-            return PayloadCase.forNumber(payloadCase_);
-        }
-
-        public Builder clearPayload() {
-            payloadCase_ = 0;
-            payload_ = null;
-            onChanged();
-            return this;
-        }
-
-        private int bitField0_;
-
-        private int kind_ = 0;
-
-        /**
-         * <pre>
-         * Defines the "kind" of content contained on a given page.
-         * </pre>
-         *
-         * <code>.page.Kind kind = 1;</code>
-         * @return The enum numeric value on the wire for kind.
-         */
-        @java.lang.Override
-        public int getKindValue() {
-            return kind_;
-        }
-
-        /**
-         * <pre>
-         * Defines the "kind" of content contained on a given page.
-         * </pre>
-         *
-         * <code>.page.Kind kind = 1;</code>
-         * @param value The enum numeric value on the wire for kind to set.
-         * @return This builder for chaining.
-         */
-        public Builder setKindValue(int value) {
-            kind_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Defines the "kind" of content contained on a given page.
-         * </pre>
-         *
-         * <code>.page.Kind kind = 1;</code>
-         * @return The kind.
-         */
-        @java.lang.Override
-        public tools.elide.page.Kind getKind() {
-            @SuppressWarnings("deprecation")
-            tools.elide.page.Kind result = tools.elide.page.Kind.valueOf(kind_);
-            return result == null ? tools.elide.page.Kind.UNRECOGNIZED : result;
-        }
-
-        /**
-         * <pre>
-         * Defines the "kind" of content contained on a given page.
-         * </pre>
-         *
-         * <code>.page.Kind kind = 1;</code>
-         * @param value The kind to set.
-         * @return This builder for chaining.
-         */
-        public Builder setKind(tools.elide.page.Kind value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-
-            kind_ = value.getNumber();
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Defines the "kind" of content contained on a given page.
-         * </pre>
-         *
-         * <code>.page.Kind kind = 1;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearKind() {
-            kind_ = 0;
-            onChanged();
-            return this;
-        }
-
-        private java.util.List<java.lang.Integer> format_ = java.util.Collections.emptyList();
-
-        private void ensureFormatIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                format_ = new java.util.ArrayList<java.lang.Integer>(format_);
-                bitField0_ |= 0x00000001;
-            }
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @return A list containing the format.
-         */
-        public java.util.List<tools.elide.page.Format> getFormatList() {
-            return new com.google.protobuf.Internal.ListAdapter<java.lang.Integer, tools.elide.page.Format>(
-                format_,
-                format_converter_
-            );
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @return The count of format.
-         */
-        public int getFormatCount() {
-            return format_.size();
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param index The index of the element to return.
-         * @return The format at the given index.
-         */
-        public tools.elide.page.Format getFormat(int index) {
-            return format_converter_.convert(format_.get(index));
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param index The index to set the value at.
-         * @param value The format to set.
-         * @return This builder for chaining.
-         */
-        public Builder setFormat(int index, tools.elide.page.Format value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            ensureFormatIsMutable();
-            format_.set(index, value.getNumber());
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param value The format to add.
-         * @return This builder for chaining.
-         */
-        public Builder addFormat(tools.elide.page.Format value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            ensureFormatIsMutable();
-            format_.add(value.getNumber());
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param values The format to add.
-         * @return This builder for chaining.
-         */
-        public Builder addAllFormat(
-            java.lang.Iterable<? extends tools.elide.page.Format> values
-        ) {
-            ensureFormatIsMutable();
-            for (tools.elide.page.Format value : values) {
-                format_.add(value.getNumber());
-            }
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearFormat() {
-            format_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000001);
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @return A list containing the enum numeric values on the wire for format.
-         */
-        public java.util.List<java.lang.Integer> getFormatValueList() {
-            return java.util.Collections.unmodifiableList(format_);
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param index The index of the value to return.
-         * @return The enum numeric value on the wire of format at the given index.
-         */
-        public int getFormatValue(int index) {
-            return format_.get(index);
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param index The index of the value to return.
-         * @return The enum numeric value on the wire of format at the given index.
-         * @return This builder for chaining.
-         */
-        public Builder setFormatValue(int index, int value) {
-            ensureFormatIsMutable();
-            format_.set(index, value);
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param value The enum numeric value on the wire for format to add.
-         * @return This builder for chaining.
-         */
-        public Builder addFormatValue(int value) {
-            ensureFormatIsMutable();
-            format_.add(value);
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Formats to render semantic metadata in.
-         * </pre>
-         *
-         * <code>repeated .page.Format format = 2;</code>
-         * @param values The enum numeric values on the wire for format to add.
-         * @return This builder for chaining.
-         */
-        public Builder addAllFormatValue(
-            java.lang.Iterable<java.lang.Integer> values
-        ) {
-            ensureFormatIsMutable();
-            for (int value : values) {
-                format_.add(value);
-            }
-            onChanged();
-            return this;
-        }
-
-        private java.util.List<tools.elide.page.MediaAsset> media_ = java.util.Collections.emptyList();
-
-        private void ensureMediaIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
-                media_ =
-                    new java.util.ArrayList<tools.elide.page.MediaAsset>(
-                        media_
-                    );
-                bitField0_ |= 0x00000002;
-            }
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder> mediaBuilder_;
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public java.util.List<tools.elide.page.MediaAsset> getMediaList() {
-            if (mediaBuilder_ == null) {
-                return java.util.Collections.unmodifiableList(media_);
-            } else {
-                return mediaBuilder_.getMessageList();
-            }
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public int getMediaCount() {
-            if (mediaBuilder_ == null) {
-                return media_.size();
-            } else {
-                return mediaBuilder_.getCount();
-            }
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public tools.elide.page.MediaAsset getMedia(int index) {
-            if (mediaBuilder_ == null) {
-                return media_.get(index);
-            } else {
-                return mediaBuilder_.getMessage(index);
-            }
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder setMedia(int index, tools.elide.page.MediaAsset value) {
-            if (mediaBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureMediaIsMutable();
-                media_.set(index, value);
-                onChanged();
-            } else {
-                mediaBuilder_.setMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder setMedia(
-            int index,
-            tools.elide.page.MediaAsset.Builder builderForValue
-        ) {
-            if (mediaBuilder_ == null) {
-                ensureMediaIsMutable();
-                media_.set(index, builderForValue.build());
-                onChanged();
-            } else {
-                mediaBuilder_.setMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder addMedia(tools.elide.page.MediaAsset value) {
-            if (mediaBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureMediaIsMutable();
-                media_.add(value);
-                onChanged();
-            } else {
-                mediaBuilder_.addMessage(value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder addMedia(int index, tools.elide.page.MediaAsset value) {
-            if (mediaBuilder_ == null) {
-                if (value == null) {
-                    throw new NullPointerException();
-                }
-                ensureMediaIsMutable();
-                media_.add(index, value);
-                onChanged();
-            } else {
-                mediaBuilder_.addMessage(index, value);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder addMedia(
-            tools.elide.page.MediaAsset.Builder builderForValue
-        ) {
-            if (mediaBuilder_ == null) {
-                ensureMediaIsMutable();
-                media_.add(builderForValue.build());
-                onChanged();
-            } else {
-                mediaBuilder_.addMessage(builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder addMedia(
-            int index,
-            tools.elide.page.MediaAsset.Builder builderForValue
-        ) {
-            if (mediaBuilder_ == null) {
-                ensureMediaIsMutable();
-                media_.add(index, builderForValue.build());
-                onChanged();
-            } else {
-                mediaBuilder_.addMessage(index, builderForValue.build());
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder addAllMedia(
-            java.lang.Iterable<? extends tools.elide.page.MediaAsset> values
-        ) {
-            if (mediaBuilder_ == null) {
-                ensureMediaIsMutable();
-                com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                    values,
-                    media_
-                );
-                onChanged();
-            } else {
-                mediaBuilder_.addAllMessages(values);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder clearMedia() {
-            if (mediaBuilder_ == null) {
-                media_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000002);
-                onChanged();
-            } else {
-                mediaBuilder_.clear();
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public Builder removeMedia(int index) {
-            if (mediaBuilder_ == null) {
-                ensureMediaIsMutable();
-                media_.remove(index);
-                onChanged();
-            } else {
-                mediaBuilder_.remove(index);
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public tools.elide.page.MediaAsset.Builder getMediaBuilder(int index) {
-            return getMediaFieldBuilder().getBuilder(index);
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public tools.elide.page.MediaAssetOrBuilder getMediaOrBuilder(
-            int index
-        ) {
-            if (mediaBuilder_ == null) {
-                return media_.get(index);
-            } else {
-                return mediaBuilder_.getMessageOrBuilder(index);
-            }
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public java.util.List<? extends tools.elide.page.MediaAssetOrBuilder> getMediaOrBuilderList() {
-            if (mediaBuilder_ != null) {
-                return mediaBuilder_.getMessageOrBuilderList();
-            } else {
-                return java.util.Collections.unmodifiableList(media_);
-            }
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public tools.elide.page.MediaAsset.Builder addMediaBuilder() {
-            return getMediaFieldBuilder()
-                .addBuilder(tools.elide.page.MediaAsset.getDefaultInstance());
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public tools.elide.page.MediaAsset.Builder addMediaBuilder(int index) {
-            return getMediaFieldBuilder()
-                .addBuilder(
-                    index,
-                    tools.elide.page.MediaAsset.getDefaultInstance()
-                );
-        }
-
-        /**
-         * <pre>
-         * Describes page-level semantic media.
-         * </pre>
-         *
-         * <code>repeated .page.MediaAsset media = 3;</code>
-         */
-        public java.util.List<tools.elide.page.MediaAsset.Builder> getMediaBuilderList() {
-            return getMediaFieldBuilder().getBuilderList();
-        }
-
-        private com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder> getMediaFieldBuilder() {
-            if (mediaBuilder_ == null) {
-                mediaBuilder_ =
-                    new com.google.protobuf.RepeatedFieldBuilderV3<tools.elide.page.MediaAsset, tools.elide.page.MediaAsset.Builder, tools.elide.page.MediaAssetOrBuilder>(
-                        media_,
-                        ((bitField0_ & 0x00000002) != 0),
-                        getParentForChildren(),
-                        isClean()
-                    );
-                media_ = null;
-            }
-            return mediaBuilder_;
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @return Whether the content field is set.
-         */
-        @java.lang.Override
-        public boolean hasContent() {
-            return payloadCase_ == 4;
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @return The content.
-         */
-        @java.lang.Override
-        public java.lang.String getContent() {
-            java.lang.Object ref = "";
-            if (payloadCase_ == 4) {
-                ref = payload_;
-            }
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                if (payloadCase_ == 4) {
-                    payload_ = s;
-                }
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @return The bytes for content.
-         */
-        @java.lang.Override
-        public com.google.protobuf.ByteString getContentBytes() {
-            java.lang.Object ref = "";
-            if (payloadCase_ == 4) {
-                ref = payload_;
-            }
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref
-                );
-                if (payloadCase_ == 4) {
-                    payload_ = b;
-                }
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @param value The content to set.
-         * @return This builder for chaining.
-         */
-        public Builder setContent(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            payloadCase_ = 4;
-            payload_ = value;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearContent() {
-            if (payloadCase_ == 4) {
-                payloadCase_ = 0;
-                payload_ = null;
-                onChanged();
-            }
-            return this;
-        }
-
-        /**
-         * <pre>
-         * Semantic metadata content.
-         * </pre>
-         *
-         * <code>string content = 4;</code>
-         * @param value The bytes for content to set.
-         * @return This builder for chaining.
-         */
-        public Builder setContentBytes(com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-            payloadCase_ = 4;
-            payload_ = value;
-            onChanged();
-            return this;
-        }
-
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields
-        ) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-        // @@protoc_insertion_point(builder_scope:page.SemanticMetadata)
+    public Builder setContent(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  payloadCase_ = 4;
+      payload_ = value;
+      onChanged();
+      return this;
     }
-
-    // @@protoc_insertion_point(class_scope:page.SemanticMetadata)
-    private static final tools.elide.page.SemanticMetadata DEFAULT_INSTANCE;
-
-    static {
-        DEFAULT_INSTANCE = new tools.elide.page.SemanticMetadata();
+    /**
+     * <pre>
+     * Semantic metadata content.
+     * </pre>
+     *
+     * <code>string content = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearContent() {
+      if (payloadCase_ == 4) {
+        payloadCase_ = 0;
+        payload_ = null;
+        onChanged();
+      }
+      return this;
     }
-
-    public static tools.elide.page.SemanticMetadata getDefaultInstance() {
-        return DEFAULT_INSTANCE;
+    /**
+     * <pre>
+     * Semantic metadata content.
+     * </pre>
+     *
+     * <code>string content = 4;</code>
+     * @param value The bytes for content to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContentBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      payloadCase_ = 4;
+      payload_ = value;
+      onChanged();
+      return this;
     }
-
-    private static final com.google.protobuf.Parser<SemanticMetadata> PARSER = new com.google.protobuf.AbstractParser<SemanticMetadata>() {
-        @java.lang.Override
-        public SemanticMetadata parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry
-        ) throws com.google.protobuf.InvalidProtocolBufferException {
-            return new SemanticMetadata(input, extensionRegistry);
-        }
-    };
-
-    public static com.google.protobuf.Parser<SemanticMetadata> parser() {
-        return PARSER;
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SemanticMetadata> getParserForType() {
-        return PARSER;
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
+
+    // @@protoc_insertion_point(builder_scope:page.SemanticMetadata)
+  }
+
+  // @@protoc_insertion_point(class_scope:page.SemanticMetadata)
+  private static final tools.elide.page.SemanticMetadata DEFAULT_INSTANCE;
+  static {
+    DEFAULT_INSTANCE = new tools.elide.page.SemanticMetadata();
+  }
+
+  public static tools.elide.page.SemanticMetadata getDefaultInstance() {
+    return DEFAULT_INSTANCE;
+  }
+
+  private static final com.google.protobuf.Parser<SemanticMetadata>
+      PARSER = new com.google.protobuf.AbstractParser<SemanticMetadata>() {
     @java.lang.Override
-    public tools.elide.page.SemanticMetadata getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
+    public SemanticMetadata parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new SemanticMetadata(input, extensionRegistry);
     }
+  };
+
+  public static com.google.protobuf.Parser<SemanticMetadata> parser() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<SemanticMetadata> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public tools.elide.page.SemanticMetadata getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
+

@@ -4,15 +4,15 @@
 package tools.elide.data;
 
 @kotlin.jvm.JvmName("-initializecompressedData")
-public inline fun compressedData(block: tools.elide.data.CompressedDataKt.Dsl.() -> kotlin.Unit): tools.elide.data.CompressedData =
+inline fun compressedData(block: tools.elide.data.CompressedDataKt.Dsl.() -> kotlin.Unit): tools.elide.data.CompressedData =
   tools.elide.data.CompressedDataKt.Dsl._create(tools.elide.data.CompressedData.newBuilder()).apply { block() }._build()
-public object CompressedDataKt {
+object CompressedDataKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.data.CompressedData.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.data.CompressedData.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object CompressedDataKt {
      *
      * <code>.data.CompressionMode compression = 1;</code>
      */
-    public var compression: tools.elide.data.CompressionMode
+     var compression: tools.elide.data.CompressionMode
       @JvmName("getCompression")
       get() = _builder.getCompression()
       @JvmName("setCompression")
@@ -43,7 +43,7 @@ public object CompressedDataKt {
      *
      * <code>.data.CompressionMode compression = 1;</code>
      */
-    public fun clearCompression() {
+    fun clearCompression() {
       _builder.clearCompression()
     }
 
@@ -55,7 +55,7 @@ public object CompressedDataKt {
      *
      * <code>.data.DataContainer data = 2;</code>
      */
-    public var data: tools.elide.data.DataContainer
+    var data: tools.elide.data.DataContainer
       @JvmName("getData")
       get() = _builder.getData()
       @JvmName("setData")
@@ -70,7 +70,7 @@ public object CompressedDataKt {
      *
      * <code>.data.DataContainer data = 2;</code>
      */
-    public fun clearData() {
+    fun clearData() {
       _builder.clearData()
     }
     /**
@@ -82,7 +82,7 @@ public object CompressedDataKt {
      * <code>.data.DataContainer data = 2;</code>
      * @return Whether the data field is set.
      */
-    public fun hasData(): kotlin.Boolean {
+    fun hasData(): kotlin.Boolean {
       return _builder.hasData()
     }
 
@@ -94,7 +94,7 @@ public object CompressedDataKt {
      *
      * <code>uint64 size = 3;</code>
      */
-    public var size: kotlin.Long
+    var size: kotlin.Long
       @JvmName("getSize")
       get() = _builder.getSize()
       @JvmName("setSize")
@@ -109,7 +109,7 @@ public object CompressedDataKt {
      *
      * <code>uint64 size = 3;</code>
      */
-    public fun clearSize() {
+    fun clearSize() {
       _builder.clearSize()
     }
 
@@ -118,7 +118,7 @@ public object CompressedDataKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class IntegrityProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class IntegrityProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Holds an (optional) integrity fingerprint, calculated from the held data *before* compression, which maybe used to
@@ -127,7 +127,7 @@ public object CompressedDataKt {
      *
      * <code>repeated .data.DataFingerprint integrity = 4;</code>
      */
-     public val integrity: com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>
+     val integrity: com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getIntegrityList()
@@ -143,7 +143,7 @@ public object CompressedDataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addIntegrity")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.add(value: tools.elide.data.DataFingerprint) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.add(value: tools.elide.data.DataFingerprint) {
       _builder.addIntegrity(value)
     }
     /**
@@ -158,7 +158,7 @@ public object CompressedDataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignIntegrity")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.plusAssign(value: tools.elide.data.DataFingerprint) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.plusAssign(value: tools.elide.data.DataFingerprint) {
       add(value)
     }
     /**
@@ -172,7 +172,7 @@ public object CompressedDataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllIntegrity")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.data.DataFingerprint>) {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.addAll(values: kotlin.collections.Iterable<tools.elide.data.DataFingerprint>) {
       _builder.addAllIntegrity(values)
     }
     /**
@@ -187,7 +187,7 @@ public object CompressedDataKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllIntegrity")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.data.DataFingerprint>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.plusAssign(values: kotlin.collections.Iterable<tools.elide.data.DataFingerprint>) {
       addAll(values)
     }
     /**
@@ -202,7 +202,7 @@ public object CompressedDataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setIntegrity")
-    public operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.set(index: kotlin.Int, value: tools.elide.data.DataFingerprint) {
+    operator fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.set(index: kotlin.Int, value: tools.elide.data.DataFingerprint) {
       _builder.setIntegrity(index, value)
     }
     /**
@@ -215,14 +215,14 @@ public object CompressedDataKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearIntegrity")
-    public fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<tools.elide.data.DataFingerprint, IntegrityProxy>.clear() {
       _builder.clearIntegrity()
     }
 
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.data.CompressedData.copy(block: tools.elide.data.CompressedDataKt.Dsl.() -> kotlin.Unit): tools.elide.data.CompressedData =
+inline fun tools.elide.data.CompressedData.copy(block: tools.elide.data.CompressedDataKt.Dsl.() -> kotlin.Unit): tools.elide.data.CompressedData =
   tools.elide.data.CompressedDataKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
 val tools.elide.data.CompressedDataOrBuilder.dataOrNull: tools.elide.data.DataContainer?

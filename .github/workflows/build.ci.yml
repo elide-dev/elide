@@ -231,6 +231,10 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
 
+      ## Setup: Expand Git History
+      - name: "Setup: Git History"
+        run: git fetch --unshallow
+
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
@@ -269,6 +273,7 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
+            build
             test
             jacocoTestReport
             koverMergedHtmlReport
@@ -277,9 +282,10 @@ jobs:
             :tools:reports:reports
             sonar
             --scan
+            --warning-mode=none
             --dependency-verification=lenient
             -Pelide.ci=true
-            -PbuildSamples=false
+            -PbuildSamples=true
             -PbuildDocs=false
             -Pversions.java.language=17
 

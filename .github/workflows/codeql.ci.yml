@@ -20,57 +20,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript", "typescript"]
+        language: ["javascript", "java"]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      ## Setup: Java
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "zulu"
-          java-version: "11"
-
-      ## Setup: GraalVM
-      - uses: graalvm/setup-graalvm@v1
-        with:
-          version: "21.1.0"
-          java-version: "17"
-          components: "native-image"
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
-
-      ## Prep: Download Caches
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./node_modules
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}-yarn-${{ hashFiles('**/*.yarn.lock') }}
-          restore-keys: |
-            elide-${{ runner.os }}
-            elide-
-
-      ## CI: Re-Build
-      - name: "🛠️ Build"
-        uses: gradle/gradle-build-action@v2
-        env:
-          CI: true
-        with:
-          arguments: |
-            build
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -x nativeCompile
-            -x test
 
       ## Code QL: Perform analysis
       - name: Perform CodeQL Analysis

@@ -16,6 +16,25 @@ env:
 
 jobs:
   ##
+  ## Job: Dependency Review
+  ##
+  dependency-review:
+    name: "Dependency Review"
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+    steps:
+      - name: "Checkout Repository"
+        uses: "actions/checkout@v3"
+      - name: "Dependency Review"
+        uses: "actions/dependency-review-action@v3"
+        with:
+          config-file: "./.github/dependency-review-config.yml"
+
+  ##
   ## Job: Library Build
   ##
 
@@ -91,7 +110,7 @@ jobs:
 
       ## CI: Build
       - name: "🛠️ Build"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         id: gradlebuild
         continue-on-error: ${{ matrix.experimental }}
         env:
@@ -140,7 +159,7 @@ jobs:
     name: "Samples"
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{ matrix.experimental }}
-    needs: [gradle]
+    needs: [gradle, dependency-review]
 
     steps:
       ## Setup: Checkout Code
@@ -179,7 +198,7 @@ jobs:
 
       ## CI: Test
       - name: "🛠️ Test: Samples"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         id: gradletest
         continue-on-error: true
         env:
@@ -201,6 +220,7 @@ jobs:
     name: "Tests: JVM"
     runs-on: ubuntu-latest
     continue-on-error: true
+    needs: [dependency-review]
     permissions:
       contents: "read"
       id-token: "write"
@@ -243,7 +263,7 @@ jobs:
 
       ## Run JVM Tests
       - name: "Run Tests (JVM)"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
@@ -302,7 +322,7 @@ jobs:
   tests-native:
     name: "Tests: Native"
     runs-on: ubuntu-latest
-    needs: [tests-jvm]
+    needs: [tests-jvm, dependency-review]
     continue-on-error: true # temporary
     if: |
       (
@@ -351,7 +371,7 @@ jobs:
 
       ## Run Native Tests
       - name: "Run Tests (Native)"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         with:
           cache-read-only: false
           arguments: |
@@ -377,7 +397,7 @@ jobs:
   docker-jvm:
     name: "Docker: JVM"
     runs-on: ubuntu-latest
-    needs: [gradle]
+    needs: [gradle, dependency-review]
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -461,7 +481,7 @@ jobs:
 
       ## Docker Samples: Server - Hello World - JVM
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: |
             -Pelide.ci=true
@@ -479,7 +499,7 @@ jobs:
   docker-native:
     name: "Docker: Native"
     runs-on: ubuntu-latest
-    needs: [gradle]
+    needs: [gradle, dependency-review]
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -563,7 +583,7 @@ jobs:
 
       ## Docker Samples: Server - Hello World - Native
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: |
             -Pversions.java.language=17

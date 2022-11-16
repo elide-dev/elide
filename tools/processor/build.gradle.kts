@@ -28,7 +28,6 @@ dependencies {
 
   // Modules
   implementation(project(":packages:base"))
-  implementation(project(":packages:proto"))
 
   // KSP
   implementation(libs.ksp)

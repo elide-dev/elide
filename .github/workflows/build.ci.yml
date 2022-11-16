@@ -39,14 +39,6 @@ jobs:
             experimental: false
             gu-binary: gu
             java: 11
-          - os: windows
-            experimental: true
-            gu-binary: gu.cmd
-            java: 17
-          - os: windows
-            experimental: true
-            gu-binary: gu.cmd
-            java: 11
 
     name: "Build"
     runs-on: ${{ matrix.os }}-latest

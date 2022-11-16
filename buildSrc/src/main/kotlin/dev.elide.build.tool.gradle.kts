@@ -6,15 +6,8 @@ plugins {
   `jvm-test-suite`
 
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
   id("dev.elide.build.core")
-  id("dev.elide.build.jvm")
-}
-
-// Compiler: `kapt`
-// ----------------
-// Configure Kotlin annotation processing.
-kapt {
-  useBuildCache = true
+  id("dev.elide.build.kotlin")
+  id("dev.elide.build.jvm.kapt")
 }

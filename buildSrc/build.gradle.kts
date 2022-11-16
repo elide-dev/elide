@@ -9,6 +9,8 @@ plugins {
   `kotlin-dsl-precompiled-script-plugins`
 }
 
+val buildDocs by properties
+
 repositories {
   maven("https://maven-central.storage-download.googleapis.com/maven2/")
   mavenCentral()
@@ -21,7 +23,6 @@ dependencies {
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)
   implementation(libs.plugin.detekt)
-  implementation(libs.plugin.dokka)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.micronaut)
   implementation(libs.plugin.sonar)
@@ -34,4 +35,7 @@ dependencies {
   implementation(libs.plugin.kotlinx.serialization)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+  if (buildDocs == "true") {
+    implementation(libs.plugin.dokka)
+  }
 }

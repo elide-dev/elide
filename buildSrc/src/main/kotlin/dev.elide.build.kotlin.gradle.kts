@@ -1,12 +1,58 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
+  publishing
+
+  kotlin("jvm")
   kotlin("plugin.allopen")
   kotlin("plugin.noarg")
   id("org.jetbrains.kotlinx.kover")
-  id("kotlinx-atomicfu")
+  id("dev.elide.build.core")
 }
 
-atomicfu {
-  transformJs = true
-  transformJvm = true
-  jvmVariant = "VH"  // `VarHandle`
+val strictMode = project.properties["versions.java.language"] as String == "true"
+val enableK2 = project.properties["elide.kotlin.k2"] as String == "true"
+val javaLanguageVersion = project.properties["versions.java.language"] as String
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+
+// Compiler: Kotlin
+// ----------------
+// Configure Kotlin compile runs for MPP, JS, and JVM.
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    apiVersion = Elide.kotlinLanguage
+    languageVersion = Elide.kotlinLanguage
+    jvmTarget = javaLanguageVersion
+    javaParameters = true
+    freeCompilerArgs = Elide.kaptCompilerArgs
+    allWarningsAsErrors = strictMode
+    incremental = true
+  }
+}
+
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      apiVersion = kotlinLanguageVersion
+      languageVersion = kotlinLanguageVersion
+      progressiveMode = true
+      optIn("kotlin.ExperimentalUnsignedTypes")
+    }
+  }
+
+  publishing {
+    publications {
+      create<MavenPublication>("main") {
+        groupId = "dev.elide"
+        artifactId = project.name
+        version = rootProject.version as String
+
+        from(components["kotlin"])
+      }
+    }
+  }
 }

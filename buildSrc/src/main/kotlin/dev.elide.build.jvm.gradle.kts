@@ -5,22 +5,35 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   java
   jacoco
   `jvm-test-suite`
   `maven-publish`
 
-  kotlin("jvm")
   id("dev.elide.build.core")
+  id("dev.elide.build.kotlin")
 }
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
-val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
+val strictMode = project.properties["versions.java.language"] as String == "true"
+val buildDocs = project.properties["buildDocs"] as String == "true"
 
+// Compiler: Kotlin
+// ----------------
+// Override with JVM-specific (non-kapt) arguments.
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    apiVersion = Elide.kotlinLanguage
+    languageVersion = Elide.kotlinLanguage
+    jvmTarget = javaLanguageVersion
+    javaParameters = true
+    freeCompilerArgs = Elide.jvmCompilerArgs
+    allWarningsAsErrors = strictMode
+    incremental = true
+  }
+}
 
 // JVM: Testing
 // ------------
@@ -33,16 +46,16 @@ testing {
   }
 }
 
-// Compiler: Kotlin
-// ----------------
-// Configure Kotlin compile runs for MPP, JS, and JVM.
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-  kotlinOptions {
-    apiVersion = Elide.kotlinLanguage
-    languageVersion = Elide.kotlinLanguage
-    jvmTarget = Elide.jvmTarget
-    javaParameters = true
-    freeCompilerArgs = Elide.jvmCompilerArgs
+// Tasks: Javadoc Jar
+// ------------------
+// Build Javadocs from Dokka.
+val javadocJar by tasks.creating(Jar::class) {
+  archiveClassifier.set("javadoc")
+  isPreserveFileTimestamps = false
+  isReproducibleFileOrder = true
+
+  if (buildDocs) {
+    from(tasks.named("dokkaJavadoc"))
   }
 }
 
@@ -51,7 +64,9 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 // Configure Java compiler.
 java {
   withSourcesJar()
-  withJavadocJar()
+  if (buildDocs) {
+    withJavadocJar()
+  }
 
   toolchain {
     languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
@@ -75,50 +90,6 @@ tasks.withType<JavaCompile>().configureEach {
   options.isIncremental = true
 }
 
-// Compiler: Kotlin
-// ----------------
-// Configure Kotlin compiler.
-kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-  }
-
-  sourceSets.all {
-    languageSettings.apply {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-      progressiveMode = true
-      optIn("kotlin.ExperimentalUnsignedTypes")
-    }
-  }
-
-  publishing {
-    publications {
-      create<MavenPublication>("main") {
-        groupId = "dev.elide"
-        artifactId = project.name
-        version = rootProject.version as String
-
-        from(components["kotlin"])
-      }
-    }
-  }
-}
-
-val compileKotlin: KotlinCompile by tasks
-val compileJava: JavaCompile by tasks
-compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
-
-tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    apiVersion = kotlinLanguageVersion
-    languageVersion = kotlinLanguageVersion
-    jvmTarget = javaLanguageVersion
-    freeCompilerArgs = Elide.mppCompilerArgs
-    javaParameters = true
-  }
-}
-
 tasks.withType<Javadoc>().configureEach {
   isFailOnError = false
 }
@@ -128,16 +99,11 @@ tasks.withType<Javadoc>().configureEach {
 // Settings for publishing library artifacts to Maven repositories.
 publishing {
   publications.withType<MavenPublication> {
-    artifact(tasks.named("javadocJar"))
     artifact(tasks.named("sourcesJar"))
+    if (buildDocs) {
+      artifact(tasks.named("javadocJar"))
+    }
   }
-}
-
-// Tasks: Javadoc Jar
-// ------------------
-// Build Javadocs from Dokka.
-val javadocJar = tasks.named<Jar>("javadocJar") {
-  from(tasks.named("dokkaJavadoc"))
 }
 
 // Tasks: Binary Jar
@@ -158,8 +124,10 @@ tasks.jar {
 // Mounts configured module artifacts.
 tasks {
   artifacts {
-    add("archives", javadocJar)
     add("archives", tasks.named("sourcesJar"))
+    if (buildDocs) {
+      add("archives", javadocJar)
+    }
   }
 }
 

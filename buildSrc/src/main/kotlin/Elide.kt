@@ -33,15 +33,13 @@ object Elide {
 
   /** Compiler args to include in Kotlin JVM targets. */
   val jvmCompilerArgs = compilerArgs.plus(listOf(
-    "-Xuse-k2",
+    "-no-stdlib",
     "-Xjvm-default=all",
-    "-Xjvm-enable-preview",
   ))
 
   /** Compiler args to include in Kotlin JS targets. */
   val jsCompilerArgs = compilerArgs.plus(listOf(
     "-Xgenerate-dts",
-    "-Xgenerate-polyfills",
   ))
 
   /** Compiler args to include in Kotlin MPP targets. */
@@ -49,13 +47,11 @@ object Elide {
 
   /** Compiler args to include in Kotlin JVM targets which use `kapt`. */
   val kaptCompilerArgs = compilerArgs.plus(listOf(
+    "-no-stdlib",
     "-Xallow-unstable-dependencies",
     "-Xemit-jvm-type-annotations",
     "-Xjvm-default=all",
   ))
-
-  /** Minimum JVM version. */
-  const val jvmTarget = "11"
 
   /** Kotlin SDK and platform version. */
   const val kotlinSdk = "1.7.21"

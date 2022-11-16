@@ -6,29 +6,13 @@ plugins {
   signing
   idea
 
-  id("dev.elide.build.kotlin")
-
   id("com.adarshr.test-logger")
   id("com.github.ben-manes.versions")
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
-  id("org.jetbrains.dokka")
   id("org.sonarqube")
 }
 
-
-// Plugin: Test Logger
-// -------------------
-// Configure test logging.
-testlogger {
-  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
-  showExceptions = true
-  showFailed = true
-  showPassed = true
-  showSkipped = true
-  showFailedStandardStreams = true
-  showFullStackTraces = true
-}
 
 // Dependencies: Locking
 // ---------------------
@@ -68,12 +52,6 @@ configurations.all {
     }
   }
 }
-
-// Artifacts: Sources
-// ------------------
-// Resolve any applicable sources JAR.
-//val sourcesJar = tasks.withType(Jar::class).filter { it.archiveClassifier.get() == "sources" }.firstOrNull() ?:
-//  tasks.register(Jar::class) { archiveClassifier.set("sources") }
 
 // Artifacts: Signing
 // ------------------
@@ -131,6 +109,13 @@ publishing {
   }
 }
 
+// Tasks: Test
+// -----------
+// Settings for testsuite execution.
+tasks.withType<Test>().configureEach {
+  maxParallelForks = 4
+}
+
 // Tasks: Tar
 // ----------
 // Configure tasks which produce tarballs (improves caching/hermeticity).
@@ -145,4 +130,18 @@ tasks.withType<Jar>().configureEach {
 tasks.withType<Zip>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false
+}
+
+// Plugin: Test Logger
+// -------------------
+// Configure test logging.
+testlogger {
+  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
+  showExceptions = true
+  showFailed = true
+  showPassed = true
+  showSkipped = true
+  showFailedStandardStreams = true
+  showFullStackTraces = true
+  slowThreshold = 30000L
 }

@@ -119,7 +119,3 @@ tasks.jacocoTestReport {
 tasks.test {
   finalizedBy(tasks.jacocoTestReport)
 }
-
-tasks.dokkaHtml.configure {
-  moduleName.set("rpc-jvm")
-}

@@ -38,7 +38,7 @@ tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfi
 
 tasks.named<JavaExec>("run") {
   val argsList = ArrayList<String>()
-  jvmArgs = (jvmArgs ?: emptyList()).plus(listOf(
+  jvmArgs(listOf(
     "-Delide.dev=true",
   ))
   if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {

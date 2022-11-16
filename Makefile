@@ -4,12 +4,15 @@
 #
 
 VERSION ?= $(shell cat .version)
+STRICT ?= yes
+RELOCK ?= no
 
 SAMPLES ?= no
 
 # Flags that control this makefile, along with their defaults:
 #
 # DEBUG ?= no
+# STRICT ?= yes
 # RELEASE ?= no
 # JVMDEBUG ?= no
 # NATIVE ?= no
@@ -17,6 +20,7 @@ SAMPLES ?= no
 # DRY ?= no
 # SCAN ?= no
 # IGNORE_ERRORS ?= no
+# RELOCK ?= no
 
 GRADLE ?= ./gradlew
 YARN ?= $(shell which yarn)
@@ -42,8 +46,16 @@ else
 BUILD_ARGS += -PbuildSamples=false
 endif
 
+ifeq ($(RELOCK),yes)
+BUILD_ARGS += --write-verification-metadata sha256,pgp --export-keys --write-locks
+endif
+
 ifeq ($(CI),yes)
 BUILD_ARGS += -Pelide.ci=true
+endif
+
+ifeq ($(STRICT),yes)
+BUILD_ARGS += --warning-mode=none -Pelide.strict=true
 endif
 
 ifeq ($(SCAN),yes)

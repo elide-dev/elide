@@ -67,7 +67,6 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core.js)
                 implementation(libs.kotlinx.serialization.json.js)
                 implementation(libs.kotlinx.serialization.protobuf.js)
-                implementation(libs.uuid)
             }
         }
         val jsTest by getting

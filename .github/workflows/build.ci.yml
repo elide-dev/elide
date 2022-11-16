@@ -255,7 +255,7 @@ jobs:
             :tools:reports:reports
             sonar
             --scan
-            --dependency-verification=strict
+            --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false

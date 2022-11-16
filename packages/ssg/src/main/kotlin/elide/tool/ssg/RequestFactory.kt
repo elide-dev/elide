@@ -9,6 +9,7 @@ import io.micronaut.http.HttpRequest
 /**
  *
  */
+@Suppress("UNUSED_PARAMETER", "unused")
 class RequestFactory {
   /**
    *

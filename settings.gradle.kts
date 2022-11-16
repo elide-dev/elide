@@ -27,7 +27,7 @@ dependencyResolutionManagement {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
     }
-    create("mn") {
+    create("mnLibs") {
       from("io.micronaut:micronaut-bom:$micronautVersion")
     }
   }
@@ -116,8 +116,5 @@ buildCache {
   }
 }
 
-enableFeaturePreview("VERSION_CATALOGS")
-enableFeaturePreview("VERSION_ORDERING_V2")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
-enableFeaturePreview("ONE_LOCKFILE_PER_PROJECT")

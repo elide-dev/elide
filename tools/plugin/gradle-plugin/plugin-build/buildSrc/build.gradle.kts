@@ -18,8 +18,7 @@ dependencies {
     api(kotlin("gradle-plugin"))
     api(libs.plugin.kotlin.allopen)
     api(libs.plugin.kotlin.noarg)
-    api(libs.plugin.kotlinx.atomicfu)
-    api(libs.plugin.kotlinx.serialization)
+    implementation(libs.plugin.kotlinx.serialization)
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }

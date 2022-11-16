@@ -6,3 +6,5 @@ dependencyResolutionManagement {
     }
   }
 }
+
+rootProject.name = "elideBuild"

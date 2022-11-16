@@ -15,6 +15,8 @@ plugins {
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
+val strictMode = project.properties["versions.java.language"] as String == "true"
+val enableK2 = project.properties["elide.kotlin.k2"] as String == "true"
 
 kover {
   xmlReport {
@@ -31,18 +33,7 @@ kotlin {
     }
   }
 
-  js(BOTH) {
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-        target = ecmaVersion
-        apiVersion = kotlinLanguageVersion
-        languageVersion = kotlinLanguageVersion
-        freeCompilerArgs = Elide.jsCompilerArgs
-      }
-    }
+  js(IR) {
     browser {
       commonWebpackConfig {
         cssSupport {
@@ -98,7 +89,10 @@ tasks.withType<KotlinCompileCommon>().configureEach {
   kotlinOptions {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
-    freeCompilerArgs = Elide.compilerArgs
+    freeCompilerArgs = Elide.mppCompilerArgs
+    allWarningsAsErrors = strictMode
+    useK2 = enableK2
+    incremental = true
   }
 }
 
@@ -109,5 +103,8 @@ tasks.withType<KotlinCompile>().configureEach {
     jvmTarget = javaLanguageVersion
     freeCompilerArgs = Elide.mppCompilerArgs
     javaParameters = true
+    allWarningsAsErrors = strictMode
+    useK2 = enableK2
+    incremental = true
   }
 }

@@ -8,7 +8,6 @@ import java.util.Properties
 
 plugins {
   id("project-report")
-  id("org.jetbrains.dokka")
   id("org.sonarqube")
   id("org.jetbrains.kotlinx.kover")
   id("io.gitlab.arturbosch.detekt")
@@ -55,20 +54,7 @@ val samplesList = listOf(
   ":samples:fullstack:react-ssr:server",
 )
 
-tasks.dokkaHtmlMultiModule.configure {
-  includes.from("README.md")
-  outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
-}
-
-tasks.create("docs") {
-  dependsOn(listOf(
-    "dokkaHtmlMultiModule",
-    "dokkaGfmMultiModule",
-    ":packages:graalvm:dokkaJavadoc",
-    ":packages:rpc-jvm:dokkaJavadoc",
-    ":packages:server:dokkaJavadoc",
-  ))
-}
+val buildDocs by properties
 
 buildscript {
   repositories {
@@ -78,6 +64,7 @@ buildscript {
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {
+    classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
@@ -121,15 +108,20 @@ subprojects {
     plugin("io.gitlab.arturbosch.detekt")
     plugin("org.jlleitschuh.gradle.ktlint")
     plugin("org.sonarqube")
-    plugin("org.jetbrains.dokka")
+
+    if (buildDocs == "true") {
+      plugin("org.jetbrains.dokka")
+    }
   }
 
-  val dokkaPlugin by configurations
-  dependencies {
-    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
-    dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
-    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
+  if (buildDocs == "true") {
+    val dokkaPlugin by configurations
+    dependencies {
+      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
+      dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
+      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
 //    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
+    }
   }
 
   sonarqube {
@@ -174,9 +166,9 @@ subprojects {
 
   ktlint {
     debug.set(false)
-    verbose.set(true)
+    verbose.set(false)
     android.set(false)
-    outputToConsole.set(true)
+    outputToConsole.set(false)
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
     filter {
@@ -324,4 +316,21 @@ tasks.register("preMerge") {
     ":ktlintCheck",
     ":check",
   )
+}
+
+if (buildDocs == "true") {
+  tasks.named("dokkaHtmlMultiModule", org.jetbrains.dokka.gradle.DokkaMultiModuleTask::class).configure {
+    includes.from("README.md")
+    outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
+  }
+
+  tasks.create("docs") {
+    dependsOn(listOf(
+      "dokkaHtmlMultiModule",
+      "dokkaGfmMultiModule",
+      ":packages:graalvm:dokkaJavadoc",
+      ":packages:rpc-jvm:dokkaJavadoc",
+      ":packages:server:dokkaJavadoc",
+    ))
+  }
 }

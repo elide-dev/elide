@@ -119,6 +119,10 @@ tasks.jar {
   }
 }
 
+tasks.withType<Jar>().configureEach {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 // Tasks: Artifacts
 // ----------------
 // Mounts configured module artifacts.

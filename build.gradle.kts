@@ -127,7 +127,7 @@ subprojects {
               "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
               "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
               "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
-              "$buildDir/reports/kover/xml/coverage.xml",
+              "$buildDir/reports/kover/xml/report.xml",
             ))
           }
 
@@ -135,7 +135,7 @@ subprojects {
           Elide.frontendModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/xml/coverage.xml")
+            property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/xml/report.xml")
           }
 
           // Kotlin MPP coverage via Kover
@@ -144,7 +144,7 @@ subprojects {
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
             property("sonar.java.binaries", "$buildDir/classes/kotlin/jvm/main")
             property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-              "$buildDir/reports/kover/xml/coverage.xml",
+              "$buildDir/reports/kover/xml/report.xml",
             ))
           }
         }

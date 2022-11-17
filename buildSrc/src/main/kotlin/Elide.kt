@@ -105,6 +105,12 @@ object Elide {
     "site",
     "ssg",
     "docs",
+    "model",
     "benchmarks",
+    "frontend",
+    "graalvm-js",
+    "graalvm-react",
+    "rpc-js",
+    "test",
   )
 }

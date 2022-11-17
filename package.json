@@ -26,7 +26,7 @@
     "@types/react": "18.0.21",
     "@types/react-dom": "^18",
     "buffer": "6.0.3",
-    "esbuild": "0.15.11",
+    "esbuild": "0.15.14",
     "gradle-upgrade-interactive": "^0.7.4",
     "grpc-web": "1.4.1",
     "husky": "^8.0.2",

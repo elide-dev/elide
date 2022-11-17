@@ -116,8 +116,9 @@ publish:  ## Publish a new version of all Elide packages.
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=false \
+		-x test \
 		-x jvmTest \
-		-x jsIrTest;
+		-x jsTest;
 
 clean:  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."

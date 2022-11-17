@@ -12,7 +12,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 }
 
-val antJUnit by configurations.creating
+val antJUnit: Configuration by configurations.creating
 
 kover {
   isDisabled.set(true)
@@ -35,14 +35,8 @@ reporting {
 }
 
 dependencies {
-  listOf(
-    "base",
-    "server",
-    "graalvm",
-    "rpc-jvm",
-    "model",
-    "ssg",
-    "test",
+  Elide.serverModules.plus(
+    Elide.multiplatformModules
   ).forEach {
     testReportAggregation(project(":packages:$it"))
     jacocoAggregation(project(":packages:$it"))

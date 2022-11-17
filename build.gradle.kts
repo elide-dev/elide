@@ -44,49 +44,6 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 
-// List of code samples to consider for official builds and testing.
-val samplesList = listOf(
-  ":samples:server:hellocss",
-  ":samples:server:helloworld",
-  ":samples:fullstack:basic:server",
-  ":samples:fullstack:react:server",
-  ":samples:fullstack:ssr:server",
-  ":samples:fullstack:react-ssr:server",
-)
-
-val multiplatformModules = listOf(
-  "base",
-  "model",
-  "test",
-)
-
-val serverModules = listOf(
-  "graalvm",
-  "server",
-  "rpc-jvm",
-)
-
-val frontendModules = listOf(
-  "frontend",
-  "graalvm-js",
-  "graalvm-react",
-  "rpc-js",
-)
-
-val noTestModules = listOf(
-  "bom",
-  "platform",
-  "proto",
-  "packages",
-  "processor",
-  "reports",
-  "bundler",
-  "samples",
-  "site",
-  "docs",
-  "benchmarks",
-)
-
 val buildDocs by properties
 
 buildscript {
@@ -159,10 +116,10 @@ subprojects {
 
   sonarqube {
     properties {
-      if (!noTestModules.contains(name)) {
+      if (!Elide.noTestModules.contains(name)) {
         when {
           // pure Java/Kotlin coverage
-          serverModules.contains(name) -> {
+          Elide.serverModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
             property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
@@ -175,26 +132,18 @@ subprojects {
           }
 
           // KotlinJS coverage via Kover
-          frontendModules.contains(name) -> {
+          Elide.frontendModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-              "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-              "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-              "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
-              "$buildDir/reports/kover/xml/coverage.xml",
-            ))
+            property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/xml/coverage.xml")
           }
 
           // Kotlin MPP coverage via Kover
-          multiplatformModules.contains(name) -> {
+          Elide.multiplatformModules.contains(name) -> {
             property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
             property("sonar.java.binaries", "$buildDir/classes/kotlin/jvm/main")
             property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-              "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-              "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-              "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
               "$buildDir/reports/kover/xml/coverage.xml",
             ))
           }
@@ -316,7 +265,7 @@ tasks.register("samples") {
 tasks.register("buildSamples") {
   description = "Assemble all sample code."
 
-  samplesList.forEach {
+  Elide.samplesList.forEach {
     dependsOn("$it:assemble")
   }
 }
@@ -324,7 +273,7 @@ tasks.register("buildSamples") {
 tasks.register("testSamples") {
   description = "Run all tests for sample code."
 
-  samplesList.forEach {
+  Elide.samplesList.forEach {
     dependsOn("$it:test")
   }
 }
@@ -332,7 +281,7 @@ tasks.register("testSamples") {
 tasks.register("nativeTestSamples") {
   description = "Run native (GraalVM) tests for sample code."
 
-  samplesList.forEach {
+  Elide.samplesList.forEach {
     dependsOn("$it:nativeTest")
   }
 }
@@ -355,6 +304,18 @@ tasks.register("preMerge") {
     ":ktlintCheck",
     ":check",
   )
+}
+
+afterEvaluate {
+  tasks.named("koverMergedReport") {
+    Elide.multiplatformModules.plus(
+      Elide.serverModules
+    ).plus(
+      Elide.frontendModules
+    ).forEach {
+      dependsOn(":packages:$it:koverXmlReport")
+    }
+  }
 }
 
 if (buildDocs == "true") {

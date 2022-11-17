@@ -283,6 +283,7 @@ jobs:
           arguments: |
             build
             test
+            check
             jacocoTestReport
             koverMergedHtmlReport
             koverMergedXmlReport
@@ -394,6 +395,7 @@ jobs:
           arguments: |
             build
             test
+            check
             jacocoTestReport
             koverMergedHtmlReport
             koverMergedXmlReport

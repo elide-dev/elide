@@ -58,4 +58,53 @@ object Elide {
 
   /** Kotlin language version. */
   const val kotlinLanguage = "1.7"
+
+  /** Sample code modules. */
+  val samplesList = listOf(
+    ":samples:server:hellocss",
+    ":samples:server:helloworld",
+    ":samples:fullstack:basic:server",
+    ":samples:fullstack:react:server",
+    ":samples:fullstack:ssr:server",
+    ":samples:fullstack:react-ssr:server",
+  )
+
+  /** Kotlin MPP modules. */
+  val multiplatformModules = listOf(
+    "base",
+    "model",
+    "test",
+  )
+
+  /** Server-side only modules. */
+  val serverModules = listOf(
+    "graalvm",
+    "server",
+    "rpc-jvm",
+    "ssg",
+  )
+
+  /** Browser-side only modules. */
+  val frontendModules = listOf(
+    "frontend",
+    "graalvm-js",
+    "graalvm-react",
+    "rpc-js",
+  )
+
+  /** Modules which should not be reported on for testing.. */
+  val noTestModules = listOf(
+    "bom",
+    "platform",
+    "proto",
+    "packages",
+    "processor",
+    "reports",
+    "bundler",
+    "samples",
+    "site",
+    "ssg",
+    "docs",
+    "benchmarks",
+  )
 }

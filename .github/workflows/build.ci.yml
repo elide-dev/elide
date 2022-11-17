@@ -341,7 +341,6 @@ jobs:
             koverMergedXmlReport
             koverMergedReport
             :tools:reports:reports
-            sonar
             --scan
             --warning-mode=none
             --dependency-verification=lenient
@@ -385,12 +384,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: ["server:helloworld"]
+        project: ["server:hellocss"]
         include:
-          - project: "server:hellocss"
-          - project: "fullstack:basic:server"
-          - project: "fullstack:ssr:server"
-          - project: "fullstack:react:server"
           - project: "fullstack:react-ssr:server"
 
     steps:
@@ -489,12 +484,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: ["server:helloworld"]
+        project: ["server:hellocss"]
         include:
-          - project: "server:hellocss"
-          - project: "fullstack:basic:server"
-          - project: "fullstack:ssr:server"
-          - project: "fullstack:react:server"
           - project: "fullstack:react-ssr:server"
 
     steps:
@@ -596,15 +587,11 @@ jobs:
       pull-requests: "write"
 
     steps:
-      ## Setup: GraalVM
-      - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "native-image,js"
-          version: latest
-          java-version: 17
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      ## Setup: Checkout Code
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
 
+      ## Setup: Fly
       - name: "Setup: Fly"
         uses: superfly/flyctl-actions/setup-flyctl@master
 

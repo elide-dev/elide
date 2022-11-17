@@ -154,7 +154,7 @@ jobs:
       ## Upload SARIF to GitHub.
       - name: "Report: SARIF"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
           category: detekt

@@ -530,6 +530,7 @@ jobs:
     name: "Docker: Native"
     runs-on: ubuntu-latest
     needs: [gradle, dependency-review]
+    continue-on-error: true
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -614,6 +615,7 @@ jobs:
       ## Docker Samples: Server - Hello World - Native
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
         uses: gradle/gradle-build-action@v2.3.3
+        continue-on-error: true
         with:
           arguments: |
             -Pversions.java.language=17

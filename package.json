@@ -28,7 +28,7 @@
     "buffer": "6.0.3",
     "esbuild": "0.15.14",
     "gradle-upgrade-interactive": "^0.7.4",
-    "grpc-web": "1.4.1",
+    "grpc-web": "1.4.2",
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
     "lit": "2.4.0",

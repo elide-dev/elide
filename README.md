@@ -1,6 +1,15 @@
-# Elide (v3)
+<p align="center">
+  <a href="https://nextjs.org">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./creative/logo-wide-1200-w.png">
+      <img src="./creative/logo-wide-1200-w.png" height="300">
+    </picture>
+  </a>
+</p>
 
-_elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge._
+<p align="center">
+<i>elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge.</i>
+</p>
 
 <hr />
 
@@ -42,8 +51,8 @@ Kotlin and deploy everywhere: your server, the browser, and native app targets.
   [Kotlin data classes](https://kotlinlang.org/docs/data-classes.html), the same Elide model is code-generated for use
   with your database, API, and UI.
 
-- **Extreme performance.** Enjoy fast development locally with pure Kotlin, and ludicrous runtime performance thanks to
-  GraalVM, Netty, and Micronaut.
+- **Extreme performance.** Enjoy fast development locally with Kotlin and Gradle, and insanely fast runtime performance
+  thanks to GraalVM Native, Netty, and Micronaut. Deploy to bare metal, Docker `scratch` images, or JARs.
 
 ## Code samples
 
@@ -225,10 +234,13 @@ development scenarios:
 - [**Protobuf**][5] / [**gRPC**][6]. Elide leverages cross-platform serialization through KotlinX's
   [`protobuf`](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/formats.md#protobuf-experimental)
   module, and includes **native support for [gRPC Web](https://github.com/grpc/grpc-web)** without running a proxy.
--
+
 - [**Gradle**][9]. Early support for building multi-platform Kotlin applications via Gradle, including integrated
   support for [Webpack](https://webpack.js.org/)-based frontend builds and [esbuild](https://esbuild.github.io/)-based
   embedded SSR builds.
+
+- [**`esbuild`**][14]. Elide leverages ESBuild when compiling and minifying JS code for the server or browser. ESBuild
+  sports extremely fast build times, modern language support, and tunable minification/DCE.
 
 ## Version compatibility
 
@@ -260,6 +272,7 @@ If you aren't using certain components on this list, for example, gRPC/Protobuf,
 [11]: https://github.com/sgammon/elide/tree/master
 [12]: https://github.com/sgammon/elide
 [13]: https://buf.build
+[14]: https://esbuild.github.io/
 
 ## Reports
 

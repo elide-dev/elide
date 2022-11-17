@@ -38,7 +38,7 @@ jobs:
           config-file: "./.github/dependency-review-config.yml"
           license-check: true
           vulnerability-check: true
-          fail-on-severity: "high"
+          fail-on-severity: "low"
       - name: "Patch: Restore Yarn Lock"
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
 

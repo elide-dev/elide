@@ -205,7 +205,7 @@ jobs:
         run: yarn
 
       ## CI: Test
-      - name: "🛠️ Test: Samples"
+      - name: "🛠️ Build: Samples"
         uses: gradle/gradle-build-action@v2.3.3
         id: gradletest
         continue-on-error: true
@@ -241,7 +241,7 @@ jobs:
 
       ## Setup: Expand Git History
       - name: "Setup: Git History"
-        run: git fetch --unshallow
+        run: git fetch --unshallow || exit 0
 
       ## Setup: GraalVM
       - name: "Setup: GraalVM"

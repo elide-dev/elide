@@ -322,7 +322,7 @@ jobs:
 
       ## Inflate missing git history
       - name: "Setup: Git History"
-        run: git fetch --unshallow
+        run: git fetch --unshallow || exit 0
 
       ## Upload to Codecov (JVM)
       - name: "Report: Codecov"

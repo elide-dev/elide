@@ -160,86 +160,6 @@ jobs:
           category: detekt
 
   ##
-  ## Samples: Build & Test
-  ##
-  samples:
-    permissions:
-      contents: "read"
-      id-token: "write"
-      checks: "write"
-      pull-requests: "write"
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu]
-        experimental: [false]
-        gu-binary: [gu]
-        java: [17]
-        include:
-          - os: ubuntu
-            experimental: false
-            gu-binary: gu
-            java: 11
-
-    name: "Samples"
-    runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.experimental }}
-    needs: [gradle, dependency-review]
-
-    steps:
-      ## Setup: Checkout Code
-      - name: "Setup: Checkout"
-        uses: actions/checkout@v3
-
-      ## Setup: GraalVM
-      - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "native-image,js"
-          version: latest
-          java-version: ${{ matrix.java }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: Node
-      - name: "Setup: Node"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
-
-      ## Setup: GCloud Auth
-      - id: "auth"
-        name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
-        with:
-          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
-          create_credentials_file: true
-          export_environment_variables: true
-          cleanup_credentials: true
-
-      ## Setup: Run Yarn
-      - name: "Setup: Yarn"
-        run: yarn
-
-      ## CI: Test
-      - name: "🛠️ Build: Samples"
-        uses: gradle/gradle-build-action@v2.3.3
-        id: gradletest
-        continue-on-error: true
-        env:
-          CI: true
-        with:
-          cache-read-only: ${{ matrix.os != 'ubuntu' }}
-          arguments: |
-            samples
-            --scan
-            --dependency-verification=lenient
-            -Pelide.ci=true
-            -PbuildSamples=true
-            -Pversions.java.language=${{ matrix.java }}
-
-  ##
   ## Job: Testsuite (JVM)
   ##
   tests-jvm:
@@ -660,7 +580,7 @@ jobs:
 
     name: "Deploy"
     runs-on: ubuntu-latest
-    needs: [gradle, tests-jvm, tests-native, docker-jvm, docker-native, samples]
+    needs: [gradle, tests-jvm, tests-native, docker-jvm, docker-native]
     if: |
       (
         github.ref == 'refs/heads/stable' ||

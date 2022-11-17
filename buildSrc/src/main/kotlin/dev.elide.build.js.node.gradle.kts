@@ -33,6 +33,15 @@ kotlin {
   }
 }
 
+// Tool: Kover
+// -----------
+// Settings for Kotlin coverage.
+kover {
+  xmlReport {
+    onCheck.set(true)
+  }
+}
+
 // Sources: Kotlin
 // ---------------
 // Shared configuration for Kotlin language and compiler.

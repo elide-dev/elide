@@ -296,6 +296,9 @@ jobs:
             -PbuildSamples=true
             -PbuildDocs=false
             -Pversions.java.language=17
+            -x nativeTest
+            -x testNativeImage
+            -x nativeCompile
 
       ## Collect Reports
       - uses: actions/upload-artifact@v3
@@ -389,9 +392,20 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
-            :packages:server:nativeTest
+            build
+            test
+            jacocoTestReport
+            koverMergedHtmlReport
+            koverMergedXmlReport
+            koverMergedReport
             :tools:reports:reports
+            sonar
+            --scan
+            --warning-mode=none
+            --dependency-verification=lenient
             -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
             -Pversions.java.language=17
 
       ## Collect Reports

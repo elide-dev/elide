@@ -1,22 +1,18 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 import java.util.Properties
 
 plugins {
-  kotlin("plugin.allopen") version libs.versions.kotlin.sdk.get() apply false
-  kotlin("plugin.serialization") version libs.versions.kotlin.sdk.get() apply false
   id("project-report")
-  alias(libs.plugins.dokka)
-  alias(libs.plugins.detekt)
+  id("org.sonarqube")
+  id("org.jetbrains.kotlinx.kover")
+  id("io.gitlab.arturbosch.detekt")
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
-  alias(libs.plugins.sonar)
-  alias(libs.plugins.versionCheck)
   alias(libs.plugins.doctor)
   jacoco
   signing
@@ -42,27 +38,13 @@ props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide
   "local.properties"
 }).inputStream())
 
+val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
+
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 
-tasks.dokkaHtmlMultiModule.configure {
-  outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
-}
-
-tasks.dokkaGfmMultiModule.configure {
-  outputDirectory.set(buildDir.resolve("docs/kotlin/gfm"))
-}
-
-tasks.create("docs") {
-  dependsOn(listOf(
-    "dokkaHtmlMultiModule",
-    "dokkaGfmMultiModule",
-    ":packages:graalvm:dokkaJavadoc",
-    ":packages:rpc-jvm:dokkaJavadoc",
-    ":packages:server:dokkaJavadoc",
-  ))
-}
+val buildDocs by properties
 
 buildscript {
   repositories {
@@ -72,6 +54,7 @@ buildscript {
     maven("https://plugins.gradle.org/m2/")
   }
   dependencies {
+    classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
@@ -100,10 +83,13 @@ sonarqube {
     property("sonar.dynamicAnalysis", "reuseReports")
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
-    property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
     property("sonar.sourceEncoding", "UTF-8")
+    property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
   }
 }
+
+val dokkaVersion = libs.versions.dokka.get()
+val mermaidDokka = "0.4.1"
 
 subprojects {
   val name = this.name
@@ -112,28 +98,65 @@ subprojects {
     plugin("io.gitlab.arturbosch.detekt")
     plugin("org.jlleitschuh.gradle.ktlint")
     plugin("org.sonarqube")
+
+    if (buildDocs == "true") {
+      plugin("org.jetbrains.dokka")
+    }
+  }
+
+  if (buildDocs == "true") {
+    val dokkaPlugin by configurations
+    dependencies {
+      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
+      dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
+      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
+//    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
+    }
   }
 
   sonarqube {
-    if (name != "base" && name != "test" && name != "model") {
-      properties {
-        property("sonar.sources", "src/main/kotlin")
-        property("sonar.tests", "src/test/kotlin")
-        property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
-      }
-    } else {
-      properties {
-        property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
-        property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
+    properties {
+      if (!Elide.noTestModules.contains(name)) {
+        when {
+          // pure Java/Kotlin coverage
+          Elide.serverModules.contains(name) -> {
+            property("sonar.sources", "src/main/kotlin")
+            property("sonar.tests", "src/test/kotlin")
+            property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
+            property("sonar.coverage.jacoco.xmlReportPaths", listOf(
+              "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+              "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+              "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
+              "$buildDir/reports/kover/xml/report.xml",
+            ))
+          }
+
+          // KotlinJS coverage via Kover
+          Elide.frontendModules.contains(name) -> {
+            property("sonar.sources", "src/main/kotlin")
+            property("sonar.tests", "src/test/kotlin")
+            property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/xml/report.xml")
+          }
+
+          // Kotlin MPP coverage via Kover
+          Elide.multiplatformModules.contains(name) -> {
+            property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
+            property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
+            property("sonar.java.binaries", "$buildDir/classes/kotlin/jvm/main")
+            property("sonar.coverage.jacoco.xmlReportPaths", listOf(
+              "$buildDir/reports/kover/xml/report.xml",
+            ))
+          }
+        }
       }
     }
   }
 
   ktlint {
     debug.set(false)
-    verbose.set(true)
+    verbose.set(false)
     android.set(false)
-    outputToConsole.set(true)
+    outputToConsole.set(false)
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
     filter {
@@ -144,8 +167,23 @@ subprojects {
   }
 
   detekt {
+    parallel = true
     ignoreFailures = true
     config = rootProject.files("config/detekt/detekt.yml")
+  }
+
+  val detektMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    output.set(rootProject.buildDir.resolve("reports/detekt/elide.sarif"))
+  }
+
+  plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
+    tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
+      finalizedBy(detektMerge)
+      reports.sarif.required.set(true)
+      detektMerge.configure {
+        input.from(this@detekt.sarifReportFile) // or .sarifReportFile
+      }
+    }
   }
 
   afterEvaluate {
@@ -176,31 +214,6 @@ allprojects {
     maven("https://maven-central.storage-download.googleapis.com/maven2/")
     mavenCentral()
     google()
-  }
-  tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = javaLanguageVersion
-    targetCompatibility = javaLanguageVersion
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-    }
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-      jvmTarget = javaLanguageVersion
-      javaParameters = true
-    }
-  }
-  tasks.withType<org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile>().configureEach {
-    kotlinOptions {
-      apiVersion = kotlinLanguageVersion
-      languageVersion = kotlinLanguageVersion
-      target = ecmaVersion
-    }
   }
 }
 
@@ -242,7 +255,55 @@ if (tasks.findByName("resolveAllDependencies") == null) {
   }
 }
 
+koverMerged {
+  enable()
+
+  xmlReport {
+    onCheck.set(isCI)
+  }
+
+  htmlReport {
+    onCheck.set(isCI)
+  }
+}
+
+tasks.register("samples") {
+  description = "Build and test all built-in code samples, in the `samples` path and with Knit."
+
+  dependsOn(
+    "buildSamples",
+    "testSamples",
+    "nativeTestSamples",
+  )
+}
+
+tasks.register("buildSamples") {
+  description = "Assemble all sample code."
+
+  Elide.samplesList.forEach {
+    dependsOn("$it:assemble")
+  }
+}
+
+tasks.register("testSamples") {
+  description = "Run all tests for sample code."
+
+  Elide.samplesList.forEach {
+    dependsOn("$it:test")
+  }
+}
+
+tasks.register("nativeTestSamples") {
+  description = "Run native (GraalVM) tests for sample code."
+
+  Elide.samplesList.forEach {
+    dependsOn("$it:nativeTest")
+  }
+}
+
 tasks.register("reports") {
+  description = "Build all reports."
+
   dependsOn(
     ":dependencyReport",
     ":htmlDependencyReport",
@@ -258,4 +319,33 @@ tasks.register("preMerge") {
     ":ktlintCheck",
     ":check",
   )
+}
+
+afterEvaluate {
+  tasks.named("koverMergedReport") {
+    Elide.multiplatformModules.plus(
+      Elide.serverModules
+    ).plus(
+      Elide.frontendModules
+    ).forEach {
+      dependsOn(":packages:$it:koverXmlReport")
+    }
+  }
+}
+
+if (buildDocs == "true") {
+  tasks.named("dokkaHtmlMultiModule", org.jetbrains.dokka.gradle.DokkaMultiModuleTask::class).configure {
+    includes.from("README.md")
+    outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
+  }
+
+  tasks.create("docs") {
+    dependsOn(listOf(
+      "dokkaHtmlMultiModule",
+      "dokkaGfmMultiModule",
+      ":packages:graalvm:dokkaJavadoc",
+      ":packages:rpc-jvm:dokkaJavadoc",
+      ":packages:server:dokkaJavadoc",
+    ))
+  }
 }

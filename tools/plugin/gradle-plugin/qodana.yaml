@@ -6,4 +6,3 @@ exclude:
       - plugin-build/plugin/src/model
 include:
   - name: CheckDependencyLicenses
-

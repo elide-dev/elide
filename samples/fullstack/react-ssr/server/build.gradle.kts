@@ -1,7 +1,6 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
@@ -9,33 +8,17 @@ import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
-  java
-  jacoco
-  idea
-  kotlin("jvm")
-  kotlin("kapt")
-  kotlin("plugin.allopen")
-  kotlin("plugin.serialization")
+  id("dev.elide.build.samples.backend")
+  id("dev.elide.build.docker")
   id("dev.elide.buildtools.plugin")
-  alias(libs.plugins.testLogger)
-  alias(libs.plugins.micronaut.application)
-  alias(libs.plugins.micronaut.aot)
-  alias(libs.plugins.sonar)
+  id("io.micronaut.application")
+  id("io.micronaut.aot")
+  id("dev.elide.build.native.app")
   alias(libs.plugins.jib)
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
-
-testlogger {
-  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
-  showExceptions = true
-  showFailed = true
-  showPassed = true
-  showSkipped = true
-  showFailedStandardStreams = true
-  showFullStackTraces = true
-}
 
 elide {
   mode = if (devMode) {
@@ -69,10 +52,6 @@ elide {
   }
 }
 
-kapt {
-  useBuildCache = true
-}
-
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
   runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
@@ -96,67 +75,6 @@ micronaut {
   }
 }
 
-kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-  }
-}
-
-java {
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
-    if (project.hasProperty("elide.graalvm.variant")) {
-      val variant = project.property("elide.graalvm.variant") as String
-      if (variant != "COMMUNITY") {
-        vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-          "ENTERPRISE" -> "GraalVM Enterprise"
-          else -> "GraalVM Community"
-        }))
-      }
-    }
-  }
-}
-
-graalvmNative {
-  metadataRepository {
-    enabled.set(true)
-  }
-  binaries {
-    named("main") {
-      fallback.set(false)
-      buildArgs.addAll(listOf(
-        "--language:js",
-        "--language:regex",
-        "--enable-all-security-services",
-        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
-      ))
-
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor.set(
-              JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "GraalVM Enterprise"
-              else -> "GraalVM Community"
-            }))
-          }
-        }
-      })
-    }
-  }
-}
-
-testing {
-  suites {
-    val test by getting(JvmTestSuite::class) {
-      useJUnitJupiter()
-    }
-  }
-}
-
 val mainPackage = "fullstack.reactssr"
 val mainEntry = "$mainPackage.App"
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
@@ -168,22 +86,6 @@ application {
       "-Delide.vm.inspect=true",
     )
   }
-}
-
-tasks.named<JavaExec>("run") {
-  val argsList = ArrayList<String>()
-  jvmArgs = (jvmArgs ?: emptyList()).plus(listOf(
-    "-Delide.dev=true"
-  ))
-  if (project.hasProperty("elide.vm.inspect") && project.properties["elide.vm.inspect"] == "true") {
-    argsList.add("--elide.vm.inspect=true")
-  } else {
-    argsList.add("--elide.vm.inspect=false")
-  }
-  @Suppress("SpreadOperator")
-  args(
-    *argsList.toTypedArray()
-  )
 }
 
 dependencies {
@@ -214,34 +116,6 @@ dependencies {
   testImplementation(kotlin("test-junit5"))
   testImplementation(project(":packages:test"))
   testImplementation(libs.micronaut.test.junit5)
-}
-
-tasks.withType<Tar> {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<Zip> {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
-}
-
-tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
-}
-
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
-  args("-H:+StaticExecutableWithDynamicLibC")
-}
-
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
-  args("-H:+StaticExecutableWithDynamicLibC")
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

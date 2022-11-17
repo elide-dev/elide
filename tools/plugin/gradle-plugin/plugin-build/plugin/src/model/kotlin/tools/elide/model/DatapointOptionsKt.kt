@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializedatapointOptions")
-public inline fun datapointOptions(block: tools.elide.model.DatapointOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.DatapointOptions =
+inline fun datapointOptions(block: tools.elide.model.DatapointOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.DatapointOptions =
   tools.elide.model.DatapointOptionsKt.Dsl._create(tools.elide.model.DatapointOptions.newBuilder()).apply { block() }._build()
-public object DatapointOptionsKt {
+object DatapointOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.DatapointOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.DatapointOptions.Builder): Dsl = Dsl(builder)
@@ -30,7 +30,7 @@ public object DatapointOptionsKt {
      *
      * <code>.model.Visibility visibility = 1;</code>
      */
-    public var visibility: tools.elide.model.Visibility
+     var visibility: tools.elide.model.Visibility
       @JvmName("getVisibility")
       get() = _builder.getVisibility()
       @JvmName("setVisibility")
@@ -45,7 +45,7 @@ public object DatapointOptionsKt {
      *
      * <code>.model.Visibility visibility = 1;</code>
      */
-    public fun clearVisibility() {
+    fun clearVisibility() {
       _builder.clearVisibility()
     }
 
@@ -57,7 +57,7 @@ public object DatapointOptionsKt {
      *
      * <code>bool required = 2;</code>
      */
-    public var required: kotlin.Boolean
+    var required: kotlin.Boolean
       @JvmName("getRequired")
       get() = _builder.getRequired()
       @JvmName("setRequired")
@@ -72,7 +72,7 @@ public object DatapointOptionsKt {
      *
      * <code>bool required = 2;</code>
      */
-    public fun clearRequired() {
+    fun clearRequired() {
       _builder.clearRequired()
     }
 
@@ -85,7 +85,7 @@ public object DatapointOptionsKt {
      *
      * <code>bool concrete = 3;</code>
      */
-    public var concrete: kotlin.Boolean
+    var concrete: kotlin.Boolean
       @JvmName("getConcrete")
       get() = _builder.getConcrete()
       @JvmName("setConcrete")
@@ -101,7 +101,7 @@ public object DatapointOptionsKt {
      *
      * <code>bool concrete = 3;</code>
      */
-    public fun clearConcrete() {
+    fun clearConcrete() {
       _builder.clearConcrete()
     }
 
@@ -113,7 +113,7 @@ public object DatapointOptionsKt {
      *
      * <code>bool ephemeral = 4;</code>
      */
-    public var ephemeral: kotlin.Boolean
+    var ephemeral: kotlin.Boolean
       @JvmName("getEphemeral")
       get() = _builder.getEphemeral()
       @JvmName("setEphemeral")
@@ -128,12 +128,12 @@ public object DatapointOptionsKt {
      *
      * <code>bool ephemeral = 4;</code>
      */
-    public fun clearEphemeral() {
+    fun clearEphemeral() {
       _builder.clearEphemeral()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.DatapointOptions.copy(block: tools.elide.model.DatapointOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.DatapointOptions =
+inline fun tools.elide.model.DatapointOptions.copy(block: tools.elide.model.DatapointOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.DatapointOptions =
   tools.elide.model.DatapointOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

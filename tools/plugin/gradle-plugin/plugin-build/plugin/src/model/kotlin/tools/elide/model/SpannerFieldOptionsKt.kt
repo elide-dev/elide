@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializespannerFieldOptions")
-public inline fun spannerFieldOptions(block: tools.elide.model.SpannerFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerFieldOptions =
+inline fun spannerFieldOptions(block: tools.elide.model.SpannerFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerFieldOptions =
   tools.elide.model.SpannerFieldOptionsKt.Dsl._create(tools.elide.model.SpannerFieldOptions.newBuilder()).apply { block() }._build()
-public object SpannerFieldOptionsKt {
+object SpannerFieldOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.SpannerFieldOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.SpannerFieldOptions.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>string column = 1;</code>
      */
-    public var column: kotlin.String
+    var column: kotlin.String
       @JvmName("getColumn")
       get() = _builder.getColumn()
       @JvmName("setColumn")
@@ -43,7 +43,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>string column = 1;</code>
      */
-    public fun clearColumn() {
+    fun clearColumn() {
       _builder.clearColumn()
     }
 
@@ -54,7 +54,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool ignore = 2;</code>
      */
-    public var ignore: kotlin.Boolean
+    var ignore: kotlin.Boolean
       @JvmName("getIgnore")
       get() = _builder.getIgnore()
       @JvmName("setIgnore")
@@ -68,7 +68,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool ignore = 2;</code>
      */
-    public fun clearIgnore() {
+    fun clearIgnore() {
       _builder.clearIgnore()
     }
 
@@ -79,7 +79,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>.model.SpannerOptions.SpannerType type = 3;</code>
      */
-    public var type: tools.elide.model.SpannerOptions.SpannerType
+     var type: tools.elide.model.SpannerOptions.SpannerType
       @JvmName("getType")
       get() = _builder.getType()
       @JvmName("setType")
@@ -93,7 +93,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>.model.SpannerOptions.SpannerType type = 3;</code>
      */
-    public fun clearType() {
+    fun clearType() {
       _builder.clearType()
     }
 
@@ -104,7 +104,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool json = 4;</code>
      */
-    public var json: kotlin.Boolean
+    var json: kotlin.Boolean
       @JvmName("getJson")
       get() = _builder.getJson()
       @JvmName("setJson")
@@ -118,7 +118,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool json = 4;</code>
      */
-    public fun clearJson() {
+    fun clearJson() {
       _builder.clearJson()
     }
 
@@ -129,7 +129,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>uint32 size = 5;</code>
      */
-    public var size: kotlin.Int
+    var size: kotlin.Int
       @JvmName("getSize")
       get() = _builder.getSize()
       @JvmName("setSize")
@@ -143,7 +143,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>uint32 size = 5;</code>
      */
-    public fun clearSize() {
+    fun clearSize() {
       _builder.clearSize()
     }
 
@@ -154,7 +154,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool nonnull = 6;</code>
      */
-    public var nonnull: kotlin.Boolean
+    var nonnull: kotlin.Boolean
       @JvmName("getNonnull")
       get() = _builder.getNonnull()
       @JvmName("setNonnull")
@@ -168,7 +168,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool nonnull = 6;</code>
      */
-    public fun clearNonnull() {
+    fun clearNonnull() {
       _builder.clearNonnull()
     }
 
@@ -179,7 +179,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>string expression = 7;</code>
      */
-    public var expression: kotlin.String
+    var expression: kotlin.String
       @JvmName("getExpression")
       get() = _builder.getExpression()
       @JvmName("setExpression")
@@ -193,7 +193,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>string expression = 7;</code>
      */
-    public fun clearExpression() {
+    fun clearExpression() {
       _builder.clearExpression()
     }
 
@@ -204,7 +204,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool stored = 8;</code>
      */
-    public var stored: kotlin.Boolean
+    var stored: kotlin.Boolean
       @JvmName("getStored")
       get() = _builder.getStored()
       @JvmName("setStored")
@@ -218,7 +218,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool stored = 8;</code>
      */
-    public fun clearStored() {
+    fun clearStored() {
       _builder.clearStored()
     }
 
@@ -229,7 +229,7 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool primary_key = 9;</code>
      */
-    public var primaryKey: kotlin.Boolean
+    var primaryKey: kotlin.Boolean
       @JvmName("getPrimaryKey")
       get() = _builder.getPrimaryKey()
       @JvmName("setPrimaryKey")
@@ -243,12 +243,12 @@ public object SpannerFieldOptionsKt {
      *
      * <code>bool primary_key = 9;</code>
      */
-    public fun clearPrimaryKey() {
+    fun clearPrimaryKey() {
       _builder.clearPrimaryKey()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.SpannerFieldOptions.copy(block: tools.elide.model.SpannerFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerFieldOptions =
+inline fun tools.elide.model.SpannerFieldOptions.copy(block: tools.elide.model.SpannerFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerFieldOptions =
   tools.elide.model.SpannerFieldOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

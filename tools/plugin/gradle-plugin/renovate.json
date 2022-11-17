@@ -1,46 +1,42 @@
 {
-  "enabled": true,
-  "extends": [
-    "config:base"
-  ],
-  "enabledManagers": [
-    "bazel",
-    "cloudbuild",
-    "dockerfile",
-    "github-actions",
-    "git-submodules",
-    "npm",
-    "pip_requirements",
-    "bazelisk",
-    "buildkite",
-    "html",
-    "gradle",
-    "gradle-wrapper"
-  ],
-  "pinDigests": true,
-  "rangeStrategy": "pin",
-  "updateLockFiles": true,
-  "dependencyDashboard": true,
-  "dependencyDashboardApproval": true,
-  "lockFileMaintenance": { "enabled": true },
-  "labels": ["dependencies"],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^@bazel/"],
-      "matchPackageNames": ["build_bazel_rules_nodejs", "rules_nodejs"],
-      "groupName": "Bazel Rules: Node"
-    },
-    {
-      "matchPackageNames": ["react", "react-dom", "@types/react"],
-      "groupName": "React"
-    },
-    {
-      "matchPackagePatterns": ["^@firebase/"],
-      "matchPackageNames": ["firebase"],
-      "groupName": "Firebase"
-    }
-  ],
-  "postUpdateOptions": [
-    "yarnDedupeHighest"
-  ]
+    "enabled": true,
+    "extends": ["config:base"],
+    "enabledManagers": [
+        "bazel",
+        "cloudbuild",
+        "dockerfile",
+        "github-actions",
+        "git-submodules",
+        "npm",
+        "pip_requirements",
+        "bazelisk",
+        "buildkite",
+        "html",
+        "gradle",
+        "gradle-wrapper"
+    ],
+    "pinDigests": true,
+    "rangeStrategy": "pin",
+    "updateLockFiles": true,
+    "dependencyDashboard": true,
+    "dependencyDashboardApproval": true,
+    "lockFileMaintenance": { "enabled": true },
+    "labels": ["dependencies"],
+    "packageRules": [
+        {
+            "matchPackagePatterns": ["^@bazel/"],
+            "matchPackageNames": ["build_bazel_rules_nodejs", "rules_nodejs"],
+            "groupName": "Bazel Rules: Node"
+        },
+        {
+            "matchPackageNames": ["react", "react-dom", "@types/react"],
+            "groupName": "React"
+        },
+        {
+            "matchPackagePatterns": ["^@firebase/"],
+            "matchPackageNames": ["firebase"],
+            "groupName": "Firebase"
+        }
+    ],
+    "postUpdateOptions": ["yarnDedupeHighest"]
 }

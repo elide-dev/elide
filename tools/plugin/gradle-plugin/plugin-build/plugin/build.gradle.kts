@@ -1,7 +1,12 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.noarg")
+    kotlin("plugin.allopen")
+    kotlin("plugin.serialization")
+
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
+    alias(libs.plugins.shadow)
 }
 
 repositories {
@@ -9,35 +14,62 @@ repositories {
     mavenCentral()
 }
 
+val embedded by configurations.creating
+
+configurations {
+    compileClasspath.extendsFrom(embedded)
+    runtimeClasspath.extendsFrom(embedded)
+}
+
 dependencies {
     api(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib-jdk7"))
+    implementation(kotlin("stdlib-jdk8"))
     implementation(gradleApi())
-    implementation("com.github.node-gradle:gradle-node-plugin:3.4.0")
+    api("com.github.node-gradle:gradle-node-plugin:3.4.0")
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:3.1.0") {
         exclude("org.jetbrains.kotlin", "kotlin-sam-with-receiver")
     }
     implementation("org.jetbrains.kotlin:kotlin-sam-with-receiver:${libs.versions.kotlin.get()}")
 
-    implementation(libs.kotlinx.serialization.core)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.serialization.protobuf)
+    // KotlinX
+    api(libs.kotlinx.coroutines.core)
+    api(libs.kotlinx.coroutines.core.jvm)
+    api(libs.kotlinx.coroutines.jdk8)
+    api(libs.kotlinx.coroutines.jdk9)
+    api(libs.kotlinx.coroutines.guava)
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
+    api(libs.kotlinx.serialization.core)
+    api(libs.kotlinx.serialization.json)
+    api(libs.kotlinx.serialization.protobuf)
 
-    implementation(libs.soy)
-    implementation(libs.slf4j)
-    implementation(libs.brotli)
-    implementation(libs.brotli.native.osx)
-    implementation(libs.brotli.native.linux)
-    implementation(libs.brotli.native.windows)
+    // Embedded Protos
+    embedded(libs.elide.base)
+    embedded(libs.elide.ssg)
+    embedded(libs.elide.proto)
+
+    // Embedded Tools
+    embedded(libs.closure.templates)
+    embedded(libs.closure.compiler)
+    embedded(libs.closure.stylesheets)
+    embedded(libs.brotli)
+    embedded(libs.brotli.native.osx)
+    embedded(libs.brotli.native.linux)
+    embedded(libs.brotli.native.windows)
+
+    api(libs.protobuf.java)
+    api(libs.protobuf.util)
+    api(libs.protobuf.kotlin)
+    api(libs.google.api.common)
+    api(libs.google.common.html.types.proto)
+    api(libs.google.common.html.types.types)
+
+    // General Implementation
+    api(libs.slf4j)
+    api(libs.gson)
     implementation(libs.picocli)
     implementation(libs.picocli.codegen)
-
-    // Protocol Buffers
-    implementation(libs.protobuf.java)
-    implementation(libs.protobuf.util)
-    implementation(libs.protobuf.kotlin)
-
-    implementation(libs.gson)
     implementation(libs.checker)
     implementation(libs.commons.compress)
 
@@ -99,6 +131,14 @@ pluginBundle {
         groupId = PluginCoordinates.GROUP
         artifactId = PluginCoordinates.ID.removePrefix("$groupId.")
         version = PluginCoordinates.VERSION
+    }
+}
+
+tasks {
+    shadowJar {
+//        configurations = listOf(
+//            embedded,
+//        )
     }
 }
 

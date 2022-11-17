@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializespannerOptions")
-public inline fun spannerOptions(block: tools.elide.model.SpannerOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerOptions =
+inline fun spannerOptions(block: tools.elide.model.SpannerOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerOptions =
   tools.elide.model.SpannerOptionsKt.Dsl._create(tools.elide.model.SpannerOptions.newBuilder()).apply { block() }._build()
-public object SpannerOptionsKt {
+object SpannerOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.SpannerOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.SpannerOptions.Builder): Dsl = Dsl(builder)
@@ -24,6 +24,6 @@ public object SpannerOptionsKt {
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.SpannerOptions.copy(block: tools.elide.model.SpannerOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerOptions =
+inline fun tools.elide.model.SpannerOptions.copy(block: tools.elide.model.SpannerOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SpannerOptions =
   tools.elide.model.SpannerOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

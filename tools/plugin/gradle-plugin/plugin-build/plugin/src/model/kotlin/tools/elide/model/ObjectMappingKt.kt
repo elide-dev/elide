@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializeobjectMapping")
-public inline fun objectMapping(block: tools.elide.model.ObjectMappingKt.Dsl.() -> kotlin.Unit): tools.elide.model.ObjectMapping =
+inline fun objectMapping(block: tools.elide.model.ObjectMappingKt.Dsl.() -> kotlin.Unit): tools.elide.model.ObjectMapping =
   tools.elide.model.ObjectMappingKt.Dsl._create(tools.elide.model.ObjectMapping.newBuilder()).apply { block() }._build()
-public object ObjectMappingKt {
+object ObjectMappingKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.ObjectMapping.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.ObjectMapping.Builder): Dsl = Dsl(builder)
@@ -27,7 +27,7 @@ public object ObjectMappingKt {
      * generics.
      */
     @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
-    public class InstanceProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
+    class InstanceProxy private constructor() : com.google.protobuf.kotlin.DslProxy()
     /**
      * <pre>
      * Maps an enumeration instance to this object. Enumeration membership is contextual.
@@ -36,7 +36,7 @@ public object ObjectMappingKt {
      * <code>repeated string instance = 1;</code>
      * @return A list containing the instance.
      */
-    public val instance: com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>
+     val instance: com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>
       @kotlin.jvm.JvmSynthetic
       get() = com.google.protobuf.kotlin.DslList(
         _builder.getInstanceList()
@@ -51,7 +51,7 @@ public object ObjectMappingKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addInstance")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.add(value: kotlin.String) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.add(value: kotlin.String) {
       _builder.addInstance(value)
     }
     /**
@@ -65,7 +65,7 @@ public object ObjectMappingKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignInstance")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.plusAssign(value: kotlin.String) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.plusAssign(value: kotlin.String) {
       add(value)
     }
     /**
@@ -78,7 +78,7 @@ public object ObjectMappingKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("addAllInstance")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.addAll(values: kotlin.collections.Iterable<kotlin.String>) {
       _builder.addAllInstance(values)
     }
     /**
@@ -92,7 +92,7 @@ public object ObjectMappingKt {
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("plusAssignAllInstance")
     @Suppress("NOTHING_TO_INLINE")
-    public inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
+    inline operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.plusAssign(values: kotlin.collections.Iterable<kotlin.String>) {
       addAll(values)
     }
     /**
@@ -106,7 +106,7 @@ public object ObjectMappingKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("setInstance")
-    public operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.set(index: kotlin.Int, value: kotlin.String) {
+    operator fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.set(index: kotlin.Int, value: kotlin.String) {
       _builder.setInstance(index, value)
     }/**
      * <pre>
@@ -117,11 +117,11 @@ public object ObjectMappingKt {
      */
     @kotlin.jvm.JvmSynthetic
     @kotlin.jvm.JvmName("clearInstance")
-    public fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.clear() {
+    fun com.google.protobuf.kotlin.DslList<kotlin.String, InstanceProxy>.clear() {
       _builder.clearInstance()
     }}
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.ObjectMapping.copy(block: tools.elide.model.ObjectMappingKt.Dsl.() -> kotlin.Unit): tools.elide.model.ObjectMapping =
+inline fun tools.elide.model.ObjectMapping.copy(block: tools.elide.model.ObjectMappingKt.Dsl.() -> kotlin.Unit): tools.elide.model.ObjectMapping =
   tools.elide.model.ObjectMappingKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

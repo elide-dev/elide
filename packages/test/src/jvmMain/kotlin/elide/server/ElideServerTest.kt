@@ -17,7 +17,7 @@ import kotlin.test.assertNotNull
 
 /** Base class for Micronaut tests which want to use the enclosed convenience functions. */
 @Suppress("unused", "RedundantVisibilityModifier", "UnnecessaryAbstractClass")
-public abstract class ElideServerTest {
+public abstract class ElideServerTest : elide.testing.Test() {
   // Application context.
   @Inject public lateinit var context: ApplicationContext
 

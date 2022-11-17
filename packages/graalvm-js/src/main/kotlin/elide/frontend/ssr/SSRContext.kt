@@ -1,9 +1,7 @@
 package elide.frontend.ssr
 
-import kotlin.reflect.KClass
-
 /** Context access utility for SSR-shared state. */
-class SSRContext<State: Any> private constructor (
+public class SSRContext<State: Any> private constructor (
   private val data: SSRStateContainer<State>? = null,
   private val decodedState: State? = null,
 ) {
@@ -15,7 +13,7 @@ class SSRContext<State: Any> private constructor (
     public const val CONTEXT: String = "_ctx_"
 
     /** @return SSR context, decoded from the provided input [ctx]. */
-    fun of(ctx: dynamic = null): SSRContext<Any> {
+    public fun of(ctx: dynamic = null): SSRContext<Any> {
       return if (ctx != null) {
         SSRContext(ctx)
       } else {
@@ -25,7 +23,7 @@ class SSRContext<State: Any> private constructor (
 
     /** @return SSR context, decoded from the provided input [ctx], with the provided [stateType] class. */
     @Suppress("UNUSED_PARAMETER")
-    fun <State : Any> typed(ctx: dynamic = null): SSRContext<State> {
+    public fun <State : Any> typed(ctx: dynamic = null): SSRContext<State> {
       return if (ctx != null) {
         SSRContext(ctx, ctx.state())
       } else {
@@ -35,12 +33,12 @@ class SSRContext<State: Any> private constructor (
   }
 
   /** Execute the provided [fn] within the context of this decoded SSR context. */
-  fun <R> execute(fn: SSRContext<State>.() -> R): R {
+  public fun <R> execute(fn: SSRContext<State>.() -> R): R {
     return fn.invoke(this)
   }
 
   /** @return State container managed by this context. */
-  val state: State? get() {
+  public val state: State? get() {
     return decodedState
   }
 }

@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializetableOptions")
-public inline fun tableOptions(block: tools.elide.model.TableOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableOptions =
+inline fun tableOptions(block: tools.elide.model.TableOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableOptions =
   tools.elide.model.TableOptionsKt.Dsl._create(tools.elide.model.TableOptions.newBuilder()).apply { block() }._build()
-public object TableOptionsKt {
+object TableOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.TableOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.TableOptions.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object TableOptionsKt {
      *
      * <code>string name = 1;</code>
      */
-    public var name: kotlin.String
+    var name: kotlin.String
       @JvmName("getName")
       get() = _builder.getName()
       @JvmName("setName")
@@ -43,7 +43,7 @@ public object TableOptionsKt {
      *
      * <code>string name = 1;</code>
      */
-    public fun clearName() {
+    fun clearName() {
       _builder.clearName()
     }
 
@@ -54,7 +54,7 @@ public object TableOptionsKt {
      *
      * <code>string description = 2;</code>
      */
-    public var description: kotlin.String
+    var description: kotlin.String
       @JvmName("getDescription")
       get() = _builder.getDescription()
       @JvmName("setDescription")
@@ -68,12 +68,12 @@ public object TableOptionsKt {
      *
      * <code>string description = 2;</code>
      */
-    public fun clearDescription() {
+    fun clearDescription() {
       _builder.clearDescription()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.TableOptions.copy(block: tools.elide.model.TableOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableOptions =
+inline fun tools.elide.model.TableOptions.copy(block: tools.elide.model.TableOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableOptions =
   tools.elide.model.TableOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

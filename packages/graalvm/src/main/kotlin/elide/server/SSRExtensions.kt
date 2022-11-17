@@ -110,6 +110,7 @@ public suspend fun BODY.injectSSR(
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
+@Suppress("UNUSED_PARAMETER")
 public suspend fun ssr(
   request: HttpRequest<*>,
   path: String = NODE_SSR_DEFAULT_PATH,

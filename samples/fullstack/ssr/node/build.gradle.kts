@@ -6,11 +6,7 @@
 )
 
 plugins {
-  idea
-  distribution
-  kotlin("js")
-  kotlin("plugin.serialization")
-  alias(libs.plugins.sonar)
+  id("dev.elide.build.samples.frontend")
 }
 
 group = "dev.elide.samples"

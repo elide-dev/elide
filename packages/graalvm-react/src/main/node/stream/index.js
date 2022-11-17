@@ -1,12 +1,11 @@
-
 const {
-    Readable,
-    Writable,
-    Transform,
-    Duplex,
-    pipeline,
-    finished
-} = require('readable-stream')
+  Readable,
+  Writable,
+  Transform,
+  Duplex,
+  pipeline,
+  finished,
+} = require("readable-stream");
 
 module.exports.Readable = Readable;
 module.exports.Writable = Writable;

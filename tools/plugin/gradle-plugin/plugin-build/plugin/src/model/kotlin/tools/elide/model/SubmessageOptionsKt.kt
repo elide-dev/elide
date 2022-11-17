@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializesubmessageOptions")
-public inline fun submessageOptions(block: tools.elide.model.SubmessageOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SubmessageOptions =
+inline fun submessageOptions(block: tools.elide.model.SubmessageOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SubmessageOptions =
   tools.elide.model.SubmessageOptionsKt.Dsl._create(tools.elide.model.SubmessageOptions.newBuilder()).apply { block() }._build()
-public object SubmessageOptionsKt {
+object SubmessageOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.SubmessageOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.SubmessageOptions.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object SubmessageOptionsKt {
      *
      * <code>.model.CollectionMode mode = 1;</code>
      */
-    public var mode: tools.elide.model.CollectionMode
+     var mode: tools.elide.model.CollectionMode
       @JvmName("getMode")
       get() = _builder.getMode()
       @JvmName("setMode")
@@ -43,7 +43,7 @@ public object SubmessageOptionsKt {
      *
      * <code>.model.CollectionMode mode = 1;</code>
      */
-    public fun clearMode() {
+    fun clearMode() {
       _builder.clearMode()
     }
 
@@ -54,7 +54,7 @@ public object SubmessageOptionsKt {
      *
      * <code>string concrete = 2;</code>
      */
-    public var concrete: kotlin.String
+    var concrete: kotlin.String
       @JvmName("getConcrete")
       get() = _builder.getConcrete()
       @JvmName("setConcrete")
@@ -68,7 +68,7 @@ public object SubmessageOptionsKt {
      *
      * <code>string concrete = 2;</code>
      */
-    public fun clearConcrete() {
+    fun clearConcrete() {
       _builder.clearConcrete()
     }
 
@@ -79,7 +79,7 @@ public object SubmessageOptionsKt {
      *
      * <code>string path = 3;</code>
      */
-    public var path: kotlin.String
+    var path: kotlin.String
       @JvmName("getPath")
       get() = _builder.getPath()
       @JvmName("setPath")
@@ -93,7 +93,7 @@ public object SubmessageOptionsKt {
      *
      * <code>string path = 3;</code>
      */
-    public fun clearPath() {
+    fun clearPath() {
       _builder.clearPath()
     }
 
@@ -105,7 +105,7 @@ public object SubmessageOptionsKt {
      *
      * <code>bool embed = 4;</code>
      */
-    public var embed: kotlin.Boolean
+    var embed: kotlin.Boolean
       @JvmName("getEmbed")
       get() = _builder.getEmbed()
       @JvmName("setEmbed")
@@ -120,12 +120,12 @@ public object SubmessageOptionsKt {
      *
      * <code>bool embed = 4;</code>
      */
-    public fun clearEmbed() {
+    fun clearEmbed() {
       _builder.clearEmbed()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.SubmessageOptions.copy(block: tools.elide.model.SubmessageOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SubmessageOptions =
+inline fun tools.elide.model.SubmessageOptions.copy(block: tools.elide.model.SubmessageOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.SubmessageOptions =
   tools.elide.model.SubmessageOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

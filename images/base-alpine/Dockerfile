@@ -1,4 +1,3 @@
-
 ARG ALPINE_VERSION=3.16.0
 ARG ALPINE_ARCH=amd64
 ARG ALPINE_HASH=sha256:4ff3ca91275773af45cb4b0834e12b7eb47d1c18f770a0b151381cd227f4c253
@@ -16,5 +15,5 @@ LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/im
 RUN apk add --no-cache --update musl
 
 ENV LC_CTYPE=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
-    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin
+  LC_ALL=en_US.UTF-8 \
+  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/lib/gvm/bin:/sbin:/bin

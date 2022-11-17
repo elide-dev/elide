@@ -1,0 +1,12 @@
+build
+coverage
+docs
+kotlin-js-store
+.idea
+.gradle
+proto
+proto/buf.pb.json
+buildSrc
+benchmarks
+tools/plugin
+*.gradle.kts

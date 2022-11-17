@@ -10,37 +10,37 @@ package lib.protobuf
 
 import kotlin.js.*
 
-open external class UInt64(lo: Number, hi: Number) {
-    open var lo: Number
-    open var hi: Number
-    open fun cmp(other: UInt64): Number
-    open fun rightShift(): UInt64
-    open fun leftShift(): UInt64
-    open fun msb(): Boolean
-    open fun lsb(): Boolean
-    open fun zero(): Boolean
-    open fun add(other: UInt64): UInt64
-    open fun sub(other: UInt64): UInt64
-    open fun mul(a: Number): UInt64
-    open fun div(divisor: Number): dynamic /* JsTuple<UInt64, UInt64> */
-    override fun toString(): String
-    open fun clone(): UInt64
+public open external class UInt64(lo: Number, hi: Number) {
+  public open var lo: Number
+  public open var hi: Number
+  public open fun cmp(other: UInt64): Number
+  public open fun rightShift(): UInt64
+  public open fun leftShift(): UInt64
+  public open fun msb(): Boolean
+  public open fun lsb(): Boolean
+  public open fun zero(): Boolean
+  public open fun add(other: UInt64): UInt64
+  public open fun sub(other: UInt64): UInt64
+  public open fun mul(a: Number): UInt64
+  public open fun div(divisor: Number): dynamic /* JsTuple<UInt64, UInt64> */
+  public override fun toString(): String
+  public open fun clone(): UInt64
 
-    companion object {
-        fun mul32x32(a: Number, b: Number): UInt64
-        fun fromString(str: String): UInt64
+  public companion object {
+    public fun mul32x32(a: Number, b: Number): UInt64
+    public fun fromString(str: String): UInt64
     }
 }
 
-open external class Int64(lo: Number, hi: Number) {
-    open var lo: Number
-    open var hi: Number
-    open fun add(other: Int64): Int64
-    open fun sub(other: Int64): Int64
-    open fun clone(): Int64
-    override fun toString(): String
+public open external class Int64(lo: Number, hi: Number) {
+  public open var lo: Number
+  public open var hi: Number
+  public open fun add(other: Int64): Int64
+  public open fun sub(other: Int64): Int64
+  public open fun clone(): Int64
+  public override fun toString(): String
 
-    companion object {
-        fun fromString(str: String): Int64
-    }
+  public companion object {
+    public fun fromString(str: String): Int64
+  }
 }

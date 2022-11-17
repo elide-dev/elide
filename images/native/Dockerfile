@@ -1,4 +1,3 @@
-
 ARG BASE_ARCH=amd64
 
 FROM --platform=linux/${BASE_ARCH} debian@sha256:aeecadc41628dd0a5fdb10866481f932f3ec4f29b0fa5b987db9091cd24e85a7

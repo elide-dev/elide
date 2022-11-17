@@ -33,6 +33,7 @@ import kotlin.reflect.KClass
     }
 
     // @TODO(sgammon): logging control JS-side
+    @Suppress("UNUSED_PARAMETER")
     internal fun isEnabled(level: LogLevel) = true
 
     // Static log sender.

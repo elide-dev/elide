@@ -1,37 +1,37 @@
 {
-  "name": "buildtools",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "settings": {
-    "java.completion.enabled": true,
-    "java.debug.settings.enableRunDebugCodeLens": true,
-    "java.test.editor.enableShortcuts": true
-  },
-  "extensions": [
-    "asf.apache-netbeans-java",
-    "bazelbuild.vscode-bazel",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "mathiasfrohlich.kotlin",
-    "github.codespaces",
-    "github.copilot",
-    "ms-azuretools.vscode-docker",
-    "ms-python.python",
-    "ms-vscode-remote.remote-containers",
-    "ms-vscode.vscode-typescript-tslint-plugin",
-    "redhat.vscode-yaml",
-    "sswg.swift-lang",
-    "naco-siren.gradle-language",
-    "ms-python.python",
-    "vscjava.vscode-gradle",
-    "vscjava.vscode-java-debug",
-    "vscjava.vscode-java-pack",
-    "bufbuild.vscode-buf",
-    "googlecloudtools.cloudcode",
-    "sswg.swift-lang",
-    "sourcegraph.sourcegraph"
-  ],
-  "updateContentCommand": "./gradlew build",
-  "remoteUser": "dev"
+    "name": "buildtools",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "settings": {
+        "java.completion.enabled": true,
+        "java.debug.settings.enableRunDebugCodeLens": true,
+        "java.test.editor.enableShortcuts": true
+    },
+    "extensions": [
+        "asf.apache-netbeans-java",
+        "bazelbuild.vscode-bazel",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "mathiasfrohlich.kotlin",
+        "github.codespaces",
+        "github.copilot",
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "ms-vscode-remote.remote-containers",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "redhat.vscode-yaml",
+        "sswg.swift-lang",
+        "naco-siren.gradle-language",
+        "ms-python.python",
+        "vscjava.vscode-gradle",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-pack",
+        "bufbuild.vscode-buf",
+        "googlecloudtools.cloudcode",
+        "sswg.swift-lang",
+        "sourcegraph.sourcegraph"
+    ],
+    "updateContentCommand": "./gradlew build",
+    "remoteUser": "dev"
 }

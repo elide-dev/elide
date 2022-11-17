@@ -4,15 +4,15 @@
 package tools.elide.base;
 
 @kotlin.jvm.JvmName("-initializelanguageSpec")
-public inline fun languageSpec(block: tools.elide.base.LanguageSpecKt.Dsl.() -> kotlin.Unit): tools.elide.base.LanguageSpec =
+inline fun languageSpec(block: tools.elide.base.LanguageSpecKt.Dsl.() -> kotlin.Unit): tools.elide.base.LanguageSpec =
   tools.elide.base.LanguageSpecKt.Dsl._create(tools.elide.base.LanguageSpec.newBuilder()).apply { block() }._build()
-public object LanguageSpecKt {
+object LanguageSpecKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.base.LanguageSpec.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.base.LanguageSpec.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object LanguageSpecKt {
      *
      * <code>.base.Language language = 1;</code>
      */
-    public var language: tools.elide.base.Language
+     var language: tools.elide.base.Language
       @JvmName("getLanguage")
       get() = _builder.getLanguage()
       @JvmName("setLanguage")
@@ -43,7 +43,7 @@ public object LanguageSpecKt {
      *
      * <code>.base.Language language = 1;</code>
      */
-    public fun clearLanguage() {
+    fun clearLanguage() {
       _builder.clearLanguage()
     }
     /**
@@ -54,7 +54,7 @@ public object LanguageSpecKt {
      * <code>.base.Language language = 1;</code>
      * @return Whether the language field is set.
      */
-    public fun hasLanguage(): kotlin.Boolean {
+    fun hasLanguage(): kotlin.Boolean {
       return _builder.hasLanguage()
     }
 
@@ -66,7 +66,7 @@ public object LanguageSpecKt {
      *
      * <code>string iso_language = 2;</code>
      */
-    public var isoLanguage: kotlin.String
+    var isoLanguage: kotlin.String
       @JvmName("getIsoLanguage")
       get() = _builder.getIsoLanguage()
       @JvmName("setIsoLanguage")
@@ -81,7 +81,7 @@ public object LanguageSpecKt {
      *
      * <code>string iso_language = 2;</code>
      */
-    public fun clearIsoLanguage() {
+    fun clearIsoLanguage() {
       _builder.clearIsoLanguage()
     }
     /**
@@ -93,7 +93,7 @@ public object LanguageSpecKt {
      * <code>string iso_language = 2;</code>
      * @return Whether the isoLanguage field is set.
      */
-    public fun hasIsoLanguage(): kotlin.Boolean {
+    fun hasIsoLanguage(): kotlin.Boolean {
       return _builder.hasIsoLanguage()
     }
 
@@ -104,7 +104,7 @@ public object LanguageSpecKt {
      *
      * <code>string iso_country = 3;</code>
      */
-    public var isoCountry: kotlin.String
+    var isoCountry: kotlin.String
       @JvmName("getIsoCountry")
       get() = _builder.getIsoCountry()
       @JvmName("setIsoCountry")
@@ -118,7 +118,7 @@ public object LanguageSpecKt {
      *
      * <code>string iso_country = 3;</code>
      */
-    public fun clearIsoCountry() {
+    fun clearIsoCountry() {
       _builder.clearIsoCountry()
     }
     /**
@@ -129,7 +129,7 @@ public object LanguageSpecKt {
      * <code>string iso_country = 3;</code>
      * @return Whether the isoCountry field is set.
      */
-    public fun hasIsoCountry(): kotlin.Boolean {
+    fun hasIsoCountry(): kotlin.Boolean {
       return _builder.hasIsoCountry()
     }
 
@@ -140,7 +140,7 @@ public object LanguageSpecKt {
      *
      * <code>string dialect = 4;</code>
      */
-    public var dialect: kotlin.String
+    var dialect: kotlin.String
       @JvmName("getDialect")
       get() = _builder.getDialect()
       @JvmName("setDialect")
@@ -154,7 +154,7 @@ public object LanguageSpecKt {
      *
      * <code>string dialect = 4;</code>
      */
-    public fun clearDialect() {
+    fun clearDialect() {
       _builder.clearDialect()
     }
     /**
@@ -165,26 +165,26 @@ public object LanguageSpecKt {
      * <code>string dialect = 4;</code>
      * @return Whether the dialect field is set.
      */
-    public fun hasDialect(): kotlin.Boolean {
+    fun hasDialect(): kotlin.Boolean {
       return _builder.hasDialect()
     }
-    public val selectionCase: tools.elide.base.LanguageSpec.SelectionCase
+    val selectionCase: tools.elide.base.LanguageSpec.SelectionCase
       @JvmName("getSelectionCase")
       get() = _builder.getSelectionCase()
 
-    public fun clearSelection() {
+    fun clearSelection() {
       _builder.clearSelection()
     }
-    public val modifierCase: tools.elide.base.LanguageSpec.ModifierCase
+    val modifierCase: tools.elide.base.LanguageSpec.ModifierCase
       @JvmName("getModifierCase")
       get() = _builder.getModifierCase()
 
-    public fun clearModifier() {
+    fun clearModifier() {
       _builder.clearModifier()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.base.LanguageSpec.copy(block: tools.elide.base.LanguageSpecKt.Dsl.() -> kotlin.Unit): tools.elide.base.LanguageSpec =
+inline fun tools.elide.base.LanguageSpec.copy(block: tools.elide.base.LanguageSpecKt.Dsl.() -> kotlin.Unit): tools.elide.base.LanguageSpec =
   tools.elide.base.LanguageSpecKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

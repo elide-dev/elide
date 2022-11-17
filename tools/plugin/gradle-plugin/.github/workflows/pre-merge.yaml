@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   gradle:
@@ -33,15 +33,15 @@ jobs:
       ## Setup: Java
       - uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # tag=v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
+          distribution: "zulu"
+          java-version: "11"
 
       ## Setup: GraalVM
       - uses: elide-tools/setup-graalvm@48f2bf339ab7d35e31029b1822a213681fdfc42e # tag=5.0
         with:
-          graalvm: '21.0.0.2'
-          java: 'java11'
-          arch: 'amd64'
+          graalvm: "21.0.0.2"
+          java: "java11"
+          arch: "amd64"
 
       ## Setup: Gradle Caches
       - name: Cache Gradle Caches
@@ -69,6 +69,7 @@ jobs:
             -Pelide.ci=true
             --scan
             --continue
+            --dependency-verification=lenient
 
       ## Job: Run plugin
       - name: Run the plugin
@@ -80,11 +81,12 @@ jobs:
             -Pelide.ci=true
             --scan
             --continue
+            --dependency-verification=lenient
 
       ## CI: Build
       - name: "Failure reports"
         if: failure()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # tag=v3
         with:
           name: failure-reports
           path: |

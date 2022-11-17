@@ -1,0 +1,11 @@
+license-check: true
+vulnerability-check: true
+fail-on-severity: "high"
+
+allow-ghsas:
+  ## Allow `node-fetch`, because it is unused in actual outputs made by this library.
+  - "GHSA-r683-j2x4-v87g"
+  - "GHSA-w7rc-rwvf-8q5r"
+
+  ## Allow `jszip`, because we do not use it in the browser.
+  - "GHSA-jg8v-48h5-wgxg"

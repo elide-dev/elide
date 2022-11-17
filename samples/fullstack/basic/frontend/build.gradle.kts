@@ -1,21 +1,16 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 plugins {
-  idea
-  kotlin("js")
-  kotlin("plugin.serialization")
-  alias(libs.plugins.sonar)
+  id("dev.elide.build.samples.frontend")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
 
-val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {
@@ -24,7 +19,10 @@ kotlin {
     browser {
       commonWebpackConfig {
         sourceMaps = false
-        cssSupport.enabled = true
+        cssSupport {
+          enabled = true
+        }
+
         mode = if (devMode) {
           org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
         } else {
@@ -49,7 +47,7 @@ tasks.withType<Zip>{
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-val assetDist by configurations.creating {
+val assetDist: Configuration by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }

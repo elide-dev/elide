@@ -1,4 +1,3 @@
-
 # Elide Plugin for Gradle
 
 ![beta](https://img.shields.io/badge/status-beta-blue.svg)
@@ -18,8 +17,9 @@ In particular, this plugin is responsible for configuring and running [`esbuild`
 [`webpack`](https://webpack.js.org) on behalf of the developer.
 
 ### Features
-- [x] **Embedded SSR:** Build JS apps, including Kotlin JS, into optimized embedded SSR bundles
-- [x] **Asset compiler:** Optimize and compile frontend assets, and package them for use in Elide
+
+-   [x] **Embedded SSR:** Build JS apps, including Kotlin JS, into optimized embedded SSR bundles
+-   [x] **Asset compiler:** Optimize and compile frontend assets, and package them for use in Elide
 
 ### Installing the plugin
 
@@ -28,28 +28,28 @@ the latest version at the [Gradle Plugin Portal](https://plugins.gradle.org/plug
 below for specific installation and use instructions.
 
 **Kotlin DSL**
+
 ```kotlin
 plugins {
-  id("dev.elide.buildtools.plugin") version "1.0.0-beta9"
+  id("dev.elide.buildtools.plugin") version "1.0.0-beta12"
 }
 ```
 
 **Groovy DSL**
+
 ```groovy
 plugins {
-    id "dev.elide.buildtools.plugin" version "1.0.0-beta9"
+    id "dev.elide.buildtools.plugin" version "1.0.0-beta12"
 }
 ```
 
 #### Plugin coordinates
 
-- **Version:** `1.0.0-beta9`
-- **Plugin ID:** `dev.elide.buildtools.plugin`
-- **Classpath Coordinate:** `dev.elide.buildtools:plugin`
-
+-   **Version:** `1.0.0-beta12`
+-   **Plugin ID:** `dev.elide.buildtools.plugin`
+-   **Classpath Coordinate:** `dev.elide.buildtools:plugin`
 
 ---
-
 
 # Building Elide apps with Gradle
 
@@ -72,6 +72,7 @@ Apply the plugin to both, depending on your needs.
 First up is your frontend module:
 
 **Client** (module `frontend`)
+
 ```kotlin
 plugins {
     kotlin("js")
@@ -109,6 +110,7 @@ frontend SSR builds, but in the meantime, code completion via the Gradle Kotlin 
 Next, we'll configure the server module, which needs to know where to find your frontend app:
 
 **Server** (module `server`)
+
 ```kotlin
 plugins {
   kotlin("jvm")
@@ -136,6 +138,7 @@ all you need to do for SSR.
 Server assets can be packaged and embedded via this plugin, in concert with the Kotlin JVM plugin. See below:
 
 **Server** (module `server`)
+
 ```kotlin
 plugins {
     kotlin("jvm")
@@ -186,6 +189,7 @@ expressed in the asset manifest, allowing for efficient multi-file loading in yo
 The frontend assets task can be combined with an SSR task:
 
 **Client** (module `frontend`)
+
 ```kotlin
 plugins {
     kotlin("js")
@@ -208,6 +212,7 @@ elide {
 ```
 
 **Server** (module `server`)
+
 ```kotlin
 plugins {
     kotlin("jvm")
@@ -248,7 +253,6 @@ elide {
     }
 }
 ```
-
 
 [1]: https://kotlinlang.org/docs/gradle.html
 [2]: https://kotlinlang.org/docs/js-project-setup.html

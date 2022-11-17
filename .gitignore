@@ -6,7 +6,6 @@ packages/*/out
 packages/*/build
 .gradle/
 buildSrc/.gradle/
-kotlin-js-store/yarn.lock
 .buildstate.tar.gz
 local.properties
 node_modules/

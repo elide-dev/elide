@@ -3,9 +3,9 @@ package elide.frontend.ssr
 /**
  * TBD
  */
-external interface SSRStateContainer<State : Any> {
+public external interface SSRStateContainer<State : Any> {
   /**
    * TBD
    */
-  fun state(): State?
+  public fun state(): State?
 }

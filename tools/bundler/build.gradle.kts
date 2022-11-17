@@ -1,10 +1,14 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 plugins {
   kotlin("jvm")
+  id("org.jetbrains.kotlinx.kover")
+}
+
+kover {
+  isDisabled.set(true)
 }

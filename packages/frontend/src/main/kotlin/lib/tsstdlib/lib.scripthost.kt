@@ -8,6 +8,6 @@
 )
 package lib.tsstdlib
 
-open external class VarDate {
-    open var VarDate_typekey: VarDate
+public open external class VarDate {
+  public open var VarDate_typekey: VarDate
 }

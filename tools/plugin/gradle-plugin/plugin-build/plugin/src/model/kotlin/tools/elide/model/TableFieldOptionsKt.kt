@@ -4,15 +4,15 @@
 package tools.elide.model;
 
 @kotlin.jvm.JvmName("-initializetableFieldOptions")
-public inline fun tableFieldOptions(block: tools.elide.model.TableFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableFieldOptions =
+inline fun tableFieldOptions(block: tools.elide.model.TableFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableFieldOptions =
   tools.elide.model.TableFieldOptionsKt.Dsl._create(tools.elide.model.TableFieldOptions.newBuilder()).apply { block() }._build()
-public object TableFieldOptionsKt {
+object TableFieldOptionsKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
-  public class Dsl private constructor(
+  class Dsl private constructor(
     private val _builder: tools.elide.model.TableFieldOptions.Builder
   ) {
-    public companion object {
+    companion object {
       @kotlin.jvm.JvmSynthetic
       @kotlin.PublishedApi
       internal fun _create(builder: tools.elide.model.TableFieldOptions.Builder): Dsl = Dsl(builder)
@@ -29,7 +29,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool require = 1;</code>
      */
-    public var require: kotlin.Boolean
+    var require: kotlin.Boolean
       @JvmName("getRequire")
       get() = _builder.getRequire()
       @JvmName("setRequire")
@@ -43,7 +43,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool require = 1;</code>
      */
-    public fun clearRequire() {
+    fun clearRequire() {
       _builder.clearRequire()
     }
 
@@ -54,7 +54,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool ignore = 2;</code>
      */
-    public var ignore: kotlin.Boolean
+    var ignore: kotlin.Boolean
       @JvmName("getIgnore")
       get() = _builder.getIgnore()
       @JvmName("setIgnore")
@@ -68,7 +68,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool ignore = 2;</code>
      */
-    public fun clearIgnore() {
+    fun clearIgnore() {
       _builder.clearIgnore()
     }
 
@@ -79,7 +79,7 @@ public object TableFieldOptionsKt {
      *
      * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
      */
-    public var bqtype: tools.elide.model.BigQueryOptions.BigQueryType
+     var bqtype: tools.elide.model.BigQueryOptions.BigQueryType
       @JvmName("getBqtype")
       get() = _builder.getBqtype()
       @JvmName("setBqtype")
@@ -93,7 +93,7 @@ public object TableFieldOptionsKt {
      *
      * <code>.model.BigQueryOptions.BigQueryType bqtype = 3;</code>
      */
-    public fun clearBqtype() {
+    fun clearBqtype() {
       _builder.clearBqtype()
     }
 
@@ -104,7 +104,7 @@ public object TableFieldOptionsKt {
      *
      * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
      */
-    public var sptype: tools.elide.model.SpannerOptions.SpannerType
+     var sptype: tools.elide.model.SpannerOptions.SpannerType
       @JvmName("getSptype")
       get() = _builder.getSptype()
       @JvmName("setSptype")
@@ -118,7 +118,7 @@ public object TableFieldOptionsKt {
      *
      * <code>.model.SpannerOptions.SpannerType sptype = 4;</code>
      */
-    public fun clearSptype() {
+    fun clearSptype() {
       _builder.clearSptype()
     }
 
@@ -129,7 +129,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool repeated = 5;</code>
      */
-    public var repeated: kotlin.Boolean
+    var repeated: kotlin.Boolean
       @JvmName("getRepeated")
       get() = _builder.getRepeated()
       @JvmName("setRepeated")
@@ -143,7 +143,7 @@ public object TableFieldOptionsKt {
      *
      * <code>bool repeated = 5;</code>
      */
-    public fun clearRepeated() {
+    fun clearRepeated() {
       _builder.clearRepeated()
     }
 
@@ -154,7 +154,7 @@ public object TableFieldOptionsKt {
      *
      * <code>uint32 size = 6;</code>
      */
-    public var size: kotlin.Int
+    var size: kotlin.Int
       @JvmName("getSize")
       get() = _builder.getSize()
       @JvmName("setSize")
@@ -168,7 +168,7 @@ public object TableFieldOptionsKt {
      *
      * <code>uint32 size = 6;</code>
      */
-    public fun clearSize() {
+    fun clearSize() {
       _builder.clearSize()
     }
 
@@ -179,7 +179,7 @@ public object TableFieldOptionsKt {
      *
      * <code>string name = 7;</code>
      */
-    public var name: kotlin.String
+    var name: kotlin.String
       @JvmName("getName")
       get() = _builder.getName()
       @JvmName("setName")
@@ -193,7 +193,7 @@ public object TableFieldOptionsKt {
      *
      * <code>string name = 7;</code>
      */
-    public fun clearName() {
+    fun clearName() {
       _builder.clearName()
     }
 
@@ -204,7 +204,7 @@ public object TableFieldOptionsKt {
      *
      * <code>string id = 8;</code>
      */
-    public var id: kotlin.String
+    var id: kotlin.String
       @JvmName("getId")
       get() = _builder.getId()
       @JvmName("setId")
@@ -218,12 +218,12 @@ public object TableFieldOptionsKt {
      *
      * <code>string id = 8;</code>
      */
-    public fun clearId() {
+    fun clearId() {
       _builder.clearId()
     }
   }
 }
 @kotlin.jvm.JvmSynthetic
-public inline fun tools.elide.model.TableFieldOptions.copy(block: tools.elide.model.TableFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableFieldOptions =
+inline fun tools.elide.model.TableFieldOptions.copy(block: tools.elide.model.TableFieldOptionsKt.Dsl.() -> kotlin.Unit): tools.elide.model.TableFieldOptions =
   tools.elide.model.TableFieldOptionsKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 

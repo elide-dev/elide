@@ -138,7 +138,7 @@ public final class WebContext {
       "imestamp.proto\032\035webutil/html/types/html." +
       "proto\032\025elide/data/data.proto\032\027elide/mode" +
       "l/model.proto\032\031elide/base/language.proto" +
-      "\032\031elide/page/semantic.proto\"\274-\n\007Context\022" +
+      "\032\031elide/page/semantic.proto\"\266-\n\007Context\022" +
       "$\n\004meta\030\001 \001(\0132\026.page.Context.Metadata\022$\n" +
       "\006styles\030\002 \001(\0132\024.page.Context.Styles\022\"\n\005f" +
       "onts\030\003 \001(\0132\023.page.Context.Fonts\022&\n\007scrip" +
@@ -284,10 +284,10 @@ public final class WebContext {
       "\022\n\n\006ORIGIN\020\003\022\034\n\030ORIGIN_WHEN_CROSS_ORIGIN" +
       "\020\004\022\010\n\004SAME\020\005\022\021\n\rSTRICT_ORIGIN\020\007\022#\n\037STRIC" +
       "T_ORIGIN_WHEN_CROSS_ORIGIN\020\010\022\016\n\nUNSAFE_U" +
-      "RL\020\t:\004\200\367\002\004B\202\001\n\020tools.elide.pageB\nWebCont" +
-      "extH\001P\001Z!github.com/elide-tools/elide/pa" +
-      "ge\330\001\001\370\001\001\242\002\003ELD\252\002\nElide.Page\272\002\005Elide\302\002\003EL" +
-      "D\312\002\005Elide\352\002\013Elide::Pageb\006proto3"
+      "RL\020\tB\202\001\n\020tools.elide.pageB\nWebContextH\001P" +
+      "\001Z!github.com/elide-tools/elide/page\330\001\001\370" +
+      "\001\001\242\002\003ELD\252\002\nElide.Page\272\002\005Elide\302\002\003ELD\312\002\005El" +
+      "ide\352\002\013Elide::Pageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -432,11 +432,6 @@ public final class WebContext {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_page_Context_ResponseHeader_descriptor,
         new java.lang.String[] { "Name", "Value", "Force", });
-    com.google.protobuf.ExtensionRegistry registry =
-        com.google.protobuf.ExtensionRegistry.newInstance();
-    registry.add(tools.elide.model.Datamodel.role);
-    com.google.protobuf.Descriptors.FileDescriptor
-        .internalUpdateFileDescriptor(descriptor, registry);
     com.google.protobuf.DurationProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();
     com.google.common.html.types.Html.getDescriptor();

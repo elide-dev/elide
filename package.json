@@ -3,34 +3,43 @@
   "version": "3.0.0",
   "private": true,
   "packageManager": "yarn@3.2.1",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
   "dependencies": {
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@lit/localize": "0.11.4",
-    "@lit/localize-tools": "0.6.5",
-    "@lit-labs/analyzer": "0.3.0",
+    "@lit-labs/analyzer": "0.4.0",
     "@lit-labs/context": "0.1.3",
+    "@lit-labs/motion": "1.0.3",
     "@lit-labs/react": "1.0.9",
     "@lit-labs/ssr": "2.2.3",
     "@lit-labs/ssr-client": "1.0.1",
-    "@lit-labs/motion": "1.0.3",
     "@lit-labs/task": "2.0.0",
     "@lit-labs/virtualizer": "0.7.2",
+    "@lit/localize": "0.11.4",
+    "@lit/localize-tools": "0.6.5",
     "@types/google-protobuf": "3.15.6",
     "@types/prettier": "2.7.1",
-    "@types/react": "18.0.21",
-    "@types/react-dom": "^18",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
     "buffer": "6.0.3",
-    "esbuild": "0.15.11",
-    "grpc-web": "1.4.1",
+    "esbuild": "0.15.14",
     "gradle-upgrade-interactive": "^0.7.4",
+    "grpc-web": "1.4.2",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
     "lit": "2.4.0",
     "lit-element": "3.2.2",
     "lit-html": "2.4.0",
     "prepack": "0.2.54",
-    "prettier": "^2.7.1",
+    "prettier": "2.7.1",
+    "prettier-plugin-java": "^1.6.2",
+    "prettier-plugin-properties": "^0.2.0",
+    "prettier-plugin-sh": "^0.12.8",
+    "prettier-plugin-toml": "^0.3.1",
     "readable-stream": "4.2.0",
     "webpack": "5"
   },
@@ -38,6 +47,9 @@
     "build": "make build",
     "test": "make test",
     "upgrade-node": "yarn upgrade-interactive",
-    "upgrade-gradle": "gradle-upgrade-interactive"
+    "upgrade-gradle": "gradle-upgrade-interactive",
+    "prepare": "husky install",
+    "lint": "prettier --write . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java",
+    "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   }
 }

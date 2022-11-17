@@ -3082,8 +3082,8 @@ java.lang.String defaultValue);
        * </pre>
        *
        * <code>repeated .data.CompressionMode compression = 4;</code>
-       * @param index The index of the value to return.
-       * @return The enum numeric value on the wire of compression at the given index.
+       * @param index The index to set the value at.
+       * @param value The enum numeric value on the wire for compression to set.
        * @return This builder for chaining.
        */
       public Builder setCompressionValue(

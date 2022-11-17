@@ -8,10 +8,15 @@
 plugins {
   id("test-report-aggregation")
   id("jacoco-report-aggregation")
-  alias(libs.plugins.sonar)
+  id("org.sonarqube")
+  id("org.jetbrains.kotlinx.kover")
 }
 
-val antJUnit by configurations.creating
+val antJUnit: Configuration by configurations.creating
+
+kover {
+  isDisabled.set(true)
+}
 
 reporting {
   reports {
@@ -30,12 +35,8 @@ reporting {
 }
 
 dependencies {
-  listOf(
-    "base",
-    "server",
-    "graalvm",
-    "rpc-jvm",
-    "test",
+  Elide.serverModules.plus(
+    Elide.multiplatformModules
   ).forEach {
     testReportAggregation(project(":packages:$it"))
     jacocoAggregation(project(":packages:$it"))

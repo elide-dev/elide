@@ -1,9 +1,7 @@
 const fs = require('fs');
 const esbuild = require('esbuild');
 const nodePath = process.env.NODE_PATH;
-if (!nodePath) {
-    throw new Error("Failed to resolve NODE_PATH");
-}
+if (!nodePath) { throw new Error("Failed to resolve NODE_PATH"); }
 const settings = {
     entryPoints: ['{{ENTRY}}'],
     outfile: '{{OUTFILE}}',
@@ -15,32 +13,22 @@ const settings = {
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
     resolveExtensions: ['.ts','.js'],
-    inject: [
-        '{{PROCESS}}'
-    ]
+    inject: [ '{{PROCESS}}' ]
 };
 
 console.info("Bundling SSR library '{{LIBNAME}}'...");
-
-esbuild.build(
-    settings
-).then(() => {
+esbuild.build(settings).then(() => {
     if ({{PREPACK}}) {
         const Prepack = require('prepack');
         console.info("Bundle step completed. Packing SSR bundle with Prepack...");
-        const prepacked = Prepack.prepackFileSync([
-            '{{OUTFILE}}'
-        ], {
+        const prepacked = Prepack.prepackFileSync(['{{OUTFILE}}'], {
             compatibility: 'browser',
             inlineExpressions: true,
             timeout: 300 * 60 * 1000,
             sourceMaps: false,
             filename: '{{OUTFILE}}'
         });
-
-        fs.writeFileSync('{{PREPACK_OUTFILE}}', prepacked.code, {
-            encoding: 'utf8'
-        });
+        fs.writeFileSync('{{PREPACK_OUTFILE}}', prepacked.code, { encoding: 'utf8' });
         console.info("Pre-compile step complete: SSR bundle ready (mode: {{MODE}}).")
     } else {
         console.info("Bundle step completed: embedded SSR bundle ready (mode: {{MODE}}).");

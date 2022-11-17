@@ -120,7 +120,7 @@ import kotlin.test.assertTrue
     assetResponse(
       assertDoesNotThrow {
         runBlocking {
-          sample.indexPage(HttpRequest.GET<Any>("/"))
+          sample.indexPage()
         }
       }
     )

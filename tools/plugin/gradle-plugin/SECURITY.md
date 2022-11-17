@@ -11,4 +11,3 @@ The following plugin versions receive ongoing security updates, or are marked as
 ## Reporting a Vulnerability
 
 To report a security vulnerability within Elide, the Elide build tools, or a relevant dependency, please file an issue with the main repository, available [here](https://github.com/elide-dev/v3/issues).
-

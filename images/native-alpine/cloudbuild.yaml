@@ -1,6 +1,12 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine', '.']
-images: ['us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine']
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine",
+        ".",
+      ]
+images: ["us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine"]
 options:
   logging: CLOUD_LOGGING_ONLY

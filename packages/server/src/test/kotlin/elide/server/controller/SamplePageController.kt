@@ -13,7 +13,7 @@ import kotlinx.html.title
 
 /** Sample page controller for testing. */
 @Page class SamplePageController : PageController() {
-  @Get("/") suspend fun indexPage(request: HttpRequest<*>) = html {
+  @Get("/") suspend fun indexPage() = html {
     head {
       title { +"Hello, Elide!" }
       stylesheet(asset("styles.base"), media = "screen", attrs = sortedMapOf("hello" to "cool"))
@@ -40,7 +40,7 @@ import kotlinx.html.title
     }
   }
 
-  @Get("/some-styles.css") suspend fun styles() = css {
+  @Get("/some-styles.css") fun styles() = css {
     rule("main") {
       backgroundColor = Color.white
       maxWidth = 600.px

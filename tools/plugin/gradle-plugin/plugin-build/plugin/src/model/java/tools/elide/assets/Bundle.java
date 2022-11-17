@@ -101,8 +101,8 @@ public final class Bundle {
       "\n\031elide/assets/bundle.proto\022\006assets\032\037goo" +
       "gle/protobuf/timestamp.proto\032\031elide/cryp" +
       "to/crypto.proto\032\025elide/data/data.proto\032\027" +
-      "elide/model/model.proto\032\030elide/struct/bl" +
-      "oom.proto\032\025elide/page/page.proto\"\355\017\n\013Ass" +
+      "elide/model/model.proto\032\025elide/page/page" +
+      ".proto\032\030elide/struct/bloom.proto\"\355\017\n\013Ass" +
       "etBundle\022\017\n\007version\030\001 \001(\r\0225\n\010settings\030\002 " +
       "\001(\0132#.assets.AssetBundle.BundlerSettings" +
       "\022-\n\tgenerated\030\003 \001(\0132\032.google.protobuf.Ti" +
@@ -167,8 +167,8 @@ public final class Bundle {
           tools.elide.crypto.Crypto.getDescriptor(),
           tools.elide.data.Data.getDescriptor(),
           tools.elide.model.Datamodel.getDescriptor(),
-          tools.elide.struct.Bloom.getDescriptor(),
           tools.elide.page.WebContext.getDescriptor(),
+          tools.elide.struct.Bloom.getDescriptor(),
         });
     internal_static_assets_AssetBundle_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -269,8 +269,8 @@ public final class Bundle {
     tools.elide.crypto.Crypto.getDescriptor();
     tools.elide.data.Data.getDescriptor();
     tools.elide.model.Datamodel.getDescriptor();
-    tools.elide.struct.Bloom.getDescriptor();
     tools.elide.page.WebContext.getDescriptor();
+    tools.elide.struct.Bloom.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -1,10 +1,6 @@
 license-check: true
 vulnerability-check: true
-fail-on-severity: "critical"
-
-deny-licenses:
-  - "LGPL-2.0"
-  - "BSD-2-Clause"
+fail-on-severity: "high"
 
 allow-ghsas:
   ## Allow `node-fetch`, because it is unused in actual outputs made by this library.

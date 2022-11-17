@@ -30,7 +30,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
 
       ## Code QL: Perform analysis
       - name: Perform CodeQL Analysis

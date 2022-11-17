@@ -27,7 +27,7 @@ jobs:
       checks: "write"
       pull-requests: "write"
     steps:
-      - name: "Checkout Repository"
+      - name: "Setup: Checkout"
         uses: "actions/checkout@v3"
       - name: "Patch: Neutralize Yarn Lock"
         run: mv kotlin-js-store/yarn.lock kotlin-js-store/yarn.inert
@@ -43,11 +43,52 @@ jobs:
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
 
   ##
+  ## Job: Detekt
+  ##
+
+  detekt:
+    name: "Detekt"
+    runs-on: "ubuntu-latest"
+    continue-on-error: true
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      ## Setup: Checkout
+      - name: "Setup: Checkout"
+        uses: "actions/checkout@v3"
+
+      ## Setup: GraalVM
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      ## Run Detekt
+      - name: Run Detekt
+        run: ./gradlew detekt
+
+      ## Upload SARIF to GitHub.
+      - name: Upload SARIF to Github using the upload-sarif action
+        uses: github/codeql-action/upload-sarif@v1
+        if: success() || failure()
+        with:
+          sarif_file: ./build/reports/detekt/elide.sarif
+          category: detekt
+
+  ##
   ## Job: Library Build
   ##
 
   gradle:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu]
         experimental: [false]
@@ -153,6 +194,7 @@ jobs:
       pull-requests: "write"
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu]
         experimental: [false]
@@ -229,11 +271,13 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [dependency-review]
+
     permissions:
       contents: "read"
       id-token: "write"
       checks: "write"
       pull-requests: "write"
+
     steps:
       ## Setup: Checkout Code
       - name: "Setup: Checkout"
@@ -443,6 +487,7 @@ jobs:
       pull-requests: "write"
 
     strategy:
+      fail-fast: false
       matrix:
         project: ["server:helloworld"]
         include:
@@ -546,6 +591,7 @@ jobs:
       pull-requests: "write"
 
     strategy:
+      fail-fast: false
       matrix:
         project: ["server:helloworld"]
         include:

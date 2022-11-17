@@ -167,8 +167,23 @@ subprojects {
   }
 
   detekt {
+    parallel = true
     ignoreFailures = true
     config = rootProject.files("config/detekt/detekt.yml")
+  }
+
+  val detektMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+    output.set(rootProject.buildDir.resolve("reports/detekt/elide.sarif"))
+  }
+
+  plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
+    tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
+      finalizedBy(detektMerge)
+      reports.sarif.required.set(true)
+      detektMerge.configure {
+        input.from(this@detekt.sarifReportFile) // or .sarifReportFile
+      }
+    }
   }
 
   afterEvaluate {

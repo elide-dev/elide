@@ -43,46 +43,6 @@ jobs:
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
 
   ##
-  ## Job: Detekt
-  ##
-
-  detekt:
-    name: "Detekt"
-    runs-on: "ubuntu-latest"
-    continue-on-error: true
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-    env:
-      GRADLE_OPTS: -Dorg.gradle.daemon=false
-    steps:
-      ## Setup: Checkout
-      - name: "Setup: Checkout"
-        uses: "actions/checkout@v3"
-
-      ## Setup: GraalVM
-      - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "native-image,js"
-          version: latest
-          java-version: 17
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Run Detekt
-      - name: Run Detekt
-        run: ./gradlew detekt
-
-      ## Upload SARIF to GitHub.
-      - name: Upload SARIF to Github using the upload-sarif action
-        uses: github/codeql-action/upload-sarif@v1
-        if: success() || failure()
-        with:
-          sarif_file: ./build/reports/detekt/elide.sarif
-          category: detekt
-
-  ##
   ## Job: Library Build
   ##
 
@@ -114,9 +74,11 @@ jobs:
 
     permissions:
       contents: "read"
+      actions: "read"
       id-token: "write"
       checks: "write"
       pull-requests: "write"
+      security-events: "write"
 
     defaults:
       run:
@@ -182,6 +144,19 @@ jobs:
           name: build-reports-${{ matrix.os }}-latest-java${{ matrix.java }}-gvm-latest
           path: |
             build/reports/**/*.*
+
+      ## Run Detekt
+      - name: Run Detekt
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        run: ./gradlew detekt -Pelide.ci=true -PbuildSamples=false -Pversions.java.language=${{ matrix.java }}
+
+      ## Upload SARIF to GitHub.
+      - name: Upload SARIF to Github using the upload-sarif action
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }} && (success() || failure())
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ./build/reports/detekt/elide.sarif
+          category: detekt
 
   ##
   ## Samples: Build & Test
@@ -270,7 +245,7 @@ jobs:
     name: "Tests: JVM"
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: [dependency-review]
+    needs: [dependency-review, gradle]
 
     permissions:
       contents: "read"

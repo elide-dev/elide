@@ -146,13 +146,14 @@ jobs:
             build/reports/**/*.*
 
       ## Run Detekt
-      - name: Run Detekt
+      - name: "Run: Detekt"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
         run: ./gradlew detekt -Pelide.ci=true -PbuildSamples=false -Pversions.java.language=${{ matrix.java }}
+        continue-on-error: true
 
       ## Upload SARIF to GitHub.
-      - name: Upload SARIF to Github using the upload-sarif action
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }} && (success() || failure())
+      - name: "Report: SARIF"
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: ./build/reports/detekt/elide.sarif

@@ -14,7 +14,7 @@ object Elide {
   const val versionTag = "alpha1"
 
   /** Revision value for the library. */
-  const val revision = 32
+  const val revision = 33
 
   /** Version string for the library. */
   const val version = "$majorVersion-$track-$versionTag-rc$revision"

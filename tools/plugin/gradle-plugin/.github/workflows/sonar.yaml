@@ -63,6 +63,6 @@ jobs:
           arguments: |
             build
             test
-            sonarqube
+            sonar
             --scan
             -Pelide.ci=true

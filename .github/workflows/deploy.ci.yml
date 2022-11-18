@@ -1,0 +1,92 @@
+name: Deployment
+
+concurrency:
+  group: "deploy"
+  cancel-in-progress: false
+
+on:
+  ## Deployment can be invoked from other workflows.
+  workflow_call:
+    inputs:
+      ## Path to the app to deploy.
+      path:
+        description: "Path"
+        required: true
+        default: "samples/fullstack/react-ssr"
+        type: string
+
+      ## Environment to update with this deployment.
+      environment:
+        description: "Target"
+        type: string
+        required: true
+
+      ## URL target for this deployment.
+      url:
+        description: "URL"
+        type: string
+        required: true
+
+      ## Optional image tag to deploy. If not specified, the "latest" image will be deployed.
+      image:
+        description: "Image"
+        type: string
+        required: false
+
+    secrets:
+      FLY_API_TOKEN:
+        required: true
+
+  ## Deployment can be triggered manually.
+  workflow_dispatch:
+    inputs:
+      path:
+        description: "Site"
+        required: true
+        default: "samples/fullstack/react-ssr"
+        type: choice
+        options:
+          - samples/fullstack/react-ssr
+      environment:
+        description: "Target"
+        type: environment
+        required: true
+      url:
+        description: "URL"
+        type: string
+        required: true
+      image:
+        description: "Image"
+        type: string
+        required: false
+
+jobs:
+  deployment:
+    name: "Deploy (${{ inputs.environment }})"
+    runs-on: "ubuntu-latest"
+    environment: ${{ inputs.environment }}
+    concurrency: "deploy-${{ inputs.environment }}"
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      statuses: "write"
+      deployments: "write"
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      ## Setup: Checkout Code
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+
+      ## Setup: Fly
+      - name: "Setup: Fly"
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      ## Deploy: App
+      - name: "Deploy: Fly (${{ inputs.environment }})"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          cd ${{ inputs.path }} && flyctl deploy --remote-only ${{ inputs.image != '' && format('--image {0}', inputs.image) || '' }};

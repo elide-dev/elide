@@ -39,6 +39,7 @@ jobs:
           license-check: true
           vulnerability-check: true
           fail-on-severity: "low"
+          base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
       - name: "Patch: Restore Yarn Lock"
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
 
@@ -285,6 +286,7 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
         contains(github.event.head_commit.message, 'ci:test-native') ||
         startsWith(github.ref, 'refs/tags/v')
@@ -370,6 +372,7 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
         contains(github.event.head_commit.message, 'ci:build-img-jvm') ||
         startsWith(github.ref, 'refs/tags/v')
@@ -470,6 +473,7 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
         contains(github.event.head_commit.message, 'ci:build-img-native') ||
         startsWith(github.ref, 'refs/tags/v')
@@ -563,46 +567,35 @@ jobs:
   ##
 
   deploy-samples:
+    name: "Deploy"
+    needs: [gradle, tests-jvm, docker-jvm, docker-native]
+    if: |
+      (
+        github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
+        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
+        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
+
     strategy:
       matrix:
         category: [fullstack]
         app: [react-ssr]
         variant: [jvm]
 
-    name: "Deploy"
-    runs-on: ubuntu-latest
-    needs: [gradle, tests-jvm, tests-native, docker-jvm, docker-native]
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
-        contains(github.event.head_commit.message, 'ci:deploy-samples') ||
-        startsWith(github.ref, 'refs/tags/v')
-      )
-
     permissions:
       contents: "read"
       id-token: "write"
       checks: "write"
       pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
 
-    steps:
-      ## Setup: Checkout Code
-      - name: "Setup: Checkout"
-        uses: actions/checkout@v3
-
-      ## Setup: Fly
-      - name: "Setup: Fly"
-        uses: superfly/flyctl-actions/setup-flyctl@master
-
-      - name: "Deploy: ${{ matrix.sample }} (${{ matrix.variant }})"
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          SAMPLE_CATEGORY: ${{ matrix.category }}
-          SAMPLE_APP: ${{ matrix.app }}
-          SAMPLE_VARIANT: ${{ matrix.variant }}
-        run: |
-          cd samples/$SAMPLE_CATEGORY/$SAMPLE_APP && \
-            flyctl deploy \
-            --remote-only \
-            --image "us-docker.pkg.dev/elide-fw/samples/$SAMPLE_CATEGORY/$SAMPLE_APP/$SAMPLE_VARIANT:opt-latest";
+    uses: ./.github/workflows/deploy.ci.yml
+    secrets: inherit
+    with:
+      path: "samples/${{ matrix.category }}/${{ matrix.app }}"
+      image: "us-docker.pkg.dev/elide-fw/samples/${{ matrix.category }}/${{ matrix.app }}/${{ matrix.variant }}:opt-latest"
+      environment: samples
+      url: https://${{ matrix.app }}.samples.elide.dev

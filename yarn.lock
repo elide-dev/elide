@@ -304,10 +304,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@lit-labs/analyzer@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@lit-labs/analyzer/-/analyzer-0.3.0.tgz#1445c6b6c6528b70d3a8fac5d7ff7549402f7c73"
-  integrity sha512-pZLEU3UjAtw6mnaElht/vPltePz5VOn8QbyzvA28zKDfd0HjE7ed3cTl/jUcw65T9SUi1mXd635U/gllVrmNmw==
+"@lit-labs/analyzer@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@lit-labs/analyzer/-/analyzer-0.4.0.tgz#94230543d0578cd2a665c8e6efbf9f175eba5579"
+  integrity sha512-DzBupQ+HLTcawVm9l6khaBZsDrVj4xGK5v9/lKiMq64kNP86/HaiwtXLipBMIuCezWkxxepvBfmAhqu8VSn2ww==
   dependencies:
     package-json-type "^1.0.3"
     typescript "~4.7.4"
@@ -521,10 +521,10 @@
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/react-dom@^18":
-  version "18.0.6"
-  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.0.6.tgz"
-  integrity sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==
+"@types/react-dom@18.0.9":
+  version "18.0.9"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.0.9.tgz#ffee5e4bfc2a2f8774b15496474f8e7fe8d0b504"
+  integrity sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==
   dependencies:
     "@types/react" "*"
 
@@ -537,10 +537,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@18.0.21":
-  version "18.0.21"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.0.21.tgz#b8209e9626bb00a34c76f55482697edd2b43cc67"
-  integrity sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==
+"@types/react@18.0.25":
+  version "18.0.25"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.25.tgz#8b1dcd7e56fe7315535a4af25435e0bb55c8ae44"
+  integrity sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1751,10 +1751,10 @@ gradle-upgrade-interactive@^0.7.4:
     semver "^7.1.1"
     yargs "^16.1.1"
 
-grpc-web@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/grpc-web/-/grpc-web-1.4.1.tgz#dfe80ac3693c5343000757ff65c49cf3f854a899"
-  integrity sha512-rZb/vubTg58iWjytpq/aXDpDaAePuXby7kpQqOgrGkVy4FxM2LPz5vjxAcFhWf7peKvLQDhYFk8f7dvH3cZTlw==
+grpc-web@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/grpc-web/-/grpc-web-1.4.2.tgz#86995f76471ce6b2119106ec26f909b7b69e7d43"
+  integrity sha512-gUxWq42l5ldaRplcKb4Pw5O4XBONWZgz3vxIIXnfIeJj8Jc3wYiq2O4c9xzx/NGbbPEej4rhI62C9eTENwLGNw==
 
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"

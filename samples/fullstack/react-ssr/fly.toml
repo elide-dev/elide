@@ -5,7 +5,7 @@ kill_timeout = 5
 processes = []
 
 [build]
-image = "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/jvm:opt-latest"
+image = "us-docker.pkg.dev/elide-fw/samples/fullstack/react-ssr/native:opt-latest"
 
 [deploy]
 strategy = "bluegreen"

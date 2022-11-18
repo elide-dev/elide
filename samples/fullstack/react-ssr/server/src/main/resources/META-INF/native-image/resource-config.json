@@ -62,6 +62,18 @@
         "pattern": "\\Qembedded/runtime/runtime-js.json\\E"
       },
       {
+        "pattern": "\\Qembedded/embedded.assets.pb\\E"
+      },
+      {
+        "pattern": "\\Qembedded/node-dev.opt.js\\E"
+      },
+      {
+        "pattern": "\\Qembedded/node.opt.js\\E"
+      },
+      {
+        "pattern": "\\Qembedded/node-prod.opt.js\\E"
+      },
+      {
         "pattern": "\\Qlogback.xml\\E"
       },
       {

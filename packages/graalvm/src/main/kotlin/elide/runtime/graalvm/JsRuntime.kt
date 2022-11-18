@@ -10,6 +10,7 @@ import io.micronaut.caffeine.cache.Cache
 import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
+import io.micronaut.core.annotation.ReflectiveAccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
@@ -128,6 +129,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       val logging = LoggerFactory.getLogger(JsRuntime::class.java)
       val builder = VMContext.newBuilder("js")
         .allowExperimentalOptions(true)
+        .allowValueSharing(true)
 
       buildRuntimeOptions().flatMap {
         val prop = it.key
@@ -202,6 +204,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
      */
     @Suppress("UNCHECKED_CAST")
     @HostAccess.Export
+    @ReflectiveAccess
     public fun state(): State? {
       return data[STATE] as? State
     }
@@ -215,6 +218,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
      * @return Instance of execution context provided at invocation time, or `null`.
      */
     @HostAccess.Export
+    @ReflectiveAccess
     public fun context(): RequestState? {
       return data[CONTEXT] as? RequestState
     }

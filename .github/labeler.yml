@@ -1,11 +1,49 @@
-frontend:
-  - any: ["graalvm*/**/*"]
-    all: ["module:graalvm"]
-  - any: ["frontend/**/*"]
-    all: ["module:frontend"]
-  - any: ["rpc/**/*"]
-    all: ["module:rpc"]
-  - any: ["server/**/*"]
-    all: ["module:server"]
-  - any: ["base/**/*"]
-    all: ["module:base"]
+#
+# Labels: Generic
+#
+"tools":
+  - any: ["tools/**/*"]
+"release":
+  - all: [".version", "README.md"]
+
+#
+# Labels: Platform
+#
+"platform:jvm":
+  - any: ["packages/base/**/*"]
+  - any: ["packages/graalvm/**/*"]
+  - any: ["packages/model/**/*"]
+  - any: ["packages/rpc/**/*", "packages/rpc-jvm/**/*"]
+  - any: ["packages/server/**/*"]
+"platform:browser":
+  - any: ["packages/base/**/*"]
+  - any: ["packages/frontend/**/*"]
+
+#
+# Labels: Modules
+#
+"module:base":
+  - any: ["packages/base/**/*"]
+"module:graalvm":
+  - any:
+      [
+        "packages/graalvm/**/*",
+        "packages/graalvm-js/**/*",
+        "packages/graalvm-react/**/*",
+      ]
+"module:model":
+  - any: ["packages/model/**/*"]
+"module:rpc":
+  - any: ["packages/rpc/**/*", "packages/rpc-jvm/**/*", "packages/rpc-js/**/*"]
+"module:server":
+  - any: ["packages/server/**/*"]
+"module:frontend":
+  - any: ["packages/frontend/**/*"]
+
+#
+# Labels: CI Triggers
+#
+"ci:build-img-jvm":
+  - any: ["samples/**/*.kt"]
+"ci:build-img-native":
+  - any: ["samples/**/*.kt"]

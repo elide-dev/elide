@@ -35,6 +35,7 @@ dependencies {
   // API Deps
   api(libs.jakarta.inject)
   api(libs.graalvm.sdk)
+  api(libs.google.cloud.nativeImageSupport)
 
   // Modules
   implementation(project(":packages:base"))

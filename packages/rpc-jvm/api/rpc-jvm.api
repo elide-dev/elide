@@ -1,0 +1,201 @@
+public final synthetic class elide/server/rpc/$GrpcConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/server/rpc/$RpcRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/server/rpc/$ServiceHealthManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/server/rpc/ServiceHealthManager {
+	public fun <init> ()V
+	public final fun currentStatus (Lio/grpc/ServiceDescriptor;)Lio/grpc/health/v1/HealthCheckResponse$ServingStatus;
+	public final fun currentStatus (Ljava/lang/String;)Lio/grpc/health/v1/HealthCheckResponse$ServingStatus;
+	public final fun getService ()Lio/grpc/BindableService;
+	public final fun notify (Ljava/lang/String;Lio/grpc/health/v1/HealthCheckResponse$ServingStatus;)V
+	public final fun notifyNotServing (Lio/grpc/ServiceDescriptor;)V
+	public final fun notifyPending (Lio/grpc/ServiceDescriptor;)V
+	public final fun notifyServing (Lio/grpc/ServiceDescriptor;)V
+	public final fun notifyUnknown (Lio/grpc/ServiceDescriptor;)V
+	public final fun terminalShutdown ()V
+}
+
+public final synthetic class elide/server/rpc/web/$GrpcWebConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/server/rpc/web/$GrpcWebController$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/server/rpc/web/$GrpcWebServiceRelay$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/server/rpc/web/GrpcWeb {
+	public static final field BINARY_HEADER_SUFFIX Ljava/lang/String;
+	public static final field GRPC_HEADER_PREFIX Ljava/lang/String;
+	public static final field INSTANCE Lelide/server/rpc/web/GrpcWeb;
+}
+
+public final class elide/server/rpc/web/GrpcWeb$Headers {
+	public static final field INSTANCE Lelide/server/rpc/web/GrpcWeb$Headers;
+	public static final field errorMessage Ljava/lang/String;
+	public static final field sentinel Ljava/lang/String;
+	public static final field status Ljava/lang/String;
+}
+
+public final class elide/server/rpc/web/GrpcWeb$Metadata {
+	public static final field INSTANCE Lelide/server/rpc/web/GrpcWeb$Metadata;
+	public final fun getApiKey ()Lio/grpc/Metadata$Key;
+	public final fun getAuthorization ()Lio/grpc/Metadata$Key;
+	public final fun getInternalCall ()Lio/grpc/Metadata$Key;
+	public final fun getTrace ()Lio/grpc/Metadata$Key;
+}
+
+public abstract class elide/server/rpc/web/GrpcWebCallResponse {
+	public synthetic fun <init> (ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun fill (Lio/micronaut/http/MutableHttpResponse;)V
+	public final fun getSuccess ()Z
+}
+
+public final class elide/server/rpc/web/GrpcWebCallResponse$Error : elide/server/rpc/web/GrpcWebCallResponse {
+	public fun <init> (Lelide/server/rpc/web/GrpcWebContentType;Lio/grpc/Status;Ljava/lang/Throwable;Lio/grpc/Metadata;Lio/grpc/Metadata;)V
+	public final fun component1 ()Lelide/server/rpc/web/GrpcWebContentType;
+	public final fun component2 ()Lio/grpc/Status;
+	public final fun component3 ()Ljava/lang/Throwable;
+	public final fun component4 ()Lio/grpc/Metadata;
+	public final fun component5 ()Lio/grpc/Metadata;
+	public final fun copy (Lelide/server/rpc/web/GrpcWebContentType;Lio/grpc/Status;Ljava/lang/Throwable;Lio/grpc/Metadata;Lio/grpc/Metadata;)Lelide/server/rpc/web/GrpcWebCallResponse$Error;
+	public static synthetic fun copy$default (Lelide/server/rpc/web/GrpcWebCallResponse$Error;Lelide/server/rpc/web/GrpcWebContentType;Lio/grpc/Status;Ljava/lang/Throwable;Lio/grpc/Metadata;Lio/grpc/Metadata;ILjava/lang/Object;)Lelide/server/rpc/web/GrpcWebCallResponse$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fill (Lio/micronaut/http/MutableHttpResponse;)V
+	public final fun getCause ()Ljava/lang/Throwable;
+	public final fun getContentType ()Lelide/server/rpc/web/GrpcWebContentType;
+	public final fun getHeaders ()Lio/grpc/Metadata;
+	public final fun getStatus ()Lio/grpc/Status;
+	public final fun getTrailers ()Lio/grpc/Metadata;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/server/rpc/web/GrpcWebCallResponse$UnaryResponse : elide/server/rpc/web/GrpcWebCallResponse {
+	public fun <init> (Lelide/server/rpc/web/GrpcWebContentType;[BLio/grpc/Metadata;Lio/grpc/Metadata;)V
+	public final fun component1 ()Lelide/server/rpc/web/GrpcWebContentType;
+	public final fun component2 ()[B
+	public final fun component3 ()Lio/grpc/Metadata;
+	public final fun component4 ()Lio/grpc/Metadata;
+	public final fun copy (Lelide/server/rpc/web/GrpcWebContentType;[BLio/grpc/Metadata;Lio/grpc/Metadata;)Lelide/server/rpc/web/GrpcWebCallResponse$UnaryResponse;
+	public static synthetic fun copy$default (Lelide/server/rpc/web/GrpcWebCallResponse$UnaryResponse;Lelide/server/rpc/web/GrpcWebContentType;[BLio/grpc/Metadata;Lio/grpc/Metadata;ILjava/lang/Object;)Lelide/server/rpc/web/GrpcWebCallResponse$UnaryResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fill (Lio/micronaut/http/MutableHttpResponse;)V
+	public final fun getContentType ()Lelide/server/rpc/web/GrpcWebContentType;
+	public final fun getHeaders ()Lio/grpc/Metadata;
+	public final fun getPayload ()[B
+	public final fun getTrailers ()Lio/grpc/Metadata;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/server/rpc/web/GrpcWebConfig {
+	public static final field Companion Lelide/server/rpc/web/GrpcWebConfig$Companion;
+	public static final field defaultEndpoint Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (ZLjava/lang/String;Ljava/time/Duration;)V
+	public synthetic fun <init> (ZLjava/lang/String;Ljava/time/Duration;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/time/Duration;
+	public final fun copy (ZLjava/lang/String;Ljava/time/Duration;)Lelide/server/rpc/web/GrpcWebConfig;
+	public static synthetic fun copy$default (Lelide/server/rpc/web/GrpcWebConfig;ZLjava/lang/String;Ljava/time/Duration;ILjava/lang/Object;)Lelide/server/rpc/web/GrpcWebConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnabled ()Z
+	public final fun getEndpoint ()Ljava/lang/String;
+	public final fun getTimeout ()Ljava/time/Duration;
+	public fun hashCode ()I
+	public final fun setEnabled (Z)V
+	public final fun setEndpoint (Ljava/lang/String;)V
+	public final fun setTimeout (Ljava/time/Duration;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/server/rpc/web/GrpcWebConfig$Companion {
+	public final fun getDEFAULTS ()Lelide/server/rpc/web/GrpcWebConfig;
+}
+
+public final class elide/server/rpc/web/GrpcWebContentType : java/lang/Enum {
+	public static final field BINARY Lelide/server/rpc/web/GrpcWebContentType;
+	public static final field Companion Lelide/server/rpc/web/GrpcWebContentType$Companion;
+	public static final field TEXT Lelide/server/rpc/web/GrpcWebContentType;
+	public final fun contentType (Z)Ljava/lang/String;
+	public static synthetic fun contentType$default (Lelide/server/rpc/web/GrpcWebContentType;ZILjava/lang/Object;)Ljava/lang/String;
+	public static final fun getAllValidContentTypes$rpc_jvm ()[Ljava/lang/String;
+	public final fun mediaType (Z)Lio/micronaut/http/MediaType;
+	public static synthetic fun mediaType$default (Lelide/server/rpc/web/GrpcWebContentType;ZILjava/lang/Object;)Lio/micronaut/http/MediaType;
+	public static final fun resolve$rpc_jvm (Lio/micronaut/http/MediaType;)Lelide/server/rpc/web/GrpcWebContentType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/server/rpc/web/GrpcWebContentType;
+	public static fun values ()[Lelide/server/rpc/web/GrpcWebContentType;
+}
+
+public final class elide/server/rpc/web/GrpcWebContentType$Companion {
+}
+
+public final class elide/server/rpc/web/GrpcWebController : elide/server/controller/StatusEnabledController {
+	public field settings Lelide/server/rpc/web/GrpcWebConfig;
+	public fun <init> ()V
+	public final fun getSettings ()Lelide/server/rpc/web/GrpcWebConfig;
+	public final fun handleRequest (Ljava/lang/String;Ljava/lang/String;Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setSettings (Lelide/server/rpc/web/GrpcWebConfig;)V
+}
+
+public abstract interface class elide/server/rpc/web/GrpcWebTransport {
+	public abstract fun channel ()Lio/grpc/ManagedChannel;
+}
+
+public abstract interface class elide/server/rpc/web/MessageDeserializer {
+	public abstract fun deserialize (Ljava/lang/reflect/Method;[B)Lcom/google/protobuf/Message;
+}
+
+public final class elide/server/rpc/web/MetadataUtil {
+	public static final field INSTANCE Lelide/server/rpc/web/MetadataUtil;
+	public static final fun fillHeadersFromMetadata (Lio/grpc/Metadata;Lio/micronaut/core/type/MutableHeaders;)V
+	public static final fun metadataFromHeaders (Lio/micronaut/core/type/Headers;)Lio/grpc/Metadata;
+	public static final fun packTrailer (Ljava/io/ByteArrayOutputStream;Ljava/lang/String;[B)V
+	public static final fun packTrailers (Ljava/io/ByteArrayOutputStream;Lio/grpc/Metadata;)V
+}
+
+public final class elide/server/rpc/web/RpcSymbol : java/lang/Enum {
+	public static final field DATA Lelide/server/rpc/web/RpcSymbol;
+	public static final field TRAILER Lelide/server/rpc/web/RpcSymbol;
+	public final fun getValue ()B
+	public static fun valueOf (Ljava/lang/String;)Lelide/server/rpc/web/RpcSymbol;
+	public static fun values ()[Lelide/server/rpc/web/RpcSymbol;
+}
+

@@ -1,3 +1,7 @@
+@file:OptIn(
+  DelicateCoroutinesApi::class,
+  ExperimentalCoroutinesApi::class,
+)
 @file:Suppress(
   "WildcardImport",
   "MagicNumber",
@@ -6,7 +10,6 @@
 package elide.benchmarks
 
 import elide.server.annotations.Page
-import elide.server.cfg.ServerConfigurator
 import elide.server.controller.PageController
 import elide.server.css
 import elide.server.html
@@ -17,12 +20,14 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.ReadTimeoutException
-import io.micronaut.runtime.Micronaut
 import io.micronaut.runtime.server.EmbeddedServer
 import io.netty.channel.EventLoopGroup
 import kotlinx.coroutines.*
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
 import kotlinx.css.fontFamily
@@ -41,21 +46,12 @@ import java.util.concurrent.atomic.AtomicInteger
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 class PageBenchmarkHttp {
-  final val applicationContext: ApplicationContext = ApplicationContext.builder().propertySources(
+  private val mainThreadSurrogate = newSingleThreadContext("server")
+  private final val applicationContext: ApplicationContext = ApplicationContext.builder().propertySources(
     // disable SSL, auto-select port
     PropertySource.of(mapOf(
       "micronaut.server.ssl.enabled" to false,
       "micronaut.server.port" to -1,
-      "micronaut.executors.default.n-threads" to 1,
-      "micronaut.executors.io.n-threads" to 1,
-      "micronaut.views.soy.enabled" to false,
-      "micronaut.http.client.read-timeout" to 5,
-      "micronaut.http.client.num-of-threads" to 1,
-      "micronaut.http.client.pool.enabled" to true,
-      "micronaut.server.thread-selection" to "MANUAL",
-      "micronaut.http.client.pool.max-connections" to 25,
-      "micronaut.netty.event-loops.default.num-threads" to 1,
-      "micronaut.netty.event-loops.default.prefer-native-transport" to true,
       "grpc.server.enabled" to false,
     ))
   ).start()
@@ -63,21 +59,22 @@ class PageBenchmarkHttp {
   val embeddedServer: EmbeddedServer = applicationContext.getBean(EmbeddedServer::class.java)
   val mainEventLoopGroup: EventLoopGroup = applicationContext.getBean(EventLoopGroup::class.java)
   val readTimeouts: AtomicInteger = AtomicInteger(0)
-  lateinit var client: HttpClient
-  var port: AtomicInteger = AtomicInteger(8080)
+  lateinit var client: BlockingHttpClient
+  var port: AtomicInteger = AtomicInteger(-1)
 
-  @Setup
-  fun setUp() {
+  @Setup fun setUp() {
+    Dispatchers.setMain(mainThreadSurrogate)
     embeddedServer.start()
     port.set(embeddedServer.port)
     client = HttpClient.create(
       URI.create("${embeddedServer.scheme}://${embeddedServer.host}:${port}").toURL()
-    )
+    ).toBlocking()
   }
 
-  @TearDown
-  fun tearDown() {
+  @TearDown fun tearDown() {
     client.close()
+    Dispatchers.resetMain()
+    mainThreadSurrogate.close()
     embeddedServer.stop()
     applicationContext.close()
     mainEventLoopGroup.shutdownGracefully().get(10, TimeUnit.SECONDS)
@@ -128,9 +125,9 @@ class PageBenchmarkHttp {
   }
 
   @Suppress("SwallowedException")
-  private fun submitRequest(req: HttpRequest<Any>): HttpResponse<Any> {
+  private fun submitRequest(req: HttpRequest<Any>): HttpResponse<*> {
     return try {
-      client.toBlocking().exchange(req)
+      client.exchange<Any, Any>(req)
     } catch (rte: ReadTimeoutException) {
       val numberTotal = readTimeouts.incrementAndGet()
       println("Read timeout (count: $numberTotal)")
@@ -139,7 +136,7 @@ class PageBenchmarkHttp {
   }
 
   /** Test: serve a string. */
-  @Benchmark fun controllerBasic(): HttpResponse<*> = runBlocking {
+  @Benchmark fun controllerBasic() {
     submitRequest(HttpRequest
       .GET<Any>("/basic")
       .accept(MediaType.TEXT_PLAIN)
@@ -147,9 +144,9 @@ class PageBenchmarkHttp {
   }
 
   /** Test: serve raw HTML. */
-//  @Benchmark fun controllerHTML(): HttpResponse<*> = runBlocking {
-//    submitRequest(HttpRequest.GET("/"))
-//  }
+  @Benchmark fun controllerHTML() {
+    submitRequest(HttpRequest.GET("/"))
+  }
 
   /** Test: serve raw CSS. */
 //  @Benchmark fun controllerCSS(): HttpResponse<*> = runBlocking {

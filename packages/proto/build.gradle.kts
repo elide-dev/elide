@@ -4,6 +4,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import Elide
 import com.google.protobuf.gradle.*
 
 plugins {
@@ -44,6 +45,8 @@ dependencies {
   api(libs.protobuf.kotlin)
   api(libs.google.common.html.types.proto)
   api(libs.google.common.html.types.types)
+  api(libs.kotlinx.datetime)
+  implementation(kotlin("reflect"))
   compileOnly(libs.google.cloud.nativeImageSupport)
 }
 

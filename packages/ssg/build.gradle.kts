@@ -4,9 +4,8 @@
 
 plugins {
   id("dev.elide.build.tool")
-  id("io.micronaut.application")
-  id("io.micronaut.aot")
-  id("io.micronaut.graalvm")
+//  id("io.micronaut.application")
+//  id("io.micronaut.aot")
 }
 
 dependencies {
@@ -17,9 +16,9 @@ dependencies {
   implementation(libs.micronaut.picocli)
 }
 
-application {
-  mainClass.set("elide.tool.ssg.SiteCompiler")
-}
+//application {
+//  mainClass.set("elide.tool.ssg.SiteCompiler")
+//}
 
 sonarqube {
   isSkipProject = true

@@ -1,0 +1,112 @@
+name: Benchmark
+
+on:
+  push:
+    branches:
+      - stable
+      - v3
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+env:
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+
+jobs:
+  ##
+  ## Job: Benchmarks
+  ##
+
+  bench:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu]
+        java: [17]
+        engine: [graalvm]
+        experimental: [false]
+        include:
+          - os: macos
+            java: 17
+            engine: graalvm
+            experimental: false
+
+    name: "JVM"
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: ${{ matrix.experimental }}
+
+    permissions:
+      actions: "read"
+      checks: "write"
+      contents: "write"
+      pull-requests: "write"
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        if: ${{ matrix.engine == 'graalvm' }}
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: ${{ matrix.java }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Zulu"
+        uses: actions/setup-java@v3
+        if: ${{ matrix.engine != 'graalvm' }}
+        with:
+          distribution: ${{ matrix.engine }}
+          java-version: ${{ matrix.java }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: yarn
+      - name: "Run Benchmarks"
+        uses: gradle/gradle-build-action@v2.3.3
+        id: gradlebench
+        continue-on-error: ${{ matrix.experimental }}
+        env:
+          CI: true
+          GRADLE_CACHE_PUSH: false
+        with:
+          cache-read-only: true
+          arguments: |
+            :benchmarks:server:benchmark
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -PbuildBenchmarks=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -Pversions.java.language=${{ matrix.java }}
+      - name: "Locate Benchmark Report"
+        id: benchreport
+        run: |
+          echo "BENCHMARK_REPORT=$(find benchmarks/server/build/reports/benchmarks/main -name "*.json" | head -n 1)" >> $GITHUB_OUTPUT
+      - name: "Restore Previous Benchmark"
+        uses: actions/cache@v1
+        with:
+          path: ./benchmark_reports
+          key: ${{ runner.os }}-${{ matrix.engine }}-${{ matrix.java }}-benchmark
+      - name: "Upload Benchmark Report"
+        uses: benchmark-action/github-action-benchmark@v1
+        continue-on-error: true
+        with:
+          name: "Elide: Server (${{ matrix.os }}, ${{ matrix.engine }}, JDK ${{ matrix.java }})"
+          tool: "jmh"
+          auto-push: false
+          external-data-json-path: benchmark_reports/benchmark-data.json
+          comment-on-alert: true
+          comment-always: ${{ !matrix.experimental }}
+          output-file-path: ${{ steps.benchreport.outputs.BENCHMARK_REPORT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-alert: ${{ !matrix.experimental }}

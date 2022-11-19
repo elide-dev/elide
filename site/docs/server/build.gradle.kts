@@ -8,13 +8,14 @@ import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
+  id("io.micronaut.application")
+  id("io.micronaut.aot")
   id("dev.elide.build.site.backend")
   id("dev.elide.build.docker")
   id("dev.elide.buildtools.plugin")
-  id("io.micronaut.application")
-  id("io.micronaut.aot")
   id("dev.elide.build.native.app")
   alias(libs.plugins.jib)
+  alias(libs.plugins.ksp)
 }
 
 group = "dev.elide.site.docs"
@@ -90,6 +91,7 @@ application {
 
 dependencies {
   api(libs.graalvm.sdk)
+  ksp(project(":tools:processor"))
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))

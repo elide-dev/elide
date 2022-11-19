@@ -11,7 +11,7 @@ import kotlinx.html.tagext.head
 import kotlinx.html.title
 
 /** GET `/`: Controller for index page. */
-@Page class Index : PageController() {
+@Page(name = "index") class Index : PageController() {
   // Serve the root page.
   @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
     head {

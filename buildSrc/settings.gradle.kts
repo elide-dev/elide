@@ -1,4 +1,3 @@
-
 dependencyResolutionManagement {
   versionCatalogs {
     create("libs") {

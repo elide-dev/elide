@@ -1,0 +1,58 @@
+public abstract interface annotation class elide/annotations/Model : java/lang/annotation/Annotation {
+}
+
+public abstract interface class elide/model/AppModel {
+	public abstract fun toMessage ()Lelide/model/WireMessage;
+}
+
+public abstract interface class elide/model/AppRecord {
+	public abstract fun displayName ()Ljava/lang/String;
+	public abstract fun id ()Ljava/lang/Object;
+	public abstract fun parentId ()Ljava/lang/Object;
+}
+
+public final class elide/model/AppRecord$DefaultImpls {
+	public static fun displayName (Lelide/model/AppRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/AppRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/AppRecord;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/model/StampedRecord : elide/model/AppRecord {
+	public abstract fun createdAt ()Lkotlinx/datetime/Instant;
+	public abstract fun updatedAt ()Lkotlinx/datetime/Instant;
+}
+
+public final class elide/model/StampedRecord$DefaultImpls {
+	public static fun createdAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
+	public static fun displayName (Lelide/model/StampedRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/StampedRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/StampedRecord;)Ljava/lang/Object;
+	public static fun updatedAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
+}
+
+public abstract interface class elide/model/VersionedRecord : elide/model/StampedRecord {
+	public abstract fun version ()J
+}
+
+public final class elide/model/VersionedRecord$DefaultImpls {
+	public static fun createdAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
+	public static fun displayName (Lelide/model/VersionedRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/VersionedRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/VersionedRecord;)Ljava/lang/Object;
+	public static fun updatedAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
+	public static fun version (Lelide/model/VersionedRecord;)J
+}
+
+public class elide/model/WireMessage {
+	public fun <init> ()V
+	public final fun getProto ()Lcom/google/protobuf/Message;
+	public fun toSerializedBytes ()[B
+	public fun toSerializedString ()Ljava/lang/String;
+}
+
+public final class elide/model/util/InstantFactory {
+	public static final field INSTANCE Lelide/model/util/InstantFactory;
+	public static final fun date (Lcom/google/protobuf/Timestamp;)Ljava/util/Date;
+	public static final fun instant (Lcom/google/protobuf/Timestamp;)Ljava/time/Instant;
+}
+

@@ -13,6 +13,10 @@ plugins {
   id("com.gradle.enterprise") version("3.11.4")
 }
 
+// Fix: Force CWD to proper value and store secondary value.
+System.setProperty("user.dir", rootProject.projectDir.toString())
+System.setProperty("elide.home", rootProject.projectDir.toString())
+
 val micronautVersion: String by settings
 
 dependencyResolutionManagement {
@@ -35,8 +39,22 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide"
 
+// 1: Gradle convention plugins.
+includeBuild("tools/conventions")
+
+// 2: Kotlin Compiler substrate.
+includeBuild("tools/substrate") {
+  dependencySubstitution {
+    substitute(module("dev.elide.tools:substrate")).using(project(":"))
+    substitute(module("dev.tools.compiler.plugin:injekt")).using(project(":injekt"))
+    substitute(module("dev.tools.compiler.plugin:interakt")).using(project(":interakt"))
+    substitute(module("dev.tools.compiler.plugin:redakt")).using(project(":redakt"))
+    substitute(module("dev.tools.compiler.plugin:sekret")).using(project(":sekret"))
+  }
+}
+
+// 3: Build modules.
 include(
-//  ":benchmarks",
   ":packages:base",
   ":packages:bom",
   ":packages:frontend",
@@ -59,6 +77,13 @@ include(
 val buildDocs: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
+val buildBenchmarks: String by settings
+
+if (buildPlugins == "true") {
+  includeBuild(
+    "tools/plugin/gradle-plugin",
+  )
+}
 
 if (buildSamples == "true") {
   include(
@@ -84,10 +109,8 @@ if (buildDocs == "true") {
   )
 }
 
-if (buildPlugins == "true") {
-  includeBuild(
-    "tools/plugin/gradle-plugin",
-  )
+if (buildBenchmarks == "true") {
+  includeBuild("benchmarks")
 }
 
 gradleEnterprise {

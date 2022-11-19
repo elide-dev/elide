@@ -20,6 +20,7 @@ kotlin {
 dependencies {
   // Core platform versions.
   api(platform(project(":packages:platform")))
+  api(project(":packages:proto"))
 
   // API Deps
   api(libs.jakarta.inject)

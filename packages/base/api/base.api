@@ -1,0 +1,196 @@
+public final class elide/AppEnvironment : java/lang/Enum {
+	public static final field LIVE Lelide/AppEnvironment;
+	public static final field SANDBOX Lelide/AppEnvironment;
+	public static fun valueOf (Ljava/lang/String;)Lelide/AppEnvironment;
+	public static fun values ()[Lelide/AppEnvironment;
+}
+
+public abstract interface annotation class elide/annotations/API : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/Endpoint : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/Generated : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/Logic : java/lang/annotation/Annotation {
+}
+
+public final class elide/runtime/LogLevel : java/lang/Enum {
+	public static final field DEBUG Lelide/runtime/LogLevel;
+	public static final field ERROR Lelide/runtime/LogLevel;
+	public static final field INFO Lelide/runtime/LogLevel;
+	public static final field TRACE Lelide/runtime/LogLevel;
+	public static final field WARN Lelide/runtime/LogLevel;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/LogLevel;
+	public static fun values ()[Lelide/runtime/LogLevel;
+}
+
+public abstract interface class elide/runtime/Logger {
+	public abstract fun debug (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun debug ([Ljava/lang/Object;)V
+	public abstract fun error (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun error ([Ljava/lang/Object;)V
+	public abstract fun info (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun info ([Ljava/lang/Object;)V
+	public abstract fun isEnabled (Lelide/runtime/LogLevel;)Z
+	public abstract fun log (Lelide/runtime/LogLevel;Ljava/util/List;Z)V
+	public abstract fun trace (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun trace ([Ljava/lang/Object;)V
+	public abstract fun warn (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun warn ([Ljava/lang/Object;)V
+	public abstract fun warning (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun warning ([Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/Logger$DefaultImpls {
+	public static fun debug (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun debug (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public static fun error (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun error (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public static fun info (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun info (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public static synthetic fun log$default (Lelide/runtime/Logger;Lelide/runtime/LogLevel;Ljava/util/List;ZILjava/lang/Object;)V
+	public static fun trace (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun trace (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public static fun warn (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun warn (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+	public static fun warning (Lelide/runtime/Logger;Lkotlin/jvm/functions/Function0;)V
+	public static fun warning (Lelide/runtime/Logger;[Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/Logging {
+	public static final field Companion Lelide/runtime/Logging$Companion;
+	public final fun logger ()Lelide/runtime/Logger;
+	public final fun logger (Ljava/lang/String;)Lelide/runtime/Logger;
+	public static final fun named (Ljava/lang/String;)Lelide/runtime/jvm/Logger;
+	public static final fun of (Ljava/lang/Class;)Lelide/runtime/jvm/Logger;
+	public static final fun of (Lkotlin/reflect/KClass;)Lelide/runtime/jvm/Logger;
+	public static final fun root ()Lelide/runtime/jvm/Logger;
+}
+
+public final class elide/runtime/Logging$Companion {
+	public final fun named (Ljava/lang/String;)Lelide/runtime/jvm/Logger;
+	public final fun of (Ljava/lang/Class;)Lelide/runtime/jvm/Logger;
+	public final fun of (Lkotlin/reflect/KClass;)Lelide/runtime/jvm/Logger;
+	public final fun root ()Lelide/runtime/jvm/Logger;
+}
+
+public final class elide/runtime/Runtime {
+	public static final field INSTANCE Lelide/runtime/Runtime;
+	public static final field generatedPackage Ljava/lang/String;
+}
+
+public final class elide/runtime/jvm/JvmLogLevelKt {
+	public static final fun getJvmLevel (Lelide/runtime/LogLevel;)Lorg/slf4j/event/Level;
+	public static final fun isEnabled (Lelide/runtime/LogLevel;Lorg/slf4j/Logger;)Z
+	public static final fun resolve (Lelide/runtime/LogLevel;Lorg/slf4j/Logger;)Lkotlin/jvm/functions/Function1;
+}
+
+public final class elide/runtime/jvm/Logger : elide/runtime/Logger {
+	public fun <init> (Lorg/slf4j/Logger;)V
+	public fun debug (Lkotlin/jvm/functions/Function0;)V
+	public fun debug ([Ljava/lang/Object;)V
+	public fun error (Lkotlin/jvm/functions/Function0;)V
+	public fun error ([Ljava/lang/Object;)V
+	public fun info (Lkotlin/jvm/functions/Function0;)V
+	public fun info ([Ljava/lang/Object;)V
+	public fun isEnabled (Lelide/runtime/LogLevel;)Z
+	public fun log (Lelide/runtime/LogLevel;Ljava/util/List;Z)V
+	public fun trace (Lkotlin/jvm/functions/Function0;)V
+	public fun trace ([Ljava/lang/Object;)V
+	public fun warn (Lkotlin/jvm/functions/Function0;)V
+	public fun warn ([Ljava/lang/Object;)V
+	public fun warning (Lkotlin/jvm/functions/Function0;)V
+	public fun warning ([Ljava/lang/Object;)V
+}
+
+public final class elide/util/Base64 : elide/util/Encoder {
+	public static final field INSTANCE Lelide/util/Base64;
+	public fun decode (Ljava/lang/String;)[B
+	public fun decode ([B)[B
+	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun decodeToString ([B)Ljava/lang/String;
+	public fun encode (Ljava/lang/String;)[B
+	public fun encode ([B)[B
+	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun encodeToString ([B)Ljava/lang/String;
+	public final fun encodeWebSafe (Ljava/lang/String;)Ljava/lang/String;
+	public final fun encodeWebSafe ([B)[B
+	public fun encoding ()Lelide/util/Encoding;
+}
+
+public final class elide/util/Base64Kt {
+	public static final field INSTANCE Lelide/util/Base64Kt;
+	public final fun getDecoder ()Lelide/util/Base64Kt$Decoder;
+	public final fun getEncoder ()Lelide/util/Base64Kt$Encoder;
+}
+
+public final class elide/util/Base64Kt$Decoder {
+	public static final field Companion Lelide/util/Base64Kt$Decoder$Companion;
+	public fun <init> ()V
+	public final fun decode ([B)[B
+}
+
+public final class elide/util/Base64Kt$Decoder$Companion {
+	public final fun getDEFAULT ()Lelide/util/Base64Kt$Decoder;
+}
+
+public final class elide/util/Base64Kt$Encoder {
+	public static final field Companion Lelide/util/Base64Kt$Encoder$Companion;
+	public final fun encode ([B)[B
+}
+
+public final class elide/util/Base64Kt$Encoder$Companion {
+	public final fun getDEFAULT ()Lelide/util/Base64Kt$Encoder;
+	public final fun getDEFAULT_WEBSAFE ()Lelide/util/Base64Kt$Encoder;
+}
+
+public abstract interface class elide/util/Encoder {
+	public abstract fun decode (Ljava/lang/String;)[B
+	public abstract fun decode ([B)[B
+	public abstract fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun decodeToString ([B)Ljava/lang/String;
+	public abstract fun encode (Ljava/lang/String;)[B
+	public abstract fun encode ([B)[B
+	public abstract fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun encodeToString ([B)Ljava/lang/String;
+	public abstract fun encoding ()Lelide/util/Encoding;
+}
+
+public final class elide/util/EncoderExtensionsKt {
+	public static final fun toBase64 (Ljava/lang/String;)[B
+	public static final fun toBase64 ([B)[B
+	public static final fun toBase64String (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun toBase64String ([B)Ljava/lang/String;
+	public static final fun toHex (Ljava/lang/String;)[B
+	public static final fun toHexString (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/util/Encoding : java/lang/Enum {
+	public static final field BASE64 Lelide/util/Encoding;
+	public static final field HEX Lelide/util/Encoding;
+	public static fun valueOf (Ljava/lang/String;)Lelide/util/Encoding;
+	public static fun values ()[Lelide/util/Encoding;
+}
+
+public final class elide/util/Hex : elide/util/Encoder {
+	public static final field INSTANCE Lelide/util/Hex;
+	public fun decode (Ljava/lang/String;)[B
+	public fun decode ([B)[B
+	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun decodeToString ([B)Ljava/lang/String;
+	public fun encode (Ljava/lang/String;)[B
+	public fun encode ([B)[B
+	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun encodeToString ([B)Ljava/lang/String;
+	public fun encoding ()Lelide/util/Encoding;
+	public final fun getCHARACTER_SET ()[C
+}
+
+public final class elide/util/UUID {
+	public static final field INSTANCE Lelide/util/UUID;
+	public final fun random ()Ljava/lang/String;
+}
+

@@ -4,13 +4,19 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.util.Properties
 
 plugins {
+  id("dev.elide.build")
   id("project-report")
   id("org.sonarqube")
+  id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
+  id("org.jetbrains.kotlinx.binary-compatibility-validator")
   id("io.gitlab.arturbosch.detekt")
+
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
   alias(libs.plugins.doctor)
@@ -52,6 +58,7 @@ buildscript {
     google()
     mavenCentral()
     maven("https://plugins.gradle.org/m2/")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
@@ -65,6 +72,34 @@ buildscript {
       resolutionStrategy.activateDependencyLocking()
     }
   }
+}
+
+plugins.withType<NodeJsRootPlugin>().configureEach {
+  // 16+ required for Apple Silicon support
+  // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
+  the<NodeJsRootExtension>().nodeVersion = "18.0.0"
+}
+
+apiValidation {
+  nonPublicMarkers += listOf(
+    "elide.annotations.Internal",
+    "Elide",
+  )
+
+  ignoredProjects += listOf(
+    "bundler",
+    "bom",
+    "proto",
+    "ssg",
+    "processor",
+    "reports",
+  ).plus(
+    if (project.properties["buildSamples"] == "true") {
+      listOf("samples")
+    } else {
+      emptyList()
+    }
+  )
 }
 
 tasks.register("relock") {
@@ -160,6 +195,7 @@ subprojects {
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
     filter {
+      exclude("**/proto/**")
       exclude("**/generated/**")
       exclude("**/tools/plugin/gradle-plugin/**")
       include("**/kotlin/**")
@@ -338,8 +374,10 @@ if (buildDocs == "true") {
     includes.from("README.md")
     outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
   }
+}
 
-  tasks.create("docs") {
+tasks.create("docs") {
+  if (buildDocs == "true") {
     dependsOn(listOf(
       "dokkaHtmlMultiModule",
       "dokkaGfmMultiModule",

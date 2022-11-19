@@ -8,6 +8,7 @@
 import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
+    id("dev.elide.build")
     id("dev.elide.build.multiplatform")
 }
 

@@ -1,8 +1,12 @@
+@file:Suppress("DEPRECATION")
+
 package elide.runtime.graalvm
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
+import com.oracle.svm.core.annotate.AutomaticFeature
+import elide.runtime.feature.FrameworkFeature
 import elide.server.type.RequestState
 import elide.server.util.ServerFlag
 import elide.util.Hex
@@ -14,6 +18,7 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
+import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
@@ -34,7 +39,8 @@ import com.google.common.util.concurrent.ListenableFuture as Future
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
 @Suppress("MemberVisibilityCanBePrivate")
-@Context public class JsRuntime {
+@AutomaticFeature
+@Context public class JsRuntime : FrameworkFeature {
   public companion object {
     // Singleton instance.
     private val singleton = JsRuntime()
@@ -780,5 +786,21 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       returnType,
       arguments,
     ).get()
+  }
+
+  // -- Interface: VM Feature -- //
+  /**
+   * Register types which must be callable via reflection or the Polyglot API within the Elide JS Runtime.
+   *
+   * @param access Before-analysis info for a given GraalVM image.
+   */
+  private fun registerJsRuntimeTypes(access: Feature.BeforeAnalysisAccess) {
+    registerClassForReflection(access, "elide.runtime.graalvm.JsRuntime")
+    registerClassForReflection(access, "elide.runtime.graalvm.JsRuntime${'$'}ExecutionInputs")
+  }
+
+  /** @inheritDoc */
+  override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess) {
+    registerJsRuntimeTypes(access)
   }
 }

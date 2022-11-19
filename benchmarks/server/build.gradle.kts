@@ -15,10 +15,13 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
-  id("dev.elide.buildtools.plugin")
+
+  alias(libs.plugins.elide)
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
 }
+
+val javaLanguageVersion = project.properties["versions.java.language"] as String
 
 elide {
   mode = BuildMode.PRODUCTION
@@ -31,10 +34,6 @@ elide {
           minimumSizeBytes(0)
           keepAllVariants()
         }
-      }
-
-      script("scripts.ui") {
-        from(project(":samples:fullstack:react-ssr:frontend"))
       }
     }
   }
@@ -49,6 +48,7 @@ dependencies {
   kapt(libs.micronaut.inject.java)
   implementation(libs.kotlinx.benchmark.runtime)
   implementation(libs.kotlinx.html.jvm)
+  implementation(libs.kotlinx.coroutines.test)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk8)
@@ -66,11 +66,16 @@ dependencies {
   implementation(libs.micronaut.runtime)
   implementation(libs.micronaut.router)
   implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.reactor.core)
+  implementation(libs.reactor.netty)
+  implementation(libs.reactor.netty.core)
+  implementation(libs.reactor.netty.http)
   runtimeOnly(libs.logback)
-  implementation(project(":packages:server"))
+
+  implementation(libs.elide.server)
 }
 
-configure<AllOpenExtension> {
+allOpen {
   annotation("org.openjdk.jmh.annotations.State")
 }
 
@@ -82,17 +87,35 @@ benchmark {
       include( if (project.hasProperty("elide.benchmark")) {
         project.properties["elide.benchmark"] as String
       } else {
-        "elide.benchmarks.*"
+        // "elide.benchmarks.*"
+        "elide.benchmarks.PageBenchmarkDirect"
       })
-      exclude(
-        "elide.benchmarks.PageBenchmarkHttp"
-      )
+//      exclude(
+//        "elide.benchmarks.PageBenchmarkHttp"
+//      )
     }
   }
   targets {
     register("main") {
       this as JvmBenchmarkTarget
-      jmhVersion = "1.21"
+      jmhVersion = "1.36"
     }
+  }
+}
+
+tasks.withType(Jar::class).configureEach {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+tasks.withType(Copy::class).configureEach {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  kotlinOptions {
+    apiVersion = "1.7"
+    languageVersion = "1.7"
+    jvmTarget = javaLanguageVersion
+    javaParameters = true
+    incremental = true
   }
 }

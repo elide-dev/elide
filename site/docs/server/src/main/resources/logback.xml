@@ -1,0 +1,20 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(sample) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- HTTP Access Log -->
+    <logger name="http:access" additivity="false" level="off">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="io.micronaut.context.env" level="off"/>
+
+    <!-- Root Logger -->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

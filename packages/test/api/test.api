@@ -1,0 +1,43 @@
+public abstract class elide/server/ElideServerTest : elide/testing/Test {
+	public field app Lio/micronaut/runtime/server/EmbeddedServer;
+	public field beanContext Lio/micronaut/context/BeanContext;
+	public field client Lio/micronaut/http/client/HttpClient;
+	public field context Lio/micronaut/context/ApplicationContext;
+	public fun <init> ()V
+	protected final fun assertReady ()V
+	public final fun exchange (Lio/micronaut/http/MutableHttpRequest;Ljava/lang/Integer;Ljava/lang/Class;Lkotlin/jvm/functions/Function1;)Lio/micronaut/http/HttpResponse;
+	public final fun exchange (Lio/micronaut/http/MutableHttpRequest;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;)Lio/micronaut/http/HttpResponse;
+	public static synthetic fun exchange$default (Lelide/server/ElideServerTest;Lio/micronaut/http/MutableHttpRequest;Ljava/lang/Integer;Ljava/lang/Class;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/micronaut/http/HttpResponse;
+	public static synthetic fun exchange$default (Lelide/server/ElideServerTest;Lio/micronaut/http/MutableHttpRequest;Ljava/lang/Integer;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lio/micronaut/http/HttpResponse;
+	public final fun exchangeHTML (Lio/micronaut/http/MutableHttpRequest;Ljava/lang/String;Ljava/lang/Integer;Lkotlin/jvm/functions/Function2;)Lio/micronaut/http/HttpResponse;
+	public static synthetic fun exchangeHTML$default (Lelide/server/ElideServerTest;Lio/micronaut/http/MutableHttpRequest;Ljava/lang/String;Ljava/lang/Integer;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lio/micronaut/http/HttpResponse;
+	public final fun getApp ()Lio/micronaut/runtime/server/EmbeddedServer;
+	public final fun getBeanContext ()Lio/micronaut/context/BeanContext;
+	public final fun getClient ()Lio/micronaut/http/client/HttpClient;
+	public final fun getContext ()Lio/micronaut/context/ApplicationContext;
+	public final fun setApp (Lio/micronaut/runtime/server/EmbeddedServer;)V
+	public final fun setBeanContext (Lio/micronaut/context/BeanContext;)V
+	public final fun setClient (Lio/micronaut/http/client/HttpClient;)V
+	public final fun setContext (Lio/micronaut/context/ApplicationContext;)V
+}
+
+public final class elide/server/TestUtil {
+	public static final field INSTANCE Lelide/server/TestUtil;
+	public final fun loadBinary (Ljava/lang/String;)[B
+	public final fun loadFixture (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/server/runtime/TestAppExecutor : elide/server/runtime/AppExecutor {
+	public fun <init> ()V
+	public synthetic fun service ()Lcom/google/common/util/concurrent/ListeningExecutorService;
+	public fun service ()Lcom/google/common/util/concurrent/ListeningScheduledExecutorService;
+}
+
+public final class elide/testing/ElideTesting {
+	public static final field INSTANCE Lelide/testing/ElideTesting;
+}
+
+public abstract class elide/testing/Test {
+	public fun <init> ()V
+}
+

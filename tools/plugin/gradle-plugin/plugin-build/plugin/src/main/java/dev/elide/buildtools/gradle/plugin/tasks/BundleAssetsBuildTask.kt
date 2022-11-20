@@ -22,7 +22,7 @@ import java.util.stream.Collectors
 @Suppress("UnusedPrivateMember", "UnstableApiUsage")
 abstract class BundleAssetsBuildTask : BundleBaseTask() {
     companion object {
-        private const val TASK_NAME = "bundleAssets"
+        internal const val TASK_NAME = "bundleAssets"
         private const val ASSETS_INTERMEDIATE_FOLDER = "serverAssets"
         private const val BROWSER_DIST_DEFAULT = "assetDist"
 
@@ -54,7 +54,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
                     }
                     if (extension.server.hasSsrBundle()) {
                         val target = extension.server.ssr.targetProject.get()
-                        if (target != null && target.isNotBlank()) {
+                        if (!target.isNullOrBlank()) {
                             project.evaluationDependsOn(
                                 target
                             )
@@ -209,7 +209,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
                 // resolve target project
                 val (moduleId, bundle) = it
                 val projectName = bundle.projectPath.get()
-                require(projectName != null && projectName.isNotBlank()) {
+                require(!projectName.isNullOrBlank()) {
                     "Failed to resolve `null` dependency for project '${project.path}'"
                 }
                 val targetProject = project.findProject(projectName)
@@ -264,7 +264,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
                 Collectors.toMap(
                     { it.first },
                     { it.second },
-                    { left, _, -> left },
+                    { left, _ -> left },
                     { TreeMap() }
                 )
             )

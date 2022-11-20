@@ -5,11 +5,13 @@ import dev.elide.buildtools.gradle.plugin.cfg.ElideServerHandler
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.tasks.Optional
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @Suppress("UnnecessaryAbstractClass", "unused", "RedundantVisibilityModifier", "MemberVisibilityCanBePrivate")
 public open class ElideExtension @Inject constructor(project: Project) {
     private val objects = project.objects
+    internal val multiplatform: AtomicBoolean = AtomicBoolean(false)
 
     /** Configuration for JS runtime settings. */
     public val js: ElideJsHandler = objects.newInstance(ElideJsHandler::class.java)

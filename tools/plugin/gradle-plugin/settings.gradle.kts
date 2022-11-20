@@ -1,7 +1,10 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
+        maven("https://maven-central.storage-download.googleapis.com/maven2/")
         mavenCentral()
+        google()
+        maven("https://plugins.gradle.org/m2/")
+        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     }
 }
 
@@ -25,6 +28,8 @@ include(
     ":example:fullstack:browser",
     ":example:fullstack:node",
     ":example:fullstack:server",
+    ":example:static:frontend",
+    ":example:static:server",
     ":example:mixed",
 )
 includeBuild("plugin-build")

@@ -262,6 +262,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         )
     }
 
+    @Suppress("USELESS_ELVIS")
     private fun writeAssetBundle(bundle: AssetBundle) {
         // ensure file is writable
         val targetFile = this.manifestFile.get() ?: throw IllegalStateException(
@@ -558,6 +559,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         }.toList()
     }
 
+    @Suppress("USELESS_ELVIS")
     private fun buildAssetDescriptor(
         hashAlgorithm: HashAlgorithm,
         collectedBuilders: List<Pair<AssetBundle.Builder, AssetContent>>,

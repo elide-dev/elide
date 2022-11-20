@@ -11,7 +11,7 @@ import java.util.stream.Stream
 
 // Implementation of topological sort on top of a Guava graph.
 @Suppress("UnstableApiUsage")
-internal class TopologicalGraphIterator<N> constructor (private val graph: Graph<N>) : AbstractIterator<N>() {
+internal class TopologicalGraphIterator<N : Any> constructor (private val graph: Graph<N>) : AbstractIterator<N>() {
     private val roots: Queue<N> = graph
         .nodes()
         .stream()
@@ -50,7 +50,7 @@ internal class TopologicalGraphIterator<N> constructor (private val graph: Graph
 
     companion object {
         /** @return Map [op] across each node in the provided [graph], in reverse topological order. */
-        @JvmStatic fun <N, R> map(graph: Graph<N>, op: (N) -> R): Stream<R> {
+        @JvmStatic fun <N : Any, R> map(graph: Graph<N>, op: (N) -> R): Stream<R> {
             val iterator = TopologicalGraphIterator(graph)
             val nodes = iterator.asSequence().toList()
             return nodes.reversed().stream().map {

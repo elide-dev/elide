@@ -112,7 +112,10 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 
 publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
-	$(CMD)$(GRADLE) publish \
+	$(CMD)$(GRADLE) \
+		:conventions:publish \
+		:substrate:publish \
+		publish \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=false \

@@ -27,6 +27,7 @@ dependencies {
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.atomicfu)
   implementation(libs.plugin.kotlinx.serialization)
+  implementation(libs.plugin.kotlinx.abiValidator)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 

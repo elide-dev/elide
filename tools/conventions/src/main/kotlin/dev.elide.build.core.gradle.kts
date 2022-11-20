@@ -91,7 +91,7 @@ publishing {
 
       licenses {
         license {
-          name.set("Properity License")
+          name.set("MIT License")
           url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
         }
       }

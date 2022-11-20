@@ -27,12 +27,20 @@ open class ElideServerHandler @Inject constructor(
     /** Server embedded SSR configuration. */
     public val ssr: ServerSSRHandler = objects.newInstance(ServerSSRHandler::class.java)
 
+    /** Static site generator (SSG) configuration. */
+    public val ssg: StaticSiteHandler = objects.newInstance(StaticSiteHandler::class.java)
+
     /** Server SSR runtime configuration. */
     internal val ssrRuntime: AtomicReference<EmbeddedScriptLanguage> = AtomicReference(defaultScriptLanguage)
 
     /** @return True if the user has configured an SSR bundle from their build script. */
     public fun hasSsrBundle(): Boolean {
         return ssr.hasBundle()
+    }
+
+    /** @return True if the user has configured an SSG target from their build script. */
+    public fun hasSsgConfig(): Boolean {
+        return ssg.enabled.get()
     }
 
     /** @return Whether the user has configured assets */
@@ -72,6 +80,22 @@ open class ElideServerHandler @Inject constructor(
         fun bundle(project: Project, configuration: String = defaultSsrConfiguration) {
             targetProject.set(project.path)
             targetConfiguration.set(configuration)
+        }
+    }
+
+    /** Configures SSG (static site generator) features for Elide server targets. */
+    open class StaticSiteHandler {
+        /** Whether the user configured a static site target in their build script. */
+        internal val enabled: AtomicBoolean = AtomicBoolean(false)
+
+        /** Enable a static site build run for a given server target. */
+        public fun enable() {
+            enabled.set(true)
+        }
+
+        /** Disable a static site build run for a given server target. */
+        public fun disable() {
+            enabled.set(false)
         }
     }
 }

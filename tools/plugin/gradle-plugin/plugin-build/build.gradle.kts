@@ -1,7 +1,6 @@
 @file:Suppress(
     "UnstableApiUsage",
     "unused",
-    "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
 )
 
@@ -9,6 +8,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("org.jetbrains.kotlin.kapt") apply false
+    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.pluginPublish) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)

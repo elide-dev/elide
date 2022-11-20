@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha1-rc32"
+elide = "1.0-v3-alpha1-rc33"
 ksp = "1.7.21-1.0.8"
 detekt = "1.20.0"
 kotlin = "1.7.21"
@@ -35,6 +35,7 @@ closure_stylesheets = "1.5.0"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin_kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
@@ -94,6 +95,7 @@ elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
 elide_bom = { group = "dev.elide", name = "bom", version.ref = "elide" }
+elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_bom_catalog = { group = "dev.elide", name = "bom-catalog", version.ref = "elide" }
 elide_bom_platform = { group = "dev.elide", name = "bom-platform", version.ref = "elide" }
 

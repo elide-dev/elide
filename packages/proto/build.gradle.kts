@@ -4,11 +4,12 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import Elide
 import com.google.protobuf.gradle.*
 
 plugins {
-  id("dev.elide.build.jvm")
+  `maven-publish`
+  distribution
+  signing
   id("dev.elide.build.kotlin")
   alias(libs.plugins.protobuf)
 }

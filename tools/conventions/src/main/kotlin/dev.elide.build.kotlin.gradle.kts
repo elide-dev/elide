@@ -18,7 +18,7 @@ val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as St
 // Compiler: Kotlin
 // ----------------
 // Configure Kotlin compile runs for MPP, JS, and JVM.
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = Elide.kotlinLanguage
     languageVersion = Elide.kotlinLanguage
@@ -47,10 +47,7 @@ kotlin {
   publishing {
     publications {
       create<MavenPublication>("main") {
-        artifactId = project.name
-        groupId = project.group as String
         version = rootProject.version as String
-
         from(components["kotlin"])
       }
     }

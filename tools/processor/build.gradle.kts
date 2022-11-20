@@ -14,6 +14,16 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
+
+  publishing {
+    publications {
+      named<MavenPublication>("main") {
+        artifactId = "processor"
+        groupId = "dev.elide.tools"
+        version = rootProject.version as String
+      }
+    }
+  }
 }
 
 dependencies {

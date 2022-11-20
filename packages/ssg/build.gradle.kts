@@ -8,6 +8,9 @@ plugins {
 //  id("io.micronaut.aot")
 }
 
+group = "dev.elide"
+version = rootProject.version as String
+
 dependencies {
   api(platform(project(":packages:platform")))
   implementation(project(":packages:base"))

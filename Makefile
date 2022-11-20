@@ -115,6 +115,7 @@ publish:  ## Publish a new version of all Elide packages.
 	$(CMD)$(GRADLE) \
 		:conventions:publish \
 		:substrate:publish \
+		:tools:processor:publish \
 		publish \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \

@@ -581,3 +581,68 @@ jobs:
       image: "us-docker.pkg.dev/elide-fw/samples/${{ matrix.category }}/${{ matrix.app }}/${{ matrix.variant }}:opt-latest"
       environment: samples
       url: https://${{ matrix.app }}.samples.elide.dev
+
+  ##
+  ## Publish: Library Snapshot
+  ##
+
+  publish-snapshot:
+    name: "Publish: Snapshot"
+    needs: [gradle, tests-jvm]
+    if: |
+      (
+        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
+        contains(github.event.head_commit.message, 'ci:publish-snapshot')
+      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+
+    uses: ./.github/workflows/publish.ci.yml
+    secrets: inherit
+    with:
+      environment: snapshots
+      gcp: true
+      snapshot: true
+      packages: true
+      processor: true
+      substrate: true
+      conventions: true
+      url: https://console.cloud.google.com/storage/browser/elide-snapshots/repository/v3
+
+  ##
+  ## Publish: Library OSSRH
+  ##
+
+  publish-ossrh:
+    name: "Publish: OSSRH"
+    needs: [publish-snapshot]
+    if: |
+      (
+        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
+        contains(github.event.head_commit.message, 'ci:publish')
+      ) && (
+        false
+      ) && (
+        startsWith(github.ref, 'refs/tags/v')
+      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+
+    uses: ./.github/workflows/publish.ci.yml
+    secrets: inherit
+    with:
+      environment: central
+      snapshot: false
+      repo: https://s01.oss.sonatype.org

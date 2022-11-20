@@ -5,6 +5,9 @@
       <verify-signatures>true</verify-signatures>
       <key-servers enabled="false"/>
       <trusted-artifacts>
+         <trust group="dev.elide"/>
+         <trust group="dev.elide.tools"/>
+         <trust group="dev.elide.tools.kotlin.plugin"/>
          <trust group="com.aayushatharva.brotli4j"/>
          <trust group="com.gradle"/>
          <trust group="gradle" name="gradle"/>

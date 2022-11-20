@@ -6,7 +6,6 @@
 
 plugins {
   id("dev.elide.build.jvm")
-  id("dev.elide.build.kotlin")
 }
 
 group = "dev.elide.tools"

@@ -24,11 +24,10 @@ public final synthetic class elide/runtime/graalvm/$JsRuntime$ExecutionInputs$Re
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public final class elide/runtime/graalvm/JsRuntime : elide/runtime/feature/FrameworkFeature {
+public final class elide/runtime/graalvm/JsRuntime {
 	public static final field Companion Lelide/runtime/graalvm/JsRuntime$Companion;
 	public fun <init> ()V
 	public static final fun acquire ()Lelide/runtime/graalvm/JsRuntime;
-	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public final fun execute (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
 	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;

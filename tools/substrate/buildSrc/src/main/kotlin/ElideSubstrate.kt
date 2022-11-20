@@ -25,7 +25,7 @@ object ElideSubstrate {
         groupId = group
         url.set("https://github.com/elide-dev/v3")
         description.set(summary)
-        if (!parent) from(project.components.get("java"))
+        if (!parent) from(project.components.get("kotlin"))
         else packaging = "pom"
 
         licenses {

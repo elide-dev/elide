@@ -14,6 +14,7 @@
          <trust group="info.picocli"/>
          <trust group="org.checkerframework" name="checker-compat-qual"/>
          <trust group="org.codehaus.groovy"/>
+         <trust group="org.jdbi"/>
          <trust file=".*-javadoc[.]jar" regex="true"/>
          <trust file=".*-sources[.]jar" regex="true"/>
       </trusted-artifacts>

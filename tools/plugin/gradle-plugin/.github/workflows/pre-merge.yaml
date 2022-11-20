@@ -12,10 +12,8 @@ jobs:
   gradle:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        experimental: [false]
+        os: [ubuntu]
         include:
-          - os: ubuntu
           - os: macos
 
     runs-on: ${{ matrix.os }}-latest

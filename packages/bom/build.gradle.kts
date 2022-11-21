@@ -46,8 +46,8 @@ kover {
 catalog {
   versionCatalog {
     // map Elide versions
-    version("elide", Elide.version)
-    version("elidePlugin", Elide.pluginVersion)
+    version("elide", libs.versions.elide.asProvider().get())
+    version("elidePlugin", libs.versions.elide.plugin.get())
 
     // map each peer version
     peers.forEach { alias, (_, version) ->

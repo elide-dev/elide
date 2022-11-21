@@ -143,7 +143,7 @@ jobs:
             build
             -x test
             -x testNativeImage
-            -x compileNative
+            -x nativeCompile
             --scan
             --no-daemon
             --warning-mode=none
@@ -237,7 +237,7 @@ jobs:
             koverMergedHtmlReport
             koverMergedXmlReport
             koverMergedReport
-            :substrate:test
+            :substrate:redakt:test
             :substrate:koverMergedXmlReport
             :tools:reports:reports
             sonar

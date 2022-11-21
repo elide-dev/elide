@@ -16,7 +16,11 @@ plugins {
   id("dev.elide.build.kotlin")
 }
 
+val defaultJavaVersion = "11"
+val defaultKotlinVersion = "1.7"
+
 val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val strictMode = project.properties["strictMode"] as? String == "true"
 val buildDocs = project.properties["buildDocs"] as String == "true"
@@ -28,7 +32,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = Elide.kotlinLanguage
     languageVersion = Elide.kotlinLanguage
-    jvmTarget = javaLanguageVersion
+    jvmTarget = javaLanguageTarget
     javaParameters = true
     freeCompilerArgs = Elide.kaptCompilerArgs  // intentionally eliminates `-Xuse-K2`, which is unsupported by `kapt`
     allWarningsAsErrors = strictMode
@@ -79,8 +83,8 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageVersion
-  targetCompatibility = javaLanguageVersion
+  sourceCompatibility = javaLanguageTarget
+  targetCompatibility = javaLanguageTarget
   options.isFork = true
   options.isIncremental = true
 }

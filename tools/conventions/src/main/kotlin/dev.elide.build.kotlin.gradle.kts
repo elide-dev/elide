@@ -16,6 +16,7 @@ val defaultKotlinVersion = "1.7"
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 
 // Compiler: Kotlin
@@ -25,12 +26,17 @@ tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = Elide.kotlinLanguage
     languageVersion = Elide.kotlinLanguage
-    jvmTarget = javaLanguageVersion
+    jvmTarget = javaLanguageTarget
     javaParameters = true
     freeCompilerArgs = Elide.kaptCompilerArgs
     allWarningsAsErrors = strictMode
     incremental = true
   }
+}
+
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
 }
 
 kotlin {

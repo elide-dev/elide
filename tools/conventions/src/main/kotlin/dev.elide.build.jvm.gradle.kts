@@ -22,6 +22,7 @@ val defaultKotlinVersion = "1.7"
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
 
@@ -32,7 +33,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = Elide.kotlinLanguage
     languageVersion = Elide.kotlinLanguage
-    jvmTarget = javaLanguageVersion
+    jvmTarget = javaLanguageTarget
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = strictMode
@@ -90,8 +91,8 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageVersion
-  targetCompatibility = javaLanguageVersion
+  sourceCompatibility = javaLanguageTarget
+  targetCompatibility = javaLanguageTarget
   options.isFork = true
   options.isIncremental = true
 }

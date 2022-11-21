@@ -18,6 +18,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 protobuf {
   protoc {
@@ -58,8 +59,8 @@ dependencies {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageVersion
-  targetCompatibility = javaLanguageVersion
+  sourceCompatibility = javaLanguageTarget
+  targetCompatibility = javaLanguageTarget
   options.isFork = true
   options.isIncremental = true
   options.isWarnings = false

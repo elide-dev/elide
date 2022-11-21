@@ -12,8 +12,12 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 }
 
+val defaultJavaVersion = "11"
+val defaultKotlinVersion = "1.7"
+
 val javaLanguageVersion = project.properties["versions.java.language"] as String
-val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
@@ -79,8 +83,8 @@ kotlin {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageVersion
-  targetCompatibility = javaLanguageVersion
+  sourceCompatibility = javaLanguageTarget
+  targetCompatibility = javaLanguageTarget
   options.isFork = true
   options.isIncremental = true
 }
@@ -100,7 +104,7 @@ tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
-    jvmTarget = javaLanguageVersion
+    jvmTarget = javaLanguageTarget
     freeCompilerArgs = Elide.mppCompilerArgs
     javaParameters = true
     allWarningsAsErrors = strictMode

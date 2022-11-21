@@ -23,6 +23,7 @@ dependencies {
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.sonar)
+  implementation(libs.plugin.kover)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.atomicfu)

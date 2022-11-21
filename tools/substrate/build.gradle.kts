@@ -41,6 +41,7 @@ tasks.create("buildPlugins") {
 }
 
 val libPlugins = libs.plugins
+val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
 
 tasks.named("build").configure {
   dependsOn("buildPlugins")
@@ -50,6 +51,41 @@ tasks.named("publish").configure {
   dependsOn(allPlugins.map {
     ":$it:publish"
   })
+}
+
+koverMerged {
+  enable()
+
+  xmlReport {
+    onCheck.set(isCI)
+  }
+
+  htmlReport {
+    onCheck.set(isCI)
+  }
+}
+
+sonarqube {
+  properties {
+    property("sonar.dynamicAnalysis", "reuseReports")
+    property("sonar.junit.reportsPath", "build/reports/")
+    property("sonar.java.coveragePlugin", "jacoco")
+    property("sonar.sourceEncoding", "UTF-8")
+    property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
+  }
+}
+
+subprojects {
+  sonarqube {
+    properties {
+      property("sonar.sources", "src/main/kotlin")
+      property("sonar.tests", "src/test/kotlin")
+      property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
+      property("sonar.coverage.jacoco.xmlReportPaths", listOf(
+        "$buildDir/reports/kover/xml/report.xml",
+      ))
+    }
+  }
 }
 
 publishing {

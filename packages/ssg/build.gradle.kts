@@ -14,7 +14,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 dependencies {
-  api(platform(project(":packages:platform")))
+  implementation(platform(project(":packages:platform")))
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
   implementation(libs.picocli)

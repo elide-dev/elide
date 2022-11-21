@@ -30,7 +30,7 @@ micronaut {
 
 dependencies {
   // Core platform versions.
-  api(platform(project(":packages:platform")))
+  implementation(platform(project(":packages:platform")))
 
   // API Deps
   api(libs.jakarta.inject)

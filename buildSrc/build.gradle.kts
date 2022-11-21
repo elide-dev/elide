@@ -15,7 +15,6 @@ val buildDocs by properties
 
 dependencies {
   api(kotlin("gradle-plugin"))
-//  implementation(libs.elide.tools.conventions)
   implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)

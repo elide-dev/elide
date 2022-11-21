@@ -47,6 +47,14 @@ sourceSets {
   }
 }
 
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      from(components["kotlin"])
+    }
+  }
+}
+
 dependencies {
   api(libs.protobuf.java)
   api(libs.protobuf.util)

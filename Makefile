@@ -116,6 +116,9 @@ publish:  ## Publish a new version of all Elide packages.
 		:conventions:publish \
 		:substrate:publish \
 		:tools:processor:publish \
+		:packages:bom:publish \
+		:packages:catalog:publish \
+		:packages:platform:publish \
 		publish \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \

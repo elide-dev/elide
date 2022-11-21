@@ -140,7 +140,10 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
-            assemble
+            build
+            -x test
+            -x testNativeImage
+            -x compileNative
             --scan
             --no-daemon
             --warning-mode=none
@@ -228,13 +231,14 @@ jobs:
         with:
           cache-read-only: false
           arguments: |
-            build
             test
             check
             jacocoTestReport
             koverMergedHtmlReport
             koverMergedXmlReport
             koverMergedReport
+            :substrate:test
+            :substrate:koverMergedXmlReport
             :tools:reports:reports
             sonar
             --scan
@@ -266,12 +270,22 @@ jobs:
           report_paths: "**/build/test-results/test/TEST-*.xml"
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Report: Codecov"
+      - name: "Report: Codecov (Main)"
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
-          name: jvm
+          files: ./build/reports/kover/merged/xml/report.xml
+          name: elide
+          flags: jvm,lib
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Report: Codecov (Substrate)"
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/substrate/build/reports/kover/merged/xml/report.xml
+          name: substrate
+          flags: jvm,substrate
           fail_ci_if_error: false
           verbose: true
 

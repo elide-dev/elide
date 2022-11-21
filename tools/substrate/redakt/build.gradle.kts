@@ -7,6 +7,7 @@ plugins {
   signing
 
   id("dev.elide.build")
+  id("dev.elide.build.jvm")
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
@@ -32,6 +33,9 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
 
   testImplementation(kotlin("test"))
+  testImplementation(libs.truth)
+  testImplementation(libs.truth.proto)
+  testImplementation(libs.truth.java8)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.engine)

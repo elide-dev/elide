@@ -18,7 +18,7 @@ plugins {
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
-val strictMode = project.properties["versions.java.language"] as String == "true"
+val strictMode = project.properties["strictMode"] as? String == "true"
 val buildDocs = project.properties["buildDocs"] as String == "true"
 
 // Compiler: Kotlin

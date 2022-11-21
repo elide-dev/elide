@@ -15,8 +15,8 @@ plugins {
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
-val strictMode = project.properties["versions.java.language"] as String == "true"
-val enableK2 = project.properties["elide.kotlin.k2"] as String == "true"
+val strictMode = project.properties["strictMode"] as? String == "true"
+val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 
 kover {
   xmlReport {

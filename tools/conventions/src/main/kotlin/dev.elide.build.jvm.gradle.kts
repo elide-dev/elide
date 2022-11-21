@@ -15,10 +15,14 @@ plugins {
   id("dev.elide.build.kotlin")
 }
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val ecmaVersion = project.properties["versions.ecma.language"] as String
-val strictMode = project.properties["versions.java.language"] as String == "true"
-val buildDocs = project.properties["buildDocs"] as String == "true"
+val defaultJavaVersion = "17"
+val defaultKotlinVersion = "1.7"
+
+val strictMode = project.properties["strictMode"] as? String == "true"
+val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
+val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
+val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
 
 // Compiler: Kotlin
 // ----------------
@@ -69,8 +73,9 @@ java {
   }
 
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
     vendor.set(JvmVendorSpec.GRAAL_VM)
+
     if (project.hasProperty("elide.graalvm.variant")) {
       val variant = project.property("elide.graalvm.variant") as String
       if (variant != "COMMUNITY") {

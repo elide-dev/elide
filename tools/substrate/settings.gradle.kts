@@ -28,7 +28,7 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "elide-substrate"
+rootProject.name = "substrate"
 
 gradleEnterprise {
   buildScan {

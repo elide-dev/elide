@@ -218,6 +218,7 @@ jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" 
 junit_jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit_jupiter" }
 junit_jupiter_api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit_jupiter" }
 junit_jupiter_engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit_jupiter" }
+junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit_jupiter" }
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }

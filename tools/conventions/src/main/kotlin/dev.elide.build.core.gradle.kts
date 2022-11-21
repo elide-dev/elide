@@ -6,22 +6,12 @@ plugins {
   signing
   idea
 
+  id("dev.elide.build")
   id("com.adarshr.test-logger")
   id("com.github.ben-manes.versions")
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.sonarqube")
-}
-
-
-// Dependencies: Locking
-// ---------------------
-// Produces sealed dependency locks for each module.
-dependencyLocking {
-  ignoredDependencies.addAll(listOf(
-    "org.jetbrains.kotlinx:atomicfu*",
-    "org.jetbrains.kotlinx:kotlinx-serialization*",
-  ))
 }
 
 tasks.register("resolveAndLockAll") {
@@ -33,33 +23,6 @@ tasks.register("resolveAndLockAll") {
       // Add any custom filtering on the configurations to be resolved
       it.isCanBeResolved
     }.forEach { it.resolve() }
-  }
-}
-
-// Dependencies: Conflicts
-// -----------------------
-// Establishes a strict conflict policy for dependencies.
-configurations.all {
-  resolutionStrategy {
-    // fail eagerly on version conflict (includes transitive dependencies)
-    failOnVersionConflict()
-
-    // prefer modules that are part of this build
-    preferProjectModules()
-
-    if (name.contains("detached")) {
-      disableDependencyVerification()
-    }
-  }
-}
-
-// Artifacts: Signing
-// ------------------
-// If so directed, make sure to sign outgoing artifacts.
-signing {
-  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
-    sign(configurations.archives.get())
-    sign(publishing.publications)
   }
 }
 
@@ -107,41 +70,4 @@ publishing {
       }
     }
   }
-}
-
-// Tasks: Test
-// -----------
-// Settings for testsuite execution.
-tasks.withType<Test>().configureEach {
-  maxParallelForks = 4
-}
-
-// Tasks: Tar
-// ----------
-// Configure tasks which produce tarballs (improves caching/hermeticity).
-tasks.withType<Jar>().configureEach {
-  isReproducibleFileOrder = true
-  isPreserveFileTimestamps = false
-}
-
-// Tasks: Zip
-// ----------
-// Configure tasks which produce zip archives (improves caching/hermeticity).
-tasks.withType<Zip>().configureEach {
-  isReproducibleFileOrder = true
-  isPreserveFileTimestamps = false
-}
-
-// Plugin: Test Logger
-// -------------------
-// Configure test logging.
-testlogger {
-  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
-  showExceptions = true
-  showFailed = true
-  showPassed = true
-  showSkipped = true
-  showFailedStandardStreams = true
-  showFullStackTraces = true
-  slowThreshold = 30000L
 }

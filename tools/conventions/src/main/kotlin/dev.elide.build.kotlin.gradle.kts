@@ -10,10 +10,13 @@ plugins {
   id("dev.elide.build.core")
 }
 
-val strictMode = project.properties["versions.java.language"] as String == "true"
-val enableK2 = project.properties["elide.kotlin.k2"] as String == "true"
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
+val defaultJavaVersion = "17"
+val defaultKotlinVersion = "1.7"
+
+val strictMode = project.properties["strictMode"] as? String == "true"
+val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
+val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 
 // Compiler: Kotlin
 // ----------------
@@ -32,7 +35,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
   }
 
   sourceSets.all {

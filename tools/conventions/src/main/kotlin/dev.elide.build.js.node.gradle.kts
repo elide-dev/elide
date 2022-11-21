@@ -10,7 +10,7 @@ plugins {
 }
 
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
-val strictMode = project.properties["versions.java.language"] as String == "true"
+val strictMode = project.properties["strictMode"] as? String == "true"
 
 // Compiler: Kotlin
 // ----------------

@@ -7,6 +7,7 @@ plugins {
   signing
 
   id("dev.elide.build")
+  id("dev.elide.build.jvm")
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 

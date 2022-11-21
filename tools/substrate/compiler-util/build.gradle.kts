@@ -5,9 +5,10 @@ plugins {
 
   id("java")
   id("java-test-fixtures")
-  id("dev.elide.build")
   kotlin("jvm")
   kotlin("kapt")
+  id("dev.elide.build")
+  id("dev.elide.build.jvm")
   id("dev.elide.build.substrate")
 }
 
@@ -27,6 +28,11 @@ dependencies {
 
   testApi(kotlin("test"))
   testApi(libs.junit.jupiter.api)
+  testApi(libs.junit.jupiter.params)
+  testApi(libs.kotlin.compiler.testing)
+  testApi(libs.truth)
+  testApi(libs.truth.proto)
+  testApi(libs.truth.java8)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.engine)
   testImplementation(libs.kotlin.compiler.embedded)

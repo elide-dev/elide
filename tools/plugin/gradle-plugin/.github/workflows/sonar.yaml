@@ -66,3 +66,4 @@ jobs:
             sonar
             --scan
             -Pelide.ci=true
+            --dependency-verification=lenient

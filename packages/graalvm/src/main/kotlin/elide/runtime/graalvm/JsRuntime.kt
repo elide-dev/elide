@@ -14,7 +14,6 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
-import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
@@ -31,7 +30,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import com.google.common.util.concurrent.ListenableFuture as Future
-
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
 @Suppress("MemberVisibilityCanBePrivate")

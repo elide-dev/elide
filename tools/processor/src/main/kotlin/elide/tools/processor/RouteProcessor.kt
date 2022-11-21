@@ -42,6 +42,7 @@ public class RouteProcessor(
 ) : SymbolProcessor {
   private companion object {
     private const val tagDigestAlgorithm = "MD5"
+    private const val mediaTypeHtml = "text/html"
   }
 
   // Generated app manifest.
@@ -98,7 +99,7 @@ public class RouteProcessor(
   private fun determineEndpointType(route: String, produces: Array<String>): EndpointType = when {
     // if there is nothing declared for `produces` or `consumes`, or `text/html` is in `produces`, the endpoint is then
     // considered to be of type `PAGE`.
-    produces.isEmpty() || produces.find { it.contains("text/html") } != null -> EndpointType.PAGE
+    produces.isEmpty() || produces.find { it.contains(mediaTypeHtml) } != null -> EndpointType.PAGE
 
     // if the endpoint produces JSON, it is considered to be of type `API`.
     produces.find { it.contains("application/json") } != null -> EndpointType.API
@@ -140,8 +141,8 @@ public class RouteProcessor(
     val name: String? = annotationArgument("name", anno)
 
     // resolve produces/consumes arrays
-    val produceTypes = annotationArgument("produces", anno, arrayOf("text/html")) ?: emptyArray()
-    val consumeTypes = annotationArgument("consumes", anno, arrayOf("text/html")) ?: emptyArray()
+    val produceTypes = annotationArgument("produces", anno, arrayOf(mediaTypeHtml)) ?: emptyArray()
+    val consumeTypes = annotationArgument("consumes", anno, arrayOf(mediaTypeHtml)) ?: emptyArray()
     val endpointType = determineEndpointType(route, produceTypes)
 
     // resolve pre-compilation setting and endpoint tag

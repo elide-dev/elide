@@ -3,7 +3,6 @@ package elide.tools.processor.util
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSValueArgument
-import kotlin.reflect.KClass
 
 
 // Return a predicate which finds an annotation parameter by name and type.

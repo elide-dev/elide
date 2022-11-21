@@ -494,6 +494,13 @@ elide_model = { group = "dev.elide", name = "model", version.ref = "elide" }
 elide_rpc_js = { group = "dev.elide", name = "rpc-js", version.ref = "elide" }
 elide_rpc_jvm = { group = "dev.elide", name = "rpc-jvm", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
+elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
+elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
+elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
+elide_kotlin_plugin_injekt = { group = "dev.tools.compiler.plugin", name = "injekt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_interakt = { group = "dev.tools.compiler.plugin", name = "interakt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_redakt = { group = "dev.tools.compiler.plugin", name = "redakt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_sekret = { group = "dev.tools.compiler.plugin", name = "sekret-plugin", version.ref = "elide" }
 
 [bundles]
 kotlinx_coroutines_jvm = [

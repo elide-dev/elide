@@ -83,7 +83,6 @@ plugins.withType<NodeJsRootPlugin>().configureEach {
 apiValidation {
   nonPublicMarkers += listOf(
     "elide.annotations.Internal",
-    "Elide",
   )
 
   ignoredProjects += listOf(
@@ -96,6 +95,12 @@ apiValidation {
   ).plus(
     if (project.properties["buildSamples"] == "true") {
       listOf("samples")
+    } else {
+      emptyList()
+    }
+  ).plus(
+    if (project.properties["buildDocsSite"] == "true") {
+      listOf("docs")
     } else {
       emptyList()
     }

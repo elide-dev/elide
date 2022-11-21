@@ -11,6 +11,9 @@ plugins {
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
+group = "dev.elide.tools.kotlin.plugin"
+version = rootProject.version as String
+
 projectConstants(
   packageName = "elide.tools.kotlin.plugin.interakt",
   extraProperties = mapOf(

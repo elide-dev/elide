@@ -40,16 +40,20 @@ dependencyResolutionManagement {
 rootProject.name = "elide"
 
 // 1: Gradle convention plugins.
-includeBuild("tools/conventions")
+includeBuild("tools/conventions") {
+  dependencySubstitution {
+    substitute(module("dev.elide.tools:elide-convention-plugins")).using(project(":"))
+  }
+}
 
 // 2: Kotlin Compiler substrate.
 includeBuild("tools/substrate") {
   dependencySubstitution {
     substitute(module("dev.elide.tools:substrate")).using(project(":"))
-    substitute(module("dev.tools.compiler.plugin:injekt")).using(project(":injekt"))
-    substitute(module("dev.tools.compiler.plugin:interakt")).using(project(":interakt"))
-    substitute(module("dev.tools.compiler.plugin:redakt")).using(project(":redakt"))
-    substitute(module("dev.tools.compiler.plugin:sekret")).using(project(":sekret"))
+    substitute(module("dev.elide.tools.kotlin.plugin:injekt-plugin")).using(project(":injekt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:interakt-plugin")).using(project(":interakt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:sekret-plugin")).using(project(":sekret"))
   }
 }
 
@@ -74,7 +78,7 @@ include(
   ":tools:reports",
 )
 
-val buildDocs: String by settings
+val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
@@ -101,11 +105,11 @@ if (buildSamples == "true") {
   )
 }
 
-if (buildDocs == "true") {
+if (buildDocsSite == "true") {
   include(
-    ":site:docs:frontend",
+    ":site:docs:ui",
     ":site:docs:node",
-    ":site:docs:server",
+    ":site:docs:app",
   )
 }
 

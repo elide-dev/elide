@@ -119,7 +119,9 @@ publish:  ## Publish a new version of all Elide packages.
 		publish \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
-		-PbuildDocs=false \
+		-PbuildDocs=true \
+		-PbuildDocsSite=true \
+		-PenableSigning=true \
 		-x test \
 		-x jvmTest \
 		-x jsTest;

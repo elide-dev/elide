@@ -32,6 +32,7 @@ dependencies {
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)
   implementation(libs.plugin.detekt)
+  implementation(libs.plugin.dokka)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.micronaut)
   implementation(libs.plugin.sonar)
@@ -44,6 +45,11 @@ dependencies {
   implementation(libs.plugin.kotlinx.serialization)
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 afterEvaluate {
@@ -103,8 +109,10 @@ configurations.all {
 // ------------------
 // If so directed, make sure to sign outgoing artifacts.
 signing {
-  sign(configurations.archives.get())
-  sign(publishing.publications)
+  if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
+    sign(configurations.archives.get())
+    sign(publishing.publications)
+  }
 }
 
 // Artifacts: Publishing

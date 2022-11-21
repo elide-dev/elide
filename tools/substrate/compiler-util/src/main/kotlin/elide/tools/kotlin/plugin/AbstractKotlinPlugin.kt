@@ -5,4 +5,9 @@ import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 /**
  *
  */
-public abstract class AbstractKotlinPlugin : CommandLineProcessor
+public abstract class AbstractKotlinPlugin (
+  protected val name: String,
+) : CommandLineProcessor {
+  /** @inheritDoc */
+  override val pluginId: String get() =  name
+}

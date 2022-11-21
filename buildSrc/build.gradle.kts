@@ -13,15 +13,9 @@ plugins {
 
 val buildDocs by properties
 
-repositories {
-  maven("https://maven-central.storage-download.googleapis.com/maven2/")
-  mavenCentral()
-  google()
-  gradlePluginPortal()
-}
-
 dependencies {
   api(kotlin("gradle-plugin"))
+//  implementation(libs.elide.tools.conventions)
   implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)

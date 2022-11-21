@@ -8,11 +8,18 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("org.jetbrains.kotlin.kapt") apply false
+    id("io.gitlab.arturbosch.detekt")
+    id("com.github.ben-manes.versions")
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.pluginPublish) apply false
-    alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.versionCheck)
+    alias(libs.plugins.kotlinx.plugin.abiValidator)
+}
+
+apiValidation {
+    nonPublicMarkers += listOf(
+        "elide.annotations.Internal",
+    )
 }
 
 allprojects {

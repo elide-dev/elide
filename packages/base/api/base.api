@@ -17,6 +17,15 @@ public abstract interface annotation class elide/annotations/Generated : java/la
 public abstract interface annotation class elide/annotations/Logic : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class elide/annotations/core/Experimental : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/core/Internal : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/data/Sensitive : java/lang/annotation/Annotation {
+}
+
 public final class elide/runtime/LogLevel : java/lang/Enum {
 	public static final field DEBUG Lelide/runtime/LogLevel;
 	public static final field ERROR Lelide/runtime/LogLevel;

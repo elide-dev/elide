@@ -29,7 +29,11 @@ val allPlugins = listOf(
 )
 
 group = "dev.elide.tools"
-version = rootProject.version as String
+version = if (project.hasProperty("version")) {
+  project.properties["version"] as String
+} else {
+  "1.0-SNAPSHOT"
+}
 
 tasks.create("buildPlugins") {
   description = "Build all Kotlin compiler plugins"

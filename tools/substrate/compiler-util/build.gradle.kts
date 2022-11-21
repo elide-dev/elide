@@ -7,8 +7,10 @@ plugins {
   id("java-test-fixtures")
   kotlin("jvm")
   kotlin("kapt")
+
   id("dev.elide.build")
   id("dev.elide.build.jvm")
+  id("dev.elide.build.kotlin")
   id("dev.elide.build.substrate")
 }
 
@@ -19,6 +21,12 @@ kotlin {
   explicitApi()
 }
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
 val test by configurations.creating
 
 dependencies {
@@ -39,7 +47,7 @@ dependencies {
 }
 
 val testArchive by tasks.registering(Jar::class) {
-  archiveBaseName.set("tests")
+  archiveClassifier.set("tests")
   from(sourceSets["test"].output)
 }
 
@@ -48,6 +56,14 @@ artifacts {
 }
 
 publishing {
+  publications.create<MavenPublication>("maven") {
+    group = "dev.elide.tools"
+    artifactId = "compiler-util"
+    version = rootProject.version as String
+    from(components["kotlin"])
+    artifact(tasks["testArchive"])
+  }
+
   publications.withType<MavenPublication> {
     pom {
       name.set("Elide Substrate: Compiler Utilities")

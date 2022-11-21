@@ -3,6 +3,9 @@
     "UnstableApiUsage",
 )
 
+import Elide
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.noarg")
@@ -11,7 +14,53 @@ plugins {
 
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
+    id("com.github.gmazzo.buildconfig")
     alias(libs.plugins.shadow)
+}
+
+val defaultJavaVersion = "11"
+val defaultKotlinVersion = "1.7"
+
+val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
+
+
+gradlePlugin {
+    plugins {
+        create(PluginCoordinates.ID) {
+            id = PluginCoordinates.ID
+            implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
+            version = PluginCoordinates.VERSION
+        }
+    }
+}
+
+buildConfig {
+    className("ElidePluginConfig")
+    packageName("dev.elide.buildtools.gradle.plugin.cfg")
+    useKotlinOutput()
+
+    buildConfigField("String", "ELIDE_LIB_VERSION", "\"${libs.versions.elide.get()}\"")
+}
+
+// Configuration Block for the Plugin Marker artifact on Plugin Central
+pluginBundle {
+    website = PluginBundle.WEBSITE
+    vcsUrl = PluginBundle.VCS
+    description = PluginBundle.DESCRIPTION
+    tags = PluginBundle.TAGS
+
+    plugins {
+        getByName(PluginCoordinates.ID) {
+            displayName = PluginBundle.DISPLAY_NAME
+        }
+    }
+
+    mavenCoordinates {
+        groupId = PluginCoordinates.GROUP
+        artifactId = PluginCoordinates.ID.removePrefix("$groupId.")
+        version = PluginCoordinates.VERSION
+    }
 }
 
 repositories {
@@ -34,11 +83,11 @@ dependencies {
     implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(gradleApi())
-    api("com.github.node-gradle:gradle-node-plugin:3.4.0")
-    implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:3.1.0") {
+    api(libs.plugin.node)
+    implementation(libs.gradle.kotlin.dsl) {
         exclude("org.jetbrains.kotlin", "kotlin-sam-with-receiver")
     }
-    implementation("org.jetbrains.kotlin:kotlin-sam-with-receiver:${libs.versions.kotlin.get()}")
+    implementation(libs.kotlin.samWithReceiver)
 
     // KotlinX
     api(libs.kotlinx.coroutines.core)
@@ -52,12 +101,15 @@ dependencies {
     api(libs.kotlinx.serialization.json)
     api(libs.kotlinx.serialization.protobuf)
 
-    // Embedded Protos
+    // Elide: Kotlin Plugins
+    implementation(libs.elide.kotlin.plugin.redakt)
+
+    // Elide: Embedded Libs
     embedded(libs.elide.base)
     embedded(libs.elide.ssg)
     embedded(libs.elide.proto)
 
-    // Embedded Tools
+    // Elide: Embedded Tools
     embedded(libs.closure.templates)
     embedded(libs.closure.compiler)
     embedded(libs.closure.stylesheets)
@@ -66,6 +118,7 @@ dependencies {
     embedded(libs.brotli.native.linux)
     embedded(libs.brotli.native.windows)
 
+    // Common Dependencies
     api(libs.protobuf.java)
     api(libs.protobuf.util)
     api(libs.protobuf.kotlin)
@@ -87,12 +140,30 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_9
-    targetCompatibility = JavaVersion.VERSION_1_9
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 kotlin {
-    // Nothing at this time.
+    sourceSets.all {
+        languageSettings.apply {
+            apiVersion = kotlinLanguageVersion
+            languageVersion = kotlinLanguageVersion
+            progressiveMode = true
+        }
+    }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        apiVersion = Elide.kotlinLanguage
+        languageVersion = Elide.kotlinLanguage
+        jvmTarget = "11"
+        javaParameters = true
+        freeCompilerArgs = Elide.kaptCompilerArgs
+        allWarningsAsErrors = false  // need protos in separate source set
+        incremental = true
+    }
 }
 
 sourceSets.getByName("main").java {
@@ -109,36 +180,6 @@ detekt {
 ktlint {
     filter {
         exclude("**/model/**")
-    }
-}
-
-gradlePlugin {
-    plugins {
-        create(PluginCoordinates.ID) {
-            id = PluginCoordinates.ID
-            implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
-            version = PluginCoordinates.VERSION
-        }
-    }
-}
-
-// Configuration Block for the Plugin Marker artifact on Plugin Central
-pluginBundle {
-    website = PluginBundle.WEBSITE
-    vcsUrl = PluginBundle.VCS
-    description = PluginBundle.DESCRIPTION
-    tags = PluginBundle.TAGS
-
-    plugins {
-        getByName(PluginCoordinates.ID) {
-            displayName = PluginBundle.DISPLAY_NAME
-        }
-    }
-
-    mavenCoordinates {
-        groupId = PluginCoordinates.GROUP
-        artifactId = PluginCoordinates.ID.removePrefix("$groupId.")
-        version = PluginCoordinates.VERSION
     }
 }
 

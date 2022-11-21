@@ -15,10 +15,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
  *
  */
 @AutoService(CommandLineProcessor::class)
-internal class RedaktPlugin : AbstractKotlinPlugin() {
-  /** @inheritDoc */
-  override val pluginId: String get() =  redaktPluginId
-
+internal class RedaktPlugin : AbstractKotlinPlugin(name = redaktPluginId) {
   /** @inheritDoc */
   override val pluginOptions: Collection<AbstractCliOption> get() = listOf(
     CliOption(

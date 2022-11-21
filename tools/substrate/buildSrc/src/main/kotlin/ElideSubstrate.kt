@@ -7,6 +7,12 @@ import java.net.URI
 
 /** Build tools for the build tools. */
 object ElideSubstrate {
+  // Substrate Kotlin API version.
+  const val apiVersion = "1.7"
+
+  // Substrate Kotlin language version.
+  const val kotlinVerison = "1.7"
+
   // Publishing: Repositories
   // ------------------------
   // Configure publish targets for artifacts.
@@ -19,10 +25,14 @@ object ElideSubstrate {
     parent: Boolean = false,
   ) {
     publications.create("maven", MavenPublication::class.java) {
+      artifactId = artifact
+      groupId = group
+
       pom {
         name.set(label)
         artifactId = artifact
         groupId = group
+
         url.set("https://github.com/elide-dev/v3")
         description.set(summary)
         if (!parent) from(project.components.get("kotlin"))

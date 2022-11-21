@@ -47,7 +47,7 @@ elide {
       }
 
       script("scripts.ui") {
-        from(project(":site:docs:frontend"))
+        from(project(":site:docs:ui"))
       }
     }
   }

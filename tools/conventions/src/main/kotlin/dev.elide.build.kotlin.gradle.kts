@@ -10,7 +10,7 @@ plugins {
   id("dev.elide.build.core")
 }
 
-val defaultJavaVersion = "17"
+val defaultJavaVersion = "11"
 val defaultKotlinVersion = "1.7"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
@@ -44,15 +44,6 @@ kotlin {
       languageVersion = kotlinLanguageVersion
       progressiveMode = true
       optIn("kotlin.ExperimentalUnsignedTypes")
-    }
-  }
-
-  publishing {
-    publications {
-      create<MavenPublication>("main") {
-        version = rootProject.version as String
-        from(components["kotlin"])
-      }
     }
   }
 }

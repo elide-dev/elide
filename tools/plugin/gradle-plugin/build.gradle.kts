@@ -28,8 +28,8 @@ version = if (project.hasProperty("elide.stamp") && project.properties["elide.st
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 val props = Properties()

@@ -41,7 +41,7 @@ dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm-js"))
   implementation(project(":packages:graalvm-react"))
-  implementation(project(":site:docs:frontend"))
+  implementation(project(":site:docs:ui"))
 
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.react)

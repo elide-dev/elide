@@ -17,7 +17,7 @@ kotlin {
 
   publishing {
     publications {
-      named<MavenPublication>("main") {
+      create<MavenPublication>("maven") {
         artifactId = "processor"
         groupId = "dev.elide.tools"
         version = rootProject.version as String

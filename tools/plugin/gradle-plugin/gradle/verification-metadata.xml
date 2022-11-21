@@ -257,7 +257,10 @@
             <trusting group="org.codehaus.plexus" name="plexus-utils" version="3.4.1"/>
          </trusted-key>
          <trusted-key id="f3184bcd55f4d016e30d4c9bf42e87f9665015c9" group="org.jsoup" name="jsoup"/>
-         <trusted-key id="f629176428e965ff30d5c45bfb3e48b3ec96ed95" group="^dev[.]elide[.]tools($|([.].*))" regex="true"/>
+         <trusted-key id="f629176428e965ff30d5c45bfb3e48b3ec96ed95">
+            <trusting group="dev.elide"/>
+            <trusting group="^dev[.]elide[.]tools($|([.].*))" regex="true"/>
+         </trusted-key>
          <trusted-key id="f9acd39310b477b691f4e3f9971248996df82053" group="com.google.protobuf"/>
          <trusted-key id="fa77dcfef2ee6eb2debedd2c012579464d01c06a" group="org.apache" name="apache"/>
          <trusted-key id="fa7929f83ad44c4590f6cc6815c71c0a4e0b8edd">

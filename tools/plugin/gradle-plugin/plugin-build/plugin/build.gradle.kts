@@ -1,9 +1,8 @@
 @file:Suppress(
     "DSL_SCOPE_VIOLATION",
-    "UnstableApiUsage",
+    "UnstableApiUsage"
 )
 
-import Elide
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -23,7 +22,6 @@ val defaultKotlinVersion = "1.7"
 
 val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
-
 
 gradlePlugin {
     plugins {
@@ -161,7 +159,7 @@ tasks.withType<KotlinCompile>().configureEach {
         jvmTarget = "11"
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = false  // need protos in separate source set
+        allWarningsAsErrors = false
         incremental = true
     }
 }
@@ -173,7 +171,7 @@ sourceSets.getByName("main").java {
 
 detekt {
     source = files(
-        "src/main/java",
+        "src/main/java"
     )
 }
 
@@ -186,7 +184,7 @@ ktlint {
 tasks {
     shadowJar {
         configurations = listOf(
-            embedded,
+            embedded
         )
     }
 }
@@ -220,7 +218,7 @@ tasks.create<Tar>("packageRuntimeAssets") {
         from("${project.buildDir}/elideJsRuntime/sources")
         include(
             "**/*.json",
-            "**/*.js",
+            "**/*.js"
         )
     }
 }

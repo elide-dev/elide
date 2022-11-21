@@ -56,37 +56,37 @@ artifacts {
 }
 
 publishing {
-  publications.create<MavenPublication>("maven") {
-    group = "dev.elide.tools"
-    artifactId = "compiler-util"
-    version = rootProject.version as String
-    from(components["kotlin"])
-    artifact(tasks["testArchive"])
-  }
+  publications {
+    create<MavenPublication>("maven") {
+      group = "dev.elide.tools"
+      artifactId = "compiler-util"
+      version = rootProject.version as String
+      from(components["kotlin"])
+      artifact(tasks["testArchive"])
 
-  publications.withType<MavenPublication> {
-    pom {
-      name.set("Elide Substrate: Compiler Utilities")
-      url.set("https://github.com/elide-dev/v3")
-      description.set(
-        "Provides utilities for Elide Kotlin Compiler plugins."
-      )
-
-      licenses {
-        license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
-        }
-      }
-      developers {
-        developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
-        }
-      }
-      scm {
+      pom {
+        name.set("Elide Substrate: Compiler Utilities")
         url.set("https://github.com/elide-dev/v3")
+        description.set(
+          "Provides utilities for Elide Kotlin Compiler plugins."
+        )
+
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/v3")
+        }
       }
     }
   }

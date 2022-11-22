@@ -20,7 +20,10 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
  * with this annotation are redacted from the `toString` representation.
  */
 @AutoService(CommandLineProcessor::class)
-internal class RedaktPlugin : AbstractKotlinPlugin(name = redaktPluginId) {
+internal class RedaktPlugin : CommandLineProcessor {
+  /** @inheritDoc */
+  override val pluginId: String get() = redaktPluginId
+
   /** @inheritDoc */
   override val pluginOptions: Collection<AbstractCliOption> get() = listOf(
     CliOption(

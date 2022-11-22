@@ -6,7 +6,6 @@ plugins {
   id("java")
   id("java-test-fixtures")
   kotlin("jvm")
-  kotlin("kapt")
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")
@@ -30,7 +29,6 @@ val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
 val test by configurations.creating
 
 dependencies {
-  kapt(libs.google.auto.service)
   api(libs.google.auto.service.annotations)
   implementation(libs.kotlin.compiler.embedded)
 

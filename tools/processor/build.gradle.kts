@@ -40,6 +40,7 @@ dependencies {
 
   // KSP
   implementation(libs.ksp)
+  implementation(libs.ksp.api)
   implementation(libs.kotlinx.atomicfu)
 
   // Kotlin

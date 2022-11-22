@@ -3,11 +3,11 @@
 )
 
 plugins {
+  `java-library`
   publishing
-  id("io.micronaut.application")
-  id("io.micronaut.aot")
-  id("io.micronaut.graalvm")
-  id("dev.elide.build.native.lib")
+
+  kotlin("plugin.serialization")
+  id("dev.elide.build.jvm.kapt")
 }
 
 group = "dev.elide"
@@ -19,10 +19,6 @@ dependencies {
   implementation(project(":packages:server"))
   implementation(libs.picocli)
   implementation(libs.micronaut.picocli)
-}
-
-application {
-  mainClass.set("elide.tool.ssg.SiteCompiler")
 }
 
 sonarqube {

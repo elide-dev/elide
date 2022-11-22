@@ -33,9 +33,6 @@ micronaut {
 }
 
 dependencies {
-  // Core platform versions.
-  implementation(platform(project(":packages:platform")))
-
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)

@@ -16,10 +16,6 @@ plugins {
 group = "dev.elide.tools.kotlin.plugin"
 version = rootProject.version as String
 
-testlogger {
-  showStandardStreams = true
-}
-
 projectConstants(
   packageName = "elide.tools.kotlin.plugin.redakt",
   extraProperties = mapOf(

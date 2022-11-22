@@ -7,6 +7,7 @@ plugins {
   signing
   idea
 
+  id("org.jetbrains.kotlinx.kover")
   id("dev.elide.build.core")
 }
 

@@ -27,7 +27,7 @@
 
 _**Elide is currently in alpha.**_
 
-Latest version: `1.0-v3-alpha1-rc36`
+Latest version: `1.0-v3-alpha1-rc37`
 
 <hr />
 

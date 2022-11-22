@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
  * @param version Plugin version to resolve.
  * @param O Concrete plugin options type.
  */
-internal abstract class AbstractCompilerPluginHost<O: ElideKotlinPluginsHandler.PluginHandler> protected constructor (
+internal abstract class AbstractCompilerPluginHost<O : ElideKotlinPluginsHandler.PluginHandler> protected constructor (
     private val pluginId: String,
     private val groupId: String = defaultPluginGroup,
     private val artifactId: String = "$pluginId-plugin",

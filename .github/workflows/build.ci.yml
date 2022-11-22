@@ -142,7 +142,6 @@ jobs:
           arguments: |
             build
             -x test
-            -x testNativeImage
             -x nativeCompile
             --scan
             --no-daemon

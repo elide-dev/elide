@@ -15,10 +15,6 @@ plugins {
     id("dev.elide.buildtools.plugin")
 }
 
-dependencies {
-    ksp(libs.elide.tools.processor)
-}
-
 elide {
     mode = BuildMode.DEVELOPMENT
 

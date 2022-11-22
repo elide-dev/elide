@@ -21,6 +21,14 @@ dependencies {
   implementation(libs.micronaut.picocli)
 }
 
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      from(components["kotlin"])
+    }
+  }
+}
+
 sonarqube {
   isSkipProject = true
 }

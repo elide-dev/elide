@@ -57,14 +57,12 @@ import kotlin.streams.toList
 
 /** Task to interpret server-side asset configuration and content into a compiled asset bundle. */
 @Suppress("UnstableApiUsage", "SameParameterValue", "LargeClass")
-abstract class GenerateAssetGraphTask @Inject constructor(
-    objects: ObjectFactory,
-) : BundleBaseTask() {
-    companion object {
-        private const val BROWSER_DIST_DEFAULT = "assetDist"
-        private const val GZIP_BUFFER_SIZE = 1024
-        private const val BROTLI_LEVEL = 11
-        private const val BROTLI_WINDOW = 24
+public abstract class GenerateAssetGraphTask @Inject constructor(objects: ObjectFactory) : BundleBaseTask() {
+    public companion object {
+        private const val BROWSER_DIST_DEFAULT: String = "assetDist"
+        private const val GZIP_BUFFER_SIZE: Int = 1024
+        private const val BROTLI_LEVEL: Int = 11
+        private const val BROTLI_WINDOW: Int = 24
 
         // Indicate whether Brotli can be loaded and used in this environment.
         @Suppress("TooGenericExceptionCaught", "SwallowedException")
@@ -121,7 +119,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "assetModules",
         description = "Map of module IDs to their asset info configurations",
     )
-    val assetModules: MapProperty<AssetModuleId, AssetInfo> = objects.mapProperty(
+    internal val assetModules: MapProperty<AssetModuleId, AssetInfo> = objects.mapProperty(
         AssetModuleId::class.java,
         AssetInfo::class.java,
     )
@@ -132,7 +130,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "assetModuleMap",
         description = "Map of source file paths to the module IDs that own them",
     )
-    val assetModuleMap: MapProperty<String, AssetModuleId> = objects.mapProperty(
+    internal val assetModuleMap: MapProperty<String, AssetModuleId> = objects.mapProperty(
         String::class.java,
         AssetModuleId::class.java,
     )
@@ -143,7 +141,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "inputFiles",
         description = "Transitive set of all asset source files which will be expressed in this graph",
     )
-    abstract val inputFiles: Property<FileCollection>
+    internal abstract val inputFiles: Property<FileCollection>
 
     /** Algorithm to use when digesting assets. */
     @get:Input
@@ -151,7 +149,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "digestAlgorithm",
         description = "Digest algorithm to use when calculating asset digests",
     )
-    abstract val digestAlgorithm: Property<HashAlgorithm>
+    internal abstract val digestAlgorithm: Property<HashAlgorithm>
 
     /** Compression configuration to apply to bundled assets. */
     @get:Input
@@ -159,7 +157,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "compressionConfig",
         description = "Compression configuration to apply to bundled assets",
     )
-    abstract val compressionConfig: Property<AssetCompressionConfig>
+    internal abstract val compressionConfig: Property<AssetCompressionConfig>
 
     /** Name of the manifest that this task should write. */
     @get:Input
@@ -167,7 +165,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "manifestName",
         description = "Name of the asset manifest to write.",
     )
-    abstract val manifestName: Property<String>
+    internal abstract val manifestName: Property<String>
 
     /** Manifest file that this task should write. */
     @get:OutputFile
@@ -175,7 +173,7 @@ abstract class GenerateAssetGraphTask @Inject constructor(
         option = "manifestFile",
         description = "File where the manifest should be written.",
     )
-    abstract val manifestFile: Property<File>
+    internal abstract val manifestFile: Property<File>
 
     /** Asset graph which will be built by this task. */
     @get:Internal
@@ -845,23 +843,18 @@ abstract class GenerateAssetGraphTask @Inject constructor(
     }
 
     @Suppress("MagicNumber")
-    class OptimizedGzipOutputStream(delegate: OutputStream) : DeflaterOutputStream(
+    internal class OptimizedGzipOutputStream(delegate: OutputStream) : DeflaterOutputStream(
         delegate,
         Deflater(Deflater.BEST_COMPRESSION, true),
         GZIP_BUFFER_SIZE,
         true,
     ) {
-        companion object {
-            /*
-             * GZIP header magic number.
-             */
-            private const val GZIP_MAGIC = 0x8b1f
+        internal companion object {
+            /* GZIP header magic number. */
+            private const val GZIP_MAGIC: Int = 0x8b1f
 
-            /*
-             * Trailer size in bytes.
-             *
-             */
-            private const val TRAILER_SIZE = 8
+            /* Trailer size in bytes. */
+            private const val TRAILER_SIZE: Int = 8
         }
 
         /**

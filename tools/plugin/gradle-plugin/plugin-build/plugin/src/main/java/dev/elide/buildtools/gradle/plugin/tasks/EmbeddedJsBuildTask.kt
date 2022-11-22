@@ -38,9 +38,9 @@ import java.time.Instant
 
 /** Task which builds JavaScript targets for embedded use with Elide. */
 @Suppress("unused")
-abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBundleSpec>() {
-    companion object {
-        private const val TASK_NAME = "bundleEmbeddedJs"
+public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBundleSpec>() {
+    public companion object {
+        private const val TASK_NAME: String = "bundleEmbeddedJs"
         private val defaultTargetMode: BuildMode = BuildMode.DEVELOPMENT
         private const val defaultTargetModeName: String = BuildMode.DEVELOPMENT_NAME
 
@@ -52,11 +52,11 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         private const val defaultEntrypointName: String = "main.js"
         private const val defaultOutputConfig: String = "embedded-js/compile.js"
         private const val defaultProcessShim: String = "embedded-js/shim.process.js"
-        const val esbuildConfigTemplatePath = "/dev/elide/buildtools/js/esbuild-wrapper.js.hbs"
-        const val processShimTemplatePath = "/dev/elide/buildtools/js/process-wrapper.js.hbs"
+        internal const val esbuildConfigTemplatePath: String = "/dev/elide/buildtools/js/esbuild-wrapper.js.hbs"
+        internal const val processShimTemplatePath: String = "/dev/elide/buildtools/js/process-wrapper.js.hbs"
 
         // Determine whether the JS bundle task is eligible to run for the given project / extension pair.
-        @JvmStatic fun isEligible(extension: ElideExtension, project: Project): Boolean {
+        @JvmStatic public fun isEligible(extension: ElideExtension, project: Project): Boolean {
             // we enable the JS build extension in two cases:
             //
             // 1) the user has installed the KotlinJS plugin and the Elide plugin. based on whether KotlinJS is
@@ -72,7 +72,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         }
 
         // Apply plugins which are required to run before the JS bundle task.
-        @JvmStatic fun applyPlugins(node: Boolean, project: Project, cbk: () -> Unit) {
+        @JvmStatic public fun applyPlugins(node: Boolean, project: Project, cbk: () -> Unit) {
             applyPlugin(project, "org.jetbrains.kotlin.js") {
                 if (node) {
                     applyPlugin(project, "com.github.node-gradle.node") {
@@ -85,7 +85,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         }
 
         // After determining the task is eligible, install it in the given project with the provided extension settings.
-        @JvmStatic fun install(extension: ElideExtension, project: Project) {
+        @JvmStatic public fun install(extension: ElideExtension, project: Project) {
             // apply NPM deps for tooling
             injectDeps(project)
 
@@ -104,7 +104,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         }
 
         // Build and install tasks within the scope of applied required plugins.
-        @JvmStatic fun installTasks(extension: ElideExtension, project: Project) {
+        @JvmStatic public fun installTasks(extension: ElideExtension, project: Project) {
             // resolve the inflate-runtime task installed on the root project, or if there is not one, create it.
             val inflateRuntime = resolveInflateRuntimeTask(project, extension)
 
@@ -173,7 +173,8 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             ).readText()
         }
 
-        @JvmStatic fun injectDeps(project: Project) {
+        // Inject plugin dependencies required for JS builds.
+        @JvmStatic internal fun injectDeps(project: Project) {
             // make sure node plugin is applied
             project.plugins.apply("com.github.node-gradle.node")
             project.dependencies.apply {
@@ -187,7 +188,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         // Setup build tasks for the provided project.
         @Suppress("LongParameterList")
         @JvmStatic
-        fun setup(
+        public fun setup(
             project: Project,
             fetchSources: Copy,
             kotlinJsLink: Task,
@@ -228,10 +229,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
             )
         }
 
-        @JvmStatic fun setupEsbuildEntrypointTask(
-            project: Project,
-            extension: ElideExtension,
-        ) {
+        @JvmStatic public fun setupEsbuildEntrypointTask(project: Project, extension: ElideExtension) {
             project.afterEvaluate {
                 val activeMode = extension.mode
                 val targetBundleTask = "generate${activeMode.name.lowercase().capitalized()}EsBuildConfig"
@@ -271,7 +269,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
 
         @Suppress("LongParameterList", "LongMethod")
         @JvmStatic
-        fun setupEmbeddedEsbuildTask(
+        public fun setupEmbeddedEsbuildTask(
             mode: BuildMode,
             project: Project,
             fetchSources: Copy,
@@ -399,7 +397,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
 
         @Suppress("UNUSED_PARAMETER", "LongParameterList")
         @JvmStatic
-        fun setupBrowserWebpackBuildTask(
+        public fun setupBrowserWebpackBuildTask(
             mode: BuildMode,
             project: Project,
             fetchSources: Copy,
@@ -459,7 +457,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 "Defaults to `$defaultTargetModeName`."
             ),
     )
-    var mode: BuildMode = defaultTargetMode
+    internal var mode: BuildMode = defaultTargetMode
 
     /** Target build type to apply for JS targets. */
     @get:Input
@@ -470,7 +468,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 "`${BundleTarget.WEB_NAME}`. Defaults to `$defaultTargetTypeName`."
             ),
     )
-    var target: BundleTarget = defaultTargetType
+    internal var target: BundleTarget = defaultTargetType
 
     /** Target format type for the bundle. */
     @get:Input
@@ -481,7 +479,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 "`${BundleType.ESM_NAME}`. Defaults to the value stipulated by `target`."
             ),
     )
-    var format: BundleType = target.bundleType
+    internal var format: BundleType = target.bundleType
 
     /** Tool to use for building this target.. */
     @get:Input
@@ -492,7 +490,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
                 "`${BundleTool.WEBPACK_NAME}`. Defaults to the value stipulated by `target`."
             ),
     )
-    var tool: BundleTool = target.bundleTool
+    internal var tool: BundleTool = target.bundleTool
 
     /** Target format type for the bundle. */
     @get:Input
@@ -500,7 +498,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "ecma",
         description = "ECMA standard level to target. Defaults to `$defaultEcmaVersion`.",
     )
-    var ecma: String = defaultEcmaVersion
+    internal var ecma: String = defaultEcmaVersion
 
     /** Name to use within the JAR for this JS bundle. */
     @get:Input
@@ -508,7 +506,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "libraryName",
         description = "Name to use for the output JavaScript bundle. Defaults to `$defaultLibraryName`.",
     )
-    var libraryName: String = defaultLibraryName
+    internal var libraryName: String = defaultLibraryName
 
     /** Output file for the ESBuild/Webpack configuration, as applicable. */
     @get:OutputFile
@@ -516,7 +514,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "outputConfig",
         description = "Where to put the generated build configuration or entrypoint. Typically managed by the plugin."
     )
-    abstract val outputConfig: Property<File>
+    internal abstract val outputConfig: Property<File>
 
     /** Output file for the `process` shim, as applicable. */
     @get:OutputFile
@@ -524,7 +522,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "processShim",
         description = "Where to put the generated Node process shim. Typically managed by the plugin.",
     )
-    abstract val processShim: Property<File>
+    internal abstract val processShim: Property<File>
 
     /** Name to give the bundle being compiled by this task. */
     @get:Input
@@ -532,7 +530,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "outputBundleName",
         description = "Name to give the bundle built by this task. Typically managed by the plugin.",
     )
-    abstract val outputBundleName: Property<String>
+    internal abstract val outputBundleName: Property<String>
 
     /** Name to give the pre-compiled and optimized version of the output bundle. */
     @get:Input
@@ -540,7 +538,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "outputOptimizedName",
         description = "Name to give the optimized bundle built by this task. Typically managed by the plugin.",
     )
-    abstract val outputOptimizedName: Property<String>
+    internal abstract val outputOptimizedName: Property<String>
 
     /** Input Node Modules directory for installed dependencies. */
     @get:InputFiles
@@ -548,7 +546,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "modulesFolders",
         description = "Locations of `node_modules` to load from when bundling. Typically managed by the plugin.",
     )
-    abstract val modulesFolders: ListProperty<File>
+    internal abstract val modulesFolders: ListProperty<File>
 
     /** Platform value to specify when invoking ESBuild. */
     @get:Input
@@ -556,7 +554,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "platform",
         description = "Platform to specify when invoking ESBuild. Defaults to the value stipulated by `target`.",
     )
-    var platform: String = target.platform
+    internal var platform: String = target.platform
 
     /** Whether to enable React shims for the VM runtime. */
     @get:Input
@@ -564,7 +562,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "enableReact",
         description = "Provide low-overhead runtime support for React SSR. Defaults to `true`.",
     )
-    var enableReact: Boolean = true
+    internal var enableReact: Boolean = true
 
     /** Whether to perform minification on the target bundle. */
     @get:Input
@@ -572,7 +570,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "minify",
         description = "Whether to minify the target bundle. Defaults to the value stipulate by `mode`.",
     )
-    var minify: Boolean = mode.minify
+    internal var minify: Boolean = mode.minify
 
     /** Whether to perform pre-packing on the target bundle. */
     @get:Input
@@ -580,7 +578,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "prepack",
         description = "Whether to run the bundle through `prepack`. Only applies to server-side SSR bundles.",
     )
-    var prepack: Boolean = mode.prepack
+    internal var prepack: Boolean = mode.prepack
 
     /** Whether to generate a single output bundle. */
     @get:Input
@@ -588,7 +586,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "bundle",
         description = "Whether to generate a bundle. Defaults to `true` and typically needs to stay `true`.",
     )
-    var bundle: Boolean = true
+    internal var bundle: Boolean = true
 
     /** Entrypoint file to begin the compilation from. */
     @Optional
@@ -597,7 +595,7 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "entryFileName",
         description = "Name of the source file which should serve as the entrypoint for this build.",
     )
-    var entryFileName: String? = null
+    public var entryFileName: String? = null
 
     /** Entrypoint file to begin the compilation from. */
     @get:InputFile
@@ -605,17 +603,15 @@ abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, EmbeddedBund
         option = "entryFile",
         description = "Source file which should serve as the entrypoint for this build.",
     )
-    abstract val entryFile: RegularFileProperty
+    internal abstract val entryFile: RegularFileProperty
 
     /** Template content to use for the ESBuild wrapper. Please use with caution, this is not documented yet. */
-    @get:Input
-    val configTemplate = loadEmbedded(
+    @get:Input internal val configTemplate = loadEmbedded(
         esbuildConfigTemplatePath
     )
 
     /** Template content to use for the `process` shim. Please use with caution, this is not documented yet. */
-    @get:Input
-    val processShimTemplate = loadEmbedded(
+    @get:Input internal val processShimTemplate = loadEmbedded(
         processShimTemplatePath
     )
 

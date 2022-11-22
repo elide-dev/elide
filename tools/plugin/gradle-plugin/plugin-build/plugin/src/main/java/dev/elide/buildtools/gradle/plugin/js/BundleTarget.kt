@@ -9,7 +9,7 @@ package dev.elide.buildtools.gradle.plugin.js
  * @param bundleTool Default tool to use for this bundle target type.
  */
 @Suppress("unused")
-enum class BundleTarget(
+public enum class BundleTarget(
     internal val platform: String,
     internal val bundleType: BundleType,
     internal val bundleTool: BundleTool,
@@ -23,7 +23,7 @@ enum class BundleTarget(
     /** The bundle is being assembled for use with web browsers. */
     WEB("browser", BundleType.IIFE, BundleTool.WEBPACK);
 
-    companion object {
+    internal companion object {
         internal const val EMBEDDED_NAME = "EMBEDDED"
         internal const val NODE_NAME = "NODE"
         internal const val WEB_NAME = "WEB"

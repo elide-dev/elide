@@ -49,7 +49,9 @@ includeBuild("tools/conventions") {
 // 2: Kotlin Compiler substrate.
 includeBuild("tools/substrate") {
   dependencySubstitution {
-    substitute(module("dev.elide.tools:substrate")).using(project(":"))
+    substitute(module("dev.elide.tools:elide-substrate")).using(project(":"))
+    substitute(module("dev.elide.tools:elide-substrate-bom")).using(project(":bom"))
+    substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
     substitute(module("dev.elide.tools.kotlin.plugin:injekt-plugin")).using(project(":injekt"))
     substitute(module("dev.elide.tools.kotlin.plugin:interakt-plugin")).using(project(":interakt"))
     substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))

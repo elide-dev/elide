@@ -105,4 +105,18 @@ class RedaktPluginTest : AbstractKotlinPluginTest() {
       assertThat(instance.toString()).isEqualTo("Test(<redacted>)")
     }
   }
+
+  @Test fun `verbose mode should trigger extra logging from redakt`() {
+    compile(
+      """
+      package elide.tools.kotlin.plugin.redakt.test
+
+      data class Test(@Sensitive val a: Int, val b: String)
+      """,
+      verbose = true,
+    ) {
+      assertThat(exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+      assertThat(messages).contains(":substrate.redakt:")
+    }
+  }
 }

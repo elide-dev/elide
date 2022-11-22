@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption
 import kotlin.io.path.exists
 
 /** Utility to un-tar (while decompressing) to a given destination directory. */
-object UntarUtil {
+public object UntarUtil {
     /**
      * Consume the provided [archive] input stream, decompressing it as a `.tar.gz` to the provided [destination], which
      * is expected to be a directory.
@@ -23,7 +23,7 @@ object UntarUtil {
      * @param options Copy options to apply to the operation. See [StandardCopyOption].
      */
     @Throws(IOException::class)
-    fun untar(archive: InputStream, destination: File, vararg options: CopyOption) {
+    public fun untar(archive: InputStream, destination: File, vararg options: CopyOption) {
         val pathOutput: Path = destination.toPath()
         val tarInputStream = TarArchiveInputStream(
             GzipCompressorInputStream(

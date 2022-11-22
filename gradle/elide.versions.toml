@@ -52,6 +52,7 @@ kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.8.0"
 kotlinx_serialization = "1.4.1"
+kotlinx_metadata_jvm = "0.5.0"
 atomicfu = "0.18.5"
 kotlinx_benchmark = "0.4.5"
 detekt = "1.22.0-RC3"
@@ -224,9 +225,11 @@ protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", ve
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_compiler_testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin_compile_testing" }
+kotlin_compiler_testing_ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin_compile_testing" }
 kotlinx_atomicfu = { group = "org.jetbrains.kotlin", name = "atomicfu", version.ref = "kotlin_sdk" }
 kotlinx_atomicfu_linux_x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-linuxx64", version.ref = "atomicfu" }
 kotlinx_atomicfu_macos_x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }
+kotlinx_metadata_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx_metadata_jvm" }
 kotlinx_benchmark_runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx_benchmark" }
 kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
@@ -253,7 +256,9 @@ kotlinx_serialization_protobuf_js = { group = "org.jetbrains.kotlinx", name = "k
 kotlinx_serialization_protobuf_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx_serialization" }
-ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+ksp_api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
+autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.0.0" }
 hibernate_core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
 hibernate_hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hibernate_graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }
@@ -473,6 +478,7 @@ plugin_micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plu
 plugin_kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover" }
 plugin_spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
+plugin_ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin_sdk" }
 plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin_sdk" }
 plugin_kotlinx_atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
@@ -497,10 +503,12 @@ elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
-elide_kotlin_plugin_injekt = { group = "dev.tools.compiler.plugin", name = "injekt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_interakt = { group = "dev.tools.compiler.plugin", name = "interakt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_redakt = { group = "dev.tools.compiler.plugin", name = "redakt-plugin", version.ref = "elide" }
-elide_kotlin_plugin_sekret = { group = "dev.tools.compiler.plugin", name = "sekret-plugin", version.ref = "elide" }
+elide_tools_substrate_bom = { group = "dev.elide.tools", name = "elide-substrate-bom", version.ref = "elide" }
+elide_tools_compilerUtil = { group = "dev.elide.tools", name = "compiler-util", version.ref = "elide" }
+elide_kotlin_plugin_injekt = { group = "dev.elide.tools.kotlin.plugin", name = "injekt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_interakt = { group = "dev.elide.tools.kotlin.plugin", name = "interakt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }
+elide_kotlin_plugin_sekret = { group = "dev.elide.tools.kotlin.plugin", name = "sekret-plugin", version.ref = "elide" }
 
 [bundles]
 kotlinx_coroutines_jvm = [

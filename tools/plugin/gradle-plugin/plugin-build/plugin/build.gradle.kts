@@ -143,6 +143,8 @@ java {
 }
 
 kotlin {
+    explicitApi()
+
     sourceSets.all {
         languageSettings.apply {
             apiVersion = kotlinLanguageVersion
@@ -159,14 +161,9 @@ tasks.withType<KotlinCompile>().configureEach {
         jvmTarget = "11"
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
-}
-
-sourceSets.getByName("main").java {
-    srcDir("src/model/java")
-    srcDir("src/model/kotlin")
 }
 
 detekt {

@@ -1,4 +1,3 @@
-import org.gradle.api.Project
 
 /** Static library configuration values. */
 object Elide {
@@ -114,4 +113,39 @@ object Elide {
     "rpc-js",
     "test",
   )
+
+  /** All library modules which are published. */
+  val publishedModules = listOf(
+    // Library Packages
+    "base",
+    "bom",
+    "frontend",
+    "graalvm",
+    "graalvm-js",
+    "graalvm-react",
+    "model",
+    "platform",
+    "proto",
+    "rpc-js",
+    "rpc-jvm",
+    "server",
+    "ssg",
+    "test",
+  ).map { ":packages:$it" }.plus(listOf(
+    // Tools
+    "processor",
+  ).map { ":tools:$it" })
+
+  /** All subproject modules which are published. */
+  val publishedSubprojects = listOf(
+    "bom",
+    "compiler-util",
+    "injekt",
+    "interakt",
+    "redakt",
+    "sekret",
+  ).map { ":substrate:$it" }.plus(listOf(
+    ":substrate",
+    ":conventions",
+  ))
 }

@@ -13,6 +13,11 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 /**
  * # Plugin: Redakt
  *
+ * Defines the main implementation entrypoint for the Redakt plugin, heavily inspired by Zac Sweers' plugin by a similar
+ * name ("Redacted"). See [here](https://github.com/ZacSweers/redacted-compiler-plugin) for Zac's original.
+ *
+ * The plugin enables processing of the [elide.annotations.data.Sensitive] annotation. Data classes and fields marked
+ * with this annotation are redacted from the `toString` representation.
  */
 @AutoService(CommandLineProcessor::class)
 internal class RedaktPlugin : AbstractKotlinPlugin(name = redaktPluginId) {

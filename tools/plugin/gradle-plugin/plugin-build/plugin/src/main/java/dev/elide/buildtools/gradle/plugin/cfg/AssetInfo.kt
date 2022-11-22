@@ -4,24 +4,24 @@ import org.gradle.api.file.CopySpec
 import java.util.SortedSet
 
 /** Configured and resolved information for an embedded server-side asset. */
-data class AssetInfo(
+internal data class AssetInfo(
     /** Name of the module implemented by this asset. */
-    val module: AssetModuleId,
+    internal val module: AssetModuleId,
 
     /** Type of asset symbolized by this record. */
-    val type: AssetType,
+    internal val type: AssetType,
 
     /** Direct module dependencies. */
-    val directDeps: SortedSet<AssetModuleId>,
+    internal val directDeps: SortedSet<AssetModuleId>,
 
     /** Registered paths for this asset module -- all must be distinct across all [AssetInfo] entries. */
-    val paths: SortedSet<String>,
+    internal val paths: SortedSet<String>,
 
     /** Gradle multi-module project dependencies related to this asset. Each pair is a `project`, `configuration`. */
-    val projectDeps: List<ElideAssetsHandler.InterProjectAssetHandler>,
+    internal val projectDeps: List<ElideAssetsHandler.InterProjectAssetHandler>,
 
     /** Copy specification for this module's sources. */
-    @Transient val copySpec: CopySpec,
+    @Transient internal val copySpec: CopySpec,
 ) : java.io.Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

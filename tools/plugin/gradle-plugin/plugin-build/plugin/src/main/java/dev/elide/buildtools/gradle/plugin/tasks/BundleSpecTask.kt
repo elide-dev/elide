@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * @see BundleWriteTask which is responsible for ultimately writing the bundle created by an implementation of this task
  */
-abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
-    companion object {
+public abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
+    public companion object {
         /**
          * Install a task in the [project] task set which writes the compiled asset catalog provided by [sourceTaskName]
          * from the provided set of [deps] to the [sourceTaskName]'s spec name and output directory properties.
@@ -64,7 +64,7 @@ abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
         option = "outputSpecName",
         description = "Name to give the asset catalog built by this task. Typically managed by the plugin.",
     )
-    abstract val outputSpecName: Property<String>
+    internal abstract val outputSpecName: Property<String>
 
     /**
      * Utility function which enters a DSL for building an asset bundle, which is assigned to the local task state and
@@ -80,7 +80,7 @@ abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
      *
      * @return Builder closure to produce an asset catalog.
      */
-    abstract fun assetCatalog(): (Spec.() -> Unit)
+    internal abstract fun assetCatalog(): (Spec.() -> Unit)
 
     /**
      * Post-action entrypoint for a standard [BundleSpecTask] implementation; first, the action itself is run, and then

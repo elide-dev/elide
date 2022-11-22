@@ -12,13 +12,13 @@ import org.gradle.api.tasks.TaskAction
  * built app handlers to produce a static site at build time, based on the manifest created by the KSP-based route
  * processor.
  */
-abstract class GenerateStaticSiteTask : DefaultTask() {
-    companion object {
-        private const val TASK_NAME = "generateStaticSite"
-        private const val KSP_TASK = "kspKotlin"
+public abstract class GenerateStaticSiteTask : DefaultTask() {
+    public companion object {
+        private const val TASK_NAME: String = "generateStaticSite"
+        private const val KSP_TASK: String = "kspKotlin"
 
         // After determining the SSG build is eligible to run, apply plugins, then build/install tasks.
-        @JvmStatic fun install(extension: ElideExtension, project: Project) {
+        @JvmStatic public fun install(extension: ElideExtension, project: Project) {
             project.afterEvaluate {
                 if (extension.server.hasSsgConfig()) {
                     installIfEligible(extension, project)
@@ -59,7 +59,7 @@ abstract class GenerateStaticSiteTask : DefaultTask() {
     /**
      * Run the action to fulfill SSG build settings, by generating a static site from the target application.
      */
-    @TaskAction fun runAction() {
+    @TaskAction public fun runAction() {
         project.logger.lifecycle("Generating site via SSG...")
     }
 }

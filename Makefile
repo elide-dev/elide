@@ -120,6 +120,8 @@ publish:  ## Publish a new version of all Elide packages.
 		:packages:bom:publish \
 		:packages:platform:publish \
 		publish \
+		--no-daemon \
+		--warning-mode=none \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \

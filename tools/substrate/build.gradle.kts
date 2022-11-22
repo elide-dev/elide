@@ -8,10 +8,11 @@ import ElideSubstrate.elideTarget
 
 plugins {
   `maven-publish`
+  `java-library`
   distribution
   signing
   idea
-
+  kotlin("jvm")
   alias(libs.plugins.ktlint)
   alias(libs.plugins.dokka)
   alias(libs.plugins.versionCheck)
@@ -50,7 +51,14 @@ tasks.named("build").configure {
 tasks.named("publish").configure {
   dependsOn(allPlugins.map {
     ":$it:publish"
-  })
+  }.plus(listOf(
+    ":bom:publish",
+    ":compiler-util:publish",
+  )))
+}
+
+kotlin {
+  explicitApi()
 }
 
 koverMerged {
@@ -76,7 +84,7 @@ sonarqube {
 }
 
 subprojects {
-  sonarqube {
+  if (name != "bom") sonarqube {
     properties {
       property("sonar.sources", "src/main/kotlin")
       property("sonar.tests", "src/test/kotlin")
@@ -88,13 +96,21 @@ subprojects {
   }
 }
 
+dependencies {
+  api(libs.elide.tools.compilerUtil)
+  api(libs.elide.kotlin.plugin.injekt)
+  api(libs.elide.kotlin.plugin.interakt)
+  api(libs.elide.kotlin.plugin.redakt)
+  api(libs.elide.kotlin.plugin.sekret)
+}
+
 publishing {
   elideTarget(
     project,
     label = "Elide Tools: Substrate",
     group = project.group as String,
     artifact = "elide-substrate",
-    summary = "Kotlin compiler plugins and other core project infrastructure.",
+    summary = "BOM for Kotlin compiler plugins and other core project infrastructure.",
     parent = true,
   )
 }

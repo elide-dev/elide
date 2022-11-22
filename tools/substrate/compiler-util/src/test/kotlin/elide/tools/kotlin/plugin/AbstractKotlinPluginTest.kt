@@ -39,9 +39,14 @@ public abstract class AbstractKotlinPluginTest {
   public fun compile(
     @Language("kotlin") code: String,
     trimIndent: Boolean = true,
+    verbose: Boolean = false,
     assertions: KotlinCompilation.Result.() -> Unit,
   ): KotlinCompilation.Result {
-    val op = kotlin("test.kt", code, trimIndent)
+    val target = ksource("test.kt", code, trimIndent)
+    val compilation = prepareCompilation(target)
+    compilation.verbose = verbose
+    val op = compilation.compile()
+
     require(op.exitCode == KotlinCompilation.ExitCode.OK) {
       "Compilation failed: ${op.messages}"
     }

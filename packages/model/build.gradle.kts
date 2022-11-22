@@ -6,6 +6,10 @@
 )
 
 plugins {
+  kotlin("plugin.noarg")
+  kotlin("plugin.allopen")
+  kotlin("plugin.serialization")
+  id("dev.elide.internal.kotlin.redakt")
   id("dev.elide.build.multiplatform")
 }
 
@@ -50,6 +54,10 @@ kotlin {
         implementation(project(":packages:base"))
         implementation(libs.kotlinx.collections.immutable)
         implementation(libs.kotlinx.datetime)
+        implementation(libs.kotlinx.serialization.core)
+        implementation(libs.kotlinx.serialization.json)
+        implementation(libs.kotlinx.serialization.protobuf)
+        implementation(libs.kotlinx.coroutines.core)
       }
     }
     val commonTest by getting {
@@ -60,11 +68,11 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(project(":packages:server"))
+        implementation(project(":packages:base"))
         implementation(libs.jakarta.inject)
         implementation(libs.protobuf.java)
         implementation(libs.protobuf.util)
         implementation(libs.protobuf.kotlin)
-        implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.serialization.json.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
         implementation(libs.kotlinx.coroutines.core.jvm)
@@ -83,6 +91,7 @@ kotlin {
     val jvmTest by getting {
       dependencies {
         implementation(kotlin("test-junit5"))
+        implementation(project(":packages:base"))
         implementation(project(":packages:server"))
         implementation(libs.truth)
         implementation(libs.truth.proto)
@@ -91,6 +100,7 @@ kotlin {
     val jsMain by getting {
       dependencies {
         implementation(kotlin("stdlib-js"))
+        implementation(project(":packages:base"))
         implementation(project(":packages:frontend"))
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.json.js)
@@ -98,7 +108,12 @@ kotlin {
       }
     }
     val jsTest by getting
-    val nativeMain by getting
+    val nativeMain by getting {
+      dependencies {
+        implementation(kotlin("stdlib"))
+        implementation(project(":packages:base"))
+      }
+    }
     val nativeTest by getting
   }
 }

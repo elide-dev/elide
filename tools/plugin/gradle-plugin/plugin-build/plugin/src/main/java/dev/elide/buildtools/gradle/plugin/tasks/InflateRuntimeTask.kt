@@ -17,12 +17,16 @@ import java.io.InputStream
 import java.nio.file.StandardCopyOption
 
 /** Task which inflates the packaged JS runtime into a build path where it can be referenced. */
-abstract class InflateRuntimeTask : DefaultTask() {
-    companion object {
-        const val TASK_NAME = "inflateJsRuntime"
-        private const val RUNTIME_PKG = "/dev/elide/buildtools/js/runtime/js-runtime.tar.gz"
+public abstract class InflateRuntimeTask : DefaultTask() {
+    public companion object {
+        /** Name of the inflate-runtime task. */
+        public const val TASK_NAME: String = "inflateJsRuntime"
 
-        @JvmStatic fun install(extension: ElideExtension, project: Project): InflateRuntimeTask {
+        /** Where we should be able to find the packaged JS runtime. */
+        private const val RUNTIME_PKG: String = "/dev/elide/buildtools/js/runtime/js-runtime.tar.gz"
+
+        /** Install the [InflateRuntimeTask] on the provided [extension] and [project]. */
+        @JvmStatic public fun install(extension: ElideExtension, project: Project): InflateRuntimeTask {
             return project.tasks.create(TASK_NAME, InflateRuntimeTask::class.java) {
                 it.enableRuntime.set(extension.js.runtime.inject.get())
             }
@@ -50,7 +54,7 @@ abstract class InflateRuntimeTask : DefaultTask() {
 
     // Raw/unwrapped input stream for the runtime tarball package.
     @get:Internal
-    abstract val runtimePackage: Property<InputStream>
+    internal abstract val runtimePackage: Property<InputStream>
 
     /** Output path prefix to use. */
     @get:OutputDirectory
@@ -58,7 +62,7 @@ abstract class InflateRuntimeTask : DefaultTask() {
         option = "destinationDirectory",
         description = "Where to write the inflated runtime package to",
     )
-    abstract val destinationDirectory: DirectoryProperty
+    internal abstract val destinationDirectory: DirectoryProperty
 
     /** Node modules path to inject for the runtime. */
     @get:OutputDirectory
@@ -66,7 +70,7 @@ abstract class InflateRuntimeTask : DefaultTask() {
         option = "modulesPath",
         description = "Path which should be used as a 'node_modules' entry for the JS runtime",
     )
-    abstract val modulesPath: Property<File>
+    internal abstract val modulesPath: Property<File>
 
     /** Whether to enable runtime overrides. */
     @get:Input
@@ -74,12 +78,12 @@ abstract class InflateRuntimeTask : DefaultTask() {
         option = "enableRuntime",
         description = "Whether to enable Elide's JS runtime overrides",
     )
-    abstract val enableRuntime: Property<Boolean>
+    internal abstract val enableRuntime: Property<Boolean>
 
     /**
      * Run the inflate-runtime action, by finding the runtime tarball and inflating it to the target [modulesPath].
      */
-    @TaskAction fun inflateRuntime() {
+    @TaskAction public fun inflateRuntime() {
         val nodeModsTarget = destinationDirectory.get().dir(
             "node_modules"
         ).asFile

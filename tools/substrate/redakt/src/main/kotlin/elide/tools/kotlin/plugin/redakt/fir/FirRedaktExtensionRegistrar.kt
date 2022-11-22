@@ -96,14 +96,13 @@ public class FirRedaktExtensionRegistrar private constructor (
         return
       }
 
-      val customToStringFunction =
-        declaration.declarations.find {
+      val customToStringFunction = declaration.declarations.find {
           it is FirFunction &&
-            it.isOverride &&
-            it.symbol.callableId.callableName == TO_STRING_NAME &&
-            it.valueParameters.isEmpty() &&
-            it.returnTypeRef.coneType.isString
-        }
+          it.isOverride &&
+          it.symbol.callableId.callableName == TO_STRING_NAME &&
+          it.valueParameters.isEmpty() &&
+          it.returnTypeRef.coneType.isString
+      }
       if (customToStringFunction != null) {
         reporter.reportOn(
           customToStringFunction.source,
@@ -119,8 +118,7 @@ public class FirRedaktExtensionRegistrar private constructor (
     private fun redactedProperties(
       declaration: FirRegularClass,
       matcher: FirRedaktPredicateMatcher
-    ) =
-      declaration.declarations
+    ) = declaration.declarations
         .asSequence()
         .filterIsInstance<FirProperty>()
         .mapNotNull { matcher.redactedAnnotation(it) }

@@ -23,6 +23,7 @@ object ElideSubstrate {
     artifact: String,
     summary: String,
     parent: Boolean = false,
+    bom: Boolean = false,
   ) {
     publications.create("maven", MavenPublication::class.java) {
       artifactId = artifact
@@ -35,8 +36,9 @@ object ElideSubstrate {
 
         url.set("https://github.com/elide-dev/v3")
         description.set(summary)
-        if (!parent) from(project.components.get("kotlin"))
-        else packaging = "pom"
+        if (!parent && !bom) from(project.components.get("kotlin"))
+        else if (bom) from(project.components.get("javaPlatform"))
+        else if (parent) from(project.components.get("kotlin"))
 
         licenses {
           license {

@@ -40,7 +40,7 @@ internal class RedaktIrVisitor(
   private val messageCollector: MessageCollector,
 ) : IrElementTransformerVoidWithContext() {
   internal companion object {
-    private const val LOG_PREFIX = ":Redakt:"
+    private const val LOG_PREFIX = ":substrate.redakt:"
   }
 
   // Property which is handled/detected by the plugin.
@@ -52,7 +52,7 @@ internal class RedaktIrVisitor(
 
   /** inheritDoc */
   override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-    log("Reading <$declaration>")
+    verbose("Reading <$declaration>")
 
     val declarationParent = declaration.parent
     if (declarationParent is IrClass /* && declaration.isFakeOverride */ &&
@@ -70,12 +70,13 @@ internal class RedaktIrVisitor(
         val isRedacted = prop.isRedacted()
         if (isRedacted) {
           anyRedacted = true
+          log("Found redacted properties on subject <$declaration>")
         }
         properties += Property(prop, isRedacted, parameter)
       }
       if (classIsRedacted || anyRedacted) {
         if (!declarationParent.isData) {
-          declarationParent.reportError("@Redacted is only supported on data classes!")
+          declarationParent.reportError("Redaction is only supported on data classes")
           return super.visitFunctionNew(declaration)
         }
         declaration.convertToGeneratedToString(properties, classIsRedacted)
@@ -174,6 +175,10 @@ internal class RedaktIrVisitor(
   )
 
   private fun log(message: String) {
+    messageCollector.report(CompilerMessageSeverity.INFO, "$LOG_PREFIX $message")
+  }
+
+  private fun verbose(message: String) {
     messageCollector.report(CompilerMessageSeverity.LOGGING, "$LOG_PREFIX $message")
   }
 

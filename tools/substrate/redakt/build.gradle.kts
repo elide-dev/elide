@@ -1,3 +1,4 @@
+import Elide
 import GradleProject.projectConstants
 import ElideSubstrate.elideTarget
 
@@ -8,16 +9,22 @@ plugins {
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")
+  id("com.google.devtools.ksp")
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
 group = "dev.elide.tools.kotlin.plugin"
 version = rootProject.version as String
 
+testlogger {
+  showStandardStreams = true
+}
+
 projectConstants(
   packageName = "elide.tools.kotlin.plugin.redakt",
   extraProperties = mapOf(
     "PLUGIN_ID" to Constant.string("redakt"),
+    "PLUGIN_VERSION" to Constant.string(Elide.version),
   )
 )
 
@@ -32,8 +39,10 @@ publishing {
 }
 
 dependencies {
-  implementation(project(":compiler-util"))
-  implementation(libs.kotlin.compiler.embedded)
+  ksp(libs.autoService.ksp)
+  api(project(":compiler-util"))
+  compileOnly(libs.kotlin.compiler.embedded)
+  implementation(libs.google.auto.service)
 
   testImplementation(kotlin("test"))
   testImplementation(libs.truth)
@@ -43,5 +52,6 @@ dependencies {
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.engine)
   testImplementation(libs.kotlin.compiler.testing)
+  testImplementation(libs.kotlin.compiler.embedded)
   testImplementation(project(":compiler-util", "test"))
 }

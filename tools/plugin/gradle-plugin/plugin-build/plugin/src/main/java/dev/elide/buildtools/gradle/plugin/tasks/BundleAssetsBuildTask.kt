@@ -20,13 +20,13 @@ import java.util.stream.Collectors
 
 /** Task which creates Elide asset specifications for embedding in app JARs. */
 @Suppress("UnusedPrivateMember", "UnstableApiUsage")
-abstract class BundleAssetsBuildTask : BundleBaseTask() {
-    companion object {
-        internal const val TASK_NAME = "bundleAssets"
-        private const val ASSETS_INTERMEDIATE_FOLDER = "serverAssets"
-        private const val BROWSER_DIST_DEFAULT = "assetDist"
+public abstract class BundleAssetsBuildTask : BundleBaseTask() {
+    public companion object {
+        internal const val TASK_NAME: String = "bundleAssets"
+        private const val ASSETS_INTERMEDIATE_FOLDER: String = "serverAssets"
+        private const val BROWSER_DIST_DEFAULT: String = "assetDist"
 
-        @JvmStatic fun isEligible(extension: ElideExtension, project: Project): Boolean {
+        @JvmStatic public fun isEligible(extension: ElideExtension, project: Project): Boolean {
             return (
                 project.plugins.hasPlugin("org.jetbrains.kotlin.jvm") ||
                 extension.hasServerTarget()
@@ -34,14 +34,14 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
         }
 
         // Apply plugins which are required to run before the server-side build task.
-        @JvmStatic fun applyPlugins(project: Project, cbk: () -> Unit) {
+        @JvmStatic public fun applyPlugins(project: Project, cbk: () -> Unit) {
             applyPlugin(project, "org.jetbrains.kotlin.jvm") {
                 cbk()
             }
         }
 
         // After determining the server-side plugin is eligible to run, apply plugins, then build/install tasks.
-        @JvmStatic fun install(extension: ElideExtension, project: Project) {
+        @JvmStatic public fun install(extension: ElideExtension, project: Project) {
             applyPlugins(project) {
                 project.afterEvaluate {
                     if (extension.server.assets.hasAnyProjectDeps()) {
@@ -70,7 +70,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
         }
 
         // Under the scope of applied required plugins, install tasks and wire together server-side targets.
-        @JvmStatic fun installTasks(extension: ElideExtension, project: Project) {
+        @JvmStatic public fun installTasks(extension: ElideExtension, project: Project) {
             val allTasks = ArrayList<TaskProvider<out Task>>()
 
             // add SSR injection task if the user has configured a bundle
@@ -101,7 +101,10 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
 
         // If the user has configured an SSR bundle, this method is called to configure a task which consumes it. The
         // bundle is injected into the server's resources set, along with the proto-spec for the bundle.
-        @JvmStatic fun buildSsrConsumeTask(extension: ElideExtension, project: Project): List<TaskProvider<out Task>> {
+        @JvmStatic public fun buildSsrConsumeTask(
+            extension: ElideExtension,
+            project: Project,
+        ): List<TaskProvider<out Task>> {
             val allTasks = ArrayList<TaskProvider<out Task>>()
 
             // add a project configuration which is capable of consuming SSR artifacts.
@@ -155,7 +158,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
         // package those assets, in addition to generating metadata files which describe them to the server at runtime.
         @JvmStatic
         @Suppress("SpreadOperator", "ComplexMethod", "LongMethod")
-        fun buildAssetTasks(extension: ElideExtension, project: Project): List<TaskProvider<out Task>> {
+        public fun buildAssetTasks(extension: ElideExtension, project: Project): List<TaskProvider<out Task>> {
             val allTasks = ArrayList<TaskProvider<out Task>>()
             val assetConfigs = extension.server.assets.assets
 
@@ -398,7 +401,7 @@ abstract class BundleAssetsBuildTask : BundleBaseTask() {
         option = "assets",
         description = "Source asset input files to bundle for server-side use.",
     )
-    abstract val assets: ListProperty<AssetInfo>
+    internal abstract val assets: ListProperty<AssetInfo>
 
     /** @inheritDoc */
     override fun runAction() {

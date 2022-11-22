@@ -20,14 +20,21 @@ import javax.inject.Inject
 
 /** Configuration for server-embedded assets. */
 @Suppress("RedundantVisibilityModifier", "MemberVisibilityCanBePrivate", "unused")
-open class ElideAssetsHandler @Inject constructor(
+public open class ElideAssetsHandler @Inject constructor(
     private val objects: ObjectFactory
 ) {
-    companion object {
-        val defaultManifestFormat = StaticValues.defaultEncoding
-        val defaultHashAlgorithm = StaticValues.assetHashAlgo
-        const val defaultMinimumUncompressedSize: Int = 400
-        const val BROWSER_DIST_TARGET = "assetDist"
+    private companion object {
+        /** Default format to use for built-in asset manifests. */
+        internal val defaultManifestFormat: ManifestFormat = StaticValues.defaultEncoding
+
+        /** Hash algorithm to use for calculating asset tags. */
+        internal val defaultHashAlgorithm: HashAlgorithm = StaticValues.assetHashAlgo
+
+        /** Minimum asset size to trigger compression behavior. */
+        internal const val defaultMinimumUncompressedSize: Int = 400
+
+        /** Default configuration name to pull from for asset artifacts. */
+        internal const val BROWSER_DIST_TARGET: String = "assetDist"
     }
 
     /** Whether the user has assets configured for embedding. */
@@ -40,7 +47,7 @@ open class ElideAssetsHandler @Inject constructor(
     internal val bundlerConfig: AssetBundlerConfig = objects.newInstance(AssetBundlerConfig::class.java)
 
     /** Add a script asset with the specified [module] ID using the provided [block]. */
-    fun script(module: String, block: Action<ServerAsset>) {
+    public fun script(module: String, block: Action<ServerAsset>) {
         asset(
             AssetType.SCRIPT,
             module,
@@ -49,7 +56,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Add a stylesheet asset with the specified [module] ID using the provided [block]. */
-    fun stylesheet(module: String, block: Action<ServerAsset>) {
+    public fun stylesheet(module: String, block: Action<ServerAsset>) {
         asset(
             AssetType.STYLESHEET,
             module,
@@ -58,7 +65,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Add a text asset with the specified [module] ID using the provided [block]. */
-    fun text(module: String, block: Action<ServerAsset>) {
+    public fun text(module: String, block: Action<ServerAsset>) {
         asset(
             AssetType.TEXT,
             module,
@@ -67,7 +74,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Add a generic asset of the specified [type] using the provided [block]. */
-    fun asset(type: AssetType, module: String, block: Action<ServerAsset>) {
+    public fun asset(type: AssetType, module: String, block: Action<ServerAsset>) {
         val asset = ServerAsset(objects, module, type)
         block.execute(asset)
         require(!assets.containsKey(module)) {
@@ -78,19 +85,19 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Configuration for the asset bundler task. */
-    fun bundler(block: Action<AssetBundlerConfig>) {
+    public fun bundler(block: Action<AssetBundlerConfig>) {
         block.execute(bundlerConfig)
     }
 
     /** @return `true` if inter-project dependencies have been declared; `false` otherwise. */
-    fun hasAnyProjectDeps(): Boolean {
+    public fun hasAnyProjectDeps(): Boolean {
         return assets.values.any { asset ->
             asset.projectDeps.get().isNotEmpty()
         }
     }
 
     /** @return Rolled-up set of inter-project dependencies. */
-    fun getAllProjectDeps(): List<Pair<String, String>> {
+    public fun getAllProjectDeps(): List<Pair<String, String>> {
         return assets.values.flatMap { asset ->
             asset.projectDeps.get().mapNotNull { handler ->
                 val projectTarget = handler.projectPath.get()
@@ -105,7 +112,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Extends a standard Gradle copy-task-spec with asset type information, so that sensible defaults can be used. */
-    open class AssetCopySpec @Inject constructor (
+    public open class AssetCopySpec @Inject constructor (
         private val project: Project,
         internal val type: AssetType,
         private val objects: ObjectFactory,
@@ -119,7 +126,7 @@ open class ElideAssetsHandler @Inject constructor(
      * @param type Type of server asset.
      */
     @Suppress("TooManyFunctions")
-    open class ServerAsset(
+    public open class ServerAsset(
         private val objects: ObjectFactory,
         internal val module: String,
         internal val type: AssetType
@@ -272,7 +279,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Handler for configuring an inter-project asset dependency. */
-    open class InterProjectAssetHandler : java.io.Serializable {
+    public open class InterProjectAssetHandler : java.io.Serializable {
         internal val projectPath: AtomicReference<String?> = AtomicReference(null)
         internal val internalConfiguration: AtomicReference<String?> = AtomicReference(null)
         internal val targetConfiguration: AtomicReference<String?> = AtomicReference(null)
@@ -280,7 +287,7 @@ open class ElideAssetsHandler @Inject constructor(
         internal val managedConfiguration: AtomicBoolean = AtomicBoolean(true)
         internal val includePaths: AtomicReference<SortedSet<String>> = AtomicReference(TreeSet())
 
-        companion object {
+        public companion object {
             @JvmStatic internal fun fromProject(
                 objects: ObjectFactory,
                 project: String,
@@ -332,17 +339,17 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Asset bundler configuration. */
-    open class AssetBundlerConfig @Inject constructor (objects: ObjectFactory) {
+    public open class AssetBundlerConfig @Inject constructor (objects: ObjectFactory) {
         internal val digestAlgorithm: AtomicReference<HashAlgorithm> = AtomicReference(defaultHashAlgorithm)
         internal val format: AtomicReference<ManifestFormat> = AtomicReference(defaultManifestFormat)
         internal val compressionConfig: CompressionHandler = objects.newInstance(CompressionHandler::class.java)
         internal val tagGenerator: AssetTagHandler = objects.newInstance(AssetTagHandler::class.java)
 
         /** @return Packaged compression config, based on the contents of this handler. */
-        fun compressionConfig(): AssetCompressionConfig = compressionConfig.generateConfig()
+        internal fun compressionConfig(): AssetCompressionConfig = compressionConfig.generateConfig()
 
         /** @return Packaged configuration for the asset tag generator. */
-        fun tagGenConfig(): AssetTagConfig = tagGenerator.generateConfig()
+        internal fun tagGenConfig(): AssetTagConfig = tagGenerator.generateConfig()
 
         /** Set the hash algorithm to use for asset digests. */
         public fun digestAlgorithm(algorithm: HashAlgorithm) {
@@ -366,7 +373,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Configuration specific to the asset tag generator. */
-    open class AssetTagHandler {
+    public open class AssetTagHandler {
         internal val digestAlgorithm: AtomicReference<HashAlgorithm> = AtomicReference(defaultHashAlgorithm)
         internal val tailSize: AtomicInteger = AtomicInteger(defaultMinimumUncompressedSize)
         internal val rounds: AtomicInteger = AtomicInteger(defaultMinimumUncompressedSize)
@@ -395,7 +402,7 @@ open class ElideAssetsHandler @Inject constructor(
     }
 
     /** Asset pre-compression configuration. */
-    open class CompressionHandler {
+    public open class CompressionHandler {
         internal val enableCompression: AtomicBoolean = AtomicBoolean(true)
         internal val minimumUncompressedSize: AtomicInteger = AtomicInteger(defaultMinimumUncompressedSize)
         internal val keepOnlyBest: AtomicBoolean = AtomicBoolean(false)

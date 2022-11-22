@@ -19,14 +19,19 @@ import java.security.MessageDigest
 
 /** Base task which provides shared logic and declarations across all Elide plugin tasks. */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-abstract class BundleBaseTask : DefaultTask() {
-    companion object {
-        const val defaultOutputBundleFolder = "bundle"
-        const val defaultOutputBundleName = "bundle.js"
-        const val defaultOutputOptimizedName = "bundle.opt.js"
+public abstract class BundleBaseTask : DefaultTask() {
+    public companion object {
+        /** Default output folder name for bundles. */
+        public const val defaultOutputBundleFolder: String = "bundle"
+
+        /** Default bundle output file name. */
+        public const val defaultOutputBundleName: String = "bundle.js"
+
+        /** Default bundle output file name in optimized/release mode. */
+        public const val defaultOutputOptimizedName: String = "bundle.opt.js"
 
         /** Proto-JSON printer. */
-        internal val jsonPrinter = JsonFormat
+        internal val jsonPrinter: JsonFormat.Printer = JsonFormat
             .printer()
             .omittingInsignificantWhitespace()
             .includingDefaultValueFields()
@@ -54,7 +59,7 @@ abstract class BundleBaseTask : DefaultTask() {
 
         /** Apply the plugin at the provided [id] to the provided [project] within the scope of the [cbk]. */
         @JvmStatic
-        fun applyPlugin(project: Project, id: String, cbk: () -> Unit) {
+        public fun applyPlugin(project: Project, id: String, cbk: () -> Unit) {
             project.plugins.withId(id) {
                 cbk.invoke()
             }
@@ -124,7 +129,7 @@ abstract class BundleBaseTask : DefaultTask() {
         option = "bundleEncoding",
         description = "Mode to use for encoding the asset bundle. Typically managed by the plugin.",
     )
-    abstract val bundleEncoding: Property<ManifestFormat>
+    internal abstract val bundleEncoding: Property<ManifestFormat>
 
     /** Folder in which to put built bundle targets. */
     @get:Input
@@ -132,7 +137,7 @@ abstract class BundleBaseTask : DefaultTask() {
         option = "outputBundleFolder",
         description = "Where to put compiled asset catalogs on the filesystem. Typically managed by the plugin.",
     )
-    abstract val outputBundleFolder: Property<String>
+    internal abstract val outputBundleFolder: Property<String>
 
     /**
      * Run any needed pre-action steps, which should occur before invoking the main bundle step; task implementations
@@ -155,13 +160,13 @@ abstract class BundleBaseTask : DefaultTask() {
      * applicable; after running this step, post-action build steps can be run with [postAction], and pre-action steps
      * can be run with [preAction].
      */
-    abstract fun runAction()
+    internal abstract fun runAction()
 
     /**
      * Entrypoint for a standard [BundleBaseTask] implementation; first, pre-action steps are run, then, the action
      * itself is run, and then any post action steps are run.
      */
-    @TaskAction fun execTask() {
+    @TaskAction internal fun execTask() {
         preAction()
         runAction()
         postAction()

@@ -9,12 +9,13 @@ import org.gradle.api.Project
 
 /** Definition for the main Elide build-tools plugin. */
 @Suppress("unused")
-abstract class ElidePlugin : Plugin<Project> {
-    companion object {
-        const val EXTENSION_NAME = "elide"
+public abstract class ElidePlugin : Plugin<Project> {
+    public companion object {
+        public const val EXTENSION_NAME: String = "elide"
     }
 
-    override fun apply(project: Project) = project.run {
+    /** @inheritDoc */
+    override fun apply(project: Project): Unit = project.run {
         var kotlinPluginFound = false
         val elide = elide()
 

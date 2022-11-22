@@ -38,6 +38,7 @@ gradleEnterprise {
 }
 
 include(
+  ":bom",
   ":compiler-util",
   ":injekt",
   ":interakt",

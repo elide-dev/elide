@@ -113,12 +113,6 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
-		:conventions:publish \
-		:substrate:publish \
-		:substrate:compiler-util:publish \
-		:tools:processor:publish \
-		:packages:bom:publish \
-		:packages:platform:publish \
 		publish \
 		--no-daemon \
 		--warning-mode=none \

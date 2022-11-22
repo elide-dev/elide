@@ -207,6 +207,7 @@
          <trusted-key id="c6f7d1c804c821f49af3bfc13ad93c3c677a106e" group="io.perfmark" name="perfmark-api" version="0.25.0"/>
          <trusted-key id="c70b844f002f21f6d2b9c87522e44ac0622b91c3" group="com.beust" name="jcommander" version="1.82"/>
          <trusted-key id="c7be5bcc9fec15518cfda882b0f3710fa64900e7">
+            <trusting group="com.google.auto" name="auto-common" version="1.2"/>
             <trusting group="com.google.auto.service"/>
             <trusting group="com.google.auto.value"/>
             <trusting group="com.google.code.gson"/>
@@ -257,6 +258,7 @@
             <trusting group="org.codehaus.plexus" name="plexus-utils" version="3.4.1"/>
          </trusted-key>
          <trusted-key id="f3184bcd55f4d016e30d4c9bf42e87f9665015c9" group="org.jsoup" name="jsoup"/>
+         <trusted-key id="f4fd8d1ea4a590d774a6ba777b534d9959cf9eac" group="biz.aQute.bnd"/>
          <trusted-key id="f629176428e965ff30d5c45bfb3e48b3ec96ed95">
             <trusting group="dev.elide"/>
             <trusting group="^dev[.]elide[.]tools($|([.].*))" regex="true"/>

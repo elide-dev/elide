@@ -141,7 +141,11 @@ jobs:
           cache-read-only: false
           arguments: |
             build
+            -x check
             -x test
+            -x jvmTest
+            -x jsTest
+            -x jsBrowserTest
             -x nativeCompile
             --scan
             --no-daemon

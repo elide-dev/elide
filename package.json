@@ -41,7 +41,7 @@
     "prettier-plugin-sh": "^0.12.8",
     "prettier-plugin-toml": "^0.3.1",
     "readable-stream": "4.2.0",
-    "webpack": "5"
+    "webpack": "5.75.0"
   },
   "scripts": {
     "build": "make build",

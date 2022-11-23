@@ -66,7 +66,7 @@ message Endpoint {
   // Tag generated for an endpoint.
   string tag = 1;
 
-  // Name given to an endpoint, if applicable.
+  // Name given to an endpoint, if applicable; this parameter considers the method name as well as the handler name.
   optional string name = 2;
 
   // Type of endpoint detected or configured for this payload.
@@ -89,6 +89,15 @@ message Endpoint {
 
   // Options which apply to this endpoint.
   EndpointOptions options = 9;
+
+  // Fully qualified path to the implementation class.
+  string impl = 10;
+
+  // Member function bound to this route on `impl`.
+  string member = 11;
+
+  // Value of the `name` parameter for the parent handler, if known.
+  optional string handler = 12;
 }
 
 // Specifies build-time info which is enclosed in an application binary.

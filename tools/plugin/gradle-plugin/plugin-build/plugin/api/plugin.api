@@ -256,6 +256,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler {
 	public final fun hasAssets ()Z
 	public final fun hasSsgConfig ()Z
 	public final fun hasSsrBundle ()Z
+	public final fun ssg (Lorg/gradle/api/Action;)V
 	public final fun ssr (Ltools/elide/assets/EmbeddedScriptLanguage;Lorg/gradle/api/Action;)V
 	public static synthetic fun ssr$default (Ldev/elide/buildtools/gradle/plugin/cfg/ElideServerHandler;Ltools/elide/assets/EmbeddedScriptLanguage;Lorg/gradle/api/Action;ILjava/lang/Object;)V
 }

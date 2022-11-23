@@ -46,6 +46,11 @@ public open class ElideServerHandler @Inject constructor(objects: ObjectFactory)
         return assets.active.get()
     }
 
+    /** Configure SSG compilation pass. */
+    public fun ssg(action: Action<StaticSiteHandler>) {
+        action.execute(ssg)
+    }
+
     /** Configure server-embedded assets. */
     public fun assets(action: Action<ElideAssetsHandler>) {
         action.execute(assets)

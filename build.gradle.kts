@@ -100,7 +100,9 @@ apiValidation {
     }
   ).plus(
     if (project.properties["buildDocsSite"] == "true") {
-      listOf("docs")
+      listOf(
+        "site",
+      )
     } else {
       emptyList()
     }

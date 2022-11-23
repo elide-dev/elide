@@ -92,9 +92,9 @@ application {
 dependencies {
   api(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
-  implementation(project(":packages:base"))
-  implementation(project(":packages:server"))
-  implementation(project(":packages:graalvm"))
+  api(project(":packages:base"))
+  api(project(":packages:server"))
+  api(project(":packages:graalvm"))
 
   implementation(libs.jsoup)
   implementation(libs.micronaut.context)

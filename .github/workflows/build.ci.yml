@@ -360,6 +360,7 @@ jobs:
             koverMergedXmlReport
             koverMergedReport
             :tools:reports:reports
+            -x :packages:ssg:testNativeImage
             --scan
             --no-daemon
             --warning-mode=none

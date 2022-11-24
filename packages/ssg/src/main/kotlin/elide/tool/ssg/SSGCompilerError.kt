@@ -31,5 +31,12 @@ public sealed class SSGCompilerError(
     cause,
     -3,
   )
+
+  /** Output error. */
+  public class OutputError(message: String, cause: Throwable? = null): SSGCompilerError(
+    message,
+    cause,
+    -4,
+  )
 }
 

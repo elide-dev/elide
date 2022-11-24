@@ -1,5 +1,6 @@
 package elide.tool.ssg
 
+import tools.elide.data.CompressionMode
 import java.util.SortedSet
 
 /**
@@ -14,7 +15,7 @@ public data class SiteCompilerParams(
   public val manifest: String,
   public val target: String,
   public val output: Output,
-  public val options: Options,
+  public val options: Options = Options.DEFAULTS,
 ) {
   /**
    * Compiler output configuration.
@@ -93,6 +94,7 @@ public data class SiteCompilerParams(
    * @param crawl Whether to crawl HTML content for additional URLs.
    * @param extraOrigins Extra origins to consider legal for crawling.
    * @param timeout Timeout to apply when executing app requests. Expressed in seconds.
+   * @param precompress Whether to pre-compress assets as `*.gz` or `*.br` files, or both, or none.
    */
   public data class Options(
     val classpath: String? = null,
@@ -103,6 +105,7 @@ public data class SiteCompilerParams(
     val crawl: Boolean = true,
     val extraOrigins: SortedSet<String> = sortedSetOf(),
     val timeout: Int = DEFAULT_REQUEST_TIMEOUT,
+    val precompress: Set<CompressionMode> = emptySet(),
   ) {
     public companion object {
       /** Default options. */
@@ -121,6 +124,7 @@ public data class SiteCompilerParams(
       compiler.ignoreCertErrors = ignoreCertErrors
       compiler.extraOrigins = extraOrigins
       compiler.timeout = timeout
+      compiler.precompress = precompress
     }
   }
 }

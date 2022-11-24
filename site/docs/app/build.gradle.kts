@@ -8,6 +8,7 @@ import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
+  id("com.github.johnrengelman.shadow")
   id("io.micronaut.application")
   id("io.micronaut.aot")
   id("dev.elide.build.site.backend")
@@ -77,8 +78,9 @@ micronaut {
 }
 
 val mainPackage = "elide.docs"
-val mainEntry = "$mainPackage.App"
+val mainEntry = "$mainPackage.DocsApp"
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
+val buildDocsSite: String by project.properties
 
 application {
   mainClass.set(mainEntry)
@@ -118,6 +120,20 @@ dependencies {
   testImplementation(kotlin("test-junit5"))
   testImplementation(project(":packages:test"))
   testImplementation(libs.micronaut.test.junit5)
+}
+
+val shadowAppJar by configurations.creating {
+  isCanBeConsumed = true
+  isCanBeResolved = false
+}
+
+tasks.shadowJar {
+  mergeServiceFiles()
+  archiveClassifier.set("shadow")
+}
+
+artifacts {
+  add("shadowAppJar", tasks.shadowJar)
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

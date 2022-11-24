@@ -26,6 +26,7 @@ dependencies {
   implementation(libs.plugin.micronaut)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.spotless)
+  implementation(libs.plugin.shadow)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.kotlin.allopen)

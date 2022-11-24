@@ -28,7 +28,6 @@ import java.nio.charset.StandardCharsets
  * @param assetIndex Active asset index for this server run.
  * @param reader Active asset reader implementation for this server run.
  */
-@Suppress("UnstableApiUsage")
 @Context
 public class ServerAssetManager @Inject internal constructor(
   private val assetConfig: AssetConfig,

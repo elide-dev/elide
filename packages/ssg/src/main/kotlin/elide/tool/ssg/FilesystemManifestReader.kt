@@ -30,14 +30,20 @@ import java.io.IOException
     return withContext(Dispatchers.IO) {
       async {
         val file = try {
-          File(path).let {
-            if (!it.exists()) throw SSGCompilerError.InvalidArgument(
-              "Manifest not found at path '$path'"
-            ) else {
-              logging.debug("Manifest file located at path '$path'.")
+          val target = if (path.startsWith("classpath:")) {
+            (this::class.java.getResource("/" + path.drop("classpath:".length)) ?: throw SSGCompilerError
+              .InvalidArgument("Failed to locate manifest as classpath resource at path '$path'")).let {
+              File(it.toURI())
             }
-            it
+          } else {
+            val f = File(path)
+            if (!f.exists()) throw IOException(
+              "Manifest not found at path '$path'"
+            )
+            f
           }
+          logging.debug("Manifest file located at path '$path'.")
+          target
         } catch (ioe: IOException) {
           throw SSGCompilerError.IOError("Failed to read app manifest: IO Error", ioe)
         }
@@ -50,7 +56,8 @@ import java.io.IOException
           throw SSGCompilerError.IOError("Failed to read app manifest: Invalid protocol buffer error", ipbe)
         }
         logging.debug("App manifest loaded.")
-        if (logging.isEnabled(LogLevel.TRACE)) logging.trace("Loaded app manifest: $manifest")
+        if (logging.isEnabled(LogLevel.TRACE))
+          logging.trace("Loaded app manifest: $manifest")
         manifest
       }
     }

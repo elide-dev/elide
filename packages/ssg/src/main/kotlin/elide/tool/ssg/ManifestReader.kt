@@ -9,6 +9,11 @@ import java.io.Closeable
  *
  * This interface defines the API surface of implementations responsible for loading an Elide application manifest
  * during execution of the SSG (Static Site Generator) compiler.
+ *
+ * ## Filesystem & Classpath Resources
+ *
+ * By default, the manifest reader is expected to interpret given paths as filesystem paths, unless a given path is
+ * prefixed with `classpath:`. In this case, the path is interpreted as a classpath resource.
  */
 public interface ManifestReader : Closeable, AutoCloseable {
   /**

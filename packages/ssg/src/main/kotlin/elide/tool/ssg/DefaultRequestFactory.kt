@@ -5,7 +5,6 @@ import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import jakarta.inject.Singleton
 import tools.elide.meta.Endpoint
-import java.net.URI
 
 /** Default request factory implementation. */
 @Suppress("unused")
@@ -39,25 +38,28 @@ import java.net.URI
   override fun create(page: Endpoint, controller: Class<*>?): HttpRequest<*> {
     val urlBase = page.base
     val urlPath = page.tail
-    val url = if (page.tail.startsWith("/")) {
-      if (page.base == "/") {
-        urlPath
-      } else {
-        "$urlBase$urlPath"
-      }
+
+    // special case: if the URL evaluates to "/" or empty, then it is considered a request for the root page.
+    val resolvedUrl = if (
+      (urlBase == "/" && urlPath == "/") ||
+      (urlBase == "/" && urlPath == "") ||
+      (urlBase == "" && urlPath == "/") ||
+      (urlBase == "" && urlPath == "")
+    ) {
+      "/"
     } else {
-      "$urlBase/$urlPath"
-    }
-    val urlTarget = try {
-      URI.create(url)
-    } catch (err: Throwable) {
-      throw RequestFactory.RequestGenerationFailed(
-        page,
-        err,
-      )
+      if (page.tail.startsWith("/")) {
+        if (page.base == "/") {
+          urlPath
+        } else {
+          "$urlBase$urlPath"
+        }
+      } else {
+        "$urlBase/$urlPath"
+      }
     }
 
-    return HttpRequest.GET<String>(urlTarget).headers {
+    return HttpRequest.GET<String>(resolvedUrl).headers {
       defaultHeaders.forEach { (key, value) ->
         it.add(key, value)
       }

@@ -1,5 +1,6 @@
 package elide.tool.ssg
 
+import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import java.net.URL
 import java.nio.ByteBuffer
@@ -22,10 +23,12 @@ public interface StaticContentReader {
    * Describes an asset detected after parsing an HTML response.
    *
    * @param url Absolute URL of the asset.
+   * @param request HTTP request which yielded the asset.
    * @param type Type of the asset.
    */
   public data class DetectedArtifact(
     val url: URL,
+    val request: HttpRequest<*>,
     val type: ArtifactType,
   )
 
@@ -60,9 +63,11 @@ public interface StaticContentReader {
    * This method does not determine whether assets are eligible for actual download (i.e. they must also be same-origin
    * references, depending on setting). All matching asset type URLs are expected to be returned by this method.
    *
+   * @param request HTTP request that produced this response.
    * @param response Response for which we are parsing body content.
    * @param content Raw body content from the response, which we should parse as HTML.
    * @return Detected artifacts to add to the processing queue.
    */
-  public fun parse(response: HttpResponse<ByteArray>, content: ByteBuffer): List<DetectedArtifact>
+  public fun parse(request: HttpRequest<*>, response: HttpResponse<ByteArray>, content: ByteBuffer):
+    List<DetectedArtifact>
 }

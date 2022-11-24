@@ -33,6 +33,14 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
       - name: "Patch: Neutralize Yarn Lock"
         run: mv kotlin-js-store/yarn.lock kotlin-js-store/yarn.inert
       - name: "Check: Dependency Review"
@@ -60,7 +68,7 @@ jobs:
             --no-daemon
             --warning-mode=none
             -Pelide.ci=true
-            -PbuildSamples=false
+            -PbuildSamples=true
             -Pversions.java.language=17
 
   ##
@@ -152,7 +160,7 @@ jobs:
             --warning-mode=none
             --dependency-verification=lenient
             -Pelide.ci=true
-            -PbuildSamples=false
+            -PbuildSamples=true
             -PbuildDocs=false
             -Pversions.java.language=${{ matrix.java }}
       - name: "Build reports"
@@ -164,7 +172,7 @@ jobs:
             build/reports/**/*.*
       - name: "Run: Detekt"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
-        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=false -Pversions.java.language=${{ matrix.java }}
+        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -Pversions.java.language=${{ matrix.java }}
         continue-on-error: true
       - name: "Fix: SARIF Paths"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
@@ -358,7 +366,7 @@ jobs:
             --dependency-verification=lenient
             -x apiCheck
             -Pelide.ci=true
-            -PbuildSamples=false
+            -PbuildSamples=true
             -PbuildDocs=false
             -Pversions.java.language=17
       - uses: actions/upload-artifact@v3

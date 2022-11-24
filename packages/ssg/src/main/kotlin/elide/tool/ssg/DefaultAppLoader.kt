@@ -23,7 +23,9 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.jar.Attributes
 
 /** Default [AppLoader] implementation, which works based on an isolated class-loader. */
-@Singleton public class DefaultAppLoader : AppLoader {
+@Singleton public class DefaultAppLoader @Inject internal constructor (
+  private val contentReader: StaticContentReader,
+) : AppLoader {
   /** Defines a local interface for an app loader implementation. */
   private sealed interface AppLoaderImpl : Closeable, AutoCloseable {
     /** Perform any preparation or validation steps which can be executed ahead of time. */
@@ -151,9 +153,6 @@ import java.util.jar.Attributes
 
   // Inner loader implementation.
   private val inner: AtomicReference<AppLoaderImpl> = AtomicReference(null)
-
-  // Content reader for handling response data.
-  @Inject internal lateinit var contentReader: StaticContentReader
 
   // Indicate whether any endpoints within the provided `app` manifest are eligible for SSG compilation.
   private fun appEligibleForSSG(app: AppManifest): Boolean {
@@ -285,7 +284,7 @@ import java.util.jar.Attributes
     // it to determine any additional URLs we need to fetch as followup tasks.
     val (shouldScan, post) = contentReader.consume(response)
     val followup = if (shouldScan && config.params.options.crawl) {
-      contentReader.parse(response, post)
+      contentReader.parse(spec.request, response, post)
     } else {
       emptyList()
     }

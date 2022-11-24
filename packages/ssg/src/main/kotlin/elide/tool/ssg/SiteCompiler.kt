@@ -1,11 +1,13 @@
 package elide.tool.ssg
 
+import com.google.common.annotations.VisibleForTesting
 import elide.tool.ssg.SiteCompilerParams as CompilerParams
 import elide.tool.ssg.SiteCompilerParams.Options
 import elide.tool.ssg.SiteCompileResult as CompileResult
 import com.google.errorprone.annotations.CanIgnoreReturnValue
 import elide.runtime.Logger
 import elide.runtime.Logging
+import elide.tool.ssg.SiteCompilerParams
 import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
@@ -15,6 +17,7 @@ import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
+import tools.elide.data.CompressionMode
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -33,45 +36,45 @@ public class SiteCompiler internal constructor () : Runnable {
     /** CLI entrypoint and [args]. */
     @JvmStatic public fun main(args: Array<String>): Unit = exitProcess(exec(args))
 
+    /** @return Tool version. */
+    @JvmStatic public fun version(): String = ELIDE_TOOL_VERSION
+
     /**
      * Programmatic entrypoint for the SSG compiler; equivalent to invoking [main].
      *
-     * @param logging Logger to use for compiler messages.
      * @param manifest Filesystem path to the manifest which should be read and interpreted.
      * @param target File path to the application JAR which should be launched, or HTTP URL if running in HTP mode.
      * @param output Output settings for this compiler run.
      * @param options Options to apply to this compile execution.
+     * @param logging Logger to use for compiler messages.
      * @return Compiler result.
      */
     @JvmStatic public fun compile(
-      logging: Logger,
       manifest: String,
       target: String,
       output: CompilerParams.Output,
-      options: Options = Options.DEFAULTS,
+      options: Options,
+      logging: Logger? = null,
     ): CompileResult {
-      val compiler = SiteCompiler()
-      compiler.manifest = manifest.ifBlank {
-        throw SSGCompilerError.InvalidArgument("Cannot load blank manifest path")
-      }
-      compiler.target = target.ifBlank {
-        throw SSGCompilerError.InvalidArgument("Cannot load blank JAR path/HTTP target")
-      }
-      if (options.classpath != null) {
-        compiler.classpath = options.classpath
-      }
-      compiler.params = CompilerParams(
-        target = target,
-        output = output,
-        manifest = manifest,
-        options = options.copy(
-          httpMode = options.httpMode || target.startsWith("http")
-        ),
-      )
-      compiler.logging = logging
-      compiler.paramsAvailable.compareAndSet(false, true)
-      options.applyTo(compiler)
-      return compiler.compile()
+      return SiteCompiler().apply {
+        // setup default actors
+        manifestReader = FilesystemManifestReader()
+        requestFactory = DefaultRequestFactory()
+        contentReader = DefaultAppStaticReader()
+        contentWriter = DefaultAppStaticWriter()
+        appLoader = DefaultAppLoader(contentReader)
+        compiler = DefaultAppStaticCompiler()
+
+        // configure the compiler
+        configure(logging = logging, params = CompilerParams(
+          target = target,
+          output = output,
+          manifest = manifest,
+          options = options.copy(
+            httpMode = options.httpMode || target.startsWith("http")
+          ),
+        ))
+      }.compile()
     }
 
     // Wrap the tool execution with exception protection.
@@ -89,7 +92,7 @@ public class SiteCompiler internal constructor () : Runnable {
     }
 
     // Private execution entrypoint for customizing core Picocli settings.
-    @JvmStatic private fun exec(args: Array<String>): Int {
+    @JvmStatic @VisibleForTesting internal fun exec(args: Array<String>): Int {
       return ApplicationContext.builder().start().use {
         CommandLine(SiteCompiler::class.java, MicronautFactory(it))
           .setUsageHelpAutoWidth(true)
@@ -125,14 +128,17 @@ public class SiteCompiler internal constructor () : Runnable {
   // App runner implementation.
   @Inject internal lateinit var appLoader: AppLoader
 
+  // Static content reader implementation.
+  @Inject internal lateinit var contentReader: StaticContentReader
+
+  // Static content writer implementation.
+  @Inject internal lateinit var contentWriter: AppStaticWriter
+
   // Request factory implementation.
   @Inject internal lateinit var requestFactory: RequestFactory
 
   // Site compiler logic implementation.
   @Inject internal lateinit var compiler: AppStaticCompiler
-
-  // Output writer.
-  @Inject internal lateinit var writer: AppStaticWriter
 
   /** Verbose logging mode. */
   @Option(
@@ -183,6 +189,15 @@ public class SiteCompiler internal constructor () : Runnable {
   )
   internal var crawl: Boolean = false
 
+  /** Crawl returned HTML. */
+  @Option(
+    names = ["--precompress"],
+    description = [
+      "Whether to pre-compress eligible outputs with GZIP or Brotli. Pass `GZIP` or `BROTLI`, zero or more times."
+    ],
+  )
+  internal var precompress: Set<CompressionMode> = emptySet()
+
   /** Extra allowable origins. */
   @Option(
     names = ["--allow-origin"],
@@ -201,7 +216,7 @@ public class SiteCompiler internal constructor () : Runnable {
   /** Location of the manifest to read. */
   @Parameters(
     index = "0",
-    description = ["Location of the app manifest to read."],
+    description = ["Location of the app manifest to read. Prefix with `classpath:` or provide a file system path."],
   )
   internal lateinit var manifest: String
 
@@ -218,6 +233,26 @@ public class SiteCompiler internal constructor () : Runnable {
     description = ["Output directory, zip, or tarball."],
   )
   internal lateinit var output: String
+
+  /** Interface for manually configuring the compiler; meant for testing and internal use only. */
+  @VisibleForTesting internal fun configure(params: SiteCompilerParams? = null, logging: Logger? = null): SiteCompiler {
+    if (params != null) {
+      manifest = params.manifest.ifBlank {
+        throw SSGCompilerError.InvalidArgument("Cannot load blank manifest path")
+      }
+      target = params.target.ifBlank {
+        throw SSGCompilerError.InvalidArgument("Cannot load blank JAR path/HTTP target")
+      }
+      if (params.options.classpath != null) {
+        classpath = params.options.classpath
+      }
+      this.params = params
+      this.logging = logging ?: Logging.of(SiteCompiler::class.java)
+      paramsAvailable.compareAndSet(false, true)
+      params.options.applyTo(this)
+    }
+    return this
+  }
 
   /** Utility function to indicate a successful compile. */
   @CanIgnoreReturnValue internal fun success(
@@ -255,6 +290,7 @@ public class SiteCompiler internal constructor () : Runnable {
   // Main execution function.
   private suspend fun execute(): CompileResult {
     logging.info("Compiling Elide app to static site...")
+    logging.debug("SSG Compiler parameters: $params")
     val manifest = manifestReader.use {
       manifestReader.readManifest(params)
     }
@@ -266,7 +302,7 @@ public class SiteCompiler internal constructor () : Runnable {
         // in this case, there are no pre-compiled endpoints within the target app manifest; so the compiler has
         // nothing to do. this is not considered an error.
         logging.warn("App loader indicates no eligible SSG endpoints. Skipping compile.")
-        success(appInfo, target, StaticSiteBuffer())
+        return success(appInfo, target, StaticSiteBuffer())
       } else {
         logging.info("App loader indicates eligible SSG endpoints. Compiling...")
       }
@@ -291,8 +327,8 @@ public class SiteCompiler internal constructor () : Runnable {
         is CompileResult.Success -> {
           // at this point, we're ready to write outputs.
           logging.info("Site compile complete. Writing outputs...")
-          writer.use {
-            writer.writeOutputs(params, buffer)
+          contentWriter.use {
+            contentWriter.write(params, buffer)
           }
           logging.info("Static site compile succeeded.")
           success(appInfo, result.output, buffer)
@@ -319,6 +355,7 @@ public class SiteCompiler internal constructor () : Runnable {
           crawl = crawl,
           timeout = timeout,
           extraOrigins = extraOrigins.toSortedSet(),
+          precompress = precompress,
         )
       )
       paramsAvailable.compareAndSet(false, true)

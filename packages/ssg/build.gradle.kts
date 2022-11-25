@@ -185,6 +185,12 @@ val quickbuild = (
   project.properties["elide.buildMode"] == "dev"
 )
 
+afterEvaluate {
+  tasks.named("testNativeImage") {
+    enabled = false
+  }
+}
+
 graalvmNative {
   testSupport.set(false)  // disabled for now due to micronaut test bugs in native
 

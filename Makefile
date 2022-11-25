@@ -117,9 +117,9 @@ publish:  ## Publish a new version of all Elide packages.
 		--no-daemon \
 		--warning-mode=none \
 		-Pversion=$(VERSION) \
-		-PbuildSamples=false \
+		-PbuildSamples=true \
 		-PbuildDocs=true \
-		-PbuildDocsSite=true \
+		-PbuildDocsSite=false \
 		-PenableSigning=true \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \

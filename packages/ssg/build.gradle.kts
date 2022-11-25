@@ -180,6 +180,11 @@ tasks {
   }
 }
 
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+
 graalvmNative {
   testSupport.set(true)
 
@@ -232,6 +237,7 @@ graalvmNative {
         "-H:IncludeLocales=en",
         "--enable-all-security-services",
       ))
+      quickBuild.set(quickbuild)
     }
 
     named("test") {
@@ -239,6 +245,7 @@ graalvmNative {
         "--language:regex",
         "--enable-all-security-services",
       ))
+      quickBuild.set(quickbuild)
     }
   }
 }

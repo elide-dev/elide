@@ -5,6 +5,10 @@ plugins {
   id("dev.elide.build.jvm.kapt")
 }
 
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
 
 graalvmNative {
   testSupport.set(true)
@@ -36,6 +40,7 @@ graalvmNative {
   binaries {
     named("main") {
       fallback.set(false)
+      quickBuild.set(quickbuild)
       buildArgs.addAll(listOf(
         "--language:js",
         "--language:regex",
@@ -65,6 +70,7 @@ graalvmNative {
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 
+      quickBuild.set(quickbuild)
       javaLauncher.set(javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
         if (project.hasProperty("elide.graalvm.variant")) {

@@ -8,6 +8,51 @@ plugins {
   id("dev.elide.build.docker")
 }
 
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+
+graalvmNative {
+  testSupport.set(true)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    defaultMode.set("standard")
+    builtinCallerFilter.set(true)
+    builtinHeuristicFilter.set(true)
+    enableExperimentalPredefinedClasses.set(false)
+    enableExperimentalUnsafeAllocationTracing.set(false)
+    trackReflectionMetadata.set(true)
+    enabled.set(true)
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.add("test")
+      outputDirectories.add("src/main/resources/META-INF/native-image")
+      mergeWithExisting.set(true)
+    }
+  }
+
+  binaries {
+    named("main") {
+      fallback.set(false)
+      sharedLibrary.set(false)
+      quickBuild.set(quickbuild)
+    }
+
+    named("test") {
+      quickBuild.set(quickbuild)
+    }
+  }
+}
+
 tasks.withType<Tar> {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

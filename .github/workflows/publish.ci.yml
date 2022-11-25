@@ -177,6 +177,8 @@ jobs:
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password="${{ secrets.SIGNING_KEY_PASSPHRASE }}"
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
             -x test
             :conventions:publish
       - name: "Publish: Substrate"
@@ -191,6 +193,8 @@ jobs:
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password="${{ secrets.SIGNING_KEY_PASSPHRASE }}"
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
             -x test
             :substrate:publish
       - name: "Publish: Processor"
@@ -205,6 +209,8 @@ jobs:
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password="${{ secrets.SIGNING_KEY_PASSPHRASE }}"
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
             -x test
             :tools:processor:publish
       - name: "Publish: Packages"
@@ -219,5 +225,7 @@ jobs:
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password="${{ secrets.SIGNING_KEY_PASSPHRASE }}"
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
             -x test
             publish

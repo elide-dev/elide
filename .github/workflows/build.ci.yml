@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - stable
+      - v3
   pull_request:
     types: [labeled, opened, reopened, synchronize]
 
@@ -68,7 +69,8 @@ jobs:
             --no-daemon
             --warning-mode=none
             -Pelide.ci=true
-            -PbuildSamples=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
             -Pversions.java.language=17
 
   ##
@@ -161,6 +163,7 @@ jobs:
             --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=true
+            -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.language=${{ matrix.java }}
       - name: "Build reports"
@@ -172,7 +175,7 @@ jobs:
             build/reports/**/*.*
       - name: "Run: Detekt"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
-        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -Pversions.java.language=${{ matrix.java }}
+        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=${{ matrix.java }}
         continue-on-error: true
       - name: "Fix: SARIF Paths"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
@@ -259,6 +262,7 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=true
             -PbuildDocs=false
+            -PbuildDocsSite=false
             -Pversions.java.language=17
             -x apiCheck
             -x nativeTest
@@ -279,8 +283,6 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           report_paths: "**/build/test-results/test/TEST-*.xml"
-      - name: "Setup: Git History"
-        run: git fetch --unshallow || exit 0
       - name: "Report: Codecov (Main)"
         uses: codecov/codecov-action@v3
         with:
@@ -361,13 +363,15 @@ jobs:
             koverMergedReport
             :tools:reports:reports
             -x :packages:ssg:testNativeImage
+            -x :packages:ssg:test
             --scan
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
             -x apiCheck
             -Pelide.ci=true
-            -PbuildSamples=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.language=17
       - uses: actions/upload-artifact@v3

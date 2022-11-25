@@ -16,7 +16,7 @@ import kotlinx.html.title
   @Get("/") suspend fun indexPage(request: HttpRequest<*>) = ssr(request) {
     head {
       title { +"Elide v3 | Rapid development framework for Kotlin" }
-      stylesheet(asset("styles.base"))
+      stylesheet("/styles/base.css")
       stylesheet("/styles/main.css")
       script("/scripts/ui.js", defer = true)
     }

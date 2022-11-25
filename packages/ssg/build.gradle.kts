@@ -30,7 +30,7 @@ buildConfig {
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"${libs.versions.elide.asProvider().get()}\"")
 }
 
-val testProject = ":samples:server:helloworld"
+val testProject = ":samples:server:hellocss"
 
 val embeddedJars by configurations.creating {
   isCanBeConsumed = true
@@ -119,7 +119,7 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(libs.micronaut.test.junit5)
 
-  if (project.properties["elide.release"] != "true") {
+  if (project.properties["elide.release"] != "true" && project.properties["buildSamples"] != "false") {
     testImplementation(project(testProject))
     embeddedJars(project(
       testProject,

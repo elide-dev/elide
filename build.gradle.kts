@@ -396,14 +396,25 @@ if (buildDocs == "true") {
   }
 }
 
+tasks {
+  htmlDependencyReport {
+    projects = project.allprojects.filter {
+      !Elide.multiplatformModules.contains(it.name)
+    }.toSet()
+  }
+
+  htmlDependencyReport {
+    reports.html.outputLocation.set(file("${project.buildDir}/reports/project/dependencies"))
+  }
+}
+
 tasks.create("docs") {
   if (buildDocs == "true") {
     dependsOn(listOf(
+      "dokkaHtml",
       "dokkaHtmlMultiModule",
-      "dokkaGfmMultiModule",
-      ":packages:graalvm:dokkaJavadoc",
-      ":packages:rpc-jvm:dokkaJavadoc",
-      ":packages:server:dokkaJavadoc",
+      "dokkaJavadoc",
+      "htmlDependencyReport",
     ))
   }
 }

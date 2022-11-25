@@ -1,0 +1,139 @@
+name: Site
+
+on:
+  push:
+    branches:
+      - stable
+      - v3
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
+
+env:
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+
+jobs:
+  ##
+  ## Job: Site Build
+  ##
+  site-build:
+    name: "Site: Build"
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: QEMU"
+        uses: docker/setup-qemu-action@v2
+      - name: "Setup: Docker Buildx"
+        uses: docker/setup-buildx-action@v2
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: yarn
+      - name: "Build: Reference Docs"
+        uses: gradle/gradle-build-action@v2.3.3
+        env:
+          CI: true
+          GRADLE_CACHE_PUSH: true
+        with:
+          cache-read-only: false
+          arguments: |
+            docs
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -Pelide.release=true
+            -PbuildSamples=false
+            -PbuildDocs=true
+            -PbuildDocsSite=false
+            -Pversions.java.language=17
+            -x check
+            -x apiCheck
+            -x nativeTest
+            -x testNativeImage
+            -x nativeCompile
+      - name: "Build: Site"
+        uses: gradle/gradle-build-action@v2.3.3
+        env:
+          CI: true
+          GRADLE_CACHE_PUSH: true
+        with:
+          cache-read-only: false
+          arguments: |
+            :site:docs:app:build
+            :site:docs:app:dockerBuild
+            --scan
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -Pelide.release=true
+            -PbuildSamples=false
+            -PbuildDocs=true
+            -PbuildDocsSite=true
+            -Pversions.java.language=17
+            -x check
+            -x apiCheck
+            -x nativeTest
+            -x testNativeImage
+            -x nativeCompile
+      - name: "Build: Run Site"
+        env:
+          CI: true
+        run: |
+          nohup ./gradlew :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 > server_log.txt 2>&1 &
+          echo $! > server_pid.txt;
+          echo "Running docs server at PID $(cat server_pid.txt)";
+      - name: "Build: SSG Compile"
+        env:
+          CI: true
+        run: |
+          ./gradlew \
+            :packages:ssg:run \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            -Pelide.ci=true \
+            -Pelide.release=true \
+            -PbuildSamples=false \
+            -PbuildDocs=true \
+            -PbuildDocsSite=true \
+            -Pversions.java.language=17 \
+            --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $PWD/site/docs/app/build/docs-ssg.zip"
+      - uses: actions/upload-artifact@v3
+        env:
+          CI: true
+        with:
+          name: test-reports-jvm
+          path: |
+            ./site/docs/app/build/docs-ssg.zip
+            ./docs/reports/project/dependencies/dependencies.txt
+      - name: "Post Build: Run Site"
+        run: |
+          echo "Killing docs server at PID $(cat server_pid.txt)"
+          kill -9 $(cat server_pid.txt)
+          rm -fv server_pid.txt

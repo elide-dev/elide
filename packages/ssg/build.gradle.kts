@@ -118,11 +118,14 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(libs.micronaut.test.junit5)
-  testImplementation(project(testProject))
-  embeddedJars(project(
-    testProject,
-    configuration = "shadowAppJar",
-  ))
+
+  if (project.properties["elide.release"] != "true") {
+    testImplementation(project(testProject))
+    embeddedJars(project(
+      testProject,
+      configuration = "shadowAppJar",
+    ))
+  }
 }
 
 application {

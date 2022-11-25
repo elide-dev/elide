@@ -121,6 +121,8 @@ publish:  ## Publish a new version of all Elide packages.
 		-PbuildDocs=true \
 		-PbuildDocsSite=true \
 		-PenableSigning=true \
+		-Pelide.release=true \
+		-Pelide.buildMode=release \
 		-x test \
 		-x jvmTest \
 		-x jsTest;

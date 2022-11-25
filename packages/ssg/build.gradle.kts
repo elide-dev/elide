@@ -186,7 +186,7 @@ val quickbuild = (
 )
 
 graalvmNative {
-  testSupport.set(true)
+  testSupport.set(false)  // disabled for now due to micronaut test bugs in native
 
   metadataRepository {
     enabled.set(true)

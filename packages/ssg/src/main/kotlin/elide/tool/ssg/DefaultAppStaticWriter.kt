@@ -169,7 +169,11 @@ import kotlin.io.path.Path
     )
 
     override fun entryFromFile(path: String, fragment: StaticFragment): TarArchiveEntry = TarArchiveEntry(
-      path,
+      if (path.startsWith("/")) {
+        path.drop(1)
+      } else {
+        path
+      },
     ).apply {
       size = fragment.content.array().size.toLong()
       setModTime(FileTime.fromMillis(0))

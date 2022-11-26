@@ -90,13 +90,15 @@ jobs:
         env:
           CI: true
         run: |
-          nohup ./gradlew --no-daemon :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 > server_log.txt 2>&1 &
+          nohup ./gradlew --no-daemon :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 2>&1 &
           echo $! > server_pid.txt;
           echo "Running docs server at PID $(cat server_pid.txt)";
+          sleep 10;
       - name: "Build: SSG Compile"
         env:
           CI: true
         run: |
+          rm -fv ./site/docs/app/build/ssg-site.zip;
           ./gradlew \
             :packages:ssg:run \
             --warning-mode=none \
@@ -111,7 +113,8 @@ jobs:
       - name: "Build: Assemble Site"
         env:
           CI: true
-        run: make site CI=yes
+        run: |
+          make site CI=yes JVM=17;
       - name: "Upload: Site Artifact"
         uses: actions/upload-pages-artifact@v1
         with:

@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+  implementation(gradleApi())
   api(kotlin("gradle-plugin"))
   implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.detekt)

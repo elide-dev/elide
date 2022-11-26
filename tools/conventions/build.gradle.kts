@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  api(kotlin("gradle-plugin"))
+  implementation(gradleApi())
   implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)
@@ -43,7 +43,10 @@ dependencies {
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.serialization)
-  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-sam-with-receiver")
+  }
+  implementation(libs.plugin.kotlin.samWithReceiver)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   if (enableAtomicfu) {
     implementation(libs.plugin.kotlinx.atomicfu)

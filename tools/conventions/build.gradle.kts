@@ -18,6 +18,7 @@ group = "dev.elide.tools"
 version = rootProject.version as String
 
 val kotlinVersion by project.properties
+val enableAtomicfu = project.properties["elide.atomicFu"] == "true"
 
 repositories {
   maven("https://maven-central.storage-download.googleapis.com/maven2/")
@@ -41,10 +42,12 @@ dependencies {
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
-  implementation(libs.plugin.kotlinx.atomicfu)
   implementation(libs.plugin.kotlinx.serialization)
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+  if (enableAtomicfu) {
+    implementation(libs.plugin.kotlinx.atomicfu)
+  }
 }
 
 java {

@@ -415,6 +415,8 @@ tasks.create("docs") {
       "dokkaHtmlMultiModule",
       "dokkaJavadoc",
       "htmlDependencyReport",
+      ":packages:server:dokkaJavadoc",
+      ":packages:rpc-jvm:dokkaJavadoc",
     ))
   }
 }

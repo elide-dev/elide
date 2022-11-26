@@ -199,7 +199,7 @@ SITE_PKG_ZIP ?= $(PWD)/
 
 site: docs reports site-assets site/docs/app/build site/docs/app/build/ssg-site.zip  ## Generate the static Elide website.
 	@echo "Assembling Elide site..."
-	$(CMD)$(UNZIP) -d $(SITE_BUILD)/ $(PWD)/site/docs/app/build/ssg-site.zip
+	$(CMD)$(UNZIP) -o -d $(SITE_BUILD) $(PWD)/site/docs/app/build/ssg-site.zip
 
 site/docs/app/build:
 	@echo "Building Elide site..."

@@ -4,11 +4,13 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.util.Properties
 
 plugins {
+  idea
   id("dev.elide.build")
   id("project-report")
   id("org.sonarqube")
@@ -405,6 +407,19 @@ tasks {
 
   htmlDependencyReport {
     reports.html.outputLocation.set(file("${project.buildDir}/reports/project/dependencies"))
+  }
+}
+
+val jvmName = project.properties["elide.jvm"] as? String
+
+idea {
+  project {
+    //if you want to set specific jdk and language level
+    jdkName = jvmName ?: javaLanguageVersion
+    languageLevel = IdeaLanguageLevel(javaLanguageVersion)
+
+    //you can configure the VCS used by the project
+    vcs = "Git"
   }
 }
 

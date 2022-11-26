@@ -86,32 +86,11 @@ jobs:
             -x nativeTest
             -x testNativeImage
             -x nativeCompile
-      - name: "Build: Run Site"
+      - name: "Build: Compile SSG Site"
         env:
           CI: true
         run: |
-          nohup ./gradlew --no-daemon :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 2>&1 &
-          echo $! > server_pid.txt;
-          echo "Running docs server at PID $(cat server_pid.txt)";
-          sleep 10;
-      - name: "Build: SSG Compile"
-        env:
-          CI: true
-        run: |
-          rm -fv ./site/docs/app/build/ssg-site.zip;
-          ./gradlew \
-            :packages:ssg:run \
-            --warning-mode=none \
-            --dependency-verification=lenient \
-            -Pelide.ci=true \
-            -Pelide.release=true \
-            -PbuildSamples=false \
-            -PbuildDocs=true \
-            -PbuildDocsSite=true \
-            -Pversions.java.language=17 \
-            --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $PWD/site/docs/app/build/ssg-site.zip"
-          sleep 10;
-          make site CI=yes JVM=17;
+          make site CI=yes JVM=17 VERBOSE=yes;
       - name: "Upload: Site Artifact"
         uses: actions/upload-pages-artifact@v1
         with:

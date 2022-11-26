@@ -28,10 +28,13 @@ RM ?= $(shell which rm)
 FIND ?= $(shell which find)
 MKDIR ?= $(shell which mkdir)
 CP ?= $(shell which cp)
+RSYNC ?= $(shell which rsync)
+UNZIP ?= $(shell which unzip)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
-REPORTS ?= $(DOCS)/reports
+SITE_BUILD ?= $(PWD)/build/site
+REPORTS ?= $(SITE_BUILD)/reports
 
 POSIX_FLAGS ?=
 GRADLE_ARGS ?=
@@ -75,7 +78,7 @@ endif
 
 ifneq ($(VERBOSE),)
 RULE ?=
-POSIX_FLAGS += v
+POSIX_FLAGS +=v
 GRADLE_LOGS ?= info
 GRADLE_ARGS += --$(GRADLE_LOGS)
 else
@@ -127,40 +130,117 @@ publish:  ## Publish a new version of all Elide packages.
 		-x jvmTest \
 		-x jsTest;
 
-clean:  ## Clean build outputs and caches.
+clean: clean-docs clean-site  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
-	$(CMD)$(RM) -fr$(POSIX_FLAGS) $(TARGET)
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
 	$(CMD)$(GRADLE) clean $(_ARGS)
 	$(CMD)$(FIND) . -name .DS_Store -delete
 
-docs: $(DOCS)  ## Generate docs for all library modules.
-	@echo "Generating docs..."
-	$(CMD)$(RM) -fr$(POSIX_FLAGS) docs/kotlin docs/reports
-	$(CMD)$(GRADLE) docs $(_ARGS)
-	$(CMD)$(MKDIR) -p $(DOCS) $(DOCS)/kotlin $(DOCS)/kotlin/javadoc
-	$(CMD)cd $(TARGET)/docs \
-		&& $(CP) -fr$(POSIX_FLAGS) ./* $(PWD)/docs/
-	$(CMD)cd packages/server/build/dokka \
-		&& $(CP) -fr$(POSIX_FLAGS) ./javadoc/* $(PWD)/docs/kotlin/javadoc/
-	$(CMD)cd packages/rpc-jvm/build/dokka \
-		&& $(CP) -fr$(POSIX_FLAGS) ./javadoc/* $(PWD)/docs/kotlin/javadoc/
-	@echo "Docs update complete."
+clean-docs:  ## Clean documentation targets.
+	@echo "Cleaning docs..."
+	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs
 
-reports:  ## Generate reports for tests, coverage, etc.
+clean-site:  ## Clean site targets.
+	@echo "Cleaning site..."
+	$(CMD)$(RM) -fr$$(strip $(POSIX_FLAGS)) $(SITE_BUILD)
+
+docs: $(DOCS) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc  ## Generate docs for all library modules.
+
+$(TARGET)/docs:
+	@echo "Generating docs..."
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc
+	$(CMD)$(GRADLE) docs $(_ARGS)
+	@echo "Docs build complete."
+
+$(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
+	@echo "Assembling docs site..."
+	$(CMD)$(MKDIR) -p $(SITE_BUILD) $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc
+	$(CMD)cd $(DOCS) \
+		&& $(RSYNC) -a$(strip $(POSIX_FLAGS)) --exclude="Makefile" --exclude="buf.work.yml" --exclude="README.md" "./" $(SITE_BUILD)/;
+	$(CMD)cd $(TARGET)/docs/kotlin/html \
+		&& $(RSYNC) -a$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/docs/kotlin/
+	$(CMD)cd packages/server/build/dokka \
+		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/server \
+		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/server/
+	$(CMD)cd packages/rpc-jvm/build/dokka \
+		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/rpc-jvm \
+		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/rpc-jvm/
+	@echo "Docs assemble complete."
+
+reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
+	@$(RM) -f $(SITE_BUILD)/reports/project/properties.txt
+
+$(REPORTS):
 	@echo "Generating reports..."
 	$(CMD)$(GRADLE) \
 		:reports \
 		:tools:reports:reports \
 		-x nativeCompile \
 		-x test
-	$(CMD)$(MKDIR) -p $(REPORTS) $(TARGET)/reports
+	$(CMD)$(MKDIR) -p $(REPORTS)
 	@echo "Copying merged reports to '$(REPORTS)'..."
-	$(CMD)-cd $(TARGET)/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	$(CMD)-cd $(TARGET)/reports && $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(REPORTS)/
 	@echo "Copying test reports to '$(REPORTS)'..."
 	$(CMD)$(MKDIR) -p tools/reports/build/reports
-	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(POSIX_FLAGS) ./* $(REPORTS)/
+	$(CMD)cd tools/reports/build/reports && $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(REPORTS)/
 	$(CMD)$(RM) -f docs/reports/project/properties.txt docs/reports/project/tasks.txt
 	@echo "Reports synced."
+
+site-assets: $(SITE_BUILD)/creative
+
+$(SITE_BUILD)/creative:
+	@echo "Copying site assets..."
+	$(CMD)$(MKDIR) -p $(SITE_BUILD)/creative/logo $(SITE_BUILD)/docs/kotlin/creative/logo/
+	$(CMD)cd creative/logo \
+		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/creative/logo/ \
+		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(SITE_BUILD)/docs/kotlin/creative/logo/
+
+SITE_PKG_ZIP ?= $(PWD)/
+
+site: docs reports site-assets site/docs/app/build site/docs/app/build/ssg-site.zip  ## Generate the static Elide website.
+	@echo "Assembling Elide site..."
+	$(CMD)$(UNZIP) -d $(SITE_BUILD)/ $(PWD)/site/docs/app/build/ssg-site.zip
+
+site/docs/app/build:
+	@echo "Building Elide site..."
+	$(CMD)$(GRADLE) \
+		-PbuildDocsSite=true \
+		-PbuildDocs=true \
+		-PbuildSamples=false \
+		-x test \
+		-x check \
+		:site:docs:app:build
+
+site/docs/app/build/ssg-site.zip: site/docs/app/build
+	@echo "Starting Elide docs site for SSG build..."
+	$(CMD)$(RM) -fv server_pid.txt
+	-nohup $(GRADLE) \
+		--no-daemon \
+		:site:docs:app:run \
+		-Pelide.release=true \
+		-PbuildSamples=false \
+		> server_log.txt 2>&1 & \
+		echo $$! > server_pid.txt \
+		&& echo "Elide site server started at PID $(shell cat server_pid.txt)" \
+		&& echo "Waiting for server to be ready..." \
+		&& sleep 5 \
+		&& $(GRADLE) \
+			:packages:ssg:run \
+			--warning-mode=none \
+			--dependency-verification=lenient \
+			-Pelide.ci=true \
+			-Pelide.release=true \
+			-PbuildSamples=false \
+			-PbuildDocs=false \
+			-PbuildDocsSite=false \
+			--args="--http --ignore-cert-errors --verbose --no-crawl $(PWD)/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $(PWD)/site/docs/app/build/ssg-site.zip" \
+		&& echo "Finishing up..." \
+		&& flush || echo "No flush needed." \
+		&& sleep 3 \
+		&& echo "Site SSG build complete.";
+	@echo "Killing server at PID $(shell cat server_pid.txt)..." \
+		&& sudo kill -9 `cat server_pid.txt` || echo "No process to kill." \
+		&& $(RM) -f server_pid.txt
 
 update-dep-hashes:
 	@echo "- Updating dependency hashes..."
@@ -196,13 +276,19 @@ relock-deps:  ## Update dependency locks and hashes across Yarn and Gradle.
 
 serve-docs:  ## Serve documentation locally.
 	@echo "Serving docs at http://localhost:8000..."
-	$(CMD)cd docs \
+	$(CMD)cd $(SITE_BUILD)/docs/kotlin \
+		&& open http://localhost:8000 \
+		&& python -m SimpleHTTPServer
+
+serve-site:  ## Serve Elide site locally.
+	@echo "Serving site at http://localhost:8000..."
+	$(CMD)cd $(SITE_BUILD) \
 		&& open http://localhost:8000 \
 		&& python -m SimpleHTTPServer
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."
-	$(CMD)$(RM) -fr$(POSIX_FLAGS) kotlin-js-store .buildstate.tar.gz
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) kotlin-js-store .buildstate.tar.gz
 
 forceclean: forceclean  ## DANGER: Clean, distclean, and clear untracked files.
 	@echo "Resetting codebase..."

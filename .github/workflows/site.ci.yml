@@ -57,27 +57,10 @@ jobs:
       - name: "Setup: Yarn"
         run: yarn
       - name: "Build: Reference Docs"
-        uses: gradle/gradle-build-action@v2.3.3
         env:
           CI: true
-          GRADLE_CACHE_PUSH: true
-        with:
-          cache-read-only: false
-          arguments: |
-            docs
-            --warning-mode=none
-            --dependency-verification=lenient
-            -Pelide.ci=true
-            -Pelide.release=true
-            -PbuildSamples=false
-            -PbuildDocs=true
-            -PbuildDocsSite=false
-            -Pversions.java.language=17
-            -x check
-            -x apiCheck
-            -x nativeTest
-            -x testNativeImage
-            -x nativeCompile
+        run: |
+          make docs reports CI=yes VERBOSE=yes
       - name: "Build: Site"
         uses: gradle/gradle-build-action@v2.3.3
         env:
@@ -106,7 +89,7 @@ jobs:
         env:
           CI: true
         run: |
-          nohup ./gradlew :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 > server_log.txt 2>&1 &
+          nohup ./gradlew --no-daemon :site:docs:app:run -Pelide.ci=true -Pelide.release=true -PbuildSamples=false -Pversions.java.language=17 > server_log.txt 2>&1 &
           echo $! > server_pid.txt;
           echo "Running docs server at PID $(cat server_pid.txt)";
       - name: "Build: SSG Compile"

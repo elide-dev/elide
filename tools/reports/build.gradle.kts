@@ -6,7 +6,6 @@
 )
 
 plugins {
-  `build-dashboard`
   id("project-report")
   id("test-report-aggregation")
   id("jacoco-report-aggregation")
@@ -39,8 +38,6 @@ reporting {
 dependencies {
   Elide.serverModules.plus(
     Elide.multiplatformModules
-  ).plus(
-    Elide.frontendModules
   ).forEach {
     testReportAggregation(project(":packages:$it"))
     jacocoAggregation(project(":packages:$it"))
@@ -104,10 +101,4 @@ tasks.create("reports") {
   dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
   dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
   dependsOn(tasks.named("mergeJUnitReports"))
-}
-
-tasks {
-  buildDashboard {
-    // Nothing at this time.
-  }
 }

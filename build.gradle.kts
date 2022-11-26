@@ -414,11 +414,8 @@ val jvmName = project.properties["elide.jvm"] as? String
 
 idea {
   project {
-    //if you want to set specific jdk and language level
     jdkName = jvmName ?: javaLanguageVersion
     languageLevel = IdeaLanguageLevel(javaLanguageVersion)
-
-    //you can configure the VCS used by the project
     vcs = "Git"
   }
 }

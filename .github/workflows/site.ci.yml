@@ -50,6 +50,20 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
+      - name: "Setup: Setup Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:

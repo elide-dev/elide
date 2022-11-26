@@ -260,6 +260,7 @@ jobs:
             --warning-mode=none
             --dependency-verification=lenient
             -Pelide.ci=true
+            -Pelide.release=false
             -PbuildSamples=true
             -PbuildDocs=false
             -PbuildDocsSite=false

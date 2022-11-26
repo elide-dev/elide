@@ -35,6 +35,7 @@ object Elide {
   val jvmCompilerArgs = compilerArgs.plus(listOf(
     "-no-stdlib",
     "-Xjvm-default=all",
+    "-Xjsr305=strict",
   ))
 
   /** Compiler args to include in Kotlin JS targets. */
@@ -51,6 +52,7 @@ object Elide {
     "-Xallow-unstable-dependencies",
     "-Xemit-jvm-type-annotations",
     "-Xjvm-default=all",
+    "-Xjsr305=strict",
   ))
 
   /** Kotlin SDK and platform version. */

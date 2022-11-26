@@ -5,6 +5,7 @@ on:
     branches:
       - stable
       - v3
+      - site/*
   pull_request:
     types: [labeled, opened, reopened, synchronize]
 
@@ -60,7 +61,7 @@ jobs:
         env:
           CI: true
         run: |
-          make docs reports CI=yes VERBOSE=yes
+          make docs reports CI=yes JVM=17
       - name: "Build: Site"
         uses: gradle/gradle-build-action@v2.3.3
         env:

@@ -35,9 +35,11 @@ TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
+JVM ?= 11
 
 POSIX_FLAGS ?=
-GRADLE_ARGS ?=
+GRADLE_OPTS ?=
+GRADLE_ARGS ?= -Pversions.java.language=$(JVM)
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
 DEP_HASH_ALGO ?= pgp,sha256

@@ -110,10 +110,7 @@ jobs:
             -PbuildDocsSite=true \
             -Pversions.java.language=17 \
             --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $PWD/site/docs/app/build/ssg-site.zip"
-      - name: "Build: Assemble Site"
-        env:
-          CI: true
-        run: |
+          sleep 10;
           make site CI=yes JVM=17;
       - name: "Upload: Site Artifact"
         uses: actions/upload-pages-artifact@v1

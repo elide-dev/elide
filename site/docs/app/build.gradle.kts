@@ -136,6 +136,26 @@ artifacts {
   add("shadowAppJar", tasks.shadowJar)
 }
 
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
+}
+
+tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile") {
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
+  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}
+
+tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
+  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  args("-H:+StaticExecutableWithDynamicLibC")
+}
+
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {
   images.set(listOf(
     "${project.properties["elide.publish.repo.docker.samples"]}/site/docs/jvm:latest"

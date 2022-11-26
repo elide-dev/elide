@@ -178,7 +178,8 @@ $(REPORTS):
 		:reports \
 		:tools:reports:reports \
 		-x nativeCompile \
-		-x test
+		-x test \
+		-Pversions.java.language=$(JVM)
 	$(CMD)$(MKDIR) -p $(REPORTS)
 	@echo "Copying merged reports to '$(REPORTS)'..."
 	$(CMD)-cd $(TARGET)/reports && $(CP) -fr$(strip $(POSIX_FLAGS)) ./* $(REPORTS)/
@@ -209,6 +210,7 @@ site/docs/app/build:
 		-PbuildDocsSite=true \
 		-PbuildDocs=true \
 		-PbuildSamples=false \
+		-Pversions.java.language=$(JVM) \
 		-x test \
 		-x check \
 		:site:docs:app:build
@@ -221,6 +223,7 @@ site/docs/app/build/ssg-site.zip: site/docs/app/build
 		:site:docs:app:run \
 		-Pelide.release=true \
 		-PbuildSamples=false \
+		-Pversions.java.language=$(JVM) \
 		> server_log.txt 2>&1 & \
 		echo $$! > server_pid.txt \
 		&& echo "Elide site server started at PID $(shell cat server_pid.txt)" \
@@ -235,6 +238,7 @@ site/docs/app/build/ssg-site.zip: site/docs/app/build
 			-PbuildSamples=false \
 			-PbuildDocs=false \
 			-PbuildDocsSite=false \
+			-Pversions.java.language=$(JVM) \
 			--args="--http --ignore-cert-errors --verbose --no-crawl $(PWD)/site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb https://localhost:8443 $(PWD)/site/docs/app/build/ssg-site.zip" \
 		&& echo "Finishing up..." \
 		&& flush || echo "No flush needed." \
@@ -247,6 +251,7 @@ site/docs/app/build/ssg-site.zip: site/docs/app/build
 update-dep-hashes:
 	@echo "- Updating dependency hashes..."
 	$(CMD)$(GRADLE) \
+		-Pversions.java.language=$(JVM) \
 		--write-verification-metadata $(DEP_HASH_ALGO)
 	@echo "Dependency hashes updated."
 

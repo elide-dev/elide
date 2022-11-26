@@ -162,7 +162,7 @@ jobs:
             --warning-mode=none
             --dependency-verification=lenient
             -Pelide.ci=true
-            -PbuildSamples=true
+            -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.language=${{ matrix.java }}

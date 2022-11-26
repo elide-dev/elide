@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 
 /** Tests which invoke the SSG compiler over the Java API. */
 @MicronautTest(
-  application = helloworld.App::class,
+  application = hellocss.App::class,
   startApplication = true,
   packages = [
     "helloworld",

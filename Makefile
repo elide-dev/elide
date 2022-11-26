@@ -206,7 +206,7 @@ SITE_PKG_ZIP ?= $(PWD)/
 
 site: docs reports site-assets site/docs/app/build site/docs/app/build/ssg-site.zip  ## Generate the static Elide website.
 	@echo "Assembling Elide site..."
-	$(CMD)$(UNZIP) -o -d $(SITE_BUILD) $(PWD)/site/docs/app/build/ssg-site.zip
+	$(CMD)-$(UNZIP) -o -d $(SITE_BUILD) $(PWD)/site/docs/app/build/ssg-site.zip
 
 site/docs/app/build:
 	@echo "Building Elide site..."
@@ -219,6 +219,10 @@ site/docs/app/build:
 		-x check \
 		:site:docs:app:build
 
+ifeq ($(CI),yes)
+site/docs/app/build/ssg-site.zip:
+	@echo "Failed to locate Zip site output. Skipping."
+else
 site/docs/app/build/ssg-site.zip: site/docs/app/build
 	@echo "Starting Elide docs site for SSG build..."
 	$(CMD)$(RM) -fv server_pid.txt
@@ -251,6 +255,7 @@ site/docs/app/build/ssg-site.zip: site/docs/app/build
 	@echo "Killing server at PID $(shell cat server_pid.txt)..." \
 		&& sudo kill -9 `cat server_pid.txt` || echo "No process to kill." \
 		&& $(RM) -f server_pid.txt
+endif
 
 update-dep-hashes:
 	@echo "- Updating dependency hashes..."

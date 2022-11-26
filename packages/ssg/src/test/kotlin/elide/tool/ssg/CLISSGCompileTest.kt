@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 /** Tests which invoke the SSG compiler over the CLI. */
 @MicronautTest(
-  application = helloworld.App::class,
+  application = hellocss.App::class,
   startApplication = true,
   packages = [
     "helloworld",

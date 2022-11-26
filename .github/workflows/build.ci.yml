@@ -259,16 +259,15 @@ jobs:
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            -Pelide.ci=true
-            -Pelide.release=false
-            -PbuildSamples=true
-            -PbuildDocs=false
-            -PbuildDocsSite=false
-            -Pversions.java.language=17
             -x apiCheck
             -x nativeTest
             -x testNativeImage
             -x nativeCompile
+            -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+            -Pversions.java.language=17
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-jvm

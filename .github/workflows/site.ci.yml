@@ -96,12 +96,21 @@ jobs:
             -PbuildDocs=true
             -PbuildDocsSite=true
             -Pversions.java.language=17
+            -x test
             -x check
             -x apiCheck
             -x nativeTest
             -x testNativeImage
             -x nativeCompile
+      - name: "Build: Compress Site"
+        run: |
+          tar -czf site.tar.gz build/site
       - name: "Upload: Manifest"
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-tarball-phase1
+          path: ./site.tar.gz
+      - name: "Upload: Site"
         uses: actions/upload-artifact@v3
         with:
           name: site-manifest
@@ -130,6 +139,11 @@ jobs:
         ports:
           - 8080:8080
           - 8443:8443
+        options: >-
+          --health-cmd "curl --fail http://localhost:8080/"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 4
 
     steps:
       - name: "Setup: Checkout"
@@ -179,14 +193,26 @@ jobs:
         with:
           name: site-manifest
           path: ./artifacts/
+      - name: "Setup: Site Tarball"
+        uses: actions/download-artifact@v3
+        with:
+          name: site-tarball-phase1
+          path: .
+      - name: "Setup: Expand Site Tarball"
+        run: |
+          tar -xzf site.tar.gz
       - name: "Setup: Show Artifacts"
         run: ls -R
         working-directory: ./artifacts/
+      - name: "Setup: Test Site Container"
+        run: |
+          curl -vv --fail http://localhost:8080/ || exit 1
       - name: "Build: Compile SSG Site"
         env:
           CI: true
         run: |
           rm -fv ./site/docs/app/build/ssg-site.zip;
+          mkdir -p ./site/docs/app/build;
           ./gradlew \
             :packages:ssg:run \
             --warning-mode=none \
@@ -197,9 +223,18 @@ jobs:
             -PbuildDocs=true \
             -PbuildDocsSite=true \
             -Pversions.java.language=17 \
-            --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb https://localhost:8443 $PWD/site/docs/app/build/ssg-site.zip"
+            --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
       - name: "Build: Assemble Site"
         run: make site CI=yes JVM=17;
+      - name: "Build: Compress Site"
+        run: |
+          rm -fv site.tar.gz;
+          tar -czf site.tar.gz build/site;
+      - name: "Upload: Site Tarball"
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-tarball-phase2
+          path: ./site.tar.gz
       - name: "Upload: Site Artifact"
         uses: actions/upload-pages-artifact@v1
         with:

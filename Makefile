@@ -71,10 +71,13 @@ ifeq ($(RELEASE),yes)
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true
 endif
 
+OMIT_NATIVE ?= -x nativeCompile -x testNativeImage
 
 ifneq ($(NATIVE),)
 ifneq ($(NATIVE),no)
 BUILD_ARGS += $(patsubst %,-d %,$(NATIVE_TASKS))
+OMIT_NATIVE =
+else
 endif
 endif
 
@@ -98,6 +101,7 @@ else
 CMD ?= $(RULE)
 endif
 
+GRADLE_OMIT ?= $(OMIT_NATIVE)
 _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 
 
@@ -109,7 +113,7 @@ all: build test docs
 
 build:  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide v3...)
-	$(CMD) $(GRADLE) build -x test $(_ARGS)
+	$(CMD) $(GRADLE) build -x test -x check $(GRADLE_OMIT) $(_ARGS)
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)

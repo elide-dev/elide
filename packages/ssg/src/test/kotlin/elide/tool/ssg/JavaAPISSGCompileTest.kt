@@ -67,6 +67,34 @@ import kotlin.test.assertTrue
     }
   }
 
+  @Test fun testProgrammaticEmptyTarCompile(): Unit = withCompiler(outputArchive(OutputFormat.TAR)) { _, out ->
+    assertDoesNotThrow {
+      SiteCompiler.compile(
+        manifest = emptyManifest,
+        target = embeddedApp().url.toString(),
+        output = out,
+        options = SiteCompilerParams.Options.DEFAULTS.copy(
+          httpMode = true,
+          crawl = false,
+        ),
+      )
+    }
+  }
+
+  @Test fun testProgrammaticHttpCompileToTar(): Unit = withCompiler(outputArchive(OutputFormat.TAR)) { _, out ->
+    assertDoesNotThrow {
+      SiteCompiler.compile(
+        manifest = helloWorldManifest,
+        target = embeddedApp().url.toString(),
+        output = out,
+        options = SiteCompilerParams.Options.DEFAULTS.copy(
+          httpMode = true,
+          crawl = false,
+        ),
+      )
+    }
+  }
+
   @Test fun testProgrammaticHttpCompileToDir(): Unit = withCompiler(outputDirectory()) { _, out ->
     assertDoesNotThrow {
       SiteCompiler.compile(

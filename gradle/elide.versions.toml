@@ -170,6 +170,7 @@ auto_common = "1.2.1"
 auto_service = "1.0.1"
 auto_factory = "1.0.1"
 auto_value = "1.10.1"
+kotter = "1.0.0"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -223,6 +224,7 @@ junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+kotter = { group = "com.varabyte.kotter", name = "kotter", version.ref = "kotter" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_compiler_testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin_compile_testing" }
 kotlin_compiler_testing_ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin_compile_testing" }

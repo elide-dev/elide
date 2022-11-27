@@ -4,8 +4,6 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 import io.micronaut.context.BeanContext
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.ssl.ClientSslConfiguration
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tools.elide.meta.*
-import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -29,7 +26,7 @@ import kotlin.test.assertNotNull
 /** Provides baseline logic for tests which invoke the SSG compiler. */
 @OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("unused", "MemberVisibilityCanBePrivate", "SameParameterValue")
-abstract class AbstractSSGCompilerTest {
+abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
   companion object {
     const val helloWorldManifest = "classpath:helloworld.manifest.pb"
     const val emptyManifest = "classpath:empty.manifest.pb"
@@ -40,9 +37,6 @@ abstract class AbstractSSGCompilerTest {
 
   // Embedded Micronaut server.
   @Inject protected lateinit var server: EmbeddedServer
-
-  // SSG request factory implementation.
-  @Inject protected lateinit var requestFactory: RequestFactory
 
   // Bean context.
   @Inject protected lateinit var beanContext: BeanContext
@@ -149,86 +143,6 @@ abstract class AbstractSSGCompilerTest {
   protected fun cli(vararg args: String): Int {
     return SiteCompiler.exec(args.toList().toTypedArray())
   }
-
-  // Make a fake endpoint payload based on the provided inputs.
-  protected fun endpoint(
-    type: EndpointType = EndpointType.PAGE,
-    impl: String = "some.page.impl.Index",
-    member: String = "someMember",
-    tag: String? = null,
-    name: String? = null,
-    pageName: String? = null,
-    base: String = "/",
-    tail: String = "",
-    consumes: List<String> = listOf(MediaType.TEXT_HTML),
-    produces: List<String> = listOf(MediaType.TEXT_HTML),
-    methods: List<EndpointMethods> = listOf(EndpointMethods.GET),
-    precompilable: Boolean = true,
-    stateful: Boolean = false,
-    options: EndpointOptions? = null,
-  ): Endpoint = endpoint {
-    this.base = base
-    this.tail = tail
-    this.impl = impl
-    this.member = member
-    this.type = type
-    this.consumes.addAll(consumes)
-    this.produces.addAll(produces)
-    this.method.addAll(methods)
-    if (!pageName.isNullOrBlank()) this.handler = pageName
-    if (!name.isNullOrBlank()) this.name = "${pageName ?: impl.split(".").last()}:$name"
-    if (!tag.isNullOrBlank()) this.tag = tag
-    this.options = options ?: endpointOptions {
-      this.precompilable = precompilable
-      this.stateful = stateful
-    }
-  }
-
-  // Make a fake static fragment payload based on the provided inputs.
-  protected fun staticFragment(
-    request: HttpRequest<*>,
-    response: HttpResponse<*>,
-    endpoint: Endpoint,
-    content: ByteBuffer,
-    discovered: List<StaticFragmentSpec> = emptyList(),
-  ): StaticFragment = StaticFragment.EndpointFragment(
-    request,
-    endpoint,
-    response,
-    content,
-    discovered,
-  )
-
-  // Make a fake static fragment payload based on the provided inputs.
-  protected fun staticFragment(
-    endpoint: Endpoint,
-    content: ByteArray,
-    discovered: List<StaticFragmentSpec> = emptyList(),
-    mimeType: String = MediaType.TEXT_HTML,
-  ): StaticFragment = StaticFragment.EndpointFragment(
-    requestFactory.create(endpoint, null),
-    endpoint,
-    HttpResponse.ok(content).contentLength(
-      content.size.toLong()
-    ).contentType(
-      mimeType
-    ),
-    ByteBuffer.wrap(content),
-    discovered,
-  )
-
-  // Make a fake static fragment payload based on the provided inputs.
-  protected fun staticFragment(
-    endpoint: Endpoint,
-    content: String,
-    discovered: List<StaticFragmentSpec> = emptyList(),
-    mimeType: String = MediaType.TEXT_HTML,
-  ): StaticFragment = staticFragment(
-    endpoint,
-    content.toByteArray(),
-    discovered,
-    mimeType,
-  )
 
   // Assert based on the exit code of a CLI-based compiler call.
   protected fun assertExit(

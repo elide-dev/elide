@@ -1,5 +1,6 @@
 package elide.tool.ssg
 
+import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope as coroutine
@@ -29,13 +30,14 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
   /** @inheritDoc */
   override fun close() {
     closed.compareAndSet(false, true)
-    reset()
   }
 
   // Reset buffer state.
-  private fun reset() {
+  @VisibleForTesting internal fun reset() {
     allFragments.clear()
     fragmentCount.set(0)
+    open.set(true)
+    closed.set(false)
   }
 
   /**
@@ -51,6 +53,12 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
     open.compareAndSet(true, false)
   }
 
+  /** @return Indicate whether the buffer is open. */
+  internal fun isOpen(): Boolean = open.get() && !closed.get()
+
+  /** @return Indicate whether the buffer is closed. */
+  internal fun isClosed(): Boolean = !open.get() && closed.get()
+
   /**
    * Add a compiled [StaticFragment] to the current set of buffered fragments.
    *
@@ -59,7 +67,7 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
    * @throws IllegalStateException if the buffer is sealed.
    */
   internal fun add(fragment: StaticFragment): Int {
-    require(open.get() && !closed.get()) {
+    check(open.get() && !closed.get()) {
       "Output buffer must be in an open state to accept fragments"
     }
     allFragments.add(fragment)
@@ -76,10 +84,10 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
    * @throws IllegalStateException if the buffer has not yet been sealed, or is closed.
    */
   public suspend fun <R: Any> consumeAsync(consumer: suspend (StaticFragment) -> R): List<Deferred<R>> = coroutine {
-    require(!open.get() && !closed.get()) {
+    check(!open.get() && !closed.get()) {
       "Cannot consume from output buffer while it is open for additional fragments"
     }
-    require(!consuming.getAndSet(true)) {
+    check(!consuming.getAndSet(true)) {
       "Cannot consume from output buffer while it is already being consumed"
     }
 

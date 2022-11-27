@@ -342,7 +342,7 @@ import kotlin.io.path.Path
         it.prepare(base)
       }
 
-      // @TODO(sgammon): buffer will probably need to be unlockable for feedback
+      // seal buffer, we're ready to write
       buffer.seal()
 
       // for each fragment in the buffer, (1) call `ensureDirectory`, and (2) call `writeFile`.

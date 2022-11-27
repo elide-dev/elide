@@ -137,6 +137,14 @@ abstract class AbstractSSGCompilerTest {
     op,
   )
 
+  // Run the provided `op` with the compiler under test, with a custom output location.
+  protected fun <R: Any> withCompiler(
+    output: SiteCompilerParams.Output,
+    op: suspend (SiteCompiler, SiteCompilerParams.Output) -> R,
+  ): R = withCompiler {
+    op(it, output)
+  }
+
   // Invoke the compiler over the CLI interface with provided arguments, then return exit code.
   protected fun cli(vararg args: String): Int {
     return SiteCompiler.exec(args.toList().toTypedArray())
@@ -183,7 +191,7 @@ abstract class AbstractSSGCompilerTest {
     endpoint: Endpoint,
     content: ByteBuffer,
     discovered: List<StaticFragmentSpec> = emptyList(),
-  ): StaticFragment = StaticFragment(
+  ): StaticFragment = StaticFragment.EndpointFragment(
     request,
     endpoint,
     response,
@@ -197,7 +205,7 @@ abstract class AbstractSSGCompilerTest {
     content: ByteArray,
     discovered: List<StaticFragmentSpec> = emptyList(),
     mimeType: String = MediaType.TEXT_HTML,
-  ): StaticFragment = StaticFragment(
+  ): StaticFragment = StaticFragment.EndpointFragment(
     requestFactory.create(endpoint, null),
     endpoint,
     HttpResponse.ok(content).contentLength(

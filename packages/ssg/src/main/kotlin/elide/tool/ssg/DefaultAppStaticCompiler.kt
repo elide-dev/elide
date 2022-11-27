@@ -1,12 +1,18 @@
 package elide.tool.ssg
 
+import elide.runtime.Logger
+import elide.runtime.Logging
 import jakarta.inject.Singleton
 import kotlinx.coroutines.*
+import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /** Default static app compiler implementation, which executes the request against the app. */
 @Singleton internal class DefaultAppStaticCompiler : AppStaticCompiler {
+  // Private logger.
+  private val logging: Logger = Logging.of(DefaultAppStaticCompiler::class)
+
   // Whether we have prepared this compiler with inputs and parameters.
   private val prepared: AtomicBoolean = AtomicBoolean(false)
 
@@ -39,6 +45,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
   // Set of "discovered" static fragments, based on configured fragments.
   private val discovered: ArrayList<StaticFragmentSpec> = ArrayList()
+
+  // Seen URLs.
+  private val seen: ConcurrentSkipListSet<String> = ConcurrentSkipListSet()
 
   // Reset the state of the compiler.
   private fun reset() {
@@ -76,6 +85,26 @@ import java.util.concurrent.atomic.AtomicInteger
       params.output.path,
       buf,
     )
+  }
+
+  // Check the provided request for uniqueness and enqueue it if it has not been seen yet.
+  private suspend fun checkEnqueueRequest(
+    appInfo: LoadedAppInfo,
+    spec: StaticFragmentSpec,
+  ): Deferred<StaticFragment?>? {
+    val target = spec.request.uri.toString()
+    return if (!seen.contains(target)) {
+      seen.add(target)
+      logging.trace("URL '$target' has not been seen; enqueueing for fetch")
+      val job = fulfillRequestAsync(
+        appInfo,
+        spec,
+      )
+      job
+    } else {
+      logging.trace("URL '$target' has already been seen; skipping")
+      null
+    }
   }
 
   /** @inheritDoc */
@@ -116,22 +145,22 @@ import java.util.concurrent.atomic.AtomicInteger
 
       // start initial set of tasks
       for (spec in seed) {
-        activeJobs.add(fulfillRequestAsync(
+        val job = checkEnqueueRequest(
           appInfo,
           spec,
-        ))
+        )
+        if (job != null)
+          activeJobs.add(job)
       }
 
       while (!done()) {
         // wait for all current jobs to complete
         activeJobs.joinAll()
-
-        // move all jobs to finished list
-        finishedJobs.addAll(activeJobs)
+        val batch = ArrayList(activeJobs)
         activeJobs.clear()
 
         // consume results
-        for (job in finishedJobs) {
+        for (job in batch) {
           val fragment = job.await()
           completed.incrementAndGet()
           if (fragment == null) {
@@ -147,12 +176,18 @@ import java.util.concurrent.atomic.AtomicInteger
 
             // spawn job for each discovered fragment
             for (spec in fragment.discovered) {
-              activeJobs.add(fulfillRequestAsync(
+              val subjob = checkEnqueueRequest(
                 appInfo,
                 spec,
-              ))
+              )
+              if (subjob != null) {
+                activeJobs.add(subjob)
+              }
             }
           }
+
+          // add to finished jobs
+          finishedJobs.add(job)
         }
       }
 

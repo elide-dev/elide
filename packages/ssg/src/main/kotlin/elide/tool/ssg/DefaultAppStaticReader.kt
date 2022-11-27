@@ -4,7 +4,6 @@ import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.tool.ssg.StaticContentReader.ArtifactType
-import elide.tool.ssg.StaticContentReader.DetectedArtifact
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus

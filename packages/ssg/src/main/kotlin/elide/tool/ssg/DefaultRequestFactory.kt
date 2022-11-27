@@ -3,8 +3,10 @@ package elide.tool.ssg
 import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpRequest
 import jakarta.inject.Singleton
 import tools.elide.meta.Endpoint
+import java.net.URL
 
 /** Default request factory implementation. */
 @Suppress("unused")
@@ -34,6 +36,14 @@ import tools.elide.meta.Endpoint
     )
   }
 
+  private fun affixHeaders(req: MutableHttpRequest<*>): MutableHttpRequest<*> {
+    return req.headers {
+      defaultHeaders.forEach { (key, value) ->
+        it.add(key, value)
+      }
+    }
+  }
+
   /** @inheritDoc */
   override fun create(page: Endpoint, controller: Class<*>?): HttpRequest<*> {
     val urlBase = page.base
@@ -41,10 +51,10 @@ import tools.elide.meta.Endpoint
 
     // special case: if the URL evaluates to "/" or empty, then it is considered a request for the root page.
     val resolvedUrl = if (
-      (urlBase == "/" && urlPath == "/") ||
-      (urlBase == "/" && urlPath == "") ||
       (urlBase == "" && urlPath == "/") ||
-      (urlBase == "" && urlPath == "")
+      (urlBase == "" && urlPath == "") ||
+      (urlBase == "/" && urlPath == "/") ||
+      (urlBase == "/" && urlPath == "")
     ) {
       "/"
     } else {
@@ -59,10 +69,22 @@ import tools.elide.meta.Endpoint
       }
     }
 
-    return HttpRequest.GET<String>(resolvedUrl).headers {
-      defaultHeaders.forEach { (key, value) ->
-        it.add(key, value)
-      }
-    }
+    return affixHeaders(HttpRequest.GET<String>(resolvedUrl))
+  }
+
+  /** @inheritDoc */
+  override fun create(spec: StaticFragmentSpec, artifact: DetectedArtifact): HttpRequest<*> {
+    return affixHeaders(HttpRequest.GET<String>(
+      artifact.url.toURI()
+    ))
+  }
+
+  override fun create(base: URL, path: String): HttpRequest<*> {
+    return affixHeaders(HttpRequest.GET<String>(URL(
+      base.protocol,
+      base.host,
+      base.port,
+      path,
+    ).toURI()))
   }
 }

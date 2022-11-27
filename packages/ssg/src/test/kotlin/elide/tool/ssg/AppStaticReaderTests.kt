@@ -375,26 +375,22 @@ import kotlin.test.assertTrue
       }
 
       when (detected.type) {
-        StaticContentReader.ArtifactType.STYLE -> {
-          assertTrue(
-            detected.url.toString().endsWith(".css"),
-            "CSS should only be detected for CSS URLs",
-          )
-        }
+        StaticContentReader.ArtifactType.STYLE -> assertTrue(
+          detected.url.toString().endsWith(".css"),
+          "CSS should only be detected for CSS URLs",
+        )
 
-        StaticContentReader.ArtifactType.SCRIPT -> {
-          assertTrue(
-            detected.url.toString().endsWith(".js"),
-            "JS should only be detected for JS URLs",
-          )
-        }
+        StaticContentReader.ArtifactType.SCRIPT -> assertTrue(
+          detected.url.toString().endsWith(".js"),
+          "JS should only be detected for JS URLs",
+        )
 
-        StaticContentReader.ArtifactType.IMAGE -> {
-          assertTrue(
-            detected.url.toString().endsWith(".gif"),
-            "images should only be detected for image URLs",
-          )
-        }
+        StaticContentReader.ArtifactType.IMAGE -> assertTrue(
+          detected.url.toString().endsWith(".gif"),
+          "images should only be detected for image URLs",
+        )
+
+        else -> continue
       }
     }
   }

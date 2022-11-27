@@ -60,6 +60,7 @@ dependencies {
   implementation(project(":packages:server"))
   implementation(libs.jsoup)
   implementation(libs.picocli)
+  implementation(libs.kotter)
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
@@ -202,24 +203,24 @@ graalvmNative {
     version.set(GraalVMVersions.graalvmMetadata)
   }
 
-  agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(true)
-
-    modes {
-      standard {}
-    }
-    metadataCopy {
-      inputTaskNames.add("test")
-      outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
-    }
-  }
+//  agent {
+//    defaultMode.set("standard")
+//    builtinCallerFilter.set(true)
+//    builtinHeuristicFilter.set(true)
+//    enableExperimentalPredefinedClasses.set(false)
+//    enableExperimentalUnsafeAllocationTracing.set(false)
+//    trackReflectionMetadata.set(true)
+//    enabled.set(true)
+//
+//    modes {
+//      standard {}
+//    }
+//    metadataCopy {
+//      inputTaskNames.add("test")
+//      outputDirectories.add("src/main/resources/META-INF/native-image")
+//      mergeWithExisting.set(true)
+//    }
+//  }
 
   binaries {
     named("main") {

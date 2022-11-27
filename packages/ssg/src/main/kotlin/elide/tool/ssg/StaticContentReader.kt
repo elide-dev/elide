@@ -2,7 +2,6 @@ package elide.tool.ssg
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import java.net.URL
 import java.nio.ByteBuffer
 
 /**
@@ -19,18 +18,6 @@ import java.nio.ByteBuffer
  * applicable), and then handed up to the [SiteCompiler] for further action.
  */
 public interface StaticContentReader {
-  /**
-   * Describes an asset detected after parsing an HTML response.
-   *
-   * @param url Absolute URL of the asset.
-   * @param request HTTP request which yielded the asset.
-   * @param type Type of the asset.
-   */
-  public data class DetectedArtifact(
-    val url: URL,
-    val request: HttpRequest<*>,
-    val type: ArtifactType,
-  )
 
   /** Types of supported web artifacts for detection. */
   public enum class ArtifactType {
@@ -42,6 +29,12 @@ public interface StaticContentReader {
 
     /** A link to a script asset. */
     SCRIPT,
+
+    /** A link to a font asset. */
+    FONT,
+
+    /** A link to a generic text asset. */
+    TEXT,
   }
 
   /**

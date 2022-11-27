@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: hellocss
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/**"
+        paths: classpath:static

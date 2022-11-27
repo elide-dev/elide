@@ -95,6 +95,7 @@ public data class SiteCompilerParams(
    * @param extraOrigins Extra origins to consider legal for crawling.
    * @param timeout Timeout to apply when executing app requests. Expressed in seconds.
    * @param precompress Whether to pre-compress assets as `*.gz` or `*.br` files, or both, or none.
+   * @param pretty Whether to enable color and other pretty terminal output features.
    */
   public data class Options(
     val classpath: String? = null,
@@ -106,6 +107,7 @@ public data class SiteCompilerParams(
     val extraOrigins: SortedSet<String> = sortedSetOf(),
     val timeout: Int = DEFAULT_REQUEST_TIMEOUT,
     val precompress: Set<CompressionMode> = emptySet(),
+    val pretty: Boolean = true,
   ) {
     public companion object {
       /** Default options. */
@@ -125,6 +127,7 @@ public data class SiteCompilerParams(
       compiler.extraOrigins = extraOrigins
       compiler.timeout = timeout
       compiler.precompress = precompress
+      compiler.pretty = pretty
     }
   }
 }

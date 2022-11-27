@@ -170,7 +170,7 @@ import java.util.jar.Attributes
 
   // Generate a static fragment spec for the provided inputs.
   private suspend fun fragmentSpecFromEndpoint(endpoint: Endpoint): StaticFragmentSpec {
-    return StaticFragmentSpec(
+    return StaticFragmentSpec.fromEndpoint(
       endpoint = endpoint,
       request = requestFactory.create(
         endpoint,
@@ -180,10 +180,14 @@ import java.util.jar.Attributes
   }
 
   // Generate a static fragment spec from a detected URL in a response.
-  @Suppress("UNUSED_PARAMETER")
-  private fun fragmentSpecFromUrl(parent: Endpoint, url: URL): StaticFragmentSpec {
-    TODO("Cannot yet fetch URLs in second-round processing.")
-  }
+  private fun fragmentSpecFromUrl(
+    @Suppress("UNUSED_PARAMETER") parent: StaticFragmentSpec,
+    request: HttpRequest<*>,
+    artifact: DetectedArtifact,
+  ): StaticFragmentSpec = StaticFragmentSpec.fromDetectedArtifact(
+    request,
+    artifact,
+  )
 
   // Warn about a request which failed to execute.
   private fun warnFailedRequest(request: HttpRequest<*>, endpoint: Endpoint?) {
@@ -288,18 +292,56 @@ import java.util.jar.Attributes
     } else {
       emptyList()
     }
+    val url = spec.request().uri
+    val synthesized = if (spec.request().path == "/") {
+      // special case: if we are fetching the home/root path, synthesize a request for the `/favicon.ico`, which may or
+      // may not be present in the page. we should also add a mapping for `/robots.txt` and `/humans.txt`, which are not
+      // typically shown in the page but may be present anyway.
+      listOf(
+        StaticFragmentSpec.SynthesizedSpec.fromRequest(
+          base = spec.request(),
+          request = requestFactory.create(url.toURL(), "/favicon.ico"),
+          expectedType = StaticContentReader.ArtifactType.IMAGE,
+        ),
+        StaticFragmentSpec.SynthesizedSpec.fromRequest(
+          base = spec.request(),
+          request = requestFactory.create(url.toURL(), "/robots.txt"),
+          expectedType = StaticContentReader.ArtifactType.TEXT,
+        ),
+        StaticFragmentSpec.SynthesizedSpec.fromRequest(
+          base = spec.request(),
+          request = requestFactory.create(url.toURL(), "/humans.txt"),
+          expectedType = StaticContentReader.ArtifactType.TEXT,
+        ),
+      )
+    } else {
+      emptyList()
+    }
 
     // followup tasks then need to be spawned into specs.
     val addlSpecs = followup.map {
-      fragmentSpecFromUrl(spec.endpoint, it.url)
-    }
+      fragmentSpecFromUrl(
+        spec,
+        requestFactory.create(spec, it),
+        it,
+      )
+    }.plus(synthesized)
 
-    return StaticFragment(
-      request = spec.request,
-      endpoint = spec.endpoint,
-      response = response,
-      content = post,
-      discovered = addlSpecs,
-    )
+    // make sure to factory a specific fragment implementation based on the spec implementation.
+    return when (spec) {
+      is StaticFragmentSpec.EndpointSpec -> StaticFragment.fromEndpoint(
+        spec,
+        response,
+        post,
+        addlSpecs,
+      )
+
+      is StaticFragmentSpec.SynthesizedSpec -> StaticFragment.fromDetectedArtifact(
+        spec.artifact,
+        response,
+        post,
+        addlSpecs,
+      )
+    }
   }
 }

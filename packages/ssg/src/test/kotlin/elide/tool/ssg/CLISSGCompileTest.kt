@@ -1,5 +1,6 @@
 package elide.tool.ssg
 
+import elide.tool.ssg.SiteCompilerParams.OutputFormat
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Test
 
@@ -14,19 +15,6 @@ import org.junit.jupiter.api.Test
     "elide.tools.ssg.*",
   ],
 ) class CLISSGCompileTest : AbstractSSGCompilerTest() {
-  @Test fun testCommandLineHttpCompile(): Unit = withCompiler {
-    assertSuccess(
-      cli(
-        "--no-crawl",
-        "--http",
-        "--verbose",
-        helloWorldManifest,
-        embeddedApp().url.toString(),
-        outputArchive(SiteCompilerParams.OutputFormat.ZIP).path,
-      )
-    )
-  }
-
   @Test fun testCommandHelp() {
     assertSuccess {
       cli("--help")
@@ -39,7 +27,20 @@ import org.junit.jupiter.api.Test
     }
   }
 
-  @Test fun testCommandLineEmptyCompile(): Unit = withCompiler {
+  @Test fun testCommandLineHttpCompile(): Unit = withCompiler(outputArchive(OutputFormat.ZIP)) { _, out ->
+    assertSuccess(
+      cli(
+        "--no-crawl",
+        "--http",
+        "--verbose",
+        helloWorldManifest,
+        embeddedApp().url.toString(),
+        out.path,
+      )
+    )
+  }
+
+  @Test fun testCommandLineEmptyCompile(): Unit = withCompiler(outputArchive(OutputFormat.ZIP)) { _, out ->
     assertSuccess {
       cli(
         "--no-crawl",
@@ -47,7 +48,33 @@ import org.junit.jupiter.api.Test
         "--verbose",
         emptyManifest,
         embeddedApp().url.toString(),
-        outputArchive(SiteCompilerParams.OutputFormat.ZIP).path,
+        out.path,
+      )
+    }
+  }
+
+  @Test fun testCommandLineHttpCompileDir(): Unit = withCompiler(outputDirectory()) { _, out ->
+    assertSuccess(
+      cli(
+        "--no-crawl",
+        "--http",
+        "--verbose",
+        helloWorldManifest,
+        embeddedApp().url.toString(),
+        out.path,
+      )
+    )
+  }
+
+  @Test fun testCommandLineEmptyCompileDir(): Unit = withCompiler(outputDirectory()) { _, out ->
+    assertSuccess {
+      cli(
+        "--no-crawl",
+        "--http",
+        "--verbose",
+        emptyManifest,
+        embeddedApp().url.toString(),
+        out.path,
       )
     }
   }

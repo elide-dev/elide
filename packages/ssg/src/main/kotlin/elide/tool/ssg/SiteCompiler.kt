@@ -71,7 +71,7 @@ public class SiteCompiler internal constructor () : Runnable {
           output = output,
           manifest = manifest,
           options = options.copy(
-            httpMode = options.httpMode || target.startsWith("http")
+            httpMode = options.httpMode,
           ),
         ))
       }.compile()
@@ -189,6 +189,15 @@ public class SiteCompiler internal constructor () : Runnable {
   )
   internal var crawl: Boolean = false
 
+  /** Whether to activate pretty logging; on by default. */
+  @Option(
+    names = ["--pretty"],
+    negatable = true,
+    description = ["Timeout to apply to application requests. Expressed in seconds, defaults to 30s."],
+    defaultValue = "true",
+  )
+  internal var pretty: Boolean = false
+
   /** Crawl returned HTML. */
   @Option(
     names = ["--precompress"],
@@ -242,9 +251,6 @@ public class SiteCompiler internal constructor () : Runnable {
       }
       target = params.target.ifBlank {
         throw SSGCompilerError.InvalidArgument("Cannot load blank JAR path/HTTP target")
-      }
-      if (params.options.classpath != null) {
-        classpath = params.options.classpath
       }
       this.params = params
       this.logging = logging ?: Logging.of(SiteCompiler::class.java)
@@ -356,6 +362,7 @@ public class SiteCompiler internal constructor () : Runnable {
           timeout = timeout,
           extraOrigins = extraOrigins.toSortedSet(),
           precompress = precompress,
+          pretty = pretty,
         )
       )
       paramsAvailable.compareAndSet(false, true)

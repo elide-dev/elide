@@ -31,10 +31,10 @@ import kotlin.io.path.Path
     suspend fun prepare(path: Path) = Unit
 
     /** Ensure that a directory exists at the provided [path]. */
-    suspend fun ensureDirectory(path: String) = Unit
+    suspend fun ensureDirectory(base: Path, path: Path) = Unit
 
-    /** Write a file from a static [fragment] and calculated [path]. */
-    suspend fun writeFile(path: String, fragment: StaticFragment): FragmentWrite
+    /** Write a file from a static [fragment] and calculated [path], within the output [base]. */
+    suspend fun writeFile(base: Path, path: Path, fragment: StaticFragment): FragmentWrite
 
     /** Flush all pending output to disk. */
     suspend fun flush() = Unit // default: no-op
@@ -54,26 +54,34 @@ import kotlin.io.path.Path
       else -> Unit
     }
 
-    override suspend fun ensureDirectory(path: String): Unit = ioOperation("ensureDirectory") {
-      File(path).let {
+    override suspend fun ensureDirectory(base: Path, path: Path): Unit = ioOperation("ensureDirectory") {
+      // relativize archive file path
+      val relativePath = if (path.startsWith("/")) {
+        Path(path.toString().drop(1))
+      } else {
+        path
+      }
+
+      val resolved = base.resolve(relativePath)
+      File(resolved.toAbsolutePath().toUri()).let {
         if (!it.parentFile.exists() && !it.parentFile.mkdirs()) {
-          throw IOException("Failed to create tree directory '$path'")
-        } else if (!it.canWrite()) {
-          throw IOException("No permission to create tree directory '$path'")
+          throw IOException("Failed to create tree directory '${resolved.parent}'")
+        } else if (!it.parentFile.canWrite()) {
+          throw IOException("No permission to create tree directory '${resolved.parent}'")
         } else {
-          logging.trace("Ensure directory: '$path'")
+          logging.trace("Ensure directory: '$resolved'")
         }
       }
     }
 
-    override suspend fun writeFile(path: String, fragment: StaticFragment): FragmentWrite = ioOperation("write") {
-      File(path).let {
+    override suspend fun writeFile(
+      base: Path,
+      path: Path,
+      fragment: StaticFragment,
+    ): FragmentWrite = ioOperation("write") {
+      File(base.resolve(path).toAbsolutePath().toUri()).let {
         if (it.exists()) {
           throw IOException("Output file already exists: '$path'")
-        } else if (!it.parentFile.exists()) {
-          throw IOException("Parent directory for output '$path' does not exist")
-        } else if (!it.canWrite()) {
-          throw IOException("Unable to write output file '$path'")
         } else {
           logging.trace("Writing file: '$path'")
           val size = AtomicLong(0)
@@ -88,7 +96,7 @@ import kotlin.io.path.Path
 
           FragmentWrite.success(
             fragment,
-            path,
+            path.toString(),
             size.get(),
           )
         }
@@ -119,19 +127,31 @@ import kotlin.io.path.Path
       else -> Unit
     }
 
-    override suspend fun writeFile(path: String, fragment: StaticFragment): FragmentWrite {
+    override suspend fun writeFile(
+      base: Path,
+      path: Path,
+      fragment: StaticFragment,
+    ): FragmentWrite {
       // acquire raw bytes of target file
       val bytes = fragment.content.array()
+      val pathString = path.toString()
+
+      // relativize archive file path
+      val relativePath = Path(if (pathString.startsWith("/")) {
+        pathString.drop(1)
+      } else {
+        pathString
+      })
 
       // package, write, and close as archive entry
-      val entry = writeArchiveEntry(entryFromFile(path, fragment)) {
+      val entry = writeArchiveEntry(entryFromFile(relativePath.toString(), fragment)) {
         write(bytes)
       }
 
       // return as written fragment
       return FragmentWrite.success(
         fragment = fragment,
-        path = path,
+        path = path.toString(),
         size = bytes.size.toLong(),
         compressed = entry.size,
       )
@@ -169,11 +189,7 @@ import kotlin.io.path.Path
     )
 
     override fun entryFromFile(path: String, fragment: StaticFragment): TarArchiveEntry = TarArchiveEntry(
-      if (path.startsWith("/")) {
-        path.drop(1)
-      } else {
-        path
-      },
+      path,
     ).apply {
       size = fragment.content.array().size.toLong()
       setModTime(FileTime.fromMillis(0))
@@ -225,9 +241,9 @@ import kotlin.io.path.Path
 
   // Build a virtualized output file-path based on the input `fragment`. Relative to output base.
   @VisibleForTesting @Suppress("unused") internal fun filepathForFragment(fragment: StaticFragment): String {
-    val basepath = fragment.endpoint.base
-    val tailpath = fragment.endpoint.tail
-    val produces = fragment.endpoint.producesList
+    val basepath = fragment.basePath()
+    val tailpath = fragment.tailPath()
+    val produces = fragment.produces()
 
     val filepathVirtual = if (!tailpath.isNullOrBlank()) {
       if (tailpath.startsWith("/")) {
@@ -246,7 +262,7 @@ import kotlin.io.path.Path
     } else {
       basepath
     }
-    val extensionVirtual = if (fragment.endpoint.type == EndpointType.PAGE || produces.contains("text/html")) {
+    val extensionVirtual = if (fragment.endpointType() == EndpointType.PAGE || produces.contains("text/html")) {
       "html"
     } else {
       null
@@ -332,16 +348,21 @@ import kotlin.io.path.Path
       // for each fragment in the buffer, (1) call `ensureDirectory`, and (2) call `writeFile`.
       val jobs = buffer.consumeAsync { fragment ->
         // translate the fragment into a file path
-        val path = filepathForFragment(fragment)
+        val path = Path(filepathForFragment(fragment))
+        val relativePath = if (path.toString().startsWith("/")) {
+          Path(path.toString().drop(1))
+        } else {
+          path
+        }
 
         // ensure that any parent directories exist, as applicable.
         ioOperation("ensureDirectory") {
-          it.ensureDirectory(path)
+          it.ensureDirectory(base, path)
         }
 
         // write the file in question.
         ioOperation("writeFile") {
-          it.writeFile(path, fragment)
+          it.writeFile(base, relativePath, fragment)
         }
       }
 
@@ -359,10 +380,6 @@ import kotlin.io.path.Path
 
   /** @inheritDoc */
   override fun close(): Unit = closeables.forEach {
-    try {
-      it.close()
-    } catch (err: Throwable) {
-      // no op
-    }
+    it.close()
   }
 }

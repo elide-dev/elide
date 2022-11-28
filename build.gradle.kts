@@ -29,12 +29,15 @@ plugins {
 group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
+val versionFile = File("./.version")
 version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
   file(".version").readText().trim().replace("\n", "").ifBlank {
     throw IllegalStateException("Failed to load `.version`")
   }
 } else if (project.hasProperty("version")) {
   project.properties["version"] as String
+} else if (versionFile.exists()) {
+  versionFile.readText()
 } else {
   "1.0-SNAPSHOT"
 }

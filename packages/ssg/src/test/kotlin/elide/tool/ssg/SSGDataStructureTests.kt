@@ -90,9 +90,13 @@ import kotlin.test.*
     assertNotNull(failure.toString())
     assertTrue(failure.toString().contains("Failure"))
     assertEquals(err, failure.err)
-    assertFalse(success.writeResult)
+    assertFalse(failure.writeResult)
     assertEquals(failure.hashCode(), failure.hashCode())
     assertEquals("/some/path/here", failure.path)
     assertNotEquals(success, failure)
+  }
+
+  @Test fun testStaticFragment() = runTest {
+
   }
 }

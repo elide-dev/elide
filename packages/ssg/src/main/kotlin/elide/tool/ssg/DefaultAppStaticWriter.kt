@@ -113,24 +113,18 @@ import kotlin.io.path.Path
 
   /** Writes outputs to an archive. */
   private abstract inner class ArchiveOutputWriter<A: ArchiveOutputStream, E: ArchiveEntry>(
-    protected val file: File,
     protected val stream: A,
   ): OutputWriter {
     // Write an archive entry.
     @Synchronized private fun writeArchiveEntry(entry: E, write: OutputStream.() -> Unit): E {
-      try {
-        stream.putArchiveEntry(entry)
-        write.invoke(stream)
-        stream.closeArchiveEntry()
-      } catch (err: Throwable) {
-        logging.error("Encountered error while writing to output archive stream", err)
-        throw SSGCompilerError.IOError("Failed to write to output archive stream", err)
-      }
+      stream.putArchiveEntry(entry)
+      write.invoke(stream)
+      stream.closeArchiveEntry()
       return entry
     }
 
     override suspend fun prepare(path: Path): Unit = when {
-      !file.canWrite() -> throw SSGCompilerError.IOError("Output file is not writable: $path")
+      !path.toFile().canWrite() -> throw SSGCompilerError.IOError("Output file is not writable: $path")
       else -> Unit
     }
 
@@ -173,12 +167,11 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to a tar archive. */
-  private inner class TarArchiveWriter private constructor (file: File, target: TarArchiveOutputStream):
-    ArchiveOutputWriter<TarArchiveOutputStream, TarArchiveEntry>(file, target) {
+  private inner class TarArchiveWriter private constructor (target: TarArchiveOutputStream):
+    ArchiveOutputWriter<TarArchiveOutputStream, TarArchiveEntry>(target) {
 
     // Alternate constructor which loads from a file.
     constructor(file: File): this(
-      file,
       TarArchiveOutputStream(file.outputStream()),
     )
 
@@ -191,12 +184,11 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to a zip archive. */
-  private inner class ZipArchiveWriter private constructor (file: File, target: ZipArchiveOutputStream):
-    ArchiveOutputWriter<ZipArchiveOutputStream, ZipArchiveEntry>(file, target) {
+  private inner class ZipArchiveWriter private constructor (target: ZipArchiveOutputStream):
+    ArchiveOutputWriter<ZipArchiveOutputStream, ZipArchiveEntry>(target) {
 
     // Alternate constructor which loads from a file.
     constructor(file: File): this(
-      file,
       ZipArchiveOutputStream(file.outputStream()),
     )
 
@@ -296,7 +288,7 @@ import kotlin.io.path.Path
   }
 
   // Run an I/O operation, protecting for errors.
-  private suspend fun <R: Any> ioOperation(phase: String, op: suspend () -> R): R = try {
+  @VisibleForTesting internal suspend fun <R: Any> ioOperation(phase: String, op: suspend () -> R): R = try {
     op.invoke()
   } catch (err: IOException) {
     logging.error("Failed to write static site in I/O phase '$phase'", err)

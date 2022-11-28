@@ -24,7 +24,9 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.io.path.Path
 
 /** Default writer implementation for static sites. */
-@Singleton internal class DefaultAppStaticWriter : AppStaticWriter {
+@Singleton internal class DefaultAppStaticWriter (
+  private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+) : AppStaticWriter {
   companion object {
     /** @return Relative path from input. */
     @JvmStatic private fun relativize(path: Path): Path {
@@ -78,6 +80,7 @@ import kotlin.io.path.Path
       }
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun writeFile(
       base: Path,
       path: Path,
@@ -93,7 +96,7 @@ import kotlin.io.path.Path
             val data = fragment.content.array()
             size.set(data.size.toLong())
 
-            withContext(Dispatchers.IO) {
+            withContext(dispatcher) {
               stream.write(data)
             }
           }.await()
@@ -155,7 +158,8 @@ import kotlin.io.path.Path
       )
     }
 
-    override suspend fun flush() = withContext(Dispatchers.IO) {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    override suspend fun flush() = withContext(dispatcher) {
       stream.flush()
     }
 

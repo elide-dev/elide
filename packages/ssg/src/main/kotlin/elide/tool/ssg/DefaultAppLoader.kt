@@ -25,6 +25,7 @@ import java.util.jar.Attributes
 /** Default [AppLoader] implementation, which works based on an isolated class-loader. */
 @Singleton public class DefaultAppLoader @Inject internal constructor (
   private val contentReader: StaticContentReader,
+  private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : AppLoader {
   /** Defines a local interface for an app loader implementation. */
   private sealed interface AppLoaderImpl : Closeable, AutoCloseable {
@@ -69,8 +70,9 @@ import java.util.jar.Attributes
       )
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun connect() {
-      connection.set(withContext(Dispatchers.IO) {
+      connection.set(withContext(dispatcher) {
         target.openConnection()
       } as JarURLConnection)
 

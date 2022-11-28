@@ -5,16 +5,15 @@ import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import jakarta.inject.Singleton
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import tools.elide.meta.AppManifest
 import java.io.File
 import java.io.IOException
 
 /** Implementation of a [ManifestReader] which reads off disk. */
-@Singleton internal class FilesystemManifestReader : ManifestReader {
+@Singleton internal class FilesystemManifestReader (
+  private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+) : ManifestReader {
   // Private logger.
   private val logging: Logger = Logging.of(FilesystemManifestReader::class)
 
@@ -27,7 +26,7 @@ import java.io.IOException
     logging.debug("Locating manifest at path '$path'...")
 
     // locate file
-    return withContext(Dispatchers.IO) {
+    return withContext(dispatcher) {
       async {
         val file = try {
           val target = if (path.startsWith("classpath:")) {

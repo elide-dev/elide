@@ -9,7 +9,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /** Default static app compiler implementation, which executes the request against the app. */
-@Singleton internal class DefaultAppStaticCompiler : AppStaticCompiler {
+@Singleton internal class DefaultAppStaticCompiler (
+  private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
+) : AppStaticCompiler {
   // Private logger.
   private val logging: Logger = Logging.of(DefaultAppStaticCompiler::class)
 
@@ -66,7 +68,7 @@ import java.util.concurrent.atomic.AtomicInteger
   @Suppress("UNUSED_PARAMETER") private suspend fun fulfillRequestAsync(
     app: LoadedAppInfo,
     spec: StaticFragmentSpec,
-  ): Deferred<StaticFragment?> = withContext(Dispatchers.IO) {
+  ): Deferred<StaticFragment?> = withContext(dispatcher) {
     async {
       loader.executeRequest(spec)
     }
@@ -127,7 +129,7 @@ import java.util.concurrent.atomic.AtomicInteger
     appInfo: LoadedAppInfo,
     seed: Sequence<StaticFragmentSpec>,
     buffer: StaticSiteBuffer,
-  ): Deferred<SiteCompileResult> = withContext(Dispatchers.IO) {
+  ): Deferred<SiteCompileResult> = withContext(dispatcher) {
     // must have parameters set
     require(prepared.get()) {
       "Must prepare compiler implementation before calling `compileStaticSite`."

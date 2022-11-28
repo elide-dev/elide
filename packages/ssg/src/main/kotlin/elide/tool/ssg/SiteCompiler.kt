@@ -12,6 +12,8 @@ import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import picocli.CommandLine
 import picocli.CommandLine.Command
@@ -47,6 +49,7 @@ public class SiteCompiler internal constructor () : Runnable {
      * @param output Output settings for this compiler run.
      * @param options Options to apply to this compile execution.
      * @param logging Logger to use for compiler messages.
+     * @param dispatcher Co-routine dispatcher to use, as applicable.
      * @return Compiler result.
      */
     @JvmStatic public fun compile(
@@ -55,15 +58,17 @@ public class SiteCompiler internal constructor () : Runnable {
       output: CompilerParams.Output,
       options: Options,
       logging: Logger? = null,
+      dispatcher: CoroutineDispatcher? = null,
     ): CompileResult {
       return SiteCompiler().apply {
+        val ioDispatcher = dispatcher ?: Dispatchers.IO
         // setup default actors
-        manifestReader = FilesystemManifestReader()
+        manifestReader = FilesystemManifestReader(ioDispatcher)
         requestFactory = DefaultRequestFactory()
         contentReader = DefaultAppStaticReader()
-        contentWriter = DefaultAppStaticWriter()
-        appLoader = DefaultAppLoader(contentReader)
-        compiler = DefaultAppStaticCompiler()
+        contentWriter = DefaultAppStaticWriter(ioDispatcher)
+        appLoader = DefaultAppLoader(contentReader, ioDispatcher)
+        compiler = DefaultAppStaticCompiler(ioDispatcher)
 
         // configure the compiler
         configure(logging = logging, params = CompilerParams(

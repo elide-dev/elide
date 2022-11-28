@@ -14,6 +14,9 @@ public final class dev/elide/buildtools/gradle/plugin/BuildMode$Companion {
 public class dev/elide/buildtools/gradle/plugin/ElideExtension {
 	public static final field Companion Ldev/elide/buildtools/gradle/plugin/ElideExtension$Companion;
 	public fun <init> (Lorg/gradle/api/Project;)V
+	public final fun disableAutoConfig ()V
+	public final fun enableAutoConfig ()V
+	public final fun getAutoConfig ()Ljava/util/concurrent/atomic/AtomicBoolean;
 	public final fun getJs ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideJsHandler;
 	public final fun getKotlinPluginOptions ()Ldev/elide/buildtools/gradle/plugin/cfg/ElideKotlinPluginsHandler;
 	public final fun getMode ()Ldev/elide/buildtools/gradle/plugin/BuildMode;
@@ -241,6 +244,21 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideKotlinPluginsHandler$Pl
 }
 
 public final class dev/elide/buildtools/gradle/plugin/cfg/ElidePluginConfig {
+	public static final field DEPENDENCY_BASE Ljava/lang/String;
+	public static final field DEPENDENCY_CATALOG Ljava/lang/String;
+	public static final field DEPENDENCY_CONVENTION Ljava/lang/String;
+	public static final field DEPENDENCY_FRONTEND Ljava/lang/String;
+	public static final field DEPENDENCY_GRAALVM Ljava/lang/String;
+	public static final field DEPENDENCY_GRAALVM_JS Ljava/lang/String;
+	public static final field DEPENDENCY_GRAALVM_REACT Ljava/lang/String;
+	public static final field DEPENDENCY_MODEL Ljava/lang/String;
+	public static final field DEPENDENCY_PLATFORM Ljava/lang/String;
+	public static final field DEPENDENCY_PROCESSOR Ljava/lang/String;
+	public static final field DEPENDENCY_PROTO Ljava/lang/String;
+	public static final field DEPENDENCY_SERVER Ljava/lang/String;
+	public static final field DEPENDENCY_SSG Ljava/lang/String;
+	public static final field DEPENDENCY_SUBSTRATE Ljava/lang/String;
+	public static final field DEPENDENCY_TEST Ljava/lang/String;
 	public static final field ELIDE_LIB_VERSION Ljava/lang/String;
 	public static final field INSTANCE Ldev/elide/buildtools/gradle/plugin/cfg/ElidePluginConfig;
 }

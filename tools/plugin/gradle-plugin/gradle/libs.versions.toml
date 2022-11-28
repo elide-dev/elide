@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha1-rc37"
+elide = "1.0-v3-alpha1-rc38"
 ksp = "1.7.21-1.0.8"
 detekt = "1.22.0"
 kotlin = "1.7.21"
@@ -35,6 +35,10 @@ soy = "2022-03-07"
 closure = "v20221004"
 closure_stylesheets = "1.5.0"
 buildconfig_plugin = "3.1.0"
+auto_service = "1.0.1"
+
+micronaut = "3.7.4"
+micronaut_plugin = "3.6.5"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -46,8 +50,20 @@ kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = 
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlin_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 kotlinx_plugin_abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
-buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig_plugin" }
 
+micronaut_application = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
+micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
+micronaut_crac = { id = "io.micronaut.crac", version.ref = "micronaut_plugin" }
+micronaut_component = { id = "io.micronaut.component", version.ref = "micronaut_plugin" }
+micronaut_library = { id = "io.micronaut.library", version.ref = "micronaut_plugin" }
+micronaut_graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut_plugin" }
+micronaut_docker = { id = "io.micronaut.docker", version.ref = "micronaut_plugin" }
+micronaut_minimal_application = { id = "io.micronaut.minimal.application", version.ref = "micronaut_plugin" }
+micronaut_minimal_library = { id = "io.micronaut.minimal.library", version.ref = "micronaut_plugin" }
+micronaut_test_resources = { id = "io.micronaut.test-resources", version.ref = "micronaut_plugin" }
+micronaut_test_resourcesConsumer = { id = "io.micronaut.test-resources-consumer", version.ref = "micronaut_plugin" }
+
+buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig_plugin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 sonar = { id = "org.sonarqube", version.ref = "sonar" }
 node = { id = "com.github.node-gradle.node", version.ref = "nodePlugin" }
@@ -97,9 +113,13 @@ commons_compress = { group = "org.apache.commons", name = "commons-compress", ve
 closure_templates = { group = "com.google.template", name = "soy", version.ref = "soy" }
 closure_compiler = { group = "com.google.javascript", name = "closure-compiler", version.ref = "closure" }
 closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure_stylesheets" }
+autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.0.0" }
+google_auto_service = { group = "com.google.auto.service", name = "auto-service", version.ref = "auto_service" }
+google_auto_service_annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "auto_service" }
 
 elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
+elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
 elide_bom = { group = "dev.elide", name = "bom", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }

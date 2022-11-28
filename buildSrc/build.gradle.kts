@@ -29,6 +29,7 @@ dependencies {
   implementation(libs.plugin.shadow)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
+  implementation(libs.plugin.ksp)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.atomicfu)

@@ -48,6 +48,7 @@ public open class ElideServerHandler @Inject constructor(objects: ObjectFactory)
 
     /** Configure SSG compilation pass. */
     public fun ssg(action: Action<StaticSiteHandler>) {
+        ssg.enabled.set(true)
         action.execute(ssg)
     }
 

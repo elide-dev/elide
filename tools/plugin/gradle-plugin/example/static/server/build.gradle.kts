@@ -5,27 +5,46 @@
 )
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
-import tools.elide.assets.EmbeddedScriptLanguage
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
 
 plugins {
+    alias(libs.plugins.micronaut.application)
+    alias(libs.plugins.micronaut.aot)
+
     kotlin("jvm")
-    id("com.google.devtools.ksp")
+//    alias(libs.plugins.ksp)
     id("dev.elide.buildtools.plugin")
 }
 
+application {
+    mainClass.set("example.App")
+}
+
 dependencies {
-    ksp(libs.elide.tools.processor)
+//    ksp(libs.elide.tools.processor)
+//    ksp(libs.autoService.ksp)
+
+    implementation(libs.elide.base)
+    implementation(libs.elide.proto)
+    implementation(libs.elide.server)
+    implementation(libs.google.auto.service.annotations)
+
+    implementation("io.micronaut:micronaut-context")
+    implementation("io.micronaut:micronaut-runtime")
+}
+
+micronaut {
+    version.set("3.7.4")
 }
 
 elide {
     mode = BuildMode.DEVELOPMENT
 
     server {
-        ssg {
-            enable()
-        }
+//        ssg {
+//            enable()
+//        }
 
         assets {
             bundler {

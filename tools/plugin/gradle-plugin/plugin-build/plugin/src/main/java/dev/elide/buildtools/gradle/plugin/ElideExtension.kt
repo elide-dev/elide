@@ -10,13 +10,16 @@ import org.gradle.api.tasks.Optional
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-@Suppress("UnnecessaryAbstractClass", "unused", "RedundantVisibilityModifier", "MemberVisibilityCanBePrivate")
+@Suppress("UnnecessaryAbstractClass", "unused", "MemberVisibilityCanBePrivate")
 public open class ElideExtension @Inject constructor(project: Project) {
     private val objects = project.objects
     internal val multiplatform: AtomicBoolean = AtomicBoolean(false)
 
     /** Version pin for Elide, plugins, and tooling. */
     public val version: Property<String> = objects.property(String::class.java)
+
+    /** Whether to auto-configure the build, including injected dependencies. */
+    public val autoConfig: AtomicBoolean = AtomicBoolean(true)
 
     /** Configuration for JS runtime settings. */
     public val js: ElideJsHandler = objects.newInstance(ElideJsHandler::class.java)
@@ -35,6 +38,21 @@ public open class ElideExtension @Inject constructor(project: Project) {
         public fun Project.elide(): ElideExtension {
             return extensions.create("elide", ElideExtension::class.java)
         }
+    }
+
+    /** Indicate whether build auto-config should be enabled. */
+    internal fun shouldConfigureBuild(): Boolean {
+        return autoConfig.get()
+    }
+
+    /** Enable auto-configuration of the build, including library management and dependency injection. */
+    public fun enableAutoConfig() {
+        autoConfig.set(true)
+    }
+
+    /** Disable auto-configuration of the build, including library management and dependency injection. */
+    public fun disableAutoConfig() {
+        autoConfig.set(false)
     }
 
     /** Indicate whether a JS target was configured. */

@@ -38,6 +38,9 @@
          <ignored-key id="689cbe64f4bc997f" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="35addf131bdac9de" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="7b534d9959cf9eac" reason="Key couldn't be downloaded from any key server"/>
+         <ignored-key id="0181b45ea58677bc" reason="Key couldn't be downloaded from any key server"/>
+         <ignored-key id="713ea82adf3a287b" reason="Key couldn't be downloaded from any key server"/>
+         <ignored-key id="9eb80e92eb2135b1" reason="Key couldn't be downloaded from any key server"/>
       </ignored-keys>
       <trusted-keys>
          <trusted-key id="015479e1055341431b4545ab72475fd306b9cab7" group="com.googlecode.javaewah" name="JavaEWAH" version="1.1.13"/>
@@ -80,6 +83,7 @@
          <trusted-key id="2655176f748fd83725b4805ff2a01147d830c125" group="org.testcontainers" name="testcontainers-bom"/>
          <trusted-key id="2777eca28734ce7ff1f53e162a7e27c7d8a43411" group="com.google.common.html.types"/>
          <trusted-key id="28118c070cb22a0175a2e8d43d12ca2ac19f3181" group="^com[.]fasterxml[.]jackson($|([.].*))" regex="true"/>
+         <trusted-key id="2a5e8d8495dd653f753c4c7e061107b0f74a6daa" group="com.typesafe" name="config" version="1.4.2"/>
          <trusted-key id="2b1042677fd8190c7b9fc0dc2161d72e7dcd4258" group="^org[.]sonarsource($|([.].*))" regex="true"/>
          <trusted-key id="2bcbdd0f23ea1cafcc11d4860374cf2e8dd1bdfd" group="org.sonatype.oss" name="oss-parent" version="4"/>
          <trusted-key id="2db4f1ef0fa761ecc4ea935c86fdc7e2a11262cb">
@@ -125,10 +129,12 @@
          <trusted-key id="6214760097dc5cfad0175ac2c9fbaa83a8753994">
             <trusting group="com.fasterxml" name="oss-parent" version="38"/>
             <trusting group="org.codehaus.woodstox"/>
+            <trusting group="^com[.]fasterxml($|([.].*))" regex="true"/>
          </trusted-key>
          <trusted-key id="66ca61ea0fc7e9ea1216f83396b88eacd463b90b" group="^com[.]diffplug($|([.].*))" regex="true"/>
          <trusted-key id="682f765eea718d250bbdb2f1685c46769dbb5e5d" group="^com[.]squareup($|([.].*))" regex="true"/>
          <trusted-key id="694621a7227d8d5289699830abe9f3126bb741c1" group="com.google.guava"/>
+         <trusted-key id="696b6199a2a9d8c29ce78cc0d041cad2e452550f" group="com.google.protobuf" name="protobuf-bom" version="3.17.2"/>
          <trusted-key id="6dd3b8c64ef75253beb2c53ad908a43fb7ec07ac">
             <trusting group="com.sun.activation" name="all" version="1.2.1"/>
             <trusting group="jakarta.activation"/>
@@ -155,8 +161,10 @@
          <trusted-key id="8858d45be9b276802318155b96fb9db219f3338d" group="kr.motd.maven" name="os-maven-plugin" version="1.7.0"/>
          <trusted-key id="89114d320b8b1c52c3b09991fa120a6742234999" group="com.google.jsinterop"/>
          <trusted-key id="8a10792983023d5d14c93b488d7f1bec1e2ecae7" group="^com[.]fasterxml($|([.].*))" regex="true"/>
+         <trusted-key id="8bdd4281238fab30b6b04a80eb6f6532e6611fc9" group="com.varabyte.kotter" name="kotter" version="1.0.0"/>
          <trusted-key id="8da70c00df7af1b0d2f9dc74ddbcc1270a29d081" group="org.apache.ant"/>
          <trusted-key id="8e3a02905a1ae67e7b0f9acd3967d4eda591b991">
+            <trusting group="io.ktor" name="ktor-bom" version="1.6.1"/>
             <trusting group="io.ktor" name="ktor-bom" version="1.6.8"/>
             <trusting group="org.jetbrains.kotlinx"/>
          </trusted-key>
@@ -182,7 +190,10 @@
          <trusted-key id="aa70c7c433d501636392ec02153e7a3c2b4e5118" group="org.eclipse.ee4j" name="project"/>
          <trusted-key id="aaeba10329ec94024ed4d8328d70fe993a5c9bbc" group="org.jetbrains.kotlin-wrappers"/>
          <trusted-key id="adbc987d1a7b91db6b0aaa81995efbf4a3d20beb" group="^com[.]pinterest($|([.].*))" regex="true"/>
-         <trusted-key id="aee8a343247713a5a198640d4d1670765ef90eab" group="io.methvin" name="directory-watcher" version="0.15.1"/>
+         <trusted-key id="aee8a343247713a5a198640d4d1670765ef90eab">
+            <trusting group="io.methvin" name="directory-watcher" version="0.15.1"/>
+            <trusting group="io.methvin" name="directory-watcher" version="0.16.1"/>
+         </trusted-key>
          <trusted-key id="afa2b1823fc021bfd08c211fd5f4c07a434ab3da" group="com.squareup" name="kotlinpoet" version="1.10.2"/>
          <trusted-key id="afcc4c7594d09e2182c60e0f7a01b0f236e5430f" group="com.google.code.gson"/>
          <trusted-key id="b02137d875d833d9b23392ecae5a7fb608a0221c" group="org.apache.maven"/>
@@ -222,12 +233,16 @@
             <trusting group="org.apache.ant"/>
             <trusting group="org.apache.commons"/>
          </trusted-key>
+         <trusted-key id="d022218dcc08aad6ef3af876b3de72e647d35161" group="org.testcontainers" name="testcontainers-bom" version="1.16.2"/>
          <trusted-key id="d196a5e3e70732eeb2e5007f1861c322c56014b2" group="commons-lang" name="commons-lang" version="2.6"/>
          <trusted-key id="d4c89ea4aaf455fd88b22087efe8086f9e93774e" group="junit" name="junit" version="4.12"/>
          <trusted-key id="d6f1bc78607808ec8e9f69437a8860944fad5f62" group="org.apache.commons" name="commons-parent"/>
          <trusted-key id="d87208efad150e7e0c862f182fa831c781faaadc" group="com.nixxcode.jvmbrotli"/>
          <trusted-key id="dbd744ace7ade6aa50dd591f66b50994442d2d40" group="com.squareup.okio"/>
-         <trusted-key id="dc98224c6421a7a5bb87f346ed2378cd09a08cde" group="org.fusesource.jansi" name="jansi" version="2.4.0"/>
+         <trusted-key id="dc98224c6421a7a5bb87f346ed2378cd09a08cde">
+            <trusting group="org.fusesource.jansi" name="jansi" version="2.4.0"/>
+            <trusting group="org.jline"/>
+         </trusted-key>
          <trusted-key id="df93a4edfe686d687cc4b9fcb55f59562d5321ef" group="com.google.protobuf"/>
          <trusted-key id="e2acb037933cdeaab7bf77d49a2c7a98e457c53d">
             <trusting group="io.micrometer" name="micrometer-bom"/>
@@ -247,6 +262,7 @@
          <trusted-key id="ebb4a00ddefb45874c6984d3fdc09e28df98a023" group="io.grpc"/>
          <trusted-key id="ec86f41279f2ec8ffd2f54906ccc36cc6c69fc17" group="com.google" name="google" version="5"/>
          <trusted-key id="ee0ca873074092f806f59b65d364abaa39a47320" group="com.google.errorprone"/>
+         <trusted-key id="ef6ad6684034b0cb67a9b5714406b84c1661dcd1" group="io.r2dbc" name="r2dbc-bom" version="Arabba-SR9"/>
          <trusted-key id="f046369b06b761ac86d9849f71b329993bffcfdd">
             <trusting group="org.graalvm.sdk" name="graal-sdk" version="22.3.0"/>
             <trusting group="^org[.]graalvm[.]buildtools($|([.].*))" regex="true"/>
@@ -524,6 +540,11 @@
       <component group="com.fasterxml" name="oss-parent" version="43">
          <artifact name="oss-parent-43.pom">
             <sha256 value="e5585cc1c37079b2e3817a8997945736f158831844d59d0e4d3a45b27611f926" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="com.fasterxml.jackson" name="jackson-base" version="2.13.4">
+         <artifact name="jackson-base-2.13.4.pom">
+            <sha256 value="98b08346fa922deb37afb02713d50a6c56848250374c64198153a3f9dcb79879" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="com.fasterxml.jackson" name="jackson-bom" version="2.12.4">
@@ -1145,6 +1166,7 @@
       <component group="com.google.protobuf" name="protobuf-bom" version="3.17.2">
          <artifact name="protobuf-bom-3.17.2.pom">
             <pgp value="696b6199a2a9d8c29ce78cc0d041cad2e452550f"/>
+            <sha256 value="f36e5bc0bc0e6b0151fa83b17cd94dcb5a6b8c9e1b1499dc086edca99e99b805" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="com.google.protobuf" name="protobuf-bom" version="3.20.1">
@@ -1581,6 +1603,11 @@
             <sha256 value="4e5f8301f2a76f405b344ca76283e8b7d6b232a47f0ceb13c3dbc47ec50611c5" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="io.grpc" name="grpc-bom" version="1.39.0">
+         <artifact name="grpc-bom-1.39.0.pom">
+            <sha256 value="7ea8dc4b3a7fb94c4fb26b51db91a1da9a91bd84bd13fa6cd6580ae600afdf3a" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
       <component group="io.grpc" name="grpc-bom" version="1.46.0">
          <artifact name="grpc-bom-1.46.0.pom">
             <sha256 value="33a5a3df51a77cd4bc16d0b52379cb0fcf7712a36491e3b60a30b4777d7034d6" origin="Generated by Gradle"/>
@@ -1895,6 +1922,11 @@
             <sha256 value="2d8b55a8feaa63b1c577bca8d09ff7fad9c9f26c1626ae7934fa2a48e7864bfe" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="io.micronaut.aot" name="io.micronaut.aot.gradle.plugin" version="3.6.5">
+         <artifact name="io.micronaut.aot.gradle.plugin-3.6.5.pom">
+            <sha256 value="1247b42a4f644ad317ce195a446a2b31babec13a5f1f5513638c2fa82401391c" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
       <component group="io.micronaut.aot" name="micronaut-aot-api" version="1.1.0">
          <artifact name="micronaut-aot-api-1.1.0.jar">
             <sha256 value="476a63f4c5d2d7f1b57af83dbcc031fac31855cabeee04a432e67c8d6e938c6a" origin="Generated by Gradle"/>
@@ -1930,6 +1962,11 @@
       <component group="io.micronaut.application" name="io.micronaut.application.gradle.plugin" version="3.4.1">
          <artifact name="io.micronaut.application.gradle.plugin-3.4.1.pom">
             <sha256 value="716a96c79506a17d349a47872809fbddc3666abe97e8f36afa730fecd42fad5d" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="io.micronaut.application" name="io.micronaut.application.gradle.plugin" version="3.6.5">
+         <artifact name="io.micronaut.application.gradle.plugin-3.6.5.pom">
+            <sha256 value="a76cf81373866f6db21ee3d396ea0a76b407a5842a19dda86e34086ad8b0ba65" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
       <component group="io.micronaut.aws" name="micronaut-aws-bom" version="3.5.0">
@@ -1988,6 +2025,14 @@
             <sha256 value="0b9d80c83eef0f4b14c0e417ce0ab82427edcc88d3e86d55ae440d4b4ffd1938" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
+      <component group="io.micronaut.gradle" name="micronaut-aot-plugin" version="3.6.5">
+         <artifact name="micronaut-aot-plugin-3.6.5.jar">
+            <sha256 value="758a69bd86b7c49729bba754597becb73f8a914ada804c6e0b052b7d5626329a" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-aot-plugin-3.6.5.module">
+            <sha256 value="bba3d44ac41841de200bde9ff198795cab4dc26bc9dac26e774d20043cf9ef01" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
       <component group="io.micronaut.gradle" name="micronaut-docker-plugin" version="3.4.1">
          <artifact name="micronaut-docker-plugin-3.4.1.jar">
             <sha256 value="e82feba23a7ba98e029611115cca25cb08ad04d8f7dc0bcc6947b733c64f190e" origin="Generated by Gradle"/>
@@ -2002,6 +2047,14 @@
          </artifact>
          <artifact name="micronaut-docker-plugin-3.6.4.module">
             <sha256 value="7f9a12ca7c51833e6c4940af2369bb91f2574d5651e91fb2ede64db6973af08c" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
+      <component group="io.micronaut.gradle" name="micronaut-docker-plugin" version="3.6.5">
+         <artifact name="micronaut-docker-plugin-3.6.5.jar">
+            <sha256 value="6376062ce6f1146aa4c39cc636f1fa5ea6104ccbcd278305f97729b871d0eb97" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-docker-plugin-3.6.5.module">
+            <sha256 value="977e685ef0716fa08bf7a95a82dfb2d81bcff14d83401081193b0974f4be7fcb" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
       <component group="io.micronaut.gradle" name="micronaut-graalvm-plugin" version="3.4.1">
@@ -2020,6 +2073,14 @@
             <sha256 value="3839316620eeeccfa4d4b5375ad35085c221a74fb661021f122cc29000bb3160" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
+      <component group="io.micronaut.gradle" name="micronaut-graalvm-plugin" version="3.6.5">
+         <artifact name="micronaut-graalvm-plugin-3.6.5.jar">
+            <sha256 value="8fba00f17f3c4a7e99392dc8f4b60043aa065ea3db14766c40ea0078a08001cd" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-graalvm-plugin-3.6.5.module">
+            <sha256 value="f11c0486961d249ad1a5d376cebd4eea55017fd2053105a194d6b2047bbb124d" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
       <component group="io.micronaut.gradle" name="micronaut-gradle-plugin" version="3.4.1">
          <artifact name="micronaut-gradle-plugin-3.4.1.jar">
             <sha256 value="d736f407f8dbf5127d3d5bdecfb3bd3c012d4074016ddd7e406cfcbcae29fcfb" origin="Generated by Gradle"/>
@@ -2034,6 +2095,14 @@
          </artifact>
          <artifact name="micronaut-gradle-plugin-3.6.4.module">
             <sha256 value="c10f9df82b2406bcc2f7f861cb7fd740b1fa47293d38781702cb5712efb3e67d" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
+      <component group="io.micronaut.gradle" name="micronaut-gradle-plugin" version="3.6.5">
+         <artifact name="micronaut-gradle-plugin-3.6.5.jar">
+            <sha256 value="1580c760d31890d9b6279f41592375d2cf65346143ddc458cb5c4900f69da624" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-gradle-plugin-3.6.5.module">
+            <sha256 value="fcfb384c779aecded96b29bdea9425d8a752814ab1432606d98efac94dac664c" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
       <component group="io.micronaut.gradle" name="micronaut-minimal-plugin" version="3.4.1">
@@ -2052,12 +2121,28 @@
             <sha256 value="faaf0adbcfb4a93c6f6bf607e38ecb44c55603230440e2ca663a8fda028193fb" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
+      <component group="io.micronaut.gradle" name="micronaut-minimal-plugin" version="3.6.5">
+         <artifact name="micronaut-minimal-plugin-3.6.5.jar">
+            <sha256 value="62d7c4b2cae5803bfe2ff9bedc6b48fd9779826fed4ea9f86f2257f2000cfe09" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-minimal-plugin-3.6.5.module">
+            <sha256 value="6eefeb8018b6e4df0e4a28724bcde592798c2193f307e8564f6709516da4b18e" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
       <component group="io.micronaut.gradle" name="micronaut-test-resources-plugin" version="3.6.4">
          <artifact name="micronaut-test-resources-plugin-3.6.4.jar">
             <sha256 value="32679b61c489128aaa6b1374d66bc4c9b9b4e63ac0048e9e6e441d13629225bc" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
          <artifact name="micronaut-test-resources-plugin-3.6.4.module">
             <sha256 value="9aa72aa6a91aa77bc94388c111736aad42bf165316081243b5e2bc31c570043f" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
+      <component group="io.micronaut.gradle" name="micronaut-test-resources-plugin" version="3.6.5">
+         <artifact name="micronaut-test-resources-plugin-3.6.5.jar">
+            <sha256 value="f144c9f687a609e22826b37f3f0ea7a8ceefe8c65cf234fb96678808933769db" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="micronaut-test-resources-plugin-3.6.5.module">
+            <sha256 value="023067b9489def4de89cf511b570f65f501a24bc882777c629456d23dc5af0ff" origin="Generated by Gradle because artifact wasn't signed"/>
          </artifact>
       </component>
       <component group="io.micronaut.groovy" name="micronaut-groovy-bom" version="3.1.0">
@@ -2395,6 +2480,12 @@
             <pgp value="ef6ad6684034b0cb67a9b5714406b84c1661dcd1"/>
          </artifact>
       </component>
+      <component group="io.r2dbc" name="r2dbc-bom" version="Arabba-SR9">
+         <artifact name="r2dbc-bom-Arabba-SR9.pom">
+            <pgp value="ef6ad6684034b0cb67a9b5714406b84c1661dcd1"/>
+            <sha256 value="a968473ac67c5af92b0a37decc835d07d02eac1aed82260112563e5835f3c612" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
       <component group="io.rest-assured" name="rest-assured-bom" version="5.2.0">
          <artifact name="rest-assured-bom-5.2.0.pom">
             <pgp value="07e20f0103d9dfc697c490d0368557390486f2c5"/>
@@ -2537,6 +2628,22 @@
             <sha256 value="5fe81b0255978f24616d37b10608b79498a5f3073e1d9b2038d8736a831f2608" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="net.jcip" name="jcip-annotations" version="1.0">
+         <artifact name="jcip-annotations-1.0.jar">
+            <sha256 value="be5805392060c71474bf6c9a67a099471274d30b83eef84bfc4e0889a4f1dcc0" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+         <artifact name="jcip-annotations-1.0.pom">
+            <sha256 value="5c19e6848cc550a95664fb082304bc5f9fcf7b672faf03af1635f0e93c268177" origin="Generated by Gradle because artifact wasn't signed"/>
+         </artifact>
+      </component>
+      <component group="net.jpountz.lz4" name="lz4" version="1.3.0">
+         <artifact name="lz4-1.3.0.jar">
+            <sha256 value="b877a4d4a3a0140486d3d0f83d9058e7c0ff6ca80b00d2f7b77145935b385b56" origin="Generated by Gradle because a key couldn't be downloaded"/>
+         </artifact>
+         <artifact name="lz4-1.3.0.pom">
+            <sha256 value="687150631ed9dc0c042091e12ceea29c6b8560d7973c102cf936b428d1db7ce8" origin="Generated by Gradle because a key couldn't be downloaded"/>
+         </artifact>
+      </component>
       <component group="net.sf.jopt-simple" name="jopt-simple" version="4.6">
          <artifact name="jopt-simple-4.6.jar">
             <sha256 value="3fcfbe3203c2ea521bf7640484fd35d6303186ea2e08e72f032d640ca067ffda" origin="Generated by Gradle"/>
@@ -2571,6 +2678,11 @@
       <component group="org.apache" name="apache" version="23">
          <artifact name="apache-23.pom">
             <sha256 value="bc10624e0623f36577fac5639ca2936d3240ed152fb6d8d533ab4d270543491c" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="org.apache" name="apache" version="27">
+         <artifact name="apache-27.pom">
+            <sha256 value="b2b0fc69e22a650c3892f1c366d77076f29575c6738df4c7a70a44844484cdf9" origin="Generated by Gradle because a key couldn't be downloaded"/>
          </artifact>
       </component>
       <component group="org.apache" name="apache" version="7">
@@ -2608,6 +2720,14 @@
             <sha256 value="c519f4d47bbf9cdfd0d011ec6854295fca81e5a09e38b85f96e26f76d80e5f88" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="org.apache.commons" name="commons-compress" version="1.22">
+         <artifact name="commons-compress-1.22.jar">
+            <sha256 value="53d04a0efc7223baecaa303bd5d298eb0600e6b82b4076f9cecd558b97ba760b" origin="Generated by Gradle because a key couldn't be downloaded"/>
+         </artifact>
+         <artifact name="commons-compress-1.22.pom">
+            <sha256 value="8d87c70724a4f1e03f9e04b9e25f538b00b4826dd4044e65e61525fbe3c5f3dd" origin="Generated by Gradle because a key couldn't be downloaded"/>
+         </artifact>
+      </component>
       <component group="org.apache.commons" name="commons-math3" version="3.2">
          <artifact name="commons-math3-3.2.jar">
             <sha256 value="6268a9a0ea3e769fc493a21446664c0ef668e48c93d126791f6f3f757978fee2" origin="Generated by Gradle"/>
@@ -2636,6 +2756,11 @@
          <artifact name="commons-parent-52.pom">
             <pgp value="b6e73d84ea4fcc47166087253faad2cd5ecbb314"/>
             <sha256 value="75dbe8f34e98e4c3ff42daae4a2f9eb4cbcd3b5f1047d54460ace906dbb4502e" origin="Generated by Gradle because a key couldn't be downloaded"/>
+         </artifact>
+      </component>
+      <component group="org.apache.commons" name="commons-parent" version="54">
+         <artifact name="commons-parent-54.pom">
+            <pgp value="2db4f1ef0fa761ecc4ea935c86fdc7e2a11262cb"/>
          </artifact>
       </component>
       <component group="org.apache.maven" name="maven-parent" version="33">
@@ -4493,6 +4618,9 @@
          <artifact name="junit-bom-5.7.2.module">
             <sha256 value="f3bceb1c59dd4f6993f4304dffa580172b8df65a76cd36fa4fd92c0578d28ad8" origin="Generated by Gradle"/>
          </artifact>
+         <artifact name="junit-bom-5.7.2.pom">
+            <sha256 value="cd14aaa869991f82021c585d570d31ff342bcba58bb44233b70193771b96487b" origin="Generated by Gradle"/>
+         </artifact>
       </component>
       <component group="org.junit" name="junit-bom" version="5.8.1">
          <artifact name="junit-bom-5.8.1.module">
@@ -4929,6 +5057,11 @@
             <sha256 value="fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="org.spockframework" name="spock-bom" version="2.0-groovy-3.0">
+         <artifact name="spock-bom-2.0-groovy-3.0.pom">
+            <sha256 value="c2cc0fe59606d5d8bd194a7eaa15581a7d9ab2b8e7b965d0f767a8a6aca0ba82" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
       <component group="org.spockframework" name="spock-bom" version="2.1-groovy-3.0">
          <artifact name="spock-bom-2.1-groovy-3.0.pom">
             <pgp value="76e94e8ff0ab5af3b6f8366972fefd1572eb75e1"/>
@@ -4943,6 +5076,7 @@
       <component group="org.testcontainers" name="testcontainers-bom" version="1.16.2">
          <artifact name="testcontainers-bom-1.16.2.pom">
             <pgp value="d022218dcc08aad6ef3af876b3de72e647d35161"/>
+            <sha256 value="4cdc10db524d5c7efdc7dac9fbfac58befb3741b9a765d99289f28843fb1c56e" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.testcontainers" name="testcontainers-bom" version="1.17.1">

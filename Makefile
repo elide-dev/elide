@@ -42,7 +42,7 @@ GRADLE_OPTS ?=
 GRADLE_ARGS ?= -Pversions.java.language=$(JVM)
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
-DEP_HASH_ALGO ?= pgp,sha256
+DEP_HASH_ALGO ?= sha256,pgp
 ARGS ?=
 
 ifeq ($(SAMPLES),yes)
@@ -52,7 +52,7 @@ BUILD_ARGS += -PbuildSamples=false
 endif
 
 ifeq ($(RELOCK),yes)
-BUILD_ARGS += --write-verification-metadata sha256,pgp --export-keys --write-locks
+BUILD_ARGS += --write-verification-metadata $(DEP_HASH_ALGO) --export-keys
 endif
 
 ifeq ($(CI),yes)
@@ -68,7 +68,7 @@ BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)
-BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true
+BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x testNativeImage

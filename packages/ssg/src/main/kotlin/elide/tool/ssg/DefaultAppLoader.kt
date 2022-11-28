@@ -14,13 +14,9 @@ import kotlinx.coroutines.reactive.awaitFirst
 import tools.elide.meta.AppManifest
 import tools.elide.meta.Endpoint
 import java.io.Closeable
-import java.io.File
-import java.net.JarURLConnection
 import java.net.URL
-import java.net.URLClassLoader
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import java.util.jar.Attributes
 
 /** Default [AppLoader] implementation, which works based on an isolated class-loader. */
 @Singleton public class DefaultAppLoader @Inject internal constructor (
@@ -42,66 +38,6 @@ import java.util.jar.Attributes
 
     /** Execute the provided [request] against the backing application, to produce a response or error. */
     suspend fun execute(request: HttpRequest<*>): HttpResponse<ByteArray>
-  }
-
-  /** Defines a local implementation of a JAR app loader. */
-  private inner class JARAppLoader(
-    private val target: URL,
-    private val path: String,
-    ): AppLoaderImpl, URLClassLoader(arrayOf(target)) {
-    // Whether we currently have an open JAR file.
-    private val loaded: AtomicBoolean = AtomicBoolean(false)
-
-    // JAR connection.
-    private val connection: AtomicReference<JarURLConnection> = AtomicReference(null)
-
-    // JAR file.
-    private val file: AtomicReference<File> = AtomicReference(null)
-
-    override fun prepare(info: LoadedAppInfo) {
-      require(!loaded.get()) {
-        "Cannot prepare an inner loader twice"
-      }
-      val subject = File(path)
-      if (subject.exists()) {
-        file.set(subject)
-      } else throw SSGCompilerError.IOError(
-        "Failed to locate JAR file at path '${subject.absolutePath}'"
-      )
-    }
-
-    @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun connect() {
-      connection.set(withContext(dispatcher) {
-        target.openConnection()
-      } as JarURLConnection)
-
-      loaded.set(true)
-    }
-
-    override fun close() {
-      if (loaded.get()) {
-        connection.set(null)
-        loaded.set(false)
-      }
-    }
-
-    override suspend fun classForName(qualifiedName: String?): Class<*>? {
-      return if (qualifiedName != null) {
-        loadClass(qualifiedName, true)
-      } else {
-        val main = connection.get().mainAttributes[Attributes.Name.MAIN_CLASS] as? String
-        if (!main.isNullOrBlank()) {
-          loadClass(main, true)
-        } else {
-          null
-        }
-      }
-    }
-
-    override suspend fun execute(request: HttpRequest<*>): HttpResponse<ByteArray> {
-      TODO("JAR-based request execution is not implemented yet.")
-    }
   }
 
   /** Defines a local implementation of an HTTP app loader. */
@@ -238,10 +174,7 @@ import java.util.jar.Attributes
       inner.set(HTTPAppLoader(httpClient))
     } else {
       logging.debug("Detected HTTP mode is inactive; validating target as file URL.")
-      require(url.protocol == "jar") {
-        "File mode requires a file path, but got \"${params.target}\""
-      }
-      inner.set(JARAppLoader(url, params.target))
+      TODO("JAR target mode is not implemented yet.")
     }
     require(!active.get()) {
       "Cannot prep the app loader while it is already active."

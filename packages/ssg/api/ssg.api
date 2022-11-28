@@ -1,0 +1,460 @@
+public final synthetic class elide/tool/ssg/$DefaultAppLoader$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultAppStaticCompiler$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultAppStaticReader$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultAppStaticWriter$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultDispatcherProvider$AcquireDispatcher0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultDispatcherProvider$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$DefaultRequestFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$FilesystemManifestReader$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/tool/ssg/$SiteCompiler$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/tool/ssg/AppLoader : java/io/Closeable, java/lang/AutoCloseable {
+	public abstract fun executeRequest (Lelide/tool/ssg/StaticFragmentSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun generateRequests (Lelide/tool/ssg/RequestFactory;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun prep (Lelide/tool/ssg/SiteCompilerParams;Ltools/elide/meta/AppManifest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun prep$suspendImpl (Lelide/tool/ssg/AppLoader;Lelide/tool/ssg/SiteCompilerParams;Ltools/elide/meta/AppManifest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun prepAsync (Lelide/tool/ssg/SiteCompilerParams;Ltools/elide/meta/AppManifest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tool/ssg/AppStaticCompiler : java/io/Closeable, java/lang/AutoCloseable {
+	public fun compileStaticSite (ILelide/tool/ssg/LoadedAppInfo;Lkotlin/sequences/Sequence;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun compileStaticSite$suspendImpl (Lelide/tool/ssg/AppStaticCompiler;ILelide/tool/ssg/LoadedAppInfo;Lkotlin/sequences/Sequence;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun compileStaticSiteAsync (ILelide/tool/ssg/LoadedAppInfo;Lkotlin/sequences/Sequence;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun prepare (Lelide/tool/ssg/SiteCompilerParams;Lelide/tool/ssg/LoadedAppInfo;Lelide/tool/ssg/AppLoader;)V
+}
+
+public abstract interface class elide/tool/ssg/AppStaticWriter : java/io/Closeable, java/lang/AutoCloseable {
+	public fun write (Lelide/tool/ssg/SiteCompilerParams;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun write$suspendImpl (Lelide/tool/ssg/AppStaticWriter;Lelide/tool/ssg/SiteCompilerParams;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun writeAsync (Lelide/tool/ssg/SiteCompilerParams;Lelide/tool/ssg/StaticSiteBuffer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tool/ssg/AppStaticWriter$FragmentOutputs {
+	public static final field Companion Lelide/tool/ssg/AppStaticWriter$FragmentOutputs$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getFragments ()Ljava/util/List;
+	public final fun getPath ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;Ljava/util/List;)Lelide/tool/ssg/AppStaticWriter$FragmentOutputs;
+}
+
+public final class elide/tool/ssg/AppStaticWriter$FragmentOutputs$Companion {
+	public final fun of (Ljava/lang/String;Ljava/util/List;)Lelide/tool/ssg/AppStaticWriter$FragmentOutputs;
+}
+
+public final class elide/tool/ssg/AppStaticWriter$FragmentWrite {
+	public static final field Companion Lelide/tool/ssg/AppStaticWriter$FragmentWrite$Companion;
+	public synthetic fun <init> (Lelide/tool/ssg/StaticFragment;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun failure (Lelide/tool/ssg/StaticFragment;Ljava/lang/String;Ljava/lang/Throwable;)Lelide/tool/ssg/AppStaticWriter$FragmentWrite;
+	public final fun getCompressed ()Ljava/lang/Long;
+	public final fun getErr ()Ljava/lang/Throwable;
+	public final fun getFragment ()Lelide/tool/ssg/StaticFragment;
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getSize ()Ljava/lang/Long;
+	public final fun getWriteResult ()Z
+	public fun hashCode ()I
+	public static final fun success (Lelide/tool/ssg/StaticFragment;Ljava/lang/String;JJ)Lelide/tool/ssg/AppStaticWriter$FragmentWrite;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/AppStaticWriter$FragmentWrite$Companion {
+	public final fun failure (Lelide/tool/ssg/StaticFragment;Ljava/lang/String;Ljava/lang/Throwable;)Lelide/tool/ssg/AppStaticWriter$FragmentWrite;
+	public final fun success (Lelide/tool/ssg/StaticFragment;Ljava/lang/String;JJ)Lelide/tool/ssg/AppStaticWriter$FragmentWrite;
+	public static synthetic fun success$default (Lelide/tool/ssg/AppStaticWriter$FragmentWrite$Companion;Lelide/tool/ssg/StaticFragment;Ljava/lang/String;JJILjava/lang/Object;)Lelide/tool/ssg/AppStaticWriter$FragmentWrite;
+}
+
+public final class elide/tool/ssg/DefaultAppLoader : elide/tool/ssg/AppLoader {
+	public fun close ()V
+	public fun executeRequest (Lelide/tool/ssg/StaticFragmentSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun generateRequests (Lelide/tool/ssg/RequestFactory;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun prepAsync (Lelide/tool/ssg/SiteCompilerParams;Ltools/elide/meta/AppManifest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tool/ssg/DefaultRequestFactory : elide/tool/ssg/RequestFactory {
+	public static final field defaultUserAgent Ljava/lang/String;
+	public static final field ssgSynthesizedHost Ljava/lang/String;
+	public fun <init> ()V
+	public fun create (Lelide/tool/ssg/StaticFragmentSpec;Lelide/tool/ssg/DetectedArtifact;)Lio/micronaut/http/HttpRequest;
+	public fun create (Ljava/net/URL;Ljava/lang/String;)Lio/micronaut/http/HttpRequest;
+	public fun create (Ltools/elide/meta/Endpoint;Ljava/lang/Class;)Lio/micronaut/http/HttpRequest;
+}
+
+public final class elide/tool/ssg/DetectedArtifact {
+	public fun <init> (Ljava/net/URL;Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/StaticContentReader$ArtifactType;)V
+	public final fun component1 ()Ljava/net/URL;
+	public final fun component2 ()Lio/micronaut/http/HttpRequest;
+	public final fun component3 ()Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public final fun copy (Ljava/net/URL;Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/StaticContentReader$ArtifactType;)Lelide/tool/ssg/DetectedArtifact;
+	public static synthetic fun copy$default (Lelide/tool/ssg/DetectedArtifact;Ljava/net/URL;Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/StaticContentReader$ArtifactType;ILjava/lang/Object;)Lelide/tool/ssg/DetectedArtifact;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRequest ()Lio/micronaut/http/HttpRequest;
+	public final fun getType ()Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public final fun getUrl ()Ljava/net/URL;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/LoadedAppInfo {
+	public fun <init> (Ljava/net/URL;Ltools/elide/meta/AppManifest;Lelide/tool/ssg/SiteCompilerParams;Z)V
+	public final fun component1 ()Ljava/net/URL;
+	public final fun component2 ()Ltools/elide/meta/AppManifest;
+	public final fun component3 ()Lelide/tool/ssg/SiteCompilerParams;
+	public final fun component4 ()Z
+	public final fun copy (Ljava/net/URL;Ltools/elide/meta/AppManifest;Lelide/tool/ssg/SiteCompilerParams;Z)Lelide/tool/ssg/LoadedAppInfo;
+	public static synthetic fun copy$default (Lelide/tool/ssg/LoadedAppInfo;Ljava/net/URL;Ltools/elide/meta/AppManifest;Lelide/tool/ssg/SiteCompilerParams;ZILjava/lang/Object;)Lelide/tool/ssg/LoadedAppInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEligible ()Z
+	public final fun getManifest ()Ltools/elide/meta/AppManifest;
+	public final fun getParams ()Lelide/tool/ssg/SiteCompilerParams;
+	public final fun getTarget ()Ljava/net/URL;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tool/ssg/ManifestReader : java/io/Closeable, java/lang/AutoCloseable {
+	public fun readManifest (Lelide/tool/ssg/SiteCompilerParams;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun readManifest (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun readManifest$suspendImpl (Lelide/tool/ssg/ManifestReader;Lelide/tool/ssg/SiteCompilerParams;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun readManifest$suspendImpl (Lelide/tool/ssg/ManifestReader;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun readManifestAsync (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tool/ssg/RequestFactory {
+	public abstract fun create (Lelide/tool/ssg/StaticFragmentSpec;Lelide/tool/ssg/DetectedArtifact;)Lio/micronaut/http/HttpRequest;
+	public abstract fun create (Ljava/net/URL;Ljava/lang/String;)Lio/micronaut/http/HttpRequest;
+	public abstract fun create (Ltools/elide/meta/Endpoint;Ljava/lang/Class;)Lio/micronaut/http/HttpRequest;
+}
+
+public abstract class elide/tool/ssg/SSGCompilerError : java/lang/Throwable {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getExitCode ()I
+}
+
+public final class elide/tool/ssg/SSGCompilerError$Generic : elide/tool/ssg/SSGCompilerError {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/tool/ssg/SSGCompilerError$IOError : elide/tool/ssg/SSGCompilerError {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/tool/ssg/SSGCompilerError$InvalidArgument : elide/tool/ssg/SSGCompilerError {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/tool/ssg/SSGCompilerError$OutputError : elide/tool/ssg/SSGCompilerError {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public abstract class elide/tool/ssg/SiteCompileResult {
+	public synthetic fun <init> (ZLelide/tool/ssg/SiteCompilerParams;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ZLelide/tool/ssg/SiteCompilerParams;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getExitCode ()I
+	public fun getParams ()Lelide/tool/ssg/SiteCompilerParams;
+	public final fun getSuccess ()Z
+}
+
+public final class elide/tool/ssg/SiteCompileResult$Failure : elide/tool/ssg/SiteCompileResult {
+	public fun <init> (Lelide/tool/ssg/SiteCompilerParams;Ljava/lang/Throwable;I)V
+	public final fun getErr ()Ljava/lang/Throwable;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompileResult$Success : elide/tool/ssg/SiteCompileResult {
+	public fun <init> (Lelide/tool/ssg/SiteCompilerParams;Lelide/tool/ssg/LoadedAppInfo;Ljava/lang/String;Lelide/tool/ssg/StaticSiteBuffer;)V
+	public final fun getAppInfo ()Lelide/tool/ssg/LoadedAppInfo;
+	public final fun getBuffer ()Lelide/tool/ssg/StaticSiteBuffer;
+	public final fun getOutput ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompiler : java/lang/Runnable {
+	public static final field Companion Lelide/tool/ssg/SiteCompiler$Companion;
+	public static final fun compile (Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;Lelide/runtime/Logger;Lkotlinx/coroutines/CoroutineDispatcher;)Lelide/tool/ssg/SiteCompileResult;
+	public static final fun exec$ssg ([Ljava/lang/String;)I
+	public static final fun main ([Ljava/lang/String;)V
+	public fun run ()V
+	public static final fun version ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompiler$Companion {
+	public final fun compile (Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;Lelide/runtime/Logger;Lkotlinx/coroutines/CoroutineDispatcher;)Lelide/tool/ssg/SiteCompileResult;
+	public static synthetic fun compile$default (Lelide/tool/ssg/SiteCompiler$Companion;Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;Lelide/runtime/Logger;Lkotlinx/coroutines/CoroutineDispatcher;ILjava/lang/Object;)Lelide/tool/ssg/SiteCompileResult;
+	public final fun main ([Ljava/lang/String;)V
+	public final fun version ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/tool/ssg/SiteCompilerParams$Output;
+	public final fun component4 ()Lelide/tool/ssg/SiteCompilerParams$Options;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;)Lelide/tool/ssg/SiteCompilerParams;
+	public static synthetic fun copy$default (Lelide/tool/ssg/SiteCompilerParams;Ljava/lang/String;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$Output;Lelide/tool/ssg/SiteCompilerParams$Options;ILjava/lang/Object;)Lelide/tool/ssg/SiteCompilerParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getManifest ()Ljava/lang/String;
+	public final fun getOptions ()Lelide/tool/ssg/SiteCompilerParams$Options;
+	public final fun getOutput ()Lelide/tool/ssg/SiteCompilerParams$Output;
+	public final fun getTarget ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$Options {
+	public static final field Companion Lelide/tool/ssg/SiteCompilerParams$Options$Companion;
+	public static final field DEFAULT_REQUEST_TIMEOUT I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;Z)V
+	public synthetic fun <init> (Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/util/SortedSet;
+	public final fun component8 ()I
+	public final fun component9 ()Ljava/util/Set;
+	public final fun copy (Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;Z)Lelide/tool/ssg/SiteCompilerParams$Options;
+	public static synthetic fun copy$default (Lelide/tool/ssg/SiteCompilerParams$Options;Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;ZILjava/lang/Object;)Lelide/tool/ssg/SiteCompilerParams$Options;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClasspath ()Ljava/lang/String;
+	public final fun getCrawl ()Z
+	public final fun getDebug ()Z
+	public final fun getExtraOrigins ()Ljava/util/SortedSet;
+	public final fun getHttpMode ()Z
+	public final fun getIgnoreCertErrors ()Z
+	public final fun getPrecompress ()Ljava/util/Set;
+	public final fun getPretty ()Z
+	public final fun getTimeout ()I
+	public final fun getVerbose ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$Options$Companion {
+	public final fun getDEFAULTS ()Lelide/tool/ssg/SiteCompilerParams$Options;
+}
+
+public abstract class elide/tool/ssg/SiteCompilerParams$Output {
+	public synthetic fun <init> (Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$OutputMode;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun fromParams$ssg (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$Output;
+	public final fun getMode ()Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+	public fun getPath ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$Output$Directory : elide/tool/ssg/SiteCompilerParams$Output {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$Output$Directory;
+	public static synthetic fun copy$default (Lelide/tool/ssg/SiteCompilerParams$Output$Directory;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/ssg/SiteCompilerParams$Output$Directory;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$Output$File : elide/tool/ssg/SiteCompilerParams$Output {
+	public fun <init> (Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$OutputFormat;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$OutputFormat;Z)Lelide/tool/ssg/SiteCompilerParams$Output$File;
+	public static synthetic fun copy$default (Lelide/tool/ssg/SiteCompilerParams$Output$File;Ljava/lang/String;Lelide/tool/ssg/SiteCompilerParams$OutputFormat;ZILjava/lang/Object;)Lelide/tool/ssg/SiteCompilerParams$Output$File;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCompressed ()Z
+	public final fun getFormat ()Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$OutputFormat : java/lang/Enum {
+	public static final field TAR Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public static final field ZIP Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public static fun values ()[Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+}
+
+public final class elide/tool/ssg/SiteCompilerParams$OutputMode : java/lang/Enum {
+	public static final field DIRECTORY Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+	public static final field FILE Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+	public static fun values ()[Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+}
+
+public abstract interface class elide/tool/ssg/StaticContentReader {
+	public abstract fun consume (Lio/micronaut/http/HttpResponse;)Lkotlin/Pair;
+	public abstract fun parse (Lio/micronaut/http/HttpRequest;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;)Ljava/util/List;
+}
+
+public final class elide/tool/ssg/StaticContentReader$ArtifactType : java/lang/Enum {
+	public static final field FONT Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static final field IMAGE Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static final field SCRIPT Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static final field STYLE Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static final field TEXT Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static fun values ()[Lelide/tool/ssg/StaticContentReader$ArtifactType;
+}
+
+public abstract class elide/tool/ssg/StaticFragment {
+	public static final field Companion Lelide/tool/ssg/StaticFragment$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/Endpoint;Ljava/net/URL;Ltools/elide/meta/EndpointType;Ltools/elide/meta/Endpoint;Lio/micronaut/http/HttpRequest;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ltools/elide/meta/Endpoint;Ljava/net/URL;Ltools/elide/meta/EndpointType;Ltools/elide/meta/Endpoint;Lio/micronaut/http/HttpRequest;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun basePath ()Ljava/lang/String;
+	public abstract fun endpointType ()Ltools/elide/meta/EndpointType;
+	public static final fun fromDetectedArtifact (Lelide/tool/ssg/DetectedArtifact;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)Lelide/tool/ssg/StaticFragment;
+	public static final fun fromEndpoint (Lelide/tool/ssg/StaticFragmentSpec;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)Lelide/tool/ssg/StaticFragment$EndpointFragment;
+	public final fun getContent ()Ljava/nio/ByteBuffer;
+	public final fun getDiscovered ()Ljava/util/List;
+	public final fun getRequest ()Lio/micronaut/http/HttpRequest;
+	public final fun getResponse ()Lio/micronaut/http/HttpResponse;
+	public abstract fun produces ()Ljava/util/Set;
+	public abstract fun tailPath ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/StaticFragment$Companion {
+	public final fun fromDetectedArtifact (Lelide/tool/ssg/DetectedArtifact;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)Lelide/tool/ssg/StaticFragment;
+	public final fun fromEndpoint (Lelide/tool/ssg/StaticFragmentSpec;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)Lelide/tool/ssg/StaticFragment$EndpointFragment;
+}
+
+public final class elide/tool/ssg/StaticFragment$EndpointFragment : elide/tool/ssg/StaticFragment {
+	public fun <init> (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)V
+	public fun basePath ()Ljava/lang/String;
+	public fun endpointType ()Ltools/elide/meta/EndpointType;
+	public synthetic fun produces ()Ljava/util/Set;
+	public fun produces ()Ljava/util/SortedSet;
+	public fun tailPath ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/StaticFragment$SynthesizedFragment : elide/tool/ssg/StaticFragment {
+	public fun <init> (Ljava/net/URL;Ltools/elide/meta/EndpointType;Lio/micronaut/http/HttpRequest;Lio/micronaut/http/HttpResponse;Ljava/nio/ByteBuffer;Ljava/util/List;)V
+	public fun basePath ()Ljava/lang/String;
+	public fun endpointType ()Ltools/elide/meta/EndpointType;
+	public fun produces ()Ljava/util/Set;
+	public fun tailPath ()Ljava/lang/String;
+}
+
+public abstract class elide/tool/ssg/StaticFragmentSpec {
+	public static final field Companion Lelide/tool/ssg/StaticFragmentSpec$Companion;
+	public synthetic fun <init> (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun endpoint ()Ltools/elide/meta/Endpoint;
+	public static final fun fromDetectedArtifact (Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;)Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;
+	public static final fun fromEndpoint (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;)Lelide/tool/ssg/StaticFragmentSpec$EndpointSpec;
+	public abstract fun request ()Lio/micronaut/http/HttpRequest;
+}
+
+public final class elide/tool/ssg/StaticFragmentSpec$Companion {
+	public final fun fromDetectedArtifact (Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;)Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;
+	public final fun fromEndpoint (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;)Lelide/tool/ssg/StaticFragmentSpec$EndpointSpec;
+}
+
+public final class elide/tool/ssg/StaticFragmentSpec$EndpointSpec : elide/tool/ssg/StaticFragmentSpec {
+	public fun <init> (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;)V
+	public final fun copy (Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;)Lelide/tool/ssg/StaticFragmentSpec$EndpointSpec;
+	public static synthetic fun copy$default (Lelide/tool/ssg/StaticFragmentSpec$EndpointSpec;Lio/micronaut/http/HttpRequest;Ltools/elide/meta/Endpoint;ILjava/lang/Object;)Lelide/tool/ssg/StaticFragmentSpec$EndpointSpec;
+	public fun endpoint ()Ltools/elide/meta/Endpoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun request ()Lio/micronaut/http/HttpRequest;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/StaticFragmentSpec$SynthesizedSpec : elide/tool/ssg/StaticFragmentSpec {
+	public fun <init> (Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;Lelide/tool/ssg/StaticContentReader$ArtifactType;)V
+	public synthetic fun <init> (Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;Lelide/tool/ssg/StaticContentReader$ArtifactType;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;Lelide/tool/ssg/StaticContentReader$ArtifactType;)Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;
+	public static synthetic fun copy$default (Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/DetectedArtifact;Lelide/tool/ssg/StaticContentReader$ArtifactType;ILjava/lang/Object;)Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;
+	public fun endpoint ()Ltools/elide/meta/Endpoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromRequest$ssg (Lio/micronaut/http/HttpRequest;Lio/micronaut/http/HttpRequest;Lelide/tool/ssg/StaticContentReader$ArtifactType;)Lelide/tool/ssg/StaticFragmentSpec$SynthesizedSpec;
+	public fun hashCode ()I
+	public fun request ()Lio/micronaut/http/HttpRequest;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ssg/StaticSiteBuffer : java/io/Closeable, java/lang/AutoCloseable {
+	public fun <init> ()V
+	public fun close ()V
+	public final fun consumeAsync (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun size ()I
+}
+
+public final class elide/tool/ssg/cfg/ElideSSGCompiler {
+	public static final field ELIDE_TOOL_VERSION Ljava/lang/String;
+	public static final field INSTANCE Lelide/tool/ssg/cfg/ElideSSGCompiler;
+}
+

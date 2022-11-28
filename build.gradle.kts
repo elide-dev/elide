@@ -91,7 +91,6 @@ apiValidation {
     "bundler",
     "bom",
     "proto",
-    "ssg",
     "processor",
     "reports",
   ).plus(

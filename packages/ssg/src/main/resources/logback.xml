@@ -9,13 +9,13 @@
     <logger name="io.micronaut.context.env" level="off"/>
     <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
 
-    <logger name="elide.tool.ssg.SiteCompiler" level="trace" />
-    <logger name="elide.tool.ssg.FilesystemManifestReader" level="trace" />
-    <logger name="elide.tool.ssg.DefaultAppLoader" level="trace" />
-    <logger name="elide.tool.ssg.DefaultRequestFactory" level="trace" />
-    <logger name="elide.tool.ssg.DefaultAppStaticCompiler" level="trace" />
-    <logger name="elide.tool.ssg.DefaultAppStaticWriter" level="trace" />
-    <logger name="elide.tool.ssg.DefaultAppStaticReader" level="trace" />
+    <logger name="elide.tool.ssg.SiteCompiler" level="info" />
+    <logger name="elide.tool.ssg.FilesystemManifestReader" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppLoader" level="info" />
+    <logger name="elide.tool.ssg.DefaultRequestFactory" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticCompiler" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticWriter" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticReader" level="info" />
 
     <!-- Root Logger -->
     <root level="warn">

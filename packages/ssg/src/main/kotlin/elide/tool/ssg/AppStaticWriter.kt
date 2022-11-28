@@ -79,7 +79,7 @@ public interface AppStaticWriter : Closeable, AutoCloseable {
         (writeResult == other.writeResult) &&
         (path == other.path) &&
         (size == other.size) &&
-        (compressed != other.compressed)
+        (compressed == other.compressed)
       )
     }
 

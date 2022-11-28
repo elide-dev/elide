@@ -15,8 +15,8 @@ plugins {
   id("dev.elide.build.docker")
   id("dev.elide.buildtools.plugin")
   id("dev.elide.build.native.app")
+  id("com.google.devtools.ksp")
   alias(libs.plugins.jib)
-  alias(libs.plugins.ksp)
 }
 
 group = "dev.elide.site.docs"
@@ -30,6 +30,10 @@ elide {
   }
 
   server {
+    ssg {
+      enable()
+    }
+
     ssr(EmbeddedScriptLanguage.JS) {
       bundle(project(":site:docs:node"))
     }
@@ -134,6 +138,10 @@ tasks.shadowJar {
 
 artifacts {
   add("shadowAppJar", tasks.shadowJar)
+}
+
+tasks.named("apiCheck").configure {
+  onlyIf { false }
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {

@@ -10,7 +10,7 @@ plugins {
   id("dev.elide.build.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
-  alias(libs.plugins.ksp)
+  id("com.google.devtools.ksp")
 }
 
 group = "dev.elide.samples"

@@ -55,6 +55,7 @@ public abstract class ElidePlugin : Plugin<Project> {
             if (kotlinPluginFound && shouldConfig) {
                 // if there is a server target configuration, install base server libs.
                 if (elide.hasServerTarget()) project.installServerLibs()
+                else project.installCommonLibs()
 
                 // if we are configuring a JVM project, install the Java Platform library, which will make sure lib
                 // versions remain consistent throughout.

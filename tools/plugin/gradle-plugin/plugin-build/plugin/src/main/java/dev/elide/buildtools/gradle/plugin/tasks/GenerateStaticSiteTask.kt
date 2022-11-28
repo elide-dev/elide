@@ -27,7 +27,7 @@ public abstract class GenerateStaticSiteTask : DefaultTask() {
         // Determine whether the SSG compiler can run, and if so, install it.
         @JvmStatic private fun installIfEligible(extension: ElideExtension, project: Project) {
             if (!extension.server.hasSsgConfig()) {
-                return  // no need to subscribe
+                return // no need to subscribe
             }
             project.pluginManager.withPlugin("com.google.devtools.ksp") {
                 val producer = project.tasks.findByName(KSP_TASK)

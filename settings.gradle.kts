@@ -91,9 +91,12 @@ if (buildPlugins == "true") {
   )
 }
 
+include(
+  ":samples:server:hellocss",
+)
+
 if (buildSamples == "true") {
   include(
-    ":samples:server:hellocss",
     ":samples:server:helloworld",
     ":samples:fullstack:basic:frontend",
     ":samples:fullstack:basic:server",

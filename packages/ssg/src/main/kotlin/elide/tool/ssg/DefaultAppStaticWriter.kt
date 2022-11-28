@@ -25,6 +25,20 @@ import kotlin.io.path.Path
 
 /** Default writer implementation for static sites. */
 @Singleton internal class DefaultAppStaticWriter : AppStaticWriter {
+  companion object {
+    /** @return Relative path from input. */
+    @JvmStatic private fun relativize(path: Path): Path {
+      return if (path.startsWith("/")) {
+        Path(path.toString().drop(1))
+      } else {
+        path
+      }
+    }
+
+    /** @return Relative path from input. */
+    @JvmStatic private fun relativize(path: String): Path = relativize(Path(path))
+  }
+
   /** Defines types of output writer implementations. */
   private sealed interface OutputWriter : Closeable, AutoCloseable {
     /** Prepare the provided [path] as an output target. */
@@ -51,12 +65,7 @@ import kotlin.io.path.Path
 
     override suspend fun ensureDirectory(base: Path, path: Path): Unit = ioOperation("ensureDirectory") {
       // relativize archive file path
-      val relativePath = if (path.startsWith("/")) {
-        Path(path.toString().drop(1))
-      } else {
-        path
-      }
-
+      val relativePath = relativize(path)
       val resolved = base.resolve(relativePath)
       File(resolved.toAbsolutePath().toUri()).let {
         if (!it.parentFile.exists() && !it.parentFile.mkdirs()) {
@@ -131,14 +140,8 @@ import kotlin.io.path.Path
       val bytes = fragment.content.array()
       val pathString = path.toString()
 
-      // relativize archive file path
-      val relativePath = Path(if (pathString.startsWith("/")) {
-        pathString.drop(1)
-      } else {
-        pathString
-      })
-
-      // package, write, and close as archive entry
+      // relativize archive file path, then package, write, and close as archive entry
+      val relativePath = relativize(pathString)
       val entry = writeArchiveEntry(entryFromFile(relativePath.toString(), fragment)) {
         write(bytes)
       }
@@ -172,15 +175,7 @@ import kotlin.io.path.Path
     // Alternate constructor which loads from a file.
     constructor(file: File): this(
       file,
-      try {
-        TarArchiveOutputStream(file.outputStream())
-      } catch (err: IOException) {
-        logging.error("Failed to initialize tar archive writer", err)
-        throw SSGCompilerError.IOError("Cannot initialize Tar writer", err)
-      } catch (err: Throwable) {
-        logging.error("Failed to initialize tar archive writer", err)
-        throw SSGCompilerError.Generic(err)
-      }
+      TarArchiveOutputStream(file.outputStream()),
     )
 
     override fun entryFromFile(path: String, fragment: StaticFragment): TarArchiveEntry = TarArchiveEntry(
@@ -198,15 +193,7 @@ import kotlin.io.path.Path
     // Alternate constructor which loads from a file.
     constructor(file: File): this(
       file,
-      try {
-        ZipArchiveOutputStream(file.outputStream())
-      } catch (err: IOException) {
-        logging.error("Failed to initialize zip archive writer", err)
-        throw SSGCompilerError.IOError("Cannot initialize Zip writer", err)
-      } catch (err: Throwable) {
-        logging.error("Failed to initialize zip archive writer", err)
-        throw SSGCompilerError.Generic(err)
-      }
+      ZipArchiveOutputStream(file.outputStream()),
     )
 
     override fun entryFromFile(path: String, fragment: StaticFragment): ZipArchiveEntry = ZipArchiveEntry(
@@ -344,11 +331,7 @@ import kotlin.io.path.Path
       val jobs = buffer.consumeAsync { fragment ->
         // translate the fragment into a file path
         val path = Path(filepathForFragment(fragment))
-        val relativePath = if (path.toString().startsWith("/")) {
-          Path(path.toString().drop(1))
-        } else {
-          path
-        }
+        val relativePath = relativize(path)
 
         // ensure that any parent directories exist, as applicable.
         ioOperation("ensureDirectory") {

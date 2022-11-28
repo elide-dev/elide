@@ -60,6 +60,39 @@ public interface AppStaticWriter : Closeable, AutoCloseable {
       public fun failure(fragment: StaticFragment, path: String, err: Throwable): FragmentWrite =
         FragmentWrite(fragment, false, path, null, null, err)
     }
+
+    override fun toString(): String {
+      val successLabel = if (writeResult) {
+        "Success"
+      } else {
+        "Failure"
+      }
+      return "FragmentWrite($successLabel, path = $path, size = $size, compressed = $compressed)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+      if (this === other) return true
+      if (javaClass != other?.javaClass) return false
+      other as FragmentWrite
+      return (
+        (fragment == other.fragment) &&
+        (writeResult == other.writeResult) &&
+        (path == other.path) &&
+        (size == other.size) &&
+        (compressed != other.compressed)
+      )
+    }
+
+    override fun hashCode(): Int {
+      var result = fragment.hashCode()
+      result = 31 * result + writeResult.hashCode()
+      result = 31 * result + path.hashCode()
+      result = 31 * result + (size?.hashCode() ?: 0)
+      result = 31 * result + (compressed?.hashCode() ?: 0)
+      return result
+    }
+
+
   }
 
   /**

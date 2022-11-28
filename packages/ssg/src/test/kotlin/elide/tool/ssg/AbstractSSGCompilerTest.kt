@@ -27,11 +27,6 @@ import kotlin.test.assertNotNull
 @OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("unused", "MemberVisibilityCanBePrivate", "SameParameterValue")
 abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
-  companion object {
-    const val helloWorldManifest = "classpath:helloworld.manifest.pb"
-    const val emptyManifest = "classpath:empty.manifest.pb"
-  }
-
   // Test logger.
   private val logging: Logger = Logging.named("ssg-test")
 

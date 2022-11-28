@@ -9,8 +9,23 @@ import java.nio.ByteBuffer
 
 /** Baseline utilities that don't boot the SSG compiler. */
 abstract class AbstractSSGTest {
+  companion object {
+    const val helloWorldManifest = "classpath:helloworld.manifest.pb"
+    const val emptyManifest = "classpath:empty.manifest.pb"
+  }
+
   // SSG request factory implementation.
   @Inject protected lateinit var requestFactory: RequestFactory
+
+  // Default manifest reader.
+  @Inject protected lateinit var manifestReader: ManifestReader
+
+  /** @return Manifest data from path at [target]. */
+  protected suspend fun manifest(
+    target: String = helloWorldManifest,
+  ): AppManifest {
+    return manifestReader.readManifest(target)
+  }
 
   // Make a fake endpoint payload based on the provided inputs.
   protected fun endpoint(

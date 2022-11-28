@@ -12,17 +12,21 @@ public sealed class SiteCompileResult(
   public open val exitCode: Int = if (success) { 0 } else { -1 },
 ) {
   /** Successful compilation response payload. */
-  public data class Success(
-    override val params: SiteCompilerParams,
+  public class Success(
+    params: SiteCompilerParams,
     public val appInfo: LoadedAppInfo,
     public val output: String,
     public val buffer: StaticSiteBuffer,
-  ) : SiteCompileResult(true, params)
+  ) : SiteCompileResult(true, params) {
+    override fun toString(): String = "CompileResult(Success)"
+  }
 
   /** Compilation failure response. */
-  public data class Failure(
-    override val params: SiteCompilerParams,
+  public class Failure(
+    params: SiteCompilerParams,
     public val err: Throwable,
-    override val exitCode: Int,
-  ) : SiteCompileResult(false, params, exitCode)
+    exitCode: Int,
+  ) : SiteCompileResult(false, params, exitCode) {
+    override fun toString(): String = "CompileResult(Failure, exitCode = $exitCode)"
+  }
 }

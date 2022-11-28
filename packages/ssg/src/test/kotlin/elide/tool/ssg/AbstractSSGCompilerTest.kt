@@ -112,6 +112,7 @@ abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
       SiteCompilerParams.OutputFormat.ZIP -> "zip"
       SiteCompilerParams.OutputFormat.TAR -> "tar"
     },
+    format = format,
   ) as SiteCompilerParams.Output.File
 
   // Return the embedded server under test.

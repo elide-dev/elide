@@ -45,14 +45,9 @@ import kotlin.io.path.Path
 
   /** Writes outputs to a directory. */
   private inner class DirectoryOutputWriter(private val parent: File): OutputWriter {
-    override suspend fun prepare(path: Path): Unit = when {
-      !parent.exists() -> ioOperation("createOutputTree") {
-        if (!parent.mkdirs()) throw IOException("Failed to create output directory tree '$path'")
-      }
-      !parent.isDirectory -> throw SSGCompilerError.IOError("Output path is not a directory: $path")
-      !parent.canWrite() -> throw SSGCompilerError.IOError("Output path is not writable: $path")
-      else -> Unit
-    }
+    override suspend fun prepare(path: Path): Unit = if (!parent.exists()) ioOperation("createOutputTree") {
+      if (!parent.mkdirs()) throw IOException("Failed to create output directory tree '$path'")
+    } else { /* no-op */ }
 
     override suspend fun ensureDirectory(base: Path, path: Path): Unit = ioOperation("ensureDirectory") {
       // relativize archive file path

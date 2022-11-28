@@ -250,8 +250,6 @@ import java.util.jar.Attributes
       // prep interpreted app info, then pre-warm/connect/load app
       loadAppIfNeeded(LoadedAppInfo(
         target = url,
-        httpMode = params.options.httpMode,
-        classpath = params.options.classpath,
         manifest = app,
         params = params,
         eligible = appEligibleForSSG(app),

@@ -39,9 +39,6 @@ public sealed class StaticFragment(
   /** @return Types known to be produced by this endpoint, as simple MIME-type strings. */
   public abstract fun produces(): Set<String>
 
-  /** @return Types known to be consumed by this endpoint, as simple MIME-type strings. */
-  public abstract fun consumes(): Set<String>
-
   /** @return Type of endpoint specified by this structure. */
   public abstract fun endpointType(): EndpointType
 
@@ -64,8 +61,6 @@ public sealed class StaticFragment(
     override fun tailPath(): String? = endpoint.tail.ifBlank { null }
 
     override fun produces(): SortedSet<String> = endpoint.producesList.toSortedSet()
-
-    override fun consumes(): SortedSet<String> = endpoint.consumesList.toSortedSet()
 
     override fun endpointType(): EndpointType = endpoint.type
   }
@@ -94,18 +89,15 @@ public sealed class StaticFragment(
     }
 
     override fun produces(): Set<String> = when (expectedType) {
+      EndpointType.PAGE -> sortedSetOf("text/html")
+      EndpointType.API -> sortedSetOf("application/json")
       EndpointType.ASSET -> when {
         explicitUrl.path.endsWith(".css") -> sortedSetOf("text/css")
         explicitUrl.path.endsWith(".js") -> sortedSetOf("application/javascript")
         else -> emptySet()
       }
-
-      EndpointType.PAGE -> sortedSetOf("text/html")
-      EndpointType.API -> sortedSetOf("application/json")
       else -> emptySet()
     }
-
-    override fun consumes(): SortedSet<String> = emptySet<String>().toSortedSet()
 
     override fun endpointType(): EndpointType = expectedType ?: EndpointType.ENDPOINT_TYPE_UNSPECIFIED
   }

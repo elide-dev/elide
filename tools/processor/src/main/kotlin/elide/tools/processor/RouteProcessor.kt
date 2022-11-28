@@ -1,5 +1,6 @@
 package elide.tools.processor
 
+import com.google.auto.service.AutoService
 import com.google.devtools.ksp.hasAnnotation
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
@@ -76,7 +77,8 @@ public class RouteProcessor(
    *
    * Builds an instance of [RouteProcessor].
    */
-  internal class RouteProcessorFactory : SymbolProcessorProvider {
+  @AutoService(SymbolProcessorProvider::class)
+  public class RouteProcessorFactory : SymbolProcessorProvider {
     /** @inheritDoc */
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
       return RouteProcessor(

@@ -6,6 +6,7 @@
 
 plugins {
   id("dev.elide.build.jvm")
+  id("com.google.devtools.ksp")
 }
 
 group = "dev.elide.tools"
@@ -29,6 +30,7 @@ kotlin {
 dependencies {
   // Core platform versions.
   api(project(":packages:proto"))
+  ksp(libs.autoService.ksp)
 
   // API Deps
   api(libs.jakarta.inject)
@@ -41,6 +43,7 @@ dependencies {
   // KSP
   implementation(libs.ksp)
   implementation(libs.ksp.api)
+  implementation(libs.google.auto.service)
   implementation(libs.kotlinx.atomicfu)
 
   // Kotlin

@@ -267,6 +267,7 @@ jobs:
       pull-requests: "write"
       statuses: "write"
       deployments: "write"
+      pages: "write"
 
     steps:
       - name: "Deploy Site: GitHub Pages"

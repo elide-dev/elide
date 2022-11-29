@@ -17,6 +17,10 @@ jobs:
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - name: Cache Gradle Caches
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # tag=v2
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
       - name: Run Gradle tasks
         run: ./gradlew preMerge --continue --dependency-verification=lenient
       - name: Publish on Plugin Portal

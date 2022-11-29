@@ -54,6 +54,12 @@ jobs:
       - name: Prime Gradle Caches
         uses: gradle/gradle-build-action@v2.3.3
 
+      ## Setup: Signing Keys
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
         uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3

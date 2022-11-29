@@ -24,5 +24,14 @@ jobs:
       - name: Run Gradle tasks
         run: ./gradlew preMerge --continue --dependency-verification=lenient
       - name: Publish on Plugin Portal
-        run: ./gradlew --info --project-dir plugin-build setupPluginUploadFromEnvironment publishPlugins --dependency-verification=lenient
         if: success()
+        run: |
+          ./gradlew \
+            --info \
+            --project-dir plugin-build \
+            --dependency-verification=lenient \
+            -PenableSigning=true \
+            -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }} \
+            -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }} \
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg \
+            setupPluginUploadFromEnvironment publishPlugins

@@ -21,6 +21,7 @@ jobs:
         run: |
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
+          gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
       - name: Run Gradle tasks
         run: ./gradlew preMerge --continue --dependency-verification=lenient
       - name: Publish on Plugin Portal

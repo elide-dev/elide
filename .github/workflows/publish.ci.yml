@@ -168,6 +168,7 @@ jobs:
         run: |
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
+          gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
       - name: "Publish: Conventions"
         uses: gradle/gradle-build-action@v2.3.3
         if: ${{ inputs.conventions }}

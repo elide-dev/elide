@@ -6,7 +6,7 @@ on:
       - stable
       - v3
   pull_request:
-    types: [labeled, opened, reopened, synchronize]
+    types: [opened, reopened, synchronize]
 
 env:
   GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
@@ -320,14 +320,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-        contains(github.event.head_commit.message, 'ci:test-native') ||
-        startsWith(github.ref, 'refs/tags/v')
-      )
+    if: false
+
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3

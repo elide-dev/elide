@@ -244,4 +244,17 @@ jobs:
             -Pelide.release=true
             -Pelide.buildMode=release
             -x test
-            publish
+            :packages:base:publish
+            :packages:bom:publish
+            :packages:frontend:publish
+            :packages:graalvm:publish
+            :packages:graalvm-js:publish
+            :packages:graalvm-react:publish
+            :packages:model:publish
+            :packages:platform:publish
+            :packages:proto:publish
+            :packages:rpc-js:publish
+            :packages:rpc-jvm:publish
+            :packages:server:publish
+            :packages:ssg:publish
+            :packages:test:publish

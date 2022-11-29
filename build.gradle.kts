@@ -121,19 +121,6 @@ tasks.register("relock") {
   )
 }
 
-tasks.named("publish").configure {
-  // publish sub-projects
-  dependsOn(listOf(
-    gradle.includedBuild("conventions").task(":publish"),
-    gradle.includedBuild("substrate").task(":publish"),
-  ))
-
-  // publish library modules
-  dependsOn(Elide.publishedModules.map {
-    project(it).tasks.named("publish")
-  })
-}
-
 sonarqube {
   properties {
     property("sonar.projectKey", "elide-dev_v3")

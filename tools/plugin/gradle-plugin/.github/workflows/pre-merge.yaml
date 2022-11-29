@@ -56,6 +56,7 @@ jobs:
 
       ## Setup: Signing Keys
       - name: "Setup: Signing Keys"
+        if: ${{ matrix.os == 'ubuntu' }}
         run: |
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG

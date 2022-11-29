@@ -169,6 +169,10 @@ jobs:
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
+      - name: "Setup: Version"
+        run: |
+          echo "APP_VERSION=$(cat .version)" >> $GITHUB_ENV;
+          echo "Releasing version $APP_VERSION"
       - name: "Publish: Conventions"
         uses: gradle/gradle-build-action@v2.3.3
         if: ${{ inputs.conventions }}
@@ -182,6 +186,7 @@ jobs:
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
             -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pversion=${{ env.APP_VERSION }}
             -Pelide.release=true
             -Pelide.buildMode=release
             -x test
@@ -199,6 +204,7 @@ jobs:
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
             -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pversion=${{ env.APP_VERSION }}
             -Pelide.release=true
             -Pelide.buildMode=release
             -x test
@@ -216,6 +222,7 @@ jobs:
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
             -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pversion=${{ env.APP_VERSION }}
             -Pelide.release=true
             -Pelide.buildMode=release
             -x test
@@ -233,6 +240,7 @@ jobs:
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
             -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pversion=${{ env.APP_VERSION }}
             -Pelide.release=true
             -Pelide.buildMode=release
             -x test

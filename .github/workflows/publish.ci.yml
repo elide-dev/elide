@@ -179,7 +179,7 @@ jobs:
             -PenableSigning=true
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
-            -Psigning.secretKeyRingFile=/home/runner/.gnupg/pubring.kbx
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
             -Pelide.release=true
             -Pelide.buildMode=release
@@ -196,7 +196,7 @@ jobs:
             -PenableSigning=true
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
-            -Psigning.secretKeyRingFile=/home/runner/.gnupg/pubring.kbx
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
             -Pelide.release=true
             -Pelide.buildMode=release
@@ -213,7 +213,7 @@ jobs:
             -PenableSigning=true
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
-            -Psigning.secretKeyRingFile=/home/runner/.gnupg/pubring.kbx
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
             -Pelide.release=true
             -Pelide.buildMode=release
@@ -230,7 +230,7 @@ jobs:
             -PenableSigning=true
             -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
-            -Psigning.secretKeyRingFile=/home/runner/.gnupg/pubring.kbx
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
             -Pelide.release=true
             -Pelide.buildMode=release

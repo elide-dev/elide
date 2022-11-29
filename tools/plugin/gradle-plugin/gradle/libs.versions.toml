@@ -37,6 +37,7 @@ closure_stylesheets = "1.5.0"
 buildconfig_plugin = "3.1.0"
 auto_service = "1.0.1"
 kover = "0.6.1"
+testLoggerPlugin = "3.2.0"
 
 micronaut = "3.7.4"
 micronaut_plugin = "3.6.5"
@@ -52,6 +53,7 @@ kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.re
 kotlin_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 kotlinx_plugin_abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
 
 micronaut_application = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
 micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }

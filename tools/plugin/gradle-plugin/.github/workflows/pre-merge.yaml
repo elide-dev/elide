@@ -41,18 +41,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
 
-      ## Setup: Java
-      - uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc # tag=v3
-        with:
-          distribution: "zulu"
-          java-version: "11"
-
       ## Setup: GraalVM
-      - uses: elide-tools/setup-graalvm@48f2bf339ab7d35e31029b1822a213681fdfc42e # tag=5.0
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: "21.0.0.2"
-          java: "java11"
-          arch: "amd64"
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Gradle Caches
       - name: Prime Gradle Caches
@@ -61,6 +57,7 @@ jobs:
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
         uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3
+        if: ${{ matrix.os == 'ubuntu' }}
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -75,7 +72,8 @@ jobs:
           GRADLE_CACHE_PUSH: "true"
         with:
           arguments: |
-            preMerge
+            build
+            -x check
             -Pelide.ci=true
             --scan
             --continue
@@ -90,6 +88,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           arguments: |
+            check
+            test
+            preMerge
+            :plugin-build:plugin:test
+            :plugin-build:plugin:check
             :plugin-build:plugin:sonar
             -Pelide.ci=true
             --scan

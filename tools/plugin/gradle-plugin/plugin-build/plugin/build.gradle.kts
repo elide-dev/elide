@@ -14,6 +14,7 @@ plugins {
 
     id("java-gradle-plugin")
     id("org.sonarqube")
+    id("com.adarshr.test-logger")
     id("com.gradle.plugin-publish")
     id("com.github.gmazzo.buildconfig")
     alias(libs.plugins.shadow)
@@ -35,6 +36,17 @@ gradlePlugin {
             version = PluginCoordinates.VERSION
         }
     }
+}
+
+testlogger {
+    theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
+    showExceptions = true
+    showFailed = true
+    showPassed = true
+    showSkipped = true
+    showFailedStandardStreams = true
+    showFullStackTraces = true
+    slowThreshold = 30000L
 }
 
 sonarqube {
@@ -108,6 +120,27 @@ pluginBundle {
 
 val minimumMicronaut = "3.6.3"
 val preferredMicronaut = "3.6.5"
+val defaultJavaMin = "11"
+val defaultJavaMax = "19"
+
+val baseJavaMin: Int = (if (project.hasProperty("versions.java.minimum")) {
+    project.properties["versions.java.minimum"] as? String ?: defaultJavaMin
+} else {
+    defaultJavaMin
+}).toInt()
+
+val javaMin: Int = if (System.getProperty("os.arch") == "aarch64") {
+    // artificially start at java 17 for aarch64, which is the first version that supports this architecture.
+    17
+} else {
+    baseJavaMin
+}
+
+val javaMax: Int = (if (project.hasProperty("versions.java.maximum")) {
+    project.properties["versions.java.maximum"] as? String ?: defaultJavaMax
+} else {
+    defaultJavaMax
+}).toInt()
 
 val embedded: Configuration by configurations.creating
 
@@ -313,4 +346,30 @@ tasks.named<ProcessResources>("processResources") {
     dependsOn(
         tasks.named("packageRuntimeAssets")
     )
+}
+
+tasks.named("check").configure {
+    dependsOn("test")
+    dependsOn("detekt")
+    dependsOn("ktlintCheck")
+    dependsOn("koverReport")
+    dependsOn("koverVerify")
+}
+
+// Normal test task runs on compile JDK.
+(javaMin..javaMax).forEach { major ->
+    val jdkTest = tasks.register("testJdk$major", Test::class.java) {
+        description = "Runs the test suite on JDK $major"
+        group = LifecycleBasePlugin.VERIFICATION_GROUP
+        javaLauncher.set(javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(major))
+        })
+        val testTask = tasks.named("test", Test::class.java).get()
+        classpath = testTask.classpath
+        testClassesDirs = testTask.testClassesDirs
+    }
+    val checkTask = tasks.named("check")
+    checkTask.configure {
+        dependsOn(jdkTest)
+    }
 }

@@ -8,6 +8,11 @@ on:
     branches:
       - "*"
 
+env:
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+  GRADLE_CACHE_REMOTE: "true"
+
 jobs:
   preflight-checks:
     runs-on: ubuntu-latest
@@ -16,6 +21,8 @@ jobs:
         uses: actions/checkout@v3
       - name: "Check: Dependency Review"
         uses: actions/dependency-review-action@v3
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@55e685c48d84285a5b0418cd094606e199cca3b6 # tag=v1
 
   gradle:
     strategy:
@@ -48,28 +55,42 @@ jobs:
           arch: "amd64"
 
       ## Setup: Gradle Caches
-      - name: Cache Gradle Caches
+      - name: Prime Gradle Caches
         uses: gradle/gradle-build-action@v2.3.3
 
-      ## Prep: Download Caches
-      - name: Cache build
+      ## Setup: Checkout Code
+      - name: Cache SonarCloud packages
         uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3
         with:
-          path: |
-            ./build
-            ./*/build
-            ./*/*/build
-          key: elide-${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            elide-gradle-${{ runner.os }}
-            elide-gradle-
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       ## Job: Run build
       - name: Run Gradle build
         uses: gradle/gradle-build-action@v2.3.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GRADLE_CACHE_PUSH: "true"
         with:
           arguments: |
             preMerge
+            -Pelide.ci=true
+            --scan
+            --continue
+            --dependency-verification=lenient
+
+      ## Job: Reports
+      - name: Build reports
+        uses: gradle/gradle-build-action@v2.3.3
+        if: ${{ matrix.os == 'ubuntu' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: |
+            :plugin-build:plugin:sonar
             -Pelide.ci=true
             --scan
             --continue
@@ -117,6 +138,7 @@ jobs:
       - name: "Report: Codecov"
         uses: codecov/codecov-action@v3
         continue-on-error: true
+        if: ${{ matrix.os == 'ubuntu' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./plugin-build/plugin/build/reports/kover/xml/report.xml

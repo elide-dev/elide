@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 
     id("java-gradle-plugin")
+    id("org.sonarqube")
     id("com.gradle.plugin-publish")
     id("com.github.gmazzo.buildconfig")
     alias(libs.plugins.shadow)
@@ -33,6 +34,20 @@ gradlePlugin {
             implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
             version = PluginCoordinates.VERSION
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "elide-dev_buildtools")
+        property("sonar.organization", "elide-dev")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.dynamicAnalysis", "reuseReports")
+        property("sonar.junit.reportsPath", "$buildDir/reports/")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
+        property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
+        property("sonar.sourceEncoding", "UTF-8")
     }
 }
 
@@ -211,6 +226,29 @@ detekt {
 ktlint {
     filter {
         exclude("**/model/**")
+    }
+}
+
+subprojects {
+    apply {
+        plugin("org.jetbrains.kotlinx.kover")
+        plugin("org.sonarqube")
+    }
+
+    sonarqube {
+        properties {
+            property("sonar.sources", "src/main/java")
+            property("sonar.tests", "src/test/java")
+            property(
+                "sonar.coverage.jacoco.xmlReportPaths",
+                listOf(
+                    "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+                    "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+                    "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
+                    "$buildDir/reports/kover/xml/coverage.xml",
+                )
+            )
+        }
     }
 }
 

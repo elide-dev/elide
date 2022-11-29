@@ -301,6 +301,15 @@ jobs:
           flags: jvm,substrate
           fail_ci_if_error: false
           verbose: true
+      - name: "Report: Codecov (Plugin)"
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml
+          name: plugin-gradle
+          flags: jvm,plugin,gradle
+          fail_ci_if_error: false
+          verbose: true
 
   ##
   ## Job: Testsuite (Native)

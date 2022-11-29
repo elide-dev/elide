@@ -318,7 +318,7 @@ jobs:
     name: "Tests: Native"
     runs-on: ubuntu-latest
     needs: [tests-jvm, preflight-checks]
-    continue-on-error: true # temporary
+    continue-on-error: true
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -357,6 +357,7 @@ jobs:
           cache: "yarn"
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2.3.3
+        continue-on-error: true
         env:
           CI: true
           GRADLE_CACHE_PUSH: true

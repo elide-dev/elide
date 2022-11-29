@@ -33,17 +33,14 @@ micronaut {
 }
 
 dependencies {
-  // Core platform versions.
-  api(platform(project(":packages:platform")))
-
   // API Deps
   api(libs.jakarta.inject)
-  api(libs.slf4j)
   api(libs.graalvm.sdk)
 
   // Modules
   kapt(libs.micronaut.inject)
   kapt(libs.micronaut.inject.java)
+  implementation(libs.slf4j)
   implementation(project(":packages:base"))
   implementation(project(":packages:proto"))
 
@@ -78,20 +75,6 @@ dependencies {
   implementation(libs.brotli.native.linux)
   implementation(libs.brotli.native.windows)
 
-  // Google
-  implementation(libs.grpc.core)
-  implementation(libs.grpc.api)
-  implementation(libs.grpc.auth)
-  implementation(libs.grpc.stub)
-  implementation(libs.grpc.services)
-  implementation(libs.grpc.netty)
-  implementation(libs.grpc.protobuf)
-  implementation(libs.grpc.kotlin.stub)
-  implementation(libs.guava)
-  implementation(libs.gax.java)
-  implementation(libs.gax.java.grpc)
-  implementation(libs.google.api.common)
-
   // Micronaut
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.http.server)
@@ -100,9 +83,6 @@ dependencies {
   implementation(libs.micronaut.inject)
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.protobuf)
-  implementation(libs.micronaut.grpc.runtime)
-  implementation(libs.micronaut.grpc.client.runtime)
-  implementation(libs.micronaut.grpc.server.runtime)
   implementation(libs.micronaut.management)
   implementation(libs.micronaut.views.core)
 

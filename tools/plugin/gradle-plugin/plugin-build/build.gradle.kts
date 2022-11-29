@@ -1,7 +1,6 @@
 @file:Suppress(
     "UnstableApiUsage",
     "unused",
-    "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
 )
 
@@ -9,27 +8,43 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("org.jetbrains.kotlin.kapt") apply false
+    id("org.jetbrains.kotlinx.kover")
+    id("io.gitlab.arturbosch.detekt")
+    id("com.github.ben-manes.versions")
+    alias(libs.plugins.ksp) apply false
     alias(libs.plugins.pluginPublish) apply false
-    alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.versionCheck)
+    alias(libs.plugins.kotlinx.plugin.abiValidator)
+}
+
+val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
+
+apiValidation {
+    nonPublicMarkers += listOf(
+        "elide.annotations.Internal",
+    )
+}
+
+koverMerged {
+    enable()
+
+    xmlReport {
+        onCheck.set(isCI)
+    }
+
+    htmlReport {
+        onCheck.set(isCI)
+    }
 }
 
 allprojects {
     group = PluginCoordinates.GROUP
     version = PluginCoordinates.VERSION
 
-    repositories {
-        gradlePluginPortal()
-        maven("https://maven-central.storage-download.googleapis.com/maven2/")
-        mavenCentral()
-        google()
-        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-    }
-
     apply {
         plugin("io.gitlab.arturbosch.detekt")
         plugin("org.jlleitschuh.gradle.ktlint")
+        plugin("org.jetbrains.kotlinx.kover")
     }
 
     ktlint {

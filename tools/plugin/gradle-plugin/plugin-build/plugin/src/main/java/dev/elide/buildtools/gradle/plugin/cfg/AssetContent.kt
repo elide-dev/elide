@@ -12,22 +12,22 @@ import java.io.File
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /** Intermediate object which carries asset content and fingerprint data. */
-data class AssetContent(
+internal data class AssetContent(
     /** Calculated info for this asset. */
-    val assetInfo: AssetInfo,
+    internal val assetInfo: AssetInfo,
 
     /** Set of interpreted file records for this asset. */
-    val assets: ConcurrentLinkedQueue<AssetFile>,
+    internal val assets: ConcurrentLinkedQueue<AssetFile>,
 ) : java.io.Serializable {
     /** Describes an interpreted asset file, which carries full content/digest data. */
-    data class AssetFile(
-        val filename: String,
-        val base: String,
-        val size: Long,
-        val digestAlgorithm: HashAlgorithm,
-        val digest: ByteArray,
-        val content: ByteArray,
-        @Transient val file: File,
+    internal data class AssetFile(
+        internal val filename: String,
+        internal val base: String,
+        internal val size: Long,
+        internal val digestAlgorithm: HashAlgorithm,
+        internal val digest: ByteArray,
+        internal val content: ByteArray,
+        @Transient internal val file: File,
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -50,7 +50,7 @@ data class AssetContent(
         }
 
         /** @return Protocol buffer representation of this record. */
-        fun toProto(moduleId: String, token: String): AssetBundle.AssetContent {
+        internal fun toProto(moduleId: String, token: String): AssetBundle.AssetContent {
             return assetContent {
                 this.filename = this@AssetFile.filename
                 this.module = moduleId

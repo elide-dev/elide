@@ -6,7 +6,7 @@
 
 plugins {
   id("dev.elide.build.jvm")
-  id("dev.elide.build.kotlin")
+  id("com.google.devtools.ksp")
 }
 
 group = "dev.elide.tools"
@@ -15,11 +15,22 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
+
+  publishing {
+    publications {
+      create<MavenPublication>("maven") {
+        artifactId = "processor"
+        groupId = "dev.elide.tools"
+        version = rootProject.version as String
+      }
+    }
+  }
 }
 
 dependencies {
   // Core platform versions.
-  api(platform(project(":packages:platform")))
+  api(project(":packages:proto"))
+  ksp(libs.autoService.ksp)
 
   // API Deps
   api(libs.jakarta.inject)
@@ -31,6 +42,8 @@ dependencies {
 
   // KSP
   implementation(libs.ksp)
+  implementation(libs.ksp.api)
+  implementation(libs.google.auto.service)
   implementation(libs.kotlinx.atomicfu)
 
   // Kotlin

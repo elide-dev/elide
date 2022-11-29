@@ -7,7 +7,9 @@
 import com.google.protobuf.gradle.*
 
 plugins {
-  id("dev.elide.build.jvm")
+  `maven-publish`
+  distribution
+  signing
   id("dev.elide.build.kotlin")
   alias(libs.plugins.protobuf)
 }
@@ -16,6 +18,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 protobuf {
   protoc {
@@ -30,10 +33,24 @@ protobuf {
   }
 }
 
+afterEvaluate {
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.allWarningsAsErrors = false
+  }
+}
+
 sourceSets {
   named("main") {
     proto {
       srcDir("${rootProject.projectDir}/proto")
+    }
+  }
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      from(components["kotlin"])
     }
   }
 }
@@ -44,12 +61,14 @@ dependencies {
   api(libs.protobuf.kotlin)
   api(libs.google.common.html.types.proto)
   api(libs.google.common.html.types.types)
+  api(libs.kotlinx.datetime)
+  implementation(kotlin("reflect"))
   compileOnly(libs.google.cloud.nativeImageSupport)
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageVersion
-  targetCompatibility = javaLanguageVersion
+  sourceCompatibility = javaLanguageTarget
+  targetCompatibility = javaLanguageTarget
   options.isFork = true
   options.isIncremental = true
   options.isWarnings = false

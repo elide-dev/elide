@@ -9,10 +9,9 @@ import tools.elide.assets.ManifestFormat
 import java.nio.charset.StandardCharsets
 
 /** Writes a pre-built asset bundle to the specified location, in the specified format. */
-abstract class BundleWriteTask : BundleBaseTask() {
+public abstract class BundleWriteTask : BundleBaseTask() {
     /** Built asset spec record to write. */
-    @get:Input
-    abstract val sourceTaskName: Property<String>
+    @get:Input internal abstract val sourceTaskName: Property<String>
 
     /** Name to give the asset catalog being affixed by this task. */
     @get:Input
@@ -20,7 +19,7 @@ abstract class BundleWriteTask : BundleBaseTask() {
         option = "outputSpecName",
         description = "Name to give the asset catalog built by this task. Typically managed by the plugin.",
     )
-    abstract val outputSpecName: Property<String>
+    internal abstract val outputSpecName: Property<String>
 
     /**
      * Write the prepared asset catalog bundle to the [outputBundleFolder], under the [outputSpecName]; this method is

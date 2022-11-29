@@ -10,16 +10,14 @@ import javax.inject.Inject
 
 /** Elide JVM server target settings. */
 @Suppress("RedundantVisibilityModifier", "MemberVisibilityCanBePrivate", "unused")
-open class ElideServerHandler @Inject constructor(
-    objects: ObjectFactory
-) {
-    companion object {
+public open class ElideServerHandler @Inject constructor(objects: ObjectFactory) {
+    private companion object {
         /** Default scripting language to apply. */
         private val defaultScriptLanguage = EmbeddedScriptLanguage.JS
     }
 
     /** Whether the user configured a server target in their build script. */
-    internal val active: AtomicBoolean = AtomicBoolean(false)
+    public val active: AtomicBoolean = AtomicBoolean(false)
 
     /** Server-embedded asset configuration. */
     public val assets: ElideAssetsHandler = objects.newInstance(ElideAssetsHandler::class.java)
@@ -27,17 +25,31 @@ open class ElideServerHandler @Inject constructor(
     /** Server embedded SSR configuration. */
     public val ssr: ServerSSRHandler = objects.newInstance(ServerSSRHandler::class.java)
 
+    /** Static site generator (SSG) configuration. */
+    public val ssg: StaticSiteHandler = objects.newInstance(StaticSiteHandler::class.java)
+
     /** Server SSR runtime configuration. */
-    internal val ssrRuntime: AtomicReference<EmbeddedScriptLanguage> = AtomicReference(defaultScriptLanguage)
+    public val ssrRuntime: AtomicReference<EmbeddedScriptLanguage> = AtomicReference(defaultScriptLanguage)
 
     /** @return True if the user has configured an SSR bundle from their build script. */
     public fun hasSsrBundle(): Boolean {
         return ssr.hasBundle()
     }
 
+    /** @return True if the user has configured an SSG target from their build script. */
+    public fun hasSsgConfig(): Boolean {
+        return ssg.enabled.get()
+    }
+
     /** @return Whether the user has configured assets */
     public fun hasAssets(): Boolean {
         return assets.active.get()
+    }
+
+    /** Configure SSG compilation pass. */
+    public fun ssg(action: Action<StaticSiteHandler>) {
+        ssg.enabled.set(true)
+        action.execute(ssg)
     }
 
     /** Configure server-embedded assets. */
@@ -52,13 +64,16 @@ open class ElideServerHandler @Inject constructor(
     }
 
     /** Configures SSR features for Elide server targets. */
-    open class ServerSSRHandler {
-        companion object {
-            const val defaultSsrConfiguration = "nodeSsrDist"
+    public open class ServerSSRHandler {
+        internal companion object {
+            internal const val defaultSsrConfiguration: String = "nodeSsrDist"
         }
 
-        val targetProject: AtomicReference<String?> = AtomicReference(null)
-        val targetConfiguration: AtomicReference<String?> = AtomicReference(defaultSsrConfiguration)
+        /** Name of the target project to pull assets from. */
+        internal val targetProject: AtomicReference<String?> = AtomicReference(null)
+
+        /** Name of the configuration, within [targetProject], to pull assets from. */
+        internal val targetConfiguration: AtomicReference<String?> = AtomicReference(defaultSsrConfiguration)
 
         // Indicate whether a bundle has been configured.
         internal fun hasBundle(): Boolean {
@@ -69,9 +84,25 @@ open class ElideServerHandler @Inject constructor(
         }
 
         /** Inject the specified JS bundle as an SSR application script. */
-        fun bundle(project: Project, configuration: String = defaultSsrConfiguration) {
+        public fun bundle(project: Project, configuration: String = defaultSsrConfiguration) {
             targetProject.set(project.path)
             targetConfiguration.set(configuration)
+        }
+    }
+
+    /** Configures SSG (static site generator) features for Elide server targets. */
+    public open class StaticSiteHandler {
+        /** Whether the user configured a static site target in their build script. */
+        internal val enabled: AtomicBoolean = AtomicBoolean(false)
+
+        /** Enable a static site build run for a given server target. */
+        public fun enable() {
+            enabled.set(true)
+        }
+
+        /** Disable a static site build run for a given server target. */
+        public fun disable() {
+            enabled.set(false)
         }
     }
 }

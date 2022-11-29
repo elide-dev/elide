@@ -1,0 +1,16 @@
+micronaut:
+  server:
+    port: -1
+    ssl:
+      enabled: false
+
+  http:
+    client:
+      read-timeout: 5s
+      pool:
+        enabled: true
+        max-connections: 25
+
+grpc:
+  server:
+    enabled: false

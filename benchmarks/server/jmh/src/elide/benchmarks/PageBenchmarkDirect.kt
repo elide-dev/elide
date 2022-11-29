@@ -1,3 +1,7 @@
+@file:OptIn(
+  DelicateCoroutinesApi::class,
+  ExperimentalCoroutinesApi::class,
+)
 @file:Suppress(
   "WildcardImport",
   "MagicNumber",
@@ -9,13 +13,13 @@ import elide.server.annotations.Page
 import elide.server.controller.PageController
 import elide.server.css
 import elide.server.html
-import elide.server.script
 import io.micronaut.context.ApplicationContext
-import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Get
 import kotlinx.coroutines.*
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
 import kotlinx.css.fontFamily
@@ -33,6 +37,7 @@ import java.util.concurrent.TimeUnit
 @OutputTimeUnit(TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 class PageBenchmarkDirect {
+  private val mainThreadSurrogate = newSingleThreadContext("server")
   lateinit var applicationContext: ApplicationContext
   lateinit var controller: SampleController
 
@@ -62,11 +67,6 @@ class PageBenchmarkDirect {
     }
 
     // Serve the built & embedded JavaScript.
-    @Get("/scripts/ui.js") suspend fun js(request: HttpRequest<Any>) = script(request) {
-      module("scripts.ui")
-    }
-
-    // Serve the built & embedded JavaScript.
     @Get("/scripts/ui.json", produces = [MediaType.APPLICATION_JSON])
     fun json(): HttpResponse<String> {
       return HttpResponse.ok(
@@ -78,10 +78,16 @@ class PageBenchmarkDirect {
     }
   }
 
-  @Setup
-  fun setUp() {
+  @Setup fun setUp() {
+    Dispatchers.setMain(mainThreadSurrogate)
     applicationContext = ApplicationContext.run()
     controller = applicationContext.getBean(SampleController::class.java)
+  }
+
+  @TearDown fun tearDown() {
+    applicationContext.close()
+    Dispatchers.resetMain()
+    mainThreadSurrogate.close()
   }
 
   /** Test: serve raw HTML. */
@@ -90,17 +96,17 @@ class PageBenchmarkDirect {
   }
 
   /** Test: serve raw CSS. */
-  @Benchmark fun controllerCSS(): HttpResponse<*> = runBlocking {
-    controller.styles()
+  @Benchmark fun controllerCSS(): HttpResponse<*> {
+    return controller.styles()
   }
 
   /** Test: serve JSON. */
-  @Benchmark fun controllerServeJSON(): HttpResponse<String> = runBlocking {
-    controller.json()
+  @Benchmark fun controllerServeJSON(): HttpResponse<String> {
+    return controller.json()
   }
 
   /** Test: serve an embedded asset. */
-  @Benchmark fun controllerServeAsset(): HttpResponse<*> = runBlocking {
-    controller.js(HttpRequest.GET("/scripts/ui.js"))
+  @Benchmark fun controllerServeAsset(): HttpResponse<*> {
+    return controller.styles()
   }
 }

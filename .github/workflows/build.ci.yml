@@ -4,20 +4,21 @@ on:
   push:
     branches:
       - stable
+      - v3
   pull_request:
-    types: [labeled, opened, reopened, synchronize]
+    types: [opened, reopened, synchronize]
 
 env:
   GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
   GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
-  GRADLE_CACHE_PUSH: true
+  GRADLE_CACHE_REMOTE: "true"
 
 jobs:
   ##
-  ## Job: Dependency Review
+  ## Job: Pre-flight Checks
   ##
-  dependency-review:
-    name: "Dependency Review"
+  preflight-checks:
+    name: "Pre-flight Checks"
     runs-on: "ubuntu-latest"
     permissions:
       contents: "read"
@@ -27,9 +28,24 @@ jobs:
     steps:
       - name: "Setup: Checkout"
         uses: "actions/checkout@v3"
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
       - name: "Patch: Neutralize Yarn Lock"
         run: mv kotlin-js-store/yarn.lock kotlin-js-store/yarn.inert
-      - name: "Dependency Review"
+      - name: "Check: Dependency Review"
         uses: "actions/dependency-review-action@v3"
         continue-on-error: true
         with:
@@ -40,6 +56,23 @@ jobs:
           base-ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || 'v3' }}
       - name: "Patch: Restore Yarn Lock"
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
+      - name: "Check: Library ABI"
+        uses: gradle/gradle-build-action@v2.3.3
+        id: abicheck
+        continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:ignore-abicheck') }}
+        env:
+          CI: true
+        with:
+          cache-read-only: false
+          arguments: |
+            apiCheck
+            --dependency-verification=lenient
+            --no-daemon
+            --warning-mode=none
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -Pversions.java.language=17
 
   ##
   ## Job: Library Build
@@ -84,11 +117,8 @@ jobs:
         shell: bash
 
     steps:
-      ## Setup: Checkout Code
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-
-      ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
@@ -96,19 +126,13 @@ jobs:
           version: latest
           java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: Node
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "yarn"
-
-      ## Setup: Run Yarn
       - name: "Setup: Yarn"
         run: yarn
-
-      ## Setup: GCloud Auth
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -117,25 +141,32 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-
-      ## CI: Build
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2.3.3
         id: gradlebuild
         continue-on-error: ${{ matrix.experimental }}
         env:
           CI: true
+          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
-            assemble
+            build
+            -x check
+            -x test
+            -x jvmTest
+            -x jsTest
+            -x jsBrowserTest
+            -x nativeCompile
             --scan
+            --no-daemon
+            --warning-mode=none
             --dependency-verification=lenient
             -Pelide.ci=true
             -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
             -Pversions.java.language=${{ matrix.java }}
-
-      ## CI: Build
       - name: "Build reports"
         if: failure()
         uses: actions/upload-artifact@v3
@@ -143,14 +174,10 @@ jobs:
           name: build-reports-${{ matrix.os }}-latest-java${{ matrix.java }}-gvm-latest
           path: |
             build/reports/**/*.*
-
-      ## Run Detekt
       - name: "Run: Detekt"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
-        run: ./gradlew detekt -Pelide.ci=true -PbuildSamples=false -Pversions.java.language=${{ matrix.java }}
+        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=${{ matrix.java }}
         continue-on-error: true
-
-      ## Fix SARIF paths
       - name: "Fix: SARIF Paths"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
         continue-on-error: true
@@ -161,8 +188,6 @@ jobs:
            '. | ( .runs[].results[].locations[].physicalLocation.artifactLocation.uri |= if test($github_workspace) then .[($github_workspace | length | . + 1):] else . end )' \
            ${{ github.workspace }}/build/reports/detekt/elide.sarif
           )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
-
-      ## Upload SARIF to GitHub.
       - name: "Report: SARIF"
         if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
         uses: github/codeql-action/upload-sarif@v2
@@ -177,7 +202,7 @@ jobs:
     name: "Tests: JVM"
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: [dependency-review, gradle]
+    needs: [preflight-checks, gradle]
 
     permissions:
       contents: "read"
@@ -186,15 +211,10 @@ jobs:
       pull-requests: "write"
 
     steps:
-      ## Setup: Checkout Code
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-
-      ## Setup: Expand Git History
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-
-      ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
@@ -202,8 +222,6 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: GCloud Auth
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -212,47 +230,45 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-
-      ## Setup: Node
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "yarn"
-
-      ## Setup: Run Yarn
       - name: "Setup: Yarn"
         run: yarn
-
-      ## Run JVM Tests
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@v2.3.3
         env:
+          CI: true
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
-            build
             test
             check
             jacocoTestReport
             koverMergedHtmlReport
             koverMergedXmlReport
             koverMergedReport
+            :substrate:redakt:test
+            :substrate:koverMergedXmlReport
             :tools:reports:reports
             sonar
             --scan
+            --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
-            -Pelide.ci=true
-            -PbuildSamples=true
-            -PbuildDocs=false
-            -Pversions.java.language=17
+            -x apiCheck
             -x nativeTest
             -x testNativeImage
             -x nativeCompile
-
-      ## Collect Reports
+            -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+            -Pversions.java.language=17
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-jvm
@@ -263,25 +279,36 @@ jobs:
             build/reports/kover/merged/html/**/*.*
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
-
-      ## Annotate test results
       - name: "Annotate: Test Results"
         uses: elide-tools/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
           report_paths: "**/build/test-results/test/TEST-*.xml"
-
-      ## Inflate missing git history
-      - name: "Setup: Git History"
-        run: git fetch --unshallow || exit 0
-
-      ## Upload to Codecov (JVM)
-      - name: "Report: Codecov"
+      - name: "Report: Codecov (Main)"
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tools/reports/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
-          name: jvm
+          files: ./build/reports/kover/merged/xml/report.xml
+          name: elide
+          flags: jvm,lib
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Report: Codecov (Substrate)"
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/substrate/build/reports/kover/merged/xml/report.xml
+          name: substrate
+          flags: jvm,substrate
+          fail_ci_if_error: false
+          verbose: true
+      - name: "Report: Codecov (Plugin)"
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml
+          name: plugin-gradle
+          flags: jvm,plugin,gradle
           fail_ci_if_error: false
           verbose: true
 
@@ -291,22 +318,13 @@ jobs:
   tests-native:
     name: "Tests: Native"
     runs-on: ubuntu-latest
-    needs: [tests-jvm, dependency-review]
-    continue-on-error: true # temporary
-    if: |
-      (
-        github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
-        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-        contains(github.event.head_commit.message, 'ci:test-native') ||
-        startsWith(github.ref, 'refs/tags/v')
-      )
+    needs: [tests-jvm, preflight-checks]
+    continue-on-error: true
+    if: false
+
     steps:
-      ## Setup: Checkout Code
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-
-      ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
@@ -314,8 +332,6 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: GCloud Auth
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -324,24 +340,22 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-
-      ## Setup: Node
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "yarn"
-
-      ## Setup: Run Yarn
       - name: "Setup: Yarn"
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "yarn"
-
-      ## Run Native Tests
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2.3.3
+        continue-on-error: true
+        env:
+          CI: true
+          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
@@ -353,15 +367,18 @@ jobs:
             koverMergedXmlReport
             koverMergedReport
             :tools:reports:reports
+            -x :packages:ssg:testNativeImage
+            -x :packages:ssg:test
             --scan
+            --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
+            -x apiCheck
             -Pelide.ci=true
             -PbuildSamples=false
+            -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.language=17
-
-      ## Collect Reports
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-native
@@ -378,7 +395,7 @@ jobs:
   docker-jvm:
     name: "Docker: JVM"
     runs-on: ubuntu-latest
-    needs: [gradle, dependency-review]
+    needs: [gradle, preflight-checks]
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -402,7 +419,6 @@ jobs:
           - project: "fullstack:react-ssr:server"
 
     steps:
-      ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
@@ -410,23 +426,15 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: QEMU
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
-
-      ## Setup: Docker
       - name: "Setup: Docker"
         uses: docker/setup-buildx-action@v2
         id: buildx
         with:
           install: true
-
-      ## Setup: Checkout Code
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-
-      ## Setup: GCloud Auth
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -435,20 +443,14 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-
-      ## Setup: GCloud SDK
       - name: "Setup: Setup Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
         with:
           version: 389.0.0
           project_id: elide-fw
-
-      ## Setup: Docker Auth (GAR)
       - name: "Authorize Docker: GCP"
         run: |
           gcloud auth configure-docker us-docker.pkg.dev
-
-      ## Setup: Docker Auth (GHCR)
       - name: "Authorize Docker: GHCR"
         uses: docker/login-action@v2
         with:
@@ -457,13 +459,15 @@ jobs:
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
 
       ## -- Samples -- ##
-
-      ## Docker Samples: Server - Hello World - JVM
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
         uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: |
+            --no-daemon
+            --warning-mode=none
             -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
             -Pversions.java.language=17
             -Pelide.runtime=JVM
             -x nativeCompile
@@ -479,7 +483,7 @@ jobs:
     name: "Docker: Native"
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: [gradle, dependency-review]
+    needs: [gradle, preflight-checks]
     if: |
       (
         github.ref == 'refs/heads/stable' ||
@@ -507,7 +511,6 @@ jobs:
             image: "elide-fw/samples/fullstack/react-ssr/native"
 
     steps:
-      ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
@@ -515,23 +518,15 @@ jobs:
           version: latest
           java-version: 17
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      ## Setup: QEMU
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
-
-      ## Setup: Docker
       - name: "Setup: Docker"
         uses: docker/setup-buildx-action@v2
         id: buildx
         with:
           install: true
-
-      ## Setup: Checkout Code
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-
-      ## Setup: GCloud Auth
       - id: "auth"
         name: "Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -540,21 +535,15 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-
-      ## Setup: GCloud SDK
       - name: "Setup: Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
         with:
           version: 389.0.0
           project_id: elide-fw
           install_components: "beta"
-
-      ## Setup: Docker Auth (GAR)
       - name: "Authorize Docker: GCP"
         run: |
           gcloud auth configure-docker us-docker.pkg.dev
-
-      ## Setup: Docker Auth (GHCR)
       - name: "Authorize Docker: GHCR"
         uses: docker/login-action@v2
         with:
@@ -563,21 +552,22 @@ jobs:
           password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
 
       ## -- Samples -- ##
-
-      ## Docker Samples: Build
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
         uses: gradle/gradle-build-action@v2.3.3
         continue-on-error: true
         with:
           arguments: |
+            --no-daemon
+            --warning-mode=none
             -Pversions.java.language=17
+            -Pelide.ci=true
+            -PbuildSamples=true
+            -PbuildDocs=false
             -Pelide.runtime=NATIVE
             -Pelide.ci=true
             -x test
             :samples:${{ matrix.project }}:optimizedDockerBuildNative
             :samples:${{ matrix.project }}:optimizedDockerPushNative
-
-      ## Docker Samples: Build Fallback
       - name: "Build/Push: Fallback to GCB"
         if: failure()
         run: |
@@ -601,7 +591,9 @@ jobs:
         github.ref == 'refs/heads/stable' ||
         github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
+        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
         contains(github.event.head_commit.message, 'ci:deploy-samples') ||
+        contains(github.event.head_commit.message, 'ci:deploy') ||
         startsWith(github.ref, 'refs/tags/v')
       )
 
@@ -626,3 +618,68 @@ jobs:
       image: "us-docker.pkg.dev/elide-fw/samples/${{ matrix.category }}/${{ matrix.app }}/${{ matrix.variant }}:opt-latest"
       environment: samples
       url: https://${{ matrix.app }}.samples.elide.dev
+
+  ##
+  ## Publish: Library Snapshot
+  ##
+
+  publish-snapshot:
+    name: "Publish: Snapshot"
+    needs: [gradle, tests-jvm]
+    if: |
+      (
+        contains(github.event.pull_request.labels.*.name, 'ci:publish-snapshot') ||
+        contains(github.event.head_commit.message, 'ci:publish-snapshot')
+      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+
+    uses: ./.github/workflows/publish.ci.yml
+    secrets: inherit
+    with:
+      environment: snapshots
+      gcp: true
+      snapshot: true
+      packages: true
+      processor: true
+      substrate: true
+      conventions: true
+      url: https://console.cloud.google.com/storage/browser/elide-snapshots/repository/v3
+
+  ##
+  ## Publish: Library OSSRH
+  ##
+
+  publish-ossrh:
+    name: "Publish: OSSRH"
+    needs: [publish-snapshot]
+    if: |
+      (
+        contains(github.event.pull_request.labels.*.name, 'ci:publish') ||
+        contains(github.event.head_commit.message, 'ci:publish')
+      ) && (
+        false
+      ) && (
+        startsWith(github.ref, 'refs/tags/v')
+      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      deployments: "write"
+      statuses: "write"
+
+    uses: ./.github/workflows/publish.ci.yml
+    secrets: inherit
+    with:
+      environment: central
+      snapshot: false
+      repo: https://s01.oss.sonatype.org

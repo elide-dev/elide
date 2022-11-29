@@ -4,13 +4,21 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import java.util.Properties
 
 plugins {
+  idea
+  id("dev.elide.build")
   id("project-report")
   id("org.sonarqube")
+  id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
+  id("org.jetbrains.kotlinx.binary-compatibility-validator")
   id("io.gitlab.arturbosch.detekt")
+
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
   alias(libs.plugins.doctor)
@@ -21,12 +29,15 @@ plugins {
 group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
+val versionFile = File("./.version")
 version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
   file(".version").readText().trim().replace("\n", "").ifBlank {
     throw IllegalStateException("Failed to load `.version`")
   }
 } else if (project.hasProperty("version")) {
   project.properties["version"] as String
+} else if (versionFile.exists()) {
+  versionFile.readText()
 } else {
   "1.0-SNAPSHOT"
 }
@@ -52,6 +63,7 @@ buildscript {
     google()
     mavenCentral()
     maven("https://plugins.gradle.org/m2/")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
@@ -67,12 +79,59 @@ buildscript {
   }
 }
 
+plugins.withType<NodeJsRootPlugin>().configureEach {
+  // 16+ required for Apple Silicon support
+  // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
+  the<NodeJsRootExtension>().nodeVersion = "18.0.0"
+}
+
+apiValidation {
+  nonPublicMarkers += listOf(
+    "elide.annotations.Internal",
+  )
+
+  ignoredProjects += listOf(
+    "bundler",
+    "bom",
+    "proto",
+    "processor",
+    "reports",
+  ).plus(
+    if (project.properties["buildSamples"] == "true") {
+      listOf("samples")
+    } else {
+      emptyList()
+    }
+  ).plus(
+    if (project.properties["buildDocsSite"] == "true") {
+      listOf(
+        "site",
+      )
+    } else {
+      emptyList()
+    }
+  )
+}
+
 tasks.register("relock") {
   dependsOn(
     *(subprojects.map {
       it.tasks.named("dependencies")
     }.toTypedArray())
   )
+}
+
+tasks.named("publish").configure {
+  // publish sub-projects
+  dependsOn(listOf(
+    gradle.includedBuild("conventions").task(":publish"),
+    gradle.includedBuild("substrate").task(":publish"),
+  ))
+
+  // publish library modules
+  dependsOn(Elide.publishedModules.map {
+    project(it).tasks.named("publish")
+  })
 }
 
 sonarqube {
@@ -160,6 +219,7 @@ subprojects {
     ignoreFailures.set(true)
     enableExperimentalRules.set(true)
     filter {
+      exclude("**/proto/**")
       exclude("**/generated/**")
       exclude("**/tools/plugin/gradle-plugin/**")
       include("**/kotlin/**")
@@ -206,14 +266,6 @@ subprojects {
     dependencyLocking {
       lockAllConfigurations()
     }
-  }
-}
-
-allprojects {
-  repositories {
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
-    mavenCentral()
-    google()
   }
 }
 
@@ -338,14 +390,39 @@ if (buildDocs == "true") {
     includes.from("README.md")
     outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
   }
+}
 
-  tasks.create("docs") {
+tasks {
+  htmlDependencyReport {
+    projects = project.allprojects.filter {
+      !Elide.multiplatformModules.contains(it.name)
+    }.toSet()
+  }
+
+  htmlDependencyReport {
+    reports.html.outputLocation.set(file("${project.buildDir}/reports/project/dependencies"))
+  }
+}
+
+val jvmName = project.properties["elide.jvm"] as? String
+
+idea {
+  project {
+    jdkName = jvmName ?: javaLanguageVersion
+    languageLevel = IdeaLanguageLevel(javaLanguageVersion)
+    vcs = "Git"
+  }
+}
+
+tasks.create("docs") {
+  if (buildDocs == "true") {
     dependsOn(listOf(
+      "dokkaHtml",
       "dokkaHtmlMultiModule",
-      "dokkaGfmMultiModule",
-      ":packages:graalvm:dokkaJavadoc",
-      ":packages:rpc-jvm:dokkaJavadoc",
+      "dokkaJavadoc",
+      "htmlDependencyReport",
       ":packages:server:dokkaJavadoc",
+      ":packages:rpc-jvm:dokkaJavadoc",
     ))
   }
 }

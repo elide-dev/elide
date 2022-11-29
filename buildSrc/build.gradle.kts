@@ -5,37 +5,38 @@
 val kotlinVersion = "1.7.21"
 
 plugins {
+  id("dev.elide.build")
+
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
 }
 
 val buildDocs by properties
 
-repositories {
-  maven("https://maven-central.storage-download.googleapis.com/maven2/")
-  mavenCentral()
-  google()
-  gradlePluginPortal()
-}
-
 dependencies {
   api(kotlin("gradle-plugin"))
+  api(libs.elide.tools.conventions)
+  implementation(libs.elide.kotlin.plugin.redakt)
+  implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.graalvm)
   implementation(libs.plugin.docker)
+  implementation(libs.plugin.dokka)
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.micronaut)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.spotless)
+  implementation(libs.plugin.shadow)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
+  implementation(libs.plugin.ksp)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.atomicfu)
   implementation(libs.plugin.kotlinx.serialization)
+  implementation(libs.plugin.kotlinx.abiValidator)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-  if (buildDocs == "true") {
-    implementation(libs.plugin.dokka)
-  }
 }
+
+apply(from = "../gradle/loadProps.gradle")

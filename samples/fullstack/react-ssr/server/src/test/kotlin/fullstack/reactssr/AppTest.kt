@@ -12,7 +12,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /** Example testsuite for the fullstack React SSR app sample ([App]). */
-@MicronautTest class AppTest : ElideServerTest() {
+@MicronautTest @Disabled class AppTest : ElideServerTest() {
   @Inject lateinit var index: App.Index
 
   // Make sure the handler can be injected.

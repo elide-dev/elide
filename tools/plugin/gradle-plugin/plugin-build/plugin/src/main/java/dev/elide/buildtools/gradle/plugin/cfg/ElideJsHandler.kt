@@ -11,9 +11,7 @@ import javax.inject.Inject
 
 /** Elide JavaScript settings. */
 @Suppress("RedundantVisibilityModifier", "MemberVisibilityCanBePrivate", "unused")
-open class ElideJsHandler @Inject constructor(
-    objects: ObjectFactory
-) {
+public open class ElideJsHandler @Inject constructor(objects: ObjectFactory) {
     /** Whether the user added a JS target in their build script. */
     internal val active: AtomicBoolean = AtomicBoolean(false)
 
@@ -66,7 +64,7 @@ open class ElideJsHandler @Inject constructor(
     }
 
     /** Elide JS runtime settings. */
-    open class ElideJsRuntimeHandler {
+    public open class ElideJsRuntimeHandler {
         /** Language level to expect/apply for the embedded script. */
         internal val inject = AtomicBoolean(true)
 

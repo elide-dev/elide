@@ -1,0 +1,24 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %highlight(%-5level) %magenta(ssg) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="io.micronaut.context.env" level="off"/>
+    <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
+
+    <logger name="elide.tool.ssg.SiteCompiler" level="info" />
+    <logger name="elide.tool.ssg.FilesystemManifestReader" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppLoader" level="info" />
+    <logger name="elide.tool.ssg.DefaultRequestFactory" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticCompiler" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticWriter" level="info" />
+    <logger name="elide.tool.ssg.DefaultAppStaticReader" level="info" />
+
+    <!-- Root Logger -->
+    <root level="warn">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

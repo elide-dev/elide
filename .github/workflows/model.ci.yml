@@ -21,16 +21,14 @@ jobs:
     permissions:
       contents: "read"
     steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      # Setup: Buf
-      - uses: bufbuild/buf-setup-action@v1
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: Buf"
+        uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ github.token }}
-
-      # Job: Lint
-      - uses: bufbuild/buf-lint-action@v1
+      - name: "Check: Buf Lint"
+        uses: bufbuild/buf-lint-action@v1
 
   ##
   ## Job: Buf Breaking
@@ -44,16 +42,14 @@ jobs:
       contents: "read"
     continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
     steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      # Setup: Buf
-      - uses: bufbuild/buf-setup-action@v1
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: Buf"
+        uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ github.token }}
-
-      # Job: Breaking
-      - uses: bufbuild/buf-breaking-action@v1
+      - name: "Check: Buf Breaking"
+        uses: bufbuild/buf-breaking-action@v1
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
         with:
           against: https://github.com/elide-dev/v3.git#branch=v3
@@ -70,20 +66,19 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
         startsWith(github.ref, 'refs/tags/v')
       )
     permissions:
       contents: "read"
     steps:
-      ## Setup: Checkout Code
-      - uses: actions/checkout@v3
-
-      # Setup: Buf
-      - uses: bufbuild/buf-setup-action@v1
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: Buf"
+        uses: bufbuild/buf-setup-action@v1
         with:
           github_token: ${{ github.token }}
-
-      # Job: Breaking
-      - uses: bufbuild/buf-push-action@v1
+      - name: "Push: BSR"
+        uses: bufbuild/buf-push-action@v1
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}

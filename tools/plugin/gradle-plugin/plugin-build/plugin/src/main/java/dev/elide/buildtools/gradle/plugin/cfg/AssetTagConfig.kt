@@ -3,13 +3,13 @@ package dev.elide.buildtools.gradle.plugin.cfg
 import tools.elide.crypto.HashAlgorithm
 
 /** Configuration specific to the asset tag generator. */
-data class AssetTagConfig(
+internal data class AssetTagConfig(
     /** Hash algorithm to use for generating tags. */
-    val hashAlgorithm: HashAlgorithm,
+    internal val hashAlgorithm: HashAlgorithm,
 
     /** Size, in pre-image bytes, to take from the end of the hash. */
-    val tailSize: Int,
+    internal val tailSize: Int,
 
     /** Rounds of digest activity to apply. */
-    val rounds: Int,
+    internal val rounds: Int,
 ) : java.io.Serializable

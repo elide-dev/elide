@@ -13,3 +13,7 @@ node_modules/
 .yarn/install-state.gz
 docs/reports/project/properties.txt
 tools/plugin/gradle-plugin/kotlin-js-store/yarn.lock
+gradle-log.txt
+server_log.txt
+server_pid.txt
+site.tar.gz

@@ -6,6 +6,7 @@
 )
 
 plugins {
+  id("project-report")
   id("test-report-aggregation")
   id("jacoco-report-aggregation")
   id("org.sonarqube")

@@ -1,0 +1,15 @@
+elide:
+  assets:
+    enabled: true
+    prefix: /_/assets
+
+micronaut:
+  server:
+    ssl:
+      enabled: false
+#      port: 8443
+#      build-self-signed: false
+
+grpc:
+  server:
+    enabled: false

@@ -1,15 +1,16 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
 plugins {
+  id("com.github.johnrengelman.shadow")
   id("dev.elide.build.samples.backend")
   id("dev.elide.build.docker")
   id("io.micronaut.application")
   id("io.micronaut.aot")
+  id("com.google.devtools.ksp")
 }
 
 group = "dev.elide.samples"
@@ -38,11 +39,26 @@ micronaut {
 }
 
 dependencies {
+  ksp(project(":tools:processor"))
   implementation(project(":packages:server"))
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   runtimeOnly(libs.logback)
+}
+
+val shadowAppJar by configurations.creating {
+  isCanBeConsumed = true
+  isCanBeResolved = false
+}
+
+tasks.shadowJar {
+  mergeServiceFiles()
+  archiveClassifier.set("shadow")
+}
+
+artifacts {
+  add("shadowAppJar", tasks.shadowJar)
 }
 
 tasks.withType<Copy>().named("processResources") {

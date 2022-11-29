@@ -1,0 +1,239 @@
+name: Publish
+
+concurrency:
+  group: "publish"
+  cancel-in-progress: false
+
+on:
+  ## Publish flows can be invoked from other workflows.
+  workflow_call:
+    inputs:
+      ## Repository to publish to.
+      repo:
+        description: "Repository"
+        required: false
+        default: "gcs://elide-snapshots/repository/v3"
+        type: string
+
+      ## Environment to update with this deployment.
+      environment:
+        description: "Target"
+        type: string
+        required: true
+
+      ## URL target for this repository.
+      url:
+        description: "URL"
+        type: string
+        required: false
+
+      ## Switch to use GCP credentials for publishing.
+      gcp:
+        description: "Use GCP credentials"
+        type: boolean
+        default: false
+
+      ## Whether this is a snapshot publish.
+      snapshot:
+        description: "Shapshot?"
+        type: boolean
+        default: true
+
+      ## Whether to publish library packages.
+      packages:
+        description: "Publish packages"
+        type: boolean
+        default: true
+
+      ## Whether to publish the KSP processor.
+      processor:
+        description: "Publish processor"
+        type: boolean
+        default: true
+
+      ## Whether to publish substrate packages.
+      substrate:
+        description: "Publish substrate"
+        type: boolean
+        default: true
+
+      ## Whether to publish convention plugins.
+      conventions:
+        description: "Publish conventions"
+        type: boolean
+        default: true
+
+    secrets:
+      PUBLISH_USER:
+        required: false
+      PUBLISH_TOKEN:
+        required: false
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+      BUILDBOT_SERVICE_ACCOUNT_B64:
+        required: false
+      SIGNING_KEY:
+        required: true
+      SIGNING_KEY_ID:
+        required: true
+      SIGNING_KEY_PASSPHRASE:
+        required: false
+
+  ## Publish flow can be triggered manually.
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Repository"
+        required: true
+        default: "gcs://elide-snapshots/repository/v3"
+        type: string
+      environment:
+        description: "Target"
+        type: environment
+        required: true
+      url:
+        description: "URL"
+        type: string
+        required: false
+      gcp:
+        description: "Use GCP credentials"
+        type: boolean
+        default: false
+      snapshot:
+        description: "Shapshot?"
+        type: boolean
+        default: true
+      packages:
+        description: "Publish packages"
+        type: boolean
+        default: true
+      processor:
+        description: "Publish processor"
+        type: boolean
+        default: true
+      substrate:
+        description: "Publish substrate"
+        type: boolean
+        default: true
+      conventions:
+        description: "Publish conventions"
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    name: "Publish (${{ inputs.environment }})"
+    runs-on: "ubuntu-latest"
+    environment: ${{ inputs.environment }}
+    concurrency: "publish-${{ inputs.environment }}"
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      statuses: "write"
+      deployments: "write"
+    env:
+      PUBLISH_USER: ${{ secrets.PUBLISH_USER }}
+      PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+      GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+      GRADLE_CACHE_REMOTE: "true"
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        if: ${{ inputs.gcp }}
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Setup Cloud SDK"
+        if: ${{ inputs.gcp }}
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+          gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
+      - name: "Publish: Conventions"
+        uses: gradle/gradle-build-action@v2.3.3
+        if: ${{ inputs.conventions }}
+        with:
+          arguments: |
+            --warning-mode=none
+            -Pversions.java.language=17
+            -Pelide.ci=true
+            -PenableSigning=true
+            -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
+            -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
+            -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -x test
+            :conventions:publish
+      - name: "Publish: Substrate"
+        uses: gradle/gradle-build-action@v2.3.3
+        if: ${{ inputs.substrate }}
+        with:
+          arguments: |
+            --warning-mode=none
+            -Pversions.java.language=17
+            -Pelide.ci=true
+            -PenableSigning=true
+            -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
+            -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
+            -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -x test
+            :substrate:publish
+      - name: "Publish: Processor"
+        uses: gradle/gradle-build-action@v2.3.3
+        if: ${{ inputs.processor }}
+        with:
+          arguments: |
+            --warning-mode=none
+            -Pversions.java.language=17
+            -Pelide.ci=true
+            -PenableSigning=true
+            -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
+            -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
+            -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -x test
+            :tools:processor:publish
+      - name: "Publish: Packages"
+        uses: gradle/gradle-build-action@v2.3.3
+        if: ${{ inputs.packages }}
+        with:
+          arguments: |
+            --warning-mode=none
+            -Pversions.java.language=17
+            -Pelide.ci=true
+            -PenableSigning=true
+            -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
+            -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
+            -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
+            -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -x test
+            publish

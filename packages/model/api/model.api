@@ -1,0 +1,135 @@
+public abstract interface annotation class elide/annotations/Model : java/lang/annotation/Annotation {
+}
+
+public abstract interface class elide/model/AppModel {
+	public abstract fun toMessage ()Lelide/model/WireMessage;
+}
+
+public abstract interface class elide/model/AppRecord {
+	public abstract fun displayName ()Ljava/lang/String;
+	public abstract fun id ()Ljava/lang/Object;
+	public abstract fun parentId ()Ljava/lang/Object;
+}
+
+public final class elide/model/AppRecord$DefaultImpls {
+	public static fun displayName (Lelide/model/AppRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/AppRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/AppRecord;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/model/StampedRecord : elide/model/AppRecord {
+	public abstract fun createdAt ()Lkotlinx/datetime/Instant;
+	public abstract fun updatedAt ()Lkotlinx/datetime/Instant;
+}
+
+public final class elide/model/StampedRecord$DefaultImpls {
+	public static fun createdAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
+	public static fun displayName (Lelide/model/StampedRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/StampedRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/StampedRecord;)Ljava/lang/Object;
+	public static fun updatedAt (Lelide/model/StampedRecord;)Lkotlinx/datetime/Instant;
+}
+
+public abstract interface class elide/model/VersionedRecord : elide/model/StampedRecord {
+	public abstract fun version ()J
+}
+
+public final class elide/model/VersionedRecord$DefaultImpls {
+	public static fun createdAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
+	public static fun displayName (Lelide/model/VersionedRecord;)Ljava/lang/String;
+	public static fun id (Lelide/model/VersionedRecord;)Ljava/lang/Object;
+	public static fun parentId (Lelide/model/VersionedRecord;)Ljava/lang/Object;
+	public static fun updatedAt (Lelide/model/VersionedRecord;)Lkotlinx/datetime/Instant;
+	public static fun version (Lelide/model/VersionedRecord;)J
+}
+
+public class elide/model/WireMessage {
+	public fun <init> ()V
+	public final fun getProto ()Lcom/google/protobuf/Message;
+	public fun toSerializedBytes ()[B
+	public fun toSerializedString ()Ljava/lang/String;
+}
+
+public final class elide/model/token/Token {
+	public static final field Companion Lelide/model/token/Token$Companion;
+	public synthetic fun <init> (ILelide/model/token/TokenType;Lelide/model/token/TokenValue;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Lelide/model/token/TokenType;Lelide/model/token/TokenValue;)V
+	public final fun component1 ()Lelide/model/token/TokenType;
+	public final fun component2 ()Lelide/model/token/TokenValue;
+	public final fun copy (Lelide/model/token/TokenType;Lelide/model/token/TokenValue;)Lelide/model/token/Token;
+	public static synthetic fun copy$default (Lelide/model/token/Token;Lelide/model/token/TokenType;Lelide/model/token/TokenValue;ILjava/lang/Object;)Lelide/model/token/Token;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getType ()Lelide/model/token/TokenType;
+	public final fun getValue ()Lelide/model/token/TokenValue;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final fun write$Self (Lelide/model/token/Token;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/model/token/Token$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/model/token/Token$$serializer;
+	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/model/token/Token;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/model/token/Token;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/model/token/Token$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/model/token/TokenType : java/lang/Enum {
+	public static final field CUSTOM Lelide/model/token/TokenType;
+	public static final field Companion Lelide/model/token/TokenType$Companion;
+	public static final field JWT Lelide/model/token/TokenType;
+	public static final field OAUTH2_ACCESS_TOKEN Lelide/model/token/TokenType;
+	public static final field OAUTH2_CODE Lelide/model/token/TokenType;
+	public static final field OAUTH2_REFRESH_TOKEN Lelide/model/token/TokenType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/model/token/TokenType;
+	public static fun values ()[Lelide/model/token/TokenType;
+}
+
+public final class elide/model/token/TokenType$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/model/token/TokenValue {
+	public static final field Companion Lelide/model/token/TokenValue$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/model/token/TokenValue;
+	public static synthetic fun copy$default (Lelide/model/token/TokenValue;Ljava/lang/String;ILjava/lang/Object;)Lelide/model/token/TokenValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final fun write$Self (Lelide/model/token/TokenValue;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/model/token/TokenValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/model/token/TokenValue$$serializer;
+	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/model/token/TokenValue;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/model/token/TokenValue;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/model/token/TokenValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/model/util/InstantFactory {
+	public static final field INSTANCE Lelide/model/util/InstantFactory;
+	public static final fun date (Lcom/google/protobuf/Timestamp;)Ljava/util/Date;
+	public static final fun instant (Lcom/google/protobuf/Timestamp;)Ljava/time/Instant;
+}
+

@@ -60,7 +60,7 @@ protobuf {
 
 dependencies {
   // Core platform versions.
-  api(platform(project(":packages:platform")))
+  implementation(platform(project(":packages:platform")))
 
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))

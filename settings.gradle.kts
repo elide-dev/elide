@@ -13,15 +13,22 @@ plugins {
   id("com.gradle.enterprise") version("3.11.4")
 }
 
+// Fix: Force CWD to proper value and store secondary value.
+System.setProperty("user.dir", rootProject.projectDir.toString())
+System.setProperty("elide.home", rootProject.projectDir.toString())
+
 val micronautVersion: String by settings
 
 dependencyResolutionManagement {
+  repositoriesMode.set(
+    RepositoriesMode.PREFER_PROJECT
+  )
   repositories {
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     mavenCentral()
-    google()
-    maven("https://plugins.gradle.org/m2/")
+    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+    maven("https://plugins.gradle.org/m2/")
+    google()
   }
   versionCatalogs {
     create("libs") {
@@ -35,8 +42,28 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide"
 
+// 1: Gradle convention plugins.
+includeBuild("tools/conventions") {
+  dependencySubstitution {
+    substitute(module("dev.elide.tools:elide-convention-plugins")).using(project(":"))
+  }
+}
+
+// 2: Kotlin Compiler substrate.
+includeBuild("tools/substrate") {
+  dependencySubstitution {
+    substitute(module("dev.elide.tools:elide-substrate")).using(project(":"))
+    substitute(module("dev.elide.tools:elide-substrate-bom")).using(project(":bom"))
+    substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
+    substitute(module("dev.elide.tools.kotlin.plugin:injekt-plugin")).using(project(":injekt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:interakt-plugin")).using(project(":interakt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
+    substitute(module("dev.elide.tools.kotlin.plugin:sekret-plugin")).using(project(":sekret"))
+  }
+}
+
+// 3: Build modules.
 include(
-//  ":benchmarks",
   ":packages:base",
   ":packages:bom",
   ":packages:frontend",
@@ -56,13 +83,23 @@ include(
   ":tools:reports",
 )
 
-val buildDocs: String by settings
+val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
+val buildBenchmarks: String by settings
+
+if (buildPlugins == "true") {
+  includeBuild(
+    "tools/plugin/gradle-plugin",
+  )
+}
+
+include(
+  ":samples:server:hellocss",
+)
 
 if (buildSamples == "true") {
   include(
-    ":samples:server:hellocss",
     ":samples:server:helloworld",
     ":samples:fullstack:basic:frontend",
     ":samples:fullstack:basic:server",
@@ -76,18 +113,16 @@ if (buildSamples == "true") {
   )
 }
 
-if (buildDocs == "true") {
+if (buildDocsSite == "true") {
   include(
-    ":site:docs:frontend",
+    ":site:docs:ui",
     ":site:docs:node",
-    ":site:docs:server",
+    ":site:docs:app",
   )
 }
 
-if (buildPlugins == "true") {
-  includeBuild(
-    "tools/plugin/gradle-plugin",
-  )
+if (buildBenchmarks == "true") {
+  includeBuild("benchmarks")
 }
 
 gradleEnterprise {

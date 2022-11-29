@@ -1,3 +1,4 @@
+import Elide
 
 plugins {
   `version-catalog`
@@ -32,11 +33,10 @@ val libraries = listOf(
 
 // Peer modules.
 val peers = mapOf(
-  "guava" to ("com.google.guava:guava" to Versions.guava),
-  "protobuf" to ("com.google.protobuf:protobuf-java" to Versions.protobuf),
-  "grpc" to ("io.grpc:grpc-bom" to Versions.grpc),
-  "netty" to ("io.netty:netty-bom" to Versions.netty),
-  "micronaut" to ("io.micronaut:micronaut-bom" to Versions.micronaut),
+  "guava" to ("com.google.guava:guava" to libs.versions.guava.get()),
+  "protobuf" to ("com.google.protobuf:protobuf-java" to libs.versions.protobuf.get()),
+  "grpc" to ("io.grpc:grpc-bom" to libs.versions.grpc.java.get()),
+  "micronaut" to ("io.micronaut:micronaut-bom" to libs.versions.micronaut.lib.get()),
 )
 
 kover {
@@ -46,8 +46,8 @@ kover {
 catalog {
   versionCatalog {
     // map Elide versions
-    version("elide", Elide.version)
-    version("elidePlugin", Elide.pluginVersion)
+    version("elide", libs.versions.elide.asProvider().get())
+    version("elidePlugin", libs.versions.elide.plugin.get())
 
     // map each peer version
     peers.forEach { alias, (_, version) ->

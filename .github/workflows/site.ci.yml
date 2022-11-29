@@ -1,0 +1,275 @@
+name: Site
+
+on:
+  push:
+    branches:
+      - stable
+      - v3
+      - site/*
+  pull_request:
+    types: [labeled, opened, reopened, synchronize]
+
+env:
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+
+jobs:
+  ##
+  ## Job: Site Build
+  ##
+  site-build:
+    name: "Site: Build"
+    runs-on: ubuntu-latest
+    continue-on-error: false
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: QEMU"
+        uses: docker/setup-qemu-action@v2
+      - name: "Setup: Docker Buildx"
+        uses: docker/setup-buildx-action@v2
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Setup Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: yarn
+      - name: "Build: Reference Docs"
+        env:
+          CI: true
+        run: |
+          make docs reports CI=yes JVM=17
+      - name: "Build: Site"
+        uses: gradle/gradle-build-action@v2.3.3
+        env:
+          CI: true
+          GRADLE_CACHE_PUSH: true
+        with:
+          cache-read-only: false
+          arguments: |
+            :site:docs:app:build
+            :site:docs:app:dockerBuild
+            :site:docs:app:dockerPush
+            --scan
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -Pelide.release=true
+            -PbuildSamples=false
+            -PbuildDocs=true
+            -PbuildDocsSite=true
+            -Pversions.java.language=17
+            -x test
+            -x check
+            -x apiCheck
+            -x nativeTest
+            -x testNativeImage
+            -x nativeCompile
+      - name: "Build: Compress Site"
+        run: |
+          tar -czf site.tar.gz build/site
+      - name: "Upload: Manifest"
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-tarball-phase1
+          path: ./site.tar.gz
+      - name: "Upload: Site"
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-manifest
+          path: ./site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb
+
+  ##
+  ## Job: SSG Compile
+  ##
+  ssg-compile:
+    name: "Site: SSG Compile"
+    needs: [site-build]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+
+    services:
+      site:
+        image: us-docker.pkg.dev/elide-fw/samples/site/docs/jvm:latest
+        credentials:
+          username: _json_key_base64
+          password: ${{  secrets.BUILDBOT_SERVICE_ACCOUNT_B64 }}
+        ports:
+          - 8080:8080
+          - 8443:8443
+        options: >-
+          --health-cmd "curl --fail http://localhost:8080/"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 4
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: QEMU"
+        uses: docker/setup-qemu-action@v2
+      - name: "Setup: Docker Buildx"
+        uses: docker/setup-buildx-action@v2
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "Setup: Setup Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: 389.0.0
+          project_id: elide-fw
+      - name: "Authorize Docker: GCP"
+        run: |
+          gcloud auth configure-docker us-docker.pkg.dev
+      - name: "Authorize Docker: GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: elidebot
+          password: ${{ secrets.BUILDBOT_GHCR_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: yarn
+      - name: "Setup: Site Manifest"
+        uses: actions/download-artifact@v3
+        with:
+          name: site-manifest
+          path: ./artifacts/
+      - name: "Setup: Site Tarball"
+        uses: actions/download-artifact@v3
+        with:
+          name: site-tarball-phase1
+          path: .
+      - name: "Setup: Expand Site Tarball"
+        run: |
+          tar -xzf site.tar.gz
+      - name: "Setup: Show Artifacts"
+        run: ls -R
+        working-directory: ./artifacts/
+      - name: "Setup: Test Site Container"
+        run: |
+          curl -vv --fail http://localhost:8080/ || exit 1
+      - name: "Build: Compile SSG Site"
+        env:
+          CI: true
+        run: |
+          rm -fv ./site/docs/app/build/ssg-site.zip;
+          mkdir -p ./site/docs/app/build;
+          ./gradlew \
+            :packages:ssg:run \
+            --warning-mode=none \
+            --dependency-verification=lenient \
+            -Pelide.ci=true \
+            -Pelide.release=true \
+            -PbuildSamples=false \
+            -PbuildDocs=true \
+            -PbuildDocsSite=true \
+            -Pversions.java.language=17 \
+            --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
+      - name: "Build: Assemble Site"
+        run: make site CI=yes JVM=17;
+      - name: "Build: Compress Site"
+        run: |
+          rm -fv site.tar.gz;
+          tar -czf site.tar.gz build/site;
+      - name: "Upload: Site Tarball"
+        uses: actions/upload-artifact@v3
+        with:
+          name: site-tarball-phase2
+          path: ./site.tar.gz
+      - name: "Upload: Site Artifact"
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: build/site
+
+  ##
+  ## Job: Site Deploy
+  ##
+  site-deploy:
+    name: "Site: Deploy"
+    runs-on: ubuntu-latest
+    needs: [site-build, ssg-compile]
+    environment: github-pages
+    concurrency: "deploy-pages"
+    if: |
+      (
+        github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
+        contains(github.event.pull_request.labels.*.name, 'ci:deploy-site') ||
+        contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
+        contains(github.event.head_commit.message, 'ci:deploy-site') ||
+        contains(github.event.head_commit.message, 'ci:deploy') ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      statuses: "write"
+      deployments: "write"
+      pages: "write"
+
+    steps:
+      - name: "Deploy Site: GitHub Pages"
+        id: site-deploy
+        uses: actions/deploy-pages@v1

@@ -11,7 +11,7 @@ package dev.elide.buildtools.gradle.plugin.js
  * @param supportedByWebpack Whether Webpack supports this bundle format.
  */
 @Suppress("unused")
-enum class BundleType constructor(
+public enum class BundleType constructor(
     internal val symbol: String,
     internal val supportedByEsbuild: Boolean = true,
     internal val supportedByWebpack: Boolean = true
@@ -25,9 +25,14 @@ enum class BundleType constructor(
     /** ESModules-based loading. */
     ESM("esm");
 
-    companion object {
-        internal const val IIFE_NAME = "IIFE"
-        internal const val COMMON_JS_NAME = "COMMON_JS"
-        internal const val ESM_NAME = "ESM"
+    public companion object {
+        /** Name of the bundle type for `iife` (inline function). */
+        internal const val IIFE_NAME: String = "IIFE"
+
+        /** Name of the bundle type for CommonJS. */
+        internal const val COMMON_JS_NAME: String = "COMMON_JS"
+
+        /** Name of the bundle type for ESM. */
+        internal const val ESM_NAME: String = "ESM"
     }
 }

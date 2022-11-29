@@ -12,6 +12,7 @@ plugins {
     java
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotlin.kapt) apply false
+    alias(libs.plugins.kover)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar)
@@ -40,6 +41,7 @@ val overlay = file(if (project.hasProperty("elide.ci") && project.properties["el
 })
 
 if (overlay.exists()) props.load(overlay.inputStream())
+val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
 
 sonarqube {
     properties {
@@ -49,8 +51,21 @@ sonarqube {
         property("sonar.dynamicAnalysis", "reuseReports")
         property("sonar.junit.reportsPath", "build/reports/")
         property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
         property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
         property("sonar.sourceEncoding", "UTF-8")
+    }
+}
+
+koverMerged {
+    enable()
+
+    xmlReport {
+        onCheck.set(isCI)
+    }
+
+    htmlReport {
+        onCheck.set(isCI)
     }
 }
 
@@ -58,6 +73,7 @@ subprojects {
     apply {
         plugin("io.gitlab.arturbosch.detekt")
         plugin("org.jlleitschuh.gradle.ktlint")
+        plugin("org.jetbrains.kotlinx.kover")
         plugin("org.sonarqube")
     }
 
@@ -68,10 +84,10 @@ subprojects {
             property(
                 "sonar.coverage.jacoco.xmlReportPaths",
                 listOf(
-                    "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                    "build/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                    "build/reports/jacoco/test/jacocoTestReport.xml",
-                    "build/reports/kover/xml/coverage.xml",
+                    "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+                    "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+                    "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
+                    "$buildDir/reports/kover/xml/coverage.xml",
                 )
             )
         }
@@ -126,10 +142,14 @@ tasks.register("reformatAll") {
 tasks.register("preMerge") {
     description = "Runs all the tests/verification tasks on both top level and included build."
 
+    dependsOn("build", "test", "check")
+    dependsOn("koverReport", "koverVerify", "koverMergedXmlReport")
     dependsOn(":example:fullstack:node:check")
     dependsOn(":example:fullstack:server:check")
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:check"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:validatePlugins"))
+    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverReport"))
+    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverVerify"))
 }
 
 tasks.wrapper {

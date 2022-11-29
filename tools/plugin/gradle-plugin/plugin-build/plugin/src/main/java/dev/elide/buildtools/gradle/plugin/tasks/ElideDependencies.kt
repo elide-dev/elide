@@ -389,9 +389,7 @@ internal object ElideDependencies {
                 }
 
                 // if it's a platform dependency, we need to add it via the JVM source set.
-                DependencyTarget.PLATFORM -> {
-                    TODO("not yet implemented")
-                }
+                DependencyTarget.PLATFORM -> DependencyTarget.MAIN.kmppSourceSet!!
 
                 else -> spec.target.kmppSourceSet ?: error(
                     "Failed to resolve source set name for dependency target '${spec.target.name}'"
@@ -418,10 +416,7 @@ internal object ElideDependencies {
                 TODO("not yet implemented")
             }
 
-            DependencyTarget.PLATFORM -> {
-                TODO("not yet implemented")
-            }
-
+            DependencyTarget.PLATFORM,
             DependencyTarget.TEST,
             DependencyTarget.MAIN -> configurations.getByName(
                 spec.visibility.config
@@ -454,7 +449,7 @@ internal object ElideDependencies {
             logger.debug("[Elide]: Dependency '${spec.groupId}:${spec.artifactId}' requested")
         }
         val extension = extensions.getByType(ElideExtension::class.java)
-        val configuration: Configuration = resolveConfigurationForSpec(spec)
+        val configuration = resolveConfigurationForSpec(spec)
 
         // check for an existing dependency
         val existing = configuration.dependencies.find {
@@ -481,7 +476,7 @@ internal object ElideDependencies {
      * @param deps Dependencies to install into the project.
      * @return Current project, for chaining.
      */
-    private fun Project.install(vararg deps: ElideDependency): Project {
+    internal fun Project.install(vararg deps: ElideDependency): Project {
         deps.forEach {
             installDependency(it)
         }
@@ -494,7 +489,7 @@ internal object ElideDependencies {
      * @receiver Project to which the KSP plugin should be applied.
      * @return Current project, for chaining.
      */
-    fun Project.installApplyKSP(): Project {
+    internal fun Project.installApplyKSP(): Project {
         if (!pluginManager.hasPlugin(ThirdParty.Plugins.KSP.pluginId) &&
             plugins.findPlugin(ThirdParty.Plugins.KSP.pluginId) == null) {
             // KSP needs to be resolved and by version, and then applied to the project.
@@ -510,10 +505,9 @@ internal object ElideDependencies {
      * @return Current project, for chaining.
      */
     internal fun Project.installJavaPlatform(): Project {
-        return this // @TODO(sgammon): not yet implemented
-//        return installVersionCatalog().install(
-//            Tools.PLATFORM,
-//        )
+        return install(
+            Tools.PLATFORM,
+        )
     }
 
     /**

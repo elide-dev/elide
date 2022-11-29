@@ -10,6 +10,7 @@ plugins {
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
     kotlin("plugin.serialization")
+    id("org.jetbrains.kotlinx.kover")
 
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
@@ -62,9 +63,9 @@ buildConfig {
     dependencyConfig("GRAALVM", "graalvm")
     dependencyConfig("GRAALVM_JS", "graalvm-js")
     dependencyConfig("GRAALVM_REACT", "graalvm-react")
+    dependencyConfig("PLATFORM", "platform")
+    dependencyConfig("CATALOG", "bom")
 
-    dependencyConfig("PLATFORM", "bom-platform", elideToolsGroup)
-    dependencyConfig("CATALOG", "bom-catalog", elideToolsGroup)
     dependencyConfig("PROCESSOR", "processor", elideToolsGroup)
     dependencyConfig("SUBSTRATE", "elide-substrate", elideToolsGroup)
     dependencyConfig("CONVENTION", "elide-convention-plugins", elideToolsGroup)
@@ -88,11 +89,6 @@ pluginBundle {
         artifactId = PluginCoordinates.ID.removePrefix("$groupId.")
         version = PluginCoordinates.VERSION
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
 
 val minimumMicronaut = "3.6.3"

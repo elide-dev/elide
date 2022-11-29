@@ -3,19 +3,18 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://maven-central.storage-download.googleapis.com/maven2/")
         mavenCentral()
-        google()
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     }
 }
 
 dependencyResolutionManagement {
+    repositoriesMode.set(
+        RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    )
     repositories {
-        google()
-        maven("https://maven-central.storage-download.googleapis.com/maven2/")
         mavenCentral()
-        maven("https://plugins.gradle.org/m2/")
+        gradlePluginPortal()
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     }
     versionCatalogs {

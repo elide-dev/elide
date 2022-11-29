@@ -72,3 +72,7 @@ elide {
         }
     }
 }
+
+tasks.named("nativeCompile").configure {
+    onlyIf { false }
+}

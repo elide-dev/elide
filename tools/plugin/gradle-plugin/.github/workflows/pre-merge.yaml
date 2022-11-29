@@ -112,3 +112,13 @@ jobs:
           file ./example/fullstack/server/build/resources/main/assets/*.txt
           file ./example/fullstack/server/build/resources/main/assets/*.css
           file ./example/fullstack/server/build/resources/main/assets/*.js
+
+      ## Job: Report Code Coverage
+      - name: "Report: Codecov"
+        uses: codecov/codecov-action@v3
+        continue-on-error: true
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./plugin-build/plugin/build/reports/kover/xml/report.xml
+          fail_ci_if_error: false
+          verbose: true

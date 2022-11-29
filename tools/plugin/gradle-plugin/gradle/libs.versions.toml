@@ -36,6 +36,7 @@ closure = "v20221004"
 closure_stylesheets = "1.5.0"
 buildconfig_plugin = "3.1.0"
 auto_service = "1.0.1"
+kover = "0.6.1"
 
 micronaut = "3.7.4"
 micronaut_plugin = "3.6.5"
@@ -50,6 +51,7 @@ kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = 
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlin_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 kotlinx_plugin_abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 micronaut_application = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
 micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
@@ -121,12 +123,11 @@ elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
-elide_bom = { group = "dev.elide", name = "bom", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
-elide_bom_catalog = { group = "dev.elide", name = "bom-catalog", version.ref = "elide" }
-elide_bom_platform = { group = "dev.elide", name = "bom-platform", version.ref = "elide" }
+elide_bom_catalog = { group = "dev.elide", name = "bom", version.ref = "elide" }
+elide_bom_platform = { group = "dev.elide", name = "platform", version.ref = "elide" }
 elide_kotlin_plugin_injekt = { group = "dev.elide.tools.kotlin.plugin", name = "injekt-plugin", version.ref = "elide" }
 elide_kotlin_plugin_interakt = { group = "dev.elide.tools.kotlin.plugin", name = "interakt-plugin", version.ref = "elide" }
 elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "redakt-plugin", version.ref = "elide" }

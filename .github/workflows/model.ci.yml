@@ -29,6 +29,8 @@ jobs:
           github_token: ${{ github.token }}
       - name: "Check: Buf Lint"
         uses: bufbuild/buf-lint-action@v1
+        with:
+          input: proto
 
   ##
   ## Job: Buf Breaking
@@ -53,6 +55,7 @@ jobs:
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
         with:
           against: https://github.com/elide-dev/v3.git#branch=v3
+          input: proto
 
   ##
   ## Job: Buf Push
@@ -82,3 +85,4 @@ jobs:
         uses: bufbuild/buf-push-action@v1
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
+          input: proto

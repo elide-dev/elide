@@ -136,6 +136,9 @@ jobs:
     env:
       PUBLISH_USER: ${{ secrets.PUBLISH_USER }}
       PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+      GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+      GRADLE_CACHE_REMOTE: "true"
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3

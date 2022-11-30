@@ -272,7 +272,13 @@ public final class elide/tool/ssg/SiteCompilerParams {
 
 public final class elide/tool/ssg/SiteCompilerParams$Options {
 	public static final field Companion Lelide/tool/ssg/SiteCompilerParams$Options$Companion;
+	public static final field DEFAULT_CRAWL Z
+	public static final field DEFAULT_DEBUG Z
+	public static final field DEFAULT_HTTP_MODE Z
+	public static final field DEFAULT_IGNORE_CERTS Z
+	public static final field DEFAULT_PRETTY Z
 	public static final field DEFAULT_REQUEST_TIMEOUT I
+	public static final field DEFAULT_VERBOSE Z
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;Z)V
 	public synthetic fun <init> (Ljava/lang/String;ZZZZZLjava/util/SortedSet;ILjava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V

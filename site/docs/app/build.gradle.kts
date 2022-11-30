@@ -118,6 +118,16 @@ dependencies {
   implementation(libs.bouncycastle.pkix)
   implementation(libs.conscrypt)
   implementation(libs.tink)
+  implementation(libs.netty.resolver.dns.native.macos)
+  implementation(libs.netty.transport.native.unixCommon)
+  implementation(libs.netty.transport.native.epoll)
+  implementation(libs.netty.transport.native.kqueue)
+  implementation(libs.netty.tcnative)
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
   runtimeOnly(libs.logback)
 
   testImplementation(kotlin("test"))
@@ -202,6 +212,66 @@ tasks {
       mainClass = mainEntry
       ports = listOf("8080", "50051")
       format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
+    }
+  }
+}
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    defaultMode.set("standard")
+    builtinCallerFilter.set(true)
+    builtinHeuristicFilter.set(true)
+    enableExperimentalPredefinedClasses.set(false)
+    enableExperimentalUnsafeAllocationTracing.set(false)
+    trackReflectionMetadata.set(true)
+    enabled.set(true)
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.add("test")
+      outputDirectories.add("src/main/resources/META-INF/native-image")
+      mergeWithExisting.set(true)
+    }
+  }
+
+  binaries {
+    named("main") {
+      fallback.set(false)
+      quickBuild.set(false)
+      buildArgs.addAll(listOf(
+        "--no-fallback",
+        "--language:js",
+        "--language:regex",
+        "--enable-http",
+        "--enable-https",
+        "--gc=G1",
+        "--static",
+        "--libc=glibc",
+        "--enable-all-security-services",
+        "--install-exit-handlers",
+        "--report-unsupported-elements-at-runtime",
+        "-Duser.country=US",
+        "-Duser.language=en",
+        "-H:IncludeLocales=en",
+        "-H:+InstallExitHandlers",
+        "-H:+ReportExceptionStackTraces",
+        "-H:+DashboardAll",
+        "-H:DashboardDump=/workspaces/v3/site/docs/app/analysis/dashboard.json",
+        "-H:+DashboardJson",
+        "--pgo-instrument",
+        "-dsa",
+        "--enable-all-security-services",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+      ))
     }
   }
 }

@@ -2073,10 +2073,10 @@ isomorphic-fetch@^2.1.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
-java-parser@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.npmjs.org/java-parser/-/java-parser-2.0.2.tgz#488160fbf4fd1351880134f9af832537f2124995"
-  integrity sha512-fwv1eDYE4OIAN+XS7cD8aB7UdQyAh3Uz36ydWqemvnDKXEdLbxq7qIbvsjpSvS1NHFR+r81N7AjGcpnamjVxJw==
+java-parser@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/java-parser/-/java-parser-2.0.3.tgz#02b4d52d530c8ce569576e755e1c0a6f6bfbafb0"
+  integrity sha512-z+ZsqcY3LCN0NPK1KnC7AXFHQxtzlsADJ2OVQmenKS/4gHBQ6SkEQYIMVV/2WrxRBMWXMXW7KeOVmXPLHCMRAQ==
   dependencies:
     chevrotain "6.5.0"
     lodash "4.17.21"
@@ -2773,14 +2773,14 @@ prepack@0.2.54:
   optionalDependencies:
     v8-profiler-node8 "^6.0.1"
 
-prettier-plugin-java@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.npmjs.org/prettier-plugin-java/-/prettier-plugin-java-1.6.2.tgz#ffa361eaa50056254eb6d3dbd53d449a5f281229"
-  integrity sha512-oVIUOkx50eb9skdRtEIU7MJUsizQ1ZocgXR1w1o8AnieNGpuPI/2pWnpjtbBm9wUG1dHtBGU8cVIr8h+xgzQIg==
+prettier-plugin-java@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-java/-/prettier-plugin-java-2.0.0.tgz#a5c983d8edfd55a4e5d6b7e6132e8bb2eb3e8272"
+  integrity sha512-ct7Zgog2XUpZ+olF3Ed4gPBNU7aWBu0cnpgDX7eqs0IZVH+9ZAduRkaJ0HlreoOm7SdUOc7UoKK1vk3T/coEoQ==
   dependencies:
-    java-parser "2.0.2"
+    java-parser "2.0.3"
     lodash "4.17.21"
-    prettier "2.3.1"
+    prettier "2.8.0"
 
 prettier-plugin-properties@^0.2.0:
   version "0.2.0"
@@ -2806,15 +2806,15 @@ prettier-plugin-toml@^0.3.1:
     "@toml-tools/parser" "^0.3.1"
     prettier "^1.16.0"
 
-prettier@2.3.1:
-  version "2.3.1"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-2.3.1.tgz#76903c3f8c4449bc9ac597acefa24dc5ad4cbea6"
-  integrity sha512-p+vNbgpLjif/+D+DwAZAbndtRrR0md0MwfmOVN9N+2RgyACMT+7tfaRnT+WDPkqnuVwleyuBIG2XBxKDme3hPA==
-
 prettier@2.7.1:
   version "2.7.1"
   resolved "https://registry.npmjs.org/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+
+prettier@2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.0.tgz#c7df58393c9ba77d6fba3921ae01faf994fb9dc9"
+  integrity sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==
 
 prettier@^1.16.0:
   version "1.19.1"

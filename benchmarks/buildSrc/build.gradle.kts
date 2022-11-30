@@ -11,7 +11,7 @@ repositories {
   maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
 }
 
-val kotlinVersion = "1.7.21"
+val kotlinVersion = "1.7.22"
 
 dependencies {
   implementation(libs.plugin.kotlin.allopen)

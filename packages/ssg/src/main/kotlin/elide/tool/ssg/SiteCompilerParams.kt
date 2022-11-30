@@ -99,15 +99,15 @@ public data class SiteCompilerParams(
    */
   public data class Options(
     val classpath: String? = null,
-    val verbose: Boolean = false,
-    val debug: Boolean = false,
-    val httpMode: Boolean = false,
-    val ignoreCertErrors: Boolean = false,
-    val crawl: Boolean = true,
+    val verbose: Boolean = DEFAULT_VERBOSE,
+    val debug: Boolean = DEFAULT_DEBUG,
+    val httpMode: Boolean = DEFAULT_HTTP_MODE,
+    val ignoreCertErrors: Boolean = DEFAULT_IGNORE_CERTS,
+    val crawl: Boolean = DEFAULT_CRAWL,
     val extraOrigins: SortedSet<String> = sortedSetOf(),
     val timeout: Int = DEFAULT_REQUEST_TIMEOUT,
     val precompress: Set<CompressionMode> = emptySet(),
-    val pretty: Boolean = true,
+    val pretty: Boolean = DEFAULT_PRETTY,
   ) {
     public companion object {
       /** Default options. */
@@ -115,6 +115,24 @@ public data class SiteCompilerParams(
 
       /** Default request timeout, in seconds. */
       public const val DEFAULT_REQUEST_TIMEOUT: Int = 30
+
+      /** Default verbose mode value. */
+      public const val DEFAULT_VERBOSE: Boolean = false
+
+      /** Default debug mode value. */
+      public const val DEFAULT_DEBUG: Boolean = false
+
+      /** Default HTTP mode value. */
+      public const val DEFAULT_HTTP_MODE: Boolean = false
+
+      /** Default ignore-cert-errors value. */
+      public const val DEFAULT_IGNORE_CERTS: Boolean = false
+
+      /** Default crawl-mode value. */
+      public const val DEFAULT_CRAWL: Boolean = true
+
+      /** Default pretty-mode value. */
+      public const val DEFAULT_PRETTY: Boolean = true
     }
 
     // Apply these options to the provided `compiler` instance.

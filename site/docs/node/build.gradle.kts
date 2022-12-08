@@ -17,15 +17,7 @@ plugins {
 group = "dev.elide.site.docs"
 version = rootProject.version as String
 
-val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
-
-//kotlin {
-//  js(IR) {
-//    nodejs {
-//      binaries.executable()
-//    }
-//  }
-//}
+val devMode = (project.property("elide.buildMode") ?: "dev") != "prod"
 
 elide {
   mode = if (devMode) {

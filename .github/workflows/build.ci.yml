@@ -34,6 +34,7 @@ jobs:
           components: "native-image,js"
           version: latest
           java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -83,18 +84,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        experimental: [false]
-        gu-binary: [gu]
-        java: [19]
+        mode: ['strict']
         include:
           - os: macos
-            experimental: false
-            gu-binary: gu
-            java: 19
+            mode: strict
 
     name: "Build"
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.experimental }}
+    continue-on-error: ${{ matrix.mode == 'labs' }}
 
     permissions:
       contents: "read"
@@ -111,12 +108,31 @@ jobs:
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java 11)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 11
+          set-java-home: false
+          check-for-updates: ${{ matrix.os == 'ubuntu' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 17)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 17
+          set-java-home: false
+          check-for-updates: ${{ matrix.os == 'ubuntu' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 19)"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
           version: latest
-          java-version: ${{ matrix.java }}
+          java-version: 19
+          check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@v3
@@ -136,7 +152,7 @@ jobs:
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2.3.3
         id: gradlebuild
-        continue-on-error: ${{ matrix.experimental }}
+        continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
           CI: true
           GRADLE_CACHE_PUSH: true
@@ -158,20 +174,21 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-            -Pversions.java.language=${{ matrix.java }}
+            -Pversions.java.minimum=11
+            -Pversions.java.language=19
       - name: "Build reports"
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: build-reports-${{ matrix.os }}-latest-java${{ matrix.java }}-gvm-latest
+          name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
             build/reports/**/*.*
       - name: "Run: Detekt"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
-        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=${{ matrix.java }}
+        if: ${{ matrix.os == 'ubuntu' }}
+        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=19
         continue-on-error: true
       - name: "Fix: SARIF Paths"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
+        if: ${{ matrix.os == 'ubuntu' }}
         continue-on-error: true
         run: |
           echo "$(
@@ -181,7 +198,7 @@ jobs:
            ${{ github.workspace }}/build/reports/detekt/elide.sarif
           )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
       - name: "Report: SARIF"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
+        if: ${{ matrix.os == 'ubuntu' }}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
@@ -207,12 +224,31 @@ jobs:
         uses: actions/checkout@v3
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java 11)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 11
+          set-java-home: false
+          check-for-updates: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 17)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 17
+          set-java-home: false
+          check-for-updates: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 19)"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
           version: latest
           java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -323,6 +359,7 @@ jobs:
           components: "native-image,js"
           version: latest
           java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -417,6 +454,7 @@ jobs:
           components: "native-image,js"
           version: latest
           java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
@@ -509,6 +547,7 @@ jobs:
           components: "native-image,js"
           version: latest
           java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2

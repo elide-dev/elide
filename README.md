@@ -20,10 +20,11 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Java 17](https://img.shields.io/badge/Java-17-blue.svg?logo=java)](https://openjdk.org/projects/jdk/17/)
-[![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
+[![Java 19](https://img.shields.io/badge/Java-19-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
 [![GraalVM](https://img.shields.io/badge/GraalVM-22.3.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
+[![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
 _**Elide is currently in alpha.**_
 

@@ -132,16 +132,6 @@ import java.util.SortedSet
       "micronaut.server.netty.parent.prefer-native-transport" to true,
       "micronaut.server.netty.worker.prefer-native-transport" to true,
     )
-
-    // Properties applied only in dev mode.
-    public val devMap: SortedMap<String, Any> = sortedMapOf(
-      "micronaut.server.ssl.enabled" to true,
-//      "micronaut.server.http-version" to 2.0,
-      "micronaut.server.dual-protocol" to true,
-      "micronaut.server.http-to-https-redirect" to false,
-      "micronaut.server.ssl.build-self-signed" to (
-        System.getProperty("elide.ssl.build-self-signed", "true").toBoolean()),
-    )
   }
 
   /** @inheritDoc */
@@ -162,13 +152,7 @@ import java.util.SortedSet
     // inject configuration unless disabled
     if (System.getProperty("elide.config.noInject") != "true") {
       builder.propertySources(
-        PropertySource.of(baseMap.plus(nonTestMap).plus(
-          if (System.getProperty("elide.dev") == "true") {
-            devMap
-          } else {
-            emptyMap()
-          }
-        ).filter {
+        PropertySource.of(baseMap.plus(nonTestMap).filter {
           !bannedConfig.contains(it.key)
         }),
       )

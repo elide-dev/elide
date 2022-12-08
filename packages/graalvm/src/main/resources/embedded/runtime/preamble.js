@@ -11,7 +11,7 @@ const process = this["process"] || {
 
 globalThis.process = process;
 
-const window = globalThis || this;
+const window = undefined;
 const global = globalThis || this;
 const self = globalThis || this;
 
@@ -19,7 +19,6 @@ let gc = null;
 
 const Elide = {
   process,
-  window,
   global,
   self,
   context: {

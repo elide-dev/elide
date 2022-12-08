@@ -34,19 +34,29 @@ public final class elide/runtime/ssr/RenderedStream {
 
 public abstract interface class elide/runtime/ssr/ServerResponse {
 	public abstract fun getContent ()Ljava/lang/String;
+	public abstract fun getFin ()Z
 	public abstract fun getHasContent ()Z
 	public abstract fun getHeaders ()Ljava/util/Map;
-	public abstract fun getStatus ()I
+	public abstract fun getStatus ()Ljava/lang/Integer;
+}
+
+public final class elide/runtime/ssr/ServerResponse$DefaultImpls {
+	public static fun getContent (Lelide/runtime/ssr/ServerResponse;)Ljava/lang/String;
+	public static fun getFin (Lelide/runtime/ssr/ServerResponse;)Z
+	public static fun getHasContent (Lelide/runtime/ssr/ServerResponse;)Z
+	public static fun getHeaders (Lelide/runtime/ssr/ServerResponse;)Ljava/util/Map;
+	public static fun getStatus (Lelide/runtime/ssr/ServerResponse;)Ljava/lang/Integer;
 }
 
 public abstract class elide/runtime/ssr/StreamResponse : elide/runtime/ssr/ServerResponse {
 	public static final field Companion Lelide/runtime/ssr/StreamResponse$Companion;
-	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getContent ()Ljava/lang/String;
+	public fun getFin ()Z
 	public fun getHasContent ()Z
 	public fun getHeaders ()Ljava/util/Map;
-	public fun getStatus ()I
+	public fun getStatus ()Ljava/lang/Integer;
 }
 
 public final class elide/runtime/ssr/StreamResponse$Companion {

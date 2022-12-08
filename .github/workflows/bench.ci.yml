@@ -22,12 +22,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        java: [17]
+        java: [19]
         engine: [graalvm]
         experimental: [false]
         include:
           - os: macos
-            java: 17
+            java: 19
             engine: graalvm
             experimental: false
 

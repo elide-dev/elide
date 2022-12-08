@@ -40,7 +40,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -75,7 +75,7 @@ jobs:
         env:
           CI: true
         run: |
-          make docs reports CI=yes JVM=17
+          make docs reports CI=yes JVM=19
       - name: "Build: Site"
         uses: gradle/gradle-build-action@v2.3.3
         env:
@@ -95,7 +95,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocs=true
             -PbuildDocsSite=true
-            -Pversions.java.language=17
+            -Pversions.java.language=19
             -x test
             -x check
             -x apiCheck
@@ -157,7 +157,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -222,10 +222,10 @@ jobs:
             -PbuildSamples=false \
             -PbuildDocs=true \
             -PbuildDocsSite=true \
-            -Pversions.java.language=17 \
+            -Pversions.java.language=19 \
             --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
       - name: "Build: Assemble Site"
-        run: make site CI=yes JVM=17;
+        run: make site CI=yes JVM=19;
       - name: "Build: Compress Site"
         run: |
           rm -fv site.tar.gz;

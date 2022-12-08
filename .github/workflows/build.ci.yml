@@ -33,7 +33,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -72,7 +72,7 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocsSite=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
 
   ##
   ## Job: Library Build
@@ -85,20 +85,12 @@ jobs:
         os: [ubuntu]
         experimental: [false]
         gu-binary: [gu]
-        java: [17]
+        java: [19]
         include:
-          - os: ubuntu
-            experimental: false
-            gu-binary: gu
-            java: 11
           - os: macos
             experimental: false
             gu-binary: gu
-            java: 17
-          - os: macos
-            experimental: false
-            gu-binary: gu
-            java: 11
+            java: 19
 
     name: "Build"
     runs-on: ${{ matrix.os }}-latest
@@ -175,11 +167,11 @@ jobs:
           path: |
             build/reports/**/*.*
       - name: "Run: Detekt"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
         run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=${{ matrix.java }}
         continue-on-error: true
       - name: "Fix: SARIF Paths"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
         continue-on-error: true
         run: |
           echo "$(
@@ -189,7 +181,7 @@ jobs:
            ${{ github.workspace }}/build/reports/detekt/elide.sarif
           )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
       - name: "Report: SARIF"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        if: ${{ matrix.os == 'ubuntu' && matrix.java == '19' }}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
@@ -220,7 +212,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -268,7 +260,7 @@ jobs:
             -PbuildSamples=true
             -PbuildDocs=false
             -PbuildDocsSite=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-jvm
@@ -330,7 +322,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -378,7 +370,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-native
@@ -424,7 +416,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
@@ -468,7 +460,7 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=true
             -PbuildDocs=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
             -Pelide.runtime=JVM
             -x nativeCompile
             -x test
@@ -516,7 +508,7 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
@@ -559,7 +551,7 @@ jobs:
           arguments: |
             --no-daemon
             --warning-mode=none
-            -Pversions.java.language=17
+            -Pversions.java.language=19
             -Pelide.ci=true
             -PbuildSamples=true
             -PbuildDocs=false

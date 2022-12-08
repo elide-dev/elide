@@ -358,7 +358,6 @@ public final class elide/server/cfg/ServerConfigurator$Companion {
 	public final fun getBaseMap ()Ljava/util/SortedMap;
 	public final fun getCipherSuites ()Ljava/util/List;
 	public final fun getDefaultAccessLogExclusions ()Ljava/util/SortedSet;
-	public final fun getDevMap ()Ljava/util/SortedMap;
 	public final fun getLabsMap ()Ljava/util/SortedMap;
 	public final fun getNonTestMap ()Ljava/util/SortedMap;
 	public final fun getSystemProps ()Ljava/util/SortedMap;

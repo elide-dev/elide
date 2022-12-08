@@ -32,7 +32,8 @@ public final class elide/runtime/graalvm/JsRuntime {
 	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
 	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
 	public final fun executeStreaming (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun resolveInvocationTarget (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Z)Lorg/graalvm/polyglot/Value;
+	public final fun resolveInvocationTarget (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;ZLjava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun resolveInvocationTarget$default (Lelide/runtime/graalvm/JsRuntime;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;ZLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
 	public final fun serverResponseFromRaw (Lorg/graalvm/polyglot/Value;)Lelide/runtime/ssr/ServerResponse;
 }
 
@@ -42,8 +43,8 @@ public final class elide/runtime/graalvm/JsRuntime$Companion {
 
 public final class elide/runtime/graalvm/JsRuntime$EmbeddedScript : elide/runtime/graalvm/JsRuntime$ExecutableScript {
 	public static final field Companion Lelide/runtime/graalvm/JsRuntime$EmbeddedScript$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getPath ()Ljava/lang/String;
 }
 
@@ -51,8 +52,8 @@ public final class elide/runtime/graalvm/JsRuntime$EmbeddedScript$Companion {
 }
 
 public abstract class elide/runtime/graalvm/JsRuntime$ExecutableScript {
-	public synthetic fun <init> (ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ZZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ZZLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class elide/runtime/graalvm/JsRuntime$ExecutionInputs {
@@ -76,8 +77,7 @@ public final class elide/runtime/graalvm/JsRuntime$ExecutionInputs$Companion {
 
 public final class elide/runtime/graalvm/JsRuntime$LiteralScript : elide/runtime/graalvm/JsRuntime$ExecutableScript {
 	public static final field Companion Lelide/runtime/graalvm/JsRuntime$LiteralScript$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class elide/runtime/graalvm/JsRuntime$LiteralScript$Companion {
@@ -85,10 +85,9 @@ public final class elide/runtime/graalvm/JsRuntime$LiteralScript$Companion {
 
 public final class elide/runtime/graalvm/JsRuntime$Script {
 	public static final field INSTANCE Lelide/runtime/graalvm/JsRuntime$Script;
-	public static final fun embedded (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
-	public static synthetic fun embedded$default (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
-	public static final fun literal (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
-	public static synthetic fun literal$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
+	public static final fun embedded (Ljava/lang/String;Ljava/nio/charset/Charset;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
+	public static synthetic fun embedded$default (Ljava/lang/String;Ljava/nio/charset/Charset;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
+	public static final fun literal (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
 }
 
 public final class elide/runtime/graalvm/JsRuntime$VMThread : java/lang/Thread {
@@ -104,16 +103,16 @@ public final class elide/runtime/graalvm/JsRuntime$VMThread$Companion {
 
 public final class elide/server/SSRExtensionsKt {
 	public static final field DEFAULT_INVOCATION_STREAM_TARGET Ljava/lang/String;
+	public static final field DEFAULT_INVOCATION_TARGET Ljava/lang/String;
 	public static final field DEFAULT_SSR_DOM_ID Ljava/lang/String;
 	public static final field NODE_SSR_DEFAULT_PATH Ljava/lang/String;
 	public static final fun getDEFAULT_INVOCATION_BASE ()Ljava/lang/String;
-	public static final fun getDEFAULT_INVOCATION_TARGET ()Ljava/lang/String;
-	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun streamSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun streamSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun streamSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun streamSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/server/ssr/ServerRenderer : elide/server/ResponseRenderer {

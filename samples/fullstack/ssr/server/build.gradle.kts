@@ -6,15 +6,31 @@
 
 plugins {
   id("dev.elide.build.samples.backend")
+  id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
   id("io.micronaut.aot")
 }
 
 group = "dev.elide.samples"
 version = rootProject.version as String
+val devMode = (project.property("elide.buildMode") ?: "dev") != "prod"
 
 application {
   mainClass.set("fullstack.ssr.App")
+}
+
+elide {
+  mode = if (devMode) {
+    dev.elide.buildtools.gradle.plugin.BuildMode.DEVELOPMENT
+  } else {
+    dev.elide.buildtools.gradle.plugin.BuildMode.PRODUCTION
+  }
+
+  server {
+    ssr(tools.elide.assets.EmbeddedScriptLanguage.JS) {
+      bundle(project(":samples:fullstack:ssr:node"))
+    }
+  }
 }
 
 micronaut {
@@ -31,6 +47,65 @@ micronaut {
     cacheEnvironment.set(true)
     netty {
       enabled.set(true)
+    }
+  }
+}
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    defaultMode.set("standard")
+    builtinCallerFilter.set(true)
+    builtinHeuristicFilter.set(true)
+    enableExperimentalPredefinedClasses.set(false)
+    enableExperimentalUnsafeAllocationTracing.set(false)
+    trackReflectionMetadata.set(true)
+    enabled.set(false)
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.add("test")
+      outputDirectories.add("src/main/resources/META-INF/native-image")
+      mergeWithExisting.set(true)
+    }
+  }
+
+  binaries {
+    named("main") {
+      fallback.set(false)
+      quickBuild.set(true)
+      buildArgs.addAll(listOf(
+        "--no-fallback",
+        "--language:js",
+//        "--language:regex",
+//        "--enable-http",
+//        "--enable-https",
+//        "--gc=G1",
+//        "--static",
+//        "--libc=glibc",
+//        "--enable-all-security-services",
+//        "--install-exit-handlers",
+//        "--report-unsupported-elements-at-runtime",
+//        "-Duser.country=US",
+//        "-Duser.language=en",
+//        "-H:IncludeLocales=en",
+//        "-H:+InstallExitHandlers",
+//        "-H:+ReportExceptionStackTraces",
+//        "--pgo-instrument",
+//        "-dsa",
+//        "--language:js",
+//        "--language:regex",
+        "--enable-all-security-services",
+//        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+      ))
     }
   }
 }

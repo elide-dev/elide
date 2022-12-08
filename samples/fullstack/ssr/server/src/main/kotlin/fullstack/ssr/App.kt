@@ -24,7 +24,11 @@ object App {
         stylesheet("/styles/main.css")
       }
       body {
-        injectSSR(this@Index, request)
+        if (request.parameters["mode"] == "streaming") {
+          streamSSR(this@Index, request)
+        } else {
+          injectSSR(this@Index, request)
+        }
       }
     }
 

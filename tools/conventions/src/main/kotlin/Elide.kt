@@ -75,6 +75,7 @@ object Elide {
   val multiplatformModules = listOf(
     "base",
     "model",
+    "ssr",
     "test",
   )
 
@@ -132,6 +133,7 @@ object Elide {
     "rpc-jvm",
     "server",
     "ssg",
+    "ssr",
     "test",
   ).map { ":packages:$it" }.plus(listOf(
     // Tools

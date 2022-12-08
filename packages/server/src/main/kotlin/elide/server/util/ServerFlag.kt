@@ -47,6 +47,11 @@ import java.util.concurrent.atomic.AtomicReference
     it.trim().toBoolean()
   }
 
+  /** Whether to enable VM pre-warming. */
+  public val warmup: Boolean get() = resolve("elide.vm.prewarm", "true") {
+    it.trim().toBoolean()
+  }
+
   // Resolve an enumerated flag value.
   public fun <R> resolve(name: String, defaultValue: String, then: (String) -> R): R {
     val value = System.getProperty(name, System.getenv(name) ?: resolveArg(name))

@@ -7,10 +7,14 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.graalvm.JsRuntime
 import elide.runtime.ssr.ServerResponse
+import elide.server.Application
+import elide.server.ServerInitializer
 import elide.server.SuspensionRenderer
+import elide.server.annotations.Eager
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
 import elide.server.type.RequestState
+import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import kotlinx.coroutines.*
@@ -35,6 +39,20 @@ public class ServerSSRRenderer constructor(
   public companion object {
     /** ID in the DOM where SSR data is affixed, if present. */
     public const val ssrId: String = "ssr-data"
+  }
+
+  /** SSR service initializer. */
+  @Context @Eager public class SSRInitializer : ServerInitializer {
+    override fun initialize() {
+      Application.Initialization.initializeOnWarmup {
+        val maybeEmbedded = JsRuntime.Script.embedded()
+        if (maybeEmbedded.valid()) {
+          JsRuntime.acquire().apply {
+            prewarmScript(maybeEmbedded)
+          }
+        }
+      }
+    }
   }
 
   // Logger.

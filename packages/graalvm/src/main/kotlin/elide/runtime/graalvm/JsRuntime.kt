@@ -5,6 +5,11 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
 import elide.annotations.core.Polyglot
 import elide.runtime.ssr.ServerResponse
+import elide.server.Application
+import elide.server.EMBEDDED_ROOT
+import elide.server.NODE_SSR_DEFAULT_PATH
+import elide.server.ServerInitializer
+import elide.server.annotations.Eager
 import elide.server.type.RequestState
 import elide.server.util.ServerFlag
 import elide.util.Hex
@@ -13,9 +18,12 @@ import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
 import io.micronaut.core.annotation.ReflectiveAccess
+import jakarta.inject.Singleton
 import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
+import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.ImageSingletons
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -28,12 +36,13 @@ import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Supplier
 import com.google.common.util.concurrent.ListenableFuture as Future
 import org.graalvm.polyglot.Context as VMContext
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
 @Suppress("MemberVisibilityCanBePrivate")
-@Context public class JsRuntime {
+public class JsRuntime private constructor() {
   public companion object {
     private const val RENDER_ENTRYPOINT = "renderContent"
     private const val STREAM_ENTRYPOINT = "renderStream"
@@ -162,6 +171,22 @@ import org.graalvm.polyglot.Context as VMContext
         }
       }
       return builder.build()
+    }
+  }
+
+  /** Factory which wires in the singleton JS runtime as a bean. */
+  @Context @Eager public class JsRuntimeProvider : ServerInitializer, Supplier<JsRuntime> {
+    @Factory @Singleton override fun get(): JsRuntime = acquire()
+
+    /** @inheritDoc */
+    override fun initialize() {
+      Application.Initialization.initializeWithServer {
+        acquire()
+
+        if (ImageInfo.inImageBuildtimeCode()) {
+          ImageSingletons.add(JsRuntime::class.java, singleton)
+        }
+      }
     }
   }
 
@@ -354,10 +379,11 @@ import org.graalvm.polyglot.Context as VMContext
   @Suppress("unused") public object Script {
     /** @return Embedded script container for the provided [path] (and [charset], defaulting to `UTF-8`). */
     @JvmStatic public fun embedded(
-      path: String,
+      path: String = NODE_SSR_DEFAULT_PATH,
       charset: Charset = StandardCharsets.UTF_8,
+      embeddedRoot: String = EMBEDDED_ROOT,
     ): EmbeddedScript = EmbeddedScript(
-      path = path,
+      path = "/$embeddedRoot/$path",
       charset = charset,
     )
 
@@ -552,6 +578,9 @@ import org.graalvm.polyglot.Context as VMContext
     private var renderedContent: StringBuilder? = null
     private var interpreted: AtomicReference<Source> = AtomicReference(null)
 
+    /** @return Whether the script backing this [EmbeddedScript] is available for execution. */
+    internal abstract fun valid(): Boolean
+
     /** @return The path or some module ID for the embedded script. */
     internal abstract fun getId(): String
 
@@ -624,6 +653,9 @@ import org.graalvm.polyglot.Context as VMContext
         it.readText()
       }
     }
+
+    /** @return Whether the embedded script exists. */
+    override fun valid(): Boolean = javaClass.getResourceAsStream(path) != null
   }
 
   /** Embedded script implementation which pulls from a string literal. */
@@ -656,6 +688,9 @@ import org.graalvm.polyglot.Context as VMContext
     override fun load(): String {
       return script
     }
+
+    /** @inheritDoc */
+    override fun valid(): Boolean = true  // always valid (literal)
   }
 
   // Create the singleton script runtime.
@@ -758,6 +793,13 @@ import org.graalvm.polyglot.Context as VMContext
       override val hasContent: Boolean get() = hasContent.get()
       override val fin: Boolean get() = fin.get()
     }
+  }
+
+  /**
+   * TBD
+   */
+  public fun prewarmScript(script: ExecutableScript) {
+    runtime.resolve(script)
   }
 
   /**

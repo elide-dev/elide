@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 // Path within app JARs for embedded script assets.
-private const val EMBEDDED_ROOT: String = "embedded"
+public const val EMBEDDED_ROOT: String = "embedded"
 
 // Production script name default.
 private const val NODE_PROD_DEFAULT: String = "node-prod.pack.js"
@@ -59,15 +59,22 @@ public suspend fun BODY.injectSSR(
   domId: String = DEFAULT_SSR_DOM_ID,
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
-  path: String = NODE_SSR_DEFAULT_PATH,
+  path: String? = null,
   streamed: Boolean = false,
-  embeddedRoot: String = EMBEDDED_ROOT,
+  embeddedRoot: String? = null,
 ) {
   val rendered = ServerSSRRenderer(
     this,
     handler,
     request,
-    JsRuntime.Script.embedded(path = "/$embeddedRoot/$path"),
+    if (path != null && embeddedRoot != null) {
+      JsRuntime.Script.embedded(
+        path = path,
+        embeddedRoot = embeddedRoot,
+      )
+    } else {
+      JsRuntime.Script.embedded()
+    },
   ).renderSuspendAsync(streamed)
 
   MAIN(

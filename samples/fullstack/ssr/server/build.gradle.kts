@@ -6,6 +6,7 @@
 
 plugins {
   id("dev.elide.build.samples.backend")
+  id("dev.elide.build.native.app")
   id("dev.elide.buildtools.plugin")
   id("io.micronaut.application")
   id("io.micronaut.aot")
@@ -66,7 +67,7 @@ graalvmNative {
     enableExperimentalPredefinedClasses.set(false)
     enableExperimentalUnsafeAllocationTracing.set(false)
     trackReflectionMetadata.set(true)
-    enabled.set(false)
+    enabled.set(true)
 
     modes {
       standard {}

@@ -35,7 +35,7 @@
     "lit-element": "3.2.2",
     "lit-html": "2.4.0",
     "prepack": "0.2.54",
-    "prettier": "2.7.1",
+    "prettier": "2.8.1",
     "prettier-plugin-java": "^1.6.2",
     "prettier-plugin-properties": "^0.2.0",
     "prettier-plugin-sh": "^0.12.8",

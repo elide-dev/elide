@@ -161,3 +161,60 @@ tasks {
     }
   }
 }
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    defaultMode.set("standard")
+    builtinCallerFilter.set(true)
+    builtinHeuristicFilter.set(true)
+    enableExperimentalPredefinedClasses.set(false)
+    enableExperimentalUnsafeAllocationTracing.set(false)
+    trackReflectionMetadata.set(true)
+    enabled.set(true)
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.add("test")
+      outputDirectories.add("src/main/resources/META-INF/native-image")
+      mergeWithExisting.set(true)
+    }
+  }
+
+  binaries {
+    named("main") {
+      fallback.set(false)
+      quickBuild.set(false)
+      buildArgs.addAll(listOf(
+        "-g",
+        "--no-fallback",
+        "--language:js",
+        "--language:regex",
+        "--enable-http",
+        "--enable-https",
+//        "--gc=G1",
+//        "--static",
+//        "--libc=glibc",
+//        "--enable-all-security-services",
+//        "--install-exit-handlers",
+//        "--report-unsupported-elements-at-runtime",
+//        "-Duser.country=US",
+//        "-Duser.language=en",
+//        "-H:IncludeLocales=en",
+//        "-H:+InstallExitHandlers",
+//        "-H:+ReportExceptionStackTraces",
+//        "--pgo-instrument",
+//        "-dsa",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+      ))
+    }
+  }
+}

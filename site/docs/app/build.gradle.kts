@@ -37,6 +37,7 @@ elide {
     ssr(EmbeddedScriptLanguage.JS) {
       bundle(project(":site:docs:node"))
     }
+
     assets {
       bundler {
         format(tools.elide.assets.ManifestFormat.BINARY)
@@ -48,7 +49,7 @@ elide {
 
       // stylesheet: `styles.base`
       stylesheet("styles.base") {
-        sourceFile("src/main/assets/basestyles.css")
+        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/base.css")
       }
 
       script("scripts.ui") {
@@ -81,7 +82,7 @@ micronaut {
   }
 }
 
-val mainPackage = "elide.docs"
+val mainPackage = "elide.site"
 val mainEntry = "$mainPackage.DocsApp"
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 val buildDocsSite: String by project.properties
@@ -93,16 +94,26 @@ application {
       "-Delide.vm.inspect=true",
     )
   }
+  if (gradle.startParameter.isContinuous ||
+    (project.hasProperty("elide.mode") && project.properties["elide.mode"] == "dev")) {
+    applicationDefaultJvmArgs = listOf(
+      "-Dmicronaut.io.watch.restart=true",
+      "-Dmicronaut.io.watch.enabled=true",
+    )
+  }
 }
 
 dependencies {
   api(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
+  ksp(libs.autoService.ksp)
   api(project(":packages:base"))
   api(project(":packages:server"))
   api(project(":packages:graalvm"))
+  api(project(":site:docs:content"))
 
   implementation(libs.jsoup)
+  implementation(libs.google.auto.service.annotations)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
@@ -231,7 +242,7 @@ graalvmNative {
     enableExperimentalPredefinedClasses.set(false)
     enableExperimentalUnsafeAllocationTracing.set(false)
     trackReflectionMetadata.set(true)
-    enabled.set(true)
+    enabled.set(false)
 
     modes {
       standard {}
@@ -246,31 +257,30 @@ graalvmNative {
   binaries {
     named("main") {
       fallback.set(false)
-      quickBuild.set(false)
+      quickBuild.set(true)
       buildArgs.addAll(listOf(
         "--no-fallback",
         "--language:js",
-        "--language:regex",
-        "--enable-http",
-        "--enable-https",
-        "--gc=G1",
-        "--static",
-        "--libc=glibc",
+//        "--language:regex",
+//        "--enable-http",
+//        "--enable-https",
+//        "--gc=G1",
+//        "--static",
+//        "--libc=glibc",
+//        "--enable-all-security-services",
+//        "--install-exit-handlers",
+//        "--report-unsupported-elements-at-runtime",
+//        "-Duser.country=US",
+//        "-Duser.language=en",
+//        "-H:IncludeLocales=en",
+//        "-H:+InstallExitHandlers",
+//        "-H:+ReportExceptionStackTraces",
+//        "--pgo-instrument",
+//        "-dsa",
+//        "--language:js",
+//        "--language:regex",
         "--enable-all-security-services",
-        "--install-exit-handlers",
-        "--report-unsupported-elements-at-runtime",
-        "-Duser.country=US",
-        "-Duser.language=en",
-        "-H:IncludeLocales=en",
-        "-H:+InstallExitHandlers",
-        "-H:+ReportExceptionStackTraces",
-        "-H:+DashboardAll",
-        "-H:DashboardDump=/workspaces/v3/site/docs/app/analysis/dashboard.json",
-        "-H:+DashboardJson",
-        "--pgo-instrument",
-        "-dsa",
-        "--enable-all-security-services",
-        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+//        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
     }
   }

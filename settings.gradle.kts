@@ -115,6 +115,7 @@ if (buildSamples == "true") {
 
 if (buildDocsSite == "true") {
   include(
+    ":site:docs:content",
     ":site:docs:ui",
     ":site:docs:node",
     ":site:docs:app",

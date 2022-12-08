@@ -17,3 +17,4 @@ gradle-log.txt
 server_log.txt
 server_pid.txt
 site.tar.gz
+tmp

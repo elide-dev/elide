@@ -129,6 +129,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       val builder = VMContext.newBuilder("js")
         .allowExperimentalOptions(true)
         .allowValueSharing(true)
+        .allowIO(true)  // @TODO(sgammon): switch off when virtual IO is available
 
       buildRuntimeOptions().flatMap {
         val prop = it.key

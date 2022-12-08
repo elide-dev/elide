@@ -13,17 +13,37 @@ html {
 }
 
 body {
-  background: linear-gradient(
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif, color-emoji;
+}
+
+.gradient {
+  background-attachment: fixed;
+  background: transparent;
+  background-image: linear-gradient(
     225deg,
     var(--elide-color-primary) 0%,
     var(--elide-color-secondary) 100%
-  );
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif,
-    color-emoji;
+  ) !important;
 }
 
-pre {
+pre, .mono {
   font-family: "JetBrains Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono",
     "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace",
     "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+}
+
+.elide-site-page {
+  inset: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  background-attachment: fixed;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

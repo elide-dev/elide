@@ -10,3 +10,4 @@ buildSrc
 benchmarks
 tools/plugin
 *.gradle.kts
+*.hbs

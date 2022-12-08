@@ -35,7 +35,7 @@ TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
-JVM ?= 11
+JVM ?= 19
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=

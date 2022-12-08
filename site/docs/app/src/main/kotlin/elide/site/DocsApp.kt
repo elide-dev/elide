@@ -1,6 +1,6 @@
 @file:Suppress("WildcardImport")
 
-package elide.docs
+package elide.site
 
 import elide.server.Application
 

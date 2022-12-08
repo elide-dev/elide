@@ -19,6 +19,14 @@ version = rootProject.version as String
 
 val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
+//kotlin {
+//  js(IR) {
+//    nodejs {
+//      binaries.executable()
+//    }
+//  }
+//}
+
 elide {
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
@@ -38,6 +46,12 @@ elide {
 }
 
 dependencies {
+  api(npm("@emotion/css", "11.10.5"))
+  api(npm("@emotion/react", "11.10.5"))
+  api(npm("@emotion/cache", "11.10.5"))
+  api(npm("@emotion/server", "11.10.0"))
+
+  api(project(":site:docs:content"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm-js"))
   implementation(project(":packages:graalvm-react"))
@@ -46,4 +60,7 @@ dependencies {
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
+  implementation(libs.kotlinx.wrappers.react.router.dom)
+  implementation(libs.kotlinx.wrappers.remix.run.router)
+  implementation(libs.kotlinx.wrappers.emotion)
 }

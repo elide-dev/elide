@@ -90,26 +90,38 @@ testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.6.0"
 guava = "31.1-jre"
 gax = "2.19.5"
-kotlinxWrappers = "pre.422"
-kotlinx_wrappers_browser = "0.0.1-pre.422"
-kotlinx_wrappers_css = "1.0.0-pre.422"
-kotlinx_wrappers_node = "18.11.8-pre.422"
-kotlinx_wrappers_react = "18.2.0-pre.422"
-kotlinx_wrappers_react_router_dom = "6.3.0-pre.422"
-kotlinx_wrappers_emotion = "11.10.5-pre.422"
-kotlinx_wrappers_redux = "4.1.2-pre.422"
-kotlinx_wrappers_react_redux = "7.2.6-pre.422"
-kotlinx_wrappers_mui = "5.9.1-pre.422"
-kotlinx_wrappers_styled = "5.3.6-pre.422"
-kotlinx_wrappers_styled_next = "1.2.1-pre.422"
-kotlinx_wrappers_history = "5.3.0-pre.422"
-kotlinx_wrappers_typescript = "4.8.4-pre.422"
-kotlinx_wrappers_tanstack_query_core = "4.14.1-pre.422"
-kotlinx_wrappers_tanstack_react_query = "4.14.1-pre.422"
-kotlinx_wrappers_tanstack_react_table = "8.5.22-pre.422"
-kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.422"
-kotlinx_wrappers_tanstack_table_core = "8.5.22-pre.422"
-kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.422"
+kotlinxWrappers = "pre.454"
+kotlinx_wrappers_bom = "1.0.0-pre.454"
+kotlinx_wrappers_browser = "0.0.1-pre.454"
+kotlinx_wrappers_cesium = "1.99.0-pre.454"
+kotlinx_wrappers_css = "1.0.0-pre.454"
+kotlinx_wrappers_csstype = "3.1.1-pre.454"
+kotlinx_wrappers_node = "18.11.9-pre.454"
+kotlinx_wrappers_js = "1.0.0-pre.454"
+kotlinx_wrappers_react = "18.2.0-pre.454"
+kotlinx_wrappers_react_beautiful_dnd = "13.1.0-pre.454"
+kotlinx_wrappers_react_router_dom = "6.3.0-pre.454"
+kotlinx_wrappers_emotion = "11.10.5-pre.454"
+kotlinx_wrappers_redux = "4.1.2-pre.454"
+kotlinx_wrappers_react_redux = "7.2.6-pre.454"
+kotlinx_wrappers_react_popper = "2.3.0-pre.454"
+kotlinx_wrappers_react_select = "5.6.1-pre.454"
+kotlinx_wrappers_remix_run_router = "1.0.3-pre.454"
+kotlinx_wrappers_ringUi = "4.1.5-pre.454"
+kotlinx_wrappers_mui = "5.9.1-pre.454"
+kotlinx_wrappers_mui_icons = "5.10.9-pre.454"
+kotlinx_wrappers_styled = "5.3.6-pre.454"
+kotlinx_wrappers_styled_next = "1.2.1-pre.454"
+kotlinx_wrappers_popper = "2.11.6-pre.454"
+kotlinx_wrappers_history = "5.3.0-pre.454"
+kotlinx_wrappers_web = "1.0.0-pre.454"
+kotlinx_wrappers_typescript = "4.9.3-pre.454"
+kotlinx_wrappers_tanstack_query_core = "4.18.0-pre.454"
+kotlinx_wrappers_tanstack_react_query = "4.18.0-pre.454"
+kotlinx_wrappers_tanstack_react_table = "8.6.0-pre.454"
+kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.454"
+kotlinx_wrappers_tanstack_table_core = "8.6.0-pre.454"
+kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.454"
 kotlinx_abiValidator = "0.12.1"
 npm_esbuild = "0.15.15"
 npm_prepack = "0.2.54"
@@ -117,6 +129,8 @@ npm_buffer = "6.0.3"
 npm_stream = "4.2.0"
 npm_types_protobuf = "3.15.6"
 npm_grpcweb = "1.4.2"
+npm_emotion_core = "11.10.5"
+npm_emotion_server = "11.10.0"
 npm_lit = "2.4.0"
 npm_litHtml = "2.4.0"
 npm_litElement = "3.2.2"
@@ -380,19 +394,38 @@ micronaut_tracing_opentelemetry_http = { group = "io.micronaut.tracing", name = 
 micronaut_tracing_opentelemetry_grpc = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-grpc", version.ref = "micronaut_tracing" }
 opentelemetry_exporter_logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
 opentelemetry_exporter_googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
+kotlinx_wrappers_bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinx_wrappers_bom" }
+kotlinx_wrappers_cesium = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-cesium", version.ref = "kotlinx_wrappers_cesium" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
+kotlinx_wrappers_cssType = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-csstype", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
 kotlinx_wrappers_react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx_wrappers_react" }
 kotlinx_wrappers_react_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-dom", version.ref = "kotlinx_wrappers_react" }
+kotlinx_wrappers_react_beautiful_dnd = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-beautiful-dnd", version.ref = "kotlinx_wrappers_react_beautiful_dnd" }
 kotlinx_wrappers_react_router_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-router-dom", version.ref = "kotlinx_wrappers_react_router_dom" }
 kotlinx_wrappers_emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx_wrappers_emotion" }
 kotlinx_wrappers_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-redux", version.ref = "kotlinx_wrappers_redux" }
+kotlinx_wrappers_react_popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-popper", version.ref = "kotlinx_wrappers_react_popper" }
+kotlinx_wrappers_react_select = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-select", version.ref = "kotlinx_wrappers_react_select" }
+kotlinx_wrappers_remix_run_router = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-remix-run-router", version.ref = "kotlinx_wrappers_remix_run_router" }
+kotlinx_wrappers_ringUi = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-ring-ui", version.ref = "kotlinx_wrappers_ringUi" }
 kotlinx_wrappers_react_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-redux", version.ref = "kotlinx_wrappers_react_redux" }
 kotlinx_wrappers_mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui", version.ref = "kotlinx_wrappers_mui" }
+kotlinx_wrappers_mui_icons = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-icons", version.ref = "kotlinx_wrappers_mui_icons" }
+kotlinx_wrappers_js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "kotlinx_wrappers_js" }
 kotlinx_wrappers_styled = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled", version.ref = "kotlinx_wrappers_styled" }
+kotlinx_wrappers_styledNext = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled-next", version.ref = "kotlinx_wrappers_styled_next" }
+kotlinx_wrappers_popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-popper", version.ref = "kotlinx_wrappers_popper" }
 kotlinx_wrappers_history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx_wrappers_history" }
+kotlinx_wrappers_web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx_wrappers_web" }
 kotlinx_wrappers_typescript = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-typescript", version.ref = "kotlinx_wrappers_typescript" }
+kotlinx_wrappers_tanstack_query_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-query-core", version.ref = "kotlinx_wrappers_tanstack_query_core" }
+kotlinx_wrappers_tanstack_react_query = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-query", version.ref = "kotlinx_wrappers_tanstack_react_query" }
+kotlinx_wrappers_tanstack_react_table = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-table", version.ref = "kotlinx_wrappers_tanstack_react_table" }
+kotlinx_wrappers_tanstack_react_virtual = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-virtual", version.ref = "kotlinx_wrappers_tanstack_react_virtual" }
+kotlinx_wrappers_tanstack_table_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-table-core", version.ref = "kotlinx_wrappers_tanstack_table_core" }
+kotlinx_wrappers_tanstack_virtual_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-virtual-core", version.ref = "kotlinx_wrappers_tanstack_virtual_core" }
 grpc_api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc_java" }
 grpc_auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc_java" }
 grpc_bom = { group = "io.grpc", name = "grpc-bom", version.ref = "grpc_java" }

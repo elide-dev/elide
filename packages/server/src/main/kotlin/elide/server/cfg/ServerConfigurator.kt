@@ -60,8 +60,8 @@ import java.util.SortedSet
     // Cipher suites to support, in order of preference.
     public val cipherSuites: List<String> = listOf(
       "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
-      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
       "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
       "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
       "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
@@ -92,7 +92,7 @@ import java.util.SortedSet
       "jackson.module-scan" to false,
       "jackson.bean-introspection-module" to true,
       "micronaut.application.default-charset" to "utf-8",
-      "micronaut.server.ssl.ciphers" to cipherSuites.joinToString(","),
+//      "micronaut.server.ssl.ciphers" to cipherSuites.joinToString(","),
       "micronaut.server.ssl.protocols" to arrayOf("TLSv1.2"),
       "micronaut.server.ssl.protocol" to "TLS",
       "micronaut.server.default-charset" to "utf-8",

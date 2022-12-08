@@ -1,7 +1,6 @@
 package elide.js.ssr
 
-import kotlinx.browser.document
-import kotlinx.js.jso
+import browser.document
 import react.Props
 import react.ReactElement
 import react.dom.client.createRoot
@@ -21,7 +20,7 @@ private fun <AppProps : Props> renderApp(fragment: ReactElement<*>, props: AppPr
   val target = document.getElementById(RENDER_ROOT_ID)
   val container = if (target == null) {
     val c = document.createElement(DEFAULT_EL_TYPE)
-    document.body!!.appendChild(c)
+    document.body.appendChild(c)
     c
   } else {
     target

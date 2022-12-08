@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 292.4 318.4" style="enable-background:new 0 0 292.4 318.4;" xml:space="preserve">
+<style type="text/css">
+	.st1{fill:url(#TOPLIGHT);}
+	.st2{fill:url(#BTMLIGHT);}
+	.st3{fill:url(#MIDLIGHT);}
+    @media (prefers-color-scheme: dark) {
+		.st1{fill:url(#TOPDARK);}
+		.st2{fill:url(#MIDDARK);}
+		.st3{fill:url(#BTMDARK);}
+    }
+</style>
+<g id="Layer_2_00000118381631492804463780000014862786634177271461_">
+	<g id="Layer_1-2">
+		<linearGradient id="TOPLIGHT" gradientUnits="userSpaceOnUse" x1="134.3115" y1="506.5643" x2="158.1715" y2="643.5443" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0.43" style="stop-color:#5A00FF"/>
+			<stop  offset="0.54" style="stop-color:#5D00FE"/>
+			<stop  offset="0.64" style="stop-color:#6700FC"/>
+			<stop  offset="0.72" style="stop-color:#7800F9"/>
+			<stop  offset="0.8" style="stop-color:#9000F5"/>
+			<stop  offset="0.88" style="stop-color:#B000EF"/>
+			<stop  offset="0.95" style="stop-color:#D500E8"/>
+			<stop  offset="0.99" style="stop-color:#E900E4"/>
+		</linearGradient>
+		<linearGradient id="TOPDARK" gradientUnits="userSpaceOnUse" x1="134.3115" y1="506.5643" x2="158.1715" y2="643.5443" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0.43" style="stop-color:#C0C0C0"/>
+			<stop  offset="0.54" style="stop-color:#CACACA"/>
+			<stop  offset="0.64" style="stop-color:#D4D4D4"/>
+			<stop  offset="0.72" style="stop-color:#DEDEDE"/>
+			<stop  offset="0.8" style="stop-color:#E8E8E8"/>
+			<stop  offset="0.88" style="stop-color:#F2F2F2"/>
+			<stop  offset="0.95" style="stop-color:#FCFCFC"/>
+			<stop  offset="0.99" style="stop-color:#FFFFFF"/>
+		</linearGradient>
+		<path class="st1" d="M252.4,40v2.6c0,22.6-18.3,40.8-40.9,40.8c-0.1,0-0.2,0-0.3,0l-120-1.1c0,0-30.9,3.9-27.2,32.6l-24-24.5V40
+			H252.4z"/>
+		<linearGradient id="BTMLIGHT" gradientUnits="userSpaceOnUse" x1="169.8289" y1="803.497" x2="2.1889" y2="544.347" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0.43" style="stop-color:#5A00FF"/>
+			<stop  offset="0.54" style="stop-color:#5D00FE"/>
+			<stop  offset="0.64" style="stop-color:#6700FC"/>
+			<stop  offset="0.72" style="stop-color:#7800F9"/>
+			<stop  offset="0.8" style="stop-color:#9000F5"/>
+			<stop  offset="0.88" style="stop-color:#B000EF"/>
+			<stop  offset="0.95" style="stop-color:#D500E8"/>
+			<stop  offset="0.99" style="stop-color:#E900E4"/>
+		</linearGradient>
+		<linearGradient id="BTMDARK" gradientUnits="userSpaceOnUse" x1="169.8289" y1="803.497" x2="2.1889" y2="544.347" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0.43" style="stop-color:#C0C0C0"/>
+			<stop  offset="0.54" style="stop-color:#CACACA"/>
+			<stop  offset="0.64" style="stop-color:#D4D4D4"/>
+			<stop  offset="0.72" style="stop-color:#DEDEDE"/>
+			<stop  offset="0.8" style="stop-color:#E8E8E8"/>
+			<stop  offset="0.88" style="stop-color:#F2F2F2"/>
+			<stop  offset="0.95" style="stop-color:#FCFCFC"/>
+			<stop  offset="0.99" style="stop-color:#FFFFFF"/>
+		</linearGradient>
+		<path class="st2" d="M252.4,236.1c0,23.3-18.9,42.3-42.2,42.3
+			c0,0-0.1,0-0.1,0H40V155.1l39.4,40.1v40.9H252.4z"/>
+		<linearGradient id="MIDLIGHT" gradientUnits="userSpaceOnUse" x1="122.3516" y1="587.4187" x2="232.9716" y2="746.0787" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0" style="stop-color:#5A00FF"/>
+			<stop  offset="0.11" style="stop-color:#6401F1"/>
+			<stop  offset="0.86" style="stop-color:#AD0B93"/>
+		</linearGradient>
+		<linearGradient id="MIDDARK" gradientUnits="userSpaceOnUse" x1="122.3516" y1="587.4187" x2="232.9716" y2="746.0787" gradientTransform="matrix(1 0 0 1 0 -509.7098)">
+			<stop  offset="0" style="stop-color:#D500E8"/>
+			<stop  offset="0.11" style="stop-color:#D4D4D4"/>
+			<stop  offset="0.86" style="stop-color:#C0C0C0"/>
+		</linearGradient>
+		<path class="st3" d="M251.4,141.5c0,22.1-17.9,40.1-40.1,40.1
+			c0,0,0,0-0.1,0h-81.6l-55.3-56.2L63,114c-3.6-28.7,27.2-32.6,27.2-32.6l55,58.7L251.4,141.5z"/>
+	</g>
+</g>
+</svg>

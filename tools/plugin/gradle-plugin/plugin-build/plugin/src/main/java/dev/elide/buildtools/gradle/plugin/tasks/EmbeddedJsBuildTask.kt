@@ -181,6 +181,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 (this as ExtensionAware).extensions.configure(NpmDependencyExtension::class.java) { npm ->
                     add("implementation", npm("esbuild", Versions.esbuild))
                     add("implementation", npm("prepack", Versions.prepack))
+                    add("implementation", npm("buffer", Versions.buffer))
                     add("implementation", npm("web-streams-polyfill", Versions.webstreams))
                 }
             }

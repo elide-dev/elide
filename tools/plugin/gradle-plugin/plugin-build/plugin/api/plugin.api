@@ -444,6 +444,7 @@ public final class dev/elide/buildtools/gradle/plugin/tasks/Versions {
 	public static final field INSTANCE Ldev/elide/buildtools/gradle/plugin/tasks/Versions;
 	public static final field esbuild Ljava/lang/String;
 	public static final field prepack Ljava/lang/String;
+	public static final field webstreams Ljava/lang/String;
 }
 
 public final class dev/elide/buildtools/gradle/plugin/util/UntarUtil {

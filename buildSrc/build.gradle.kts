@@ -9,12 +9,14 @@ plugins {
 
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
+  `embedded-kotlin`
 }
 
 val buildDocs by properties
 
 dependencies {
   api(kotlin("gradle-plugin"))
+  implementation(gradleApi())
   api(libs.elide.tools.conventions)
   implementation(libs.elide.kotlin.plugin.redakt)
   implementation(libs.plugin.buildConfig)

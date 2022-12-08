@@ -1,7 +1,7 @@
 package elide.runtime.gvm
 
 /**
- *
+ * TBD.
  */
 public fun <R: Any> entrypoint(op: () -> R): R {
   js("""

@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
@@ -16,6 +18,12 @@ val defaultJavaMax = "19"
 
 val os: OperatingSystem = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
   .getCurrentOperatingSystem()
+
+val javaSdk: Int = (if (project.hasProperty("versions.java.language")) {
+  project.properties["versions.java.language"] as? String ?: defaultJavaMin
+} else {
+  defaultJavaMin
+}).toInt()
 
 val baseJavaMin: Int = (if (project.hasProperty("versions.java.minimum")) {
   project.properties["versions.java.minimum"] as? String ?: defaultJavaMin
@@ -58,17 +66,17 @@ fun Project.enableMultiJvmTesting(
 ) {
   // Normal test task runs on compile JDK.
   (min..max).forEach { major ->
-    val jdkTest = tasks.register("testJdk$major", org.gradle.api.tasks.testing.Test::class.java) {
+    val jdkTest = tasks.register("testJdk$major", Test::class.java) {
       description = "Runs the test suite on JDK $major"
-      group = org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
+      group = LifecycleBasePlugin.VERIFICATION_GROUP
       javaLauncher.set(javaToolchains.launcherFor {
-        this.languageVersion.set(org.gradle.jvm.toolchain.JavaLanguageVersion.of(major))
+        this.languageVersion.set(JavaLanguageVersion.of(major))
         this.vendor.set(vendor)
         if (engine != null) {
           this.implementation.set(engine)
         }
       })
-      val testTask = tasks.named("test", org.gradle.api.tasks.testing.Test::class.java).get()
+      val testTask = tasks.named("test", Test::class.java).get()
       classpath = testTask.classpath
       testClassesDirs = testTask.testClassesDirs
     }

@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+!tools/conventions/src/main/kotlin/dev/elide/build
 build/
 out/
 packages/*/out

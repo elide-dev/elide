@@ -31,7 +31,9 @@ public final class elide/runtime/graalvm/JsRuntime {
 	public final fun execute (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
 	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun executeStreaming (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun resolveInvocationTarget (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Z)Lorg/graalvm/polyglot/Value;
+	public final fun serverResponseFromRaw (Lorg/graalvm/polyglot/Value;)Lelide/runtime/ssr/ServerResponse;
 }
 
 public final class elide/runtime/graalvm/JsRuntime$Companion {
@@ -63,6 +65,7 @@ public final class elide/runtime/graalvm/JsRuntime$ExecutionInputs {
 	public final fun context ()Lelide/server/type/RequestState;
 	public static final fun fromRequestState (Lelide/server/type/RequestState;Ljava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutionInputs;
 	public final fun getData ()Ljava/util/Map;
+	public final fun path ()Ljava/lang/String;
 	public final fun state ()Ljava/lang/Object;
 }
 
@@ -88,6 +91,17 @@ public final class elide/runtime/graalvm/JsRuntime$Script {
 	public static synthetic fun literal$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
 }
 
+public final class elide/runtime/graalvm/JsRuntime$VMThread : java/lang/Thread {
+	public static final field Companion Lelide/runtime/graalvm/JsRuntime$VMThread$Companion;
+	public synthetic fun <init> (Ljava/util/concurrent/Callable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun spawn (ZLjava/util/concurrent/Callable;)Lelide/runtime/graalvm/JsRuntime$VMThread;
+}
+
+public final class elide/runtime/graalvm/JsRuntime$VMThread$Companion {
+	public final fun spawn (ZLjava/util/concurrent/Callable;)Lelide/runtime/graalvm/JsRuntime$VMThread;
+	public static synthetic fun spawn$default (Lelide/runtime/graalvm/JsRuntime$VMThread$Companion;ZLjava/util/concurrent/Callable;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$VMThread;
+}
+
 public final class elide/server/SSRExtensionsKt {
 	public static final field DEFAULT_INVOCATION_STREAM_TARGET Ljava/lang/String;
 	public static final field DEFAULT_SSR_DOM_ID Ljava/lang/String;
@@ -108,7 +122,8 @@ public abstract interface class elide/server/ssr/ServerRenderer : elide/server/R
 public final class elide/server/ssr/ServerSSRRenderer : elide/server/SuspensionRenderer {
 	public static final field Companion Lelide/server/ssr/ServerSSRRenderer$Companion;
 	public static final field ssrId Ljava/lang/String;
-	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)V
+	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;)V
+	public synthetic fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun renderResponse (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun renderSuspendAsync (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;

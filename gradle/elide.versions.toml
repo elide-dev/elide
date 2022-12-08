@@ -312,6 +312,10 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
+graalvm_js_engine = { group = "org.graalvm.js", name = "js", version.ref = "graalvm_sdk" }
+graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm_sdk" }
+graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm_sdk" }
+graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm_sdk" }
 micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
 micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
 micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }

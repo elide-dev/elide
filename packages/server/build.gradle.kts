@@ -36,7 +36,6 @@ micronaut {
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
-  api(libs.graalvm.sdk)
 
   // Modules
   kapt(libs.micronaut.inject)
@@ -106,6 +105,8 @@ dependencies {
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
+  implementation(libs.graalvm.espresso.hotswap)
+  implementation(libs.graalvm.sdk)
 
   // Testing
   kaptTest(libs.micronaut.inject)

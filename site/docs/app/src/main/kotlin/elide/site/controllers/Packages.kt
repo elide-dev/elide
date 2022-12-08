@@ -8,5 +8,5 @@ import io.micronaut.http.annotation.Get
 /** Library packages page (top-level). */
 @Page(name = "packages") class Packages : SitePageController(page = Packages) {
   // Serve the packages top page.
-  @Get("/tooling") suspend fun top(request: HttpRequest<*>) = page(request)
+  @Get("/packages") suspend fun top(request: HttpRequest<*>) = page(request)
 }

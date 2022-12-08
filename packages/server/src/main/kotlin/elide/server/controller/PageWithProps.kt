@@ -131,8 +131,7 @@ public abstract class PageWithProps<State> protected constructor (
    * @param request Computed request state for this request/response cycle.
    * @return State that should be active for this cycle, or `null` if no state is provided or available.
    */
-  @Suppress("UNCHECKED_CAST")
-  public open suspend fun props(request: RequestState): State? = null
+  public open suspend fun props(request: RequestState): State? = defaultState
 
   /**
    * "Finalize" the state for this controller, by (1) computing the state, if necessary, and (2) serializing it for

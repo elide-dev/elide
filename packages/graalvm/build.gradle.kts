@@ -37,6 +37,7 @@ dependencies {
   api(libs.graalvm.sdk)
 
   // Modules
+  api(project(":packages:ssr"))
   implementation(project(":packages:base"))
   implementation(project(":packages:server"))
 

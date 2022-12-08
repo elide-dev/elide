@@ -1,22 +1,12 @@
-@file:JsModule("react-dom/server")
+@file:JsModule("react-dom/server.browser")
 @file:JsNonModule
-@file:OptIn(ExperimentalJsExport::class)
 
 package react.dom.server
 
 import react.ReactNode
 import web.abort.AbortSignal
 import web.streams.ReadableStream
-
-
-/**
- * TBD.
- */
-@JsExport
-public external fun renderToPipeableStream(
-  initialChildren: ReactNode,
-): dynamic
-
+import kotlin.js.Promise
 
 /**
  * TBD.
@@ -36,8 +26,7 @@ public external interface ReadableStreamRenderOptions {
 /**
  * TBD.
  */
-@JsExport
 public external fun renderToReadableStream(
   initialChildren: ReactNode,
   options: ReadableStreamRenderOptions = definedExternally,
-): ReadableStream<String>
+): Promise<ReadableStream<ByteArray>>

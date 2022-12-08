@@ -20,7 +20,6 @@ external interface ElideSiteProps: Props {
 }
 
 val ElideSite = FC<ElideSiteProps> {
-//  ThemeModule {
     Box {
       className = ClassName("elide-site-container")
 
@@ -47,5 +46,4 @@ val ElideSite = FC<ElideSiteProps> {
       if (it.mobile) Menu() else Sidebar()
       Content()
     }
-//  }
 }

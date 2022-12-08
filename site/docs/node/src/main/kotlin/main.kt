@@ -1,29 +1,24 @@
-@file:OptIn(ExperimentalJsExport::class, DelicateCoroutinesApi::class)
+@file:OptIn(ExperimentalJsExport::class)
+@file:Suppress("NON_EXPORTABLE_TYPE")
 
+import elide.runtime.ssr.*
+import elide.frontend.ssr.*
 import js.core.jso
-import elide.frontend.ssr.SSRContext
 import elide.runtime.gvm.entrypoint
-import elide.site.ui.ElideSite
+import elide.site.ElideSite
+import elide.site.pages.Home
+import elide.site.ui.ElideSite as App
 import elide.site.ui.components.ThemeModuleServer
 import react.Fragment
-import react.Props
 import react.create
 import react.dom.server.rawRenderToString as renderSSR
-import react.dom.server.renderToReadableStream as renderSSRStreaming
 import react.router.dom.server.StaticRouter
 import emotion.react.CacheProvider
 import emotion.cache.EmotionCache
 import emotion.cache.createCache
 import emotion.server.createEmotionServer
-import kotlinx.coroutines.*
 import react.ReactElement
-import kotlin.coroutines.CoroutineContext
-
-/** Props shared with the server. */
-external interface AppProps : Props {
-  /** @return `page` context value from the server. */
-  fun getPage(): String?
-}
+import kotlin.js.Promise
 
 // Setup cache.
 private fun setupCache(): EmotionCache {
@@ -33,13 +28,29 @@ private fun setupCache(): EmotionCache {
 }
 
 /** App entrypoint fragment. */
-val app: (EmotionCache, AppProps?) -> ReactElement<*> = { emotionCache, state ->
+val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache ->
   Fragment.create {
     StaticRouter {
+      console.log("RENDERING FOR PATH: '$path'")
+      console.log("CONTEXT: ${JSON.stringify(context)}")
+      console.log("STATE: ${JSON.stringify(state)}")
+
+      val currentPage = state?.page
+      val target = path ?: when {
+        currentPage?.isNotEmpty() == true -> ElideSite.pages.find {
+          it.name == currentPage
+        }?.path
+
+        else -> null
+      } ?: "/"
+      location = target as Any
+
+      console.log("RESOLVED FOR PATH: '$target'")
+
       CacheProvider(emotionCache) {
         ThemeModuleServer {
-          ElideSite {
-            page = state?.getPage()
+          App {
+            page = state?.page
           }
         }
       }
@@ -47,29 +58,46 @@ val app: (EmotionCache, AppProps?) -> ReactElement<*> = { emotionCache, state ->
   }
 }
 
-/** @return Streaming SSR entrypoint for React. */
-@OptIn(ExperimentalJsExport::class)
-@JsExport fun renderStream(context: dynamic = null, callback: RenderCallback): Unit = entrypoint {
-  GlobalScope.launch {
-    SSRContext.typed<AppProps>(context).execute {
-      val emotionCache: EmotionCache = setupCache()
-      val emotionServer = createEmotionServer(emotionCache)
-      val html = ApplicationBuffer(app.invoke(emotionCache, this.state)).execute().extract()
-      val emotionChunks = emotionServer.extractCriticalToChunks(html)
-      val emotionCss = emotionServer.constructStyleTagsFromChunks(emotionChunks)
+private fun dispatchRaw(callback: RenderCallback, chunk: ServerResponse) {
+  val plain: dynamic = jso {
+    fin = chunk.fin
+    content = chunk.content
+    hasContent = chunk.hasContent
 
-      callback.invoke(RenderedStream(
-        status = 200,
-        html = html,
-        criticalCss = emotionCss,
-        styleChunks = emotionChunks.styles.map {
-          CssChunk(
-            ids = it.ids,
-            key = it.key,
-            css = it.css,
-          )
-        }.toTypedArray(),
-      ))
+    if (chunk.status != null) {
+      status = chunk.status
+    }
+    if (chunk.headers?.isNotEmpty() == true) {
+      headers = chunk.headers
+    }
+  }
+  callback.invoke(plain.unsafeCast<ServerResponse>())
+}
+
+/** @return Streaming SSR entrypoint for React. */
+@JsExport fun renderStream(callback: RenderCallback, context: dynamic = null): Promise<*> = entrypoint {
+  SSRContext.typed<AppProps>(context).execute {
+    val emotionCache: EmotionCache = setupCache()
+    val emotionServer = createEmotionServer(emotionCache)
+
+    try {
+      ApplicationBuffer(app.invoke(this, emotionCache)).execute {
+        try {
+          if (it.status != null && it.status != -1) {
+            // in the final chunk, splice in CSS from Emotion.
+            val emotionChunks = emotionServer.extractCriticalToChunks(it.content)
+            val emotionCss = emotionServer.constructStyleTagsFromChunks(emotionChunks)
+            console.log("would emit css: $emotionCss")
+          }
+          dispatchRaw(callback, it)
+        } catch (err: Throwable) {
+          console.error("Failed to dispatch callback: ", err)
+          throw err
+        }
+      }
+    } catch (err: Throwable) {
+      console.error("Failed to render stream: ", err)
+      throw err
     }
   }
 }
@@ -79,6 +107,6 @@ val app: (EmotionCache, AppProps?) -> ReactElement<*> = { emotionCache, state ->
 @JsExport fun renderContent(context: dynamic = null): String = entrypoint {
   return@entrypoint SSRContext.typed<AppProps>(context).execute {
     val emotionCache: EmotionCache = setupCache()
-    renderSSR(app.invoke(emotionCache, null))
+    renderSSR(app.invoke(this, emotionCache))
   }
 }

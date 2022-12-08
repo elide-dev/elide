@@ -31,6 +31,7 @@ public final class elide/runtime/graalvm/JsRuntime {
 	public final fun execute (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
 	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun resolveInvocationTarget (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Z)Lorg/graalvm/polyglot/Value;
 }
 
 public final class elide/runtime/graalvm/JsRuntime$Companion {
@@ -88,14 +89,17 @@ public final class elide/runtime/graalvm/JsRuntime$Script {
 }
 
 public final class elide/server/SSRExtensionsKt {
+	public static final field DEFAULT_INVOCATION_STREAM_TARGET Ljava/lang/String;
 	public static final field DEFAULT_SSR_DOM_ID Ljava/lang/String;
 	public static final field NODE_SSR_DEFAULT_PATH Ljava/lang/String;
 	public static final fun getDEFAULT_INVOCATION_BASE ()Ljava/lang/String;
 	public static final fun getDEFAULT_INVOCATION_TARGET ()Ljava/lang/String;
-	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun streamSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun streamSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/server/ssr/ServerRenderer : elide/server/ResponseRenderer {
@@ -107,7 +111,8 @@ public final class elide/server/ssr/ServerSSRRenderer : elide/server/SuspensionR
 	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)V
 	public fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun renderResponse (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun renderSuspendAsync (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun renderSuspendAsync (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun renderSuspendAsync$default (Lelide/server/ssr/ServerSSRRenderer;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class elide/server/ssr/ServerSSRRenderer$Companion {

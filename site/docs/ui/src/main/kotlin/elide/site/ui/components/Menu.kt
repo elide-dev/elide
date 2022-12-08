@@ -20,8 +20,7 @@ import mui.icons.material.Menu as MenuIcon
 /** */
 val Menu = FC<Props> {
   var isOpen by useState(false)
-//  val path = useLocation().pathname
-  val path = "/"
+  val path = useLocation().pathname
   val lastPathname = path.substringAfterLast("/")
 
   Box {

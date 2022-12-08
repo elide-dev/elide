@@ -3,6 +3,12 @@
  */
 function embeddedExecute() {
   // noinspection JSUnresolvedFunction,JSUnresolvedVariable
-  return embedded.renderContent;
+  const renderContent = embedded.renderContent;
+  // noinspection JSUnresolvedFunction,JSUnresolvedVariable
+  const renderStream = embedded.renderStream;
+  return {
+    renderContent,
+    renderStream,
+  };
 }
 embeddedExecute();

@@ -2,7 +2,11 @@
 
 package elide.server.ssr
 
+import elide.annotations.core.Polyglot
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.runtime.graalvm.JsRuntime
+import elide.runtime.ssr.ServerResponse
 import elide.server.SuspensionRenderer
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
@@ -16,6 +20,7 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.html.unsafe
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicReference
 
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
 @Suppress("MemberVisibilityCanBePrivate", "unused", "SpreadOperator")
@@ -24,18 +29,25 @@ public class ServerSSRRenderer constructor(
   private val handler: ElideController,
   private val request: HttpRequest<*>,
   private val script: JsRuntime.ExecutableScript,
+  private val buffer: StringBuilder = StringBuilder(),
+  private var job: AtomicReference<Job?> = AtomicReference(null),
 ) : SuspensionRenderer<ByteArrayOutputStream> {
   public companion object {
     /** ID in the DOM where SSR data is affixed, if present. */
     public const val ssrId: String = "ssr-data"
   }
 
+  // Logger.
+  private val logging: Logger = Logging.of(ServerSSRRenderer::class)
+
   /** Execute the provided operation with any prepared SSR execution context. */
-  @Suppress("UNCHECKED_CAST")
   internal suspend fun prepareContext(op: suspend (JsRuntime.ExecutionInputs<*>) -> StringBuilder): String {
     return if (handler is PageWithProps<*>) {
       // build context
-      val state = RequestState(request, null)
+      val state = RequestState(
+        request,
+        null,
+      )
       val (props, serialized) = handler.finalizeAsync(state).await()
       val buf = op.invoke(
         JsRuntime.ExecutionInputs.fromRequestState(
@@ -55,8 +67,17 @@ public class ServerSSRRenderer constructor(
       }
       buf.toString()
     } else {
-      @Suppress("UNCHECKED_CAST")
       op.invoke(JsRuntime.ExecutionInputs.EMPTY as JsRuntime.ExecutionInputs<*>).toString()
+    }
+  }
+
+  // Handle a chunk which is ready to serve back to the invoking agent.
+  @Polyglot private fun chunkReady(chunk: ServerResponse) {
+    if (chunk.hasContent) {
+      buffer.append(chunk.content)
+    }
+    if (chunk.fin) {
+      job.get()?.cancel()
     }
   }
 
@@ -65,19 +86,33 @@ public class ServerSSRRenderer constructor(
    *
    * @return String render result from [script].
    */
-  public suspend fun renderSuspendAsync(): Deferred<String> = coroutineScope {
+  public suspend fun renderSuspendAsync(streamed: Boolean = false): Deferred<String> = coroutineScope {
     return@coroutineScope async {
       prepareContext { ctx ->
-        val builder = StringBuilder()
-        val renderedContent = JsRuntime.acquire().executeAsync(
-          script,
-          String::class.java,
-          *ctx.buildArguments(),
-        )
+        val js = JsRuntime.acquire()
 
-        // then apply rendered content
-        builder.apply {
-          append(renderedContent.await())
+        if (!streamed) {
+          val renderedContent = js.executeAsync(
+            script,
+            String::class.java,
+            *ctx.buildArguments(),
+          )
+
+          // then apply rendered content
+          buffer.apply {
+            append(renderedContent.await())
+          }
+        } else {
+          buffer.apply {
+            logging.trace("Starting SSR execution")
+            val op = js.executeStreaming(
+              script,
+              *ctx.buildArguments(),
+              receiver = ::chunkReady
+            )
+            job.set(op)
+            op.join()
+          }
         }
       }
     }

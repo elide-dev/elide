@@ -3,6 +3,8 @@ package elide.runtime.graalvm
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
+import elide.annotations.core.Polyglot
+import elide.runtime.ssr.ServerResponse
 import elide.server.type.RequestState
 import elide.server.util.ServerFlag
 import elide.util.Hex
@@ -11,30 +13,33 @@ import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Factory
 import io.micronaut.core.annotation.ReflectiveAccess
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
 import org.graalvm.polyglot.HostAccess
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.util.concurrent.Callable
-import java.util.concurrent.ConcurrentSkipListMap
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Consumer
 import com.google.common.util.concurrent.ListenableFuture as Future
+import org.graalvm.polyglot.Context as VMContext
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
 @Suppress("MemberVisibilityCanBePrivate")
 @Context public class JsRuntime {
   public companion object {
+    private const val RENDER_ENTRYPOINT = "renderContent"
+    private const val STREAM_ENTRYPOINT = "renderStream"
+
     // Singleton instance.
     private val singleton = JsRuntime()
 
@@ -163,6 +168,27 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
   }
 
+  /** VM execution thread. */
+  public class VMThread private constructor(task: Callable<Value>) : Thread() {
+    private val task: java.lang.Runnable
+    @Volatile private var result: Value? = null
+
+    init {
+      this.task = Runnable {
+        result = task.call()
+      }
+    }
+
+    public companion object {
+      /** Execute a VM [task] to produce a [Value] via a background thread. */
+      @JvmStatic public fun spawn(start: Boolean = true, task: Callable<Value>): VMThread {
+        val thread = VMThread(task)
+        if (start) thread.start()
+        return thread
+      }
+    }
+  }
+
   /** Describes inputs to be made available during a VM execution. */
   public class ExecutionInputs<State : Any> public constructor(
     public val data: Map<String, Any?> = ConcurrentSkipListMap(),
@@ -203,7 +229,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
      * @return Instance of execution state provided at invocation time, or `null`.
      */
     @Suppress("UNCHECKED_CAST")
-    @HostAccess.Export
+    @Polyglot
     @ReflectiveAccess
     public fun state(): State? {
       return data[STATE] as? State
@@ -217,10 +243,21 @@ import com.google.common.util.concurrent.ListenableFuture as Future
      *
      * @return Instance of execution context provided at invocation time, or `null`.
      */
-    @HostAccess.Export
+    @Polyglot
     @ReflectiveAccess
-    public fun context(): RequestState? {
-      return data[CONTEXT] as? RequestState
+    public fun context(): RequestState {
+      return data[CONTEXT] as RequestState
+    }
+
+    /**
+     * Host access to fetch the current request path.
+     *
+     * @return Current request path.
+     */
+    @Polyglot
+    @ReflectiveAccess
+    public fun path(): String {
+      return context().path
     }
   }
 
@@ -563,14 +600,10 @@ import com.google.common.util.concurrent.ListenableFuture as Future
     }
 
     // Unique and stable ID for this script.
-    internal fun fingerprint(): ScriptID {
-      return fingerprint
-    }
+    internal fun fingerprint(): ScriptID = fingerprint
 
     // Acquire VM-interpreted source object.
-    internal fun interpret(): Source {
-      return interpreted.get() ?: render()
-    }
+    internal fun interpret(): Source = interpreted.get() ?: render()
   }
 
   /** Embedded script implementation which pulls from local JAR resources. */
@@ -621,7 +654,7 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   ): ExecutableScript(
     invocationBase = invocationBase,
     invocationTarget = invocationTarget,
-    fingerprint = fingerprintScriptContent(moduleId, script)
+    fingerprint = fingerprintScriptContent(moduleId, script),
   ) {
     public companion object {
       private const val hashAlgorithm = "SHA-256"
@@ -653,16 +686,12 @@ import com.google.common.util.concurrent.ListenableFuture as Future
   // Create the singleton script runtime.
   private val runtime: ScriptRuntime = ScriptRuntime()
 
-  @VisibleForTesting
-  internal fun <R> evalExecuteScript(
-    script: ExecutableScript,
-    returnType: Class<R>,
-    vararg arguments: Any?
-  ): R? {
+  // Resolve the invocation target for the given script details.
+  public fun resolveInvocationTarget(script: ExecutableScript, streaming: Boolean): Value {
     val interpreted = runtime.resolve(script)
     val base = script.invocationBase
     val target = script.invocationTarget
-    val baseTarget: Value = if (target != null) {
+    return if (target != null) {
       var baseSegment: Value = interpreted
       val baseResolved = if (base != null) {
         base.split(".").forEach {
@@ -685,9 +714,21 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       )
 
       if (!found.canExecute()) {
-        error(
-          "Member found, but not executable, at '${base}.${script.invocationTarget}'"
+        val method = when {
+          !streaming && found.hasMember(RENDER_ENTRYPOINT) -> found.getMember(RENDER_ENTRYPOINT)
+          streaming && found.hasMember(STREAM_ENTRYPOINT) -> found.getMember(STREAM_ENTRYPOINT)
+          else -> if (streaming && !found.hasMember(STREAM_ENTRYPOINT)) error(
+            "Member found, but is for synchronous render (expected streaming), at '${base}.${script.invocationTarget}'"
+          ) else if (!streaming && !found.hasMember(RENDER_ENTRYPOINT)) error(
+            "Member found, but is for streaming (expected non-streaming), at '${base}.${script.invocationTarget}'"
+          ) else error(
+            "Failed to resolve expected invocation target for SSR script at '${base}.${script.invocationTarget}'"
+          )
+        }
+        if (!method.canExecute()) error(
+          "Member found at target '$RENDER_ENTRYPOINT', but not executable, at '${base}.${script.invocationTarget}'"
         )
+        method
       } else {
         found
       }
@@ -695,17 +736,132 @@ import com.google.common.util.concurrent.ListenableFuture as Future
       // execute the script directly
       interpreted
     }
+  }
+
+  // Convert a JS object representing a `ServerResponse` back into a `ServerResponse` after crossing the VM boundary.
+  public fun serverResponseFromRaw(value: Value): ServerResponse {
+    val check: (String, ((Value) -> Boolean)?, (Value) -> Unit) -> Unit = { name, checker, callable ->
+      if (value.hasMember(name)) {
+        val target = value.getMember(name)
+        if (checker == null || checker.invoke(target)) {
+          callable.invoke(target)
+        }
+      }
+    }
+
+    val fin = AtomicBoolean(false)
+    val status = AtomicInteger(-1)
+    val headers: AtomicReference<Map<String, String>> = AtomicReference(emptyMap())
+    val content: AtomicReference<String> = AtomicReference("")
+    val hasContent = AtomicBoolean(false)
+
+    check("status", Value::isNumber) {
+      status.set(it.asInt())
+    }
+    check("headers", null) {
+      headers.set(it.asHostObject() as Map<String, String>)
+    }
+    check("hasContent", Value::isBoolean) {
+      hasContent.compareAndSet(false, true)
+      check("content", Value::isString) {
+        content.set(it.asString())
+        hasContent.set(true)
+      }
+    }
+    check("fin", Value::isBoolean) {
+      fin.set(it.asBoolean())
+    }
+
+    return object: ServerResponse {
+      override val status: Int get() = status.get()
+      override val headers: Map<String, String> get() = headers.get()
+      override val content: String get() = content.get()
+      override val hasContent: Boolean get() = hasContent.get()
+      override val fin: Boolean get() = fin.get()
+    }
+  }
+
+  /**
+   * TBD
+   */
+  @VisibleForTesting public suspend inline fun executeStreaming(
+    script: ExecutableScript,
+    vararg arguments: Any?,
+    noinline receiver: (ServerResponse) -> Unit,
+  ): Job = withContext(Dispatchers.IO) {
+    launch {
+      val logging = LoggerFactory.getLogger(JsRuntime::class.java)
+
+      // resolve the streaming entrypoint for the script -- if no entrypoint is available that yields a promise and takes
+      // a content chunk callback, an error is thrown.
+      val resolved: Value = resolveInvocationTarget(
+        script,
+        streaming = true,
+      )
+
+      // if we are handed back an executable, execute it, providing the input arguments. in this case, we expect a promise
+      // to be returned which needs to be awaited. the promise does not return a value. at the conclusion of the promise,
+      // the  callback is expected to have been invoked with all chunks of available content.
+      //
+      // by this time, a final chunk should have been emitted with the server's terminal response status and headers, as
+      // applicable, from the runtime (no headers must be provided, they are appended to the response generated by the
+      // Elide server layer). if no such condition is true, an error is thrown. if a timeout elapses while executing the
+      // VM script, an error is thrown. if the VM script fails to execute, an error is thrown.
+      if (resolved.canExecute()) {
+        val error = AtomicBoolean(false)
+        val wrappedReceiver = ProxyExecutable { args ->
+          if (args.isEmpty()) {
+            logging.warn("Ignoring callback from VM streaming entrypoint with empty arguments")
+          } else {
+            val chunk = args[0]
+            val response = serverResponseFromRaw(chunk)
+            receiver.invoke(response)
+          }
+        }
+
+        val promise = resolved.execute(
+          wrappedReceiver,
+          *arguments
+        )
+        check(promise != null && !promise.isNull) {
+          "Expected a Promise from SSR streaming entrypoint, but got `null` or `undefined`"
+        }
+        check(promise.metaObject.metaSimpleName == "Promise") {
+          "Expected a Promise from SSR streaming entrypoint, but got some other type instead"
+        }
+
+        if (error.get()) {
+          throw RuntimeException(
+            "Error executing VM script"
+          )
+        }
+      } else error(
+        "Cannot execute streaming script entrypoint '$script'"
+      )
+    }
+  }
+
+  @VisibleForTesting
+  internal fun <R> evalExecuteScript(
+    script: ExecutableScript,
+    returnType: Class<R>,
+    vararg arguments: Any?
+  ): R? {
+    val resolved: Value = resolveInvocationTarget(
+      script,
+      streaming = false,
+    )
 
     // if we are handed back an executable, execute it, providing the input arguments. in both cases, cast the return
     // value to the expected type.
-    return if (baseTarget.canExecute()) {
-      baseTarget.execute(
+    return if (resolved.canExecute()) {
+      resolved.execute(
         *arguments
       )?.`as`(
         returnType
       )
     } else {
-      interpreted.`as`(
+      resolved.`as`(
         returnType
       )
     }

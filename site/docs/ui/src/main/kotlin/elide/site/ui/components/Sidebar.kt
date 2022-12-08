@@ -20,8 +20,7 @@ import react.router.useLocation
 
 /** */
 val Sidebar = FC<Props> {
-//  val path = useLocation().pathname
-  val path = "/"
+  val path = useLocation().pathname
 
   Box {
     component = nav

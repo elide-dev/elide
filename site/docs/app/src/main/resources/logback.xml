@@ -12,6 +12,7 @@
     </logger>
 
     <logger name="io.micronaut.context.env" level="off"/>
+    <logger name="elide.server.ssr.ServerSSRRenderer" level="trace" />
 
     <!-- Root Logger -->
     <root level="info">

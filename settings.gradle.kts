@@ -77,6 +77,7 @@ include(
   ":packages:rpc-jvm",
   ":packages:server",
   ":packages:ssg",
+  ":packages:ssr",
   ":packages:test",
   ":tools:bundler",
   ":tools:processor",

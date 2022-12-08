@@ -1,5 +1,7 @@
 
 plugins {
+  kotlin("plugin.noarg")
+  kotlin("plugin.serialization")
   kotlin("multiplatform")
 }
 
@@ -12,6 +14,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(kotlin("stdlib-common"))
+        implementation(libs.kotlinx.serialization.core)
       }
     }
     val commonTest by getting

@@ -108,6 +108,7 @@ dependencies {
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
   api(project(":packages:base"))
+  api(project(":packages:ssr"))
   api(project(":packages:server"))
   api(project(":packages:graalvm"))
   api(project(":site:docs:content"))

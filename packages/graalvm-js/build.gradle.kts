@@ -16,6 +16,7 @@ kotlin {
 }
 
 dependencies {
+  api(project(":packages:ssr"))
   api(npm("esbuild", libs.versions.npm.esbuild.get()))
   api(npm("prepack", libs.versions.npm.prepack.get()))
   api(npm("buffer", libs.versions.npm.buffer.get()))

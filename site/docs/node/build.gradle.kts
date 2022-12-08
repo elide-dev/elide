@@ -51,6 +51,7 @@ dependencies {
   api(npm("@emotion/cache", "11.10.5"))
   api(npm("@emotion/server", "11.10.0"))
 
+  api(project(":packages:ssr"))
   api(project(":site:docs:content"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm-js"))

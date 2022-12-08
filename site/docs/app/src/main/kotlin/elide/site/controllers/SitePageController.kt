@@ -2,6 +2,8 @@ package elide.site.controllers
 
 import elide.server.*
 import elide.server.controller.PageController
+import elide.server.controller.PageWithProps
+import elide.site.AppServerProps
 import elide.site.Assets
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
@@ -17,9 +19,13 @@ import kotlinx.html.link
 import kotlinx.html.title
 
 /** Extend a [PageController] with access to a [SitePage] configuration. */
-abstract class SitePageController protected constructor(protected val page: SitePage) : PageController() {
+abstract class SitePageController protected constructor(val page: SitePage) : PageWithProps<AppServerProps>(
+  AppServerProps.serializer(),
+  AppServerProps(page = page.name),
+) {
   companion object {
     const val enableSSR = true
+    const val enableStreaming = true
   }
 
   // Site-level info resolved for the current locale.
@@ -27,7 +33,11 @@ abstract class SitePageController protected constructor(protected val page: Site
 
   /** @return Rendered page title. */
   protected fun renderTitle(): String {
-    return "${page.title} | ${siteInfo.title}"
+    return if (page.title == "Elide") {
+      siteInfo.title
+    } else {
+      "${page.title} | ${siteInfo.title}"
+    }
   }
 
   /**
@@ -51,7 +61,10 @@ abstract class SitePageController protected constructor(protected val page: Site
    *
    */
   protected open fun pageBody(): suspend BODY.(request: HttpRequest<*>) -> Unit = {
-    if (enableSSR) injectSSR(this@SitePageController, it)
+    if (enableSSR) {
+      if (enableStreaming) streamSSR(this@SitePageController, it)
+      else injectSSR(this@SitePageController, it)
+    }
   }
 
   /**

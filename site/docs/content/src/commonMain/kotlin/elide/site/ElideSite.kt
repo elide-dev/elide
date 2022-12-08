@@ -31,17 +31,17 @@ object ElideSite {
     /** Tail end of all site page titles. */
     override val postfix = "Rapid development framework for Kotlin"
 
-    /** Main title to use for the site. */
-    override val title = "Elide | $postfix"
-
     /** Name of the framework. */
     override val name = "Elide"
+
+    /** Main title to use for the site. */
+    override val title = "$name | $postfix"
 
     /** Whether to indicate an early release. */
     override val prerelease = true
 
     /** Label to show if [prerelease] is `true`. */
-    override val prelabel = "αlpha"
+    override val prelabel = "alpha"
 
     /** Main heading to use for the navigation bar. */
     override val heading = "$name Framework"

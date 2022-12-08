@@ -7,6 +7,7 @@ config.module.rules.push({
     "sass-loader"   // compiles Sass to CSS, using Node Sass by default
   ]
 });
+
 config.module.rules.push({
   test: /\.css$/,
   use: [

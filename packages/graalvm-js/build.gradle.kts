@@ -20,6 +20,7 @@ dependencies {
   api(npm("prepack", libs.versions.npm.prepack.get()))
   api(npm("buffer", libs.versions.npm.buffer.get()))
   api(npm("readable-stream", libs.versions.npm.stream.get()))
+  api(npm("web-streams-polyfill", libs.versions.npm.webstreams.get()))
   api(npm("@emotion/css", libs.versions.npm.emotion.core.get()))
   api(npm("@emotion/server", libs.versions.npm.emotion.server.get()))
 

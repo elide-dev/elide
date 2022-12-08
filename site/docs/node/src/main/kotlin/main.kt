@@ -6,7 +6,6 @@ import elide.frontend.ssr.*
 import js.core.jso
 import elide.runtime.gvm.entrypoint
 import elide.site.ElideSite
-import elide.site.pages.Home
 import elide.site.ui.ElideSite as App
 import elide.site.ui.components.ThemeModuleServer
 import react.Fragment
@@ -31,10 +30,6 @@ private fun setupCache(): EmotionCache {
 val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache ->
   Fragment.create {
     StaticRouter {
-      console.log("RENDERING FOR PATH: '$path'")
-      console.log("CONTEXT: ${JSON.stringify(context)}")
-      console.log("STATE: ${JSON.stringify(state)}")
-
       val currentPage = state?.page
       val target = path ?: when {
         currentPage?.isNotEmpty() == true -> ElideSite.pages.find {
@@ -43,9 +38,9 @@ val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache
 
         else -> null
       } ?: "/"
-      location = target as Any
 
-      console.log("RESOLVED FOR PATH: '$target'")
+      // route to requested page
+      location = target
 
       CacheProvider(emotionCache) {
         ThemeModuleServer {

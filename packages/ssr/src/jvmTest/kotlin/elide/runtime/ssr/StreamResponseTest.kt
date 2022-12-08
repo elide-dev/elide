@@ -4,8 +4,8 @@ import org.graalvm.polyglot.Context
 import kotlin.test.*
 
 /** Tests for response streaming across polyglot boundaries. */
-class StreamResponseTest {
-  @Test fun testSSRBasic() {
+@Ignore class StreamResponseTest {
+  @Test @Ignore fun testSSRBasic() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -34,7 +34,7 @@ class StreamResponseTest {
       }
   }
 
-  @Test fun testSSRPluckMethod() {
+  @Test @Ignore fun testSSRPluckMethod() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -84,7 +84,7 @@ class StreamResponseTest {
       }
   }
 
-  @Test fun testSSRInterface() {
+  @Test @Ignore fun testSSRInterface() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -139,7 +139,7 @@ class StreamResponseTest {
       }
   }
 
-  @Test fun testSSRStream() {
+  @Test @Ignore fun testSSRStream() {
     // language=javascript
     val testCode = """
       var embedded = (() => {

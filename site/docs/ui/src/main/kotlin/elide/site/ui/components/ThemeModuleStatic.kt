@@ -5,15 +5,14 @@ import mui.material.CssBaseline
 import mui.material.styles.ThemeProvider
 import react.*
 
-val ThemeContext = createContext<ThemeState>()
-
+/** Theme context provider for server/static environments. */
 val ThemeModuleServer = FC<PropsWithChildren> { props ->
   val state = useState(Themes.Mode.LIGHT.theme)
-  val (theme, _) = state
+  val (currentTheme, _) = state
 
   ThemeContext(state) {
     ThemeProvider {
-      this.theme = theme
+      theme = currentTheme
 
       CssBaseline()
       +props.children

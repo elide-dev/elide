@@ -24,10 +24,10 @@ import react.dom.aria.ariaLabel
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.img
 
-/** */
+/** Renders the main Elide site header. */
 val Header = FC<Props> {
   val siteInfo = ElideSite.defaultInfo
-//  var theme by useContext(ThemeContext)
+  var themeCtx by useContext(ThemeContext)
 
   AppBar {
     position = AppBarPosition.fixed
@@ -66,81 +66,85 @@ val Header = FC<Props> {
         }
 
         if (siteInfo.prerelease) {
-          div {
-            css {
-              display = Display.flex
-              alignItems = AlignItems.center
-              justifyContent = JustifyContent.center
-              height = 32.px
-            }
+          NoSsr {
+            div {
+              css {
+                display = Display.flex
+                alignItems = AlignItems.center
+                justifyContent = JustifyContent.center
+                height = 32.px
+              }
 
-            Chip {
-              color = ChipColor.info
-              title = siteInfo.prelabel
-              label = ReactNode(siteInfo.prelabel)
+              Chip {
+                color = ChipColor.info
+                title = siteInfo.prelabel
+                label = ReactNode(siteInfo.prelabel)
 
-              sx {
-                marginLeft = 15.px
-                borderRadius = 5.px
-                height = 25.px
-                color = Color("#333")
+                sx {
+                  marginLeft = 15.px
+                  borderRadius = 5.px
+                  height = 25.px
+                  color = Color("#333")
+                }
               }
             }
           }
         }
       }
 
-      Tooltip {
-        title = ReactNode("Theme")
+      NoSsr {
+        Tooltip {
+          title = ReactNode("Theme")
 
-        Switch {
-          icon = Brightness7.create()
-          checkedIcon = Brightness4.create()
-//          checked = theme == Themes.Dark
-          color = SwitchColor.default
-          ariaLabel = "theme"
+          Switch {
+            icon = Brightness7.create()
+            checkedIcon = Brightness4.create()
+            checked = themeCtx == Themes.Dark
+            color = SwitchColor.default
+            ariaLabel = "theme"
 
-          onChange = { _, checked ->
-//            theme = if (checked) Themes.Dark else Themes.Light
+            onChange = { _, checked ->
+              themeCtx = if (checked) Themes.Dark else Themes.Light
+            }
           }
         }
-      }
 
-      Tooltip {
-        title = ReactNode("Reference Docs")
+        Tooltip {
+          title = ReactNode("Reference Docs")
 
-        IconButton {
-          ariaLabel = "docs"
-          ariaHasPopup = `false`
-          size = Size.large
-          color = IconButtonColor.inherit
-          onClick = {
-            window.open(
-              SiteLinks.ReferenceDocs.kotlin,
-              target = "_blank",
-            )
+          IconButton {
+            ariaLabel = "docs"
+            ariaHasPopup = `false`
+            size = Size.large
+            color = IconButtonColor.inherit
+            onClick = {
+              window.open(
+                SiteLinks.ReferenceDocs.kotlin,
+                target = "_blank",
+              )
+            }
+
+            MenuBook()
           }
-
-          MenuBook()
         }
-      }
 
-      Tooltip {
-        title = ReactNode("Open Github")
+        Tooltip {
+          title = ReactNode("Open Github")
 
-        IconButton {
-          ariaLabel = "source code"
-          ariaHasPopup = `false`
-          size = Size.large
-          color = IconButtonColor.inherit
-          onClick = {
-            window.open(
-              ExternalLinks.github,
-              target = "_blank",
-            )
+          IconButton {
+            ariaLabel = "source code"
+            ariaHasPopup = `false`
+            size = Size.large
+            color = IconButtonColor.inherit
+            onClick = {
+              window.open(
+                ExternalLinks.github,
+                target = "_blank",
+              )
+            }
+
+            GitHub()
           }
-
-          GitHub()
         }
       }
     }

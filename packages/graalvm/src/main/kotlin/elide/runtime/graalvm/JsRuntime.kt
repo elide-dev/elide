@@ -16,7 +16,6 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import kotlinx.coroutines.*
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.json.Json
-import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -29,7 +28,6 @@ import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
-import java.util.function.Consumer
 import com.google.common.util.concurrent.ListenableFuture as Future
 import org.graalvm.polyglot.Context as VMContext
 
@@ -134,7 +132,6 @@ import org.graalvm.polyglot.Context as VMContext
       val builder = VMContext.newBuilder("js")
         .allowExperimentalOptions(true)
         .allowValueSharing(true)
-        .allowIO(true)  // @TODO(sgammon): switch off when virtual IO is available
 
       buildRuntimeOptions().flatMap {
         val prop = it.key
@@ -359,26 +356,18 @@ import org.graalvm.polyglot.Context as VMContext
     @JvmStatic public fun embedded(
       path: String,
       charset: Charset = StandardCharsets.UTF_8,
-      invocationBase: String? = null,
-      invocationTarget: String? = null,
     ): EmbeddedScript = EmbeddedScript(
       path = path,
       charset = charset,
-      invocationBase = invocationBase,
-      invocationTarget = invocationTarget,
     )
 
     /** @return Literal script container for the provided [script]. */
     @JvmStatic public fun literal(
       script: String,
       id: String,
-      invocationBase: String? = null,
-      invocationTarget: String? = null,
     ): ExecutableScript = LiteralScript(
       id,
       script,
-      invocationBase = invocationBase,
-      invocationTarget = invocationTarget,
     )
   }
 
@@ -558,8 +547,6 @@ import org.graalvm.polyglot.Context as VMContext
   public sealed class ExecutableScript(
     internal val installShims: Boolean = true,
     internal val installEntry: Boolean = true,
-    internal val invocationBase: String? = null,
-    internal val invocationTarget: String? = null,
     private val fingerprint: ScriptID,
   ) {
     private var renderedContent: StringBuilder? = null
@@ -610,13 +597,7 @@ import org.graalvm.polyglot.Context as VMContext
   public class EmbeddedScript(
     public val path: String,
     private val charset: Charset = StandardCharsets.UTF_8,
-    invocationBase: String? = null,
-    invocationTarget: String? = null,
-  ): ExecutableScript(
-    invocationBase = invocationBase,
-    invocationTarget = invocationTarget,
-    fingerprint = fingerprintScriptPath(path),
-  ) {
+  ): ExecutableScript(fingerprint = fingerprintScriptPath(path)) {
     public companion object {
       private const val hashAlgo = "SHA-256"
 
@@ -649,13 +630,7 @@ import org.graalvm.polyglot.Context as VMContext
   public class LiteralScript(
     private val moduleId: String,
     private val script: String,
-    invocationBase: String? = null,
-    invocationTarget: String? = null,
-  ): ExecutableScript(
-    invocationBase = invocationBase,
-    invocationTarget = invocationTarget,
-    fingerprint = fingerprintScriptContent(moduleId, script),
-  ) {
+  ): ExecutableScript(fingerprint = fingerprintScriptContent(moduleId, script)) {
     public companion object {
       private const val hashAlgorithm = "SHA-256"
 
@@ -687,54 +662,58 @@ import org.graalvm.polyglot.Context as VMContext
   private val runtime: ScriptRuntime = ScriptRuntime()
 
   // Resolve the invocation target for the given script details.
-  public fun resolveInvocationTarget(script: ExecutableScript, streaming: Boolean): Value {
+  public fun resolveInvocationTarget(
+    script: ExecutableScript,
+    streaming: Boolean,
+    base: String? = null,
+    target: String? = null,
+  ): Value {
     val interpreted = runtime.resolve(script)
-    val base = script.invocationBase
-    val target = script.invocationTarget
-    return if (target != null) {
-      var baseSegment: Value = interpreted
-      val baseResolved = if (base != null) {
-        base.split(".").forEach {
-          baseSegment = baseSegment.getMember(
-            it
-          ) ?: error(
-            "Failed to resolve base segment: '$it' in '$base' was not found"
-          )
-        }
-        baseSegment
-      } else {
-        interpreted
+    var baseSegment: Value = interpreted
+    val baseResolved = if (base != null) {
+      base.split(".").forEach {
+        baseSegment = baseSegment.getMember(
+          it
+        ) ?: error(
+          "Failed to resolve base segment: '$it' in '$base' was not found"
+        )
       }
+      baseSegment
+    } else {
+      interpreted
+    }
 
+    return if (target != null) {
       // from the resolved base segment, pluck the executable member
-      val found = baseResolved.getMember(
-        script.invocationTarget,
+      baseResolved.getMember(
+        target,
       ) ?: error(
-        "Failed to invoke script member: '${script.getId()}' (fn: '${script.invocationTarget}')"
+        "Failed to resolve script member: '${script.getId()}' (fn: '$target')"
       )
-
-      if (!found.canExecute()) {
-        val method = when {
-          !streaming && found.hasMember(RENDER_ENTRYPOINT) -> found.getMember(RENDER_ENTRYPOINT)
-          streaming && found.hasMember(STREAM_ENTRYPOINT) -> found.getMember(STREAM_ENTRYPOINT)
-          else -> if (streaming && !found.hasMember(STREAM_ENTRYPOINT)) error(
-            "Member found, but is for synchronous render (expected streaming), at '${base}.${script.invocationTarget}'"
-          ) else if (!streaming && !found.hasMember(RENDER_ENTRYPOINT)) error(
-            "Member found, but is for streaming (expected non-streaming), at '${base}.${script.invocationTarget}'"
+    } else {
+      val targetName = target ?: "(default)"
+      if (!interpreted.canExecute()) {
+        val (method, entry) = when {
+          streaming && interpreted.hasMember(STREAM_ENTRYPOINT) ->
+            interpreted.getMember(STREAM_ENTRYPOINT) to STREAM_ENTRYPOINT
+          !streaming && interpreted.hasMember(RENDER_ENTRYPOINT) ->
+            interpreted.getMember(RENDER_ENTRYPOINT) to RENDER_ENTRYPOINT
+          else -> if (streaming && !interpreted.hasMember(STREAM_ENTRYPOINT)) error(
+            "Member found, but is for synchronous render (expected streaming), at '$base.$targetName'"
+          ) else if (!streaming && !interpreted.hasMember(RENDER_ENTRYPOINT)) error(
+            "Member found, but is for streaming (expected non-streaming), at '$base.$targetName'"
           ) else error(
-            "Failed to resolve expected invocation target for SSR script at '${base}.${script.invocationTarget}'"
+            "Failed to resolve expected invocation target for SSR script at '$base.$targetName'"
           )
         }
         if (!method.canExecute()) error(
-          "Member found at target '$RENDER_ENTRYPOINT', but not executable, at '${base}.${script.invocationTarget}'"
+          "Member found at target '$entry', but not executable"
         )
         method
       } else {
-        found
+        // execute the script directly
+        interpreted
       }
-    } else {
-      // execute the script directly
-      interpreted
     }
   }
 

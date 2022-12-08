@@ -29,7 +29,7 @@ public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
 public val DEFAULT_INVOCATION_BASE: String? = null
 
 // Default target name for SSR invocation.
-public val DEFAULT_INVOCATION_TARGET: String? = null
+public const val DEFAULT_INVOCATION_TARGET: String = "renderContent"
 
 // Default target name for SSR invocation.
 public const val DEFAULT_INVOCATION_STREAM_TARGET: String = "renderStream"
@@ -50,9 +50,6 @@ public const val DEFAULT_SSR_DOM_ID: String = "root"
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
  * @param streamed Whether to enable streaming SSR.
- * @param invocationBase Base object where the engine should look for the invocation entrypoint. Defaults to `null`.
- * @param invocationTarget Member name of [invocationBase] (or global) where the engine should look for the invocation
- *     entrypoint. Defaults to `null`.
  * @param embeddedRoot Resource folder path where embedded scripts are held. Defaults to `embedded`.
  */
 @Suppress("LongParameterList")
@@ -64,19 +61,13 @@ public suspend fun BODY.injectSSR(
   attrs: List<Pair<String, String>> = emptyList(),
   path: String = NODE_SSR_DEFAULT_PATH,
   streamed: Boolean = false,
-  invocationBase: String? = DEFAULT_INVOCATION_BASE,
-  invocationTarget: String? = if (streamed) DEFAULT_INVOCATION_STREAM_TARGET else DEFAULT_INVOCATION_TARGET,
   embeddedRoot: String = EMBEDDED_ROOT,
 ) {
   val rendered = ServerSSRRenderer(
     this,
     handler,
     request,
-    JsRuntime.Script.embedded(
-      path = "/$embeddedRoot/$path",
-      invocationBase = invocationBase,
-      invocationTarget = invocationTarget,
-    )
+    JsRuntime.Script.embedded(path = "/$embeddedRoot/$path"),
   ).renderSuspendAsync(streamed)
 
   MAIN(
@@ -113,9 +104,6 @@ public suspend fun BODY.injectSSR(
  * @param attrs Set of additional attribute pairs to apply in the DOM to the root element. Defaults to an empty set.
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
- * @param invocationBase Base object where the engine should look for the invocation entrypoint. Defaults to `null`.
- * @param streamTarget Member name of [invocationBase] (or global) where the engine should look for the invocation
- *     entrypoint. Defaults to `null`.
  * @param embeddedRoot Resource folder path where embedded scripts are held. Defaults to `embedded`.
  */
 @Suppress("LongParameterList")
@@ -126,8 +114,6 @@ public suspend fun BODY.streamSSR(
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
   path: String = NODE_SSR_DEFAULT_PATH,
-  invocationBase: String? = DEFAULT_INVOCATION_BASE,
-  streamTarget: String? = DEFAULT_INVOCATION_STREAM_TARGET,
   embeddedRoot: String = EMBEDDED_ROOT,
 ): Unit = injectSSR(
   handler = handler,
@@ -136,8 +122,6 @@ public suspend fun BODY.streamSSR(
   classes = classes,
   attrs = attrs,
   path = path,
-  invocationBase = invocationBase,
-  invocationTarget = streamTarget,
   embeddedRoot = embeddedRoot,
   streamed = true,
 )

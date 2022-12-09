@@ -8,7 +8,7 @@ plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
   id("dev.elide.build.native.lib")
-  id("dev.elide.build.jvm.multi-jvm-testing")
+//  id("dev.elide.build.jvm.multi-jvm-testing")
 }
 
 group = "dev.elide"

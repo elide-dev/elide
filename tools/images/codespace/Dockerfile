@@ -181,9 +181,3 @@ RUN echo "source ~/.profile" >> ~/.zshrc \
 COPY zshrc /home/$DEV_USER/.zshrc
 USER ${DEV_USER}
 WORKDIR /home/${DEV_USER}
-
-RUN BUF_PREFIX="/usr/local" \
-  && BUF_VERSION="1.6.0" \
-  && curl -sSL \
-    "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" \
-  | tar -xvzf - -C "${BUF_PREFIX}" --strip-components 1

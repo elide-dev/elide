@@ -8,6 +8,11 @@ on:
       - site/*
   pull_request:
     types: [labeled, opened, reopened, synchronize]
+    branches:
+      - stable
+      - v3
+      - site/*
+      - release/*
 
 env:
   GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}

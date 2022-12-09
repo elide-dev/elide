@@ -1,0 +1,8 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/runtime/native", "."]
+images: ["us-docker.pkg.dev/elide-fw/tools/runtime/native"]
+options:
+  logging: CLOUD_LOGGING_ONLY
+projectId: elide-fw

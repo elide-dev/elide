@@ -1,5 +1,25 @@
+public final synthetic class elide/server/$Application$AppStartupListener$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public abstract interface class elide/server/Application {
 	public fun boot ([Ljava/lang/String;)V
+}
+
+public final class elide/server/Application$AppStartupListener : io/micronaut/context/event/ApplicationEventListener {
+	public fun <init> ()V
+	public fun onApplicationEvent (Lio/micronaut/runtime/server/event/ServerStartupEvent;)V
+	public synthetic fun onApplicationEvent (Ljava/lang/Object;)V
+}
+
+public final class elide/server/Application$Initialization {
+	public static final field INSTANCE Lelide/server/Application$Initialization;
+	public final fun initializeOnWarmup (Lkotlin/jvm/functions/Function0;)V
+	public final fun initializeWithServer (Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class elide/server/AssetHandler : elide/server/BaseResponseHandler {
@@ -59,6 +79,10 @@ public abstract interface class elide/server/ResponseHandler {
 
 public abstract interface class elide/server/ResponseRenderer {
 	public abstract fun render ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/server/ServerInitializer {
+	public fun initialize ()V
 }
 
 public abstract interface class elide/server/SuspensionRenderer {
@@ -561,6 +585,7 @@ public final class elide/server/util/ServerFlag {
 	public final fun getInspectPath ()Ljava/lang/String;
 	public final fun getInspectPort ()I
 	public final fun getInspectSecure ()Z
+	public final fun getWarmup ()Z
 	public final fun resolve (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static final fun setArgs ([Ljava/lang/String;)V
 }

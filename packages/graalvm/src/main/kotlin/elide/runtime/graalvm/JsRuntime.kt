@@ -1,9 +1,12 @@
 package elide.runtime.graalvm
 
 import com.google.common.annotations.VisibleForTesting
-import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
+import com.google.common.util.concurrent.ThreadFactoryBuilder
 import elide.annotations.core.Polyglot
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.runtime.ssr.ServerResponse
 import elide.server.Application
 import elide.server.EMBEDDED_ROOT
@@ -20,24 +23,32 @@ import io.micronaut.context.annotation.Factory
 import io.micronaut.core.annotation.ReflectiveAccess
 import jakarta.inject.Singleton
 import kotlinx.coroutines.*
-import kotlinx.coroutines.guava.asDeferred
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.json.Json
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ImageSingletons
+import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
+import java.io.InputStream
+import java.io.OutputStream
+import java.lang.Thread.UncaughtExceptionHandler
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import java.util.LinkedList
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
-import com.google.common.util.concurrent.ListenableFuture as Future
 import org.graalvm.polyglot.Context as VMContext
 
 /** JavaScript embedded runtime logic, for use on the JVM. */
@@ -46,18 +57,26 @@ public class JsRuntime private constructor() {
   public companion object {
     private const val RENDER_ENTRYPOINT = "renderContent"
     private const val STREAM_ENTRYPOINT = "renderStream"
-
-    // Singleton instance.
-    private val singleton = JsRuntime()
+    private const val manifest = "/$EMBEDDED_ROOT/runtime/runtime-js.json"
 
     // Hard-coded JS VM options.
     private val baseOptions : List<JSVMProperty> = listOf(
       StaticProperty("js.strict", "true"),
+      StaticProperty("js.intl-402", "true"),
+      StaticProperty("js.annex-b", "true"),
+      StaticProperty("js.atomics", "true"),
+      StaticProperty("engine.BackgroundCompilation", "true"),
+      StaticProperty("engine.PreinitializeContexts", "js"),
+      StaticProperty("engine.UsePreInitializedContext", "true"),
+      StaticProperty("engine.Compilation", "true"),
+      StaticProperty("engine.Inlining", "true"),
+      StaticProperty("engine.MultiTier", "true"),
     )
 
     // Options which can be controlled via user-configured inputs.
     private val configurableOptions : List<JSVMProperty> = listOf(
-      RuntimeProperty("vm.js.ecma", "js.ecmascript-version", "2020"),
+      RuntimeProperty("vm.js.ecma", "js.ecmascript-version", "2022"),
+      RuntimeProperty("vm.js.wasm", "js.webassembly", "false"),
     )
 
     // Options which must be evaluated at the time a context is created.
@@ -87,91 +106,49 @@ public class JsRuntime private constructor() {
       )),
     )
 
-    /** Runnable task within a JS VM context. */
-    private class VMExecution<R> constructor (
-      val op: (VMContext) -> R,
-      val result: AtomicReference<R?> = AtomicReference(null),
-    ): Runnable, Callable<R> {
-      override fun run() {
-        result.set(
-          ManagedContext.acquire().exec(op)
-        )
+    // Singleton instance.
+    private val singleton = JsRuntime()
+
+    // Shared JS engine.
+    private val jsEngine: Engine = Engine.newBuilder()
+      .allowExperimentalOptions(true)
+      .useSystemProperties(false)
+      .err(StubbedOutputStream.SINGLETON)
+      .out(StubbedOutputStream.SINGLETON)
+      .`in`(StubbedInputStream.SINGLETON)
+      .let {
+        baseOptions.forEach { opt ->
+          it.option(opt.symbol, opt.value())
+        }
+        it.build()
       }
 
-      override fun call(): R? {
-        result.set(
-          ManagedContext.acquire().exec(op)
-        )
-        return result.get()
+    /** Stubbed output stream. */
+    private class StubbedOutputStream : OutputStream() {
+      companion object {
+        /** Singleton instance for internal use. */
+        internal val SINGLETON = StubbedOutputStream()
       }
+
+      override fun write(b: Int): Unit = error(
+        "Cannot write to stubbed stream from inside the JS VM."
+      )
     }
 
-    /** Dedicated executor for the JS Runtime. */
-    internal class RuntimeExecutor {
-      // Dedicated thread executor backing the runtime.
-      private val threadPool: Executor = Executors.newSingleThreadExecutor()
-
-      internal fun <R> submit(runnable: (VMContext) -> R): Future<R> {
-        val task = VMExecution(runnable)
-        return Futures.submit<R>(task) {
-          threadPool.execute(it)
-        }
+    /** Stubbed input stream. */
+    private class StubbedInputStream : InputStream() {
+      companion object {
+        /** Singleton instance for internal use. */
+        internal val SINGLETON = StubbedInputStream()
       }
+
+      override fun read(): Int = error(
+        "Cannot read from stubbed stream from inside the JS VM."
+      )
     }
 
     /** @return Static acquisition of the singleton JavaScript runtime. */
     @JvmStatic public fun acquire(): JsRuntime = singleton
-
-    /** @return Set of options to apply to a new JS VM context. */
-    @JvmStatic private fun buildRuntimeOptions(): Map<JSVMProperty, String?> {
-      return baseOptions.plus(
-        configurableOptions
-      ).plus(
-        conditionalOptions
-      ).map {
-        it to it.value()
-      }.filter {
-        it.second?.isNotBlank() ?: false
-      }.toMap()
-    }
-
-    /** @return SDK VM context pre-built for JavaScript execution. */
-    @JvmStatic @Factory private fun spawnContext(): VMContext {
-      val logging = LoggerFactory.getLogger(JsRuntime::class.java)
-      val builder = VMContext.newBuilder("js")
-        .allowExperimentalOptions(true)
-        .allowValueSharing(true)
-
-      buildRuntimeOptions().flatMap {
-        val prop = it.key
-        val value = prop.value()
-        if (value != null && value != "false") {
-          if (prop is ConditionalMultiProperty) {
-            // if it's a multi-property, explode into the individual property values.
-            prop.explode()
-          } else {
-            // otherwise, just consider the single value.
-            listOf(prop)
-          }
-        } else {
-          // if there's no value for this property, then we don't need to consider it.
-          emptyList()
-        }
-      }.forEach { prop ->
-        val value = prop.value()
-        if (value != null && value != "false") {
-          logging.debug(
-            "Setting JS VM property: '$prop': '$value'"
-          )
-          builder.option(
-            prop.symbol,
-            value
-          )
-          // special case: handle inspection
-        }
-      }
-      return builder.build()
-    }
   }
 
   /** Factory which wires in the singleton JS runtime as a bean. */
@@ -181,32 +158,12 @@ public class JsRuntime private constructor() {
     /** @inheritDoc */
     override fun initialize() {
       Application.Initialization.initializeWithServer {
-        acquire()
+        // pre-warm the context pool
+        singleton.runtime.warm()
 
         if (ImageInfo.inImageBuildtimeCode()) {
           ImageSingletons.add(JsRuntime::class.java, singleton)
         }
-      }
-    }
-  }
-
-  /** VM execution thread. */
-  public class VMThread private constructor(task: Callable<Value>) : Thread() {
-    private val task: java.lang.Runnable
-    @Volatile private var result: Value? = null
-
-    init {
-      this.task = Runnable {
-        result = task.call()
-      }
-    }
-
-    public companion object {
-      /** Execute a VM [task] to produce a [Value] via a background thread. */
-      @JvmStatic public fun spawn(start: Boolean = true, task: Callable<Value>): VMThread {
-        val thread = VMThread(task)
-        if (start) thread.start()
-        return thread
       }
     }
   }
@@ -397,62 +354,21 @@ public class JsRuntime private constructor() {
     )
   }
 
-  /** Managed GraalVM execution context, with thread guards. */
-  private class ManagedContext {
-    companion object {
-      @JvmStatic internal fun acquire(): ManagedContext {
-        return context.get()
-      }
-
-      private val context: ThreadLocal<ManagedContext> = object: ThreadLocal<ManagedContext>() {
-        override fun initialValue(): ManagedContext {
-          val ctx = ManagedContext()
-          ctx.initialize()
-          return ctx
-        }
-      }
-    }
-
-    private val initialized: AtomicBoolean = AtomicBoolean(false)
-    private val locked: AtomicBoolean = AtomicBoolean(false)
-    private val vmContext: AtomicReference<VMContext?> = AtomicReference(null)
-
-    private fun initialize() {
-      initialized.compareAndSet(
-        false,
-        true,
-      )
-      vmContext.compareAndSet(
-        null,
-        spawnContext(),
-      )
-    }
-
-    // Acquire this context for execution.
-    fun <R> exec(operation: (VMContext) -> R): R {
-      locked.compareAndSet(
-        false,
-        true,
-      )
-      val ctx = vmContext.get() ?: error(
-        "Context not initialized, cannot execute on VM"
-      )
-      ctx.enter()
-      val result = operation.invoke(ctx)
-      ctx.leave()
-      locked.compareAndSet(
-        true,
-        false,
-      )
-      return result
+  /** Uncaught error handler. */
+  internal inner class VMErrorHandler : UncaughtExceptionHandler {
+    override fun uncaughtException(t: Thread, e: Throwable) {
+      logging.error("Uncaught exception while processing VM script", e)
     }
   }
 
   /** Script runtime manager. */
-  internal class ScriptRuntime {
-    internal companion object {
-      private const val embeddedRoot = "embedded"
-      private const val manifest = "/$embeddedRoot/runtime/runtime-js.json"
+  private class ScriptRuntime constructor (
+    concurrency: Int,
+    private val threadPool: ListeningExecutorService,
+    private val logging: Logger,
+  ) : ListeningExecutorService by threadPool {
+    companion object {
+      // Whether the inner script runtime has initialized yet.
       private val initialized: AtomicBoolean = AtomicBoolean(false)
 
       // Runtime pre-amble from which to clone and splice executable scripts.
@@ -467,10 +383,13 @@ public class JsRuntime private constructor() {
         loader = l
       }
 
+      // Spawn a fresh VM thread (un-started).
+      @JvmStatic internal fun spawn(task: Runnable): VMThread = VMThread(task)
+
       // Load a JS artifact for runtime use from the JAR.
       @JvmStatic private fun loadArtifact(path: String): String {
         return (
-          JsRuntime::class.java.getResourceAsStream("/$embeddedRoot/runtime/$path") ?:
+          JsRuntime::class.java.getResourceAsStream("/$EMBEDDED_ROOT/runtime/$path") ?:
             throw FileNotFoundException("Unable to locate runtime JS resource $path")
         ).bufferedReader(StandardCharsets.UTF_8).use {
           it.readText()
@@ -523,15 +442,163 @@ public class JsRuntime private constructor() {
       }
     }
 
-    // Thread-pool executor where we should acquire execution contexts.
-    internal val executor: RuntimeExecutor by lazy {
-      RuntimeExecutor()
+    /** Resource pool which manages access to a set of JavaScript execution contexts. */
+    private inner class JSRuntimeContextPool constructor (private val concurrency: Int) {
+      private val mutex = Mutex()
+      private val semaphore = Semaphore(permits = concurrency)
+      private val resources = LinkedList<VMContext>()
+      private val live = AtomicInteger(0)
+
+      /** @return Set of options to apply to a new JS VM context. */
+      private fun buildRuntimeOptions(): Map<JSVMProperty, String?> {
+        return configurableOptions.plus(
+          conditionalOptions
+        ).map {
+          it to it.value()
+        }.filter {
+          it.second?.isNotBlank() ?: false
+        }.toMap()
+      }
+
+      // Resolved static context options (computed at startup).
+      private val resolvedContextOptions: List<JSVMProperty> by lazy {
+        buildRuntimeOptions().flatMap {
+          val prop = it.key
+          val value = prop.value()
+          if (value != null && value != "false") {
+            if (prop is ConditionalMultiProperty) {
+              // if it's a multi-property, explode into the individual property values.
+              prop.explode()
+            } else {
+              // otherwise, just consider the single value.
+              listOf(prop)
+            }
+          } else {
+            // if there's no value for this property, then we don't need to consider it.
+            emptyList()
+          }
+        }.mapNotNull { prop ->
+          val value = prop.value()
+          if (value != null && value != "false") {
+            prop
+          } else {
+            null
+          }
+        }
+      }
+
+      /** @return SDK VM context pre-built for JavaScript execution. */
+      private fun spawnContext(): VMContext {
+        val builder = VMContext.newBuilder("js")
+          .engine(jsEngine)
+          .allowIO(false)
+          .allowExperimentalOptions(true)
+          .allowValueSharing(true)
+          .allowCreateProcess(false)
+          .allowCreateThread(false)
+          .allowHostClassLoading(false)
+          .allowNativeAccess(false)
+          .allowEnvironmentAccess(EnvironmentAccess.NONE)
+
+        resolvedContextOptions.forEach { prop ->
+          val value = prop.value()
+          if (value != null && value != "false") {
+            logging.debug(
+              "Setting JS VM property: '$prop': '$value'"
+            )
+            builder.option(
+              prop.symbol,
+              value
+            )
+          }
+        }
+        live.incrementAndGet()
+        return builder.build()
+      }
+
+      fun warm() {
+        // pre-spawn several contexts
+        repeat(concurrency) {
+          resources.add(
+            warmContext(spawnContext())
+          )
+        }
+      }
+
+      // Run warmup steps for a newly-provisioned context.
+      private fun warmContext(context: VMContext): VMContext = withLocked(context) {
+        initialize("js")
+        this
+      }
+
+      // Perform a guarded code block with the provided context.
+      inline fun <R> withLocked(context: VMContext, reset: Boolean = true, op: VMContext.() -> R): R {
+        return try {
+          context.enter()
+          val value = op.invoke(context)
+          context.leave()
+          value
+        } finally {
+          if (reset) {
+            context.resetLimits()
+          }
+        }
+      }
+
+      // Inner suspending invocation method for VM context use.
+      suspend operator fun <R> invoke(handler: suspend (VMContext) -> R): R {
+        return semaphore.withPermit {
+          val borrowed = if (resources.isEmpty() || live.get() < (concurrency * 2)) {
+            warmContext(spawnContext())
+          } else {
+            mutex.withLock {
+              resources.removeLast()
+            }
+          }
+          try {
+            withLocked(borrowed) {
+              handler.invoke(borrowed)
+            }
+          } finally {
+            mutex.withLock {
+              resources.add(borrowed)
+            }
+          }
+        }
+      }
     }
+
+    /** VM execution thread. */
+    private class VMThread constructor(task: Runnable) : Thread(task)
+
+    // Co-routine dispatcher.
+    private val dispatcher: CoroutineDispatcher = threadPool.asCoroutineDispatcher()
+
+    // Central managed context pool.
+    private val contextPool = JSRuntimeContextPool(concurrency)
 
     // Private cache of warmed sources.
     private val sourceCache: Cache<ScriptID, Value> = Caffeine.newBuilder()
-      .executor(MoreExecutors.directExecutor())
       .build()
+
+    /** @return Co-routine dispatcher to use for VM executions. */
+    fun dispatcher(): CoroutineDispatcher = dispatcher
+
+    /**
+     * TBD.
+     */
+    fun warm() {
+      contextPool.warm()
+    }
+
+    /**
+     * TBD.
+     */
+    suspend fun <R> acquire(op: suspend (VMContext) -> R): R {
+      return contextPool {
+        op(it)
+      }
+    }
 
     /** @return Executable [script] prepared with an entrypoint and runtime glue code. */
     private fun prepare(script: ExecutableScript): ExecutableScript {
@@ -556,16 +623,87 @@ public class JsRuntime private constructor() {
       return script
     }
 
-    /** @return Interpreted and warmed [script] -- in re-used form, or on the fly, as applicable. */
-    internal fun resolve(script: ExecutableScript): Value {
-      return sourceCache.get(script.fingerprint()) { _ ->
-        val prepped = prepare(script)
-        ManagedContext.acquire().exec {
-          it.eval(prepped.interpret())
-        } ?: error(
-          "Failed to resolve value from VM execution: got `null`"
+    // Resolve the invocation target for the given script details.
+    private fun resolveEntrypoint(
+      interpreted: Value,
+      script: ExecutableScript,
+      streaming: Boolean,
+      base: String? = null,
+      target: String? = null,
+    ): Value {
+      var baseSegment: Value = interpreted
+      val baseResolved = if (base != null) {
+        base.split(".").forEach {
+          baseSegment = baseSegment.getMember(
+            it
+          ) ?: error(
+            "Failed to resolve base segment: '$it' in '$base' was not found"
+          )
+        }
+        baseSegment
+      } else {
+        interpreted
+      }
+
+      return if (target != null) {
+        // from the resolved base segment, pluck the executable member
+        baseResolved.getMember(
+          target,
+        ) ?: error(
+          "Failed to resolve script member: '${script.getId()}' (fn: '$target')"
         )
-      }!!
+      } else {
+        val targetName = "(default)"
+        if (!interpreted.canExecute()) {
+          val (method, entry) = when {
+            streaming && interpreted.hasMember(STREAM_ENTRYPOINT) ->
+              interpreted.getMember(STREAM_ENTRYPOINT) to STREAM_ENTRYPOINT
+            !streaming && interpreted.hasMember(RENDER_ENTRYPOINT) ->
+              interpreted.getMember(RENDER_ENTRYPOINT) to RENDER_ENTRYPOINT
+            else -> if (streaming && !interpreted.hasMember(STREAM_ENTRYPOINT)) error(
+              "Member found, but is for synchronous render (expected streaming), at '$base.$targetName'"
+            ) else if (!streaming && !interpreted.hasMember(RENDER_ENTRYPOINT)) error(
+              "Member found, but is for streaming (expected non-streaming), at '$base.$targetName'"
+            ) else error(
+              "Failed to resolve expected invocation target for SSR script at '$base.$targetName'"
+            )
+          }
+          if (!method.canExecute()) error(
+            "Member found at target '$entry', but not executable"
+          )
+          method
+        } else {
+          // execute the script directly
+          interpreted
+        }
+      }
+    }
+
+    /** @return Interpreted and warmed [script] -- in re-used form, or on the fly, as applicable. */
+    suspend fun resolve(
+      script: ExecutableScript,
+      streaming: Boolean = true,
+      base: String? = null,
+      target: String? = null,
+    ): Value {
+      val print = script.fingerprint()
+      val cached = sourceCache.getIfPresent(print)
+      return if (cached != null) {
+        cached
+      } else {
+        val prepped = prepare(script)
+        val result = acquire {
+          resolveEntrypoint(
+            it.eval(prepped.interpret()),
+            script,
+            streaming,
+            base,
+            target,
+          )
+        }
+        sourceCache.put(print, result)
+        result
+      }
     }
   }
 
@@ -693,64 +831,31 @@ public class JsRuntime private constructor() {
     override fun valid(): Boolean = true  // always valid (literal)
   }
 
+  // Logging.
+  private val logging: Logger = Logging.of(JsRuntime::class.java)
+
+  // Background execution error handler.
+  private val errHandler = VMErrorHandler()
+
+  // Number of concurrent VM contexts to maintain.
+  private val concurrency = Runtime.getRuntime().availableProcessors()
+
+  // Dedicated thread executor backing the runtime.
+  private val threadPool: ListeningExecutorService = MoreExecutors.listeningDecorator(
+    Executors.newFixedThreadPool(
+      concurrency,
+      ThreadFactoryBuilder()
+        .setNameFormat("js-runtime-%d")
+        .setDaemon(true)
+        .setPriority(Thread.NORM_PRIORITY)
+        .setUncaughtExceptionHandler(errHandler)
+        .setThreadFactory(ScriptRuntime::spawn)
+        .build()
+    )
+  )
+
   // Create the singleton script runtime.
-  private val runtime: ScriptRuntime = ScriptRuntime()
-
-  // Resolve the invocation target for the given script details.
-  public fun resolveInvocationTarget(
-    script: ExecutableScript,
-    streaming: Boolean,
-    base: String? = null,
-    target: String? = null,
-  ): Value {
-    val interpreted = runtime.resolve(script)
-    var baseSegment: Value = interpreted
-    val baseResolved = if (base != null) {
-      base.split(".").forEach {
-        baseSegment = baseSegment.getMember(
-          it
-        ) ?: error(
-          "Failed to resolve base segment: '$it' in '$base' was not found"
-        )
-      }
-      baseSegment
-    } else {
-      interpreted
-    }
-
-    return if (target != null) {
-      // from the resolved base segment, pluck the executable member
-      baseResolved.getMember(
-        target,
-      ) ?: error(
-        "Failed to resolve script member: '${script.getId()}' (fn: '$target')"
-      )
-    } else {
-      val targetName = target ?: "(default)"
-      if (!interpreted.canExecute()) {
-        val (method, entry) = when {
-          streaming && interpreted.hasMember(STREAM_ENTRYPOINT) ->
-            interpreted.getMember(STREAM_ENTRYPOINT) to STREAM_ENTRYPOINT
-          !streaming && interpreted.hasMember(RENDER_ENTRYPOINT) ->
-            interpreted.getMember(RENDER_ENTRYPOINT) to RENDER_ENTRYPOINT
-          else -> if (streaming && !interpreted.hasMember(STREAM_ENTRYPOINT)) error(
-            "Member found, but is for synchronous render (expected streaming), at '$base.$targetName'"
-          ) else if (!streaming && !interpreted.hasMember(RENDER_ENTRYPOINT)) error(
-            "Member found, but is for streaming (expected non-streaming), at '$base.$targetName'"
-          ) else error(
-            "Failed to resolve expected invocation target for SSR script at '$base.$targetName'"
-          )
-        }
-        if (!method.canExecute()) error(
-          "Member found at target '$entry', but not executable"
-        )
-        method
-      } else {
-        // execute the script directly
-        interpreted
-      }
-    }
-  }
+  private val runtime: ScriptRuntime = ScriptRuntime(concurrency, threadPool, logging)
 
   // Convert a JS object representing a `ServerResponse` back into a `ServerResponse` after crossing the VM boundary.
   public fun serverResponseFromRaw(value: Value): ServerResponse {
@@ -798,133 +903,96 @@ public class JsRuntime private constructor() {
   /**
    * TBD
    */
-  public fun prewarmScript(script: ExecutableScript) {
-    runtime.resolve(script)
+  public suspend fun prewarmScript(script: ExecutableScript) {
+    runtime.resolve(
+      script
+    )
+  }
+
+  // Suspending submission.
+  public suspend fun <R> execSuspend(runnable: CoroutineScope.(VMContext) -> R): R? {
+    return withContext(runtime.dispatcher()) {
+      runtime.acquire {
+        runnable.invoke(this, it)
+      }
+    }
+  }
+
+  // Suspending submission.
+  public suspend fun <R> execSuspendAsync(runnable: suspend CoroutineScope.(VMContext) -> R): Deferred<R?> {
+    return withContext(runtime.dispatcher()) {
+      async {
+        runtime.acquire {
+          runnable.invoke(this, it)
+        }
+      }
+    }
   }
 
   /**
    * TBD
    */
-  @VisibleForTesting public suspend inline fun executeStreaming(
+  @VisibleForTesting public suspend fun executeStreaming(
     script: ExecutableScript,
     vararg arguments: Any?,
-    noinline receiver: (ServerResponse) -> Unit,
-  ): Job = withContext(Dispatchers.IO) {
-    launch {
-      val logging = LoggerFactory.getLogger(JsRuntime::class.java)
+    receiver: (ServerResponse) -> Unit,
+  ): Job = execSuspendAsync {
+    val logging = LoggerFactory.getLogger(JsRuntime::class.java)
 
-      // resolve the streaming entrypoint for the script -- if no entrypoint is available that yields a promise and takes
-      // a content chunk callback, an error is thrown.
-      val resolved: Value = resolveInvocationTarget(
-        script,
-        streaming = true,
-      )
-
-      // if we are handed back an executable, execute it, providing the input arguments. in this case, we expect a promise
-      // to be returned which needs to be awaited. the promise does not return a value. at the conclusion of the promise,
-      // the  callback is expected to have been invoked with all chunks of available content.
-      //
-      // by this time, a final chunk should have been emitted with the server's terminal response status and headers, as
-      // applicable, from the runtime (no headers must be provided, they are appended to the response generated by the
-      // Elide server layer). if no such condition is true, an error is thrown. if a timeout elapses while executing the
-      // VM script, an error is thrown. if the VM script fails to execute, an error is thrown.
-      if (resolved.canExecute()) {
-        val error = AtomicBoolean(false)
-        val wrappedReceiver = ProxyExecutable { args ->
-          if (args.isEmpty()) {
-            logging.warn("Ignoring callback from VM streaming entrypoint with empty arguments")
-          } else {
-            val chunk = args[0]
-            val response = serverResponseFromRaw(chunk)
-            receiver.invoke(response)
-          }
-        }
-
-        val promise = resolved.execute(
-          wrappedReceiver,
-          *arguments
-        )
-        check(promise != null && !promise.isNull) {
-          "Expected a Promise from SSR streaming entrypoint, but got `null` or `undefined`"
-        }
-        check(promise.metaObject.metaSimpleName == "Promise") {
-          "Expected a Promise from SSR streaming entrypoint, but got some other type instead"
-        }
-
-        if (error.get()) {
-          throw RuntimeException(
-            "Error executing VM script"
-          )
-        }
-      } else error(
-        "Cannot execute streaming script entrypoint '$script'"
-      )
+    // resolve the streaming entrypoint for the script -- if no entrypoint is available that yields a promise and takes
+    // a content chunk callback, an error is thrown.
+    val resolved: Value = runtime.resolve(
+      script,
+      streaming = true,
+    )
+    val wrappedReceiver = ProxyExecutable { args ->
+      if (args.isEmpty()) {
+        logging.warn("Ignoring callback from VM streaming entrypoint with empty arguments")
+      } else {
+        val chunk = args[0]
+        val response = serverResponseFromRaw(chunk)
+        receiver.invoke(response)
+      }
     }
+
+    // if we are handed back an executable, execute it, providing the input arguments. in this case, we expect a promise
+    // to be returned which needs to be awaited. the promise does not return a value. at the conclusion of the promise,
+    // the  callback is expected to have been invoked with all chunks of available content.
+    //
+    // by this time, a final chunk should have been emitted with the server's terminal response status and headers, as
+    // applicable, from the runtime (no headers must be provided, they are appended to the response generated by the
+    // Elide server layer). if no such condition is true, an error is thrown. if a timeout elapses while executing the
+    // VM script, an error is thrown. if the VM script fails to execute, an error is thrown.
+    resolved.execute(
+      wrappedReceiver,
+      *arguments
+    )
   }
 
-  @VisibleForTesting
-  internal fun <R> evalExecuteScript(
+  /**
+   * Asynchronously execute the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
+   * de-serialize the result [R] and provide it as the return value.
+   *
+   * @param script Executable script spec to execute within the embedded JS VM.
+   * @return Deferred task which evaluates to the return value [R] when execution finishes.
+   */
+  public suspend fun <R> executeAsync(
     script: ExecutableScript,
     returnType: Class<R>,
-    vararg arguments: Any?
-  ): R? {
-    val resolved: Value = resolveInvocationTarget(
+    vararg arguments: Any?,
+  ): Deferred<R?> = execSuspendAsync {
+    val resolved: Value = runtime.resolve(
       script,
       streaming = false,
     )
-
-    // if we are handed back an executable, execute it, providing the input arguments. in both cases, cast the return
-    // value to the expected type.
-    return if (resolved.canExecute()) {
-      resolved.execute(
-        *arguments
-      )?.`as`(
-        returnType
-      )
-    } else {
-      resolved.`as`(
-        returnType
-      )
-    }
-  }
-
-  /**
-   * Asynchronously execute the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
-   * de-serialize the result [R] and provide it as the return value.
-   *
-   * @param script Executable script spec to execute within the embedded JS VM.
-   * @return Deferred task which evaluates to the return value [R] when execution finishes.
-   */
-  @Suppress("SpreadOperator")
-  private fun <R> executeBackground(
-    script: ExecutableScript,
-    returnType: Class<R>,
-    arguments: Array<out Any?>,
-  ): Future<R?> {
-    // interpret the script
-    return runtime.executor.submit {
-      evalExecuteScript(
-        script,
-        returnType,
-        *arguments
-      )
-    }
-  }
-
-  /**
-   * Asynchronously execute the provided [script] within an embedded JavaScript VM, by way of GraalVM's runtime engine;
-   * de-serialize the result [R] and provide it as the return value.
-   *
-   * @param script Executable script spec to execute within the embedded JS VM.
-   * @return Deferred task which evaluates to the return value [R] when execution finishes.
-   */
-  public fun <R> executeAsync(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): Deferred<R?> {
-    // interpret the script
-    return executeBackground(
-      script,
-      returnType,
-      arguments,
-    ).asDeferred()
+    if (resolved.canExecute()) {
+      val result = resolved.execute(*arguments)
+      if (result != null && !result.isNull) {
+        result.`as`(returnType)
+      } else null
+    } else error(
+      "Cannot execute script entrypoint '$script'"
+    )
   }
 
   /**
@@ -952,10 +1020,8 @@ public class JsRuntime private constructor() {
    */
   public fun <R> executeBlocking(script: ExecutableScript, returnType: Class<R>, vararg arguments: Any?): R? {
     // interpret the script
-    return executeBackground(
-      script,
-      returnType,
-      arguments,
-    ).get()
+    return runBlocking {
+      execute(script, returnType, *arguments)
+    }
   }
 }

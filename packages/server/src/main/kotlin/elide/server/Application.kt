@@ -7,6 +7,7 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut
 import io.micronaut.runtime.server.event.ServerStartupEvent
+import kotlinx.coroutines.runBlocking
 import java.util.LinkedList
 import java.util.ServiceLoader
 import java.util.concurrent.atomic.AtomicBoolean
@@ -25,7 +26,7 @@ public interface Application {
     }
 
     // Callback list.
-    private val callbacks: LinkedList<Pair<CallbackStage, () -> Unit>> = LinkedList()
+    private val callbacks: LinkedList<Pair<CallbackStage, suspend () -> Unit>> = LinkedList()
 
     // Whether `INIT`-stage callbacks have been executed.
     private val initialized: AtomicBoolean = AtomicBoolean(false)
@@ -38,7 +39,7 @@ public interface Application {
      *
      * @param callable Callable to initialize the component with.
      */
-    public fun initializeWithServer(callable: () -> Unit) {
+    public fun initializeWithServer(callable: suspend () -> Unit) {
       check(!initialized.get()) {
         "Cannot add server init callback after server has initialized"
       }
@@ -53,7 +54,7 @@ public interface Application {
      *
      * @param callable Callable to execute.
      */
-    public fun initializeOnWarmup(callable: () -> Unit) {
+    public fun initializeOnWarmup(callable: suspend () -> Unit) {
       check(!warmed.get()) {
         "Cannot add server warmup callback after server has already warmed"
       }
@@ -61,7 +62,7 @@ public interface Application {
     }
 
     // Dispatch initialization callback.
-    private fun dispatchCallback(pair: Pair<CallbackStage, () -> Unit>) {
+    private suspend fun dispatchCallback(pair: Pair<CallbackStage, suspend () -> Unit>) {
       try {
         pair.second.invoke()
       } catch (e: Exception) {
@@ -82,7 +83,7 @@ public interface Application {
     /**
      * Trigger callbacks for the provided server [stage].
      */
-    internal fun trigger(stage: CallbackStage) {
+    internal suspend fun trigger(stage: CallbackStage) {
       var found = false
       var handled = 0
 
@@ -110,7 +111,7 @@ public interface Application {
 
   /** Application startup listener and callback trigger. */
   @Context @Eager public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
-    override fun onApplicationEvent(event: ServerStartupEvent) {
+    override fun onApplicationEvent(event: ServerStartupEvent): Unit = runBlocking {
       Initialization.trigger(
         Initialization.CallbackStage.INIT
       )

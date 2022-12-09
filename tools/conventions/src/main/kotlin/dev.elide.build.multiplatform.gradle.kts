@@ -13,7 +13,7 @@ plugins {
 }
 
 val defaultJavaVersion = "11"
-val defaultKotlinVersion = "1.7"
+val defaultKotlinVersion = "1.8"
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
@@ -41,7 +41,7 @@ kotlin {
     browser {
       commonWebpackConfig {
         cssSupport {
-          enabled = true
+          enabled.set(true)
         }
       }
     }

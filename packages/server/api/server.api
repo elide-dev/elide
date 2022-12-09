@@ -18,8 +18,8 @@ public final class elide/server/Application$AppStartupListener : io/micronaut/co
 
 public final class elide/server/Application$Initialization {
 	public static final field INSTANCE Lelide/server/Application$Initialization;
-	public final fun initializeOnWarmup (Lkotlin/jvm/functions/Function0;)V
-	public final fun initializeWithServer (Lkotlin/jvm/functions/Function0;)V
+	public final fun initializeOnWarmup (Lkotlin/jvm/functions/Function1;)V
+	public final fun initializeWithServer (Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class elide/server/AssetHandler : elide/server/BaseResponseHandler {
@@ -240,7 +240,6 @@ public final class elide/server/assets/AssetReference : java/io/Serializable {
 
 public final class elide/server/assets/AssetReference$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/server/assets/AssetReference$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/server/assets/AssetReference;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;

@@ -56,10 +56,10 @@ object Elide {
   ))
 
   /** Kotlin SDK and platform version. */
-  const val kotlinSdk = "1.7.21"
+  const val kotlinSdk = "1.8.0-RC"
 
   /** Kotlin language version. */
-  const val kotlinLanguage = "1.7"
+  const val kotlinLanguage = "1.8"
 
   /** Sample code modules. */
   val samplesList = listOf(

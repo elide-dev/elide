@@ -112,8 +112,8 @@ tasks.withType(Copy::class).configureEach {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    apiVersion = "1.7"
-    languageVersion = "1.7"
+    apiVersion = "1.8"
+    languageVersion = "1.8"
     jvmTarget = javaLanguageVersion
     javaParameters = true
     incremental = true

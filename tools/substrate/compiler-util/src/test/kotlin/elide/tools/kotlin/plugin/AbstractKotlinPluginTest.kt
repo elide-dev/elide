@@ -1,3 +1,5 @@
+@file:OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
+
 package elide.tools.kotlin.plugin
 
 import com.tschuchort.compiletesting.KotlinCompilation

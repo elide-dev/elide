@@ -65,5 +65,6 @@ dependencies {
 
   // Testing
   testImplementation(project(":packages:test"))
+  testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.graalvm.sdk)
 }

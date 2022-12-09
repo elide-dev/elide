@@ -27,13 +27,13 @@ public final synthetic class elide/runtime/graalvm/$JsRuntime$JsRuntimeProvider$
 public final class elide/runtime/graalvm/JsRuntime {
 	public static final field Companion Lelide/runtime/graalvm/JsRuntime$Companion;
 	public static final fun acquire ()Lelide/runtime/graalvm/JsRuntime;
+	public final fun execSuspend (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun execSuspendAsync (Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun execute (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
+	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
 	public final fun executeStreaming (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun prewarmScript (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)V
-	public final fun resolveInvocationTarget (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;ZLjava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
-	public static synthetic fun resolveInvocationTarget$default (Lelide/runtime/graalvm/JsRuntime;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;ZLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public final fun prewarmScript (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun serverResponseFromRaw (Lorg/graalvm/polyglot/Value;)Lelide/runtime/ssr/ServerResponse;
 }
 
@@ -97,15 +97,41 @@ public final class elide/runtime/graalvm/JsRuntime$Script {
 	public static final fun literal (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$VMThread : java/lang/Thread {
-	public static final field Companion Lelide/runtime/graalvm/JsRuntime$VMThread$Companion;
-	public synthetic fun <init> (Ljava/util/concurrent/Callable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun spawn (ZLjava/util/concurrent/Callable;)Lelide/runtime/graalvm/JsRuntime$VMThread;
+public abstract interface class elide/runtime/gvm/ExecutableScript {
+	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$VMThread$Companion {
-	public final fun spawn (ZLjava/util/concurrent/Callable;)Lelide/runtime/graalvm/JsRuntime$VMThread;
-	public static synthetic fun spawn$default (Lelide/runtime/graalvm/JsRuntime$VMThread$Companion;ZLjava/util/concurrent/Callable;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$VMThread;
+public abstract interface class elide/runtime/gvm/GuestLanguage {
+	public abstract fun getLabel ()Ljava/lang/String;
+	public fun getSupportsSSR ()Z
+	public fun getSupportsStreamingSSR ()Z
+	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/gvm/VMEngine {
+	public abstract fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeBlocking (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun executeStreaming (Lelide/runtime/gvm/ExecutableScript;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
+	public abstract fun prewarmScript (Lelide/runtime/gvm/ExecutableScript;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/gvm/VMEngineFactory {
+	public abstract fun acquire ()Lelide/runtime/gvm/VMEngine;
+}
+
+public abstract interface class elide/runtime/gvm/intrinsics/js/console/JavaScriptConsole {
+	public abstract fun error ([Ljava/lang/Object;)V
+	public abstract fun info ([Ljava/lang/Object;)V
+	public abstract fun log ([Ljava/lang/Object;)V
+	public abstract fun warn ([Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/gvm/intrinsics/js/stream/CoreStreams {
+}
+
+public abstract interface class elide/runtime/gvm/intrinsics/js/webstreams/ReadableStream {
 }
 
 public final class elide/server/SSRExtensionsKt {

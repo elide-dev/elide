@@ -22,7 +22,7 @@
 
 [![Java 19](https://img.shields.io/badge/Java-19-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
 [![GraalVM](https://img.shields.io/badge/GraalVM-22.3.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-RC-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
@@ -252,10 +252,10 @@ Following this guide is recommended but optional. Depending on the style of deve
 not need some of these components:
 
 | Status                                                          | **Java**  | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
-| --------------------------------------------------------------- | --------- | ---------- | ----------- | ------------- | --------- | ----------------- |
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.21`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| --------------------------------------------------------------- | --------- |------------| ----------- | ------------- | --------- |-------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.8.0-RC` | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.51.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.22`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
 | ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`  | --         | --          | --            | --        | --                |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.

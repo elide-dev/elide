@@ -21,7 +21,7 @@ plugins {
 }
 
 val defaultJavaVersion = "11"
-val defaultKotlinVersion = "1.7"
+val defaultKotlinVersion = "1.8"
 
 val defaultElideGroup = "dev.elide"
 val elideToolsGroup = "dev.elide.tools"

@@ -20,7 +20,7 @@ kotlin {
       commonWebpackConfig {
         sourceMaps = false
         cssSupport {
-          enabled = true
+          enabled.set(true)
         }
 
         mode = if (devMode) {

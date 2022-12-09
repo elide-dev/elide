@@ -31,11 +31,7 @@ kotlin {
     }
   }
   js(IR) {
-    browser {
-      commonWebpackConfig {
-        cssSupport.enabled = true
-      }
-    }
+    binaries.executable()
   }
 
   val hostOs = System.getProperty("os.name")

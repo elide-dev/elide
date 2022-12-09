@@ -21,7 +21,7 @@ class PolyglotScriptTest {
 
   @Test fun testLoadEmbeddedScript() {
     val embedded = JsRuntime.Script.embedded(
-      "/embedded/simple.js"
+      "simple.js"
     )
     assertNotNull(embedded, "should be able to create embedded script spec")
     val loaded = runBlocking {

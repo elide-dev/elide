@@ -1,8 +1,6 @@
 steps:
-  - name: "gcr.io/cloud-builders/git"
-    args: ["config", "--global", "init.defaultBranch", "v3"]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/base", "."]
+    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/base", "./tools/images/base"]
 images: ["us-docker.pkg.dev/elide-fw/tools/base"]
 options:
   logging: CLOUD_LOGGING_ONLY

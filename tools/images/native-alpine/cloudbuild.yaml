@@ -5,7 +5,7 @@ steps:
         "build",
         "-t",
         "us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine",
-        ".",
+        "./tools/images/native-alpine",
       ]
 images: ["us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine"]
 options:

@@ -1,6 +1,6 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/gvm17", "."]
+    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/gvm17", "./tools/images/gvm17"]
 images: ["us-docker.pkg.dev/elide-fw/tools/gvm17"]
 options:
   logging: CLOUD_LOGGING_ONLY

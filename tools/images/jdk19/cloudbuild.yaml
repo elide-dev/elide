@@ -1,6 +1,6 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/jdk19", "."]
+    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/jdk19", "./tools/images/jdk19"]
 images: ["us-docker.pkg.dev/elide-fw/tools/jdk19"]
 options:
   logging: CLOUD_LOGGING_ONLY

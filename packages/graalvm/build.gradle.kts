@@ -51,7 +51,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.json.jvm)
   implementation(libs.kotlinx.serialization.protobuf.jvm)
 
-  // Google
+  // General
   implementation(libs.guava)
 
   // Micronaut

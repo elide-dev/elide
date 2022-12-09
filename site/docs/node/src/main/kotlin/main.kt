@@ -19,6 +19,9 @@ import emotion.server.createEmotionServer
 import react.ReactElement
 import kotlin.js.Promise
 
+const val debugLog = false
+const val chunkCss = false
+
 // Setup cache.
 private fun setupCache(): EmotionCache {
   return createCache(jso {
@@ -78,11 +81,11 @@ private fun dispatchRaw(callback: RenderCallback, chunk: ServerResponse) {
     try {
       ApplicationBuffer(app.invoke(this, emotionCache)).execute {
         try {
-          if (it.status != null && it.status != -1) {
+          if (chunkCss && (it.status != null && it.status != -1)) {
             // in the final chunk, splice in CSS from Emotion.
             val emotionChunks = emotionServer.extractCriticalToChunks(it.content)
             val emotionCss = emotionServer.constructStyleTagsFromChunks(emotionChunks)
-            console.log("would emit css: $emotionCss")
+            if (debugLog) console.log("would emit css: $emotionCss")
           }
           dispatchRaw(callback, it)
         } catch (err: Throwable) {

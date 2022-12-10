@@ -62,7 +62,10 @@ includeBuild("tools/substrate") {
   }
 }
 
-// 3: Build modules.
+// 3: Third-party modules.
+includeBuild("tools/third_party/jetbrains/compose/web")
+
+// 4: Build modules.
 include(
   ":packages:base",
   ":packages:bom",

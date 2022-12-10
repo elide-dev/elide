@@ -2,3 +2,7 @@
 	path = tools/third_party/google/r8
 	url = https://r8.googlesource.com/r8
 	branch = main
+[submodule "tools-compose"]
+	path = tools/third_party/jetbrains/compose
+	url = git@github.com:elide-tools/compose.git
+	branch = mirror/web

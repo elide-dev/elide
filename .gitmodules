@@ -1,0 +1,4 @@
+[submodule "tools-r8"]
+	path = tools/third_party/google/r8
+	url = https://r8.googlesource.com/r8
+	branch = main

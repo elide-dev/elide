@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+
+package elide.grpctest;
+
+
+// Hello service interface.
+service HelloService {
+  // Method that renders a hello message with a given name.
+  rpc RenderMessage(HelloRequest) returns (HelloResponse);
+}
+
+// Sample request payload.
+message HelloRequest {
+  // Rendered message.
+  string name = 1;
+}
+
+// Sample response payload.
+message HelloResponse {
+  // Rendered message.
+  string message = 1;
+}

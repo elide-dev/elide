@@ -83,6 +83,7 @@ include(
   ":packages:model",
   ":packages:platform",
   ":packages:proto",
+  ":packages:rpc",
   ":packages:rpc-js",
   ":packages:rpc-jvm",
   ":packages:server",

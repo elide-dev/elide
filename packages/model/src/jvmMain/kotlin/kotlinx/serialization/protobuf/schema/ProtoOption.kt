@@ -126,7 +126,7 @@ import java.util.EnumSet
    * Specifies whether this proto option is built-in. Built-in options are resolved from Protobuf sources rather than
    * user code. This option should not be used by external developers.
    */
-  val builtin: Boolean get() = false
+  public val builtin: Boolean get() = false
 
   /**
    * ### Option field: `symbolValue`.
@@ -143,7 +143,7 @@ import java.util.EnumSet
   }
 
   /** @return Whether there is a value present for this option. */
-  val isPresent: Boolean get() = value != null
+  public val isPresent: Boolean get() = value != null
 
   /**
    * Render the option specified by this instance, including the option's [symbol] (name) and [symbolValue] (value);
@@ -151,7 +151,7 @@ import java.util.EnumSet
    *
    * @return String-rendered symbol name and value.
    */
-  fun render(): String = "${symbol}=${symbolValue}"
+  public fun render(): String = "${symbol}=${symbolValue}"
 
   // -- Abstract Option Types -- //
 
@@ -185,7 +185,7 @@ import java.util.EnumSet
 
   /** Defines the supported "scopes" at which proto-options may be applied. */
   @Suppress("unused", "CanBeParameter", "MemberVisibilityCanBePrivate")
-  public sealed class Scope constructor (val symbol: String) {
+  public sealed class Scope constructor (public val symbol: String) {
     /** Nothing scope: default scope which matches nothing. */
     public class None: Scope("__none__")
 
@@ -206,13 +206,13 @@ import java.util.EnumSet
 
     public companion object {
       /** Default scope matching nothing. */
-      public val NONE = None()
+      public val NONE: None = None()
 
       /** Global scope singleton. */
-      public val GLOBAL = Global()
+      public val GLOBAL: Global = Global()
 
       /** "All" scope singleton. */
-      public val ALL = All()
+      public val ALL: All = All()
     }
   }
 
@@ -468,7 +468,7 @@ import java.util.EnumSet
     )
 
     /** Default file-level options to apply. */
-    public val DEFAULTS = listOf(
+    public val DEFAULTS: List<KnownFileOption<*>> = listOf(
       JavaMultipleFiles(true),
       OptimizeFor(OptimizeMode.SPEED),
     )
@@ -673,9 +673,9 @@ import java.util.EnumSet
   // -- Options: Custom -- //
 
   // -- Options: All -- //
-  object All {
+  public object All {
     /** Default file-level options to apply. */
-    public val DEFAULTS = listOf(
+    public val DEFAULTS: List<ProtoOption<*>> = listOf(
       FileOptions.DEFAULTS,
     ).flatten()
   }

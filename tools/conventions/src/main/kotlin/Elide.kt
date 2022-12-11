@@ -74,7 +74,9 @@ object Elide {
   /** Kotlin MPP modules. */
   val multiplatformModules = listOf(
     "base",
+    "core",
     "model",
+    "rpc",
     "ssr",
     "test",
   )
@@ -83,7 +85,6 @@ object Elide {
   val serverModules = listOf(
     "graalvm",
     "server",
-    "rpc-jvm",
     "ssg",
   )
 
@@ -92,7 +93,6 @@ object Elide {
     "frontend",
     "graalvm-js",
     "graalvm-react",
-    "rpc-js",
   )
 
   /** Modules which should not be reported on for testing.. */
@@ -113,7 +113,6 @@ object Elide {
     "frontend",
     "graalvm-js",
     "graalvm-react",
-    "rpc-js",
     "test",
   )
 
@@ -122,6 +121,7 @@ object Elide {
     // Library Packages
     "base",
     "bom",
+    "core",
     "frontend",
     "graalvm",
     "graalvm-js",
@@ -129,8 +129,7 @@ object Elide {
     "model",
     "platform",
     "proto",
-    "rpc-js",
-    "rpc-jvm",
+    "rpc",
     "server",
     "ssg",
     "ssr",

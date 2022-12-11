@@ -5,6 +5,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.jetbrains.kotlin.konan.target.HostManager
+
 plugins {
   kotlin("plugin.noarg")
   kotlin("plugin.allopen")
@@ -31,29 +33,36 @@ kotlin {
     }
   }
   js(IR) {
+    browser {}
+    nodejs {}
     binaries.executable()
   }
 
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
+  macosArm64()
+  iosArm32()
+  iosArm64()
+  iosX64()
+  watchosArm32()
+  watchosArm64()
+  watchosX86()
+  watchosX64()
+  tvosArm64()
+  tvosX64()
+  mingwX64()
+  linuxX64()
 
   sourceSets {
     val commonMain by getting {
       dependencies {
         implementation(kotlin("stdlib-common"))
-        implementation(project(":packages:base"))
-        implementation(libs.kotlinx.collections.immutable)
-        implementation(libs.kotlinx.datetime)
-        implementation(libs.kotlinx.serialization.core)
-        implementation(libs.kotlinx.serialization.json)
-        implementation(libs.kotlinx.serialization.protobuf)
-        implementation(libs.kotlinx.coroutines.core)
+        api(project(":packages:base"))
+        api(project(":packages:core"))
+        api(libs.kotlinx.collections.immutable)
+        api(libs.kotlinx.datetime)
+        api(libs.kotlinx.serialization.core)
+        api(libs.kotlinx.serialization.json)
+        api(libs.kotlinx.serialization.protobuf)
+        api(libs.kotlinx.coroutines.core)
       }
     }
     val commonTest by getting {
@@ -63,12 +72,13 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        implementation(project(":packages:server"))
         implementation(project(":packages:base"))
+        implementation(project(":packages:proto"))
         implementation(libs.jakarta.inject)
-        implementation(libs.protobuf.java)
-        implementation(libs.protobuf.util)
-        implementation(libs.protobuf.kotlin)
+        api(libs.protobuf.java)
+        api(libs.protobuf.util)
+        api(libs.protobuf.kotlin)
+        api(libs.flatbuffers.java.core)
         implementation(libs.kotlinx.serialization.json.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
         implementation(libs.kotlinx.coroutines.core.jvm)
@@ -88,7 +98,6 @@ kotlin {
       dependencies {
         implementation(kotlin("test-junit5"))
         implementation(project(":packages:base"))
-        implementation(project(":packages:server"))
         implementation(libs.truth)
         implementation(libs.truth.proto)
       }
@@ -111,5 +120,25 @@ kotlin {
       }
     }
     val nativeTest by getting
+
+    val mingwX64Main by getting { dependsOn(nativeMain) }
+    val linuxX64Main by getting { dependsOn(nativeMain) }
+    val macosArm64Main by getting { dependsOn(nativeMain) }
+    val iosArm32Main by getting { dependsOn(nativeMain) }
+    val iosArm64Main by getting { dependsOn(nativeMain) }
+    val iosX64Main by getting { dependsOn(nativeMain) }
+    val watchosArm32Main by getting { dependsOn(nativeMain) }
+    val watchosArm64Main by getting { dependsOn(nativeMain) }
+    val watchosX86Main by getting { dependsOn(nativeMain) }
+    val watchosX64Main by getting { dependsOn(nativeMain) }
+    val tvosArm64Main by getting { dependsOn(nativeMain) }
+    val tvosX64Main by getting { dependsOn(nativeMain) }
+  }
+}
+
+afterEvaluate {
+  if(!HostManager.hostIsLinux) {
+    tasks.findByName("linuxX64Test")?.enabled = false
+    tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
   }
 }

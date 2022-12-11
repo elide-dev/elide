@@ -37,12 +37,6 @@ kotlin {
     tvosArm64()
     tvosX64()
     mingwX64()
-    linuxX64()
-
-    if(!HostManager.hostIsLinux) {
-        tasks.findByName("linuxX64Test")?.enabled = false
-        tasks.findByName("linkDebugTestLinuxX64")?.enabled = false
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -91,7 +85,6 @@ kotlin {
         }
 
         val mingwX64Main by getting { dependsOn(nativeMain) }
-        val linuxX64Main by getting { dependsOn(nativeMain) }
         val macosArm64Main by getting { dependsOn(nativeMain) }
         val iosArm32Main by getting { dependsOn(nativeMain) }
         val iosArm64Main by getting { dependsOn(nativeMain) }

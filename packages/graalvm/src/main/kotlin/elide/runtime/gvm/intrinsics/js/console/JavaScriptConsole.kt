@@ -1,5 +1,7 @@
 package elide.runtime.gvm.intrinsics.js.console
 
+import elide.annotations.core.Polyglot
+
 /**
  * # JavaScript Console
  *
@@ -8,22 +10,54 @@ package elide.runtime.gvm.intrinsics.js.console
  */
 public interface JavaScriptConsole {
   /**
+   * ## `console.log`
    *
+   * Emit a log message to the main logging system, sent to us by the JS `console` intrinsic; log message output is
+   * moderated via standard logging system mechanisms (i.e. on the JVM, this is SLF4J). The regular `console.log` method
+   * is considered a `DEBUG`-level call.
+   *
+   * All [args] are converted to a string value before emission; all values are joined by the string `" "`.
+   *
+   * @param args Arguments to emit as part of this log message.
    */
-  public fun log(vararg args: Any?)
+  @Polyglot public fun log(vararg args: Any?)
 
   /**
+   * ## `console.info`
    *
+   * Emit a warning message to the main logging system, sent to us by the JS `console` intrinsic; log message output is
+   * moderated via standard logging system mechanisms (i.e. on the JVM, this is SLF4J). The `console.info` method
+   * corresponds to the `INFO` level.
+   *
+   * All [args] are converted to a string value before emission; all values are joined by the string `" "`.
+   *
+   * @param args Arguments to emit as part of this log message.
    */
-  public fun info(vararg args: Any?)
+  @Polyglot public fun info(vararg args: Any?)
 
   /**
+   * ## `console.warn`
    *
+   * Emit a log message to the main logging system, sent to us by the JS `console` intrinsic; log message output is
+   * moderated via standard logging system mechanisms (i.e. on the JVM, this is SLF4J). The `console.warn` method
+   * corresponds to the `WARN` level.
+   *
+   * All [args] are converted to a string value before emission; all values are joined by the string `" "`.
+   *
+   * @param args Arguments to emit as part of this log message.
    */
-  public fun warn(vararg args: Any?)
+  @Polyglot public fun warn(vararg args: Any?)
 
   /**
+   * ## `console.error`
    *
+   * Emit an error message to the main logging system, sent to us by the JS `console` intrinsic; log message output is
+   * moderated via standard logging system mechanisms (i.e. on the JVM, this is SLF4J). The `console.error` method
+   * corresponds to the `ERROR` level.
+   *
+   * All [args] are converted to a string value before emission; all values are joined by the string `" "`.
+   *
+   * @param args Arguments to emit as part of this log message.
    */
-  public fun error(vararg args: Any?)
+  @Polyglot public fun error(vararg args: Any?)
 }

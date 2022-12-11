@@ -41,7 +41,9 @@ dependencies {
   kapt(libs.micronaut.inject)
   kapt(libs.micronaut.inject.java)
   implementation(libs.slf4j)
-  implementation(project(":packages:base"))
+  api(project(":packages:base"))
+  api(project(":packages:core"))
+  api(project(":packages:model"))
   implementation(project(":packages:proto"))
 
   // Crypto

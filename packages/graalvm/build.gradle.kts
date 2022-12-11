@@ -7,6 +7,8 @@
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
+
+  kotlin("kapt")
   id("dev.elide.build.native.lib")
 }
 
@@ -26,6 +28,15 @@ graalvmNative {
 
 micronaut {
   version.set(libs.versions.micronaut.lib.get())
+  processing {
+    incremental.set(true)
+    annotations.addAll(listOf(
+      "elide.runtime.*",
+      "elide.runtime.gvm.*",
+      "elide.runtime.gvm.internals.*",
+      "elide.runtime.gvm.intrinsics.*",
+    ))
+  }
 }
 
 dependencies {
@@ -35,11 +46,15 @@ dependencies {
   // API Deps
   api(libs.jakarta.inject)
   api(libs.graalvm.sdk)
+  kapt(libs.micronaut.inject.java)
 
   // Modules
   api(project(":packages:ssr"))
-  implementation(project(":packages:base"))
-  implementation(project(":packages:server"))
+  api(project(":packages:base"))
+  api(project(":packages:core"))
+  api(project(":packages:proto"))
+  api(project(":packages:model"))
+  api(project(":packages:server"))
 
   // KotlinX
   implementation(libs.kotlinx.html.jvm)
@@ -66,5 +81,9 @@ dependencies {
   // Testing
   testImplementation(project(":packages:test"))
   testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.junit.jupiter.params)
+  testImplementation(libs.micronaut.test.junit5)
   testImplementation(libs.graalvm.sdk)
+  testRuntimeOnly(libs.junit.jupiter.engine)
 }

@@ -6,6 +6,7 @@
 VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
+SITE ?= no
 
 SAMPLES ?= no
 
@@ -49,6 +50,12 @@ ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
 else
 BUILD_ARGS += -PbuildSamples=false
+endif
+
+ifeq ($(SITE),yes)
+BUILD_ARGS += -PbuildDocsSite=true
+else
+BUILD_ARGS += -PbuildDocsSite=false
 endif
 
 ifeq ($(RELOCK),yes)

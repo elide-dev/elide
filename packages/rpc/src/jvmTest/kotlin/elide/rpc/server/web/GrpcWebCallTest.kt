@@ -1,6 +1,6 @@
 package elide.rpc.server.web
 
-import elide.server.rpc.web.GrpcWebCall.Companion.newCall
+import elide.rpc.server.web.GrpcWebCall.Companion.newCall
 import io.grpc.Metadata
 import io.grpc.ServerCall
 import io.grpc.ServerMethodDefinition

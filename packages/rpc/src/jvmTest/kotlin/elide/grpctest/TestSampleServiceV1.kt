@@ -1,6 +1,6 @@
 package elide.grpctest
 
-import elide.server.rpc.web.GrpcWeb
+import elide.rpc.server.web.GrpcWeb
 import io.grpc.Metadata
 import io.grpc.Status
 import io.grpc.stub.StreamObserver

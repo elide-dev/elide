@@ -15,7 +15,7 @@ dependencies {
   implementation(project(":packages:base"))
   implementation(project(":packages:frontend"))
   implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
-  implementation(npm("google-protobuf", libs.versions.protobuf.get()))
+  implementation(npm("google-protobuf", libs.versions.npm.google.protobuf.get()))
   implementation(npm("grpc-web", libs.versions.npm.grpcweb.get()))
 
   implementation(libs.kotlinx.coroutines.core.js)

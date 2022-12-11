@@ -1,9 +1,9 @@
 package elide.rpc.server.web
 
 import com.google.protobuf.Message
+import elide.rpc.server.RpcRuntime
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.server.rpc.RpcRuntime
 import io.grpc.Metadata
 import io.grpc.Status
 import io.micronaut.context.BeanContext

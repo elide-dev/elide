@@ -12,6 +12,7 @@ plugins {
   id("dev.elide.build")
   id("dev.elide.build.multiplatform")
   `java`
+  kotlin("kapt")
   alias(libs.plugins.protobuf)
 }
 
@@ -33,16 +34,10 @@ protobuf {
     }
   }
   generateProtoTasks {
-    ofSourceSet("jvmMain").forEach {
-      it.plugins {
-        id("grpc")
-        id("grpckt")
-      }
-      it.builtins {
-        id("kotlin")
-      }
-    }
-    ofSourceSet("jvmTest").forEach {
+    all().forEach {
+      it.addIncludeDir(files("$projectDir/src/jvmTest/proto"))
+      it.addSourceDirs(files("$projectDir/src/jvmTest/proto"))
+
       it.plugins {
         id("grpc")
         id("grpckt")
@@ -85,6 +80,7 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
         implementation(project(":packages:base"))
         implementation(project(":packages:server"))
+        configurations["kapt"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
 
         // Protobuf
         implementation(libs.protobuf.java)
@@ -125,14 +121,23 @@ kotlin {
       }
     }
     val jvmTest by getting {
+      kotlin.srcDirs(
+        "$projectDir/src/jvmTest/kotlin",
+        "$buildDir/generated/source/proto/test/grpckt",
+        "$buildDir/generated/source/proto/test/kotlin",
+      )
+
       dependencies {
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("test-junit5"))
+        configurations["kaptTest"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
 
         // Testing
         implementation(project(":packages:test"))
         implementation(kotlin("test-junit5"))
         implementation(libs.micronaut.test.junit5)
+        implementation(libs.junit.jupiter.api)
+        implementation(libs.junit.jupiter.params)
         runtimeOnly(libs.junit.jupiter.engine)
         runtimeOnly(libs.logback)
       }
@@ -171,5 +176,9 @@ tasks {
   }
   withType(Jar::class).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+
+  named("compileTestKotlinJvm").configure {
+    dependsOn(named("generateTestProto"))
   }
 }

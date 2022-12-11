@@ -8,7 +8,13 @@ public final class elide/AppEnvironment : java/lang/Enum {
 public abstract interface annotation class elide/annotations/API : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class elide/annotations/Context : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class elide/annotations/Endpoint : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/Factory : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class elide/annotations/Generated : java/lang/annotation/Annotation {

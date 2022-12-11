@@ -425,7 +425,7 @@ the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
 
 // Build API docs via Dokka before running Knit.
 tasks.named("knitPrepare").configure {
-  dependsOn("dokka")
+  dependsOn("docs")
 }
 
 val jvmName = project.properties["elide.jvm"] as? String

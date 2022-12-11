@@ -6,6 +6,7 @@ pluginManagement {
   repositories {
     gradlePluginPortal()
     mavenCentral()
+    google()
   }
 }
 
@@ -18,6 +19,8 @@ System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
 val micronautVersion: String by settings
+val embeddedCompose: String by settings
+val embeddedR8: String by settings
 
 dependencyResolutionManagement {
   repositoriesMode.set(
@@ -63,7 +66,8 @@ includeBuild("tools/substrate") {
 }
 
 // 3: Third-party modules.
-includeBuild("tools/third_party/jetbrains/compose/web")
+if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
+if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
 
 // 4: Build modules.
 include(

@@ -177,6 +177,10 @@ $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
 		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/server/
 	@echo "Docs assemble complete."
 
+api-check:  ## Check API/ABI compatibility with current changes.
+	$(info Checking ABI compatibility...)
+	$(CMD)$(GRADLE) apiCheck -PbuildDocsSite=false -PbuildSamples=false -PbuildDocs=false
+
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
 	@$(RM) -f $(SITE_BUILD)/reports/project/properties.txt
 

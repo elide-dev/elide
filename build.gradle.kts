@@ -74,6 +74,7 @@ buildscript {
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
+    classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
@@ -86,6 +87,8 @@ buildscript {
     }
   }
 }
+
+apply(plugin = "kotlinx-knit")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
@@ -107,6 +110,7 @@ apiValidation {
   ignoredProjects += listOf(
     "bundler",
     "bom",
+    "docs",
     "proto",
     "processor",
     "reports",
@@ -149,7 +153,7 @@ sonarqube {
 }
 
 val dokkaVersion = libs.versions.dokka.get()
-val mermaidDokka = "0.4.1"
+val mermaidDokka = libs.versions.mermaidDokka.get()
 
 subprojects {
   val name = this.name
@@ -170,7 +174,7 @@ subprojects {
       dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
-//    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
+      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
     }
   }
 
@@ -403,6 +407,25 @@ tasks {
   htmlDependencyReport {
     reports.html.outputLocation.set(file("${project.buildDir}/reports/project/dependencies"))
   }
+}
+
+the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
+the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
+the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
+  include("README.md")
+  include("docs/guide/**/*.md")
+  include("docs/guide/**/*.kt")
+  include("samples/**/*.md")
+  include("samples/**/*.kt")
+  include("samples/**/*.kts")
+  exclude("**/build/**")
+  exclude("**/.gradle/**")
+  exclude("**/node_modules/**")
+}
+
+// Build API docs via Dokka before running Knit.
+tasks.named("knitPrepare").configure {
+  dependsOn("dokka")
 }
 
 val jvmName = project.properties["elide.jvm"] as? String

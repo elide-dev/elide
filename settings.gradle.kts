@@ -73,6 +73,8 @@ if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose
 
 // 4: Build modules.
 include(
+  ":docs:architecture",
+  ":docs:guide",
   ":packages:base",
   ":packages:bom",
   ":packages:core",

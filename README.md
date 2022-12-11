@@ -28,7 +28,7 @@
 
 _**Elide is currently in alpha.**_
 
-Latest version: `1.0-v3-alpha1-rc38`
+Latest version: `1.0-v3-alpha2-rc1`
 
 <hr />
 
@@ -37,11 +37,22 @@ Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
 ## Distinguishing features
 
-- **Pure Kotlin.** Write your core application logic and models once, and share them across platforms transparently.
-  Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing. Enjoy first-class support for
-  the full suite of KotlinX libraries, including [`serialization`](https://kotlinlang.org/docs/serialization.html),
+- **Full-stack development.** Share code across platforms with Kotlin Multiplatform. Quickly develop performant UIs in
+  Kotlin, TypeScript, or JavaScript, and execute them server-side (streaming SSR) or client-side (SPA).
+
+- **Countless ways to run.** Use SSR (server rendering), CSR (client rendering), or an isomorphic approach. Compile your
+  app to HTML via SSG. Run your app on a JVM, Node.js, JS runtime, or compile it to a native binary and run it without
+  a runtime at all.
+
+- **Pure Kotlin when you want it.** Write your core application logic and models once, and share them across platforms
+  transparently. Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing. Enjoy
+  first-class support for the full suite of KotlinX libraries, including
+  [`serialization`](https://kotlinlang.org/docs/serialization.html),
   [`atomicfu`](https://github.com/Kotlin/kotlinx.atomicfu), [`coroutines`](https://github.com/Kotlin/kotlinx.coroutines)
   and [`datetime`](https://github.com/Kotlin/kotlinx-datetime).
+
+- **TypeScript/JavaScript when you need it.** Plug your Kotlin code into the JavaScript ecosystem with embedded guest VM
+  support for ES2022.
 
 - **Isomorphic SSR with React.** Write your UI in React, using JavaScript, TypeScript, or Kotlin. Package it for serving
   via [client-side rendering or hybrid isomorphic rendering](https://web.dev/rendering-on-the-web/) directly from your
@@ -251,12 +262,12 @@ The following version matrix indicates tested support across tool and platform v
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**  | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
-| --------------------------------------------------------------- | --------- |------------| ----------- | ------------- | --------- |-------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.8.0-RC` | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.51.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.22`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`  | --         | --          | --            | --        | --                |
+| Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
+| --------------------------------------------------------------- |-------------|------------| ----------- | ------------- | --------- |--------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19`   | `1.8.0-RC` | `22.3.x`    | `3.7.x`       | `18.x`    | `3.21.11`/`1.51.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.7.22`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.21.1`/`1.51.0`  |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --         | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 

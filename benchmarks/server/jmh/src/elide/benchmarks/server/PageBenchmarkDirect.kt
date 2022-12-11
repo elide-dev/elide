@@ -7,7 +7,7 @@
   "MagicNumber",
 )
 
-package elide.benchmarks
+package elide.benchmarks.server
 
 import elide.server.annotations.Page
 import elide.server.controller.PageController

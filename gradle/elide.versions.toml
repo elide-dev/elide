@@ -549,6 +549,7 @@ plugin_kotlinx_abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-
 plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm_plugin" }
 ## Elide Internal
 elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
+elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
 elide_platform = { group = "dev.elide.tools", name = "platform", version.ref = "elide" }

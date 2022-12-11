@@ -69,6 +69,7 @@ includeBuild("tools/third_party/jetbrains/compose/web")
 include(
   ":packages:base",
   ":packages:bom",
+  ":packages:core",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

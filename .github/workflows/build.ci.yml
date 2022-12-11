@@ -107,24 +107,6 @@ jobs:
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM (Java 11)"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "js"
-          version: latest
-          java-version: 11
-          set-java-home: false
-          check-for-updates: ${{ matrix.os == 'ubuntu' }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: GraalVM (Java 17)"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "js"
-          version: latest
-          java-version: 17
-          set-java-home: false
-          check-for-updates: ${{ matrix.os == 'ubuntu' }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 19)"
         uses: graalvm/setup-graalvm@v1
         with:

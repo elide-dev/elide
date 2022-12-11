@@ -33,7 +33,7 @@ class JsRuntimeTest {
     assertNotNull(JsRuntime.acquire(), "should be able to acquire JS runtime instance")
   }
 
-  @Test @Disabled fun testConcurrentEval() {
+  @Test fun testConcurrentEval() {
     val startGate = CountDownLatch(1)
     val endGate = CountDownLatch(1)
     val hadException = AtomicBoolean(false)
@@ -85,6 +85,8 @@ class JsRuntimeTest {
           contextLock.unlock()
         }
       }
+      endGate.await()
+      t.join(10000)
     } catch (ixe: InterruptedException) {
       throw AssertionError(ixe)
     } finally {

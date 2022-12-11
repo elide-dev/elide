@@ -145,7 +145,7 @@ class PolyglotScriptTest {
     val source = Source.create(
       "js",
       PolyglotScriptTest::class.java.getResourceAsStream(
-        "/embedded/harness.js"
+        "/META-INF/elide/embedded/harness.js"
       )!!.bufferedReader(
         StandardCharsets.UTF_8
       ).readText()

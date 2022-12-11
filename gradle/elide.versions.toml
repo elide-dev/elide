@@ -16,6 +16,7 @@ protobuf = "3.21.11"
 grpc_java = "1.51.0"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
+arrow = "1.0.1"
 testcontainers = "1.17.5"
 netty = "4.1.85.Final"
 netty_tcnative = "2.0.54.Final"
@@ -525,6 +526,11 @@ koin_test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"
 koint_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
 koin_test_junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 koin_test_junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+arrow_bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
+arrow_core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
+arrow_optics_core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
+arrow_optics_ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
+arrow_fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 ## Plugin Aliases
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
@@ -575,6 +581,11 @@ elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "
 elide_kotlin_plugin_sekret = { group = "dev.elide.tools.kotlin.plugin", name = "sekret-plugin", version.ref = "elide" }
 
 [bundles]
+arrow = [
+  "arrow_core",
+  "arrow_optics_core",
+  "arrow_fx"
+]
 kotlinx_coroutines_jvm = [
   "kotlinx_coroutines_core",
   "kotlinx_coroutines_jdk8",

@@ -175,9 +175,6 @@ $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
 	$(CMD)cd packages/server/build/dokka \
 		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/server \
 		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/server/
-	$(CMD)cd packages/rpc-jvm/build/dokka \
-		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/rpc-jvm \
-		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/rpc-jvm/
 	@echo "Docs assemble complete."
 
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.

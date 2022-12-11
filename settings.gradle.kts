@@ -84,8 +84,6 @@ include(
   ":packages:platform",
   ":packages:proto",
   ":packages:rpc",
-  ":packages:rpc-js",
-  ":packages:rpc-jvm",
   ":packages:server",
   ":packages:ssg",
   ":packages:ssr",

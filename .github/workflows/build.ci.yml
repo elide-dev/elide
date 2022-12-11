@@ -130,23 +130,6 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
-      - name: "Setup: Yarn (Gradle)"
-        uses: gradle/gradle-build-action@v2.3.3
-        id: gradleyarn
-        env:
-          CI: true
-        with:
-          arguments: |
-            kotlinUpgradeYarnLock
-            --no-daemon
-            --warning-mode=none
-            --dependency-verification=lenient
-            -Pelide.ci=true
-            -PbuildSamples=false
-            -PbuildDocsSite=false
-            -PbuildDocs=false
-            -Pversions.java.minimum=11
-            -Pversions.java.language=19
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2.3.3
         id: gradlebuild

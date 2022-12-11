@@ -567,8 +567,7 @@ elide_graalvm = { group = "dev.elide", name = "graalvm", version.ref = "elide" }
 elide_graalvm_js = { group = "dev.elide", name = "graalvm-js", version.ref = "elide" }
 elide_graalvm_react = { group = "dev.elide", name = "graalvm-react", version.ref = "elide" }
 elide_model = { group = "dev.elide", name = "model", version.ref = "elide" }
-elide_rpc_js = { group = "dev.elide", name = "rpc-js", version.ref = "elide" }
-elide_rpc_jvm = { group = "dev.elide", name = "rpc-jvm", version.ref = "elide" }
+elide_rpc = { group = "dev.elide", name = "rpc", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
@@ -603,4 +602,16 @@ kotlinx_atomicfu = [
   "kotlinx_atomicfu_linux_x64",
   "kotlinx_atomicfu_macos_x64"
 ]
-koin = ["koin_core", "koin_annotations"]
+kotlinx = [
+  "kotlinx_coroutines_core",
+  "kotlinx_serialization_json",
+  "kotlinx_serialization_protobuf",
+  "kotlinx_serialization_properties",
+  "kotlinx_atomicfu",
+  "kotlinx_collections_immutable",
+  "kotlinx_datetime",
+]
+koin = [
+  "koin_core",
+  "koin_annotations",
+]

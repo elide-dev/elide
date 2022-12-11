@@ -1,0 +1,13 @@
+{
+  "name": "@elide-dev/site-content",
+  "version": "0.0.1",
+  "private": "true",
+  "dependencies": {
+    "@mdx-js/mdx": "2.1.5",
+    "@mdx-js/preact": "2.1.5",
+    "@mdx-js/react": "2.1.5"
+  },
+  "devDependencies": {
+    "@mdx-js/loader": "2.1.5"
+  }
+}

@@ -1,11 +1,23 @@
 {
-  "name": "elide",
+  "name": "@elide-dev/v3",
   "version": "3.0.0",
   "private": true,
   "packageManager": "yarn@3.2.1",
   "lint-staged": {
     "packages/*": "npx prettier --write --ignore-unknown"
   },
+  "workspaces": [
+    "packages/base",
+    "packages/core",
+    "packages/frontend",
+    "packages/graalvm",
+    "packages/graalvm-js",
+    "packages/graalvm-react",
+    "packages/model",
+    "packages/rpc",
+    "packages/test",
+    "site/docs/content"
+  ],
   "dependencies": {
     "@emotion/cache": "11.10.5",
     "@emotion/react": "11.10.5",

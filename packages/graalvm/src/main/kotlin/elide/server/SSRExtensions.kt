@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 // Path within app JARs for embedded script assets.
-public const val EMBEDDED_ROOT: String = "embedded"
+public const val EMBEDDED_ROOT: String = "META-INF/elide/embedded"
 
 // Production script name default.
 private const val NODE_PROD_DEFAULT: String = "node-prod.pack.js"

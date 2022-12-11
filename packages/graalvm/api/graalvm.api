@@ -101,6 +101,41 @@ public abstract interface class elide/runtime/gvm/ExecutableScript {
 	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
 }
 
+public final class elide/runtime/gvm/ExecutableScript$ScriptSource {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$ScriptSource;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$ScriptType {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$ScriptType;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$State : java/lang/Enum {
+	public static final field EVALUATED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field EXECUTED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field PARSED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field UNINITIALIZED Lelide/runtime/gvm/ExecutableScript$State;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$State;
+	public static fun values ()[Lelide/runtime/gvm/ExecutableScript$State;
+}
+
 public abstract interface class elide/runtime/gvm/GuestLanguage {
 	public abstract fun getLabel ()Ljava/lang/String;
 	public fun getSupportsSSR ()Z
@@ -108,7 +143,14 @@ public abstract interface class elide/runtime/gvm/GuestLanguage {
 	public abstract fun getSymbol ()Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/gvm/VMEngine {
+public abstract interface class elide/runtime/gvm/VMEngine : elide/runtime/gvm/VMFacade {
+}
+
+public abstract interface class elide/runtime/gvm/VMEngineFactory {
+	public abstract fun acquire ()Lelide/runtime/gvm/VMEngine;
+}
+
+public abstract interface class elide/runtime/gvm/VMFacade {
 	public abstract fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun executeBlocking (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
@@ -117,8 +159,81 @@ public abstract interface class elide/runtime/gvm/VMEngine {
 	public abstract fun prewarmScript (Lelide/runtime/gvm/ExecutableScript;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public abstract interface class elide/runtime/gvm/VMEngineFactory {
-	public abstract fun acquire ()Lelide/runtime/gvm/VMEngine;
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
+}
+
+public final class elide/runtime/gvm/cfg/GuestVMConfiguration : io/micronaut/core/util/Toggleable {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEnabled ()Z
+	public fun isEnabled ()Z
+	public final fun setEnabled (Z)V
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getEnabled ()Z
+	public fun isEnabled ()Z
+	public final fun setEnabled (Z)V
+}
+
+public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/$JsRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/intrinsics/$BuiltinIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/intrinsics/$ServiceIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/intrinsics/js/console/$ConsoleIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public abstract interface class elide/runtime/gvm/intrinsics/js/console/JavaScriptConsole {
@@ -128,7 +243,23 @@ public abstract interface class elide/runtime/gvm/intrinsics/js/console/JavaScri
 	public abstract fun warn ([Ljava/lang/Object;)V
 }
 
+public final synthetic class elide/runtime/gvm/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public abstract interface class elide/runtime/gvm/intrinsics/js/stream/CoreStreams {
+}
+
+public final synthetic class elide/runtime/gvm/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public abstract interface class elide/runtime/gvm/intrinsics/js/webstreams/ReadableStream {

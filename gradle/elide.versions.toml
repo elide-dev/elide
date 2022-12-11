@@ -90,6 +90,9 @@ testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.6.0"
 guava = "31.1-jre"
 gax = "2.20.1"
+flatbuffers = "2.0.3"
+flatbuffers_java = "22.12.06"
+flatbuffers_plugin = "1.0.7"
 kotlinxWrappers = "pre.454"
 kotlinx_wrappers_bom = "1.0.0-pre.454"
 kotlinx_wrappers_browser = "0.0.1-pre.454"
@@ -190,6 +193,7 @@ auto_service = "1.0.1"
 auto_factory = "1.0.1"
 auto_value = "1.10.1"
 kotter = "1.0.0"
+pluginBuf = "0.8.2"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -232,6 +236,8 @@ shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin"
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh_plugin" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig_plugin" }
+flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers_plugin" }
+buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
@@ -243,6 +249,9 @@ junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+flatbuffers_parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
+flatbuffers_java_core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers_java" }
+flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
 kotter = { group = "com.varabyte.kotter", name = "kotter", version.ref = "kotter" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_compiler_testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin_compile_testing" }
@@ -516,6 +525,7 @@ koint_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref 
 koin_test_junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 koin_test_junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 ## Plugin Aliases
+plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
 plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
 plugin_testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
@@ -528,6 +538,8 @@ plugin_spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gra
 plugin_shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow_plugin" }
 plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
 plugin_ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
+plugin_buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
+plugin_protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
 plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin_sdk" }
 plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin_sdk" }
 plugin_kotlin_samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin_sdk" }

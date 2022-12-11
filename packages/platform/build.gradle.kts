@@ -16,18 +16,15 @@ version = rootProject.version as String
 // Elide modules.
 val libraries = listOf(
   "base",
-  "base-js",
-  "base-jvm",
+  "core",
   "server",
   "ssg",
+  "ssr",
   "frontend",
   "proto",
   "test",
-  "rpc-js",
-  "rpc-jvm",
+  "rpc",
   "graalvm",
-  "graalvm-js",
-  "graalvm-react",
 )
 
 // Peer modules.

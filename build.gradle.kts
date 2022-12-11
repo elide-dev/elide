@@ -423,7 +423,6 @@ tasks.create("docs") {
       "dokkaJavadoc",
       "htmlDependencyReport",
       ":packages:server:dokkaJavadoc",
-      ":packages:rpc-jvm:dokkaJavadoc",
     ))
   }
 }

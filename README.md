@@ -271,20 +271,47 @@ not need some of these components:
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 
-[1]: https://kotlinlang.org/
-[2]: https://graalvm.org/
-[3]: https://micronaut.io/
-[4]: https://reactjs.org/
-[5]: https://developers.google.com/protocol-buffers
-[6]: https://grpc.io/
-[7]: https://developers.google.com/closure
-[8]: https://bazel.build/
-[9]: https://gradle.org/
-[10]: https://developers.google.com/speed/pagespeed/module
-[11]: https://github.com/sgammon/elide/tree/master
-[12]: https://github.com/sgammon/elide
-[13]: https://buf.build
-[14]: https://esbuild.github.io/
+## Contributing
+
+Elide is structured as a Gradle codebase, with additional support for Make and Node. Bazel is also coming soon. After
+cloning the project, you can run `make help` to get familiar with some standard local dev tasks.
+
+1) **Clone the repo.**
+   ```
+   git clone git@github.com:elide-dev/v3.git
+   ```
+2) **Install GraalVM.** You can download CE [here](https://www.graalvm.org/downloads/). Make sure to install the
+   `native-image`, `espresso`, and `js` tools after initially downloading, which you can do with:
+   ```
+   gu install native-image js espresso
+   gu rebuild-images
+   ```
+3) **Explore the Makefile.** The `Makefile` is self-describing. Run `make help` to see what it can do for you:
+  ```
+  Elide:
+  api-check                      Check API/ABI compatibility with current changes.
+  build                          Build the main library, and code-samples if SAMPLES=yes.
+  clean-docs                     Clean documentation targets.
+  clean-site                     Clean site targets.
+  clean                          Clean build outputs and caches.
+  distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
+  docs                           Generate docs for all library modules.
+  forceclean                     DANGER: Clean, distclean, and clear untracked files.
+  help                           Show this help text ('make help').
+  publish                        Publish a new version of all Elide packages.
+  relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
+  reports                        Generate reports for tests, coverage, etc.
+  serve-docs                     Serve documentation locally.
+  serve-site                     Serve Elide site locally.
+  site                           Generate the static Elide website.
+  test                           Run the library testsuite, and code-sample tests if SAMPLES=yes.
+  update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
+  update-jdeps                   Interactively update Gradle dependencies.
+  update-jsdeps                  Interactively update Yarn dependencies.
+  ```
+
+When committing to Elide, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+standard. This helps us keep changelogs clean and obvious.
 
 ## Reports
 
@@ -301,3 +328,19 @@ Code coverage is continuously reported to [Codecov](https://app.codecov.io/gh/el
 [SonarCloud](https://sonarcloud.io/project/overview?id=elide-dev_v3):
 
 [![Coverage grid](https://codecov.io/gh/elide-dev/v3/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
+
+
+[1]: https://kotlinlang.org/
+[2]: https://graalvm.org/
+[3]: https://micronaut.io/
+[4]: https://reactjs.org/
+[5]: https://developers.google.com/protocol-buffers
+[6]: https://grpc.io/
+[7]: https://developers.google.com/closure
+[8]: https://bazel.build/
+[9]: https://gradle.org/
+[10]: https://developers.google.com/speed/pagespeed/module
+[11]: https://github.com/sgammon/elide/tree/master
+[12]: https://github.com/sgammon/elide
+[13]: https://buf.build
+[14]: https://esbuild.github.io/

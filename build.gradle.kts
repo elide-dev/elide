@@ -4,9 +4,14 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import io.gitlab.arturbosch.detekt.report.ReportMergeTask
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
 
 plugins {
@@ -18,6 +23,9 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
   id("org.jetbrains.kotlinx.binary-compatibility-validator")
   id("io.gitlab.arturbosch.detekt")
+
+  id("com.android.application") version "7.3.1" apply false
+  id("com.android.library") version "7.3.1" apply false
 
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
@@ -83,7 +91,12 @@ rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
   // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
   rootProject.the<NodeJsRootExtension>().download = false
-  rootProject.the<NodeJsRootExtension>().nodeVersion = "18.0.0"
+  rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
+}
+rootProject.plugins.withType(YarnPlugin::class.java) {
+  rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+  rootProject.the<YarnRootExtension>().reportNewYarnLock = false
+  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
 }
 
 apiValidation {
@@ -220,7 +233,7 @@ subprojects {
     config = rootProject.files("config/detekt/detekt.yml")
   }
 
-  val detektMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
+  val detektMerge by tasks.registering(ReportMergeTask::class) {
     output.set(rootProject.buildDir.resolve("reports/detekt/elide.sarif"))
   }
 
@@ -374,7 +387,7 @@ afterEvaluate {
 }
 
 if (buildDocs == "true") {
-  tasks.named("dokkaHtmlMultiModule", org.jetbrains.dokka.gradle.DokkaMultiModuleTask::class).configure {
+  tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
     includes.from("README.md")
     outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
   }

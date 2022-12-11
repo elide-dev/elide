@@ -15,59 +15,51 @@
  * Defines basic framework structures related to modelling human language. These structures are render-able by the Soy
  * templates stored alongside them, and are used for various things throughout the codebase.
  */
-syntax = "proto3";
-package elide.base;
-
-option optimize_for = SPEED;
-option cc_enable_arenas = true;
-option java_multiple_files = true;
-option java_string_check_utf8 = true;
-option java_outer_classname = "BaseLanguage";
-option php_namespace = "Elide";
-option php_class_prefix = "ELD";
-option swift_prefix = "Elide";
-option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Base";
-option java_package = "tools.elide.base";
-option csharp_namespace = "Elide.Base";
-option go_package = "github.com/elide-tools/elide/base";
-
+namespace elide.base;
 
 // Specifies common/major languages present in software development or the open internet. This is not an exhaustive list
 // and if you need to specify an entry that isn't present (without a code change), it is best to opt for the `iso_`-
 // prefixed fields in `LanguageSpec`.
-enum Language {
+enum Language : int {
   // Generic, unqualified reference to English.
-  ENGLISH = 0;
+  ENGLISH = 0,
 
   // Generic, unqualified reference to French.
-  FRENCH = 1;
+  FRENCH = 1,
 
   // Generic, unqualified reference to Spanish.
-  SPANISH = 2;
+  SPANISH = 2,
 
   // Generic, unqualified reference to Chinese.
-  CHINESE = 3;
+  CHINESE = 3
 }
 
 // Specifies a given language, along with a nationality for that language.
-message LanguageSpec {
+table LanguageSpec {
   // Specifies a language either via the enumerated specifier, or the proper two-character ISO code for the language.
-  oneof selection {
-    // Enumerated language specifier.
-    Language language = 1;
-
-    // Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
-    // matter but upper-casing should be preferred for consistency.
-    string iso_language = 2;
-  }
+  selection: elide.base.LanguageSpec_.LanguageSelection;
 
   // Specifies an optional modifier for a given language `selection`.
-  oneof modifier {
-    // Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
-    string iso_country = 3;
+  modifier: elide.base.LanguageSpec_.LanguageModifier;
+}
 
-    // Dialect to specify as part of this language spec, based on a simple two-character string.
-    string dialect = 4;
-  }
+namespace elide.base.LanguageSpec_;
+
+// Specifies a language either via the enumerated specifier, or the proper two-character ISO code for the language.
+table LanguageSelection {
+  // Enumerated language specifier.
+  language: elide.base.Language;
+
+  // Two-character ISO-standard language specifier (for example: "EN" for English, "FR" for French). Casing doesn't
+  // matter but upper-casing should be preferred for consistency.
+  iso_language: string;
+}
+
+// Specifies an optional modifier for a given language `selection`.
+table LanguageModifier {
+  // Two-character ISO-standard country code, used as a modifier for a language spec (i.e. the `us` in `en-us`).
+  iso_country:string;
+
+  // Dialect to specify as part of this language spec, based on a simple two-character string.
+  dialect:string;
 }

@@ -1,0 +1,41 @@
+// Generated from tree.proto
+
+include "../../google/protobuf/timestamp.fbs";
+include "../crypto/crypto.fbs";
+include "../data/data.fbs";
+include "./file.fbs";
+
+namespace elide.vfs;
+
+table Directory {
+  name:string;
+  children:[elide.vfs.TreeEntry];
+}
+
+table TreeEntry {
+  parent:elide.vfs.TreeEntry;
+  entry:elide.vfs.TreeEntry_.Anonymous2;
+}
+
+namespace elide.vfs.TreeEntry_;
+
+table Anonymous2 {
+  file:elide.vfs.File;
+  directory:elide.vfs.Directory;
+}
+
+namespace elide.vfs;
+
+table Filesystem {
+  metadata:elide.vfs.Filesystem_.Metadata;
+  root:elide.vfs.TreeEntry;
+}
+
+namespace elide.vfs.Filesystem_;
+
+table Metadata {
+  size:ulong;
+  compressed:ulong;
+  compression:data.CompressionMode;
+  modified:google.protobuf.Timestamp;
+}

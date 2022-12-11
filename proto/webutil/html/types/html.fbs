@@ -1,0 +1,40 @@
+// Generated from html.proto
+
+namespace webutil.html.types;
+
+enum CustomSafeUrlScheme : int {
+  TEL = 0,
+  SMS = 1,
+  CALLTO = 2,
+  WTAI = 3,
+  RTSP = 4,
+  MARKET = 5,
+  GEO = 6,
+  SKYPE = 7,
+  WHATSAPP = 8,
+  ITMS_BOOKS = 9,
+}
+
+table SafeHtmlProto {
+  private_do_not_access_or_else_safe_html_wrapped_value:string;
+}
+
+table SafeUrlProto {
+  private_do_not_access_or_else_safe_url_wrapped_value:string;
+}
+
+table TrustedResourceUrlProto {
+  private_do_not_access_or_else_trusted_resource_url_wrapped_value:string;
+}
+
+table SafeStyleProto {
+  private_do_not_access_or_else_safe_style_wrapped_value:string;
+}
+
+table SafeScriptProto {
+  private_do_not_access_or_else_safe_script_wrapped_value:string;
+}
+
+table SafeStyleSheetProto {
+  private_do_not_access_or_else_safe_style_sheet_wrapped_value:string;
+}

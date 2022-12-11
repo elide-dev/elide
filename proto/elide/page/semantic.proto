@@ -16,7 +16,7 @@
  * the organization it belongs to, and so on.
  */
 syntax = "proto3";
-package page;
+package elide.page;
 
 option optimize_for = SPEED;
 option cc_enable_arenas = true;

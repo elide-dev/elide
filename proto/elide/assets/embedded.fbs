@@ -11,118 +11,111 @@
  * is strictly forbidden except in adherence with assigned license requirements.
  */
 
+include "../../google/protobuf/timestamp.fbs";
+include "../crypto/crypto.fbs";
+include "../data/data.fbs";
+
 /*
  * Specifies structures used to define the notion of an "embedded" script asset in some foreign language, which can be
  * executed at runtime by Elide to fulfill user requests.
  */
-syntax = "proto3";
-package elide.assets;
-
-option optimize_for = SPEED;
-option cc_enable_arenas = true;
-option java_multiple_files = true;
-option java_string_check_utf8 = true;
-option php_namespace = "Elide\\Assets";
-option php_class_prefix = "ELD";
-option swift_prefix = "Elide";
-option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Assets";
-option java_package = "tools.elide.assets";
-option csharp_namespace = "Elide.Assets";
-
-import "google/protobuf/timestamp.proto";
-import "elide/model/model.proto";
-import "elide/data/data.proto";
-
+namespace elide.assets;
 
 // Enumerates languages which are supported for embedded scripting in Elide.
-enum EmbeddedScriptLanguage {
+enum EmbeddedScriptLanguage : int {
   // The language is unknown or unspecified; regular code should not use this value.
-  LANGUAGE_UNSPECIFIED = 0;
+  LANGUAGE_UNSPECIFIED = 0,
 
   // The language is a dialect of JavaScript.
-  JS = 1;
+  JS = 1,
 }
 
+namespace elide.assets.EmbeddedScriptMetadata_.JsScriptMetadata_;
+
+// Enumerates supported JavaScript language levels.
+enum JsLanguageLevel : int {
+  // The language level is unknown or unspecified; regular code should not use this value.
+  JS_LANGUAGE_LEVEL_DEFAULT = 0,
+
+  // The language level is ES5.
+  ES5 = 1,
+
+  // The language level is ES6.
+  ES6 = 2,
+
+  // The language level is ES2017.
+  ES2017 = 3,
+
+  // The language level is ES2018.
+  ES2018 = 4,
+
+  // The language level is ES2019.
+  ES2019 = 5,
+
+  // The language level is ES2020.
+  ES2020 = 6,
+
+  // The language level is ES2021.
+  ES2021 = 7,
+
+  // The language level is ES2022.
+  ES2022 = 8,
+}
+
+namespace elide.assets;
 
 // Describes embedded script-level metadata which is enclosed with the asset spec for an embedded script.
-message EmbeddedScriptMetadata {
-  // Specifies JavaScript-specific script metadata.
-  message JsScriptMetadata {
-    // Enumerates supported JavaScript language levels.
-    enum JsLanguageLevel {
-      // The language level is unknown or unspecified; regular code should not use this value.
-      JS_LANGUAGE_LEVEL_DEFAULT = 0;
-
-      // The language level is ES5.
-      ES5 = 1;
-
-      // The language level is ES6.
-      ES6 = 2;
-
-      // The language level is ES2017.
-      ES2017 = 3;
-
-      // The language level is ES2018.
-      ES2018 = 4;
-
-      // The language level is ES2019.
-      ES2019 = 5;
-
-      // The language level is ES2020.
-      ES2020 = 6;
-
-      // The language level is ES2021.
-      ES2021 = 7;
-
-      // The language level is ES2022.
-      ES2022 = 8;
-    }
-
-    // Describes the JavaScript language level for the embedded script.
-    JsLanguageLevel level = 1;
-  }
-
+table EmbeddedScriptMetadata {
   // Language-specific script metadata.
-  oneof metadata {
-    // JavaScript-related metadata.
-    JsScriptMetadata javascript = 1;
-  }
+  metadata: elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata;
 }
 
+namespace elide.assets.EmbeddedScriptMetadata_;
+
+// JavaScript-related metadata.
+table JsScriptMetadata {
+  // Describes the JavaScript language level for the embedded script.
+  level: elide.assets.EmbeddedScriptMetadata_.JsScriptMetadata_.JsLanguageLevel;
+}
+
+// Language-specific script metadata.
+table LanguageSpecificMetadata {
+  // JavaScript-related metadata.
+  javascript: elide.assets.EmbeddedScriptMetadata_.JsScriptMetadata;
+}
+
+namespace elide.assets;
 
 // Describes a single embedded script asset, which is embedded within an Elide application. The script is enclosed
 // within the protocol buffer record, along with a digest and various metadata.
-message EmbeddedScript {
-  option (model.role) = WIRE;
-
+table EmbeddedScript {
   // Module name / ID for this embedded script. Set at build time.
-  string module = 1;
+  module: string;
 
   // Filename, or some synthesized filename, for this script.
-  string filename = 2;
+  filename: string;
 
   // Language of the embedded script, and expected interpreted language.
-  EmbeddedScriptLanguage language = 3;
+  language: elide.assets.EmbeddedScriptLanguage;
 
   // Embedded script-level metadata, including language-specific metadata.
-  EmbeddedScriptMetadata metadata = 4;
+  metadata: elide.assets.EmbeddedScriptMetadata;
 
   // Last-modified timestamp for the assets underlying this script.
-  google.protobuf.Timestamp last_modified = 5;
+  last_modified: google.protobuf.Timestamp;
 
   // Unique set of direct dependencies for this embedded script asset; expected to be other, compatible embedded
   // scripts (same language, same runtime level). Expressed as a `module` ID.
-  repeated string direct_dependency = 6;
+  direct_dependency: [string];
 
   // Unique transitive closure of all dependencies this module relies upon; expected to be other, compatible embedded
   // scripts (same language, same runtime level). Expressed as a `module` ID.
-  repeated string transitive_dependency = 7;
+  transitive_dependency: [string];
 
   // Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
   // digest payload additionally specifies the algorithm used.
-  data.DataContainerRef script = 8;
+  script: elide.data.DataContainerRef;
 
   // Source-map file path for the embedded script, if generated as an external file.
-  data.DataContainerRef sourcemap = 9;
+  sourcemap: elide.data.DataContainerRef;
 }

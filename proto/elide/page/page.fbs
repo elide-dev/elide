@@ -1,0 +1,360 @@
+// Generated from page.proto
+
+include "../../google/protobuf/duration.fbs";
+include "../../google/protobuf/timestamp.fbs";
+include "../base/language.fbs";
+include "../crypto/crypto.fbs";
+include "../data/data.fbs";
+include "../page/media.fbs";
+include "../page/semantic.fbs";
+include "../../webutil/html/types/html.fbs";
+
+namespace elide.page.Context_.AppManifest_;
+
+enum DisplayMode : int {
+  BROWSER = 0,
+  FULLSCREEN = 1,
+  STANDALONE = 2,
+  MINIMAL_UI = 3,
+}
+
+enum OrientationMode : int {
+  UNSPECIFIED_ORIENTATION = 0,
+  ANY = 1,
+  NATURAL = 2,
+  LANDSCAPE = 3,
+  PORTRAIT = 4,
+}
+
+namespace elide.page.Context_.AppManifest_.RelatedApplication_;
+
+enum AppPlatform : int {
+  UNSPECIFIED_APP_PLATFORM = 0,
+  APPSTORE = 1,
+  PLAYSTORE = 2,
+  WEB = 3,
+}
+
+namespace elide.page.Context_.Fonts_;
+
+enum FontReferenceType : int {
+  INTERNAL = 0,
+  GOOGLE_FONTS = 1,
+}
+
+enum FontFormat : int {
+  UNSPECIFIED_FORMAT = 0,
+  OPENTYPE = 1,
+  TRUETYPE = 2,
+  VECTOR = 3,
+  WEBFONT = 4,
+  WEBFONT2 = 5,
+  EMBEDDED_OPENTYPE = 6,
+}
+
+namespace elide.page.Context_.Cookie_;
+
+enum SameSitePolicy : int {
+  NO_SAME_SITE_POLICY = 0,
+  LAX = 1,
+  STRICT = 2,
+}
+
+namespace elide.page.Context_;
+
+enum ClientHint : int {
+  UNKNOWN_CLIENT_HINT = 0,
+  DPR = 1,
+  ECT = 2,
+  RTT = 3,
+  DOWNLINK = 4,
+  DEVICE_MEMORY = 5,
+  SAVE_DATA = 6,
+  WIDTH = 7,
+  VIEWPORT_WIDTH = 8,
+}
+
+enum ConnectionHint : int {
+  UNKNOWN_CONNECTION_HINT = 0,
+  SLOW_TWO = 1,
+  SLOW = 2,
+  TYPICAL = 3,
+  FAST = 4,
+}
+
+enum CrossOriginResourcePolicy : int {
+  DEFAULT_CROSS_ORIGIN_RESOURCE_POLICY = 0,
+  SAME_SITE = 1,
+  SAME_ORIGIN = 2,
+  CROSS_ORIGIN = 3,
+}
+
+enum FramingPolicy : int {
+  DEFAULT_FRAMING_POLICY = 0,
+  SAMEORIGIN = 1,
+  DENY = 2,
+}
+
+enum ReferrerPolicy : int {
+  DEFAULT_REFERRER_POLICY = 0,
+  NO_REFERRER = 1,
+  NO_REFERRER_WHEN_DOWNGRADE = 2,
+  ORIGIN = 3,
+  ORIGIN_WHEN_CROSS_ORIGIN = 4,
+  SAME = 5,
+  STRICT_ORIGIN = 7,
+  STRICT_ORIGIN_WHEN_CROSS_ORIGIN = 8,
+  UNSAFE_URL = 9,
+}
+
+namespace elide.page;
+
+table Context {
+  meta:elide.page.Context_.Metadata;
+  styles:elide.page.Context_.Styles;
+  fonts:elide.page.Context_.Fonts;
+  scripts:elide.page.Context_.Scripts;
+  manifest:elide.page.Context_.AppManifest;
+  etag:elide.page.Context_.DynamicETag;
+  cookie:[elide.page.Context_.Cookie];
+  header:[elide.page.Context_.ResponseHeader];
+  vary:[string];
+  language:string;
+  hints:elide.page.Context_.ClientHints;
+  feature_policy:[string];
+  framing_policy:elide.page.Context_.FramingPolicy;
+  content_type_nosniff:bool;
+  cdn_prefix:webutil.html.types.TrustedResourceUrlProto;
+  dns_prefetch:[string];
+  preconnect:[string];
+  xss_protection:string;
+  referrer_policy:elide.page.Context_.ReferrerPolicy;
+}
+
+namespace elide.page.Context_;
+
+table Metadata {
+  title:string;
+  description:string;
+  keyword:[string];
+  semantic:elide.page.SemanticMetadata;
+  viewport:string;
+  manifest:webutil.html.types.TrustedResourceUrlProto;
+  theme:string;
+  touch_icon:string;
+  startup_image:string;
+  link:[elide.page.Context_.PageLink];
+  language:elide.base.LanguageSpec;
+  gtm_id:string;
+  fb_app_id:string;
+  open_graph:elide.page.Context_.Metadata_.OpenGraph;
+  robots:string;
+  color_scheme:string;
+  prefix:[elide.page.Context_.RDFPrefix];
+  googlebot:string;
+  rating:string;
+  delegate_package:string;
+}
+
+namespace elide.page.Context_.Metadata_;
+
+table OpenGraph {
+  site_name:string;
+  title:string;
+  description:string;
+  locale:elide.base.LanguageSpec;
+  type:string;
+  url:string;
+  twitter:elide.page.Context_.Metadata_.Twitter;
+  canonical:string;
+  fb_app:string;
+  image:[elide.page.Context_.Metadata_.OpenGraph_.OpenGraphImage];
+  video:[elide.page.Context_.Metadata_.OpenGraph_.OpenGraphVideo];
+}
+
+namespace elide.page.Context_.Metadata_.OpenGraph_;
+
+table OpenGraphImage {
+  uri:string;
+  width:uint;
+  height:uint;
+  type:string;
+}
+
+table OpenGraphVideo {
+  uri:string;
+  width:uint;
+  height:uint;
+  type:string;
+}
+
+namespace elide.page.Context_.Metadata_;
+
+table Twitter {
+  site_name:string;
+  title:string;
+  description:string;
+  locale:elide.base.LanguageSpec;
+  card:string;
+  image:string;
+  url:string;
+  creator:string;
+}
+
+namespace elide.page.Context_;
+
+table PageLink {
+  relevance:string;
+  type:string;
+  href:webutil.html.types.TrustedResourceUrlProto;
+}
+
+table AppManifest {
+  name:string;
+  short_name:string;
+  start_url:string;
+  display:elide.page.Context_.AppManifest_.DisplayMode;
+  background_color:string;
+  description:string;
+  direction:string;
+  language:elide.base.LanguageSpec;
+  orientation:elide.page.Context_.AppManifest_.OrientationMode;
+  scope:string;
+  prefer_related_applications:bool;
+  related_application:[elide.page.Context_.AppManifest_.RelatedApplication];
+  app_icon:[elide.page.Context_.AppManifest_.Icon];
+}
+
+namespace elide.page.Context_.AppManifest_;
+
+table Icon {
+  src:webutil.html.types.TrustedResourceUrlProto;
+  size:[uint];
+  mime_type:string;
+}
+
+table RelatedApplication {
+  id:string;
+  platform:elide.page.Context_.AppManifest_.RelatedApplication_.AppPlatform;
+  uri:webutil.html.types.TrustedResourceUrlProto;
+}
+
+namespace elide.page.Context_;
+
+table Styles {
+  lifted:webutil.html.types.SafeStyleProto;
+  link:[elide.page.Context_.Styles_.Stylesheet];
+}
+
+namespace elide.page.Context_.Styles_;
+
+table Stylesheet {
+  uri:webutil.html.types.TrustedResourceUrlProto;
+  id:string;
+  media:string;
+  prefetch:bool;
+  preload:bool;
+  push:bool;
+}
+
+namespace elide.page.Context_;
+
+table Fonts {
+  package:[elide.page.Context_.Fonts_.FontPackage];
+}
+
+namespace elide.page.Context_.Fonts_;
+
+table FontReference {
+  type:elide.page.Context_.Fonts_.FontReferenceType;
+  format:elide.page.Context_.Fonts_.FontFormat;
+  name:string;
+  weight:string;
+  variant:string;
+  uri:webutil.html.types.TrustedResourceUrlProto;
+  prefetch:bool;
+  preload:bool;
+  push:bool;
+}
+
+table FontPackage {
+  name:string;
+  reference:[elide.page.Context_.Fonts_.FontReference];
+}
+
+namespace elide.page.Context_;
+
+table Scripts {
+  lifted:webutil.html.types.SafeScriptProto;
+  link:[elide.page.Context_.Scripts_.JavaScript];
+}
+
+namespace elide.page.Context_.Scripts_;
+
+table JavaScript {
+  uri:webutil.html.types.TrustedResourceUrlProto;
+  id:string;
+  defer:bool;
+  async:bool;
+  module:bool;
+  no_module:bool;
+  prefetch:bool;
+  preload:bool;
+  push:bool;
+}
+
+namespace elide.page.Context_;
+
+table DynamicETag {
+  enabled:bool;
+  strong:bool;
+  preimage:elide.data.DataFingerprint;
+  response:elide.data.DataFingerprint;
+}
+
+table RDFPrefix {
+  prefix:string;
+  target:string;
+}
+
+table Cookie {
+  name:string;
+  value:string;
+  domain:string;
+  path:string;
+  expiration_strategy:elide.page.Context_.Cookie_.Anonymous6;
+  http_only:bool;
+  secure:bool;
+  same_site:elide.page.Context_.Cookie_.SameSitePolicy;
+}
+
+namespace elide.page.Context_.Cookie_;
+
+table Anonymous6 {
+  immediate_expire:bool;
+  absolute_expire:google.protobuf.Timestamp;
+  relative_expire:google.protobuf.Duration;
+  no_expire:bool;
+}
+
+namespace elide.page.Context_;
+
+table ClientHints {
+  supported:[elide.page.Context_.ClientHint];
+  indicated:[elide.page.Context_.ClientHint];
+  lifetime:ulong;
+  width:uint;
+  viewport_width:uint;
+  device_pixel_ratio:uint;
+  round_trip_time:uint;
+  downlink:float;
+  effective_connection_type:elide.page.Context_.ConnectionHint;
+  save_data:bool;
+  device_memory:float;
+}
+
+table ResponseHeader {
+  name:string;
+  value:string;
+  force:bool;
+}

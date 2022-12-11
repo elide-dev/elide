@@ -1,0 +1,52 @@
+// Generated from file.proto
+
+include "../../google/protobuf/timestamp.fbs";
+include "../crypto/crypto.fbs";
+
+namespace elide.vfs.File_;
+
+enum Encoding : int {
+  UTF_8 = 0,
+  UTF_16 = 1,
+  UTF_32 = 2,
+}
+
+namespace elide.vfs;
+
+table File {
+  name:string;
+  size:ulong;
+  compressed:ulong;
+  offset:ulong;
+  encoding:elide.vfs.File_.Encoding;
+  modified:google.protobuf.Timestamp;
+  mime:string;
+  fingerprint:elide.vfs.File_.FileFingerprint;
+  attributes:[elide.vfs.File_.AttributesEntry];
+}
+
+namespace elide.vfs.File_;
+
+table Fingerprint {
+  fingerprint:elide.vfs.File_.Fingerprint_.Anonymous0;
+  algorithm:crypto.HashAlgorithm;
+}
+
+namespace elide.vfs.File_.Fingerprint_;
+
+table Anonymous0 {
+  crc32:[ubyte];
+  hash:[ubyte];
+}
+
+namespace elide.vfs.File_;
+
+table FileFingerprint {
+  compressed:elide.vfs.File_.Fingerprint;
+  uncompressed:elide.vfs.File_.Fingerprint;
+}
+
+table AttributesEntry {
+  key:string (key);
+  value:string;
+}

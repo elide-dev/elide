@@ -16,7 +16,7 @@
  * structures provide definitions for the page head, scripts appended to the body, and other page metadata.
  */
 syntax = "proto3";
-package page;
+package elide.page;
 
 option optimize_for = SPEED;
 option cc_enable_arenas = true;

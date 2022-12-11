@@ -4,6 +4,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
 import com.google.protobuf.gradle.*
 
 plugins {
@@ -12,6 +13,7 @@ plugins {
   signing
   id("dev.elide.build.kotlin")
   alias(libs.plugins.protobuf)
+  alias(libs.plugins.flatbuffers)
 }
 
 group = "dev.elide"
@@ -31,6 +33,10 @@ protobuf {
       }
     }
   }
+}
+
+flatbuffers {
+  language = "kotlin"
 }
 
 afterEvaluate {
@@ -59,6 +65,7 @@ dependencies {
   api(libs.protobuf.java)
   api(libs.protobuf.util)
   api(libs.protobuf.kotlin)
+  api(libs.flatbuffers.java.core)
   api(libs.google.common.html.types.proto)
   api(libs.google.common.html.types.types)
   api(libs.kotlinx.datetime)
@@ -80,5 +87,11 @@ tasks {
       // do not warn for generated code
       "-nowarn"
     ))
+  }
+
+  create("compileFlatbuffers", FlatBuffers::class) {
+    description = "Generate Flatbuffers code for Kotlin/JVM"
+    inputDir = file("${rootProject.projectDir}/proto")
+    outputDir = file("$buildDir/generated/source/flatbuffers")
   }
 }

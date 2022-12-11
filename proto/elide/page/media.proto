@@ -16,7 +16,7 @@
  * also semantic metadata context.
  */
 syntax = "proto3";
-package page;
+package elide.page;
 
 option optimize_for = SPEED;
 option cc_enable_arenas = true;

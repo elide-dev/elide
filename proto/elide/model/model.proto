@@ -16,7 +16,7 @@
  * type, required status, and so on. Also includes field metadata (like summaries, descriptions, and so on).
  */
 syntax = "proto3";
-package model;
+package elide.model;
 
 option optimize_for = SPEED;
 option cc_enable_arenas = true;

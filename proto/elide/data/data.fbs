@@ -11,117 +11,104 @@
  * is strictly forbidden except in adherence with assigned license requirements.
  */
 
+include "../crypto/crypto.fbs";
+
 /*
  * Specifies core structures related to cryptographic operations and primitives. These records and enumerates are used
  * throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
  */
-syntax = "proto3";
-package elide.data;
-
-option optimize_for = SPEED;
-option cc_enable_arenas = true;
-option java_multiple_files = true;
-option java_string_check_utf8 = true;
-option php_namespace = "Elide\\Data";
-option php_class_prefix = "ELD";
-option swift_prefix = "Elide";
-option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Data";
-option java_package = "tools.elide.data";
-option csharp_namespace = "Elide.Data";
-option go_package = "github.com/elide-tools/elide/data;data";
-
-import "elide/crypto/crypto.proto";
-
+namespace elide.data;
 
 // Specifies compression modes that are supported by the framework for pre-compressed assets stored inline within the
 // manifest. These inlined assets do not replace original source assets, which are enclosed in the resource JAR.
-enum CompressionMode {
+enum CompressionMode : int {
   // No compression.
-  IDENTITY = 0;
+  IDENTITY = 0,
 
   // Standard gzip-based compression.
-  GZIP = 1;
+  GZIP = 1,
 
   // Brotli-based compression.
-  BROTLI = 2;
+  BROTLI = 2,
 
   // Snappy-based compression.
-  SNAPPY = 3;
+  SNAPPY = 3,
 
   // Deflate (zlib)-based compression.
-  DEFLATE = 4;
+  DEFLATE = 4,
 }
-
 
 // Stores a generic cryptographic fingerprint of some arbitrary data. This is a utility record, which simply gathers the
 // specification of a hash algorithm with a raw data field storing the result of the hash.
-message DataFingerprint {
+table DataFingerprint {
   // Algorithm in use when fingerprinting the associated data.
-  crypto.HashAlgorithm hash = 1;
+  hash: elide.crypto.HashAlgorithm;
 
   // Salt value used when fingerprinting the associated data, if applicable. Generally appended to the end of the data
   // to be fingerprinted.
-  bytes salt = 2;
+  salt: [ubyte];
 
   // Content of the fingerprint/checksum calculated as part of this data fingerprint.
-  bytes fingerprint = 3;
+  fingerprint: [ubyte];
 }
-
 
 // Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
 // cryptographic fingerprint calculated from the data.
-message DataContainer {
+table DataContainer {
   // Raw bytes for the data referenced by this container.
-  bytes raw = 1;
+  raw: [ubyte];
 
   // Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
   // held by this data container.
-  repeated DataFingerprint integrity = 2;
+  integrity: [elide.data.DataFingerprint];
 }
-
 
 // Generic container for compressed data, which simply combines an enumerated `CompressionMode` with a blob of raw bytes
 // which are expected to be compressed by the specified algorithm or tool.
-message CompressedData {
+table CompressedData {
   // Compression mode applied to this data. If no compression is active, `IDENTITY` may be specified as a default.
-  CompressionMode compression = 1;
+  compression: elide.data.CompressionMode;
 
   // Container holding the raw compressed data, and a fingerprint of the data in compressed form. This is unmodified raw
   // bytes, aside from being compressed by the algorithm specified by `compression`.
-  DataContainer data = 2;
+  data: elide.data.DataContainer;
 
   // Size of the asset data before compression. To obtain the size of the data in compressed form, simply take the
   // length of the data field itself. This value is expressed in bytes.
-  uint64 size = 3;
+  size: ulong;
 
   // Holds an (optional) integrity fingerprint, calculated from the held data *before* compression, which maybe used to
   // verify the consistency of the data held by this container after de-compression.
-  repeated DataFingerprint integrity = 4;
+  integrity: [elide.data.DataFingerprint];
 }
 
 // Specifies the structure of a data container which can also be a reference to a different resource or file-system
 // style-asset. Only one reference value may be filled in.
-message DataContainerRef {
-  // Specifies a fingerprint and path pair.
-  message FingerprintPathPair {
-    // Specifies the fingerprint information associated with, or calculated for, the subject info.
-    DataFingerprint fingerprint = 1;
-
-    // Specifies the path for this data container reference.
-    string path = 2;
-  }
-
+table DataContainerRef {
   // Specifies the reference subject for this record.
-  oneof reference {
-    // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
-    // are enclosed inline within the protocol buffer.
-    CompressedData data = 1;
+  reference: elide.data.DataContainerRef_.ContainerReference;
+}
 
-    // Specifies a reference to a file resident in the application JAR or native image.
-    FingerprintPathPair resource = 2;
+namespace elide.data.DataContainerRef_;
 
-    // Specifies a reference to a file resident on the filesystem outside of the built application.
-    FingerprintPathPair filesystem = 3;
-  }
+// Specifies a fingerprint and path pair.
+table FingerprintPathPair {
+  // Specifies the fingerprint information associated with, or calculated for, the subject info.
+  fingerprint: elide.data.DataFingerprint;
+
+  // Specifies the path for this data container reference.
+  path: string;
+}
+
+// Specifies the reference subject for this record.
+table ContainerReference {
+  // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
+  // are enclosed inline within the protocol buffer.
+  data: elide.data.CompressedData;
+
+  // Specifies a reference to a file resident in the application JAR or native image.
+  resource: elide.data.DataContainerRef_.FingerprintPathPair;
+
+  // Specifies a reference to a file resident on the filesystem outside of the built application.
+  filesystem: elide.data.DataContainerRef_.FingerprintPathPair;
 }

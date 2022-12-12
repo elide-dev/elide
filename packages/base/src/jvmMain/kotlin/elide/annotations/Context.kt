@@ -3,4 +3,4 @@ package elide.annotations
 /**
  * TBD.
  */
-public actual annotation class Context
+public actual typealias Context =  io.micronaut.context.annotation.Context

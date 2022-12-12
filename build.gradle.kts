@@ -29,7 +29,7 @@ plugins {
 
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
-  alias(libs.plugins.doctor)
+//  alias(libs.plugins.doctor)
   jacoco
   signing
 }

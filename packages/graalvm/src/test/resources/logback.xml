@@ -10,6 +10,9 @@
     <logger name="http:access" additivity="false" level="off" />
     <logger name="gvm:js.console" level="trace" />
 
+    <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="trace" />
+    <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="trace" />
+
     <logger name="io.micronaut.context.env" level="off"/>
     <logger name="elide.server.ssr.ServerSSRRenderer" level="off" />
 

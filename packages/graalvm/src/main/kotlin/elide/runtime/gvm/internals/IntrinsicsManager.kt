@@ -1,14 +1,12 @@
 package elide.runtime.gvm.internals
 
-import elide.runtime.gvm.IntrinsicsResolver
-import elide.runtime.gvm.intrinsics.BuiltinIntrinsicsResolver
-import elide.runtime.gvm.intrinsics.CompoundIntrinsicsResolver
-import elide.runtime.gvm.intrinsics.ServiceIntrinsicsResolver
-import io.micronaut.context.annotation.Context
+import elide.annotations.Context
+import elide.annotations.Singleton
+import elide.runtime.gvm.internals.intrinsics.CompoundIntrinsicsResolver
 
 /** Resolves intrinsics for use with guest VMs. */
 @Suppress("MnInjectionPoints")
-@Context internal class IntrinsicsManager (resolvers: List<IntrinsicsResolver>) {
+@Context @Singleton internal class IntrinsicsManager (resolvers: List<IntrinsicsResolver>) {
   private val compound = CompoundIntrinsicsResolver.of(resolvers)
 
   /** Resolver stub. */

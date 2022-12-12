@@ -1,6 +1,6 @@
 package elide.testing
 
 /** Elide testing stub. */
-object ElideTesting {
+public object ElideTesting {
   // Nothing at this time.
 }

@@ -13,6 +13,8 @@ group = "dev.elide"
 version = rootProject.version as String
 
 kotlin {
+  explicitApi()
+
   jvm {
     withJava()
     testRuns["test"].executionTask.configure {
@@ -58,11 +60,14 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(kotlin("stdlib-common"))
-        implementation(project(":packages:base"))
-        implementation(kotlin("test"))
-        implementation(kotlin("test-common"))
-        implementation(kotlin("test-annotations-common"))
+        api(kotlin("stdlib-common"))
+        api(project(":packages:base"))
+        api(project(":packages:core"))
+        api(kotlin("test"))
+        api(kotlin("test-annotations-common"))
+        api(libs.kotlinx.coroutines.test)
+        api(libs.kotlinx.serialization.core)
+        api(libs.kotlinx.serialization.json)
       }
     }
     val commonTest by getting {
@@ -73,29 +78,32 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(project(":packages:server"))
-        implementation(libs.jakarta.inject)
+        api(kotlin("stdlib-jdk8"))
+        api(kotlin("test-junit5"))
+        api(libs.jakarta.inject)
+        api(libs.kotlinx.coroutines.jdk8)
+        api(libs.kotlinx.coroutines.jdk9)
+        api(libs.micronaut.context)
+        api(libs.micronaut.runtime)
+        api(libs.micronaut.test.junit5)
+        api(libs.micronaut.http)
+        api(libs.junit.jupiter.api)
+        api(libs.junit.jupiter.params)
+
         implementation(libs.protobuf.java)
         implementation(libs.protobuf.util)
         implementation(libs.protobuf.kotlin)
         implementation(libs.kotlinx.serialization.json.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
         implementation(libs.kotlinx.coroutines.core.jvm)
-        implementation(libs.kotlinx.coroutines.jdk8)
-        implementation(libs.kotlinx.coroutines.jdk9)
         implementation(libs.kotlinx.coroutines.guava)
         implementation(libs.grpc.testing)
-        implementation(kotlin("test"))
-        implementation(kotlin("test-junit5"))
         implementation(libs.jsoup)
 
         implementation(libs.truth)
         implementation(libs.truth.java8)
         implementation(libs.truth.proto)
 
-        implementation(libs.micronaut.context)
-        implementation(libs.micronaut.runtime)
-        implementation(libs.micronaut.test.junit5)
-        implementation(libs.micronaut.http)
         implementation(libs.micronaut.http.client)
         implementation(libs.micronaut.http.server)
 
@@ -106,7 +114,8 @@ kotlin {
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation(kotlin("stdlib-js"))
+        api(kotlin("stdlib-js"))
+        api(kotlin("test"))
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.core.js)
         implementation(libs.kotlinx.serialization.json.js)

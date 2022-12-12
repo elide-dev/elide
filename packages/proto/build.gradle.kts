@@ -53,6 +53,14 @@ sourceSets {
   }
 }
 
+kotlin {
+  sourceSets {
+    val main by getting {
+      kotlin.srcDir("$buildDir/generated/source/flatbuffers")
+    }
+  }
+}
+
 publishing {
   publications {
     create<MavenPublication>("maven") {
@@ -83,6 +91,10 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks {
   compileKotlin {
+    dependsOn(
+      "compileFlatbuffers"
+    )
+
     kotlinOptions.freeCompilerArgs = Elide.jvmCompilerArgs.plus(listOf(
       // do not warn for generated code
       "-nowarn"

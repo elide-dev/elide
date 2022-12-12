@@ -1,5 +1,7 @@
 package elide.runtime.gvm
 
+import java.util.EnumSet
+
 /**
  * # Executable Script
  *
@@ -37,7 +39,7 @@ package elide.runtime.gvm
  * @see GuestLanguage for the expected specification adhered to by guest language descriptors.
  * @see State for an exhaustive enumeration of states that a script may inhabit during its lifecycle.
  */
-public sealed interface ExecutableScript {
+@Suppress("unused") public sealed interface ExecutableScript {
   /**
    * ## State Lifecycle
    *
@@ -66,18 +68,91 @@ public sealed interface ExecutableScript {
   /**
    * ## Script Type
    *
+   * Specifies the type of code contained in a guest VM script, typically in the form of a MIME type; e.g.
+   * `text/javascript`. Alternative symbols are provided as calculated properties from the underlying [spec]/
    */
-  @JvmInline public value class ScriptType (private val spec: String) {
+  @JvmInline public value class ScriptType private constructor (internal val spec: String) {
+    internal companion object {
+      /** Prefix used when [spec] is a MIME type. */
+      private const val MIME_TYPE_PREFIX = "mime"
 
+      /** Specify the script type with a MIME type. */
+      @JvmStatic fun fromMime(mime: String): ScriptType = ScriptType("$MIME_TYPE_PREFIX:$mime")
+    }
+
+    override fun toString(): String = "ScriptType(${spec.drop(5)})"
+
+    /** Tests equality between two [ScriptType] instances. */
+    internal fun `is`(other: ScriptType): Boolean = spec == other.spec
   }
 
   /**
    * ## Script Source
    *
+   * Specifies the source code [target] for a guest VM script. This may be a file, a literal string, an embedded asset,
+   * or any other source permitted by the interface defined herein.
    */
-  @JvmInline public value class ScriptSource (private val target: String) {
+  @JvmInline public value class ScriptSource private constructor (internal val target: String) {
+    internal companion object {
+      /** Prefix used when [target] is a file. */
+      private const val PROTOCOL_FILE = "file"
+
+      /** Prefix used when [target] is a classpath resource. */
+      private const val PROTOCOL_CLASSPATH = "classpath"
+
+      /** Prefix used when [target] is an application-embedded script. */
+      private const val PROTOCOL_EMBEDDED = "embedded"
+
+      /** Prefix used when [target] is a literal string. */
+      private const val PROTOCOL_LITERAL = "literal"
+
+      /** Constant which refers to a literal script. */
+      private val LITERAL_SCRIPT = ScriptSource(PROTOCOL_LITERAL)
+
+      /** @return Script source which references a file [path]. */
+      @JvmStatic fun fromFile(path: String) = ScriptSource("$PROTOCOL_FILE://$path")
+
+      /** @return Script source which references a [resource] path. */
+      @JvmStatic fun fromResource(resource: String) = ScriptSource("$PROTOCOL_CLASSPATH://$resource")
+
+      /** @return Script source which references an embedded script by [name]. */
+      @JvmStatic fun fromEmbedded(name: String) = ScriptSource("$PROTOCOL_EMBEDDED://$name")
+
+      /** @return Script source which references a literal script value. */
+      @JvmStatic fun literal() = LITERAL_SCRIPT
+    }
+
+    /** @return Filename for this script source. */
+    internal val filename: String get() = if (target == PROTOCOL_LITERAL) {
+      "literal"
+    } else target.substringAfterLast("://")
+
+    /** @return Extension for this script resource, if present. */
+    internal val extension: String? get() = filename.substringAfterLast(".").ifBlank {
+      null
+    }
+  }
+
+  /**
+   * ## Source Map
+   *
+   * Specifies the source code map [target] for a guest VM script. This may be a file, a literal string, an embedded
+   * asset, or any other source permitted by the interface defined herein. This source map is expected to correspond
+   * with an associated [ScriptSource].
+   */
+  @JvmInline public value class SourceMap (private val target: String) {
 
   }
+
+  /**
+   * TBD.
+   */
+  public fun state(): State
+
+  /**
+   * TBD.
+   */
+  public fun invocation(): EnumSet<InvocationMode>
 
   /**
    * Indicate the guest language that this script is written in; it is expected that the returned [GuestLanguage] is
@@ -86,4 +161,19 @@ public sealed interface ExecutableScript {
    * @return Guest language associated with this script.
    */
   public fun language(): GuestLanguage
+
+  /**
+   * TBD.
+   */
+  public fun type(): ScriptType
+
+  /**
+   * TBD.
+   */
+  public fun source(): ScriptSource
+
+  /**
+   * TBD.
+   */
+  public fun map(): SourceMap?
 }

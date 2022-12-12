@@ -42,6 +42,21 @@ import java.util.concurrent.atomic.AtomicReference
     }
   }
 
+  /** Whether to suspend the VM at first execution. */
+  public val inspectSuspend: Boolean get() = resolve("elide.vm.inspect.suspend", "false") {
+    it.trim().toBoolean()
+  }
+
+  /** Whether to show internal sources in the inspector. */
+  public val inspectInternal: Boolean get() = resolve("elide.vm.inspect.internal", "false") {
+    it.trim().toBoolean()
+  }
+
+  /** Whether to wait for the debugger to attach before executing. */
+  public val inspectWait: Boolean get() = resolve("elide.vm.inspect.wait", "false") {
+    it.trim().toBoolean()
+  }
+
   /** Whether to enable VM inspection secure mode (TLS). */
   public val inspectSecure: Boolean get() = resolve("elide.vm.inspect.secure", "false") {
     it.trim().toBoolean()

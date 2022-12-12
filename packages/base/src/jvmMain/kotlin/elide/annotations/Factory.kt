@@ -3,4 +3,4 @@ package elide.annotations
 /**
  * TBD.
  */
-public actual annotation class Factory
+public actual typealias Factory = io.micronaut.context.annotation.Factory

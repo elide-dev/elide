@@ -4,12 +4,23 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import dev.elide.buildtools.gradle.plugin.BuildMode
+import kotlinx.benchmark.gradle.*
+import org.jetbrains.kotlin.allopen.gradle.*
+
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
   kotlin("kapt")
+  kotlin("plugin.allopen")
   id("dev.elide.build.native.lib")
+  alias(libs.plugins.jmh)
+  alias(libs.plugins.kotlinx.plugin.benchmark)
+}
+
+allOpen {
+  annotation("org.openjdk.jmh.annotations.State")
 }
 
 group = "dev.elide"
@@ -20,9 +31,33 @@ kotlin {
   explicitApi()
 }
 
+sourceSets {
+  val benchmarks by creating {
+    kotlin.srcDirs(
+      "$projectDir/src/benchmarks/kotlin",
+      "$projectDir/src/main/kotlin",
+    )
+  }
+}
+
 graalvmNative {
   agent {
     enabled.set(false)
+  }
+}
+
+benchmark {
+  configurations {
+    named("main") {
+      warmups = 10
+      iterations = 5
+    }
+  }
+  targets {
+    register("benchmarks") {
+      this as JvmBenchmarkTarget
+      jmhVersion = "1.36"
+    }
   }
 }
 
@@ -38,6 +73,16 @@ micronaut {
     ))
   }
 }
+
+configurations["benchmarksImplementation"].extendsFrom(
+  configurations.implementation.get(),
+  configurations.testImplementation.get(),
+
+)
+configurations["benchmarksRuntimeOnly"].extendsFrom(
+  configurations.runtimeOnly.get(),
+  configurations.testRuntimeOnly.get()
+)
 
 dependencies {
   // Core platform versions.
@@ -60,14 +105,18 @@ dependencies {
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
+  implementation(libs.kotlinx.coroutines.jdk8)
+  implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.coroutines.reactor)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
   implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // General
-  implementation(libs.guava)
+  implementation(libs.lmax.disruptor.core)
+  implementation(libs.lmax.disruptor.proxy)
 
   // Micronaut
   implementation(libs.micronaut.graal)

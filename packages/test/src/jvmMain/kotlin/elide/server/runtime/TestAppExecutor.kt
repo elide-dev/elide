@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadFactory
 /** Provides an implementation of [AppExecutor] that directly executes all tasks in the current thread. */
 @Suppress("UnstableApiUsage")
 @Replaces(AppExecutor.DefaultExecutor::class)
-@Singleton class TestAppExecutor: AppExecutor {
+@Singleton public class TestAppExecutor: AppExecutor {
   override fun service(): ListeningScheduledExecutorService {
     return MoreExecutors.listeningDecorator(
       MoreExecutors.getExitingScheduledExecutorService(

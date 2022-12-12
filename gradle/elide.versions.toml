@@ -197,6 +197,8 @@ auto_factory = "1.0.1"
 auto_value = "1.10.1"
 kotter = "1.0.0"
 pluginBuf = "0.8.2"
+lmaxDisruptor = "3.4.4"
+lmaxDisruptorProxy = "2.0.7"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -532,6 +534,8 @@ arrow_core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow"
 arrow_optics_core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow_optics_ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
 arrow_fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
+lmax_disruptor_core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
+lmax_disruptor_proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
 ## Plugin Aliases
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }

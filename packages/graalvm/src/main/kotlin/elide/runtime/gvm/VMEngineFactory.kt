@@ -1,11 +1,13 @@
 package elide.runtime.gvm
 
+import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
+
 /**
  * TBD.
  */
-public interface VMEngineFactory<Engine: VMEngine> {
+internal interface VMEngineFactory<Config: GuestRuntimeConfiguration, Engine: VMEngineImpl<Config>> {
   /**
-   *
+   * TBD.
    */
-  public fun acquire(): Engine
+  fun acquire(): Engine
 }

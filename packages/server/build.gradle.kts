@@ -44,6 +44,8 @@ dependencies {
   api(project(":packages:base"))
   api(project(":packages:core"))
   api(project(":packages:model"))
+  api(project(":packages:ssr"))
+  api(project(":packages:graalvm"))
   implementation(project(":packages:proto"))
 
   // Crypto

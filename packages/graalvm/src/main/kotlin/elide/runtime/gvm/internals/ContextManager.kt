@@ -1,11 +1,9 @@
 package elide.runtime.gvm.internals
 
-import elide.server.ServerInitializer
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.future.asDeferred
 import org.graalvm.polyglot.Engine
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Future
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -13,7 +11,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * TBD.
  */
-internal interface ContextManager<Context, Builder>: ServerInitializer {
+internal interface ContextManager<Context, Builder> {
   companion object {
     /** Default context execution timeout (hard limit). */
     private val DEFAULT_TIMEOUT = 30.seconds

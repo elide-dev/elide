@@ -25,7 +25,7 @@ jobs:
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:
           git_name: Dymebot
-          git_email: bot@dyme.com
+          git_email: bot@elide.dev
           git_credentials: ${{ secrets.BOT_API_CREDS }}
           ssh_key: ${{ secrets.BOT_SSH_KEY }}
           ssh_known_hosts: ${{ secrets.BOT_KNOWN_HOSTS }}
@@ -53,7 +53,7 @@ jobs:
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:
           git_name: Dymebot
-          git_email: bot@dyme.com
+          git_email: bot@elide.dev
           git_credentials: ${{ secrets.BOT_API_CREDS }}
           ssh_key: ${{ secrets.BOT_SSH_KEY }}
           ssh_known_hosts: ${{ secrets.BOT_KNOWN_HOSTS }}

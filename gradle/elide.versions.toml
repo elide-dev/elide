@@ -8,7 +8,7 @@ koin = "3.2.2"
 koin_ksp = "1.0.3"
 graalvm = "22.3.0"
 graalvm_sdk = "22.3.0"
-graalvm_metadata = "0.2.4"
+graalvm_metadata = "0.2.5"
 graalvm_plugin = "0.9.17"
 node = "18.11.10"
 react = "18.2.0"
@@ -18,6 +18,7 @@ grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 arrow = "1.0.1"
 testcontainers = "1.17.5"
+jline = "3.21.0"
 netty = "4.1.85.Final"
 netty_tcnative = "2.0.54.Final"
 dekorate = "3.1.1"
@@ -29,7 +30,7 @@ micronaut_grpc = "3.4.0"
 micronaut_graphql = "3.2.0"
 micronaut_gcp = "4.6.0"
 micronaut_test = "3.8.0"
-micronaut_plugin = "3.6.4"
+micronaut_plugin = "3.6.7"
 micronaut_redis = "5.3.0"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
@@ -55,7 +56,7 @@ kotlinx_html = "0.8.0"
 kotlinx_serialization = "1.4.1"
 kotlinx_metadata_jvm = "0.5.0"
 atomicfu = "0.18.5"
-kotlinx_benchmark = "0.4.5"
+kotlinx_benchmark = "0.4.6"
 detekt = "1.22.0-RC3"
 dokka = "1.7.20"
 mermaidDokka = "0.4.1"
@@ -175,7 +176,7 @@ bouncycastle = "1.70"
 tink = "1.7.0"
 conscrypt = "2.5.2"
 kover = "0.6.1"
-jmh_plugin = "0.6.6"
+jmh_plugin = "0.6.8"
 jmh = "1.36"
 doctor_plugin = "0.8.1"
 jansi = "1.18"
@@ -199,6 +200,9 @@ kotter = "1.0.0"
 pluginBuf = "0.8.2"
 lmaxDisruptor = "3.4.4"
 lmaxDisruptorProxy = "2.0.7"
+gr8 = "0.7"
+proguard = "7.1.0"
+openrewrite = "5.33.2"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -243,6 +247,8 @@ jmh = { id = "me.champeau.jmh", version.ref = "jmh_plugin" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig_plugin" }
 flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers_plugin" }
 buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
+gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
+openrewrite = { id = "org.openrewrite.openrewrite", version.ref = "openrewrite" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
@@ -328,10 +334,17 @@ lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
 graalvm_js_engine = { group = "org.graalvm.js", name = "js", version.ref = "graalvm_sdk" }
+graalvm_js_benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm_sdk" }
 graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm_sdk" }
 graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm_sdk" }
 graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm_sdk" }
+graalvm_launcher_common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm_sdk" }
+graalvm_launcher_js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm_sdk" }
 micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
+micronaut_aot_api = { group = "io.micronaut.aot", name = "micronaut-aot-api", version.ref = "micronaut_aot" }
+micronaut_aot_core = { group = "io.micronaut.aot", name = "micronaut-aot-core", version.ref = "micronaut_aot" }
+micronaut_aot_cli = { group = "io.micronaut.aot", name = "micronaut-aot-cli", version.ref = "micronaut_aot" }
+micronaut_aot_optimizers_standard = { group = "io.micronaut.aot", name = "micronaut-aot-std-optimizers", version.ref = "micronaut_aot" }
 micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
 micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
@@ -536,6 +549,8 @@ arrow_optics_ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", ve
 arrow_fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 lmax_disruptor_core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
 lmax_disruptor_proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
+jline_terminal_core = { module = "org.jline:jline-terminal", version.ref = "jline" }
+jline_terminal_jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
 ## Plugin Aliases
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
@@ -559,6 +574,8 @@ plugin_kotlinx_atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gr
 plugin_kotlinx_serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin_sdk" }
 plugin_kotlinx_abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
 plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm_plugin" }
+plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
+plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
 ## Elide Internal
 elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }

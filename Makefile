@@ -46,6 +46,8 @@ NATIVE_TASKS ?= nativeCompile
 DEP_HASH_ALGO ?= sha256,pgp
 ARGS ?=
 
+LOCAL_CLI_INSTALL_DIR ?= ~/bin
+
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
 else
@@ -75,7 +77,12 @@ BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)
+BUILD_MODE ?= release
+NATIVE_TARGET_NAME ?= nativeOptimizedCompile
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
+else
+BUILD_MODE ?= dev
+NATIVE_TARGET_NAME ?= nativeCompile
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x testNativeImage
@@ -114,9 +121,7 @@ _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 
 # ---- Targets ---- #
 
-
 all: build test docs
-
 
 build:  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide v3...)
@@ -142,6 +147,29 @@ publish:  ## Publish a new version of all Elide packages.
 		-x test \
 		-x jvmTest \
 		-x jsTest;
+
+cli:  ## Build the Elide command-line tool (native target).
+	$(info Building Elide CLI tool...)
+	$(CMD)$(GRADLE) \
+		:packages:cli:$(NATIVE_TARGET_NAME) \
+		-Pversion=$(VERSION) \
+		-PbuildSamples=false \
+		-PbuildDocs=false \
+		-PbuildDocsSite=false \
+		-Pelide.buildMode=$(BUILD_MODE) \
+		-x test \
+		$(_ARGS)
+
+cli-local: cli  ## Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+	$(CMD)$(MAKE) cli-install-local
+
+cli-install-local:
+	@echo "Installing CLI locally (location: \"$(LOCAL_CLI_INSTALL_DIR))\"..."
+	$(CMD)$(CP) -f$(strip $(POSIX_FLAGS)) \
+		./packages/cli/build/native/$(NATIVE_TARGET_NAME)/elide \
+		$(LOCAL_CLI_INSTALL_DIR)/elide
+	@echo ""; echo "Done. Testing CLI tool..."
+	$(CMD)elide --version
 
 clean: clean-docs clean-site  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."

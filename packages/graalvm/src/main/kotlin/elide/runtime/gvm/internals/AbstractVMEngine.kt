@@ -9,8 +9,8 @@ import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.server.ServerInitializer
-import elide.server.util.ServerFlag
+//import elide.server.ServerInitializer
+import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 import kotlinx.coroutines.Deferred
@@ -28,7 +28,7 @@ import java.util.stream.Stream
 internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Code: ExecutableScript> constructor (
   protected val language: GraalVMGuest,
   protected val config: Config,
-) : VMEngineImpl<Config>, ServerInitializer {
+) : VMEngineImpl<Config>/*, ServerInitializer*/ {
   // Abstract VM engine logger.
   private val logging: Logger = Logging.of(AbstractVMEngine::class)
 
@@ -50,28 +50,28 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
   // Abstract VM options which must be evaluated at the time a context is created.
   private val conditionalOptions : List<VMProperty> = listOf(
     VMConditionalMultiProperty(main = VMConditionalProperty("vm.inspect", "inspect", {
-      ServerFlag.inspect || guestConfig.inspector?.enabled == true
+      RuntimeFlag.inspect || guestConfig.inspector?.enabled == true
     }), properties = listOf(
       // Inspection: Path.
       VMRuntimeProperty.ofConfigurable("vm.inspect.path", "inspect.Path") {
-        ServerFlag.inspectPath ?: guestConfig.inspector?.path
+        RuntimeFlag.inspectPath ?: guestConfig.inspector?.path
       },
 
       // Inspection: Suspend.
       VMRuntimeProperty.ofBoolean("vm.inspect.suspend", "inspect.Suspend") {
-        ServerFlag.inspectSuspend || guestConfig.inspector?.suspend == true
+        RuntimeFlag.inspectSuspend || guestConfig.inspector?.suspend == true
       },
 
       // Inspection: Secure.
       VMRuntimeProperty.ofBoolean("vm.inspect.secure", "inspect.Secure") {
-        ServerFlag.inspectSecure || guestConfig.inspector?.secure == true
+        RuntimeFlag.inspectSecure || guestConfig.inspector?.secure == true
       },
 
       // Inspection: Wait for debugger.
       VMRuntimeProperty.ofBoolean("vm.inspect.wait", "inspect.WaitAttached") {
         (
-          ServerFlag.inspectSuspend &&
-          ServerFlag.inspectWait
+          RuntimeFlag.inspectSuspend &&
+          RuntimeFlag.inspectWait
         ) || (
           guestConfig.inspector?.suspend == true &&
           guestConfig.inspector?.wait == true
@@ -80,7 +80,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
 
       // Inspection: Runtime sources.
       VMRuntimeProperty.ofBoolean("vm.inspect.internal", "inspect.Internal") {
-        ServerFlag.inspectInternal
+        RuntimeFlag.inspectInternal
       },
     )),
 

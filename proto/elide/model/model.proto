@@ -436,6 +436,15 @@ extend google.protobuf.MessageOptions {
   // Settings that specify state for this message, which may include settings related to visibility or handling, and
   // validation of this object in various circumstances.
   DatapointOptions msg = 6004;
+
+  // Marks all fields on a message as "internal." Such fields are only accessible from wrapped messages.
+  bool all_internal = 6005;
+
+  // Marks all fields on a message as sensitive. Sensitive fields are not shown in logs.
+  bool all_sensitive = 6006;
+
+  // Marks all fields on a message as containing uncontrolled (user-driven) input.
+  bool all_uncontrolled = 6007;
 }
 
 
@@ -457,6 +466,15 @@ extend google.protobuf.FieldOptions {
 
   // Specifies extended options related specifically to use with Cloud Spanner.
   SpannerFieldOptions spanner = 7005;
+
+  // Marks a field as "internal." Such fields are only accessible from wrapped messages.
+  bool internal = 7006;
+
+  // Marks this field as sensitive. Sensitive fields are not shown in logs.
+  bool sensitive = 7007;
+
+  // Marks this field as containing uncontrolled (user-driven) input.
+  bool uncontrolled = 7008;
 }
 
 

@@ -47,6 +47,7 @@ kapt {
   useBuildCache = true
   includeCompileClasspath = false
   strictMode = true
+  correctErrorTypes = true
 }
 
 // JVM: Testing

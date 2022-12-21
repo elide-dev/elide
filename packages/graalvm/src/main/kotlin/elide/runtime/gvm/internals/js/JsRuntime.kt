@@ -15,7 +15,7 @@ import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMRuntimeProperty
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import elide.runtime.gvm.internals.intrinsics.GuestRuntime
-import elide.server.Application
+//import elide.server.Application
 import io.micronaut.context.annotation.Requires
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ImageSingletons
@@ -54,7 +54,6 @@ import org.graalvm.polyglot.Value as GuestValue
 
     // Hard-coded JS VM options.
     internal val baseOptions : List<VMProperty> = listOf(
-      StaticProperty.active("js.annex-b"),
       StaticProperty.active("js.async-stack-traces"),
       StaticProperty.active("js.atomics"),
       StaticProperty.active("js.bind-member-functions"),
@@ -72,6 +71,7 @@ import org.graalvm.polyglot.Value as GuestValue
       StaticProperty.active("js.strict"),
       StaticProperty.active("js.temporal"),
       StaticProperty.active("js.top-level-await"),
+      StaticProperty.inactive("js.annex-b"),
       StaticProperty.inactive("js.console"),
       StaticProperty.inactive("js.graal-builtin"),
       StaticProperty.inactive("js.interop-complete-promises"),
@@ -109,13 +109,13 @@ import org.graalvm.polyglot.Value as GuestValue
   private val logger: Logger = Logging.of(JsRuntime::class)
 
   /** @inheritDoc */
-  override fun initialize() {
-    Application.Initialization.initializeWithServer {
-      if (ImageInfo.inImageBuildtimeCode()) {
-        ImageSingletons.add(JsRuntime::class.java, this)
-      }
-    }
-  }
+//  override fun initialize() {
+//    Application.Initialization.initializeWithServer {
+//      if (ImageInfo.inImageBuildtimeCode()) {
+//        ImageSingletons.add(JsRuntime::class.java, this)
+//      }
+//    }
+//  }
 
   /** @inheritDoc */
   override fun configure(engine: Engine, context: Context.Builder): Stream<VMProperty> = baseOptions.plus(listOf(

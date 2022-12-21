@@ -1,0 +1,197 @@
+package elide.tool.cli
+
+import ch.qos.logback.classic.Level
+import elide.annotations.Eager
+import elide.annotations.Singleton
+import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.err.ToolError
+import elide.tool.cli.info.ToolInfoCommand
+import elide.tool.cli.repl.ToolShellCommand
+import io.micronaut.configuration.picocli.MicronautFactory
+import io.micronaut.context.ApplicationContext
+import io.micronaut.context.ApplicationContextBuilder
+import io.micronaut.context.ApplicationContextConfigurer
+import io.micronaut.context.annotation.ContextConfigurer
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.slf4j.LoggerFactory
+import picocli.CommandLine
+import picocli.CommandLine.*
+import picocli.jansi.graalvm.AnsiConsole
+import java.security.Security
+import java.util.ResourceBundle
+import kotlin.properties.Delegates
+import kotlin.system.exitProcess
+
+/** Entrypoint for the main Elide command-line tool. */
+@Command(
+  name = ElideTool.TOOL_NAME,
+  description = ["Manage, configure, and spawn Elide applications"],
+  mixinStandardHelpOptions = true,
+  version = [ELIDE_TOOL_VERSION],
+  scope = ScopeType.INHERIT,
+  subcommands = [
+    ToolInfoCommand::class,
+    ToolShellCommand::class,
+  ],
+  headerHeading = ("@|bold,fg(magenta)%n" +
+    "   ______     __         __     _____     ______%n" +
+    " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
+    " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
+    "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
+    "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n"
+  )
+)
+@Suppress("MemberVisibilityCanBePrivate")
+@Singleton public class ElideTool internal constructor () : AbstractToolCommand() {
+  public companion object {
+    init {
+      Security.addProvider(BouncyCastleProvider())
+    }
+
+    /** Name of the tool. */
+    public const val TOOL_NAME: String = "elide"
+
+    // Maps exceptions to process exit codes.
+    private val exceptionMapper = ExceptionMapper()
+
+    // Tool-wide main logger.
+    private val logging = Statics.logging
+
+    // Maybe install terminal support for Windows if it is needed.
+    private fun installWindowsTerminalSupport(op: () -> Int) {
+      exitProcess(if (System.getProperty("os.name") == "Windows") {
+        AnsiConsole.windowsInstall().use {
+          op.invoke()
+        }
+      } else {
+        op.invoke()
+      })
+    }
+
+    /** CLI entrypoint and [args]. */
+    @JvmStatic public fun main(args: Array<String>): Unit = installWindowsTerminalSupport {
+      exec(args)
+    }
+
+    /** @return Tool version. */
+    @JvmStatic public fun version(): String = ELIDE_TOOL_VERSION
+
+    // Private execution entrypoint for customizing core Picocli settings.
+    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {
+      CommandLine(ElideTool::class.java, MicronautFactory(it))
+        .setCommandName(TOOL_NAME)
+        .setResourceBundle(ResourceBundle.getBundle("ElideTool"))
+        .setAbbreviatedOptionsAllowed(true)
+        .setAbbreviatedSubcommandsAllowed(true)
+        .setCaseInsensitiveEnumValuesAllowed(true)
+        .setEndOfOptionsDelimiter("--")
+        .setExitCodeExceptionMapper(exceptionMapper)
+        .setPosixClusteredShortOptionsAllowed(true)
+        .setUsageHelpAutoWidth(true)
+        .setColorScheme(Help.defaultColorScheme(if (args.find { arg ->
+            arg == "--no-pretty" || arg == "--pretty=false"
+        } != null) {
+          Help.Ansi.OFF
+        } else {
+          Help.Ansi.ON
+        }))
+        .execute(*args)
+    }
+
+    /** Configures the Micronaut binary. */
+    @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
+      override fun configure(context: ApplicationContextBuilder) {
+        context
+          .bootstrapEnvironment(false)
+          .deduceEnvironment(false)
+          .banner(false)
+          .defaultEnvironments("cli")
+          .eagerInitAnnotated(Eager::class.java)
+          .eagerInitConfiguration(true)
+          .eagerInitSingletons(true)
+          .environmentPropertySource(false)
+          .enableDefaultPropertySources(false)
+          .overrideConfigLocations("classpath:elide.yml")
+      }
+    }
+
+    /** Maps exceptions to exit codes. */
+    private class ExceptionMapper : IExitCodeExceptionMapper {
+      /** @inheritDoc */
+      override fun getExitCode(exception: Throwable): Int {
+        val exitCode = if (exception is ToolError) {
+          exception.exitCode
+        } else {
+          1
+        }
+        logging.error("Exiting with code $exitCode due to uncaught $exception")
+        return exitCode
+      }
+    }
+  }
+
+  // Respond to logging level flags.
+  private fun setLoggingLevel(level: Level) {
+    ((LoggerFactory.getLogger("ROOT")) as ch.qos.logback.classic.Logger).level = level
+  }
+
+  /** Verbose logging mode (wins over `--quiet`). */
+  @set:Option(
+    names = ["-v", "--verbose"],
+    description = ["Activate verbose logging. Wins over `--quiet` when both are passed."],
+    scope = ScopeType.INHERIT,
+  )
+  internal var verbose: Boolean by Delegates.observable(false) { _, _, active ->
+    if (active) {
+      setLoggingLevel(Level.INFO)
+      logging.info("Verbose logging enabled.")
+    }
+  }
+
+  /** Verbose logging mode. */
+  @set:Option(
+    names = ["-q", "--quiet"],
+    description = ["Squelch most logging"],
+    scope = ScopeType.INHERIT,
+  )
+  internal var quiet: Boolean by Delegates.observable(false) { _, _, active ->
+    if (active) {
+      setLoggingLevel(Level.OFF)
+    }
+  }
+
+  /** Debug mode. */
+  @set:Option(
+    names = ["--debug"],
+    description = ["Activate debugging features and extra logging"],
+    scope = ScopeType.INHERIT,
+  )
+  internal var debug: Boolean by Delegates.observable(false) { _, _, active ->
+    if (active) {
+      logging.trace("Debug mode enabled.")
+      setLoggingLevel(Level.TRACE)
+    }
+  }
+
+  /** Whether to activate pretty logging; on by default. */
+  @Option(
+    names = ["--pretty"],
+    negatable = true,
+    description = ["Whether to colorize and animate output."],
+    defaultValue = "true",
+    scope = ScopeType.INHERIT,
+  )
+  internal var pretty: Boolean = false
+
+  /** Request timeout value to apply. */
+  @Option(
+    names = ["--timeout"],
+    description = ["Timeout to apply to application requests. Expressed in seconds."],
+    defaultValue = "30",
+    scope = ScopeType.INHERIT,
+  )
+  internal var timeout: Int = 30
+
+  // Nothing here (an empty tool run cannot occur anyway).
+  override fun run() {}
+}

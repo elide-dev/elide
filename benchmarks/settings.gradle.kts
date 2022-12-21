@@ -40,4 +40,5 @@ gradleEnterprise {
   }
 }
 
+include(":graalvm")
 include(":server")

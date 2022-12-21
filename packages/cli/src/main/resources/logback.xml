@@ -1,0 +1,18 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %highlight(%-5level) %magenta(elide) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="io.micronaut.context.env" level="off"/>
+    <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
+
+    <logger name="tool" level="warn" />
+
+    <!-- Root Logger -->
+    <root level="warn">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

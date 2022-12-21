@@ -2,6 +2,7 @@
 
 package elide.server.ssr
 
+import elide.annotations.Context
 import elide.annotations.core.Polyglot
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -14,7 +15,6 @@ import elide.server.annotations.Eager
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
 import elide.server.type.RequestState
-import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import kotlinx.coroutines.*

@@ -75,7 +75,6 @@ kotlin {
         implementation(project(":packages:proto"))
         implementation(libs.jakarta.inject)
         api(libs.protobuf.java)
-        api(libs.protobuf.util)
         api(libs.protobuf.kotlin)
         api(libs.flatbuffers.java.core)
         implementation(libs.kotlinx.serialization.json.jvm)
@@ -84,13 +83,8 @@ kotlin {
         implementation(libs.kotlinx.coroutines.jdk8)
         implementation(libs.kotlinx.coroutines.jdk9)
         implementation(libs.kotlinx.coroutines.guava)
-        implementation(libs.gax.java)
-        implementation(libs.gax.java.grpc)
         implementation(libs.google.api.common)
         implementation(libs.reactivestreams)
-
-        runtimeOnly(libs.junit.jupiter.engine)
-        runtimeOnly(libs.logback)
       }
     }
     val jvmTest by getting {
@@ -99,6 +93,8 @@ kotlin {
         implementation(project(":packages:base"))
         implementation(libs.truth)
         implementation(libs.truth.proto)
+        runtimeOnly(libs.junit.jupiter.engine)
+        runtimeOnly(libs.logback)
       }
     }
     val jsMain by getting {

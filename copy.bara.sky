@@ -96,7 +96,6 @@ ${GITHUB_PR_BODY}
     authoring = authoring.allowed(
         default = "Elidebot <bot@elide.dev>",
         allowlist = [
-            "sam@dyme.com",
             "samuel.gammon@gmail.com",
         ],
     ),
@@ -173,7 +172,6 @@ ${GITHUB_PR_BODY}
     authoring = authoring.allowed(
         default = "Elidebot <bot@elide.dev>",
         allowlist = [
-            "sam@dyme.com",
             "samuel.gammon@gmail.com",
         ],
     ),

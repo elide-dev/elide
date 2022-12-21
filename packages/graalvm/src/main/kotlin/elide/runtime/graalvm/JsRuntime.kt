@@ -5,17 +5,18 @@ import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import elide.annotations.core.Polyglot
+import elide.annotations.Eager
+import elide.annotations.core.Internal
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.ssr.ServerResponse
-import elide.server.Application
-import elide.server.EMBEDDED_ROOT
-import elide.server.NODE_SSR_DEFAULT_PATH
-import elide.server.ServerInitializer
-import elide.server.annotations.Eager
+//import elide.server.Application
+//import elide.server.EMBEDDED_ROOT
+//import elide.server.NODE_SSR_DEFAULT_PATH
+//import elide.server.ServerInitializer
 import elide.server.type.RequestState
-import elide.server.util.ServerFlag
 import elide.util.Hex
+import elide.util.RuntimeFlag as ServerFlag
 import io.micronaut.caffeine.cache.Cache
 import io.micronaut.caffeine.cache.Caffeine
 import io.micronaut.context.annotation.Context
@@ -28,8 +29,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.serialization.json.Json
-import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.nativeimage.ImageSingletons
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.Source
@@ -57,7 +56,7 @@ public class JsRuntime private constructor() {
   public companion object {
     private const val RENDER_ENTRYPOINT = "renderContent"
     private const val STREAM_ENTRYPOINT = "renderStream"
-    private const val manifest = "/$EMBEDDED_ROOT/runtime/runtime-js.json"
+    private const val manifest = "/META-INF/elide/embedded/runtime/runtime-js.json"
 
     // Hard-coded JS VM options.
     private val baseOptions : List<JSVMProperty> = listOf(
@@ -152,24 +151,24 @@ public class JsRuntime private constructor() {
   }
 
   /** Factory which wires in the singleton JS runtime as a bean. */
-  @Context @Eager public class JsRuntimeProvider : ServerInitializer, Supplier<JsRuntime> {
+  @Context @Eager public class JsRuntimeProvider : /* ServerInitializer, */ Supplier<JsRuntime> {
     @Factory @Singleton override fun get(): JsRuntime = acquire()
 
     /** @inheritDoc */
-    override fun initialize() {
-      Application.Initialization.initializeWithServer {
-        // pre-warm the context pool
-        singleton.runtime.warm()
-
-        if (ImageInfo.inImageBuildtimeCode()) {
-          ImageSingletons.add(JsRuntime::class.java, singleton)
-        }
-      }
-    }
+//    override fun initialize() {
+//      Application.Initialization.initializeWithServer {
+//        // pre-warm the context pool
+//        singleton.runtime.warm()
+//
+//        if (ImageInfo.inImageBuildtimeCode()) {
+//          ImageSingletons.add(JsRuntime::class.java, singleton)
+//        }
+//      }
+//    }
   }
 
   /** Describes inputs to be made available during a VM execution. */
-  public class ExecutionInputs<State : Any> public constructor(
+  @Internal public class ExecutionInputs<State : Any> public constructor (
     public val data: Map<String, Any?> = ConcurrentSkipListMap(),
   ) {
     public companion object {
@@ -195,7 +194,7 @@ public class JsRuntime private constructor() {
     }
 
     // Build the execution inputs into a set of arguments for the program.
-    internal fun buildArguments(): Array<out Any?> {
+    @Internal public fun buildArguments(): Array<out Any?> {
       return arrayOf(this)
     }
 
@@ -336,9 +335,9 @@ public class JsRuntime private constructor() {
   @Suppress("unused") public object Script {
     /** @return Embedded script container for the provided [path] (and [charset], defaulting to `UTF-8`). */
     @JvmStatic public fun embedded(
-      path: String = NODE_SSR_DEFAULT_PATH,
+      path: String = "node-dev.opt.js",
       charset: Charset = StandardCharsets.UTF_8,
-      embeddedRoot: String = EMBEDDED_ROOT,
+      embeddedRoot: String = "META-INF/elide/embedded",
     ): EmbeddedScript = EmbeddedScript(
       path = "/$embeddedRoot/$path",
       charset = charset,
@@ -389,7 +388,7 @@ public class JsRuntime private constructor() {
       // Load a JS artifact for runtime use from the JAR.
       @JvmStatic private fun loadArtifact(path: String): String {
         return (
-          JsRuntime::class.java.getResourceAsStream("/$EMBEDDED_ROOT/runtime/$path") ?:
+          JsRuntime::class.java.getResourceAsStream("/META-INF/elide/embedded/runtime/$path") ?:
             throw FileNotFoundException("Unable to locate runtime JS resource $path")
         ).bufferedReader(StandardCharsets.UTF_8).use {
           it.readText()
@@ -717,7 +716,7 @@ public class JsRuntime private constructor() {
     private var interpreted: AtomicReference<Source> = AtomicReference(null)
 
     /** @return Whether the script backing this [EmbeddedScript] is available for execution. */
-    internal abstract fun valid(): Boolean
+    @Internal public abstract fun valid(): Boolean
 
     /** @return The path or some module ID for the embedded script. */
     internal abstract fun getId(): String

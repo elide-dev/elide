@@ -71,14 +71,15 @@ publishing {
 
 dependencies {
   api(libs.protobuf.java)
-  api(libs.protobuf.util)
   api(libs.protobuf.kotlin)
   api(libs.flatbuffers.java.core)
-  api(libs.google.common.html.types.proto)
-  api(libs.google.common.html.types.types)
   api(libs.kotlinx.datetime)
   implementation(kotlin("reflect"))
   compileOnly(libs.google.cloud.nativeImageSupport)
+
+  // Safe HTML Types
+  implementation(libs.google.common.html.types.proto)
+  implementation(libs.google.common.html.types.types)
 }
 
 tasks.withType<JavaCompile>().configureEach {

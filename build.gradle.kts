@@ -29,7 +29,6 @@ plugins {
 
   alias(libs.plugins.qodana)
   alias(libs.plugins.ktlint)
-//  alias(libs.plugins.doctor)
   jacoco
   signing
 }
@@ -75,6 +74,7 @@ buildscript {
   }
   dependencies {
     classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
+    classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
@@ -110,6 +110,7 @@ apiValidation {
   ignoredProjects += listOf(
     "bundler",
     "bom",
+    "cli",
     "docs",
     "proto",
     "processor",
@@ -174,7 +175,7 @@ subprojects {
       dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
-      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
+//      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
     }
   }
 

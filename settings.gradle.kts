@@ -6,6 +6,7 @@ pluginManagement {
   repositories {
     gradlePluginPortal()
     mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
     google()
   }
 }
@@ -30,9 +31,11 @@ dependencyResolutionManagement {
     mavenCentral()
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     maven("https://plugins.gradle.org/m2/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+    maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
     google()
   }
   versionCatalogs {
@@ -78,6 +81,7 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:core",
+  ":packages:cli",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

@@ -38,6 +38,12 @@ object Elide {
     "-Xjsr305=strict",
   ))
 
+  /** Compiler args to include in Kotlin JVM targets (beta). */
+  val jvmCompilerArgsBeta = jvmCompilerArgs.plus(listOf(
+    "-opt",
+    "-Xuse-k2",
+  ))
+
   /** Compiler args to include in Kotlin JS targets. */
   val jsCompilerArgs = compilerArgs.plus(listOf(
     "-Xgenerate-dts",
@@ -60,6 +66,15 @@ object Elide {
 
   /** Kotlin language version. */
   const val kotlinLanguage = "1.8"
+
+  /** Kotlin language version (beta). */
+  const val kotlinLanguageBeta = kotlinLanguage
+
+  /** Maximum Java language target for Proguard. */
+  const val javaTargetProguard = "16"
+
+  /** Maximum Java language target. */
+  const val javaTargetMaximum = "19"
 
   /** Sample code modules. */
   val samplesList = listOf(

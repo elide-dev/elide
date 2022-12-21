@@ -2,7 +2,7 @@ package elide.server
 
 import elide.server.annotations.Eager
 import elide.server.runtime.jvm.SecurityProviderConfigurator
-import elide.server.util.ServerFlag
+import elide.util.RuntimeFlag
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut
@@ -116,7 +116,7 @@ public interface Application {
         Initialization.CallbackStage.INIT
       )
 
-      if (ServerFlag.warmup) {
+      if (RuntimeFlag.warmup) {
         Initialization.trigger(
           Initialization.CallbackStage.WARMUP
         )
@@ -131,13 +131,13 @@ public interface Application {
    * are prefixed with "--elide.". Micronaut-relevant arguments are passed on to Micronaut, and user args are
    * additionally made available.
    *
-   * Elide server arguments can be interrogated via [ServerFlag]s.
+   * Elide server arguments can be interrogated via [RuntimeFlag]s.
    *
    * @param args Arguments passed to the application.
    */
   @Suppress("SpreadOperator", "DEPRECATION")
   public fun boot(args: Array<String>) {
-    ServerFlag.setArgs(args)
+    RuntimeFlag.setArgs(args)
     SecurityProviderConfigurator.initialize()
 
     Initialization.resolveHooks()

@@ -2,6 +2,7 @@
 
 package elide.server
 
+import elide.server.ResponseRenderer
 import elide.server.assets.AssetType
 import elide.server.controller.ElideController
 import elide.server.controller.PageController
@@ -36,12 +37,6 @@ public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
  * Raw streamed file response, used internally for assets.
  */
 public typealias StreamedAssetResponse = HttpResponse<StreamedAsset>
-
-/** Describes the expected interface for a response rendering object. */
-public interface ResponseRenderer<R> {
-  /** @return Rendered result. */
-  public fun render(): R
-}
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {

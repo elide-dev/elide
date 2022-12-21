@@ -1,0 +1,10 @@
+// Generated from encoding.proto
+
+namespace elide.data;
+
+enum Encoding : int {
+  UTF_8 = 0,
+  UTF_16 = 1,
+  UTF_32 = 2,
+}
+

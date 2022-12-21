@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
     assertNotNull(contextManager, "should be able to inject context manager instance")
   }
 
-  @Test @Disabled fun testAcquireSuspend() = runBlocking {
+  @Test fun testAcquireSuspend() = runBlocking {
     val acquired = AtomicBoolean(false)
     assertDoesNotThrow {
       contextManager {

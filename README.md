@@ -294,6 +294,8 @@ cloning the project, you can run `make help` to get familiar with some standard 
   clean-docs                     Clean documentation targets.
   clean-site                     Clean site targets.
   clean                          Clean build outputs and caches.
+  cli-local                      Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+  cli                            Build the Elide command-line tool (native target).
   distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
   docs                           Generate docs for all library modules.
   forceclean                     DANGER: Clean, distclean, and clear untracked files.
@@ -308,6 +310,21 @@ cloning the project, you can run `make help` to get familiar with some standard 
   update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
   update-jdeps                   Interactively update Gradle dependencies.
   update-jsdeps                  Interactively update Yarn dependencies.
+  ```
+4) **Take a look at the Makefile flags.** The `Makefile` defines flags at the top of the source code:
+  ```
+  # Flags that control this makefile, along with their defaults:
+  #
+  # DEBUG ?= no
+  # STRICT ?= yes
+  # RELEASE ?= no
+  # JVMDEBUG ?= no
+  # NATIVE ?= no
+  # CI ?= no
+  # DRY ?= no
+  # SCAN ?= no
+  # IGNORE_ERRORS ?= no
+  # RELOCK ?= no
   ```
 
 When committing to Elide, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

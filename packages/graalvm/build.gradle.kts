@@ -85,21 +85,15 @@ configurations["benchmarksRuntimeOnly"].extendsFrom(
 )
 
 dependencies {
-  // Core platform versions.
-  implementation(platform(project(":packages:platform")))
-
   // API Deps
   api(libs.jakarta.inject)
-  api(libs.graalvm.sdk)
   kapt(libs.micronaut.inject.java)
 
   // Modules
-  api(project(":packages:ssr"))
   api(project(":packages:base"))
   api(project(":packages:core"))
   api(project(":packages:proto"))
-  api(project(":packages:model"))
-  api(project(":packages:server"))
+  implementation(project(":packages:ssr"))
 
   // KotlinX
   implementation(libs.kotlinx.html.jvm)
@@ -126,6 +120,8 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
+
+  implementation(libs.graalvm.sdk)
 
   // Testing
   testImplementation(project(":packages:test"))

@@ -220,7 +220,7 @@ tasks {
       tags = setOf("latest", "jib")
     }
     container {
-      jvmFlags = listOf("-Ddyme.runtime=JVM", "-Xms512m", "-Xdebug")
+      jvmFlags = listOf("-Delide.runtime=JVM", "-Xms512m", "-Xdebug")
       mainClass = mainEntry
       ports = listOf("8080", "50051")
       format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker

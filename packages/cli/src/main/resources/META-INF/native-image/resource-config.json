@@ -1,0 +1,47 @@
+{
+    "resources": {
+        "includes": [
+            {
+                "pattern": "\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/com.fasterxml.jackson.databind.Module\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/io.micronaut.context.ApplicationContextConfigurer\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/io.micronaut.core.convert.TypeConverterRegistrar\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/io.micronaut.core.optim.StaticOptimizations$Loader\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition\\E"
+            },
+            {
+                "pattern": "\\Qlogback.xml\\E"
+            },
+            {
+                "pattern": "\\Qmicronaut-version.properties\\E"
+            },
+            {
+                "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+            }
+        ]
+    },
+    "bundles": [
+        {
+            "name": "ElideTool",
+            "locales": [
+                "en-US"
+            ]
+        }
+    ]
+}

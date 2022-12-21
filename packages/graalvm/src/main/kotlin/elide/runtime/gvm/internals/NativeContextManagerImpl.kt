@@ -1,14 +1,13 @@
 package elide.runtime.gvm.internals
 
+import com.lmax.disruptor.EventHandler
+import com.lmax.disruptor.EventProcessor
 import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.cfg.GuestVMConfiguration
-import elide.server.Application
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-import kotlinx.coroutines.Deferred
-import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.nativeimage.ImageSingletons
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
@@ -118,6 +117,16 @@ import org.graalvm.polyglot.Context as VMContext
     }
   }
 
+  private class NativeVMInvocation<Inputs: ExecutionInputs> {
+
+  }
+
+  private class NativeVMDispatcher<I: ExecutionInputs> : EventHandler<NativeVMInvocation<I>> {
+    override fun onEvent(event: NativeVMInvocation<I>, sequence: Long, endOfBatch: Boolean) {
+      TODO("Not yet implemented")
+    }
+  }
+
   // Atomic reference to the globally-active Engine.
   private val engine: AtomicReference<Engine> = AtomicReference(null)
 
@@ -149,15 +158,6 @@ import org.graalvm.polyglot.Context as VMContext
       false,
       true
     )
-  }
-
-  /** @inheritDoc */
-  override fun initialize() {
-    Application.Initialization.initializeWithServer {
-      if (ImageInfo.inImageBuildtimeCode()) {
-        ImageSingletons.add(NativeContextManagerImpl::class.java, this)
-      }
-    }
   }
 
   /** @inheritDoc */

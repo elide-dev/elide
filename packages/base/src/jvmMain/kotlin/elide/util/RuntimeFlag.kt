@@ -1,12 +1,11 @@
-package elide.server.util
+package elide.util
 
 import elide.AppEnvironment
-import elide.util.UUID
 import java.util.concurrent.atomic.AtomicReference
 
 
 /** Static server flags, which may be set via Java system properties or environment variables. */
-@Suppress("unused", "MemberVisibilityCanBePrivate", "RedundantVisibilityModifier") public object ServerFlag {
+@Suppress("unused", "MemberVisibilityCanBePrivate", "RedundantVisibilityModifier") public object RuntimeFlag {
   /** Default port to listen on for the VM inspector. */
   public const val DEFAULT_INSPECT_PORT: Int = 4242
 

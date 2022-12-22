@@ -3,9 +3,7 @@ name: Checks
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '@daily'
-    - cron: '0 0-20/2 * * 1-5'
-    - cron: '0 0-20/4 * * 6-7'
+    - cron: '0 0-20/2 * * *'
 
 jobs:
   ##

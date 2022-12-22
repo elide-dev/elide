@@ -2,6 +2,11 @@ name: Checks
 
 on:
   workflow_dispatch: {}
+  push:
+    branches:
+      - stable
+      - v3
+      - feat/js-runtime-v3
   schedule:
     - cron: '0 0-20/2 * * *'
 

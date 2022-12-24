@@ -13,7 +13,6 @@ plugins {
 
   kotlin("plugin.serialization")
   id("com.github.gmazzo.buildconfig")
-  id("com.github.johnrengelman.shadow")
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
   id("io.micronaut.aot")
@@ -25,8 +24,6 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-val buildFat = false
-val nativeArch = "amd64"
 val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
@@ -87,7 +84,6 @@ dependencies {
   implementation(libs.logback)
 
   runtimeOnly(libs.micronaut.runtime)
-//  runtimeOnly(libs.micronaut.runtime.osx)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -103,8 +99,6 @@ application {
   mainClass.set(entrypoint)
 }
 
-
-
 publishing {
   publications {
     create<MavenPublication>("maven") {
@@ -116,33 +110,6 @@ publishing {
 sonarqube {
   isSkipProject = true
 }
-
-tasks.create("proguardShadow", ProGuardTask::class.java)
-tasks.create("proguardOptimized", ProGuardTask::class.java)
-val proguardRules = file("$projectDir/rules.pro")
-
-tasks.named("proguardShadow", ProGuardTask::class.java).configure {
-  configuration(proguardRules)
-  injars(file("$buildDir/libs/cli-all.jar"))
-  outjars(file("$buildDir/libs/cli-all-min.jar"))
-  dependsOn(tasks.named("shadowJar"))
-//  libraryjars(configurations.named("runtimeClasspath").get())
-}
-
-tasks.named("proguardOptimized", ProGuardTask::class.java).configure {
-  configuration(proguardRules)
-  injars(file("$buildDir/libs/cli-optimized.jar"))
-  outjars(file("$buildDir/libs/cli-optimized-min.jar"))
-  dependsOn("optimizedJitJarAll")
-//  libraryjars(configurations.named("runtimeClasspath").get())
-}
-
-tasks.create("proguard") {
-  dependsOn("proguardShadow", "proguardOptimized")
-}
-
-tasks.jar { enabled = false }
-artifacts.archives(tasks.shadowJar)
 
 
 /**
@@ -273,11 +240,6 @@ val enterpriseOnlyFlags: List<String> = listOf(
   "-H:+AOTInliner",
 )
 
-//-R:±VectorIntrinsics
-//-R:±VectorPolynomialIntrinsics
-//-R:±UseExperimentalReachabilityAnalysis
-
-
 fun nativeCliImageArgs(
   platform: String = "generic",
   target: String = "glibc",
@@ -400,57 +362,16 @@ graalvmNative {
 
 
 /**
- * Build from shadow JARs
- */
-
-if (buildFat) {
-  tasks.named<Jar>("jar") {
-    archiveClassifier.set("default")
-  }
-
-  tasks.named<Jar>("shadowJar") {
-    val stubbed: String? = null
-    setProperty("zip64", true)
-    archiveClassifier.set(stubbed)
-  }
-
-  afterEvaluate {
-    val optimizedShadowJar = tasks.named<Jar>("optimizedJitJarAll")
-    optimizedShadowJar.configure {
-      setProperty("zip64", true)
-      archiveClassifier.set("optimized")
-    }
-
-    if (!quickbuild) {
-      tasks.named<org.graalvm.buildtools.gradle.tasks.BuildNativeImageTask>("nativeCompile") {
-        classpathJar.set(optimizedShadowJar.flatMap { it.archiveFile })
-      }
-    }
-  }
-} else {
-  afterEvaluate {
-    val optimizedShadowJar = tasks.named<Jar>("optimizedJitJarAll")
-    optimizedShadowJar.configure {
-      setProperty("zip64", true)
-      archiveClassifier.set("optimized")
-    }
-  }
-}
-
-
-/**
  * Build: CLI Docker Images
  */
 
 tasks {
   dockerfileNative {
-    graalArch.set(nativeArch)
     graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
   }
 
   optimizedDockerfileNative {
-    graalArch.set(nativeArch)
     graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
   }

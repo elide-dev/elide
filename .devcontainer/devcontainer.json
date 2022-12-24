@@ -45,7 +45,7 @@
       "dockerDashComposeVersion": "v1"
     }
   },
-  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && git checkout kotlin-js-store || exit 0",
+  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && ./gradlew tasks && git checkout kotlin-js-store || exit 0",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"
 }

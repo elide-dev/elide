@@ -67,7 +67,6 @@ dependencies {
   implementation(libs.bouncycastle)
   implementation(libs.picocli.jansi.graalvm)
 
-  implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlinx.datetime)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.core)
@@ -80,27 +79,15 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.http.client)
   implementation(libs.micronaut.graal)
   implementation(libs.micronaut.kotlin.extension.functions)
   implementation(libs.micronaut.kotlin.runtime)
 
   compileOnly(libs.graalvm.sdk)
-  compileOnly(libs.graalvm.js.engine)
-  compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
-
   implementation(libs.logback)
 
-  implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.81.Final:osx-aarch_64"
-  )
-  implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.81.Final:osx-x86_64"
-  )
-
   runtimeOnly(libs.micronaut.runtime)
-  runtimeOnly(libs.micronaut.runtime.osx)
+//  runtimeOnly(libs.micronaut.runtime.osx)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -286,6 +273,11 @@ val enterpriseOnlyFlags: List<String> = listOf(
   "-H:+AOTInliner",
 )
 
+//-R:±VectorIntrinsics
+//-R:±VectorPolynomialIntrinsics
+//-R:±UseExperimentalReachabilityAnalysis
+
+
 fun nativeCliImageArgs(
   platform: String = "generic",
   target: String = "glibc",
@@ -456,6 +448,12 @@ tasks {
     graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
   }
+
+  optimizedDockerfileNative {
+    graalArch.set(nativeArch)
+    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
+    buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
+  }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
@@ -495,3 +493,10 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
 configureJava9ModuleInfo(
   multiRelease = true,
 )
+
+configurations.all {
+  resolutionStrategy.dependencySubstitution {
+    substitute(module("net.java.dev.jna:jna"))
+      .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
+  }
+}

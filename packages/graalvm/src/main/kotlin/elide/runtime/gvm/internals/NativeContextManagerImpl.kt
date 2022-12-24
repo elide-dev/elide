@@ -30,7 +30,6 @@ import org.graalvm.polyglot.Context as VMContext
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
       StaticProperty.inactive("engine.SpawnIsolate"),
-      StaticProperty.inactive("engine.IsolateMemoryProtection"),
       StaticProperty.of("engine.Mode", "latency"),
       StaticProperty.of("engine.PreinitializeContexts", "js"),
     )

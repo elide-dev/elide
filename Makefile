@@ -150,6 +150,7 @@ publish:  ## Publish a new version of all Elide packages.
 
 cli:  ## Build the Elide command-line tool (native target).
 	$(info Building Elide CLI tool...)
+	$(CMD)mkdir -p ./packages/cli/build/dist
 	$(CMD)$(GRADLE) \
 		:packages:cli:$(NATIVE_TARGET_NAME) \
 		-Pversion=$(VERSION) \
@@ -159,9 +160,23 @@ cli:  ## Build the Elide command-line tool (native target).
 		-Pelide.buildMode=$(BUILD_MODE) \
 		-x test \
 		$(_ARGS)
+	@echo "Built Elide CLI binary. Compressing..."
+	$(CMD)du -h ./packages/cli/build/dist/elide;
+	$(CMD)$(CP) ./packages/cli/build/native/nativeOptimizedCompile/elide ./packages/cli/build/dist/elide;
 
 cli-local: cli  ## Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
 	$(CMD)$(MAKE) cli-install-local
+
+cli-release: cli  ## Build an Elide command-line release.
+	$(CMD)$(MAKE) -j3 cli-release-local
+
+cli-compress-xz:
+	@echo "- Building release archive 'elide.xz'..."
+	$(CMD)xz --keep --verbose elide
+
+cli-compress-gz:
+	@echo "- Building release archive 'elide.gz'..."
+	$(CMD)gzip --keep --verbose elide
 
 cli-install-local:
 	@echo "Installing CLI locally (location: \"$(LOCAL_CLI_INSTALL_DIR))\"..."

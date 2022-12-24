@@ -1,11 +1,11 @@
 
 #
 # Elide: Docker Images
-# --------------------
-# Image: Base (Alpine)
+# ----------------------
+# Image: RBE Builder
 #
 
-IMAGE ?= base/alpine
+IMAGE ?= rbe/ubuntu/bionic
 
 PUSH ?= yes
 REMOTE ?= yes

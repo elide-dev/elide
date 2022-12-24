@@ -1,6 +1,4 @@
-ARG BASE_ARCH="amd64"
-
-FROM --platform=linux/${BASE_ARCH} mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04
+FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04
 
 ARG DEV_USER=dev
 ARG IBAZEL_VERSION=v0.15.10
@@ -8,7 +6,7 @@ ARG IBAZEL_VERSION=v0.15.10
 ARG NODE_VERSION="17"
 ARG YARN_VERSION="berry"
 ARG GRADLE_VERSION=7.6
-ARG KOTLIN_VERSION=1.7.22
+ARG KOTLIN_VERSION=1.8.0-RC
 ARG GRADLE_DIST=bin
 ARG INSTALL_ZSH="true"
 ARG UPGRADE_PACKAGES="true"
@@ -17,8 +15,8 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=22.3.0
-ARG GRAAL_ARCH=amd64
-ARG JAVA_VERSION=java19
+ARG JAVA_VERSION=java17
+ARG BAZELISK_VERSION=v1.15.0
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -80,9 +78,14 @@ RUN apt-get update \
     wget \
     zlib1g \
   && cd ~ \
+  && export ARCH="$(uname -m)" \
+  && export FORMAL_ARCH="$(uname -m)" \
+  && export COMPONENTS="native-image js espresso" \
+  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
+  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
-  && export GRAAL_DOWNLOAD_URL="https://github.com/graalvm/graalvm-$GRAAL_EDITION-builds/releases/download/vm-$GRAAL_VERSION/graalvm-$GRAAL_EDITION-$JAVA_VERSION-linux-$GRAAL_ARCH-$GRAAL_VERSION.tar.gz" \
+  && export GRAAL_DOWNLOAD_URL="https://github.com/graalvm/graalvm-$GRAAL_EDITION-builds/releases/download/vm-$GRAAL_VERSION/graalvm-$GRAAL_EDITION-$JAVA_VERSION-linux-$ARCH-$GRAAL_VERSION.tar.gz" \
   && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \
   && curl --progress-bar -SL "$GRAAL_DOWNLOAD_URL" > ./graalvm.tar.gz \
   && curl --progress-bar -sSL "$GRAAL_DOWNLOAD_URL.sha256" > ./graalvm.tar.gz.sha256 \
@@ -114,16 +117,14 @@ RUN apt-get update \
   && wget -q "https://github.com/JetBrains/kotlin/releases/download/v$KOTLIN_VERSION/kotlin-compiler-$KOTLIN_VERSION.zip" \
   && unzip *kotlin*.zip \
   && rm *kotlin*.zip \
-  && echo "Installing Chrome..." \
-  && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-  && apt install -y ./google-chrome-stable_current_amd64.deb \
-  && rm -f google-chrome-stable_current_amd64.deb \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A040830F7FAC5991 \
   && echo "Installing Bazelisk..." \
-  && curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-linux-amd64" \
-  && mv bazelisk-linux-amd64 "/usr/bin/bazel" \
+  && curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_VERSION/bazelisk-linux-$FORMAL_ARCH" \
+  && mv "bazelisk-linux-$FORMAL_ARCH" "/usr/bin/bazel" \
   && chmod +x /usr/bin/bazel \
   && ln -s /usr/bin/bazel /usr/bin/bazelisk \
+  && curl -o /usr/bin/bazel "https://github.com/bazelbuild/bazel-watcher/releases/download/$IBAZEL_VERSION/ibazel_linux_$FORMAL_ARCH" \
+  && chmod +x /usr/bin/bazel \
   && echo "Installing Google Cloud SDK..." \
   && mkdir -p /var/lib/gcloud \
   && cd /var/lib/gcloud \
@@ -151,11 +152,12 @@ RUN apt-get update \
   && echo "$DEV_USER  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
   && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
   && chsh -s /bin/zsh "$DEV_USER" \
-  && echo "Build tools ready."
+  && rm -rf /var/lib/apt/lists/* \
+  && echo "Codespace image ready."
 
 ENV GRADLE_HOME="/opt/gradle" \
   KOTLIN_HOME="/opt/kotlinc" \
-  JAVA_HOME="/usr/lib/jvm/gvm" \
+  JAVA_HOME="/usr/lib/gvm" \
   GRAALVM_HOME="/usr/lib/gvm" \
   GOPATH="/go" \
   QTWEBENGINE_DISABLE_SANDBOX="1" \
@@ -170,14 +172,7 @@ ENV GRADLE_HOME="/opt/gradle" \
   ELIDE_TEST_LOCAL=true
 
 COPY alias /home/$DEV_USER/.alias
-
-RUN echo "source ~/.profile" >> ~/.zshrc \
-  && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /home/dev/bin \
-  && curl -o /home/dev/bin/ibazel "https://github.com/bazelbuild/bazel-watcher/releases/download/$IBAZEL_VERSION/ibazel_linux_amd64" \
-  && yes Y | gcloud components install kubectl \
-  && echo "Codespace image ready."
-
 COPY zshrc /home/$DEV_USER/.zshrc
+
 USER ${DEV_USER}
 WORKDIR /home/${DEV_USER}

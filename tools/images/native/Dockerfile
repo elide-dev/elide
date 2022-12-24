@@ -1,6 +1,4 @@
-ARG BASE_ARCH=amd64
-
-FROM --platform=linux/${BASE_ARCH} debian@sha256:25f10b4f1ded5341a3ca0a30290ff3cd5639415f0c5a2222d5e7d5dd72952aa1
+FROM debian:bullseye@sha256:027b617a00fa483967b045f55459aa12da6f751e6ffbe82ffe9aa007d977027a
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native)"

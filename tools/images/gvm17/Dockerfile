@@ -1,13 +1,19 @@
-ARG ARCH=amd64
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:58bd4bec9d48083fbbbb99ca770487944f5f5376ca1d30550f46f0173fa18ba6"
+ARG BASE_HASH="@sha256:ee84aa430803f6eef08621d538af53fe376f63ed394062fd356e8a31183b05a3"
 
-FROM --platform=linux/${ARCH} us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
+FROM us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
 
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=22.3.0
-ARG GRAAL_ARCH=amd64
 ARG JAVA_VERSION=java17
+
+LABEL org.opencontainers.image.vendor=Elide
+LABEL org.opencontainers.image.title="Elide Tools: GraalVM (Java 17)"
+LABEL org.opencontainers.image.description="Java 17 tools for Elide/GraalVM."
+LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/v3
+LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/tools/images/gvm17/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -19,7 +25,11 @@ RUN apt-get update \
     libc-dev \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
-  && export GRAAL_DOWNLOAD_URL="https://github.com/graalvm/graalvm-$GRAAL_EDITION-builds/releases/download/vm-$GRAAL_VERSION/graalvm-$GRAAL_EDITION-$JAVA_VERSION-linux-$GRAAL_ARCH-$GRAAL_VERSION.tar.gz" \
+  && export ARCH="$(uname -m)" \
+  && export COMPONENTS="native-image js espresso" \
+  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; COMPONENTS="native-image js espresso wasm"; fi \
+  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
+  && export GRAAL_DOWNLOAD_URL="https://github.com/graalvm/graalvm-$GRAAL_EDITION-builds/releases/download/vm-$GRAAL_VERSION/graalvm-$GRAAL_EDITION-$JAVA_VERSION-linux-$ARCH-$GRAAL_VERSION.tar.gz" \
   && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \
   && curl --progress-bar -SL "$GRAAL_DOWNLOAD_URL" > ./graalvm.tar.gz \
   && curl --progress-bar -sSL "$GRAAL_DOWNLOAD_URL.sha256" > ./graalvm.tar.gz.sha256 \
@@ -35,7 +45,7 @@ RUN apt-get update \
     GRAALVM_HOME=/usr/lib/gvm \
     PATH=/usr/lib/gvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
   && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install native-image js espresso \
+  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
   && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_HOME=/usr/lib/gvm \

@@ -1,8 +1,7 @@
 ARG UBUNTU_VERSION=20.04
-ARG UBUNTU_ARCH=amd64
-ARG UBUNTU_HASH=sha256:b25ef49a40b7797937d0d23eca3b0a41701af6757afca23d504d50826f0b37ce
+ARG UBUNTU_HASH="@sha256:8eb87f3d6c9f2feee114ff0eff93ea9dfd20b294df0a0353bd6a4abf403336fe"
 
-FROM --platform=linux/${UBUNTU_ARCH} ubuntu:${UBUNTU_VERSION}@${UBUNTU_HASH}
+FROM ubuntu:${UBUNTU_VERSION}${UBUNTU_HASH}
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base"

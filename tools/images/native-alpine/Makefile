@@ -5,7 +5,7 @@
 # Image: Native (Alpine)
 #
 
-IMAGE ?= native/alpine
+IMAGE ?= runtime/native/alpine
 
 PUSH ?= yes
 REMOTE ?= yes
@@ -15,19 +15,22 @@ REGISTRY ?= us-docker.pkg.dev
 REPOSITORY ?= tools/$(IMAGE)
 DOCKER ?= $(shell which docker)
 GCLOUD ?= $(shell which gcloud) beta
+PLATFORMS ?= linux/arm64,linux/amd64
+
+all: image
 
 ifeq ($(PUSH),yes)
-all: image push
+DOCKER_ARGS ?= --push
 else
-all: image
+DOCKER_ARGS ?=
 endif
 
 ifeq ($(REMOTE),no)
 image:
-	$(DOCKER) build -t $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
+	$(DOCKER) buildx build --platform $(PLATFORMS) $(DOCKER_ARGS) --tag $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
 
 push:
-	$(DOCKER) push $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)
+	$(DOCKER) buildx push $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)
 
 .PHONY: image push
 else

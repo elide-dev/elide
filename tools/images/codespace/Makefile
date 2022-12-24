@@ -17,14 +17,16 @@ DOCKER ?= $(shell which docker)
 GCLOUD ?= $(shell which gcloud) beta
 
 ifeq ($(PUSH),yes)
-all: image push
+DOCKER_ARGS ?= --push
+all: image
 else
+DOCKER_ARGS ?=
 all: image
 endif
 
 ifeq ($(REMOTE),no)
 image:
-	$(DOCKER) build -t $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
+	$(DOCKER) buildx build $(DOCKER_ARGS) --tag $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
 
 push:
 	$(DOCKER) push $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)

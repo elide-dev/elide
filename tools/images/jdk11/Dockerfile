@@ -1,10 +1,17 @@
-ARG ARCH=amd64
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:58bd4bec9d48083fbbbb99ca770487944f5f5376ca1d30550f46f0173fa18ba6"
+ARG BASE_HASH="@sha256:ee84aa430803f6eef08621d538af53fe376f63ed394062fd356e8a31183b05a3"
 
-FROM --platform=linux/${ARCH} us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
+FROM us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
 
-ARG JAVA_VERSION=java11
+ARG JAVA_VERSION=zulu11
+
+LABEL org.opencontainers.image.vendor=Elide
+LABEL org.opencontainers.image.title="Elide Tools: Zulu JDK (Java 11)"
+LABEL org.opencontainers.image.description="Java 11 tools for Elide."
+LABEL org.opencontainers.image.version=v3-alpha1
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/v3
+LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/tools/images/jdk11/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -19,11 +26,11 @@ RUN apt-get update \
   && apt-get install ./zulu-repo_1.0.0-3_all.deb \
   && rm -fv /zulu-repo_1.0.0-3_all.deb \
   && apt-get update \
-  && apt-get install -y zulu11-jdk wget tar \
+  && apt-get install -y "${JAVA_VERSION}-jdk" wget tar \
   && rm -rf /var/lib/apt/lists/* \
   && echo "JDK image ready."
 
 ENV LC_CTYPE=en_US.UTF-8 \
   LC_ALL=en_US.UTF-8 \
-  JAVA_HOME="/usr/lib/jvm/zulu11" \
+  JAVA_HOME="/usr/lib/jvm/${JAVA_VERSION}" \
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

@@ -1,0 +1,7 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/rbe/ubuntu/bionic", "./tools/images/rbe"]
+images: ["us-docker.pkg.dev/elide-fw/tools/rbe"]
+options:
+  logging: CLOUD_LOGGING_ONLY
+projectId: elide-fw

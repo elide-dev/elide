@@ -1,7 +1,21 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/runtime/jvm17", "./tools/images/runtime-jvm19"]
-images: ["us-docker.pkg.dev/elide-fw/tools/runtime/jvm17"]
+    args: [
+      "buildx",
+      "create",
+      "--name", "multiarch",
+      "--driver", "docker-container",
+      "--use"
+    ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: [
+      "buildx",
+      "build",
+      "--push",
+      "--platform", "linux/arm64,linux/amd64",
+      "--tag", "us-docker.pkg.dev/elide-fw/runtime/jvm19",
+      "."
+    ]
 options:
   logging: CLOUD_LOGGING_ONLY
 projectId: elide-fw

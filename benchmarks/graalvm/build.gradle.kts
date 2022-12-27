@@ -38,8 +38,8 @@ dependencies {
   implementation(libs.micronaut.inject.java.test)
   implementation(libs.micronaut.runtime)
   implementation(libs.elide.graalvm)
-  implementation(libs.graalvm.sdk)
   implementation(libs.lmax.disruptor.core)
+  compileOnly(libs.graalvm.sdk)
   runtimeOnly(libs.logback)
 }
 

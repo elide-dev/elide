@@ -27,6 +27,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.4  2022-12-25  Sam Gammon  Swapped brotli for zstd.
 #   0.3  2022-12-22  Sam Gammon  Fixes for pipe/buffer issues with gzip decompression, add bzip2 as archive option.
 #   0.2  2022-12-22  Sam Gammon  Added support for gzip and brotli archive download when XZ is not available.
 #   0.1  2022-12-21  Sam Gammon  Initial release.
@@ -163,10 +164,10 @@ if [ -x "$(command -v bzip2)" ]; then
     COMPRESSION_TOOL="bzip2";
     COMPRESSION="bz2";
 fi
-if [ -x "$(command -v brotli)" ]; then
-    debug "Found compression: brotli"
-    COMPRESSION_TOOL="brotli";
-    COMPRESSION="br";
+if [ -x "$(command -v zstd)" ]; then
+    debug "Found compression: zstd"
+    COMPRESSION_TOOL="zstd";
+    COMPRESSION="zst";
 fi
 if [ -x "$(command -v xz)" ]; then
     debug "Found compression: xz"

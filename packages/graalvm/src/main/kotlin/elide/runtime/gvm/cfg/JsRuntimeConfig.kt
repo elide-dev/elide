@@ -19,6 +19,8 @@ import java.util.Locale
  *   with information about the original source code. Defaults to `true`.
  * @param v8 Run with V8 compatibility mode active. Defaults to `false`; users are not encouraged to activate this.
  * @param wasm Enable WASM support and related bindings. Defaults to `true`; only active where supported.
+ * @param esm Whether to enable ECMAScript module support. Defaults to `true`.
+ * @param npm Whether to enable NPM/Node module support. Defaults to `true`.
  * @param typescript Enable experimental built-in runtime support for TypeScript. Defaults to `false`.
  * @param language ECMA Script language level to apply within the VM; defaults to [JsLanguageLevel.ES2022].
  * @param defaultLocale Default locale to apply to the JS VM. Defaults to the system default.
@@ -33,6 +35,8 @@ public class JsRuntimeConfig(
   public var sourceMaps: Boolean = DEFAULT_SOURCEMAPS,
   public var v8: Boolean = DEFAULT_V8_COMPAT,
   public var wasm: Boolean = DEFAULT_WASM,
+  public var esm: Boolean = DEFAULT_ESM,
+  public var npm: Boolean = DEFAULT_NPM,
   public var typescript: Boolean = DEFAULT_TYPESCRIPT,
   public var language: JsLanguageLevel = DEFAULT_JS_LANGUAGE_LEVEL,
   public var defaultLocale: Locale = DEFAULT_LOCALE,
@@ -50,13 +54,16 @@ public class JsRuntimeConfig(
     public const val DEFAULT_V8_COMPAT: Boolean = false
 
     /** Default enablement of WASM support, where available. */
-    public const val DEFAULT_WASM: Boolean = true
+    public const val DEFAULT_WASM: Boolean = false  // temporary default
 
     /** Default enablement of ESM features. */
-    public const val DEFAULT_ESM: Boolean = true
+    public const val DEFAULT_ESM: Boolean = false  // temporary default
+
+    /** Default enablement of Node module resolution features. */
+    public const val DEFAULT_NPM: Boolean = false  // temporary default
 
     /** Default enablement of TypeScript execution support. */
-    public const val DEFAULT_TYPESCRIPT: Boolean = false
+    public const val DEFAULT_TYPESCRIPT: Boolean = false  // temporary default
 
     /** Default JS language level. */
     public val DEFAULT_JS_LANGUAGE_LEVEL: JsLanguageLevel = JsLanguageLevel.ES2022

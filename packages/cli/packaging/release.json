@@ -1,0 +1,5 @@
+{
+  "version": "RELEASE_VERSION",
+  "platform": "RELEASE_PLATFORM",
+  "fingerprint": "MANIFEST_FINGERPRINT"
+}

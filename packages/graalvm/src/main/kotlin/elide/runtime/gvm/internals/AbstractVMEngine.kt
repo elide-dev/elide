@@ -7,6 +7,7 @@ import elide.runtime.gvm.*
 import elide.runtime.gvm.VMEngineImpl
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 //import elide.server.ServerInitializer
@@ -26,6 +27,7 @@ import java.util.stream.Stream
  * TBD.
  */
 internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Code: ExecutableScript> constructor (
+  internal val contextManager: ContextManager<VMContext, VMContext.Builder>,
   protected val language: GraalVMGuest,
   protected val config: Config,
 ) : VMEngineImpl<Config>/*, ServerInitializer*/ {
@@ -43,9 +45,6 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
 
   /** VM filesystem manager. */
   @Inject internal lateinit var filesystem: GuestVFS
-
-  /** VM execution context manager. */
-  @Inject internal lateinit var contextManager: ContextManager<VMContext, VMContext.Builder>
 
   // Abstract VM options which must be evaluated at the time a context is created.
   private val conditionalOptions : List<VMProperty> = listOf(
@@ -126,18 +125,18 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
     }
   )
 
-  // Ensure the engine is initialized before use.
-  private inline fun <R> initialized(op: () -> R): R {
-    if (!initialized.get()) {
-      contextManager.installContextFactory {
-        builder(it)
-      }
-      contextManager.installContextSpawn {
-        spawn(it)
-      }
-      initialized.compareAndSet(false, true)
+  init {
+    // install context factory
+    contextManager.installContextFactory {
+      builder(it)
     }
-    return op.invoke()
+
+    // install context spawn
+    contextManager.installContextSpawn {
+      spawn(it)
+    }
+
+    initialized.compareAndSet(false, true)
   }
 
   /** @inheritDoc */
@@ -149,17 +148,17 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
   }
 
   // Context builder factory. Provided to the context manager.
-  private fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
+  internal fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
     *guestConfig.languages.toTypedArray()
   ).engine(engine)
 
   // Context configuration function. Provided to the context manager.
-  private fun spawn(builder: VMContext.Builder): VMContext {
+  internal fun spawn(builder: VMContext.Builder): VMContext {
     // 1: configure the builder according to the implemented VM
     configureVM(builder)
 
     // 2: build the context
-    return builder.build().apply {
+    val ctx = builder.build().apply {
       // 3: resolve target language bindings
       val globals = getBindings(language().symbol)
       val overlay = MutableIntrinsicBindings.Factory.create()
@@ -175,13 +174,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
       // 6: prepare runtime with language-specific init
       prepare(this, globals)
     }
-  }
-
-  /**
-   * TBD.
-   */
-  @Suppress("UNUSED_PARAMETER") private fun configValueActive(property: VMProperty): Boolean {
-    TODO("not yet implemented")
+    return ctx
   }
 
   /**
@@ -190,7 +183,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
   private fun configureVM(builder: VMContext.Builder) {
     // set strong secure baseline for context guest access
     builder
-      .fileSystem(filesystem)
+//      .fileSystem(filesystem)  @TODO(sgammon): implement filesystem
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowHostAccess(HostAccess.SCOPED)
       .allowPolyglotAccess(PolyglotAccess.NONE)
@@ -206,7 +199,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {
-      configValueActive(it)
+      it.active()
     }.forEach {
       builder.option(it.symbol, it.value()!!)  // no null values at this stage
     }

@@ -16,6 +16,7 @@ plugins {
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
   id("io.micronaut.aot")
+  id("com.github.johnrengelman.shadow")
   id("dev.elide.build.docker")
   id("dev.elide.build.jvm.kapt")
   id("dev.elide.build.native.app")
@@ -28,11 +29,22 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_16
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 kotlin {
   explicitApi()
+
+  target.compilations.all {
+    kotlinOptions {
+      jvmTarget = "11"
+      javaParameters = true
+      languageVersion = Elide.kotlinLanguage
+      apiVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = true
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta
+    }
+  }
 }
 
 buildConfig {
@@ -49,27 +61,20 @@ dependencies {
   kapt(libs.micronaut.inject.java)
   kapt(libs.micronaut.validation)
   kapt(libs.picocli.codegen)
-  kapt(libs.micronaut.serde.processor)
 
   implementation(project(":packages:core"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm"))
-  implementation(project(":packages:model"))
-  implementation(project(":packages:proto"))
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
 
   implementation(libs.picocli)
-  implementation(libs.bouncycastle)
   implementation(libs.picocli.jansi.graalvm)
 
-  implementation(libs.kotlinx.datetime)
-  implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
-  implementation(libs.kotlinx.coroutines.reactive)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 
@@ -134,13 +139,6 @@ micronaut {
     precomputeOperations.set(true)
     cacheEnvironment.set(true)
     optimizeClassLoading.set(true)
-  }
-}
-
-configurations.all {
-  resolutionStrategy.dependencySubstitution {
-    substitute(module("io.micronaut:micronaut-jackson-databind"))
-      .using(module("io.micronaut.serde:micronaut-serde-jackson:${libs.versions.micronaut.serde.get()}"))
   }
 }
 
@@ -366,6 +364,13 @@ graalvmNative {
  */
 
 tasks {
+  shadowJar {
+    exclude(
+      "java-header-style.xml",
+      "license.header",
+    )
+  }
+
   dockerfileNative {
     graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
@@ -412,7 +417,7 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
 }
 
 configureJava9ModuleInfo(
-  multiRelease = true,
+  multiRelease = false,
 )
 
 configurations.all {

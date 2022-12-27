@@ -104,4 +104,9 @@ internal interface GuestIntrinsic {
    * @param bindings Language bindings target where the intrinsic should be installed.
    */
   fun install(bindings: MutableIntrinsicBindings)
+
+  /**
+   * TBD.
+   */
+  fun displayName(): String
 }

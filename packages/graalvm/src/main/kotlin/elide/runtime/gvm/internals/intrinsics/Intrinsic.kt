@@ -5,6 +5,8 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.internals.GraalVMGuest
 import io.micronaut.context.annotation.DefaultScope
 import io.micronaut.context.annotation.Infrastructure
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 
 /**
  * # Intrinsic Class
@@ -19,8 +21,10 @@ import io.micronaut.context.annotation.Infrastructure
  *   supported guest language at this time.
  */
 @Singleton
+@Introspected
 @Infrastructure
 @MustBeDocumented
+@ReflectiveAccess
 @DefaultScope(Context::class)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

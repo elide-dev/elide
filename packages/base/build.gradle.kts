@@ -45,8 +45,6 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 api(project(":packages:core"))
                 api(libs.kotlinx.serialization.core)
-                api(libs.kotlinx.serialization.json)
-                api(libs.kotlinx.serialization.protobuf)
                 api(libs.kotlinx.coroutines.core)
                 api(libs.kotlinx.collections.immutable)
                 api(libs.kotlinx.datetime)
@@ -65,16 +63,11 @@ kotlin {
                 api(libs.slf4j)
                 api(libs.jakarta.inject)
                 api(libs.micronaut.inject.java)
-                implementation(libs.protobuf.java)
-                implementation(libs.protobuf.kotlin)
                 implementation(libs.kotlinx.serialization.core)
-                implementation(libs.kotlinx.serialization.json.jvm)
-                implementation(libs.kotlinx.serialization.protobuf.jvm)
                 implementation(libs.kotlinx.coroutines.core.jvm)
                 implementation(libs.kotlinx.coroutines.jdk8)
                 implementation(libs.kotlinx.coroutines.jdk9)
                 implementation(libs.kotlinx.coroutines.slf4j)
-                implementation(libs.kotlinx.coroutines.guava)
             }
         }
         val jvmTest by getting {
@@ -91,7 +84,6 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
                 implementation(libs.kotlinx.coroutines.core.js)
                 implementation(libs.kotlinx.serialization.json.js)
-                implementation(libs.kotlinx.serialization.protobuf.js)
             }
         }
         val jsTest by getting {

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 /** Tests for the V3 JS runtime implementation, on top of GraalVM. */
 @TestCase class JsRuntimeTest {
   // JS runtime singleton.
-  @Inject internal lateinit var runtime: JsRuntime.JsRuntimeFactory
+  @Inject internal lateinit var runtime: JsRuntime
 
   // Micronaut bean context.
   @Inject internal lateinit var beanContext: BeanContext
@@ -22,14 +22,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
   @Test fun testSingleton() {
     assertNotNull(runtime, "should be able to inject JS runtime factory instance")
     assertNotNull(beanContext, "should be able to inject bean context")
-    val first = runtime.acquire()
-    assertNotNull(first, "should be able to create JS runtime instance")
-    val anotherOne = beanContext.getBean(JsRuntime.JsRuntimeFactory::class.java)
-    assertNotNull(anotherOne, "should be able to acquire another injected handle to JS runtime factory")
-    assertTrue(anotherOne === runtime, "should get exact same object (singleton)")
-
-    val anotherRuntime = anotherOne.acquire()
-    assertNotNull(anotherRuntime, "should be able to acquire another injected handle to JS runtime")
-    assertTrue(anotherRuntime === first, "should get exact same object (singleton)")
+    assertNotNull(runtime, "should be able to create JS runtime instance")
   }
 }

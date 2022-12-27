@@ -19,5 +19,5 @@ public interface FetchAPI {
   /**
    * TBD.
    */
-  @Polyglot public fun fetch(url: FetchURL): JsPromise<FetchResponse> = fetch(url.toString())
+  @Polyglot public fun fetch(url: URL): JsPromise<FetchResponse> = fetch(url.toString())
 }

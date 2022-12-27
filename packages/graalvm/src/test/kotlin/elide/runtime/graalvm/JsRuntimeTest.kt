@@ -2,7 +2,6 @@
 
 package elide.runtime.graalvm
 
-import com.google.common.annotations.VisibleForTesting
 import com.lmax.disruptor.EventFactory
 import com.lmax.disruptor.EventHandler
 import com.lmax.disruptor.dsl.Disruptor
@@ -50,7 +49,7 @@ import java.util.concurrent.locks.ReentrantLock
     private var arg2: Int = 0
     private var callback: ((String) -> Unit) = {}
 
-    @VisibleForTesting internal fun set(arg1: Int, arg2: Int, cbk: (String) -> Unit) {
+    internal fun set(arg1: Int, arg2: Int, cbk: (String) -> Unit) {
       this.arg1 = arg1
       this.arg2 = arg2
       this.callback = cbk

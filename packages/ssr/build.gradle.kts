@@ -42,7 +42,7 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         api(libs.micronaut.http)
-        implementation(libs.graalvm.sdk)
+        compileOnly(libs.graalvm.sdk)
       }
     }
     val jvmTest by getting {

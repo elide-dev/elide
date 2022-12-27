@@ -12,12 +12,10 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.annotation.ContextConfigurer
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.slf4j.LoggerFactory
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
-import java.security.Security
 import java.util.ResourceBundle
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
@@ -38,14 +36,15 @@ import kotlin.system.exitProcess
     " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
     " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
     "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
-    "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n"
+    "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
+    " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
   )
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Singleton public class ElideTool internal constructor () : AbstractToolCommand() {
   public companion object {
     init {
-      Security.addProvider(BouncyCastleProvider())
+      System.setProperty("elide.js.vm.enableStreams", "true")
     }
 
     /** Name of the tool. */

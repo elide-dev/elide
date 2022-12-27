@@ -2,6 +2,9 @@ package elide.tool.cli
 
 import elide.annotations.Inject
 import elide.runtime.Logger
+import elide.runtime.gvm.ContextFactory
+import elide.runtime.gvm.VMFacadeFactory
+import elide.runtime.gvm.internals.VMProperty
 import elide.tool.cli.err.AbstractToolError
 import kotlinx.coroutines.*
 import org.graalvm.polyglot.Language
@@ -17,6 +20,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.stream.Stream
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -33,30 +37,30 @@ import kotlin.coroutines.CoroutineContext
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
     private val _engine = VMEngine.create()
-    private lateinit var context: VMContext
-    private val contextInitialized = AtomicBoolean(false)
+//    private lateinit var context: VMContext
+//    private val contextInitialized = AtomicBoolean(false)
     private val logging: Logger = Statics.logging
     private val threadFactory: ToolThreadFactory = ToolThreadFactory()
     private val threadedExecutor: ExecutorService = Executors.newCachedThreadPool(threadFactory)
     private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
 
-    /** @return Initialized VM context. */
-    @JvmStatic private fun acquireContext(language: GuestLanguage, builder: (VMContext.Builder) -> Unit): VMContext {
-      return if (contextInitialized.get()) {
-        context
-      } else {
-        check(!contextInitialized.get()) {
-          "Cannot initialize context more than once"
-        }
-
-        val temp = VMContext.newBuilder(language.id)
-        builder.invoke(temp)
-        context = temp.build()
-        contextInitialized.compareAndSet(false, true)
-        logging.debug("Context initialized.")
-        context
-      }
-    }
+//    /** @return Initialized VM context. */
+//    @JvmStatic private fun acquireContext(language: GuestLanguage, builder: (VMContext.Builder) -> Unit): VMContext {
+//      return if (contextInitialized.get()) {
+//        context
+//      } else {
+//        check(!contextInitialized.get()) {
+//          "Cannot initialize context more than once"
+//        }
+//
+//        val temp = VMContext.newBuilder(language.id)
+//        builder.invoke(temp)
+//        context = temp.build()
+//        contextInitialized.compareAndSet(false, true)
+//        logging.debug("Context initialized.")
+//        context
+//      }
+//    }
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -272,6 +276,12 @@ import kotlin.coroutines.CoroutineContext
   // Main top-level tool.
   @Inject private lateinit var base: ElideTool
 
+  // Context factory for guest VMs.
+  @Inject private lateinit var vmContextFactory: ContextFactory<VMContext, VMContext.Builder>
+
+  // Factory to acquire VM execution facades.
+  @Inject protected lateinit var vmFactory: VMFacadeFactory
+
   /** Controller for tool output. */
   protected lateinit var out: OutputController
 
@@ -301,7 +311,7 @@ import kotlin.coroutines.CoroutineContext
   ): ToolContext<State> {
     return ToolExecutionContextImpl.forSuite(
       state,
-      outputController(state, /*session*/),
+      outputController(state),
       inputController(state, _stdin, _inbuf),
       execController(state, scope, context),
     )
@@ -313,8 +323,6 @@ import kotlin.coroutines.CoroutineContext
     op: ToolContext<State>.() -> R,
   ): R {
     logging.debug("Prepping tool resources")
-//    sharedResources.add(_engine)
-//    sharedResources.add(_inbuf)
     attachShutdownHook()
 
     return use {
@@ -329,6 +337,17 @@ import kotlin.coroutines.CoroutineContext
       input = toolContext.input
       exec = toolContext.exec
       context = toolContext
+
+      // call into the subclass to initialize the VM, as needed
+      if (initializeVM(state)) {
+        // activate the context, having been configured by now via `configureVM`
+        try {
+          vmContextFactory.activate()
+        } catch (err: Throwable) {
+          logging.error("Failed to activate VM context factory", err)
+          throw err
+        }
+      }
       op.invoke(toolContext)
     }
   }
@@ -411,18 +430,23 @@ import kotlin.coroutines.CoroutineContext
   /**
    * TBD.
    */
+  protected fun configureVM(props: Stream<VMProperty>) {
+    vmContextFactory.configureVM(props)
+  }
+
+  /**
+   * TBD.
+   */
   protected open fun withVM(
     context: ToolContext<State>,
-    language: GuestLanguage,
     contextBuilder: (VMContext.Builder) -> Unit = {},
     op: VMCallable<State>,
   ) {
-    logging.debug("Acquiring VM context for language '${language.name}'")
-
-    return acquireContext(language, contextBuilder).let { ctx ->
+    logging.debug("Acquiring VM context for CLI tool")
+    vmContextFactory.acquire(contextBuilder) {
       try {
-        ctx.enter()
-        op.invoke(context, ctx)
+        enter()
+        op.invoke(context, this)
       } catch (err: AbstractToolError) {
         // it's a known tool error. re-throw.
         throw err
@@ -433,7 +457,7 @@ import kotlin.coroutines.CoroutineContext
         )
         throw err
       } finally {
-        ctx.leave()
+        leave()
       }
     }
   }
@@ -481,6 +505,11 @@ import kotlin.coroutines.CoroutineContext
       throw err
     }
   }
+
+  /**
+   * TBD.
+   */
+  protected open fun initializeVM(base: State): Boolean = false
 
   /**
    * TBD.

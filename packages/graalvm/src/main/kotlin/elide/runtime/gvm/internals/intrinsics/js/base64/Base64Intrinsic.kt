@@ -19,28 +19,19 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
 
     /** Injected name of the `atob` intrinsic. */
     private const val GLOBAL_ATOB = "atob"
-
-    /** Static implementation of Base64 encoding. */
-    internal fun doEncode(value: String): String =
-      NativeBase64Intrinsic.base64Encode(CurrentIsolate.getIsolate(), value)
-
-    /** Static implementation of Base64 decoding. */
-    internal fun doDecode(value: String): String =
-      NativeBase64Intrinsic.base64Decode(CurrentIsolate.getIsolate(), value)
   }
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String = doEncode(input)
+  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String =
+    NativeBase64Intrinsic.base64Encode(input)
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String = doDecode(input)
+  @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String =
+    NativeBase64Intrinsic.base64Decode(input)
 
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // mount `btoa`
-    bindings[GLOBAL_BTOA] = ::doEncode
-
-    // mount `atob`
-    bindings[GLOBAL_ATOB] = ::doDecode
+    // mount `Base64`
+    bindings[GLOBAL_BASE64] = this
   }
 }

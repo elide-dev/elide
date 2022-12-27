@@ -62,7 +62,8 @@ benchmark {
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
+  enableNativeImage(true)
+//  version.set(libs.versions.micronaut.lib.get())
   processing {
     incremental.set(true)
     annotations.addAll(listOf(
@@ -84,6 +85,11 @@ configurations["benchmarksRuntimeOnly"].extendsFrom(
   configurations.testRuntimeOnly.get()
 )
 
+testlogger {
+  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
+  showExceptions = System.getenv("TEST_EXCEPTIONS") == "true"
+}
+
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
@@ -95,18 +101,15 @@ dependencies {
   api(project(":packages:proto"))
   implementation(project(":packages:ssr"))
 
-  // KotlinX
-  implementation(libs.kotlinx.html.jvm)
+  // Kotlin / KotlinX
+  implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
-  implementation(libs.kotlinx.coroutines.guava)
-  implementation(libs.kotlinx.coroutines.reactor)
-  implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
-  implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // General
   implementation(libs.lmax.disruptor.core)
@@ -121,7 +124,8 @@ dependencies {
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
 
-  implementation(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.truffle.api)
 
   // Testing
   testImplementation(project(":packages:test"))
@@ -129,6 +133,6 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(libs.micronaut.test.junit5)
-  testImplementation(libs.graalvm.sdk)
+  testCompileOnly(libs.graalvm.sdk)
   testRuntimeOnly(libs.junit.jupiter.engine)
 }

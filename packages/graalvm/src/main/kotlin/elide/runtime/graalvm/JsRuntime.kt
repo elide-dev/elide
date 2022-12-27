@@ -1,9 +1,9 @@
 package elide.runtime.graalvm
 
-import com.google.common.annotations.VisibleForTesting
-import com.google.common.util.concurrent.ListeningExecutorService
-import com.google.common.util.concurrent.MoreExecutors
-import com.google.common.util.concurrent.ThreadFactoryBuilder
+//import com.google.common.annotations.VisibleForTesting
+//import com.google.common.util.concurrent.ListeningExecutorService
+//import com.google.common.util.concurrent.MoreExecutors
+//import com.google.common.util.concurrent.ThreadFactoryBuilder
 import elide.annotations.core.Polyglot
 import elide.annotations.Eager
 import elide.annotations.core.Internal
@@ -363,9 +363,9 @@ public class JsRuntime private constructor() {
   /** Script runtime manager. */
   private class ScriptRuntime constructor (
     concurrency: Int,
-    private val threadPool: ListeningExecutorService,
+    private val threadPool: ExecutorService,
     private val logging: Logger,
-  ) : ListeningExecutorService by threadPool {
+  ) : ExecutorService by threadPool {
     companion object {
       // Whether the inner script runtime has initialized yet.
       private val initialized: AtomicBoolean = AtomicBoolean(false)
@@ -840,17 +840,16 @@ public class JsRuntime private constructor() {
   private val concurrency = Runtime.getRuntime().availableProcessors()
 
   // Dedicated thread executor backing the runtime.
-  private val threadPool: ListeningExecutorService = MoreExecutors.listeningDecorator(
-    Executors.newFixedThreadPool(
-      concurrency,
-      ThreadFactoryBuilder()
-        .setNameFormat("js-runtime-%d")
-        .setDaemon(true)
-        .setPriority(Thread.NORM_PRIORITY)
-        .setUncaughtExceptionHandler(errHandler)
-        .setThreadFactory(ScriptRuntime::spawn)
-        .build()
-    )
+  private val threadPool: ExecutorService = Executors.newFixedThreadPool(
+    concurrency,
+    ScriptRuntime::spawn,
+//    ThreadFactoryBuilder()
+//      .setNameFormat("js-runtime-%d")
+//      .setDaemon(true)
+//      .setPriority(Thread.NORM_PRIORITY)
+//      .setUncaughtExceptionHandler(errHandler)
+//      .setThreadFactory(ScriptRuntime::spawn)
+//      .build()
   )
 
   // Create the singleton script runtime.
@@ -931,7 +930,7 @@ public class JsRuntime private constructor() {
   /**
    * TBD
    */
-  @VisibleForTesting public suspend fun executeStreaming(
+  public suspend fun executeStreaming(
     script: ExecutableScript,
     vararg arguments: Any?,
     receiver: (ServerResponse) -> Unit,

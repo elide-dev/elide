@@ -1,0 +1,4 @@
+{
+  "engine": "v3",
+  "artifacts": [{ "name": "facade.js" }]
+}

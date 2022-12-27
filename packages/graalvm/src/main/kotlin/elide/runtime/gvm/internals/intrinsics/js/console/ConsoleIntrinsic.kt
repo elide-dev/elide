@@ -1,6 +1,5 @@
 package elide.runtime.gvm.internals.intrinsics.js.console
 
-import com.google.common.annotations.VisibleForTesting
 import elide.annotations.core.Polyglot
 import elide.runtime.LogLevel
 import elide.runtime.Logger
@@ -9,8 +8,6 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptConsole
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -24,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference
 internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   internal companion object {
     // Global name of the JS console intrinsic.
-    const val GLOBAL_CONSOLE = "console"
+    const val GLOBAL_CONSOLE = "Console"
 
     // Name of the primary console logger.
     const val loggerName = "gvm:js.console"
@@ -40,7 +37,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   private var interceptor: AtomicReference<Logger> = AtomicReference(null)
 
   // Set an interceptor which receives a mirror of all logging calls.
-  @VisibleForTesting internal fun setInterceptor(interceptor: Logger?) {
+  internal fun setInterceptor(interceptor: Logger?) {
     if (interceptor != null) {
       this.interceptor.set(interceptor)
       this.intercept.set(true)

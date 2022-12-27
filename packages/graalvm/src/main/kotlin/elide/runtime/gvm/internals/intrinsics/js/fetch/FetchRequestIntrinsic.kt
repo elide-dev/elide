@@ -9,13 +9,13 @@ import java.util.concurrent.atomic.AtomicReference
 internal class FetchRequestIntrinsic internal constructor (
   targetUrl: String,
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
-  requestHeaders: FetchHeaders = FetchHeadersIntrinsic.HeadersConstructors.empty(),
+  requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
 ) : FetchMutableRequest {
   /** Construct a new `Request` from a plain string URL. */
   @Polyglot constructor (url: String) : this(targetUrl = url)
 
   /** Construct a new `Request` from a Fetch API spec `URL` object. */
-  @Polyglot constructor (url: FetchURL) : this(targetUrl = url.toString())
+  @Polyglot constructor (url: URL) : this(targetUrl = url.toString())
 
   /** Construct a new `Request` from another request (i.e. make a mutable or non-mutable copy). */
   @Polyglot constructor (request: FetchRequest) : this (

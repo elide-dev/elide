@@ -10,15 +10,23 @@ import java.lang.reflect.Modifier
 import java.net.JarURLConnection
 
 /**
- *
+ * TBD.
  */
 public interface FrameworkFeature : Feature {
   /**
-   *
+   * TBD.
    */
   public fun logging(): Logger {
     return Logging.of(FrameworkFeature::class)
   }
+
+  /**
+   * TBD.
+   */
+  override fun getDescription(): String
+
+  /** @inheritDoc */
+  override fun getURL(): String = "https://elide.dev"
 
   /**
    * Returns the method of a class or fails if it is not present.
@@ -153,13 +161,10 @@ public interface FrameworkFeature : Feature {
   }
 
   /**
-   *
+   * TBD.
    */
   @Throws(IOException::class)
-  public fun findClassesInJar(
-    urlConnection: JarURLConnection,
-    packageName: String
-  ): List<String> {
+  public fun findClassesInJar(urlConnection: JarURLConnection, packageName: String): List<String> {
     val result: MutableList<String> = ArrayList()
     val jarFile = urlConnection.jarFile
     val entries = jarFile.entries()

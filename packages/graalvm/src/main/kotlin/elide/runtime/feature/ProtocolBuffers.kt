@@ -3,11 +3,16 @@
 package elide.runtime.feature
 
 import com.oracle.svm.core.annotate.AutomaticFeature
+import elide.annotations.internal.VMFeature
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.RuntimeReflection
 import java.lang.reflect.Executable
 import java.util.*
 
+/**
+ * TBD.
+ */
+@VMFeature
 @AutomaticFeature
 internal class ProtocolBuffers : FrameworkFeature {
   companion object {
@@ -45,6 +50,11 @@ internal class ProtocolBuffers : FrameworkFeature {
     }
   }
 
+  /** @inheritDoc */
+  override fun isInConfiguration(access: Feature.IsInConfigurationAccess): Boolean =
+    access.findClassByName("com.google.protobuf.GeneratedMessageV3") != null
+
+  /** @inheritDoc */
   override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess) {
     val protoMessageClass = access.findClassByName(PROTO_MESSAGE_CLASS)
     if (protoMessageClass != null) {
@@ -79,4 +89,7 @@ internal class ProtocolBuffers : FrameworkFeature {
       }, protoEnumClass)
     }
   }
+
+  /** @inheritDoc */
+  override fun getDescription(): String = "Configures native Protocol Buffers support"
 }

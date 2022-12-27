@@ -9,6 +9,7 @@ RELOCK ?= no
 SITE ?= no
 
 SAMPLES ?= no
+SIGNING_KEY ?= F812016B
 
 # Flags that control this makefile, along with their defaults:
 #
@@ -22,6 +23,8 @@ SAMPLES ?= no
 # SCAN ?= no
 # IGNORE_ERRORS ?= no
 # RELOCK ?= no
+# SIGNING ?= no
+# SIGNING_KEY ?= "F812016B"
 
 GRADLE ?= ./gradlew
 YARN ?= $(shell which yarn)
@@ -31,12 +34,21 @@ MKDIR ?= $(shell which mkdir)
 CP ?= $(shell which cp)
 RSYNC ?= $(shell which rsync)
 UNZIP ?= $(shell which unzip)
+TAR ?= $(shell which tar)
+ZIP ?= $(shell which zip)
+XZ ?= $(shell which xz)
+ZSTD ?= $(shell which zstd)
+BZIP2 ?= $(shell which bzip2)
+GZIP ?= $(shell which gzip)
+GPG2 ?= $(shell which gpg2)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
 JVM ?= 19
+SYSTEM ?= $(shell uname -s)
+JQ ?= $(shell which jq)
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=
@@ -47,6 +59,16 @@ DEP_HASH_ALGO ?= sha256,pgp
 ARGS ?=
 
 LOCAL_CLI_INSTALL_DIR ?= ~/bin
+
+HASHSUM_SIZE ?= 256
+HASHSUM_CLASS ?= sha
+HASHSUM_ALGORITHM ?= $(HASHSUM_CLASS)$(HASHSUM_SIZE)
+
+ifeq ($(SYSTEM),Darwin)
+HASHSUM ?= shasum -a $(HASHSUM_SIZE)
+else
+HASHSUM ?= gsha$(HASHSUM_SIZE)sum
+endif
 
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
@@ -77,12 +99,18 @@ BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)
+SIGNING = yes
 BUILD_MODE ?= release
 NATIVE_TARGET_NAME ?= nativeOptimizedCompile
+CLI_DISTPATH ?= ./packages/cli/build/dist/release
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
+CLI_RELEASE_TARGETS ?= cli-local cli-release-artifacts
 else
+SIGNING ?= no
 BUILD_MODE ?= dev
+CLI_DISTPATH ?= ./packages/cli/build/dist/debug
 NATIVE_TARGET_NAME ?= nativeCompile
+CLI_RELEASE_TARGETS ?= cli-local
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x testNativeImage
@@ -148,9 +176,13 @@ publish:  ## Publish a new version of all Elide packages.
 		-x jvmTest \
 		-x jsTest;
 
+clean-cli:  ## Clean built CLI targets.
+	$(CMD)echo "Cleaning CLI targets..."
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) ./packages/cli/build/dist
+
 cli:  ## Build the Elide command-line tool (native target).
 	$(info Building Elide CLI tool...)
-	$(CMD)mkdir -p ./packages/cli/build/dist
+	$(CMD)mkdir -p $(CLI_DISTPATH)
 	$(CMD)$(GRADLE) \
 		:packages:cli:$(NATIVE_TARGET_NAME) \
 		-Pversion=$(VERSION) \
@@ -159,24 +191,75 @@ cli:  ## Build the Elide command-line tool (native target).
 		-PbuildDocsSite=false \
 		-Pelide.buildMode=$(BUILD_MODE) \
 		-x test \
-		$(_ARGS)
-	@echo "Built Elide CLI binary. Compressing..."
-	$(CMD)du -h ./packages/cli/build/dist/elide;
-	$(CMD)$(CP) ./packages/cli/build/native/nativeOptimizedCompile/elide ./packages/cli/build/dist/elide;
+		$(_ARGS);
+	$(CMD)$(MAKE) cli-distroot cli-sizereport
+
+cli-distroot:
+	@echo "Built Elide CLI binary. Creating distroot..."
+	@$(MKDIR) -p $(CLI_DISTPATH) \
+		&& $(CP) ./packages/cli/build/native/$(NATIVE_TARGET_NAME)/elide $(CLI_DISTPATH)/elide;
+	$(CMD)cd $(CLI_DISTPATH) && du -h elide;
+	@echo "Compressing...";
+	$(CMD)cd $(CLI_DISTPATH) \
+		&& $(GZIP) --best --keep --verbose elide \
+		&& $(BZIP2) --best --keep --verbose elide \
+		&& $(XZ) --best --keep --verbose elide \
+		&& $(ZSTD) --ultra -22 -k -v elide \
+		&& $(ZIP) -9 --verbose elide.zip elide;
+
+cli-sizereport:
+	@echo "\nSize report:" \
+		&& cd $(CLI_DISTPATH) && du -h elide* \
+		&& echo "\nChecksums:" \
+		&& $(HASHSUM) elide* \
+		&& echo "";
 
 cli-local: cli  ## Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+ifeq ($(RELEASE),yes)
+	$(CMD)$(MAKE) clean-cli
+endif
 	$(CMD)$(MAKE) cli-install-local
 
+cli-release-artifacts:
+	$(CMD)echo "Building release artifacts..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(HASHSUM) elide elide* > manifest.txt \
+		&& $(HASHSUM) elide | cut -d " " -f 1 > elide.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.bz2 | cut -d " " -f 1 > elide.bz2.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.gz | cut -d " " -f 1 > elide.gz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.xz | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.zst | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.zip | cut -d " " -f 1 > elide.zip.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) manifest.txt | cut -d " " -f 1 > manifest.txt.$(HASHSUM_ALGORITHM);
+ifeq ($(SIGNING),yes)
+	$(CMD)echo "Signing release artifacts..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(GPG2) --default-key "$(SIGNING_KEY)" --armor --detach-sign --output elide.asc elide;
+else
+	@echo "Skipping signatures: signing is disabled.";
+endif
+	$(CMD)echo "Building release descriptor..." \
+		&& $(HASHSUM) $(CLI_DISTPATH)/manifest.txt | cut -d " " -f 1 > $(CLI_DISTPATH)/manifest.txt.$(HASHSUM_ALGORITHM) \
+		&& MANIFEST_FINGERPRINT=$$(cat $(CLI_DISTPATH)/manifest.txt.$(HASHSUM_ALGORITHM)) \
+		&& RELEASE_SYSTEM=$$(echo "$(SYSTEM)" | tr A-Z a-z) \
+		&& RELEASE_ARCH=$$(uname -m | tr A-Z a-z) \
+		&& cat ./packages/cli/packaging/release.json | \
+			$(JQ) ".version = \"$(VERSION)\"" | \
+			$(JQ) ".platform = \"$${RELEASE_SYSTEM}\"" | \
+			$(JQ) ".fingerprint = \"$${MANIFEST_FINGERPRINT}\"" > $(CLI_DISTPATH)/release.json \
+		&& $(HASHSUM) $(CLI_DISTPATH)/release.json | cut -d " " -f 1 > $(CLI_DISTPATH)/release.json.$(HASHSUM_ALGORITHM) \
+		&& echo "Release manifest built for version '$(VERSION)'.";
+ifeq ($(SIGNING),yes)
+	$(CMD)echo "Signing release descriptor..." \
+		&& cd $(CLI_DISTPATH) \
+		&& cat release.json.sha256 manifest.txt.sha256 | $(GPG2) --default-key "$(SIGNING_KEY)" --armor --detach-sign --output release.asc;
+endif
+	$(CMD)echo "Building final release tarball..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(TAR) -cvf release.tar elide elide.* manifest.txt release.json;
+
 cli-release: cli  ## Build an Elide command-line release.
-	$(CMD)$(MAKE) -j3 cli-release-local
-
-cli-compress-xz:
-	@echo "- Building release archive 'elide.xz'..."
-	$(CMD)xz --keep --verbose elide
-
-cli-compress-gz:
-	@echo "- Building release archive 'elide.gz'..."
-	$(CMD)gzip --keep --verbose elide
+	$(CMD)make $(CLI_RELEASE_TARGETS) RELEASE=yes
 
 cli-install-local:
 	@echo "Installing CLI locally (location: \"$(LOCAL_CLI_INSTALL_DIR))\"..."

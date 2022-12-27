@@ -1,3 +1,12 @@
+elide:
+  gvm:
+    enabled: true
+    languages: ["JS"]
+    defer: true
+    js:
+      enabled: true
+      wasm: false
+
 micronaut:
   application:
     name: elide

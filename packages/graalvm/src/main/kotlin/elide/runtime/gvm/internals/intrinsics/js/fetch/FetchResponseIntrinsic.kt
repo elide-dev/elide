@@ -23,7 +23,7 @@ internal class FetchResponseIntrinsic private constructor (
       responseUrl = Defaults.DEFAULT_URL,
       responseStatus = Defaults.DEFAULT_STATUS,
       responseText = Defaults.DEFAULT_STATUS_TEXT,
-      responseHeaders = FetchHeadersIntrinsic.HeadersConstructors.empty(),
+      responseHeaders = FetchHeadersIntrinsic.empty(),
     )
 
     /** @return Manual response. */

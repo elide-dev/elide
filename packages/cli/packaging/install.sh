@@ -82,10 +82,10 @@ debug "Found compression: bzip2";
 COMPRESSION_TOOL="bzip2";
 COMPRESSION="bz2";
 fi
-if [ -x "$(command -v brotli)" ]; then
-debug "Found compression: brotli";
-COMPRESSION_TOOL="brotli";
-COMPRESSION="br";
+if [ -x "$(command -v zstd)" ]; then
+debug "Found compression: zstd";
+COMPRESSION_TOOL="zstd";
+COMPRESSION="zst";
 fi
 if [ -x "$(command -v xz)" ]; then
 debug "Found compression: xz";

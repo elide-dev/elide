@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha2-rc1"
+elide = "1.0-v3-alpha3-b1"
 elide_plugin = "1.0.0-beta12"
 kotlin_sdk = "1.8.0-RC"
 kotlin_language = "1.8"
@@ -334,6 +334,10 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
+graalvm_truffle_api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm_sdk" }
+graalvm_truffle_processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm_sdk" }
+graalvm_truffle_nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm_sdk" }
+graalvm_truffle_nfi_libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm_sdk" }
 graalvm_js_engine = { group = "org.graalvm.js", name = "js", version.ref = "graalvm_sdk" }
 graalvm_js_benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm_sdk" }
 graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm_sdk" }

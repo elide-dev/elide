@@ -1,0 +1,92 @@
+[
+    {
+        "name": "kotlin.Metadata",
+        "queryAllDeclaredMethods": true,
+        "methods": [
+            {
+                "name": "bv",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "d1",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "d2",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "k",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "mv",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "pn",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "xi",
+                "parameterTypes": [
+
+                ]
+            },
+            {
+                "name": "xs",
+                "parameterTypes": [
+
+                ]
+            }
+        ]
+    },
+    {
+        "name": "kotlin.Unit"
+    },
+    {
+        "name": "kotlin.jvm.internal.DefaultConstructorMarker"
+    },
+    {
+        "name": "kotlin.reflect.jvm.internal.ReflectionFactoryImpl",
+        "methods": [
+            {
+                "name": "<init>",
+                "parameterTypes": [
+
+                ]
+            }
+        ]
+    },
+    {
+        "name": "kotlinx.coroutines.reactor.ReactorContext"
+    },
+    {
+        "name": "picocli.CommandLine$AutoHelpMixin",
+        "queryAllDeclaredMethods": true,
+        "allDeclaredFields": true
+    },
+    {
+        "name": "sun.security.provider.NativePRNG",
+        "methods": [
+            {
+                "name": "<init>",
+                "parameterTypes": [
+
+                ]
+            }
+        ]
+    }
+]

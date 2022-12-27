@@ -1,12 +1,19 @@
 package elide.tool.cli.repl
 
+import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
+import elide.runtime.gvm.VMFacade
+import elide.runtime.gvm.VMFacadeFactory
+import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.ToolState
 import elide.tool.cli.err.ShellError
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
@@ -23,12 +30,13 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.EnumSet
 import java.util.Scanner
+import java.util.stream.Stream
 import kotlin.io.path.Path
 
 /** TBD. */
 @Command(
   name = "run",
-  aliases = ["shell", "repl"],
+  aliases = ["shell", "r"],
   description = ["%nRun a script or an interactive shell in a given language"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -36,13 +44,15 @@ import kotlin.io.path.Path
   usageHelpAutoWidth = true,
   synopsisHeading = "",
   customSynopsis = [
-    "Usage:  elide @|bold,fg(cyan) run|@ [OPTIONS] FILE                      (1st form, script from file)",
-    "   or:  elide @|bold,fg(cyan) run|@ [OPTIONS] @|bold,fg(cyan) --stdin|@                   (2nd form, script from stdin)",
-    "   or:  elide @|bold,fg(cyan) run|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]          (3rd form, execute literal)",
-    "   or:  elide [@|bold,fg(cyan) shell|@|@|bold,fg(cyan) repl|@] [OPTIONS]                  (4th form, interactive)",
-    "   or:  elide [@|bold,fg(cyan) shell|@|@|bold,fg(cyan) repl|@] --js [OPTIONS]             (5th form, interactive)",
-    "   or:  elide [@|bold,fg(cyan) shell|@|@|bold,fg(cyan) repl|@] --languages",
-    "   or:  elide [@|bold,fg(cyan) shell|@|@|bold,fg(cyan) repl|@] --language=[@|bold,fg(green) JS|@] [OPTIONS]",
+    " @|bold,fg(magenta) " + elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION + "|@",
+    "",
+    " Usage:  elide @|bold,fg(cyan) run|@ [OPTIONS] FILE",
+    "    or:  elide @|bold,fg(cyan) run|@ [OPTIONS] @|bold,fg(cyan) --stdin|@",
+    "    or:  elide @|bold,fg(cyan) run|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]",
+    "    or:  elide @|bold,fg(cyan) shell|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) shell|@ --js [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) shell|@ --languages",
+    "    or:  elide @|bold,fg(cyan) shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
   ]
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
@@ -51,7 +61,7 @@ import kotlin.io.path.Path
   }
 
   /** Allows selecting a language by name. */
-  class LanguageSelector {
+  @Introspected @ReflectiveAccess class LanguageSelector {
     /** Specifies the guest language to run. */
     @Option(
       names = ["--language", "-l"],
@@ -104,6 +114,11 @@ import kotlin.io.path.Path
       defaultValue = "false",
     )
     internal var esm: Boolean = false
+
+    /** Apply configuration to the JS VM based on the provided arguments. */
+    internal fun apply(): Stream<VMProperty> {
+      return Stream.empty()
+    }
   }
 
   /** Specifies the guest language to run. */
@@ -181,9 +196,15 @@ import kotlin.io.path.Path
   )
   internal var runnable: String? = null
 
+  /** VM facade to use for execution. */
+  private lateinit var vm: VMFacade
+
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
-    println(event.location.characters)
+    val txt: CharSequence? = event.location.characters
+    if (!txt.isNullOrBlank()) {
+      println(event.location.characters)
+    }
   }
 
   // Execute a single chunk of code, or literal statement.
@@ -206,14 +227,9 @@ import kotlin.io.path.Path
     }
 
     logging.trace("Code chunk built. Evaluating")
-    return try {
-      ctx.enter()
-      val value = ctx.eval(source)
-      logging.trace("Code chunk evaluation complete")
-      value
-    } finally {
-      ctx.leave()
-    }
+    val result = ctx.eval(source)
+    logging.trace("Code chunk evaluation complete")
+    return result
   }
 
   // Execute a single chunk of code as a literal statement.
@@ -307,6 +323,7 @@ import kotlin.io.path.Path
 
     return Source.newBuilder(language.id, script)
       .encoding(StandardCharsets.UTF_8)
+      .internal(false)
       .build()
   }
 
@@ -314,7 +331,6 @@ import kotlin.io.path.Path
   private fun readExecuteCode(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
     try {
       // enter VM context
-      ctx.enter()
       logging.trace("Entered VM for script execution (language: ${language.id}). Consuming script from: '$label'")
 
       // parse the source
@@ -335,11 +351,26 @@ import kotlin.io.path.Path
 
       // execute the script
       parsed.execute()
+
     } catch (exc: PolyglotException) {
       logging.debug("User code exception caught", exc)
       throw ShellError.USER_CODE_ERROR.asError()
-    } finally {
-      ctx.leave()
+    }
+  }
+
+  /** @inheritDoc */
+  override fun initializeVM(base: ToolState): Boolean {
+    val baseProps: Stream<VMProperty> = emptyList<VMProperty>().stream()
+
+    when (language.resolve()) {
+      GuestLanguage.JS -> {
+        logging.debug("Configuring JS VM")
+        configureVM(Stream.concat(baseProps, jsSettings.apply()))
+
+        logging.debug("Acquiring JavaScript VM (tool state/args indicate JS)")
+        vm = vmFactory.acquireVM(GuestLanguage.JS)
+        return true  // initialize the VM now that it has been configured
+      }
     }
   }
 
@@ -359,7 +390,7 @@ import kotlin.io.path.Path
     val engineLang = supported.find { it.first == lang }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language context ('${lang.id}')")
 
-    withVM(context, lang, accessControl::apply) {
+    withVM(context, accessControl::apply) {
       // warn about experimental status, as applicable
       logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")
 

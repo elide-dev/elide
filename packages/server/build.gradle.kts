@@ -109,8 +109,8 @@ dependencies {
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
-  implementation(libs.graalvm.espresso.hotswap)
-  implementation(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.espresso.hotswap)
+  compileOnly(libs.graalvm.sdk)
 
   // Testing
   kaptTest(libs.micronaut.inject)

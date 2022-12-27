@@ -5,7 +5,6 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.intrinsics.js.*
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 
 /**
@@ -26,45 +25,18 @@ import org.graalvm.polyglot.Value
 
     /** Global where the `Headers` constructor is mounted. */
     const val GLOBAL_HEADERS = "Headers"
-
-    /** Global where the `URL` constructor is mounted. */
-    const val GLOBAL_URL = "URL"
-
-    // Create a new `Request` object.
-    @Polyglot @JvmStatic private fun createRequest(input: Value): FetchRequest = when {
-      input.isString -> FetchRequestIntrinsic(input.asString())
-      input.isHostObject && input.asHostObject<Any>() is FetchURL ->
-        FetchRequestIntrinsic(input.asHostObject() as FetchURL)
-      input.isHostObject && input.asHostObject<Any>() is FetchRequest ->
-        FetchRequestIntrinsic(input.asHostObject() as FetchRequest)
-      else -> error(
-        "Unsupported type for `Request` constructor: '${input.metaObject.metaSimpleName}'"
-      )
-    }
-
-    // Create a new `Request` object.
-    @Polyglot @JvmStatic private fun createResponse(input: Value? = null): FetchResponse = when (input) {
-      null -> FetchResponseIntrinsic.ResponseConstructors.empty()
-      else -> error("Unsupported type for `Response` constructor: '${input.metaObject.metaSimpleName}'")
-    }
-
-    // Create an empty `Headers` object.
-    @Polyglot @JvmStatic private fun createHeaders(input: Value? = null): FetchHeaders = when (input) {
-      null -> FetchHeadersIntrinsic.HeadersConstructors.empty()
-      else -> error("Unsupported type for `Headers` constructor: '${input.metaObject.metaSimpleName}'")
-    }
   }
 
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // mount `Headers` constructors
-    bindings[GLOBAL_HEADERS] = ::createHeaders
+    // mount `Headers`
+    bindings[GLOBAL_HEADERS] = FetchHeadersIntrinsic::class.java
 
-    // mount `Request` constructors
-    bindings[GLOBAL_REQUEST] = ::createRequest
+    // mount `Request`
+    bindings[GLOBAL_REQUEST] = FetchRequestIntrinsic::class.java
 
-    // mount `Response` constructors
-    bindings[GLOBAL_RESPONSE] = ::createResponse
+    // mount `Response`
+    bindings[GLOBAL_RESPONSE] = FetchResponseIntrinsic::class.java
 
     // mount `fetch` method
     bindings[GLOBAL_FETCH] = { request: Value ->
@@ -83,8 +55,8 @@ import org.graalvm.polyglot.Value
     )
 
     // invocation with a mocked `Request`
-    request.isHostObject && request.asHostObject<Any>() is FetchURL -> fetch(
-      request.asHostObject() as FetchURL
+    request.isHostObject && request.asHostObject<Any>() is URL -> fetch(
+      request.asHostObject() as URL
     )
 
     else -> error("Unsupported invocation of `fetch`")

@@ -5,20 +5,88 @@ import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableHeaders
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.JsIterator
+import org.graalvm.polyglot.Value
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
 internal class FetchHeadersIntrinsic private constructor (
-  private val data: MutableMap<String, SortedSet<String>>,
-  private val valueCache: TreeMap<String, String> = TreeMap(),
+  initialData: MutableMap<String, SortedSet<String>>?
 ) : FetchMutableHeaders {
+  // Internal data map.
+  private val data: MutableMap<String, SortedSet<String>> = initialData ?: allocateMap()
+
+  // Computed joined value cache.
+  private val valueCache: SortedMap<String, String> = TreeMap(String.CASE_INSENSITIVE_ORDER)
+
+  /** Empty constructor: empty headers. */
+  @Polyglot constructor(): this(null)
+
+  /** Construct from a plain JavaScript map-capable object. */
+  @Polyglot constructor(initialValue: Value) : this (
+    when {
+      // if it's a host object, it should really only be another `FetchHeadersIntrinsic` instance.
+      initialValue.isHostObject -> {
+        (try {
+          initialValue.`as`(FetchHeadersIntrinsic::class.java)
+        } catch (err: ClassCastException) {
+          throw IllegalArgumentException(
+            "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+          )
+        }).internalDataForCopy()
+      }
+
+      // if it's a plain javascript object, we should be able to cast it to a map.
+      initialValue.metaObject.metaQualifiedName == "Object" -> {
+        val members = initialValue.memberKeys
+        val buf = allocateMap()
+        members.forEach {
+          if (it.isNotEmpty()) {
+            val value = initialValue.getMember(it)
+            if (value != null && value.isString) {
+              buf[it] = sortedSetOf(value.asString())
+            }
+          }
+        }
+        buf
+      }
+
+      // if it's a regular map-like object, we can add each value wrapped in a single-entry set.
+      initialValue.hasHashEntries() -> {
+        val mapKeysIter = initialValue.hashKeysIterator
+        val iterWrap = object: Iterator<String> {
+          override fun hasNext(): Boolean = mapKeysIter.hasIteratorNextElement()
+          override fun next(): String = mapKeysIter.iteratorNextElement.asString()
+        }
+        val buf = allocateMap()
+        iterWrap.forEach { mapKey ->
+          val mapValue = initialValue.getHashValueOrDefault(mapKey, null) ?: return@forEach
+          if (mapValue.isString) {
+            buf[mapKey] = sortedSetOf(mapValue.asString())
+          }
+        }
+        buf
+      }
+
+      // otherwise, we can't accept it, it's an error.
+      else -> throw IllegalArgumentException(
+        "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+      )
+    }
+  )
+
+  /** @return Copy of internal data. */
+  private fun internalDataForCopy(): MutableMap<String, SortedSet<String>> {
+    return TreeMap(data)
+  }
+
   /** Typed constructors. */
-  internal object HeadersConstructors {
+  companion object {
+    // Allocate an empty sorted map.
+    @JvmStatic private fun allocateMap(): SortedMap<String, SortedSet<String>> = TreeMap(String.CASE_INSENSITIVE_ORDER)
+
     /** @return Empty `Headers` container. */
-    @JvmStatic @Polyglot fun empty(): FetchHeadersIntrinsic = FetchHeadersIntrinsic(
-      data = TreeMap(),
-    )
+    @JvmStatic @Polyglot fun empty(): FetchHeadersIntrinsic = FetchHeadersIntrinsic()
   }
 
   // Whether the headers map is locked for iteration.

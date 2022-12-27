@@ -11,6 +11,11 @@
 
     <logger name="tool" level="warn" />
 
+    <logger name="gvm:js.console" level="trace" />
+    <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="trace" />
+    <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="trace" />
+    <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="trace" />
+
     <!-- Root Logger -->
     <root level="warn">
         <appender-ref ref="STDOUT" />

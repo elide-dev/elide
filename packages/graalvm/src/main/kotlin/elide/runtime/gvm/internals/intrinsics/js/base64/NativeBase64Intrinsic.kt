@@ -2,6 +2,7 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
+import elide.annotations.core.Polyglot
 import elide.core.encoding.Base64
 import org.graalvm.nativeimage.Isolate
 
@@ -12,21 +13,15 @@ import org.graalvm.nativeimage.Isolate
   /**
    * TBD.
    */
-  @JvmStatic fun base64Encode(thread: Isolate, input: String): String {
-    return Base64.encodeToString(input)
-  }
+  @JvmStatic @Polyglot fun base64Encode(input: String): String = Base64.encodeToString(input)
 
   /**
    * TBD.
    */
-  @JvmStatic fun base64Decode(thread: Isolate, input: String): String {
-    return Base64.decodeToString(input)
-  }
+  @JvmStatic @Polyglot fun base64Decode(input: String): String = Base64.decodeToString(input)
 
   /**
    * TBD.
    */
-  @JvmStatic fun base64EncodeWebsafe(thread: Isolate, input: String): String {
-    return Base64.encodeWebSafe(input)
-  }
+  @JvmStatic @Polyglot fun base64EncodeWebsafe(input: String): String = Base64.encodeWebSafe(input)
 }

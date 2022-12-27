@@ -38,13 +38,8 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
 
   // Set an interceptor which receives a mirror of all logging calls.
   internal fun setInterceptor(interceptor: Logger?) {
-    if (interceptor != null) {
-      this.interceptor.set(interceptor)
-      this.intercept.set(true)
-    } else {
-      this.interceptor.set(null)
-      this.intercept.set(false)
-    }
+    this.interceptor.set(interceptor)
+    this.intercept.set(interceptor != null)
   }
 
   /**

@@ -490,7 +490,6 @@ public class JsRuntime private constructor() {
       private fun spawnContext(): VMContext {
         val builder = VMContext.newBuilder("js")
           .engine(jsEngine)
-          .allowIO(false)
           .allowExperimentalOptions(true)
           .allowValueSharing(true)
           .allowCreateProcess(false)

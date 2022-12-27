@@ -187,7 +187,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowHostAccess(HostAccess.SCOPED)
       .allowPolyglotAccess(PolyglotAccess.NONE)
-      .allowIO(false)
+//      .allowIO(false)
       .allowInnerContextOptions(false)
       .allowCreateThread(false)
       .allowCreateProcess(false)

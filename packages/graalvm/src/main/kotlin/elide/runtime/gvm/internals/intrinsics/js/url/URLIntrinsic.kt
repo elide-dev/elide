@@ -11,6 +11,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.URLSearchParams
 import java.io.Serializable
+import java.net.URI
 import java.util.TreeMap
 import java.util.concurrent.atomic.AtomicBoolean
 import org.graalvm.polyglot.Value as GuestValue
@@ -46,8 +47,11 @@ import kotlin.reflect.*
 
   /** Abstract internal base for URL types. */
   internal interface BaseURLType : elide.runtime.intrinsics.js.MutableURL {
-    /** @return Wrapped native-Java URL object (mostly for testing and copying). Not exposed to guests. */
+    /** @return Native URL managed by this URL object. Not available from guest code. */
     fun wrappedURL(): NativeURL
+
+    /** @return Parsed URL managed by this URL object. Not available from guest code. */
+    fun parsedURL(): ParsedURL
   }
 
   /**
@@ -56,20 +60,14 @@ import kotlin.reflect.*
    * @param scheme URI scheme expected for this protocol.
    * @param port Standard port for this protocol, or `-1` if ports are not relevant. Defaults to `-1`.
    * @param hasHost Set to `true` if hosts are relevant to this protocol. Defaults to `true` if `port` is not `-1`.
-   * @param hasHash Whether URLs of this type are allowed to have a hash/fragment portion.
-   * @param hasQuery Whether URLs of this type are allowed to have a query/search portion.
    */
-  private enum class KnownProtocol constructor (
+  internal enum class KnownProtocol constructor (
     val scheme: String = "",
     val port: Int = -1,
-    val isRelative: Boolean = false,  // only flipped for protocol-relative URLs
     val hasHost: Boolean = port != -1,
-    val hasHash: Boolean = hasHost && scheme != "ftp",  // in practice, the hash follows the host, minus FTP
-    val hasQuery: Boolean = hasHost && scheme != "ftp",
-    val hasOrigin: Boolean = hasHost && scheme != "ftp",
   ) {
     /** Special case: protocol-relative URLs. */
-    RELATIVE(isRelative = true),
+    RELATIVE,
 
     /** Protocol: HTTP. */
     HTTP(scheme = "http", port = 80),
@@ -88,7 +86,7 @@ import kotlin.reflect.*
   }
 
   /** Wrapper class which enables lazy processing of parsed URL values. */
-  private class CachedURLValue<T: Serializable> constructor (
+  internal class CachedURLValue<T: Serializable> constructor (
     initialValue: T? = null,
     private val processor: (() -> T)? = null,
   ) {
@@ -101,7 +99,7 @@ import kotlin.reflect.*
     /** @return Processed value `T`, or lazily processed value `T`. */
     fun resolve(): T {
       if (!initialized.getAndSet(true)) {
-        value.set((processor ?: error("Failed to resolve lazy processor for value")).invoke())
+        value.set((processor!!).invoke())
       }
       return value.get()
     }
@@ -109,79 +107,6 @@ import kotlin.reflect.*
     companion object {
       /** @return Wrapped [value] [T], which we happen to have on-hand (skipping the lazy call). */
       @JvmStatic fun <T: Serializable> of(value: T): CachedURLValue<T> = CachedURLValue(value)
-    }
-  }
-
-  /** Enumerates every available field within the URL object, so that each can be return via a map-like interface. */
-  private enum class URLField constructor (
-    val symbol: String,
-    val type: KClass<out Serializable>,
-    val mutable: KMutableProperty1<out Serializable, *>? = null,
-    val readOnly: KProperty<Serializable>? = null,
-    internal val isMutable: Boolean = mutable != null,
-  ) {
-    // Field: `protocol`.
-    PROTOCOL("protocol", String::class, URLValue::protocol),
-
-    // Field: `port`.
-    PORT("port", Int::class, URLValue::port),
-
-    // Field: `host`.
-    HOST("host", String::class, URLValue::host),
-
-    // Field: `hostname`.
-    HOSTNAME("hostname", String::class, URLValue::hostname),
-
-    // Field: `pathname`.
-    PATHNAME("pathname", String::class, URLValue::pathname),
-
-    // Field: `search`.
-    SEARCH("search", String::class, URLValue::search),
-
-    // Field: `searchParams`.
-    SEARCH_PARAMS("searchParams", URLSearchParams::class, readOnly = URLValue::searchParams),
-
-    // Field: `origin`.
-    ORIGIN("origin", String::class, readOnly = URLValue::origin),
-
-    // Field: `hash`.
-    HASH("hash", String::class, URLValue::hash),
-
-    // Field: `username`.
-    USERNAME("username", String::class, URLValue::username),
-
-    // Field: `password`.
-    PASSWORD("password", String::class, URLValue::password);
-
-    companion object {
-      // Sorted set of field names.
-      private val fieldNames = allFields().map { it.symbol }.toSortedSet()
-
-      // Sorted map of fields to their configurations.
-      private val fieldMap = allFields().associateByTo(TreeMap()) { it.symbol }
-
-      // Set of all field names.
-      @JvmStatic fun allFieldNames(): Set<String> = fieldNames
-
-      // Set of all fields.
-      @JvmStatic fun allFields(): Array<URLField> = values()
-
-      // Lookup a field by name.
-      @JvmStatic fun lookup(name: String): URLField = fieldMap[name] ?: error("Unknown field: $name")
-
-      // Indicate whether a field is mutable.
-      @JvmStatic fun isMutable(name: String): Boolean = lookup(name).readOnly == null
-    }
-
-    // Resolve a field value from the provided `ParsedURL` record.
-    fun resolveValue(record: URLValue): Any? =
-      mutable?.getter?.call(record) ?: readOnly?.getter?.call(record)
-
-    // Cast a `GuestValue` to the expected setter method value.
-    fun cast(value: Any?): Any? = when (value) {
-      null -> null
-      is GuestValue -> value.`as`(this.type.java)
-      else -> error("Cannot cast value '$value' for setter method '${this.name}'")
     }
   }
 
@@ -208,7 +133,7 @@ import kotlin.reflect.*
    *   value is an empty string.
    */
   @Suppress("unused", "UNUSED_PARAMETER")
-  private data class ParsedURL(
+  internal data class ParsedURL(
     val uri: NativeURL,
     val absolute: String = uri.toString(),
     val knownProtocol: KnownProtocol? = knownProtocol(uri),
@@ -219,7 +144,7 @@ import kotlin.reflect.*
     val pathname: CachedURLValue<String> = computePathname(uri, knownProtocol),
     val search: CachedURLValue<String> = computeSearch(uri, knownProtocol),
     val searchParams: CachedURLValue<URLSearchParams> = computeSearchParams(uri, knownProtocol),
-    val origin: CachedURLValue<String> = computeOrigin(uri, port, hostname, knownProtocol),
+    val origin: CachedURLValue<String> = CachedURLValue.of("") ,  // not implemented
     val hash: CachedURLValue<String> = computeHash(uri, knownProtocol),
     val username: CachedURLValue<String> = computeUsername(uri, knownProtocol),
     val password: CachedURLValue<String> = computePassword(uri, knownProtocol),
@@ -261,10 +186,10 @@ import kotlin.reflect.*
       // Calculate a spec-compliant value for the `port` property.
       @JvmStatic private fun computePort(uri: NativeURL, proto: KnownProtocol?): Int {
         val uriPort = uri.port
-        return if (uriPort == -1) {
+        return (if (uriPort == -1) {
           // ports are not applicable to this type of URL
-          proto?.port ?: -1
-        } else uriPort
+          proto?.port
+        } else uriPort) ?: -1
       }
 
       // Calculate a spec-compliant value for the `host` property.
@@ -390,16 +315,6 @@ import kotlin.reflect.*
         }
       }
 
-      // Calculate a spec-compliant value for the `origin` property.
-      @JvmStatic private fun computeOrigin(
-        uri: NativeURL,
-        port: Int,
-        host: CachedURLValue<String>,
-        proto: KnownProtocol?,
-      ) = cachedParse<String> {
-        TODO("not yet implemented")
-      }
-
       // Calculate a spec-compliant value for the `username` property.
       @JvmStatic private fun computeUsername(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
         val userinfo = uri.userInfo
@@ -508,46 +423,54 @@ import kotlin.reflect.*
     fun absoluteString(): String = absolute
 
     // Splice a new protocol into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySpliceProtocol(protocol: String): ParsedURL = if (protocol.isNotEmpty()) {
-      if (protocol == this.protocol) {
-        this  // special case: the protocol change is a no-op, because they are already equal.
-      } else {
-        require(protocol.isNotBlank()) {
-          "Protocol cannot be blank"
-        }
-        val spliced = if (absolute.startsWith("//")) {
-          // special case: protocol-relative URLs, transitioning to protocol-absolute URLs
-          "$protocol:$absolute"
-        } else {
-          "$protocol://${absolute.substringAfter("://")}"
-        }
-        val reparsed = parseUrl(spliced)
-        val knownProto = knownProtocol(reparsed)
-        val splicedPort = computePort(reparsed, knownProto)
+    private fun copySpliceProtocol(protocol: String): ParsedURL = when {
+      protocol.endsWith(":") -> protocol.dropLast(1)
+      protocol.endsWith("://") -> protocol.dropLast(3)
+      else -> protocol
+    }.let { cleanedProtocol ->
+      "$cleanedProtocol:".let { composedProtocol ->
+        if (cleanedProtocol.isNotEmpty()) {
+          if (composedProtocol == this.protocol) {
+            this  // special case: the protocol change is a no-op, because they are already equal.
+          } else {
+            require(cleanedProtocol.isNotBlank()) {
+              "Protocol cannot be blank"
+            }
+            val spliced = if (absolute.startsWith("//")) {
+              // special case: protocol-relative URLs, transitioning to protocol-absolute URLs
+              "${cleanedProtocol}:$absolute"
+            } else {
+              "${cleanedProtocol}://${absolute.substringAfter("://")}"
+            }
+            val reparsed = parseUrl(spliced)
+            val knownProto = knownProtocol(reparsed)
+            val splicedPort = computePort(reparsed, knownProto)
 
-        ParsedURL(
-          uri = reparsed,
-          absolute = spliced,
-          port = splicedPort,
-          knownProtocol = knownProto,
-          host = computeHost(reparsed, splicedPort, knownProto),
-          protocol = protocol,  // can reuse
-          hostname = this.hostname,  // no change
-          pathname = this.pathname,  // no change
-          search = this.search,  // no change
-          searchParams = this.searchParams,  // no change
-          hash = this.hash,  // no change
-          username = this.username,  // no change
-          password = this.password,  // no change
-          // `origin` omitted in order to trigger re-calculation
-        )
-      }
-    } else {
-      if (absolute.startsWith("//")) {
-        this  // already protocol relative: nothing to do
-      } else {
-        // protocol relative
-        fromString("//${absolute.substringAfter("://")}")
+            ParsedURL(
+              uri = reparsed,
+              absolute = spliced,
+              port = splicedPort,
+              knownProtocol = knownProto,
+              host = computeHost(reparsed, splicedPort, knownProto),
+              protocol = composedProtocol,  // can reuse
+              hostname = this.hostname,  // no change
+              pathname = this.pathname,  // no change
+              search = this.search,  // no change
+              searchParams = this.searchParams,  // no change
+              hash = this.hash,  // no change
+              username = this.username,  // no change
+              password = this.password,  // no change
+              // `origin` omitted in order to trigger re-calculation
+            )
+          }
+        } else {
+          if (absolute.startsWith("//")) {
+            this  // already protocol relative: nothing to do
+          } else {
+            // protocol relative
+            fromString("//${absolute.substringAfter("://")}")
+          }
+        }
       }
     }
 
@@ -557,7 +480,7 @@ import kotlin.reflect.*
         this  // special case: port matches, change is a no-op
       } else {
         val knownProto = knownProtocol(port)
-        val reassembled = if (knownProto?.port != null && port == knownProto.port) {
+        val reassembled = if (port == knownProto?.port) {
           // special case: if the user is assigning the port to the default-port for a matching known protocol, we can
           // just omit the port and set the scheme.
           NativeURL(
@@ -613,22 +536,19 @@ import kotlin.reflect.*
       else -> {
         val colonCount = host.count { it == ':' }
         val reassembled = if (colonCount > 0) {
-          if (colonCount > 1) throw valueError(
-            "Cannot parse port: Too many colons in: '$host'"
-          )
+          if (colonCount > 1)
+            throw valueError("Cannot parse port: Too many colons in: '$host'")
 
           // potentially includes a port
-          if (host.endsWith(":")) throw valueError(
-            "Host port cannot be empty if specified: '$host'"
-          )
-          val hostPort = host.substringAfterLast(":").toIntOrNull() ?: throw valueError(
-            "Failed to parse port value: '$host'"
-          )
-          if (!validPort(hostPort)) throw valueError(
-            "Invalid port number: $hostPort (not between 1 and 65535)"
-          )
+          if (host.endsWith(":"))
+            throw valueError("Host port cannot be empty if specified: '$host'")
+          val hostPort = host.substringAfterLast(":").toIntOrNull() ?:
+            throw valueError("Failed to parse port value: '$host'")
+          if (!validPort(hostPort))
+            throw valueError("Invalid port number: $hostPort (not between 1 and 65535)")
           val hostName = host.substringBefore(":")
 
+          // assemble with port
           NativeURL(
             uri.scheme,
             uri.userInfo,
@@ -716,15 +636,16 @@ import kotlin.reflect.*
     }
 
     // Splice a new path-name into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySplicePathname(pathname: String): ParsedURL = when {
-      pathname == this.pathname.resolve() -> this  // special case: pathname matches, change is a no-op
-
-      // if the pathname is specified, but non-blank and non-empty, that's an error: it must start with a slash. this
-      // case happens to cover completely blank URLs, which is why we skip that check here.
-      pathname.isNotEmpty() && !pathname.startsWith("/") ->
-        throw valueError("Path-name should start with '/' (got: '$pathname')")
+    private fun copySplicePathname(pathname: String): ParsedURL = when (pathname) {
+      // special case: pathname matches, change is a no-op
+      this.pathname.resolve() -> this
 
       else -> try {
+        // if the pathname is specified, but non-blank and non-empty, that's an error: it must start with a slash. this
+        // case happens to cover completely blank URLs, which is why we skip that check here.
+        if (pathname.isNotEmpty() && !pathname.startsWith("/"))
+          throw java.net.URISyntaxException(pathname, "Path-name should start with '/' (got: '$pathname')")
+
         NativeURL(
           uri.scheme,
           uri.userInfo,
@@ -758,117 +679,133 @@ import kotlin.reflect.*
     }
 
     // Splice a new query value into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySpliceSearch(query: String): ParsedURL = if (query == this.search.resolve()) {
-      this  // special case: pathname matches, change is a no-op
+    private fun copySpliceSearch(query: String): ParsedURL = if (query.isNotEmpty() && query.startsWith("?")) {
+      val dropped = query.drop(1)
+      dropped
     } else {
-      try {
-        val prefixedQuery = if (query.isNotEmpty() && query.startsWith("?")) {
-          val dropped = query.drop(1)
-          if (dropped.isNotEmpty() && dropped.isBlank())
-            throw valueError("Cannot set blank query-string value: '$query'")
-          dropped
+      query
+    }.let { cleanedQuery ->
+      "?$cleanedQuery".let { composedQuery ->
+        if (composedQuery == this.search.resolve()) {
+          this  // special case: pathname matches, change is a no-op
         } else {
-          query
-        }
-        val transformedPath = if (prefixedQuery.isNotBlank() && uri.path.isNullOrBlank()) {
-          // special case: if there is no path, make sure we put a `/` slash in there to be pedantic with other parsers
-          "/"
-        } else if (prefixedQuery == "" && uri.path == "/" && uri.fragment.isNullOrEmpty()) {
-          // special case: if there is a path, but the query is blank, remove the path for a clean URL, since the root
-          // slash is implied with no other path characters.
-          ""
-        } else uri.path
+          try {
+            if (cleanedQuery.isNotEmpty() && cleanedQuery.isBlank())
+              throw java.net.URISyntaxException(query, "Cannot set blank query-string value")
+            if (cleanedQuery.contains("?"))
+              throw java.net.URISyntaxException(query, "Cannot contain invalid character '?'")
+            if (cleanedQuery.contains("\n"))
+              throw java.net.URISyntaxException(query, "Cannot contain invalid character (newline)")
+            val transformedPath = if (cleanedQuery.isNotBlank() && uri.path.isNullOrBlank()) {
+              // special case: if there is no path, make sure we put a `/` slash in there to be pedantic
+              "/"
+            } else if (cleanedQuery == "" && uri.path == "/" && uri.fragment.isNullOrEmpty()) {
+              // special case: if there is a path, but the query is blank, remove the path for a clean URL, since the
+              // root slash is implied with no other path characters.
+              ""
+            } else uri.path
 
-        NativeURL(
-          uri.scheme,
-          uri.userInfo,
-          uri.host,
-          uri.port,
-          transformedPath,
-          prefixedQuery.ifEmpty { null },
-          uri.fragment,
-        )
-      } catch (e: java.net.URISyntaxException) {
-        throw valueError("Invalid query string: '$query'")
-      }.let { reassembled ->
-        ParsedURL(
-          uri = reassembled,
-          absolute = reassembled.toString(),
-          search = CachedURLValue.of(query),  // can re-use value
-          knownProtocol = this.knownProtocol,  // no change
-          port = this.port,  // no change
-          protocol = this.protocol,  // no change
-          host = this.host,  // no change
-          hostname = this.hostname,  // no change
-          pathname = this.pathname,  // no change
-          hash = this.hash,  // no change
-          username = this.username,  // no change
-          password = this.password,  // no change
-          origin = this.origin,  // no change
-          // `searchParams` omitted to trigger re-calculation
-        )
+            NativeURL(
+              uri.scheme,
+              uri.userInfo,
+              uri.host,
+              uri.port,
+              transformedPath,
+              cleanedQuery.ifEmpty { null },
+              uri.fragment,
+            )
+          } catch (e: java.net.URISyntaxException) {
+            throw valueError("Invalid query string: '$query'")
+          }.let { reassembled ->
+            ParsedURL(
+              uri = reassembled,
+              absolute = reassembled.toString(),
+              search = CachedURLValue.of(composedQuery),  // can re-use value
+              knownProtocol = this.knownProtocol,  // no change
+              port = this.port,  // no change
+              protocol = this.protocol,  // no change
+              host = this.host,  // no change
+              hostname = this.hostname,  // no change
+              pathname = this.pathname,  // no change
+              hash = this.hash,  // no change
+              username = this.username,  // no change
+              password = this.password,  // no change
+              origin = this.origin,  // no change
+              // `searchParams` omitted to trigger re-calculation
+            )
+          }
+        }
       }
     }
 
     // Splice a new fragment value into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySpliceHash(fragment: String): ParsedURL = if (fragment === this.hash.resolve()) {
-      this  // special case: update is a no-op
-    } else try {
-      val cleanedFragment = if (fragment.isNotEmpty() && fragment.startsWith("#")) {
-        fragment.drop(1)
-      } else {
-        fragment
-      }
-      val transformedPath = if (cleanedFragment.isNotBlank() && uri.path.isNullOrBlank()) {
-        // special case: if there is no path, make sure we put a `/` slash in there to be pedantic with other parsers
-        "/"
-      } else if (cleanedFragment == "" && uri.path == "/" && uri.query.isNullOrBlank()) {
-        // special case: if there is no path, and the fragment is blank, remove the path for a clean URL, since the root
-        // slash is implied with no other path characters.
-        ""
-      } else uri.path
+    private fun copySpliceHash(fragment: String): ParsedURL = when {
+      // drop any fragment prefix
+      fragment.startsWith("#") -> fragment.drop(1)
 
-      NativeURL(
-        uri.scheme,
-        uri.userInfo,
-        uri.host,
-        uri.port,
-        transformedPath,
-        uri.query,
-        cleanedFragment.ifBlank { null },
-      )
-    } catch (e: java.net.URISyntaxException) {
-      throw valueError("Invalid fragment: '$fragment'")
-    }.let { reassembled ->
-      ParsedURL(
-        uri = reassembled,
-        absolute = reassembled.toString(),
-        hash = computeHash(reassembled, knownProtocol),
-        knownProtocol = this.knownProtocol,  // no change
-        port = this.port,  // no change
-        protocol = this.protocol,  // no change
-        host = this.host,  // no change
-        search = this.search,  // no change
-        searchParams = this.searchParams,  // no change
-        hostname = this.hostname,  // no change
-        pathname = this.pathname,  // no change
-        username = this.username,  // no change
-        password = this.password,  // no change
-        origin = this.origin,  // no change
-      )
+      // otherwise, pass it along unmodified
+      else -> fragment
+    }.let { cleanedFragment ->
+      "#$cleanedFragment".let { composedFragment ->
+        if (composedFragment == this.hash.resolve()) {
+          this  // special case: update is a no-op
+        } else try {
+          if (fragment.contains("?"))
+            throw java.net.URISyntaxException(fragment, "Cannot contain invalid characters")
+          val transformedPath = if (cleanedFragment.isNotBlank() && uri.path.isNullOrBlank()) {
+            // special case: if there is no path, make sure we put a `/` slash in there to be pedantic
+            "/"
+          } else if (cleanedFragment.isBlank() && uri.path == "/" && uri.query.isNullOrBlank()) {
+            // special case: if there is no path, and the fragment is blank, remove the path for a clean URL, since the
+            // root slash is implied with no other path characters.
+            ""
+          } else uri.path
+
+          NativeURL(
+            uri.scheme,
+            uri.userInfo,
+            uri.host,
+            uri.port,
+            transformedPath,
+            uri.query,
+            cleanedFragment.ifBlank { null },
+          )
+        } catch (e: java.net.URISyntaxException) {
+          throw valueError("Invalid fragment: '$fragment'")
+        }.let { reassembled ->
+          ParsedURL(
+            uri = reassembled,
+            absolute = reassembled.toString(),
+            hash = CachedURLValue.of(if (cleanedFragment.isBlank()) "" else composedFragment),
+            knownProtocol = this.knownProtocol,  // no change
+            port = this.port,  // no change
+            protocol = this.protocol,  // no change
+            host = this.host,  // no change
+            search = this.search,  // no change
+            searchParams = this.searchParams,  // no change
+            hostname = this.hostname,  // no change
+            pathname = this.pathname,  // no change
+            username = this.username,  // no change
+            password = this.password,  // no change
+            origin = this.origin,  // no change
+          )
+        }
+      }
     }
 
     // Splice a new username value into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySpliceUsername(username: String): ParsedURL = when (username) {
-      this.username.resolve() -> this  // special case: update is a no-op
+    private fun copySpliceUsername(username: String): ParsedURL = when {
+      username == this.username.resolve() -> this  // special case: update is a no-op
+      username.isNotEmpty() && username.isBlank() ->
+        throw valueError("Cannot set `URL.username` to blank value")
       else -> try {
-        val desiredUser = if (username.isNotBlank() && username.isNotBlank()) {
-          username
-        } else {
+        val desiredUser = if (username.isBlank()) {
           // if the username is blank, we're clearing the value; if the username is being cleared, the password needs to
           // be cleared, too.
           null
-        }
+        } else if (username.contains(":") || username.contains("\n")) {
+          throw java.net.URISyntaxException(username, "Cannot contain invalid characters")
+        } else username
 
         NativeURL(
           uri.scheme,
@@ -898,7 +835,7 @@ import kotlin.reflect.*
           origin = this.origin,  // no change
 
           // corner case: clear the password forcibly if the username is cleared
-          password = if (username.isBlank() || username.isEmpty()) {
+          password = if (username.isBlank()) {
             CachedURLValue.of("")
           } else {
             this.password
@@ -908,21 +845,15 @@ import kotlin.reflect.*
     }
 
     // Splice a new username and password value into the current URL, and return it re-wrapped as a parsed URL.
-    private fun copySplicePassword(username: String, password: String): ParsedURL = when {
-      password == this.password.resolve() -> this  // special case: update is a no-op
-      username.isBlank() || username.isEmpty() -> this  // reject password update if username is blank or empty
-
+    private fun copySplicePassword(username: String, password: String): ParsedURL = when (password) {
+      this.password.resolve() -> this  // special case: update is a no-op
       else -> try {
-        val desiredUserInfo = if (username.isNotBlank() && username.isNotBlank()) {
-          if (password.isBlank()) {
-            username
-          } else {
-            "$username:$password"
-          }
+        if (password.contains("\n"))
+          throw java.net.URISyntaxException(password, "Cannot contain invalid characters")
+        val desiredUserInfo = if (password.isBlank()) {
+          username
         } else {
-          // if the username is blank, we're clearing the value; if the username is being cleared, the password needs to
-          // be cleared, too.
-          null
+          "$username:$password"
         }
 
         NativeURL(
@@ -935,7 +866,7 @@ import kotlin.reflect.*
           uri.fragment,
         )
       } catch (syntaxErr: java.net.URISyntaxException) {
-        throw valueError("Invalid username: '$username'")
+        throw valueError("Invalid password: '$username'")
       }.let { reassembled ->
         ParsedURL(
           uri = reassembled,
@@ -1018,7 +949,7 @@ import kotlin.reflect.*
         hash != null -> copySpliceHash(hash)
 
         // mutable field update: `password`
-        username != null && password != null -> copySplicePassword(username = username, password = password)
+        password != null -> copySplicePassword(username = this.username.resolve(), password = password)
 
         // mutable field update: `username`
         username != null -> copySpliceUsername(username)
@@ -1042,10 +973,21 @@ import kotlin.reflect.*
 
       /** @return Wrapped intrinsic URL from a regular Java URL. */
       @JvmStatic fun fromString(url: String): URLValue = URLValue(AtomicReference(ParsedURL.fromString(url)))
-    }
 
-    /** @inheritDoc */
-    override fun wrappedURL(): NativeURL = target.get().uri
+      // Shortcut to parse a string as a URL (used internally only).
+      @JvmStatic private fun parseString(url: String): AtomicReference<ParsedURL> =
+        if (url.isNotEmpty() && url.isNotBlank()) {
+          if (!url.startsWith("//") && url.startsWith("/"))
+            throw valueError("Invalid URL: Relative URLs are not supported")
+          AtomicReference(ParsedURL.fromString(url))
+        } else throw valueError(
+          "Cannot construct URL from empty string value"
+        )
+
+      // Shortcut to parse a guest string as a URL (used internally only).
+      @JvmStatic private fun parseString(url: GuestValue): AtomicReference<ParsedURL> =
+        parseString(url.asString())
+    }
 
     /**
      * Constructor: universal. Accepts a [String], another [URLValue] intrinsic, or a guest value which evaluates to any
@@ -1057,20 +999,10 @@ import kotlin.reflect.*
      * @throws TypeError if the provided [target] is not a valid type from which a URL can be constructed.
      */
     @Polyglot constructor (target: Any?) : this(when (target) {
-      null -> throw valueError("Cannot construct URL from: `null`")
-      is String -> if (target.isNotEmpty() && target.isNotBlank()) {
-        if (!target.startsWith("//") && target.startsWith("/"))
-          throw valueError("Invalid URL: Relative URLs are not supported")
-        AtomicReference(ParsedURL.fromString(target))
-      } else throw valueError(
-        "Cannot construct URL from empty string value"
-      )
-      is NativeURL -> AtomicReference(ParsedURL.fromURL(target))
-      is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))
-      is URLValue -> AtomicReference(target.target.get())
+      null -> throw typeError("Cannot construct URL from: `null`")
       is GuestValue -> when {
         // if we are given a guest value string, handle it as a regular URL string
-        target.isString -> AtomicReference(ParsedURL.fromString(target.asString()))
+        target.isString -> parseString(target)
 
         // if we are given another URL class, let's clone it
         target.isHostObject && target.`as`(URLValue::class.java) != null ->
@@ -1079,6 +1011,10 @@ import kotlin.reflect.*
         // if we are given anything else, it is considered an error
         else -> throw typeError("Invalid URL: $target")
       }
+      is String -> parseString(target)
+      is NativeURL -> AtomicReference(ParsedURL.fromURL(target))
+      is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))
+      is URLValue -> AtomicReference(target.target.get())
       else -> throw typeError("Cannot construct URL from: $target")
     })
 
@@ -1092,6 +1028,12 @@ import kotlin.reflect.*
         target.set(changed)
       }
     }
+
+    /** @inheritDoc */
+    override fun wrappedURL(): URI = parsedURL().uri
+
+    /** @inheritDoc */
+    override fun parsedURL(): ParsedURL = target.get()
 
     /** @inheritDoc */
     @Polyglot override fun compareTo(other: URLValue): Int = target.get().absoluteString().compareTo(other.toString())
@@ -1113,7 +1055,7 @@ import kotlin.reflect.*
     /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var hash: String
       get() = target.get().hash.resolve()
-      set(value) = mutateURL { copySplice(hash = value.dropWhile { it == '#' }) }
+      set(value) = mutateURL { copySplice(hash = value) }
 
     /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var host: String
@@ -1138,10 +1080,7 @@ import kotlin.reflect.*
         if (user.isBlank()) {
           this  // silently drop update: by spec, the `username` must be set before the password.
         } else {
-          copySplice(
-            username = user,
-            password = value,
-          )
+          copySplice(password = value)
         }
       }
 
@@ -1171,7 +1110,9 @@ import kotlin.reflect.*
       set(value) = mutateURL { copySplice(username = value) }
 
     /** @inheritDoc */
-    @get:Polyglot override val origin: String get() = target.get().origin.resolve()
+    @get:Polyglot override val origin: String get() = throw typeError(
+      "Property `URL.origin` is not supported in server-side environments"
+    )
 
     /** @inheritDoc */
     @get:Polyglot override val searchParams: URLSearchParams get() = target.get().searchParams.resolve()

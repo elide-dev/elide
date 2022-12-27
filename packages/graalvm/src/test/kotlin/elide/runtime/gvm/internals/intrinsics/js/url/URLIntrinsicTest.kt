@@ -11,7 +11,6 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import kotlin.test.assertFailsWith
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.net.URI
@@ -31,6 +30,11 @@ import java.net.URI
   @Test fun testURLFromJavaURL() {
     assertNotNull(sampleUrl, "should be able to convert a Java `URL` to a wrapped intrinsic `URL`")
     assertEquals("https://google.com", sampleUrl.toString())
+
+    val url = URLValue(java.net.URL("https://google.com"))
+    assertNotNull(url, "should be able to construct a `URLValue` from a `java.net.URL`")
+    val uri = URLValue(java.net.URI.create("https://google.com"))
+    assertNotNull(uri, "should be able to construct a `URLValue` from a `java.net.URI`")
   }
 
   @Test fun testConstructFromString() = dual {
@@ -51,24 +55,99 @@ import java.net.URI
     """
   }
 
+  @Test fun testConstructGuest() = withContext {
+    // guest string
+    val url = "https://google.com"
+    val guestUrlString = asValue(url)
+    val guestUrl = URLValue(guestUrlString)
+    assertNotNull(guestUrl, "should be able to construct a `URL` from a guest string")
+
+    // guest URL
+    val url2 = URLValue.fromString("https://google.com")
+    val guestUrlString2 = asValue(url2)
+    val guestUrl2 = URLValue(guestUrlString2)
+    assertNotNull(guestUrl2, "should be able to construct a `URL` from a guest string")
+  }
+
+  @Test fun testConstructProtocolRelative() = withContext {
+    val url = URLValue.fromString("//google.com")
+    assertNotNull(url, "should be able to construct a `URL` from a protocol-relative string")
+    assertEquals("//google.com", url.toString())
+    val url2 = URLValue(asValue("//google.com"))
+    assertNotNull(url2, "should be able to construct a `URL` from a protocol-relative string (as guest)")
+    assertEquals("//google.com", url2.toString())
+  }
+
+  @Test fun testURLValueFailUndeterminedUpdate() {
+    val value = URLValue.fromString("https://google.com")
+    val wrapped = value.wrappedURL()
+    val parsed = value.parsedURL()
+    assertNotNull(wrapped, "should be able to obtain wrapped URL (internally)")
+    assertNotNull(parsed, "should be able to obtain parsed URL (internally)")
+    assertFailsWith<IllegalStateException> {
+      parsed.copySplice(/* intentionally provide nothing */)
+    }
+  }
+
   @Test fun testConstructInvalid() = dual {
-    assertFailsWith<TypeError> {
-      URLValue(5)
-    }
-    assertFailsWith<TypeError> {
-      URLValue(1.5)
-    }
-    assertFailsWith<TypeError> {
-      URLValue(HashMap<String, String>())
-    }
-    assertFailsWith<TypeError> {
-      URLValue(false)
-    }
-    assertFailsWith<ValueError> {
-      URLValue("")
-    }
-    assertFailsWith<ValueError> {
-      URLValue("/relative")
+    withContext {
+      assertFailsWith<TypeError> {
+        URLValue(5)
+      }
+      assertFailsWith<TypeError> {
+        URLValue(asValue(5))
+      }
+      assertFailsWith<TypeError> {
+        URLValue(1.5)
+      }
+      assertFailsWith<TypeError> {
+        URLValue(asValue(1.5))
+      }
+      assertFailsWith<TypeError> {
+        URLValue(HashMap<String, String>())
+      }
+      assertFailsWith<TypeError> {
+        URLValue(null)
+      }
+      assertFailsWith<TypeError> {
+        URLValue(asValue(null))
+      }
+      assertFailsWith<TypeError> {
+        URLValue(false)
+      }
+      assertFailsWith<TypeError> {
+        URLValue(asValue(false))
+      }
+      assertFailsWith<ValueError> {
+        URLValue("")
+      }
+      assertFailsWith<ValueError> {
+        URLValue(asValue(""))
+      }
+      assertFailsWith<ValueError> {
+        URLValue(" ")
+      }
+      assertFailsWith<ValueError> {
+        URLValue(asValue(" "))
+      }
+      assertFailsWith<ValueError> {
+        URLValue("  ")
+      }
+      assertFailsWith<ValueError> {
+        URLValue(asValue("  "))
+      }
+      assertFailsWith<ValueError> {
+        URLValue("\n")
+      }
+      assertFailsWith<ValueError> {
+        URLValue(asValue("\n"))
+      }
+      assertFailsWith<ValueError> {
+        URLValue("/relative")
+      }
+      assertFailsWith<ValueError> {
+        URLValue(asValue("/relative"))
+      }
     }
   }.guest {
     // language=javascript
@@ -78,6 +157,11 @@ import java.net.URI
       test(() => new URL(1.5)).fails("should throw an exception when constructing an invalid `URL` (value: '1.5')");
       test(() => new URL(false)).fails("should throw an exception when constructing an invalid `URL` (value: 'false')");
       test(() => new URL("")).fails("should throw an exception when constructing an invalid `URL` (value: '')");
+      test(() => new URL(" ")).fails("should throw an exception when constructing an invalid `URL` (value: ' ')");
+      test(() => new URL("  ")).fails("should throw an exception when constructing an invalid `URL` (value: '  ')");
+      test(() => new URL("   ")).fails("should throw an exception when constructing an invalid `URL` (value: '   ')");
+      test(() => new URL("\n")).fails("should throw an exception when constructing an invalid `URL` (value: '\\n')");
+      test(() => new URL(null)).fails("should throw an exception when constructing an invalid `URL` (value: 'null')");
       test(() => new URL("/relative")).fails("should throw an exception when constructing a relative `URL`");
     """
   }
@@ -134,6 +218,7 @@ import java.net.URI
     "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
     "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
   ])
+  @Suppress("AssertBetweenInconvertibleTypes")
   @ParameterizedTest(
     name = "[{index}:dual]: {0}: {4}",
   ) fun testURLEquals(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) = dual {
@@ -157,6 +242,21 @@ import java.net.URI
       shouldNotEqual
     }
     op.invoke(URLValue.fromString(base), URLValue.fromString(comparison))
+    assertNotEquals(URLValue.fromString(base), 5)
+    assertNotEquals(URLValue.fromString(base), 5.5)
+    assertNotEquals(URLValue.fromString(base), false)
+    assertNotEquals(URLValue.fromString(base), null)
+    val parsedOne = URLValue.fromString(base).parsedURL()
+    val parsedTwo = URLValue.fromString(base).parsedURL()
+    assertEquals(parsedOne, parsedOne)
+    assertSame(parsedOne, parsedOne)
+    assertNotSame(parsedOne, parsedTwo)
+    assertEquals(parsedOne, parsedTwo)
+    assertEquals(parsedOne.hashCode(), parsedTwo.hashCode())
+    assertNotEquals(parsedOne, 5)
+    assertNotEquals(parsedOne, 5.5)
+    assertNotEquals(parsedOne, false)
+    assertNotEquals(parsedOne, null)
   }.guest {
     // language=javascript
     """
@@ -165,6 +265,10 @@ import java.net.URI
       } else {
         test(new URL("$base")).isNotEqualTo(new URL("$comparison"), "$msg");
       }
+      test(new URL("$base")).isNotEqualTo(5);
+      test(new URL("$base")).isNotEqualTo(5.5);
+      test(new URL("$base")).isNotEqualTo(false);
+      test(new URL("$base")).isNotEqualTo(null);
     """
   }
 
@@ -227,9 +331,17 @@ import java.net.URI
 
   @Test fun testURLHashMutability() = dual {
     val url = URLValue.fromString("https://google.com")
+    val captured = url.parsedURL()
     url.hash = "hi"
+    assertNotSame(captured, url.parsedURL())
     assertEquals("https://google.com/#hi", url.toString())
     url.hash = "#yo"
+    val captured2 = url.parsedURL()
+    assertNotSame(captured, url.parsedURL())
+    url.hash = "yo"
+    assertSame(captured2, url.parsedURL())
+    url.hash = "#yo"
+    assertSame(captured2, url.parsedURL())
     assertEquals("https://google.com/#yo", url.toString())
     url.hash = ""
     assertEquals("https://google.com", url.toString())
@@ -252,6 +364,24 @@ import java.net.URI
       test(url.hash).isEqualTo("");
       test(url.toString()).isEqualTo("https://google.com");
     """
+  }
+
+  @Test fun testURLHashMutabilitySideEffects() {
+    val url = URLValue.fromString("https://google.com/has/a/path")
+    url.hash = "hi"
+    assertEquals("https://google.com/has/a/path#hi", url.toString())
+    val urlWithQuery = URLValue.fromString("https://google.com?has=query")
+    urlWithQuery.hash = "hi"
+    assertEquals("https://google.com/?has=query#hi", urlWithQuery.toString())
+    val urlWithQueryAndPath = URLValue.fromString("https://google.com/has/path?has=query")
+    urlWithQueryAndPath.hash = "hi"
+    assertEquals("https://google.com/has/path?has=query#hi", urlWithQueryAndPath.toString())
+  }
+
+  @Test fun testURLHashInvalid() {
+    assertFailsWith<ValueError> {
+      URLValue.fromString("https://google.com").hash = "hi?"
+    }
   }
 
   @CsvSource(value = [
@@ -282,8 +412,13 @@ import java.net.URI
 
   @Test fun testURLHostMutability() = dual {
     val url = URLValue.fromString("https://google.com")
+    val captured = url.parsedURL()
     assertEquals("google.com", url.host)
     url.host = "github.com"
+    assertNotSame(captured, url.parsedURL())
+    val captured2 = url.parsedURL()
+    url.host = "github.com"
+    assertSame(captured2, url.parsedURL())
     assertEquals("github.com", url.host)
     assertEquals("https://github.com", url.toString())
     url.host = "dl.elide.dev:123"
@@ -297,6 +432,9 @@ import java.net.URI
     assertEquals("https://google.com", url.toString())
     assertFailsWith<ValueError> {
       url.host = "google.com:"
+    }
+    assertFailsWith<ValueError> {
+      url.host = "cool.host.com:123butnotacoolport"
     }
     assertFailsWith<ValueError> {
       url.host = "google.com:1:2"
@@ -358,13 +496,28 @@ import java.net.URI
   @Test fun testURLProtocolMutability() = dual {
     val url = URLValue.fromString("https://google.com")
     assertEquals("https:", url.protocol, "expected protocol mismatch")
+    assertEquals("https:", url.protocol)
+    val captured = url.parsedURL()
     url.protocol = "ftp"
+    assertEquals("ftp:", url.protocol)
+    assertNotSame(captured, url.parsedURL())
+    val captured2 = url.parsedURL()
+    url.protocol = "ftp"
+    assertSame(captured2, url.parsedURL())
     assertEquals("ftp://google.com", url.toString(), "expected protocol mismatch")
     url.protocol = ""
+    val captured3 = url.parsedURL()
     assertEquals("//google.com", url.toString(), "should be able to 'relativize' a protocol by setting it to empty")
+    assertEquals("", url.protocol)
+    url.protocol = ""
+    assertSame(captured3, url.parsedURL())
     assertFailsWith<ValueError>("should reject blank protocols") {
       url.protocol = " "
     }
+    url.protocol = "https:"
+    assertNotSame(captured3, url.parsedURL())
+    assertEquals("https:", url.protocol)
+    assertEquals("https://google.com", url.toString(), "should be able to 're-absolute' a URL")
   }.guest {
     // language=javascript
     """
@@ -407,7 +560,12 @@ import java.net.URI
   @Test fun testURLPortMutability() = dual {
     val url = URLValue.fromString("https://google.com")
     assertEquals(443, url.port, "expected port mismatch")
+    val captured = url.parsedURL()
     url.port = 123
+    assertNotSame(captured, url.parsedURL())
+    val captured2 = url.parsedURL()
+    url.port = 123
+    assertSame(captured2, url.parsedURL())
     assertEquals("https://google.com:123", url.toString(), "expected port mismatch")
     assertFailsWith<ValueError>("should reject ports which are too small") {
       url.port = -5
@@ -459,11 +617,16 @@ import java.net.URI
 
   @Test fun testURLHostnameMutability() = dual {
     val url = URLValue.fromString("https://google.com")
+    val captured = url.parsedURL()
     url.hostname = "github.com"
+    assertNotSame(captured, url.parsedURL())
     assertEquals("https://github.com", url.toString())
     assertFailsWith<ValueError>("should reject URL hostname changes with a port") {
       url.hostname = "dl.elide.dev:123"
     }
+    val captured2 = url.parsedURL()
+    url.hostname = "github.com"
+    assertSame(captured2, url.parsedURL())
     url.host = "github.com:123"
     assertEquals("https://github.com:123", url.toString())
     url.hostname = "testing.com"
@@ -662,6 +825,67 @@ import java.net.URI
     """
   }
 
+  @Test fun testURLUsernamePasswordSplice() {
+    val url = URLValue.fromString("https://google.com")
+    val captured = url.parsedURL()
+    url.password = "";  // should not trigger an update
+    assertSame(captured, url.parsedURL())
+
+    // should be dropped because there is no username
+    url.password = "hello"
+    assertSame(captured, url.parsedURL())
+    assertEquals("https://google.com", url.toString())
+    assertEquals("", url.password)
+
+    // setting username should work and trigger an update
+    url.username = "sample"
+    assertNotSame(captured, url.parsedURL())
+    assertEquals("https://sample@google.com", url.toString())
+    val captured2 = url.parsedURL()
+
+    // repeated update of same value should not trigger update
+    url.username = "sample"
+    assertSame(captured2, url.parsedURL())
+    assertEquals("https://sample@google.com", url.toString())
+
+    // now, updating the password will add the password
+    url.password = "hello"
+    assertNotSame(captured2, url.parsedURL())
+    assertEquals("https://sample:hello@google.com", url.toString())
+    val captured3 = url.parsedURL()
+
+    // updating the password again to the same value should not trigger an update
+    url.password = "hello"
+    assertSame(captured3, url.parsedURL())
+    assertEquals("https://sample:hello@google.com", url.toString())
+
+    assertFailsWith<ValueError> {
+      url.password = " \n"
+    }
+  }
+
+  @Test fun testURLUsernameInvalid() {
+    val url = URLValue.fromString("https://google.com")
+    assertFailsWith<ValueError> {
+      url.username = "::::"
+    }
+    assertFailsWith<ValueError> {
+      url.username = " "
+    }
+    assertFailsWith<ValueError> {
+      url.username = "  "
+    }
+    assertFailsWith<ValueError> {
+      url.username = "   "
+    }
+    assertFailsWith<ValueError> {
+      url.username = "\n"
+    }
+    assertFailsWith<ValueError> {
+      url.username = "hi\n"
+    }
+  }
+
   @CsvSource(value = [
     "https://google.com,/",
     "https://github.com/elide-dev/v3,/elide-dev/v3",
@@ -690,7 +914,10 @@ import java.net.URI
   @Test fun testURLPathnameMutability() = dual {
     val url = URLValue.fromString("https://google.com")
     url.pathname = "/hello/hi"
+    val captured = url.parsedURL()
     assertEquals("https://google.com/hello/hi", url.toString())
+    url.pathname = "/hello/hi"
+    assertSame(captured, url.parsedURL())
     url.pathname = ""
     assertEquals("https://google.com", url.toString())
   }.guest {
@@ -701,7 +928,19 @@ import java.net.URI
       test(url.toString()).isEqualTo("https://google.com/hello/hi");
       url.pathname = "";
       test(url.toString()).isEqualTo("https://google.com");
+      test(() => url.pathname = "hello/hi").fails();
     """
+  }
+
+  @Test fun testURLPathnameInvalid() {
+    assertFailsWith<ValueError> {
+      // cannot set to a relative path
+      URLValue.fromString("https://google.com").pathname = "hello/hi"
+    }
+    assertFailsWith<ValueError> {
+      // cannot set to a relative path
+      URLValue.fromString("https://google.com").pathname = "hello/hi"
+    }
   }
 
   @CsvSource(value = [
@@ -754,36 +993,71 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
-    "https://google.com,https://google.com",
-    "https://github.com/elide-dev/v3,https://github.com",
-    "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev",
-    "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123",
-    "http://www.google.com/#hello,https://www.google.com",
-    "//dl.elide.dev/test?abc=123&def=456,//dl.elide.dev",
-    "ftp://hello.local.dev/hello/test,",
-    "file://here/is/a/file/path,",
-    "blob://some-blob-id,",
-    "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") @Disabled fun testURLOrigin(testString: String, expected: String?) = dual {
-    val url = URLValue.fromString(testString)
-    assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
-    assertEquals(expected ?: "", url.origin, "origin value mismatch")
+  @Test fun testURLQueryInvalid() {
+    val url = URLValue.fromString("https://google.com")
+    assertFailsWith<ValueError> {
+      url.search = "?hello???"
+    }
+    assertFailsWith<ValueError> {
+      url.search = "    "
+    }
+    assertFailsWith<ValueError> {
+      url.search = "\n"
+    }
+    assertFailsWith<ValueError> {
+      url.search = "  xx\n"
+    }
+    assertFailsWith<ValueError> {
+      url.search = "?  xx\n"
+    }
+  }
+
+  @Test fun testURLToJSON() = dual {
+    val url = URLValue.fromString("https://google.com")
+    assertEquals("https://google.com", url.toJSON())
+    assertEquals("https://google.com", url.toString())
   }.guest {
     // language=javascript
     """
-      // not yet implemented
+      test(new URL("https://google.com").toJSON()).isEqualTo("https://google.com");
+      test(new URL("https://google.com").toString()).isEqualTo("https://google.com");
     """
   }
 
-  @Test @Disabled fun testURLSearchParams() = dual {
-    // coming soon.
-  }.guest {
-    // language=javascript
-    """
-      // not yet implemented
-    """
+  @Test fun testURLHashcode() {
+    val url1 = URLValue.fromString("https://google.com")
+    val url2 = URLValue.fromString("https://google.com")
+    assertEquals(url1.hashCode(), url2.hashCode())
+    val url3 = URLValue.fromString("https://google.com/hello")
+    assertNotEquals(url1.hashCode(), url3.hashCode())
+  }
+
+  @Test fun testURLSort() {
+    val url1 = URLValue.fromString("https://google.com")
+    val url2 = URLValue.fromString("https://github.com")
+    val list = listOf(url1, url2)
+    val sorted = list.sorted()
+    assertEquals("https://github.com", sorted.first().toString())
+    assertEquals("https://google.com", sorted.last().toString())
+  }
+
+  @Test fun testURLSortedSet() {
+    val url1 = URLValue.fromString("https://google.com")
+    val url2 = URLValue.fromString("https://github.com")
+    val sorted = sortedSetOf(url1, url2)
+    assertEquals("https://github.com", sorted.first().toString())
+  }
+
+  @Test fun testURLSortedHashmap() {
+    val url1 = URLValue.fromString("https://google.com")
+    val url2 = URLValue.fromString("https://github.com")
+    val sorted = sortedMapOf(url1 to 1, url2 to 2)
+    assertEquals("https://github.com", sorted.firstKey().toString())
+  }
+
+  @Test fun testURLOriginNotSupported() {
+    assertFailsWith<TypeError> {
+      URLValue.fromString("https://google.com").origin
+    }
   }
 }

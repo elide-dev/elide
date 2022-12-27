@@ -1,5 +1,7 @@
 package elide.runtime.intrinsics.js
 
+import elide.annotations.core.Polyglot
+
 /**
  * TBD.
  */
@@ -7,7 +9,12 @@ public interface JavaScriptBase64 {
   /**
    * TBD.
    */
-  public fun encode(input: String): String
+  @Polyglot public fun encode(input: String): String = encode(input, false)
+
+  /**
+   * TBD.
+   */
+  @Polyglot public fun encode(input: String, websafe: Boolean): String
 
   /**
    *

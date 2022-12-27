@@ -88,7 +88,7 @@ import kotlin.reflect.full.companionObjectInstance
     } catch (value: IllegalArgumentException) {
       // typically, these should raise as `ValueError`.
       throw wrapped(value, ValueError::class)
-    } catch (state: IllegalStateException) {
+    } catch (state: ClassCastException) {
       // typically, these should raise as `TypeError`.
       throw wrapped(state, TypeError::class)
     }

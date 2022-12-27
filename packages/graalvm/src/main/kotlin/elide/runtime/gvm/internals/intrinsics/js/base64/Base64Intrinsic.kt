@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
 import elide.annotations.core.Polyglot
+import elide.core.encoding.Base64
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
@@ -22,12 +23,12 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
   }
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String =
-    NativeBase64Intrinsic.base64Encode(input)
+  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String, websafe: Boolean): String =
+    if (websafe) Base64.encodeWebSafe(input) else Base64.encodeToString(input)
 
   /** @inheritDoc */
   @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String =
-    NativeBase64Intrinsic.base64Decode(input)
+    Base64.decodeToString(input)
 
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {

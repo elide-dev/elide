@@ -115,16 +115,16 @@ import org.junit.jupiter.params.provider.CsvSource
   }
 
   @CsvSource(value = [
-    "Hello world!,SGVsbG8gd29ybGQh",
-    "12346789,MTIzNDY3ODk=",
-    "f,Zg==",
-    "fo,Zm8=",
-    "foo,Zm9v",
-    "foob,Zm9vYg==",
-    "fooba,Zm9vYmE=",
-    "foobar,Zm9vYmFy",
+    "Hello world!,SGVsbG8gd29ybGQh,SGVsbG8gd29ybGQh",
+    "12346789,MTIzNDY3ODk=,MTIzNDY3ODk",
+    "f,Zg==,Zg",
+    "fo,Zm8=,Zm8",
+    "foo,Zm9v,Zm9v",
+    "foob,Zm9vYg==,Zm9vYg",
+    "fooba,Zm9vYmE=,Zm9vYmE",
+    "foobar,Zm9vYmFy,Zm9vYmFy",
   ])
-  @ParameterizedTest fun testCodec(source: String, expected: String) {
+  @ParameterizedTest(name = "[{index}]") fun testCodec(source: String, expected: String, websafeExpected: String) {
     // first, encode and decode directly
     val encoded = base64.encode(source)
     assertNotNull(encoded, "should be able to encode string as base64")
@@ -155,6 +155,15 @@ import org.junit.jupiter.params.provider.CsvSource
     assertTrue(decoded3.isNotEmpty())
     assertEquals(source, decoded3, "should get decoded string after round-trip encoding/decoding")
 
+    val websafe = base64.encode(source, true)
+    assertNotNull(websafe, "should be able to encode a string in websafe base64")
+    assertTrue(websafe.isNotEmpty(), "should be able to encode a string in websafe base64")
+    assertEquals(websafeExpected, websafe, "should get expected websafe base64-encoded result")
+    val decoded4 = base64.decode(websafe)
+    assertNotNull(decoded4, "should not get `null` from decoding websafe base64")
+    assertTrue(decoded4.isNotEmpty(), "should not get empty string from decoding websafe base64")
+    assertEquals(source, decoded4, "should get decoded string after decoding websafe base64 string")
+
     // check guest encode
     executeGuest {
       // language=javascript
@@ -168,6 +177,24 @@ import org.junit.jupiter.params.provider.CsvSource
       )
       assertEquals(
         encoded,
+        it.returnValue()?.asString(),
+        "should get a return value for guest base64 encode"
+      )
+    }
+
+    // check guest encode web-safe
+    executeGuest {
+      // language=javascript
+      """
+        Base64.encode("$source", true);
+      """
+    }.thenAssert {
+      assertNotNull(
+        it.returnValue(),
+        "should get a return value for guest base64 encode",
+      )
+      assertEquals(
+        websafeExpected,
         it.returnValue()?.asString(),
         "should get a return value for guest base64 encode"
       )
@@ -188,6 +215,24 @@ import org.junit.jupiter.params.provider.CsvSource
         source,
         it.returnValue()?.asString(),
         "should get a return value for guest base64 decode"
+      )
+    }
+
+    // check guest decode web-safe
+    executeGuest {
+      // language=javascript
+      """
+        Base64.decode("$websafe");
+      """
+    }.thenAssert {
+      assertNotNull(
+        it.returnValue(),
+        "should get a return value for guest base64 decode (websafe)",
+      )
+      assertEquals(
+        source,
+        it.returnValue()?.asString(),
+        "should get a return value for guest base64 decode (websafe)"
       )
     }
 

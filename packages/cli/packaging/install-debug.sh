@@ -27,6 +27,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.6  2022-12-28  Sam Gammon  Add latest version message to install script
 #   0.5  2022-12-28  Sam Gammon  Updated to new default version format
 #   0.4  2022-12-25  Sam Gammon  Swapped brotli for zstd.
 #   0.3  2022-12-22  Sam Gammon  Fixes for pipe/buffer issues with gzip decompression, add bzip2 as archive option.
@@ -37,7 +38,7 @@ set -e;
 set +x;
 
 TOOL_REVISION="1.0-v3-alpha3-b1";
-INSTALLER_VERSION="v0.5";
+INSTALLER_VERSION="v0.6";
 
 TOOL="cli";
 VERSION="v1";
@@ -222,7 +223,7 @@ VARIANT="$OS-$ARCH";
 DOWNLOAD_ENDPOINT="$DOWNLOAD_BASE/$TOOL/$VERSION/$RELEASE/$VARIANT/$TOOL_REVISION/$BINARY.$COMPRESSION";
 debug "Download endpoint: $DOWNLOAD_ENDPOINT";
 
-say "Installing Elide (variant: $VARIANT)...";
+say "Installing Elide (variant: $VARIANT, version: $TOOL_VERSION)...";
 
 DEBUG_FLAGS="-vv";
 CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --retry-delay 2 --http2";

@@ -84,4 +84,8 @@ import org.graalvm.polyglot.Value
   override fun fetch(request: FetchRequest): JsPromise<FetchResponse> {
     TODO("Fetch is not implemented yet")
   }
+
+  override fun fetch(url: URL): JsPromise<FetchResponse> {
+    TODO("Not yet implemented")
+  }
 }

@@ -27,15 +27,28 @@ kotlin {
   }
 }
 
+val protocol: Configuration by configurations.creating {
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+val implementation: Configuration by configurations.getting {
+  extendsFrom(protocol)
+}
+
 dependencies {
   // Core platform versions.
-  api(project(":packages:proto"))
   ksp(libs.autoService.ksp)
 
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)
   api(libs.graalvm.sdk)
+
+  // Protocol dependencies.
+  protocol(project(mapOf(
+    "path" to ":packages:proto",
+    "configuration" to "modelInternal",
+  )))
 
   // Modules
   implementation(project(":packages:base"))

@@ -129,14 +129,6 @@ protobuf {
   }
 }
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["kotlin"])
-    }
-  }
-}
-
 tasks.withType<JavaCompile>().configureEach {
   sourceCompatibility = javaLanguageTarget
   targetCompatibility = javaLanguageTarget
@@ -155,19 +147,19 @@ tasks {
   val protobufJar by creating(Jar::class) {
     description = "Package a JAR of the Protocol Buffers implementation of Elide Proto"
     from(sourceSets.named("proto").get().output)
-    archiveClassifier.set("protobuf")
+    archiveBaseName.set("proto-protobuf")
   }
 
   val flatbuffersJar by creating(Jar::class) {
     description = "Package a JAR of the Flatbuffers implementation of Elide Proto"
     from(sourceSets.named("flat").get().output)
-    archiveClassifier.set("flatbuffers")
+    archiveBaseName.set("proto-flatbuffers")
   }
 
   val kotlinxJar by creating(Jar::class) {
     description = "Package a JAR of the KotlinX implementation of Elide Proto"
     from(sourceSets.named("kotlinx").get().output)
-    archiveClassifier.set("kotlinx")
+    archiveBaseName.set("proto-kotlinx")
   }
 
   artifacts {
@@ -178,6 +170,43 @@ tasks {
     add("modelInternal", protobufJar)
     add("modelInternal", kotlinxJar)
     add("flatInternal", flatbuffersJar)
+  }
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      from(components["kotlin"])
+      pom {
+        name.set("Elide Protocol: API")
+        description.set("API headers and services for the Elide Protocol")
+      }
+    }
+    create<MavenPublication>("mavenProtobuf") {
+      artifactId = "proto-protobuf"
+      artifact(tasks.named("protobufJar"))
+
+      pom {
+        name.set("Elide Protocol: Protobuf")
+        description.set("Elide protocol implementation for Protocol Buffers")
+      }
+    }
+    create<MavenPublication>("mavenFlatbuffers") {
+      artifactId = "proto-flatbuffers"
+      artifact(tasks.named("flatbuffersJar"))
+      pom {
+        name.set("Elide Protocol: Flatbuffers")
+        description.set("Elide protocol implementation for Flatbuffers")
+      }
+    }
+    create<MavenPublication>("mavenKotlinx") {
+      artifactId = "proto-kotlinx"
+      artifact(tasks.named("kotlinxJar"))
+      pom {
+        name.set("Elide Protocol: KotlinX")
+        description.set("Elide protocol implementation for KotlinX Serialization")
+      }
+    }
   }
 }
 

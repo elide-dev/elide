@@ -27,6 +27,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.5  2022-12-28  Sam Gammon  Updated to new default version format
 #   0.4  2022-12-25  Sam Gammon  Swapped brotli for zstd.
 #   0.3  2022-12-22  Sam Gammon  Fixes for pipe/buffer issues with gzip decompression, add bzip2 as archive option.
 #   0.2  2022-12-22  Sam Gammon  Added support for gzip and brotli archive download when XZ is not available.
@@ -35,8 +36,8 @@
 set -e;
 set +x;
 
-TOOL_REVISION="1.0.0-r2";
-INSTALLER_VERSION="v0.3";
+TOOL_REVISION="1.0-v3-alpha3-b1";
+INSTALLER_VERSION="v0.5";
 
 TOOL="cli";
 VERSION="v1";

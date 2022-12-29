@@ -225,7 +225,9 @@ cli-release-artifacts:
 		&& $(HASHSUM) elide.xz | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
 		&& $(HASHSUM) elide.zst | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
 		&& $(HASHSUM) elide.zip | cut -d " " -f 1 > elide.zip.$(HASHSUM_ALGORITHM) \
-		&& $(HASHSUM) manifest.txt | cut -d " " -f 1 > manifest.txt.$(HASHSUM_ALGORITHM);
+		&& $(HASHSUM) manifest.txt | cut -d " " -f 1 > manifest.txt.$(HASHSUM_ALGORITHM) \
+		&& $(TAR) -cvf elide.tar elide elide.sha256 $(SIGNATURE_FILE) \
+		&& $(GZIP) --best --verbose elide.tar;
 ifeq ($(SIGNING),yes)
 	$(CMD)echo "Signing release artifacts..." \
 		&& cd $(CLI_DISTPATH) \

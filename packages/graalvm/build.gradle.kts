@@ -116,6 +116,10 @@ dependencies {
   implementation(libs.lmax.disruptor.core)
   implementation(libs.lmax.disruptor.proxy)
 
+  // Compression
+  implementation(libs.lz4)
+  implementation(libs.brotli)
+
   // Micronaut
   implementation(libs.micronaut.graal)
   implementation(libs.micronaut.http)

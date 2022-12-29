@@ -14,12 +14,8 @@ import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
-import org.graalvm.polyglot.HostAccess
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.Serializable
 import java.net.URI
-import java.util.TreeMap
 import java.util.concurrent.atomic.AtomicBoolean
 import org.graalvm.polyglot.Value as GuestValue
 import java.net.URI as NativeURL

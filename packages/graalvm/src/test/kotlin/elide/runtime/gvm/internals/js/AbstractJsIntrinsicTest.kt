@@ -19,7 +19,9 @@ import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
 /** Abstract base for JS intrinsics. */
-internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
+internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
+  private val testInject: Boolean = true,
+) : AbstractIntrinsicTest<T>() {
   companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")

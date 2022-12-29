@@ -11,49 +11,32 @@
  * is strictly forbidden except in adherence with assigned license requirements.
  */
 
-/*
- * Specifies core structures related to cryptographic operations and primitives. These records and enumerates are used
- * throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
- */
 syntax = "proto3";
-package elide.crypto;
 
-option optimize_for = CODE_SIZE;
+/**
+ * Defines known syntax types for guest languages supported by the Elide framework and runtime.
+ */
+package elide.meta;
+
+option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
 option php_class_prefix = "ELD";
 option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
-option java_package = "tools.elide.crypto";
-option csharp_namespace = "Elide.Crypto";
-option go_package = "github.com/elide-tools/elide/crypto;crypto";
+option java_package = "tools.elide.meta";
+option csharp_namespace = "Elide.Meta";
 
 
-// Specifies hash algorithms supported by the asset manifest code. We keep a token for this around so that we can
-// easily detect configuration changes and make evictions accordingly.
-enum HashAlgorithm {
-  // No hash algorithm was/is active.
-  IDENTITY = 0;
+// # Guest Language
+//
+// Enumerates known guest programming languages, which may be used alongside JVM technologies in an Elide application.
+// This list may grow over time.
+enum GuestLanguage {
+  // No guest language is available.
+  NO_GUEST_ENABLED = 0;
 
-  // Algorithm: MD5.
-  MD5 = 1;
-
-  // Algorithm: SHA1.
-  SHA1 = 2;
-
-  // Algorithm: SHA-256.
-  SHA256 = 3;
-
-  // Algorithm: SHA-512.
-  SHA512 = 4;
-
-  // Algorithm: SHA3-224.
-  SHA3_224 = 5;
-
-  // Algorithm: SHA3-256.
-  SHA3_256 = 6;
-
-  // Algorithm: SHA3-512.
-  SHA3_512 = 7;
+  // Guest language: JavaScript.
+  JAVASCRIPT = 1;
 }

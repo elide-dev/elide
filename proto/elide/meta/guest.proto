@@ -1,0 +1,125 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+syntax = "proto3";
+
+/**
+ * Defines structures and enumerations which are used to describe application guest VM settings, including language-
+ * specific settings.
+ */
+package elide.meta;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.meta";
+option csharp_namespace = "Elide.Meta";
+
+import "elide/meta/syntax.proto";
+
+
+// Enumerates supported JavaScript language levels.
+enum JsLanguageLevel {
+  // The language level is unknown or unspecified; regular code should not use this value.
+  JS_LANGUAGE_LEVEL_DEFAULT = 0;
+
+  // The language level is ES5.
+  ES5 = 1;
+
+  // The language level is ES6.
+  ES6 = 2;
+
+  // The language level is ES2017.
+  ES2017 = 3;
+
+  // The language level is ES2018.
+  ES2018 = 4;
+
+  // The language level is ES2019.
+  ES2019 = 5;
+
+  // The language level is ES2020.
+  ES2020 = 6;
+
+  // The language level is ES2021.
+  ES2021 = 7;
+
+  // The language level is ES2022.
+  ES2022 = 8;
+}
+
+// # Language Settings: JavaScript
+//
+// Specifies JavaScript-specific settings and configurations.
+message JsSettings {
+  // Enumeration of Elide JavaScript features which may be enabled/disabled.
+  enum JsFeature {
+    // The feature is unknown or unspecified; regular code should not use this value. Backwards-incompatible values also
+    // decode to this value, where supported.
+    FEATURE_UNRECOGNIZED = 0 [deprecated = true];
+
+    // ESM: Support for ECMAScript Modules.
+    ESM = 1;
+
+    // NPM: Support for NPM modules and CommonJS `require`.
+    NPM = 2;
+  }
+
+  // Describes the JavaScript language level for an embedded guest script.
+  JsLanguageLevel level = 1;
+}
+
+// # Language Settings: General
+//
+// Defines general settings and configurations which apply to every guest language.
+message GeneralLanguageSettings {
+  // Whether this language is enabled.
+  bool enabled = 1;
+
+  // Whether to disable source parser caching. Requires sharing of engines across contexts. Defaults to `false`; should
+  // usually be kept on to improve performance.
+  bool disable_cache = 2;
+}
+
+// # Guest Settings: Stanza
+//
+// Describes a single group of settings which apply to a given guest language as part of a bigger set of configurations.
+message GuestSettingsStanza {
+  // Specifies the language which these settings apply to.
+  GuestLanguage lang = 1;
+
+  // General settings which apply to all guest language types.
+  GeneralLanguageSettings general = 2;
+
+  // Language-specific settings, bound to the specified `lang`.
+  oneof lang_settings {
+    // JavaScript-specific language settings.
+    JsSettings js = 10;
+  }
+}
+
+// # Guest Settings: Configuration
+//
+// Top-level configuration for Elide guest VM settings. Includes root settings for the guest VM as well as all language-
+// specific settings, as applicable.
+message GuestConfiguration {
+  // Whether to enable guest VMs at all.
+  bool enabled = 1;
+
+  // Settings stanzas, each of which describe general and language-specific settings for a given guest language.
+  repeated GuestSettingsStanza settings = 2;
+}

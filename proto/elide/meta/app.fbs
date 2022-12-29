@@ -12,6 +12,8 @@
  */
 
 include "../../google/protobuf/timestamp.fbs";
+include "./guest.fbs";
+include "./syntax.fbs";
 
 /*
  * Specifies Elide application configuration, which is embedded at build-time.
@@ -105,6 +107,15 @@ table BuildInfo {
   stamp: google.protobuf.Timestamp;
 }
 
+// Specifies guest VM requirements for a given Elide application.
+table GuestVM {
+  // Syntax set enabled for this application, if any.
+  language: [elide.meta.GuestLanguage];
+
+  // Settings for each enabled guest language.
+  config: elide.meta.GuestConfiguration;
+}
+
 // Info regarding an Elide application.
 table AppInfo {
   // Version string of the application.
@@ -138,4 +149,7 @@ table AppManifest {
 
   // Build info/configuration.
   build: elide.meta.BuildInfo;
+
+  // Guest VM settings.
+  guest:elide.meta.GuestVM;
 }

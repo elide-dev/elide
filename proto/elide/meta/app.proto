@@ -28,6 +28,8 @@ option java_package = "tools.elide.meta";
 option csharp_namespace = "Elide.Meta";
 
 import "google/protobuf/timestamp.proto";
+import "elide/meta/syntax.proto";
+import "elide/meta/guest.proto";
 
 
 // Enumerates standard types of endpoints.
@@ -117,6 +119,15 @@ message BuildInfo {
   google.protobuf.Timestamp stamp = 1;
 }
 
+// Specifies guest VM requirements for a given Elide application.
+message GuestVM {
+  // Syntax set enabled for this application, if any.
+  repeated GuestLanguage language = 1;
+
+  // Settings for each enabled guest language.
+  GuestConfiguration config = 2;
+}
+
 // Info regarding an Elide application.
 message AppInfo {
   // Version string of the application.
@@ -137,4 +148,7 @@ message AppManifest {
 
   // Build info/configuration.
   BuildInfo build = 2;
+
+  // Guest VM settings.
+  GuestVM guest = 3;
 }

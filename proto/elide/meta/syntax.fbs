@@ -1,0 +1,18 @@
+// Generated from syntax.proto
+
+/**
+ * Defines known syntax types for guest languages supported by the Elide framework and runtime.
+ */
+namespace elide.meta;
+
+// # Guest Language
+//
+// Enumerates known guest programming languages, which may be used alongside JVM technologies in an Elide application.
+// This list may grow over time.
+enum GuestLanguage : int {
+  // No guest language is available.
+  NO_GUEST_ENABLED = 0,
+
+  // Guest language: JavaScript.
+  JAVASCRIPT = 1,
+}

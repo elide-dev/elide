@@ -1,3 +1,5 @@
+@OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
+
 package elide.tools.kotlin.plugin
 
 import com.google.common.truth.Truth.assertThat

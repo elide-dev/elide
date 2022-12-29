@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04
 ARG DEV_USER=dev
 ARG IBAZEL_VERSION=v0.15.10
 
-ARG NODE_VERSION="17"
+ARG NODE_VERSION="18"
 ARG YARN_VERSION="berry"
 ARG GRADLE_VERSION=7.6
 ARG KOTLIN_VERSION=1.8.0-RC2
@@ -15,7 +15,7 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=22.3.0
-ARG JAVA_VERSION=java17
+ARG JAVA_VERSION=java19
 ARG BAZELISK_VERSION=v1.15.0
 
 RUN apt-get update \
@@ -81,7 +81,7 @@ RUN apt-get update \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js espresso" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
+  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; FORMAL_ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
   && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
@@ -119,7 +119,7 @@ RUN apt-get update \
   && rm *kotlin*.zip \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A040830F7FAC5991 \
   && echo "Installing Bazelisk..." \
-  && curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_VERSION/bazelisk-linux-$FORMAL_ARCH" \
+  && curl -fLO "https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_VERSION/bazelisk-linux-$FORMAL_ARCH" \
   && mv "bazelisk-linux-$FORMAL_ARCH" "/usr/bin/bazel" \
   && chmod +x /usr/bin/bazel \
   && ln -s /usr/bin/bazel /usr/bin/bazelisk \

@@ -70,6 +70,7 @@ jobs:
             --no-daemon
             --warning-mode=none
             -Pelide.ci=true
+            -PbuildDocs=false
             -PbuildSamples=false
             -PbuildDocsSite=false
             -Pversions.java.language=19

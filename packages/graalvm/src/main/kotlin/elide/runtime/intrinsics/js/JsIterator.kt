@@ -5,15 +5,15 @@ import elide.annotations.core.Polyglot
 /**
  * TBD.
  */
-public interface JsIterator<T: Any> : Iterator<JsIterator.JsIteratorResult<T>> {
+public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>> {
   /** Represents an inner iterator value. */
-  public class JsIteratorResult<T: Any> private constructor (
+  public class JsIteratorResult<T> private constructor (
     @Polyglot public val value: T?,
     @Polyglot public val done: Boolean,
   ) {
     internal companion object {
       /** @return Paired [value] and [done] flag. */
-      @JvmStatic fun <T: Any> of(value: T?, done: Boolean): JsIteratorResult<T> =
+      @JvmStatic fun <T> of(value: T?, done: Boolean): JsIteratorResult<T> =
         JsIteratorResult(value, done)
     }
   }
@@ -23,7 +23,7 @@ public interface JsIterator<T: Any> : Iterator<JsIterator.JsIteratorResult<T>> {
    */
   public object JsIteratorFactory {
     /** Wrap the provided [iterator] in a JS iterator proxy. */
-    @JvmStatic public fun <T: Any> forIterator(iterator: Iterator<T>): JsIterator<T> = object: JsIterator<T> {
+    @JvmStatic public fun <T> forIterator(iterator: Iterator<T>): JsIterator<T> = object: JsIterator<T> {
       /** @inheritDoc */
       @Polyglot override fun hasNext(): Boolean = iterator.hasNext()
 

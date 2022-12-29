@@ -27,6 +27,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.7  2022-12-28  Sam Gammon  Fix tool revision message with custom version
 #   0.6  2022-12-28  Sam Gammon  Add latest version message to install script
 #   0.5  2022-12-28  Sam Gammon  Updated to new default version format
 #   0.4  2022-12-25  Sam Gammon  Swapped brotli for zstd.
@@ -223,7 +224,7 @@ VARIANT="$OS-$ARCH";
 DOWNLOAD_ENDPOINT="$DOWNLOAD_BASE/$TOOL/$VERSION/$RELEASE/$VARIANT/$TOOL_REVISION/$BINARY.$COMPRESSION";
 debug "Download endpoint: $DOWNLOAD_ENDPOINT";
 
-say "Installing Elide (variant: $VARIANT, version: $TOOL_VERSION)...";
+say "Installing Elide (variant: $VARIANT, version: $TOOL_REVISION)...";
 
 DEBUG_FLAGS="-vv";
 CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --retry-delay 2 --http2";

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e;set +x;TOOL_REVISION="1.0-v3-alpha3-b1";INSTALLER_VERSION="v0.6";TOOL="cli";VERSION="v1";RELEASE="snapshot";
+set -e;set +x;TOOL_REVISION="1.0-v3-alpha3-b1";INSTALLER_VERSION="v0.7";TOOL="cli";VERSION="v1";RELEASE="snapshot";
 COMPRESSION="gz";BINARY="elide";DOWNLOAD_BASE="https://dl.elide.dev";DEFAULT_INSTALL_DIR="$HOME/bin";
 ENABLE_DEBUG="false";ENABLE_COLOR="true";INSTALL_INTO_PATH="true";
 if [[ "$@" == *"no-color"* ]]; then MAGENTA="";CYAN="";RED="";YELLOW="";GRAY="";BOLD="";NC="";else MAGENTA="\033[0;35m";
@@ -124,7 +124,7 @@ fi
 VARIANT="$OS-$ARCH";
 DOWNLOAD_ENDPOINT="$DOWNLOAD_BASE/$TOOL/$VERSION/$RELEASE/$VARIANT/$TOOL_REVISION/$BINARY.$COMPRESSION";
 debug "Download endpoint: $DOWNLOAD_ENDPOINT";
-say "Installing Elide (variant: $VARIANT, version: $TOOL_VERSION)...";
+say "Installing Elide (variant: $VARIANT, version: $TOOL_REVISION)...";
 DEBUG_FLAGS="-vv";
 CURL_ARGS="--no-buffer --progress-bar --location --fail --tlsv1.2 --retry 3 --retry-delay 2 --http2";
 debug "Downloading binary with command: curl $CURL_ARGS";

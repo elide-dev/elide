@@ -1,4 +1,4 @@
-@OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
+@file:OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
 
 package elide.tools.kotlin.plugin
 

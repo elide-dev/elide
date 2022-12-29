@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha1-rc38"
+elide = "1.0-v3-alpha3-b1"
 ksp = "1.8.0-RC2-1.0.8"
 detekt = "1.22.0"
 kotlin = "1.8.0-RC2"

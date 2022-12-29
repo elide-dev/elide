@@ -17,6 +17,7 @@ jobs:
   check-repos:
     name: "Repositories: Clone Test"
     runs-on: "ubuntu-latest"
+    continue-on-error: true
     permissions:
       contents: "read"
       id-token: "write"
@@ -28,6 +29,7 @@ jobs:
       - name: "Clone: Elide"
         run: git clone https://github.com/elide-dev/v3.git ./repos/elide
       - name: "Clone: Runtime"
+        continue-on-error: true
         run: git clone https://github.com/elide-dev/runtime.git ./repos/runtime
       - name: "Clone: Build Tools"
         run: git clone https://github.com/elide-dev/buildtools.git ./repos/buildtools

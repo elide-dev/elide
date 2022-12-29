@@ -272,7 +272,7 @@ cli-install-local:
 clean: clean-docs clean-site  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
-	$(CMD)$(GRADLE) clean $(_ARGS)
+	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
 	$(CMD)$(FIND) . -name .DS_Store -delete
 
 clean-docs:  ## Clean documentation targets.

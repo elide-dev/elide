@@ -120,7 +120,6 @@ apiValidation {
     } else {
       emptyList()
     }
-  )
   ).plus(
     if (project.properties["buildSamples"] == "true") {
       listOf("samples")

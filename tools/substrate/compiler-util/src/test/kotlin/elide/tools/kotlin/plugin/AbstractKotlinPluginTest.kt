@@ -1,4 +1,5 @@
 @file:OptIn(org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi::class)
+@file:Suppress("DEPRECATION")
 
 package elide.tools.kotlin.plugin
 

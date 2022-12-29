@@ -111,10 +111,16 @@ apiValidation {
     "bundler",
     "bom",
     "cli",
-    "docs",
     "proto",
     "processor",
     "reports",
+  ).plus(
+    if (project.properties["buildDocs"] == "true") {
+      listOf("docs")
+    } else {
+      emptyList()
+    }
+  )
   ).plus(
     if (project.properties["buildSamples"] == "true") {
       listOf("samples")

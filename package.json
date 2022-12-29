@@ -22,6 +22,7 @@
     "packages/model",
     "packages/rpc",
     "packages/test",
+    "packages/cli",
     "site/docs/content"
   ],
   "dependencies": {

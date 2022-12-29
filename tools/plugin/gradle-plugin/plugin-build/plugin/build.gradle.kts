@@ -1,6 +1,7 @@
 @file:Suppress(
     "DSL_SCOPE_VIOLATION",
-    "UnstableApiUsage"
+    "UnstableApiUsage",
+    "UNUSED_VARIABLE",
 )
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -142,7 +143,17 @@ val javaMax: Int = (if (project.hasProperty("versions.java.maximum")) {
     defaultJavaMax
 }).toInt()
 
+sourceSets {
+    val main by getting {
+        // Nothing at this time.
+    }
+    val test by getting {
+        // Nothing at this time.
+    }
+}
+
 val embedded: Configuration by configurations.creating
+val implementation: Configuration by configurations.getting
 
 configurations {
     compileClasspath.get().extendsFrom(embedded)
@@ -154,6 +165,7 @@ dependencies {
     api(libs.elide.tools.processor)
     implementation(libs.elide.base)
     implementation(libs.elide.ssg)
+    implementation(libs.elide.proto.protobuf)
 
     implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib-jdk8"))
@@ -189,7 +201,6 @@ dependencies {
     // Elide: Embedded Libs
     embedded(libs.elide.base)
     embedded(libs.elide.ssg)
-    embedded(libs.elide.proto)
 
     // Elide: Embedded Tools
     embedded(libs.closure.templates)

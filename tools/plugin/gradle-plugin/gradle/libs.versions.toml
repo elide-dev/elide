@@ -125,6 +125,9 @@ elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
+elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
+elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }
+elide_proto_kotlinx = { group = "dev.elide", name = "proto-kotlinx", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }

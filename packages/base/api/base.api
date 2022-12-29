@@ -8,13 +8,10 @@ public final class elide/AppEnvironment : java/lang/Enum {
 public abstract interface annotation class elide/annotations/API : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class elide/annotations/Context : java/lang/annotation/Annotation {
+public abstract interface annotation class elide/annotations/Eager : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class elide/annotations/Endpoint : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class elide/annotations/Factory : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class elide/annotations/Generated : java/lang/annotation/Annotation {
@@ -202,6 +199,23 @@ public final class elide/util/Hex : elide/util/Encoder {
 	public fun encodeToString ([B)Ljava/lang/String;
 	public fun encoding ()Lelide/util/Encoding;
 	public final fun getCHARACTER_SET ()[C
+}
+
+public final class elide/util/RuntimeFlag {
+	public static final field DEFAULT_INSPECT_PORT I
+	public static final field INSTANCE Lelide/util/RuntimeFlag;
+	public final fun getAppEnv ()Lelide/AppEnvironment;
+	public final fun getInspect ()Z
+	public final fun getInspectHost ()Ljava/lang/String;
+	public final fun getInspectInternal ()Z
+	public final fun getInspectPath ()Ljava/lang/String;
+	public final fun getInspectPort ()I
+	public final fun getInspectSecure ()Z
+	public final fun getInspectSuspend ()Z
+	public final fun getInspectWait ()Z
+	public final fun getWarmup ()Z
+	public final fun resolve (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun setArgs ([Ljava/lang/String;)V
 }
 
 public final class elide/util/UUID {

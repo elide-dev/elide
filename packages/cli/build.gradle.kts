@@ -32,6 +32,18 @@ java {
   targetCompatibility = JavaVersion.VERSION_11
 }
 
+ktlint {
+  debug.set(false)
+  verbose.set(false)
+  android.set(false)
+  outputToConsole.set(false)
+  ignoreFailures.set(true)
+  enableExperimentalRules.set(true)
+  filter {
+    exclude("elide/tool/cli/ToolTypealiases.kt")
+  }
+}
+
 kotlin {
   explicitApi()
 

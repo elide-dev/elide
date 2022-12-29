@@ -57,6 +57,12 @@ import kotlin.reflect.*
 
     /** @return Parsed URL managed by this URL object. Not available from guest code. */
     fun parsedURL(): ParsedURL
+
+    /** @return Lock a URL as immutable. */
+    fun lock(): URL
+
+    /** @return Indication of whether this URL is mutable. */
+    fun isMutable(): Boolean
   }
 
   /**
@@ -92,7 +98,7 @@ import kotlin.reflect.*
 
   /** Wrapper class which enables lazy processing of parsed URL values. */
   internal class CachedURLValue<T: Serializable> constructor (
-    initialValue: T? = null,
+    initialValue: T?,
     private val processor: (() -> T)? = null,
   ) {
     // Value held by this container.
@@ -131,31 +137,27 @@ import kotlin.reflect.*
    * @param hostname Hostname calculated for this URL. If no host is applicable, this is an empty string.
    * @param pathname Path-name (spec-compliant) calculated for this URL. This field is never empty (`/` is default).
    * @param search Search string (query parameters) for this URL. If not applicable, this is an empty string.
-   * @param origin Origin value calculated for this URI. If no origin is applicable, this is an empty string.
    * @param hash Fragment, or "hash", portion of the URL. If no hash is applicable, this is an empty string.
    * @param username Username value parsed from the URL. If none is present, then this is an empty string.
    * @param password Password value parsed from the URL. If none is present, or no [username] is present, then this
    *   value is an empty string.
    */
-  @Suppress("unused", "UNUSED_PARAMETER")
   internal data class ParsedURL(
     val uri: NativeURL,
-    val absolute: String = uri.toString(),
+    val absolute: String,
     val knownProtocol: KnownProtocol? = knownProtocol(uri),
     val protocol: String = computeProtocol(uri, knownProtocol),
     val port: Int = computePort(uri, knownProtocol),
     val host: String = computeHost(uri, port, knownProtocol),
-    val hostname: CachedURLValue<String> = computeHostname(uri, port, knownProtocol),
+    val hostname: CachedURLValue<String> = computeHostname(uri, knownProtocol),
     val pathname: CachedURLValue<String> = computePathname(uri, knownProtocol),
-    val search: CachedURLValue<String> = computeSearch(uri, knownProtocol),
+    val search: CachedURLValue<String> = computeSearch(uri),
     val searchParams: CachedURLValue<URLSearchParams> = computeSearchParams(uri, knownProtocol),
-    val origin: CachedURLValue<String> = CachedURLValue.of("") ,  // not implemented
-    val hash: CachedURLValue<String> = computeHash(uri, knownProtocol),
-    val username: CachedURLValue<String> = computeUsername(uri, knownProtocol),
-    val password: CachedURLValue<String> = computePassword(uri, knownProtocol),
+    val hash: CachedURLValue<String> = computeHash(uri),
+    val username: CachedURLValue<String> = computeUsername(uri),
+    val password: CachedURLValue<String> = computePassword(uri),
     private val hashCode: Int = computeHashCode(
       uri,
-      absolute,
       knownProtocol,
       protocol,
       port,
@@ -174,12 +176,13 @@ import kotlin.reflect.*
       // Use an already-parsed native URI type, pre-initializing anything else we need.
       @JvmStatic fun fromURL(url: NativeURL): ParsedURL = ParsedURL(
         uri = url,
+        absolute = url.toString(),
       )
 
       // Parse a URL and wrap it in a `ParsedURL` object, pre-initializing anything else we need.
-      @JvmStatic fun fromString(string: String): ParsedURL = ParsedURL(
-        uri = parseUrl(string),
-      )
+      @JvmStatic fun fromString(string: String): ParsedURL = parseUrl(string).let { parsed ->
+        ParsedURL(uri = parsed, absolute = parsed.toString())
+      }
 
       // Calculate a spec-compliant value for the `protocol` property.
       @JvmStatic private fun computeProtocol(uri: NativeURL, proto: KnownProtocol?): String {
@@ -222,7 +225,7 @@ import kotlin.reflect.*
       }
 
       // Calculate a spec-compliant value for the `hostname` property.
-      @JvmStatic private fun computeHostname(uri: NativeURL, port: Int, proto: KnownProtocol?) = cachedParse {
+      @JvmStatic private fun computeHostname(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
         when {
           // special case: protocol-relative URIs.
           proto == KnownProtocol.RELATIVE -> hostForProtocolRelative(uri)
@@ -296,7 +299,7 @@ import kotlin.reflect.*
       }
 
       // Calculate a spec-compliant value for the `search` property.
-      @JvmStatic private fun computeSearch(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
+      @JvmStatic private fun computeSearch(uri: NativeURL) = cachedParse {
         val query = uri.query
         if (query.isNullOrBlank()) {
           ""
@@ -306,12 +309,13 @@ import kotlin.reflect.*
       }
 
       // Calculate a spec-compliant value for the `searchParams` property.
+      @Suppress("UNUSED_PARAMETER")
       @JvmStatic private fun computeSearchParams(uri: NativeURL, proto: KnownProtocol?) = cachedParse<URLSearchParams> {
         TODO("not yet implemented")
       }
 
       // Calculate a spec-compliant value for the `host` property.
-      @JvmStatic private fun computeHash(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
+      @JvmStatic private fun computeHash(uri: NativeURL) = cachedParse {
         val hash = uri.fragment
         if (hash.isNullOrBlank()) {
           ""
@@ -321,7 +325,7 @@ import kotlin.reflect.*
       }
 
       // Calculate a spec-compliant value for the `username` property.
-      @JvmStatic private fun computeUsername(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
+      @JvmStatic private fun computeUsername(uri: NativeURL) = cachedParse {
         val userinfo = uri.userInfo
         if (userinfo.isNullOrBlank()) {
           ""
@@ -331,8 +335,8 @@ import kotlin.reflect.*
       }
 
       // Calculate a spec-compliant value for the `password` property.
-      @JvmStatic private fun computePassword(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
-        val username = computeUsername(uri, proto).resolve()
+      @JvmStatic private fun computePassword(uri: NativeURL) = cachedParse {
+        val username = computeUsername(uri).resolve()
         if (username.isBlank()) {
           ""
         } else {
@@ -387,7 +391,6 @@ import kotlin.reflect.*
       // Pre-calculate a URL comparison and storage hashcode.
       @JvmStatic private fun computeHashCode(
         uri: NativeURL,
-        absolute: String,
         knownProtocol: KnownProtocol?,
         protocol: String,
         port: Int,
@@ -465,7 +468,6 @@ import kotlin.reflect.*
               hash = this.hash,  // no change
               username = this.username,  // no change
               password = this.password,  // no change
-              // `origin` omitted in order to trigger re-calculation
             )
           }
         } else {
@@ -525,7 +527,6 @@ import kotlin.reflect.*
           hash = this.hash,  // no change
           username = this.username,  // no change
           password = this.password,  // no change
-          // `origin` omitted in order to trigger re-calculation
         )
       }
     } else throw valueError(
@@ -594,7 +595,6 @@ import kotlin.reflect.*
           username = this.username,  // no change
           password = this.password,  // no change
           // `hostname` omitted
-          // `origin` omitted
         )
       }
     }
@@ -635,7 +635,6 @@ import kotlin.reflect.*
           username = this.username,  // no change
           password = this.password,  // no change
           // `host` omitted
-          // `origin` omitted
         )
       }
     }
@@ -678,7 +677,6 @@ import kotlin.reflect.*
           hash = this.hash,  // no change
           username = this.username,  // no change
           password = this.password,  // no change
-          origin = this.origin,  // no change
         )
       }
     }
@@ -735,7 +733,6 @@ import kotlin.reflect.*
               hash = this.hash,  // no change
               username = this.username,  // no change
               password = this.password,  // no change
-              origin = this.origin,  // no change
               // `searchParams` omitted to trigger re-calculation
             )
           }
@@ -792,7 +789,6 @@ import kotlin.reflect.*
             pathname = this.pathname,  // no change
             username = this.username,  // no change
             password = this.password,  // no change
-            origin = this.origin,  // no change
           )
         }
       }
@@ -837,7 +833,6 @@ import kotlin.reflect.*
           searchParams = this.searchParams,  // no change
           hostname = this.hostname,  // no change
           pathname = this.pathname,  // no change
-          origin = this.origin,  // no change
 
           // corner case: clear the password forcibly if the username is cleared
           password = if (username.isBlank()) {
@@ -887,7 +882,6 @@ import kotlin.reflect.*
           searchParams = this.searchParams,  // no change
           hostname = this.hostname,  // no change
           pathname = this.pathname,  // no change
-          origin = this.origin,  // no change
         )
       }
     }
@@ -1026,6 +1020,9 @@ import kotlin.reflect.*
     // Run the provided `op` to mutate the current URL, which returns a new URL value; after the transformation is done,
     // replace the current atomic URL reference with the updated reference.
     private fun mutateURL(op: ParsedURL.() -> ParsedURL) {
+      check(isMutable()) {
+        "Locked URL object is immutable"
+      }
       val subject = target.get()
       val changed = op.invoke(subject)
       if (subject !== changed) {
@@ -1034,11 +1031,26 @@ import kotlin.reflect.*
       }
     }
 
+    // Whether this URL is locked (and, therefore, immutable).
+    private val locked: AtomicBoolean = AtomicBoolean(false)
+
     /** @inheritDoc */
     override fun wrappedURL(): URI = parsedURL().uri
 
     /** @inheritDoc */
     override fun parsedURL(): ParsedURL = target.get()
+
+    /** @inheritDoc */
+    override fun lock(): URL {
+      check(isMutable()) {
+        "Locked URL object is immutable"
+      }
+      locked.set(true)
+      return this
+    }
+
+    /** @inheritDoc */
+    override fun isMutable(): Boolean = !locked.get()
 
     /** @inheritDoc */
     @Polyglot override fun compareTo(other: URLValue): Int = target.get().absoluteString().compareTo(other.toString())

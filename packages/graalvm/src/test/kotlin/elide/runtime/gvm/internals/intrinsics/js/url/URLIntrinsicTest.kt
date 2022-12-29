@@ -1060,4 +1060,39 @@ import java.net.URI
       URLValue.fromString("https://google.com").origin
     }
   }
+
+  @Test fun testURLImmutability() {
+    val url = URLValue("https://google.com")
+    url.protocol = "http"
+    assertEquals("http:", url.protocol)
+    url.protocol = "https"
+    assertEquals("https:", url.protocol)
+    assertTrue(url.isMutable())
+    url.lock()
+    assertFalse(url.isMutable())
+    assertFailsWith<IllegalStateException> {
+      url.protocol = "http"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.host = "hello.com"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.hostname = "hello.com"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.search = "?hello=cool"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.hash = "#hi"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.username = "testing"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.password = "testing"
+    }
+    assertFailsWith<IllegalStateException> {
+      url.lock()  // cannot lock if already locked
+    }
+  }
 }

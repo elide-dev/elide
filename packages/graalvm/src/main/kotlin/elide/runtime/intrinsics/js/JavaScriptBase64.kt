@@ -9,7 +9,7 @@ public interface JavaScriptBase64 {
   /**
    * TBD.
    */
-  @Polyglot public fun encode(input: String): String = encode(input, false)
+  @Polyglot public fun encode(input: String): String
 
   /**
    * TBD.
@@ -20,14 +20,4 @@ public interface JavaScriptBase64 {
    *
    */
   public fun decode(input: String): String
-
-  /**
-   * TBD.
-   */
-  public fun btoa(input: String): String = encode(input)
-
-  /**
-   *
-   */
-  public fun atob(input: String): String = decode(input)
 }

@@ -28,8 +28,12 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
   }
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String, websafe: Boolean): String =
+  @Polyglot override fun encode(input: String, websafe: Boolean): String =
     if (websafe) Base64.encodeWebSafe(input) else Base64.encodeToString(input)
+
+  /** @inheritDoc */
+  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String =
+    encode(input, false)
 
   /** @inheritDoc */
   @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String =

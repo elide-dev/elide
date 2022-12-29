@@ -39,8 +39,9 @@ echo -e "Options:";
 echo -e "  ${YELLOW}--install-dir${NC}=<path>     Install to a custom directory";
 echo -e "  ${YELLOW}--install-rev${NC}=<version>  Install a specific version of Elide";
 echo -e "  ${YELLOW}--${NC}[${YELLOW}no${NC}]${YELLOW}-path${NC}              Whether to add the install directory to the PATH";
-echo -e "  ${YELLOW}--debug${NC}                  Enable debug output";
+echo -e "  ${YELLOW}--no-banner${NC}              Opt out of the announcement banner after install";
 echo -e "  ${YELLOW}--no-color${NC}               Disable color output";
+echo -e "  ${YELLOW}--debug${NC}                  Enable debug output";
 echo -e "  ${YELLOW}--trace${NC}                  Enable bash tracing";
 echo -e "  ${YELLOW}--version${NC}                Show version information";
 echo -e "  ${YELLOW}--help${NC}                   Show this help message";
@@ -59,6 +60,11 @@ fi
 if [[ "$@" == *"no-path"* ]]; then
 debug "User disabled path installation.";
 INSTALL_INTO_PATH="false";
+fi
+SHOW_BANNER="true";
+if [[ "$@" == *"no-banner"* ]]; then
+debug "Opting out of install banner.";
+SHOW_BANNER="false";
 fi
 if [[ "$@" == *"trace"* ]]; then
 debug "Trace mode is active.";
@@ -137,7 +143,16 @@ fi
 debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS";
 mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-download/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | $COMPRESSION_TOOL $DECOMPRESS_ARGS > "$INSTALL_DIR/$BINARY" && chmod +x "$INSTALL_DIR/$BINARY";
 set +x;
+if [ -x "$INSTALL_DIR/$BINARY" ]; then
+debug "Binary installed successfully.";
+if [ "$SHOW_BANNER" = true ]; then
 "$INSTALL_DIR/$BINARY" --help;
+echo "";
+fi
+else
+debug "Binary failed to install Path \"$INSTALL_DIR/$BINARY\" does not exist or is not executable.";
+exit 1;
+fi
 echo "";
 echo -e "Elide installed successfully! 🎉";
 IS_ON_PATH="false";

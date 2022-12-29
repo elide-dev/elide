@@ -20,13 +20,15 @@
 #   --arch=<arch>                Install for a specific architecture (optional, overrides detection)
 #   --os=<os>                    Install for a specific operating system (optional, overrides detection)
 #   --[no]-path                  Whether to add the install directory to the PATH
-#   --debug                      Enable debug output
+#   --no-banner                  Opt out of the announcement banner after install
 #   --no-color                   Disable color output
+#   --debug                      Enable debug output
 #   --trace                      Enable bash tracing
 #   --version                    Show version information
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.8  2022-12-28  Sam Gammon  Add --no-banner flag to skip banner
 #   0.7  2022-12-28  Sam Gammon  Fix tool revision message with custom version
 #   0.6  2022-12-28  Sam Gammon  Add latest version message to install script
 #   0.5  2022-12-28  Sam Gammon  Updated to new default version format
@@ -39,7 +41,7 @@ set -e;
 set +x;
 
 TOOL_REVISION="1.0-v3-alpha3-b1";
-INSTALLER_VERSION="v0.6";
+INSTALLER_VERSION="v0.8";
 
 TOOL="cli";
 VERSION="v1";
@@ -113,8 +115,9 @@ if [[ "$@" == *"help"* ]]; then
     echo -e "  ${YELLOW}--install-dir${NC}=<path>     Install to a custom directory";
     echo -e "  ${YELLOW}--install-rev${NC}=<version>  Install a specific version of Elide";
     echo -e "  ${YELLOW}--${NC}[${YELLOW}no${NC}]${YELLOW}-path${NC}              Whether to add the install directory to the PATH";
-    echo -e "  ${YELLOW}--debug${NC}                  Enable debug output";
+    echo -e "  ${YELLOW}--no-banner${NC}              Opt out of the announcement banner after install";
     echo -e "  ${YELLOW}--no-color${NC}               Disable color output";
+    echo -e "  ${YELLOW}--debug${NC}                  Enable debug output";
     echo -e "  ${YELLOW}--trace${NC}                  Enable bash tracing";
     echo -e "  ${YELLOW}--version${NC}                Show version information";
     echo -e "  ${YELLOW}--help${NC}                   Show this help message";
@@ -137,6 +140,12 @@ fi
 if [[ "$@" == *"no-path"* ]]; then
     debug "User disabled path installation.";
     INSTALL_INTO_PATH="false";
+fi
+
+SHOW_BANNER="true";
+if [[ "$@" == *"no-banner"* ]]; then
+    debug "Opting out of install banner.";
+    SHOW_BANNER="false";
 fi
 
 if [[ "$@" == *"trace"* ]]; then
@@ -243,12 +252,22 @@ debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS";
 ## okay, it's time to download the binary and decompress it as we go.
 
 # shellcheck disable=SC2086
-mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-download/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | $COMPRESSION_TOOL $DECOMPRESS_ARGS > "$INSTALL_DIR/$BINARY" && chmod +x "$INSTALL_DIR/$BINARY";
+mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-installer/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | $COMPRESSION_TOOL $DECOMPRESS_ARGS > "$INSTALL_DIR/$BINARY" && chmod +x "$INSTALL_DIR/$BINARY";
 set +x;
 
 ## test the binary
-"$INSTALL_DIR/$BINARY" --help;
-echo "";
+if [ -x "$INSTALL_DIR/$BINARY" ]; then
+    debug "Binary installed successfully.";
+
+    # unless the user has opted out, run command help
+    if [ "$SHOW_BANNER" = true ]; then
+        "$INSTALL_DIR/$BINARY" --help;
+        echo "";
+    fi
+else
+    debug "Binary failed to install Path \"$INSTALL_DIR/$BINARY\" does not exist or is not executable.";
+    exit 1;
+fi
 
 ## if we're here, we're done!
 echo -e "Elide installed successfully! 🎉";

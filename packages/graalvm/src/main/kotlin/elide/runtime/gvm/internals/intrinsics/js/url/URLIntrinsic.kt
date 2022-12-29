@@ -10,8 +10,13 @@ import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.js.Blob
+import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
+import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.Serializable
 import java.net.URI
 import java.util.TreeMap
@@ -959,11 +964,13 @@ import kotlin.reflect.*
   }
 
   /** URL value class implementation. */
-  @Suppress("UNUSED_PARAMETER")
   internal class URLValue private constructor (private val target: AtomicReference<ParsedURL>) :
     Comparable<URLValue>,
     BaseURLType {
-    internal companion object Factory {
+//    ProxyObject {
+    internal companion object Factory : URL.URLConstructors, URL.URLStaticMethods {
+      // -- Factories: Java -- //
+
       /** @return Wrapped intrinsic URL from a regular Java URL. */
       @JvmStatic fun fromURL(url: NativeURL): URLValue = URLValue(AtomicReference(ParsedURL.fromURL(url)))
 
@@ -972,6 +979,34 @@ import kotlin.reflect.*
 
       /** @return Wrapped intrinsic URL from a regular Java URL. */
       @JvmStatic fun fromString(url: String): URLValue = URLValue(AtomicReference(ParsedURL.fromString(url)))
+
+      // -- Factories: JS -- //
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun create(url: URL): URL =
+        fromURL(url as URLValue)
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun create(url: String): URL =
+        fromString(url)
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun create(url: String, base: String): URL =
+        fromString(url)  // @TODO(sgammon): relative URLs
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun createObjectURL(file: File): URL =
+        error("Not implemented: createObjectURL")
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun createObjectURL(blob: Blob): URL =
+        error("Not implemented: createObjectURL")
+
+      /** @inheritDoc */
+      @JvmStatic @Polyglot override fun revokeObjectURL(url: URL) =
+        error("Not implemented: createObjectURL")
+
+      // -- Internals -- //
 
       // Shortcut to parse a string as a URL (used internally only).
       @JvmStatic private fun parseString(url: String): AtomicReference<ParsedURL> =
@@ -985,7 +1020,28 @@ import kotlin.reflect.*
 
       // Shortcut to parse a guest string as a URL (used internally only).
       @JvmStatic private fun parseString(url: GuestValue): AtomicReference<ParsedURL> =
-        parseString(url.asString())
+        parseString(url, null)
+
+      // Relative entrypoint for string parsing (with base URL).
+      @Suppress("UNUSED_PARAMETER")
+      @JvmStatic private fun parseString(url: GuestValue, base: Any?): AtomicReference<ParsedURL> =
+        parseString(url.asString())  // @TODO(sgammon): base URL support during parsing
+
+      // Shortcut for parsing a constructor guest value.
+      @JvmStatic private fun constructFromGuestValue(
+        target: GuestValue,
+        base: Any? = null,
+      ): AtomicReference<ParsedURL> = when {
+        // if we are given a guest value string, handle it as a regular URL string
+        target.isString -> parseString(target, base)
+
+        // if we are given another URL class, let's clone it
+        target.isHostObject && target.`as`(URLValue::class.java) != null ->
+          target.`as`(URLValue::class.java).target
+
+        // if we are given anything else, it is considered an error
+        else -> throw typeError("Invalid URL: $target")
+      }
     }
 
     /**
@@ -999,17 +1055,29 @@ import kotlin.reflect.*
      */
     @Polyglot constructor (target: Any?) : this(when (target) {
       null -> throw typeError("Cannot construct URL from: `null`")
-      is GuestValue -> when {
-        // if we are given a guest value string, handle it as a regular URL string
-        target.isString -> parseString(target)
+      is GuestValue -> constructFromGuestValue(target)
+      is String -> parseString(target)
+      is NativeURL -> AtomicReference(ParsedURL.fromURL(target))
+      is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))
+      is URLValue -> AtomicReference(target.target.get())
+      else -> throw typeError("Cannot construct URL from: $target")
+    })
 
-        // if we are given another URL class, let's clone it
-        target.isHostObject && target.`as`(URLValue::class.java) != null ->
-          target.`as`(URLValue::class.java).target
-
-        // if we are given anything else, it is considered an error
-        else -> throw typeError("Invalid URL: $target")
-      }
+    /**
+     * Constructor: relative-capable. Accepts a [String], another [URLValue] intrinsic, or a guest value which evaluates
+     * to any of these things; from Java, [java.net.URI] and [java.net.URL] may also be passed; if the [target] is
+     * relative, a [base] URL must also be provided, which can be a [String] or [URLValue].
+     *
+     * @param target Absolute URL string, or a [URLValue], or a [GuestValue] of either of those things. If a
+     *   [java.net.URL] or [java.net.URI] is passed from the host, it will be converted and wrapped.
+     * @param base Base URL from which to resolve [target] if it is relative; a guest [String] may be provided, or
+     *   another [URLValue], or a [java.net.URL] or [java.net.URI].
+     * @throws ValueError if the provided [target] is not a valid URL.
+     * @throws TypeError if the provided [target] is not a valid type from which a URL can be constructed.
+     */
+    @Polyglot constructor (target: Any?, base: Any?) : this(when (target) {
+      null -> throw typeError("Cannot construct URL from: `null`")
+      is GuestValue -> constructFromGuestValue(target, base)
       is String -> parseString(target)
       is NativeURL -> AtomicReference(ParsedURL.fromURL(target))
       is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))

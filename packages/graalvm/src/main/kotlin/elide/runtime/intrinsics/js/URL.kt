@@ -64,12 +64,15 @@ public interface URL : java.io.Serializable {
    */
   public interface URLConstructors {
     /**
-     * ### Constructor: From `URL`
+     * ### Constructor: From [URL]
      *
      * Construct a copy of the provided `URL` object. Since the `URL` is already parsed, we can easily copy it without
      * validating, as it was validated when it was first constructed.
      *
-     * @see create To create a URL from a string.
+     * Relative URLs are not allowed via this constructor.
+     *
+     * @see create to create a URL from a relative URL, with the `base` parameter.
+     * @see create to create a URL from a string.
      * @param url URL to create a copy of.
      * @return Copied URL object.
      */
@@ -88,6 +91,23 @@ public interface URL : java.io.Serializable {
      */
     @Throws(TypeError::class)
     @Polyglot public fun create(url: String): URL
+
+    /**
+     * ### Constructor: From String, with Base URL as String
+     *
+     * Construct a new `URL` object from the provided `string`. If the provided `string` is not a valid URL, an error is
+     * thrown. The resulting URL can be considered validated and well-formed.
+     *
+     * If [url] is relative, [base] is parsed first and used to resolve the effective absolute URL.
+     *
+     * @see create To create a URL from another URL.
+     * @param url String to create a structured/parsed URL from.
+     * @param base Base URL to use if [url] is relative.
+     * @return Parsed URL object.
+     * @throws TypeError If the provided `string` is not a valid URL.
+     */
+    @Throws(TypeError::class)
+    @Polyglot public fun create(url: String, base: String): URL
   }
 
   /**

@@ -1,8 +1,8 @@
 [versions]
-elide = "1.0-v3-alpha2-rc1"
-ksp = "1.8.0-RC-1.0.8"
+elide = "1.0-v3-alpha1-rc38"
+ksp = "1.8.0-RC2-1.0.8"
 detekt = "1.22.0"
-kotlin = "1.8.0-RC"
+kotlin = "1.8.0-RC2"
 kotlin_dsl = "3.1.0"
 ktlint = "0.47.1"
 ktlintGradle = "10.3.0"

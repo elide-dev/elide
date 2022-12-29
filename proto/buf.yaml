@@ -4,10 +4,7 @@ name: buf.build/elide/v3
 
 build:
   excludes:
-    - bazel-bin
-    - bazel-elide
-    - bazel-out
-    - bazel-testlogs
+    - build
     - dist
     - external
     - node_modules

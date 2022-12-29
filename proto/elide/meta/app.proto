@@ -21,11 +21,9 @@ option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
-option php_namespace = "Elide\\Meta";
 option php_class_prefix = "ELD";
 option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Meta";
 option java_package = "tools.elide.meta";
 option csharp_namespace = "Elide.Meta";
 

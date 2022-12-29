@@ -22,11 +22,9 @@ option optimize_for = SPEED;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
-option php_namespace = "Elide\\VFS";
 option php_class_prefix = "EVFS";
 option swift_prefix = "ElideVFS";
 option objc_class_prefix = "EVS";
-option ruby_package = "Elide::VFS";
 option java_package = "tools.elide.vfs";
 option csharp_namespace = "Elide.VFS";
 

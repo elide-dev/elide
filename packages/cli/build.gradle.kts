@@ -55,6 +55,14 @@ buildConfig {
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"${libs.versions.elide.asProvider().get()}\"")
 }
 
+val protocol: Configuration by configurations.creating {
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+val implementation: Configuration by configurations.getting {
+  extendsFrom(protocol)
+}
+
 dependencies {
   api(libs.slf4j)
 
@@ -84,6 +92,11 @@ dependencies {
   implementation(libs.micronaut.graal)
   implementation(libs.micronaut.kotlin.extension.functions)
   implementation(libs.micronaut.kotlin.runtime)
+
+  protocol(project(mapOf(
+    "path" to ":packages:proto",
+    "configuration" to "modelInternal",
+  )))
 
   compileOnly(libs.graalvm.sdk)
   implementation(libs.logback)

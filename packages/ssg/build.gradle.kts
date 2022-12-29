@@ -36,6 +36,13 @@ val embeddedJars by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
 }
+val protocol: Configuration by configurations.creating {
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+val implementation: Configuration by configurations.getting {
+  extendsFrom(protocol)
+}
 
 dependencies {
   api(libs.jakarta.inject)
@@ -53,11 +60,15 @@ dependencies {
   implementation(libs.jackson.jsr310)
   implementation(libs.jackson.module.kotlin)
 
+  protocol(project(mapOf(
+    "path" to ":packages:proto",
+    "configuration" to "modelInternal",
+  )))
+
   implementation(libs.guava)
   implementation(libs.commons.compress)
   implementation(platform(project(":packages:platform")))
   implementation(project(":packages:base"))
-  implementation(project(":packages:proto"))
   implementation(project(":packages:server"))
   implementation(libs.jsoup)
   implementation(libs.picocli)

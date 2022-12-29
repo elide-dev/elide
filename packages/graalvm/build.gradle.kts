@@ -2,11 +2,10 @@
   "UnstableApiUsage",
   "unused",
   "DSL_SCOPE_VIOLATION",
+  "UNUSED_VARIABLE",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
 import kotlinx.benchmark.gradle.*
-import org.jetbrains.kotlin.allopen.gradle.*
 
 plugins {
   id("io.micronaut.library")
@@ -63,7 +62,7 @@ benchmark {
 
 micronaut {
   enableNativeImage(true)
-//  version.set(libs.versions.micronaut.lib.get())
+  version.set(libs.versions.micronaut.lib.get())
   processing {
     incremental.set(true)
     annotations.addAll(listOf(
@@ -85,9 +84,12 @@ configurations["benchmarksRuntimeOnly"].extendsFrom(
   configurations.testRuntimeOnly.get()
 )
 
-testlogger {
-  theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
-  showExceptions = System.getenv("TEST_EXCEPTIONS") == "true"
+val protocol: Configuration by configurations.creating {
+  isCanBeConsumed = false
+  isCanBeResolved = true
+}
+val implementation: Configuration by configurations.getting {
+  extendsFrom(protocol)
 }
 
 dependencies {
@@ -98,7 +100,6 @@ dependencies {
   // Modules
   api(project(":packages:base"))
   api(project(":packages:core"))
-  api(project(":packages:proto"))
   implementation(project(":packages:ssr"))
 
   // Kotlin / KotlinX
@@ -123,6 +124,15 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
+
+  protocol(project(mapOf(
+    "path" to ":packages:proto",
+    "configuration" to "modelInternal",
+  )))
+  protocol(project(mapOf(
+    "path" to ":packages:proto",
+    "configuration" to "flatInternal",
+  )))
 
   compileOnly(libs.graalvm.sdk)
   compileOnly(libs.graalvm.truffle.api)

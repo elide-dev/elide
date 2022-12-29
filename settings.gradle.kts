@@ -76,8 +76,6 @@ if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose
 
 // 4: Build modules.
 include(
-  ":docs:architecture",
-  ":docs:guide",
   ":packages:base",
   ":packages:bom",
   ":packages:core",
@@ -99,6 +97,7 @@ include(
   ":tools:reports",
 )
 
+val buildDocs: String by settings
 val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
@@ -126,6 +125,13 @@ if (buildSamples == "true") {
     ":samples:fullstack:react-ssr:frontend",
     ":samples:fullstack:react-ssr:node",
     ":samples:fullstack:react-ssr:server",
+  )
+}
+
+if (buildDocs == "true") {
+  include(
+    ":docs:architecture",
+    ":docs:guide",
   )
 }
 

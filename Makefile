@@ -40,7 +40,7 @@ XZ ?= $(shell which xz)
 ZSTD ?= $(shell which zstd)
 BZIP2 ?= $(shell which bzip2)
 GZIP ?= $(shell which gzip)
-GPG2 ?= $(shell which gpg2)
+GPG2 ?= $(shell which gpg)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
@@ -63,12 +63,7 @@ LOCAL_CLI_INSTALL_DIR ?= ~/bin
 HASHSUM_SIZE ?= 256
 HASHSUM_CLASS ?= sha
 HASHSUM_ALGORITHM ?= $(HASHSUM_CLASS)$(HASHSUM_SIZE)
-
-ifeq ($(SYSTEM),Darwin)
 HASHSUM ?= shasum -a $(HASHSUM_SIZE)
-else
-HASHSUM ?= gsha$(HASHSUM_SIZE)sum
-endif
 
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true

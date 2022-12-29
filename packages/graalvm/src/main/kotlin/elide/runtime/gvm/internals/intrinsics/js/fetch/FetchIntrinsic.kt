@@ -4,6 +4,7 @@ import elide.annotations.core.Polyglot
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.*
 import org.graalvm.polyglot.Value
 
@@ -15,31 +16,43 @@ import org.graalvm.polyglot.Value
 @Intrinsic internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
   internal companion object {
     /** Global where the fetch method is available. */
-    const val GLOBAL_FETCH = "fetch"
+    private const val GLOBAL_FETCH = "fetch"
 
     /** Global where the `Request` constructor is mounted. */
-    const val GLOBAL_REQUEST = "Request"
+    private const val GLOBAL_REQUEST = "Request"
 
     /** Global where the `Response` constructor is mounted. */
-    const val GLOBAL_RESPONSE = "Response"
+    private const val GLOBAL_RESPONSE = "Response"
 
     /** Global where the `Headers` constructor is mounted. */
-    const val GLOBAL_HEADERS = "Headers"
+    private const val GLOBAL_HEADERS = "Headers"
+
+    // `Headers` intrinsic symbol.
+    private val HEADERS_SYMBOL = GLOBAL_HEADERS.asJsSymbol()
+
+    // `Request` intrinsic symbol.
+    private val REQUEST_SYMBOL = GLOBAL_REQUEST.asJsSymbol()
+
+    // `Response` intrinsic symbol.
+    private val RESPONSE_SYMBOL = GLOBAL_RESPONSE.asJsSymbol()
+
+    // `fetch` intrinsic symbol.
+    private val FETCH_SYMBOL = GLOBAL_FETCH.asJsSymbol()
   }
 
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Headers`
-    bindings[GLOBAL_HEADERS] = FetchHeadersIntrinsic::class.java
+    bindings[HEADERS_SYMBOL] = FetchHeadersIntrinsic::class.java
 
     // mount `Request`
-    bindings[GLOBAL_REQUEST] = FetchRequestIntrinsic::class.java
+    bindings[REQUEST_SYMBOL] = FetchRequestIntrinsic::class.java
 
     // mount `Response`
-    bindings[GLOBAL_RESPONSE] = FetchResponseIntrinsic::class.java
+    bindings[RESPONSE_SYMBOL] = FetchResponseIntrinsic::class.java
 
     // mount `fetch` method
-    bindings[GLOBAL_FETCH] = { request: Value ->
+    bindings[FETCH_SYMBOL] = { request: Value ->
       handleFetch(request)
     }
   }

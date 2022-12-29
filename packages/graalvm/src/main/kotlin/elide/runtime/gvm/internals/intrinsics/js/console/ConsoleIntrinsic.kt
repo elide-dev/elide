@@ -7,6 +7,8 @@ import elide.runtime.Logging
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.JavaScriptConsole
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -22,6 +24,9 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   internal companion object {
     // Global name of the JS console intrinsic.
     const val GLOBAL_CONSOLE = "Console"
+
+    /** Base64 symbol. */
+    private val CONSOLE_SYMBOL = GLOBAL_CONSOLE.asJsSymbol()
 
     // Name of the primary console logger.
     const val loggerName = "gvm:js.console"
@@ -72,6 +77,6 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // bind self to `console`
-    bindings[GLOBAL_CONSOLE] = this
+    bindings[CONSOLE_SYMBOL] = this
   }
 }

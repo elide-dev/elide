@@ -5,6 +5,8 @@ import elide.core.encoding.Base64
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.JavaScriptBase64
 import org.graalvm.nativeimage.CurrentIsolate
 
@@ -20,6 +22,9 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
 
     /** Injected name of the `atob` intrinsic. */
     private const val GLOBAL_ATOB = "atob"
+
+    /** Base64 symbol. */
+    private val BASE64_SYMBOL = GLOBAL_BASE64.asJsSymbol()
   }
 
   /** @inheritDoc */
@@ -33,6 +38,6 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Base64`
-    bindings[GLOBAL_BASE64] = this
+    bindings[BASE64_SYMBOL] = this
   }
 }

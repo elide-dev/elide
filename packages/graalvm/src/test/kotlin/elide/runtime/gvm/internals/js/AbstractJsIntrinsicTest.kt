@@ -7,6 +7,7 @@ import elide.annotations.core.Polyglot
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.junit.jupiter.api.Assertions.*
@@ -266,7 +267,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic> : AbstractIn
 
     // prep intrinsic bindings under test
     val bindings = if (bind) {
-      val target = HashMap<String, Any>()
+      val target = HashMap<JsSymbol, Any>()
       provide().install(GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(target))
       target
     } else {
@@ -276,7 +277,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic> : AbstractIn
     // install bindings under test, if directed
     val target = ctx.getBindings("js")
     bindings.forEach {
-      target.putMember(it.key, it.value)
+      target.putMember(it.key.symbol, it.value)
     }
 
     // install utility bindings, if directed

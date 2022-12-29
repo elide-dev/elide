@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics
 
 import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import java.util.TreeMap
 import java.util.TreeSet
 import java.util.function.BiFunction
@@ -16,23 +17,23 @@ internal interface GuestIntrinsic {
   /**
    * TBD.
    */
-  interface IntrinsicBindings : Map<String, Any>
+  interface IntrinsicBindings : Map<JsSymbol, Any>
 
   /**
    * TBD.
    */
-  interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<String, Any> {
+  interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<JsSymbol, Any> {
     /** factory for creating empty bindings. */
     object Factory {
       /** @return Mutable intrinsic bindings backed by a map. */
-      @JvmStatic fun create(): MutableIntrinsicBindings = wrap(TreeMap<String, Any>())
+      @JvmStatic fun create(): MutableIntrinsicBindings = wrap(TreeMap<JsSymbol, Any>())
 
       /** @return Mutable intrinsic bindings backed by a map. */
-      @JvmStatic fun wrap(target: MutableMap<String, Any>): MutableIntrinsicBindings {
-        val bindingSet = TreeSet<String>()
-        return object: MutableIntrinsicBindings, MutableMap<String, Any> by target {
+      @JvmStatic fun wrap(target: MutableMap<JsSymbol, Any>): MutableIntrinsicBindings {
+        val bindingSet = TreeSet<JsSymbol>()
+        return object: MutableIntrinsicBindings, MutableMap<JsSymbol, Any> by target {
           // Check uniqueness of an intrinsic binding name.
-          private fun checkName(key: String) {
+          private fun checkName(key: JsSymbol) {
             check(key !in bindingSet) {
               "Intrinsic binding '$key' is already bound."
             }
@@ -44,17 +45,17 @@ internal interface GuestIntrinsic {
           )
 
           /** Removing intrinsics is not allowed; this method always throws. */
-          override fun remove(key: String): Any = notAllowed()
+          override fun remove(key: JsSymbol): Any = notAllowed()
 
           /** Clearing intrinsics is not allowed; this method always throws. */
           override fun clear() = notAllowed()
 
-          override fun put(key: String, value: Any): Any? {
+          override fun put(key: JsSymbol, value: Any): Any? {
             checkName(key)
             return target.put(key ,value)
           }
 
-          override fun putAll(from: Map<out String, Any>) {
+          override fun putAll(from: Map<out JsSymbol, Any>) {
             from.keys.forEach {
               checkName(it)
               target[it] = from[it]!!
@@ -62,15 +63,15 @@ internal interface GuestIntrinsic {
           }
 
           /** @inheritDoc */
-          override fun compute(key: String, remappingFunction: BiFunction<in String, in Any?, out Any?>): Any
+          override fun compute(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any?, out Any?>)
             = notAllowed()
 
           /** @inheritDoc */
-          override fun computeIfAbsent(key: String, mappingFunction: Function<in String, out Any>): Any
+          override fun computeIfAbsent(key: JsSymbol, mappingFunction: Function<in JsSymbol, out Any>)
             = notAllowed()
 
           /** @inheritDoc */
-          override fun computeIfPresent(key: String, remappingFunction: BiFunction<in String, in Any, out Any?>): Any
+          override fun computeIfPresent(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any, out Any?>)
             = notAllowed()
         }
       }

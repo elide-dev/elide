@@ -168,7 +168,7 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
 
       // 5: flush global overlay to bindings
       overlay.forEach { name, target ->
-        globals.putMember(name, target)
+        globals.putMember(name.symbol, target)
       }
 
       // 6: prepare runtime with language-specific init

@@ -2,6 +2,7 @@ package elide.runtime.gvm.internals
 
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.testing.annotations.Test
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -26,7 +27,7 @@ internal abstract class AbstractIntrinsicTest<T : GuestIntrinsic> {
 
   /** Test installation of the intrinsic. */
   @Test fun testInstall() {
-    val target = HashMap<String, Any>()
+    val target = HashMap<JsSymbol, Any>()
     val subject = provide()
     assertNotNull(subject, "should not get `null` subject from `provide` for intrinsic under test")
     assertDoesNotThrow {

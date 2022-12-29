@@ -9,6 +9,8 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import java.io.Serializable
 import java.net.URI
@@ -23,7 +25,10 @@ import kotlin.reflect.*
 @Intrinsic internal class URLIntrinsic : AbstractJsIntrinsic() {
   internal companion object {
     /** Global where the `URL` constructor is mounted. */
-    const val GLOBAL_URL = "URL"
+    private const val GLOBAL_URL = "URL"
+
+    // `URL` class symbol.
+    private val URL_SYMBOL = GLOBAL_URL.asJsSymbol()
 
     // Resolve a known protocol for the provided URI, or `null`.
     @JvmStatic private fun knownProtocol(target: NativeURL): KnownProtocol? = when (val scheme = target.scheme) {
@@ -1124,6 +1129,6 @@ import kotlin.reflect.*
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `URL`
-    bindings[GLOBAL_URL] = URLValue::class.java
+    bindings[URL_SYMBOL] = URLValue::class.java
   }
 }

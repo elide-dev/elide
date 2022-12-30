@@ -1,6 +1,15 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
     args: [
+      "run",
+      "--rm",
+      "--privileged",
+      "tonistiigi/binfmt",
+      "--install",
+      "all"
+    ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: [
       "buildx",
       "create",
       "--name", "multiarch",
@@ -13,7 +22,7 @@ steps:
       "build",
       "--push",
       "--platform", "linux/arm64,linux/amd64",
-      "--tag", "us-docker.pkg.dev/elide-fw/runtime/native/alpine",
+      "--tag", "us-docker.pkg.dev/elide-fw/tools/runtime/native/alpine",
       "."
     ]
 options:

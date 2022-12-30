@@ -6,39 +6,8 @@
 #
 
 IMAGE ?= base/alpine
-
-PUSH ?= yes
-REMOTE ?= yes
-VERSION ?= latest
-PROJECT ?= elide-fw
-REGISTRY ?= us-docker.pkg.dev
+PUB_IMAGE ?= base-alpine
 REPOSITORY ?= tools/$(IMAGE)
-DOCKER ?= $(shell which docker)
-GCLOUD ?= $(shell which gcloud) beta
-PLATFORMS ?= linux/arm64,linux/amd64
+PUB_IMAGE_PATH ?= ghcr.io/elide-dev/base/alpine:$(VERSION)
 
-all: image
-
-ifeq ($(PUSH),yes)
-DOCKER_ARGS ?= --push
-else
-DOCKER_ARGS ?=
-endif
-
-ifeq ($(REMOTE),no)
-image:
-	$(DOCKER) buildx build --platform $(PLATFORMS) $(DOCKER_ARGS) --tag $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
-
-push:
-	$(DOCKER) buildx push $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)
-
-.PHONY: image push
-else
-image:
-	$(GCLOUD) builds submit . --config cloudbuild.yaml
-
-push:
-	@echo "Remote image build complete: $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)"
-
-.PHONY: image
-endif
+include ../Docker.mk

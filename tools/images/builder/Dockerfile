@@ -1,6 +1,6 @@
 ARG BASE_IMAGE=gvm17
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:7db6e37eb898adc48fc1251997374ecc765b9a85a191d89c30adbfc41cc83883"
+ARG BASE_HASH="@sha256:f9d94fb3e5202dcf92512c9e9d2d7fc7b51b4f14383c1863af1b4a7efaef59eb"
 
 FROM us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
 
@@ -54,7 +54,7 @@ RUN echo "Building Elide builder image..." \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; COMPONENTS="native-image js wasm"; fi \
+  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; FORMAL_ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
   && if [ "$ARCH" = "arm64" ] ; then FORMAL_ARCH="arm64"; fi \
   && if [ "$ARCH" = "aarch64" ] ; then FORMAL_ARCH="arm64"; fi \
   && cd ~ \

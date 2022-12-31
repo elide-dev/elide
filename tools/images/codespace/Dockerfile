@@ -16,7 +16,6 @@ ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
 ARG GRAAL_VERSION=22.3.0
 ARG JAVA_VERSION=java19
-ARG BAZELISK_VERSION=v1.15.0
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -80,7 +79,7 @@ RUN apt-get update \
   && cd ~ \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
-  && export COMPONENTS="native-image js espresso" \
+  && export COMPONENTS="native-image js" \
   && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; FORMAL_ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
   && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
   && mkdir -p /tmp/gvm \
@@ -119,7 +118,7 @@ RUN apt-get update \
   && rm *kotlin*.zip \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A040830F7FAC5991 \
   && echo "Installing Bazelisk..." \
-  && curl -fLO "https://github.com/bazelbuild/bazelisk/releases/download/$BAZELISK_VERSION/bazelisk-linux-$FORMAL_ARCH" \
+  && curl -fLO https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-amd64 \
   && mv "bazelisk-linux-$FORMAL_ARCH" "/usr/bin/bazel" \
   && chmod +x /usr/bin/bazel \
   && ln -s /usr/bin/bazel /usr/bin/bazelisk \
@@ -133,15 +132,28 @@ RUN apt-get update \
   && rm -fv install_gcloud.sh \
   && cd ~ \
   && /var/lib/gcloud/google-cloud-sdk/bin/gcloud auth configure-docker us-docker.pkg.dev \
+  && echo "Installing Go..." \
+  && curl -fLO https://go.dev/dl/go1.19.linux-amd64.tar.gz \
+  && tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz \
+  && rm go1.19.linux-amd64.tar.gz \
   && export GOPATH="/go" \
   && mkdir -p "$GOPATH/src" "$GOPATH/bin" \
   && chmod -R 777 "$GOPATH" \
-  && echo "Installing GraalVM modules..." \
-  && $GRAALVM_HOME/bin/gu install native-image js \
-  && rm -rf /var/lib/apt/lists/* \
+  && echo "Installing Buf..." \
+  && curl -fLSO https://github.com/bufbuild/buf/releases/download/v1.11.0/buf-Linux-x86_64 \
+  && mv buf-Linux-x86_64 /usr/local/bin/buf \
+  && chmod +x /usr/local/bin/buf \
   && echo "Setting up Debian-based codespace..." \
   && yes | unminimize 2>&1 \
-  && echo "Installing updates and dev packages..." \
+  && wget https://apt.llvm.org/llvm.sh \
+  && chmod +x llvm.sh \
+  && sudo ./llvm.sh 15 \
+  && rm -fv llvm.sh \
+  && echo "Installing GraalVM modules..." \
+  && $GRAALVM_HOME/bin/gu install $COMPONENTS \
+  && rm -rf /var/lib/apt/lists/*;
+
+RUN echo "Preparing dev root..." \
   && groupadd engineering \
   && useradd -g engineering -m dev \
   && usermod -aG sudo dev \
@@ -153,10 +165,23 @@ RUN apt-get update \
   && echo "%dev  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
   && chsh -s /bin/zsh "$DEV_USER" \
   && rm -rf /var/lib/apt/lists/* \
+  && chown -R "$DEV_USER" /home/dev \
+  && chmod 755 /usr/local \
+  && chown "$DEV_USER" /usr/local \
+  && sudo -u "$DEV_USER" mkdir -p /home/dev/.ssh \
+  && sudo -u "$DEV_USER" bash -c 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"' \
+  && echo "Installing Rust..." \
+  && sudo -u "$DEV_USER" bash -c "curl https://sh.rustup.rs -sSf | bash -s -- -y" \
+  && echo 'source $HOME/.cargo/env' >> $HOME/.bashrc \
+  && echo 'source $HOME/.cargo/env' >> $HOME/.zshrc \
+  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup toolchain install nightly" \
+  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup default nightly" \
+  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup target add wasm32-unknown-unknown" \
+  && sudo -u "$DEV_USER" bash -c "/home/dev/.cargo/bin/rustup target add wasm32-wasi" \
   && echo "Codespace image ready."
 
-ENV GRADLE_HOME="/opt/gradle" \
-  KOTLIN_HOME="/opt/kotlinc" \
+ENV GRADLE_HOME="/opt/gradle/gradle" \
+  KOTLIN_HOME="/opt/kotlin/kotlincc" \
   JAVA_HOME="/usr/lib/gvm" \
   GRAALVM_HOME="/usr/lib/gvm" \
   GOPATH="/go" \

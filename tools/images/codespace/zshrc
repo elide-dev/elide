@@ -5,3 +5,4 @@ source $ZSH/oh-my-zsh.sh
 source ~/.profile
 source ~/.alias
 if [ -f '/var/lib/gcloud/google-cloud-sdk/path.zsh.inc' ]; then . '/var/lib/gcloud/google-cloud-sdk/path.zsh.inc'; fi
+source $HOME/.cargo/env;

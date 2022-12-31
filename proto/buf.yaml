@@ -45,6 +45,7 @@ lint:
   rpc_allow_google_protobuf_empty_requests: true
   rpc_allow_google_protobuf_empty_responses: true
   allow_comment_ignores: true
+  allow_comment_ignores: true
 breaking:
   use:
     - FILE

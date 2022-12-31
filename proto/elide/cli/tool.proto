@@ -34,6 +34,7 @@ import "elide/data/secrets/token.proto";
 // Coming soon.
 //
 message LocalAuthToken {
+  // Auth token attached to this record.
   oneof auth_token {
     // Specifies an authorization token for a user.
     elide.data.secrets.Token user_token = 1;

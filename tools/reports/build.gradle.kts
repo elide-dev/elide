@@ -98,7 +98,7 @@ task("mergeJUnitReports") {
 }
 
 tasks.create("reports") {
-  dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
-  dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
-  dependsOn(tasks.named("mergeJUnitReports"))
+//  dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
+//  dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
+//  dependsOn(tasks.named("mergeJUnitReports"))
 }

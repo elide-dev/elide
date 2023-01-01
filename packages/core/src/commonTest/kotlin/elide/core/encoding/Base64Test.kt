@@ -1,30 +1,31 @@
 package elide.core.encoding
 
+import elide.core.encoding.base64.DefaultBase64
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-/** Tests for built in [Base64] tools. */
-class Base64Test: AbstractEncoderTest<Base64>() {
+/** Tests for built in [DefaultBase64] tools. */
+class Base64Test: AbstractEncoderTest<DefaultBase64>() {
   override fun encoding(): Encoding = Encoding.BASE64
-  override fun encoder(): Base64 = Base64
+  override fun encoder(): DefaultBase64 = DefaultBase64
 
   @Test fun testEncodeBase64() {
     val input = "abc123123"
     assertEquals(
       "YWJjMTIzMTIz",
-      Base64.encodeToString(input),
+      DefaultBase64.encodeToString(input),
       "should get expected output from Base64 encode"
     )
     val inputPadded = "abc1231231"
     assertEquals(
       "YWJjMTIzMTIzMQ==",
-      Base64.encodeToString(inputPadded),
+      DefaultBase64.encodeToString(inputPadded),
       "should get expected output from non-websafe Base64 encode"
     )
     assertEquals(
       "YWJjMTIzMTIzMQ",
-      Base64.encodeWebSafe(inputPadded),
+      DefaultBase64.encodeWebSafe(inputPadded),
       "should get expected output from websafe Base64 encode"
     )
   }
@@ -42,7 +43,7 @@ class Base64Test: AbstractEncoderTest<Base64>() {
     val input = "YWJjMTIzMTIz"
     assertEquals(
       "abc123123",
-      Base64.decodeToString(input),
+      DefaultBase64.decodeToString(input),
       "should get expected output from Base64 decode"
     )
   }
@@ -53,14 +54,14 @@ class Base64Test: AbstractEncoderTest<Base64>() {
       "here is a sample bla bla",
     )
     subjects.forEach { sample ->
-      val encoded = Base64.encodeToString(
+      val encoded = DefaultBase64.encodeToString(
         sample
       )
       assertNotNull(
         encoded,
         "should get non-null output from base64 encoder"
       )
-      val decoded = Base64.decodeToString(
+      val decoded = DefaultBase64.decodeToString(
         encoded
       )
       assertEquals(

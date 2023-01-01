@@ -1,25 +1,9 @@
-package elide.core.encoding
+package elide.core.encoding.base64
 
-import kotlin.jvm.JvmInline
+import elide.annotations.Static
+import elide.core.encoding.Codec
+import elide.core.encoding.Encoding
 import kotlin.math.min
-import kotlin.native.concurrent.SharedImmutable
-
-// Default globally-shared Base64 encoder.
-@SharedImmutable private val defaultEncoder: Base64.Encoder = Base64.Encoder(
-  null,
-  -1,
-  true,
-)
-
-// Default globally-shared Base64 encoder for web-safe outputs.
-@SharedImmutable private val defaultEncoderWebsafe: Base64.Encoder = Base64.Encoder(
-  null,
-  -1,
-  false,
-)
-
-// Default globally-shared decoder.
-@SharedImmutable private val defaultDecoder: Base64.Decoder = Base64.Decoder()
 
 /**
  * # Base64
@@ -62,16 +46,7 @@ import kotlin.native.concurrent.SharedImmutable
   "LongMethod",
   "NestedBlockDepth"
 )
-public object Base64 : Codec<Base64.Base64Data> {
-  /** Carrier value-class for base64-encoded data. */
-  @JvmInline public value class Base64Data constructor (override val data: ByteArray): EncodedData {
-    /** @inheritDoc */
-    override val encoding: Encoding get() = Encoding.HEX
-
-    /** @inheritDoc */
-    override val string: String get() = data.decodeToString()
-  }
-
+public actual object Base64 : Codec<Base64Data> {
   /**
    * This array is a lookup table that translates 6-bit positive integer index values into their "Base64 Alphabet"
    * equivalents as specified in "Table 1: The Base64 Alphabet" of RFC 2045 (and RFC 4648).
@@ -126,6 +101,14 @@ public object Base64 : Codec<Base64.Base64Data> {
   private val encoder: Encoder = Encoder(null, -1, true)
 
   /**
+   * Returns a [Encoder] that encodes using the [Basic](#basic) type base64 encoding scheme, which does not use or apply
+   * any padding (i.e. "web-safe" mode).
+   *
+   * @return A web-safe Base64 encoder.
+   */
+  private val encoderWebsafe: Encoder = Encoder(null, -1, false)
+
+  /**
    * Returns a [Decoder] that decodes using the [Basic](#basic) type base64 encoding scheme.
    *
    * @return A Base64 decoder.
@@ -141,23 +124,22 @@ public object Base64 : Codec<Base64.Base64Data> {
    * Unless otherwise noted, passing a `null` argument to a method of this class will cause a `NullPointerException` to
    * be thrown.
    *
-   * @see Decoder
+   * @see Decoder for the corresponding decoder.
    */
-  public class Encoder internal constructor(
+  public actual class Encoder internal constructor(
     private val newline: ByteArray?,
     private val linemax: Int,
     private val doPadding: Boolean
   ) {
-    public companion object {
-      /**
-       * Default encoder instance.
-       */
-      public val DEFAULT: Encoder = defaultEncoder
+    // Empty constructor.
+    public actual constructor(): this(null, -1, true)
 
-      /**
-       * Default encoder instance for un-padded encoding.
-       */
-      public val DEFAULT_WEBSAFE: Encoder = defaultEncoderWebsafe
+    public actual companion object {
+      /** Default encoder instance. */
+      @Static public actual val DEFAULT: Encoder = encoder
+
+      /** Default encoder instance for un-padded encoding. */
+      @Static public actual val DEFAULT_WEBSAFE: Encoder = encoderWebsafe
     }
 
     private fun outLength(srclen: Int): Int {
@@ -179,10 +161,10 @@ public object Base64 : Codec<Base64.Base64Data> {
      * @param src the byte array to encode
      * @return A newly-allocated byte array containing the resulting encoded bytes.
      */
-    public fun encode(src: ByteArray): ByteArray {
+    public actual fun encode(src: ByteArray): ByteArray {
       val len = outLength(src.size) // dst array size
       val dst = ByteArray(len)
-      val ret = encode0(src, 0, src.size, dst)
+      val ret = encode0(src, src.size, dst)
       return if (ret != dst.size) dst.copyOf(ret) else dst
     }
 
@@ -201,8 +183,9 @@ public object Base64 : Codec<Base64.Base64Data> {
     }
 
     @Suppress("UNUSED_CHANGED_VALUE")
-    private fun encode0(src: ByteArray, off: Int, end: Int, dst: ByteArray): Int {
+    private fun encode0(src: ByteArray, end: Int, dst: ByteArray): Int {
       val base64 = toBase64
+      val off = 0
       var sp = off
       var slen = (end - off) / 3 * 3
       val sl = off + slen
@@ -259,9 +242,10 @@ public object Base64 : Codec<Base64.Base64Data> {
    *
    * @see Encoder
    */
-  public class Decoder {
-    public companion object {
-      public val DEFAULT: Decoder = defaultDecoder
+  public actual class Decoder {
+    public actual companion object {
+      /** Decoder singleton. */
+      @Static public actual val DEFAULT: Decoder = decoder
     }
 
     /**
@@ -272,18 +256,18 @@ public object Base64 : Codec<Base64.Base64Data> {
      * @return A newly-allocated byte array containing the decoded bytes.
      * @throws IllegalArgumentException if `src` is not in valid Base64 scheme
      */
-    public fun decode(src: ByteArray): ByteArray {
-      var dst = ByteArray(outLength(src, 0, src.size))
-      val ret = decode0(src, 0, src.size, dst)
+    public actual fun decode(src: ByteArray): ByteArray {
+      var dst = ByteArray(outLength(src, src.size))
+      val ret = decode0(src, src.size, dst)
       if (ret != dst.size) {
         dst = dst.copyOf(ret)
       }
       return dst
     }
 
-
-    private fun outLength(src: ByteArray, sp: Int, sl: Int): Int {
+    private fun outLength(src: ByteArray, sl: Int): Int {
       var paddings = 0
+      val sp = 0
       val len = sl - sp
       if (len == 0) return 0
       if (len < 2) {
@@ -299,7 +283,8 @@ public object Base64 : Codec<Base64.Base64Data> {
       return 3 * ((len + 3) / 4) - paddings
     }
 
-    private fun decode0(src: ByteArray, spi: Int, sl: Int, dst: ByteArray): Int {
+    private fun decode0(src: ByteArray, sl: Int, dst: ByteArray): Int {
+      val spi = 0
       var sp = spi
       val base64 = fromBase64
       var dp = 0
@@ -376,7 +361,7 @@ public object Base64 : Codec<Base64.Base64Data> {
   }
 
   /** @inheritDoc */
-  override fun encoding(): Encoding = Encoding.BASE64
+  actual override fun encoding(): Encoding = Encoding.BASE64
 
   /** @inheritDoc */
   override fun decodeBytes(data: ByteArray): ByteArray = decoder.decode(data)
@@ -391,7 +376,7 @@ public object Base64 : Codec<Base64.Base64Data> {
    * @param string String to encode with web-safe Base64.
    * @return Base64-encoded string, using only web-safe characters.
    */
-  public fun encodeWebSafe(string: String): String = encodeWebSafe(string.encodeToByteArray()).decodeToString()
+  public actual fun encodeWebSafe(string: String): String = encodeWebSafe(string.encodeToByteArray()).decodeToString()
 
   /**
    * Encode the provided [data] into a Base64-encoded set of bytes, omitting characters which are unsafe for use on the
@@ -400,5 +385,5 @@ public object Base64 : Codec<Base64.Base64Data> {
    * @param data Raw bytes to encode with web-safe Base64.
    * @return Base64-encoded bytes, using only web-safe characters.
    */
-  public fun encodeWebSafe(data: ByteArray): ByteArray = defaultEncoderWebsafe.encode(data)
+  public actual fun encodeWebSafe(data: ByteArray): ByteArray = encoderWebsafe.encode(data)
 }

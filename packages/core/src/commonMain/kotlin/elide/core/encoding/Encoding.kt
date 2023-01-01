@@ -6,5 +6,14 @@ public enum class Encoding {
   HEX,
 
   /** Base64 encoding. */
-  BASE64
+  BASE64,
+
+  /** Plain UTF-8 encoding. */
+  UTF_8,
+
+  /** UTF-16 encoding. */
+  UTF_16,
+
+  /** UTF-32 encoding. */
+  UTF_32
 }

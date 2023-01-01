@@ -1,16 +1,17 @@
 package elide.core.encoding
 
+import elide.core.encoding.hex.DefaultHex
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/** Tests for built-in [Hex] encoding tools. */
-class HexTest : AbstractEncoderTest<Hex>() {
+/** Tests for built-in [DefaultHex] encoding tools. */
+class HexTest : AbstractEncoderTest<DefaultHex>() {
   override fun encoding(): Encoding = Encoding.HEX
-  override fun encoder(): Hex = Hex
+  override fun encoder(): DefaultHex = DefaultHex
 
   @Test fun testEncodeHexFromByteArray() {
     val value = "abc123123"
-    val hex = Hex.bytesToHex(value.encodeToByteArray())
+    val hex = DefaultHex.bytesToHex(value.encodeToByteArray())
     assertEquals(
       "616263313233313233",
       hex,
@@ -20,7 +21,7 @@ class HexTest : AbstractEncoderTest<Hex>() {
 
   @Test fun testEncodeHexFromString() {
     val value = "abc123123"
-    val hex = Hex.encodeToString(value)
+    val hex = DefaultHex.encodeToString(value)
     assertEquals(
       "616263313233313233",
       hex,

@@ -1,60 +1,14 @@
-public final class elide/core/encoding/Base64 : elide/core/encoding/Codec {
-	public static final field INSTANCE Lelide/core/encoding/Base64;
-	public synthetic fun decode (Lelide/core/encoding/EncodedData;)[B
-	public fun decode--6uyOLw ([B)[B
-	public fun decodeBytes ([B)[B
-	public fun decodeString (Ljava/lang/String;)[B
-	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
-	public fun decodeToString ([B)Ljava/lang/String;
-	public fun decoder ()Lelide/core/encoding/Decoder;
-	public synthetic fun encode ([B)Lelide/core/encoding/EncodedData;
-	public fun encode--yvQymk ([B)[B
-	public fun encodeBytes ([B)[B
-	public fun encodeString (Ljava/lang/String;)[B
-	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
-	public fun encodeToString ([B)Ljava/lang/String;
-	public final fun encodeWebSafe (Ljava/lang/String;)Ljava/lang/String;
-	public final fun encodeWebSafe ([B)[B
-	public fun encoder ()Lelide/core/encoding/Encoder;
-	public fun encoding ()Lelide/core/encoding/Encoding;
+public final class elide/core/Defaults : elide/core/PlatformDefaults {
+	public static final field INSTANCE Lelide/core/Defaults;
+	public fun getCharset ()Ljava/lang/String;
 }
 
-public final class elide/core/encoding/Base64$Base64Data : elide/core/encoding/EncodedData {
-	public static final synthetic fun box-impl ([B)Lelide/core/encoding/Base64$Base64Data;
-	public static fun constructor-impl ([B)[B
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl ([BLjava/lang/Object;)Z
-	public static final fun equals-impl0 ([B[B)Z
-	public fun getData ()[B
-	public fun getEncoding ()Lelide/core/encoding/Encoding;
-	public static fun getEncoding-impl ([B)Lelide/core/encoding/Encoding;
-	public fun getString ()Ljava/lang/String;
-	public static fun getString-impl ([B)Ljava/lang/String;
-	public fun hashCode ()I
-	public static fun hashCode-impl ([B)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl ([B)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()[B
+public abstract interface class elide/core/PlatformDefaults {
+	public abstract fun getCharset ()Ljava/lang/String;
 }
 
-public final class elide/core/encoding/Base64$Decoder {
-	public static final field Companion Lelide/core/encoding/Base64$Decoder$Companion;
-	public fun <init> ()V
-	public final fun decode ([B)[B
-}
-
-public final class elide/core/encoding/Base64$Decoder$Companion {
-	public final fun getDEFAULT ()Lelide/core/encoding/Base64$Decoder;
-}
-
-public final class elide/core/encoding/Base64$Encoder {
-	public static final field Companion Lelide/core/encoding/Base64$Encoder$Companion;
-	public final fun encode ([B)[B
-}
-
-public final class elide/core/encoding/Base64$Encoder$Companion {
-	public final fun getDEFAULT ()Lelide/core/encoding/Base64$Encoder;
-	public final fun getDEFAULT_WEBSAFE ()Lelide/core/encoding/Base64$Encoder;
+public final class elide/core/PlatformDefaults$DefaultImpls {
+	public static fun getCharset (Lelide/core/PlatformDefaults;)Ljava/lang/String;
 }
 
 public abstract interface class elide/core/encoding/Codec : elide/core/encoding/CodecIdentifiable, elide/core/encoding/Decoder, elide/core/encoding/Encoder {
@@ -137,17 +91,122 @@ public final class elide/core/encoding/Encoding : java/lang/Enum {
 	public static fun values ()[Lelide/core/encoding/Encoding;
 }
 
-public final class elide/core/encoding/Hex : elide/core/encoding/Codec {
-	public static final field INSTANCE Lelide/core/encoding/Hex;
+public final class elide/core/encoding/base64/Base64 : elide/core/encoding/Codec {
+	public static final field INSTANCE Lelide/core/encoding/base64/Base64;
 	public synthetic fun decode (Lelide/core/encoding/EncodedData;)[B
-	public fun decode-bnPf6mY (Ljava/lang/String;)[B
+	public fun decode-GM02rw0 ([B)[B
 	public fun decodeBytes ([B)[B
 	public fun decodeString (Ljava/lang/String;)[B
 	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
 	public fun decodeToString ([B)Ljava/lang/String;
 	public fun decoder ()Lelide/core/encoding/Decoder;
 	public synthetic fun encode ([B)Lelide/core/encoding/EncodedData;
-	public fun encode-S5nwr2E ([B)Ljava/lang/String;
+	public fun encode-ZmuYYJo ([B)[B
+	public fun encodeBytes ([B)[B
+	public fun encodeString (Ljava/lang/String;)[B
+	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun encodeToString ([B)Ljava/lang/String;
+	public final fun encodeWebSafe (Ljava/lang/String;)Ljava/lang/String;
+	public final fun encodeWebSafe ([B)[B
+	public fun encoder ()Lelide/core/encoding/Encoder;
+	public fun encoding ()Lelide/core/encoding/Encoding;
+}
+
+public final class elide/core/encoding/base64/Base64$Decoder {
+	public static final field Companion Lelide/core/encoding/base64/Base64$Decoder$Companion;
+	public fun <init> ()V
+	public final fun decode ([B)[B
+	public static final fun getDEFAULT ()Lelide/core/encoding/base64/Base64$Decoder;
+}
+
+public final class elide/core/encoding/base64/Base64$Decoder$Companion {
+	public final fun getDEFAULT ()Lelide/core/encoding/base64/Base64$Decoder;
+}
+
+public final class elide/core/encoding/base64/Base64$Encoder {
+	public static final field Companion Lelide/core/encoding/base64/Base64$Encoder$Companion;
+	public fun <init> ()V
+	public final fun encode ([B)[B
+	public static final fun getDEFAULT ()Lelide/core/encoding/base64/Base64$Encoder;
+	public static final fun getDEFAULT_WEBSAFE ()Lelide/core/encoding/base64/Base64$Encoder;
+}
+
+public final class elide/core/encoding/base64/Base64$Encoder$Companion {
+	public final fun getDEFAULT ()Lelide/core/encoding/base64/Base64$Encoder;
+	public final fun getDEFAULT_WEBSAFE ()Lelide/core/encoding/base64/Base64$Encoder;
+}
+
+public final class elide/core/encoding/base64/Base64Data : elide/core/encoding/EncodedData {
+	public static final synthetic fun box-impl ([B)Lelide/core/encoding/base64/Base64Data;
+	public static fun constructor-impl ([B)[B
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl ([BLjava/lang/Object;)Z
+	public static final fun equals-impl0 ([B[B)Z
+	public fun getData ()[B
+	public fun getEncoding ()Lelide/core/encoding/Encoding;
+	public static fun getEncoding-impl ([B)Lelide/core/encoding/Encoding;
+	public fun getString ()Ljava/lang/String;
+	public static fun getString-impl ([B)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl ([B)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl ([B)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()[B
+}
+
+public final class elide/core/encoding/base64/DefaultBase64 : elide/core/encoding/Codec {
+	public static final field INSTANCE Lelide/core/encoding/base64/DefaultBase64;
+	public synthetic fun decode (Lelide/core/encoding/EncodedData;)[B
+	public fun decode-GM02rw0 ([B)[B
+	public fun decodeBytes ([B)[B
+	public fun decodeString (Ljava/lang/String;)[B
+	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun decodeToString ([B)Ljava/lang/String;
+	public fun decoder ()Lelide/core/encoding/Decoder;
+	public synthetic fun encode ([B)Lelide/core/encoding/EncodedData;
+	public fun encode-ZmuYYJo ([B)[B
+	public fun encodeBytes ([B)[B
+	public fun encodeString (Ljava/lang/String;)[B
+	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun encodeToString ([B)Ljava/lang/String;
+	public final fun encodeWebSafe (Ljava/lang/String;)Ljava/lang/String;
+	public final fun encodeWebSafe ([B)[B
+	public fun encoder ()Lelide/core/encoding/Encoder;
+	public fun encoding ()Lelide/core/encoding/Encoding;
+}
+
+public final class elide/core/encoding/base64/DefaultBase64$Decoder {
+	public static final field Companion Lelide/core/encoding/base64/DefaultBase64$Decoder$Companion;
+	public fun <init> ()V
+	public final fun decode ([B)[B
+}
+
+public final class elide/core/encoding/base64/DefaultBase64$Decoder$Companion {
+	public final fun getDEFAULT ()Lelide/core/encoding/base64/DefaultBase64$Decoder;
+}
+
+public class elide/core/encoding/base64/DefaultBase64$Encoder {
+	public static final field Companion Lelide/core/encoding/base64/DefaultBase64$Encoder$Companion;
+	public fun <init> ()V
+	public final fun encode ([B)[B
+}
+
+public final class elide/core/encoding/base64/DefaultBase64$Encoder$Companion {
+	public final fun getDEFAULT ()Lelide/core/encoding/base64/DefaultBase64$Encoder;
+	public final fun getDEFAULT_WEBSAFE ()Lelide/core/encoding/base64/DefaultBase64$Encoder;
+}
+
+public final class elide/core/encoding/hex/DefaultHex : elide/core/encoding/Codec {
+	public static final field INSTANCE Lelide/core/encoding/hex/DefaultHex;
+	public synthetic fun decode (Lelide/core/encoding/EncodedData;)[B
+	public fun decode-zVQz0Fs (Ljava/lang/String;)[B
+	public fun decodeBytes ([B)[B
+	public fun decodeString (Ljava/lang/String;)[B
+	public fun decodeToString (Ljava/lang/String;)Ljava/lang/String;
+	public fun decodeToString ([B)Ljava/lang/String;
+	public fun decoder ()Lelide/core/encoding/Decoder;
+	public synthetic fun encode ([B)Lelide/core/encoding/EncodedData;
+	public fun encode-yhQo9TM ([B)Ljava/lang/String;
 	public fun encodeBytes ([B)[B
 	public fun encodeString (Ljava/lang/String;)[B
 	public fun encodeToString (Ljava/lang/String;)Ljava/lang/String;
@@ -157,8 +216,8 @@ public final class elide/core/encoding/Hex : elide/core/encoding/Codec {
 	public final fun getCHARACTER_SET ()[C
 }
 
-public final class elide/core/encoding/Hex$HexData : elide/core/encoding/EncodedData {
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/core/encoding/Hex$HexData;
+public final class elide/core/encoding/hex/HexData : elide/core/encoding/EncodedData {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/core/encoding/hex/HexData;
 	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
@@ -174,5 +233,10 @@ public final class elide/core/encoding/Hex$HexData : elide/core/encoding/Encoded
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/core/platform/PlatformDefaults : elide/core/PlatformDefaults {
+	public fun <init> ()V
+	public fun getCharset ()Ljava/lang/String;
 }
 

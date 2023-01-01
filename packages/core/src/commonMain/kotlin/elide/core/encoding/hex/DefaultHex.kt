@@ -1,6 +1,7 @@
-package elide.core.encoding
+package elide.core.encoding.hex
 
-import kotlin.jvm.JvmInline
+import elide.core.encoding.Codec
+import elide.core.encoding.Encoding
 
 /**
  * # Hex
@@ -8,19 +9,7 @@ import kotlin.jvm.JvmInline
  * Provides cross-platform utilities for encoding values into hex, or decoding values from hex. Available on any target
  * platform supported by Elide/Kotlin, including native platforms.
  */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public object Hex : Codec<Hex.HexData> {
-  /** Carrier value-class for hex-encoded data. */
-  @JvmInline public value class HexData constructor (private val encoded: String) : EncodedData {
-    /** @inheritDoc */
-    override val encoding: Encoding get() = Encoding.HEX
-
-    /** @inheritDoc */
-    override val string: String get() = encoded
-
-    /** @inheritDoc */
-    override val data: ByteArray get() = encoded.encodeToByteArray()
-  }
-
+@Suppress("unused", "MemberVisibilityCanBePrivate") public object DefaultHex : Codec<HexData> {
   /** Array of hex-allowable characters.  */
   public val CHARACTER_SET: CharArray = "0123456789abcdef".toCharArray()
 

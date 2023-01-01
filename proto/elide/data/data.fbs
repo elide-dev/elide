@@ -12,6 +12,7 @@
  */
 
 include "../crypto/crypto.fbs";
+include "./encoding.fbs";
 
 /*
  * Specifies core structures related to cryptographic operations and primitives. These records and enumerates are used
@@ -50,6 +51,9 @@ table DataFingerprint {
 
   // Content of the fingerprint/checksum calculated as part of this data fingerprint.
   fingerprint: [ubyte];
+
+  // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
+  encoding: elide.core.encoding.Encoding;
 }
 
 // Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
@@ -61,6 +65,9 @@ table DataContainer {
   // Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
   // held by this data container.
   integrity: [elide.data.DataFingerprint];
+
+  // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
+  encoding: elide.core.encoding.Encoding;
 }
 
 // Generic container for compressed data, which simply combines an enumerated `CompressionMode` with a blob of raw bytes

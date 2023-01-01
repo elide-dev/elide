@@ -29,7 +29,7 @@ option csharp_namespace = "Elide.Data";
 option go_package = "github.com/elide-tools/elide/data;data";
 
 
-// File Encoding
+// Data Encoding
 //
 // Describes supported file encodings. By default, files are encoded with `UTF-8`.
 enum Encoding {

@@ -30,6 +30,7 @@ option csharp_namespace = "Elide.Data";
 option go_package = "github.com/elide-tools/elide/data;data";
 
 import "elide/crypto/crypto.proto";
+import "elide/data/encoding.proto";
 
 
 // Specifies compression modes that are supported by the framework for pre-compressed assets stored inline within the
@@ -64,6 +65,9 @@ message DataFingerprint {
 
   // Content of the fingerprint/checksum calculated as part of this data fingerprint.
   bytes fingerprint = 3;
+
+  // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
+  data.Encoding encoding = 4;
 }
 
 
@@ -76,6 +80,9 @@ message DataContainer {
   // Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
   // held by this data container.
   repeated DataFingerprint integrity = 2;
+
+  // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
+  data.Encoding encoding = 3;
 }
 
 

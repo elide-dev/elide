@@ -157,7 +157,31 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
-		publish \
+		:conventions:publish \
+		:substrate:compiler-util:publish \
+		:substrate:redakt:publish \
+		:substrate:injekt:publish \
+		:substrate:sekret:publish \
+		:substrate:interakt:publish \
+		:tools:processor:publish \
+		:packages:core:publish \
+		:packages:base:publish \
+		:packages:test:publish \
+		:packages:proto:proto-core:publish \
+		:packages:proto:proto-kotlinx:publish \
+		:packages:proto:proto-protobuf:publish \
+		:packages:proto:proto-flatbuffers:publish \
+		:packages:model:publish \
+		:packages:rpc:publish \
+		:packages:graalvm:publish \
+		:packages:graalvm-js:publish \
+		:packages:graalvm-react:publish \
+		:packages:ssr:publish \
+		:packages:server:publish \
+		:packages:ssg:publish \
+		:packages:platform:publish \
+		:packages:bom:publish \
+		:packages:cli:publish \
 		--no-daemon \
 		--warning-mode=none \
 		-Pversion=$(VERSION) \

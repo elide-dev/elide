@@ -27,14 +27,6 @@ kotlin {
   }
 }
 
-val protocol: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-val implementation: Configuration by configurations.getting {
-  extendsFrom(protocol)
-}
-
 dependencies {
   // Core platform versions.
   ksp(libs.autoService.ksp)
@@ -45,10 +37,9 @@ dependencies {
   api(libs.graalvm.sdk)
 
   // Protocol dependencies.
-  protocol(project(mapOf(
-    "path" to ":packages:proto",
-    "configuration" to "modelInternal",
-  )))
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
 
   // Modules
   implementation(project(":packages:base"))

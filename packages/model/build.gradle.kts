@@ -72,7 +72,9 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(project(":packages:base"))
-        implementation(project(":packages:proto"))
+        implementation(project(":packages:proto:proto-core"))
+        implementation(project(":packages:proto:proto-protobuf"))
+        implementation(project(":packages:proto:proto-kotlinx"))
         implementation(libs.jakarta.inject)
         api(libs.protobuf.java)
         api(libs.protobuf.kotlin)

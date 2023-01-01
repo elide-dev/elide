@@ -33,14 +33,6 @@ micronaut {
   }
 }
 
-val protocol: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-val implementation: Configuration by configurations.getting {
-  extendsFrom(protocol)
-}
-
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
@@ -55,10 +47,9 @@ dependencies {
   api(project(":packages:ssr"))
   api(project(":packages:graalvm"))
 
-  protocol(project(mapOf(
-    "path" to ":packages:proto",
-    "configuration" to "modelInternal",
-  )))
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
 
   // Crypto
   implementation(libs.bouncycastle)

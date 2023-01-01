@@ -84,14 +84,6 @@ configurations["benchmarksRuntimeOnly"].extendsFrom(
   configurations.testRuntimeOnly.get()
 )
 
-val protocol: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-val implementation: Configuration by configurations.getting {
-  extendsFrom(protocol)
-}
-
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
@@ -129,14 +121,13 @@ dependencies {
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
 
-  protocol(project(mapOf(
-    "path" to ":packages:proto",
-    "configuration" to "modelInternal",
-  )))
-  protocol(project(mapOf(
-    "path" to ":packages:proto",
-    "configuration" to "flatInternal",
-  )))
+  // SQLite
+  implementation(libs.sqlite)
+
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
+  implementation(project(":packages:proto:proto-flatbuffers"))
 
   compileOnly(libs.graalvm.sdk)
   compileOnly(libs.graalvm.truffle.api)

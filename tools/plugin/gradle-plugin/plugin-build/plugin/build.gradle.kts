@@ -165,7 +165,7 @@ dependencies {
     api(libs.elide.tools.processor)
     implementation(libs.elide.base)
     implementation(libs.elide.ssg)
-    implementation(libs.elide.proto.protobuf)
+    implementation(libs.elide.proto.legacy)
 
     implementation(kotlin("stdlib-jdk7"))
     implementation(kotlin("stdlib-jdk8"))

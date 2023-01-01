@@ -67,14 +67,6 @@ buildConfig {
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"${libs.versions.elide.asProvider().get()}\"")
 }
 
-val protocol: Configuration by configurations.creating {
-  isCanBeConsumed = false
-  isCanBeResolved = true
-}
-val implementation: Configuration by configurations.getting {
-  extendsFrom(protocol)
-}
-
 dependencies {
   api(libs.slf4j)
 
@@ -105,10 +97,9 @@ dependencies {
   implementation(libs.micronaut.kotlin.extension.functions)
   implementation(libs.micronaut.kotlin.runtime)
 
-  protocol(project(mapOf(
-    "path" to ":packages:proto",
-    "configuration" to "modelInternal",
-  )))
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
 
   compileOnly(libs.graalvm.sdk)
   implementation(libs.logback)

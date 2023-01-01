@@ -11,6 +11,19 @@ public final class elide/core/PlatformDefaults$DefaultImpls {
 	public static fun getCharset (Lelide/core/PlatformDefaults;)Ljava/lang/String;
 }
 
+public final class elide/core/crypto/HashAlgorithm : java/lang/Enum {
+	public static final field IDENTITY Lelide/core/crypto/HashAlgorithm;
+	public static final field MD5 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA1 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA3_224 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA3_256 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA3_512 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA_256 Lelide/core/crypto/HashAlgorithm;
+	public static final field SHA_512 Lelide/core/crypto/HashAlgorithm;
+	public static fun valueOf (Ljava/lang/String;)Lelide/core/crypto/HashAlgorithm;
+	public static fun values ()[Lelide/core/crypto/HashAlgorithm;
+}
+
 public abstract interface class elide/core/encoding/Codec : elide/core/encoding/CodecIdentifiable, elide/core/encoding/Decoder, elide/core/encoding/Encoder {
 	public abstract fun decoder ()Lelide/core/encoding/Decoder;
 	public abstract fun encoder ()Lelide/core/encoding/Encoder;
@@ -87,6 +100,9 @@ public final class elide/core/encoding/EncoderExtensionsKt {
 public final class elide/core/encoding/Encoding : java/lang/Enum {
 	public static final field BASE64 Lelide/core/encoding/Encoding;
 	public static final field HEX Lelide/core/encoding/Encoding;
+	public static final field UTF_16 Lelide/core/encoding/Encoding;
+	public static final field UTF_32 Lelide/core/encoding/Encoding;
+	public static final field UTF_8 Lelide/core/encoding/Encoding;
 	public static fun valueOf (Ljava/lang/String;)Lelide/core/encoding/Encoding;
 	public static fun values ()[Lelide/core/encoding/Encoding;
 }

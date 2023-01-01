@@ -157,6 +157,10 @@ npm_lit_labs_ssr = "2.2.3"
 npm_lit_labs_ssrClient = "1.0.1"
 npm_lit_labs_virtualizer = "0.7.2"
 npm_lit_labs_task = "2.0.0"
+sqlite = "3.40.0.0"
+snappy = "1.1.8.4"
+msgpack = "0.9.3"
+larray = "0.4.0"
 google_api_common = "2.3.1"
 google_html_types = "1.0.8"
 reactivestreams = "1.0.4"
@@ -557,6 +561,12 @@ lmax_disruptor_core = { group = "com.lmax", name = "disruptor", version.ref = "l
 lmax_disruptor_proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
 jline_terminal_core = { module = "org.jline:jline-terminal", version.ref = "jline" }
 jline_terminal_jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
+larray_core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }
+larray_buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
+larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
+msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 ## Plugin Aliases
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
@@ -586,7 +596,7 @@ plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref =
 elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
 elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
-elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
+elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
 elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
 elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }
 elide_proto_kotlinx = { group = "dev.elide", name = "proto-kotlinx", version.ref = "elide" }

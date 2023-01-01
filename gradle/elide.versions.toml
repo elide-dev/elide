@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha3-b1"
+elide = "1.0-v3-alpha3-b2"
 elide_plugin = "1.0.0-beta12"
 kotlin_sdk = "1.8.0-RC2"
 kotlin_language = "1.8"

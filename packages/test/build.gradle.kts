@@ -15,14 +15,29 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
+  wasm32()
+  js(IR) {
+    nodejs {}
+    browser {}
+  }
+
+  macosArm64()
+  iosArm32()
+  iosArm64()
+  iosX64()
+  watchosArm32()
+  watchosArm64()
+  watchosX86()
+  watchosX64()
+  tvosArm64()
+  tvosX64()
+  mingwX64()
+
   jvm {
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()
     }
-  }
-  js(IR) {
-    binaries.executable()
   }
 
   val publicationsFromMainHost =
@@ -39,15 +54,6 @@ kotlin {
     }
   }
 
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
-
   sourceSets.all {
     languageSettings.apply {
       languageVersion = libs.versions.kotlin.language.get()
@@ -61,13 +67,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(kotlin("stdlib-common"))
-        api(project(":packages:base"))
-        api(project(":packages:core"))
         api(kotlin("test"))
         api(kotlin("test-annotations-common"))
-        api(libs.kotlinx.coroutines.test)
-        api(libs.kotlinx.serialization.core)
-        api(libs.kotlinx.serialization.json)
       }
     }
     val commonTest by getting {
@@ -81,6 +82,7 @@ kotlin {
         api(kotlin("stdlib-jdk8"))
         api(kotlin("test-junit5"))
         api(libs.jakarta.inject)
+        api(libs.kotlinx.coroutines.test)
         api(libs.kotlinx.coroutines.jdk8)
         api(libs.kotlinx.coroutines.jdk9)
         api(libs.micronaut.context)
@@ -93,8 +95,6 @@ kotlin {
         implementation(libs.protobuf.java)
         implementation(libs.protobuf.util)
         implementation(libs.protobuf.kotlin)
-        implementation(libs.kotlinx.serialization.json.jvm)
-        implementation(libs.kotlinx.serialization.protobuf.jvm)
         implementation(libs.kotlinx.coroutines.core.jvm)
         implementation(libs.kotlinx.coroutines.guava)
         implementation(libs.grpc.testing)
@@ -116,12 +116,34 @@ kotlin {
       dependencies {
         api(kotlin("stdlib-js"))
         api(kotlin("test"))
-        implementation(libs.kotlinx.coroutines.core.js)
-        implementation(libs.kotlinx.serialization.core.js)
-        implementation(libs.kotlinx.serialization.json.js)
-        implementation(libs.kotlinx.serialization.protobuf.js)
+        api(libs.kotlinx.coroutines.test)
+        api(libs.kotlinx.coroutines.core.js)
       }
     }
     val jsTest by getting
+    val nativeMain by getting {
+      dependencies {
+        api(kotlin("stdlib"))
+      }
+    }
+    val nativeTest by getting {
+      dependencies {
+        api(kotlin("stdlib"))
+        api(kotlin("test"))
+      }
+    }
+
+    val wasm32Main by getting { dependsOn(nativeMain) }
+    val mingwX64Main by getting { dependsOn(nativeMain) }
+    val macosArm64Main by getting { dependsOn(nativeMain) }
+    val iosArm32Main by getting { dependsOn(nativeMain) }
+    val iosArm64Main by getting { dependsOn(nativeMain) }
+    val iosX64Main by getting { dependsOn(nativeMain) }
+    val watchosArm32Main by getting { dependsOn(nativeMain) }
+    val watchosArm64Main by getting { dependsOn(nativeMain) }
+    val watchosX86Main by getting { dependsOn(nativeMain) }
+    val watchosX64Main by getting { dependsOn(nativeMain) }
+    val tvosArm64Main by getting { dependsOn(nativeMain) }
+    val tvosX64Main by getting { dependsOn(nativeMain) }
   }
 }

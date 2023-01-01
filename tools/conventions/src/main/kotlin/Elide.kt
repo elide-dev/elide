@@ -11,13 +11,13 @@ object Elide {
   const val majorVersion = "1.0"
 
   /** Major library version tag. */
-  const val versionTag = "alpha2"
+  const val versionTag = "alpha3"
 
   /** Revision value for the library. */
-  const val revision = 1
+  const val revision = 2
 
   /** Version string for the library. */
-  const val version = "$majorVersion-$track-$versionTag-rc$revision"
+  const val version = "$majorVersion-$track-$versionTag-b$revision"
 
   /** Latest plugin version. */
   const val pluginVersion = "1.0.0-beta12"
@@ -115,7 +115,6 @@ object Elide {
   val noTestModules = listOf(
     "bom",
     "platform",
-    "proto",
     "packages",
     "processor",
     "reports",
@@ -144,7 +143,10 @@ object Elide {
     "graalvm-react",
     "model",
     "platform",
-    "proto",
+    "proto:proto-core",
+    "proto:proto-protobuf",
+    "proto:proto-flatbuffers",
+    "proto:proto-kotlinx",
     "rpc",
     "server",
     "ssg",

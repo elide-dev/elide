@@ -70,7 +70,6 @@ internal class RedaktIrVisitor(
         val isRedacted = prop.isRedacted()
         if (isRedacted) {
           anyRedacted = true
-          log("Found redacted properties on subject <$declaration>")
         }
         properties += Property(prop, isRedacted, parameter)
       }

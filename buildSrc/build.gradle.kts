@@ -39,4 +39,4 @@ dependencies {
   api("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 }
 
-apply(from = "../gradle/loadProps.gradle")
+apply(from = "../gradle/loadProps.gradle.kts")

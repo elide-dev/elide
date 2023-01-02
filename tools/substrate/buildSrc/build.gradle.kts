@@ -37,4 +37,4 @@ dependencies {
   }
 }
 
-apply(from = "../../../gradle/loadProps.gradle")
+apply(from = "../../../gradle/loadProps.gradle.kts")

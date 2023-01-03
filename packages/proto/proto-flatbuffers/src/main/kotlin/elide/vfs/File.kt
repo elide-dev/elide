@@ -38,30 +38,37 @@ class File : Table() {
             val o = __offset(10)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val encoding : Int
+    val tail : ULong
         get() {
             val o = __offset(12)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    val encoding : Int
+        get() {
+            val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     val modified : google.protobuf.Timestamp? get() = modified(google.protobuf.Timestamp())
     fun modified(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
-        val o = __offset(14)
+        val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
             null
         }
     }
-    val mime : String?
-        get() {
-            val o = __offset(16)
-            return if (o != 0) __string(o + bb_pos) else null
+    val fileType : elide.vfs.File_.FileTypeSpec? get() = fileType(elide.vfs.File_.FileTypeSpec())
+    fun fileType(obj: elide.vfs.File_.FileTypeSpec) : elide.vfs.File_.FileTypeSpec? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
-    val mimeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun mimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    }
     val fingerprint : elide.vfs.File_.FileFingerprint? get() = fingerprint(elide.vfs.File_.FileFingerprint())
     fun fingerprint(obj: elide.vfs.File_.FileFingerprint) : elide.vfs.File_.FileFingerprint? {
-        val o = __offset(18)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -70,7 +77,7 @@ class File : Table() {
     }
     fun attributes(j: Int) : elide.vfs.File_.AttributesEntry? = attributes(elide.vfs.File_.AttributesEntry(), j)
     fun attributes(obj: elide.vfs.File_.AttributesEntry, j: Int) : elide.vfs.File_.AttributesEntry? {
-        val o = __offset(20)
+        val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -79,10 +86,10 @@ class File : Table() {
     }
     val attributesLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     fun attributesByKey(key: String) : elide.vfs.File_.AttributesEntry? {
-        val o = __offset(20)
+        val o = __offset(22)
         return if (o != 0) {
             elide.vfs.File_.AttributesEntry.__lookup_by_key(null, __vector(o), key, bb)
         } else {
@@ -90,7 +97,7 @@ class File : Table() {
         }
     }
     fun attributesByKey(obj: elide.vfs.File_.AttributesEntry, key: String) : elide.vfs.File_.AttributesEntry? {
-        val o = __offset(20)
+        val o = __offset(22)
         return if (o != 0) {
             elide.vfs.File_.AttributesEntry.__lookup_by_key(obj, __vector(o), key, bb)
         } else {
@@ -104,29 +111,31 @@ class File : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFile(builder: FlatBufferBuilder, nameOffset: Int, size: ULong, compressed: ULong, offset: ULong, encoding: Int, modifiedOffset: Int, mimeOffset: Int, fingerprintOffset: Int, attributesOffset: Int) : Int {
-            builder.startTable(9)
+        fun createFile(builder: FlatBufferBuilder, nameOffset: Int, size: ULong, compressed: ULong, offset: ULong, tail: ULong, encoding: Int, modifiedOffset: Int, fileTypeOffset: Int, fingerprintOffset: Int, attributesOffset: Int) : Int {
+            builder.startTable(10)
+            addTail(builder, tail)
             addOffset(builder, offset)
             addCompressed(builder, compressed)
             addSize(builder, size)
             addAttributes(builder, attributesOffset)
             addFingerprint(builder, fingerprintOffset)
-            addMime(builder, mimeOffset)
+            addFileType(builder, fileTypeOffset)
             addModified(builder, modifiedOffset)
             addEncoding(builder, encoding)
             addName(builder, nameOffset)
             return endFile(builder)
         }
-        fun startFile(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startFile(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addName(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
         fun addSize(builder: FlatBufferBuilder, size: ULong) = builder.addLong(1, size.toLong(), 0)
         fun addCompressed(builder: FlatBufferBuilder, compressed: ULong) = builder.addLong(2, compressed.toLong(), 0)
         fun addOffset(builder: FlatBufferBuilder, offset: ULong) = builder.addLong(3, offset.toLong(), 0)
-        fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(4, encoding, 0)
-        fun addModified(builder: FlatBufferBuilder, modified: Int) = builder.addOffset(5, modified, 0)
-        fun addMime(builder: FlatBufferBuilder, mime: Int) = builder.addOffset(6, mime, 0)
-        fun addFingerprint(builder: FlatBufferBuilder, fingerprint: Int) = builder.addOffset(7, fingerprint, 0)
-        fun addAttributes(builder: FlatBufferBuilder, attributes: Int) = builder.addOffset(8, attributes, 0)
+        fun addTail(builder: FlatBufferBuilder, tail: ULong) = builder.addLong(4, tail.toLong(), 0)
+        fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(5, encoding, 0)
+        fun addModified(builder: FlatBufferBuilder, modified: Int) = builder.addOffset(6, modified, 0)
+        fun addFileType(builder: FlatBufferBuilder, fileType: Int) = builder.addOffset(7, fileType, 0)
+        fun addFingerprint(builder: FlatBufferBuilder, fingerprint: Int) = builder.addOffset(8, fingerprint, 0)
+        fun addAttributes(builder: FlatBufferBuilder, attributes: Int) = builder.addOffset(9, attributes, 0)
         fun createAttributesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

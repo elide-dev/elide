@@ -61,11 +61,11 @@ message TreeEntry {
 
   // Describes the file system entry held by this tree entry.
   oneof entry {
-    // Describes a file held by this tree entry.
-    File file = 9;
-
     // Describes a directory held by this tree entry.
-    Directory directory = 10;
+    Directory directory = 9;
+
+    // Describes a file held by this tree entry.
+    File file = 10;
   }
 }
 

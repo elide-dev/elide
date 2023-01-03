@@ -83,6 +83,21 @@ message JsSettings {
   JsLanguageLevel level = 1;
 }
 
+// # Language Settings: Policy
+//
+// Guest "policies" define the access rights granted to a given guest language VM. Policies are defined by the host and
+// enforced at runtime.
+message GuestPolicy {
+  // Policy assignment for this record.
+  oneof policy {
+    // ## Policies: Allow-all.
+    //
+    // Allows all host access for the guest language. This means the guest language can load classes, access I/O, and
+    // perform other potentially sensitive or dangerous operations. Exercise extreme caution enabling this policy.
+    bool allow_all = 1;
+  }
+}
+
 // # Language Settings: General
 //
 // Defines general settings and configurations which apply to every guest language.
@@ -93,6 +108,10 @@ message GeneralLanguageSettings {
   // Whether to disable source parser caching. Requires sharing of engines across contexts. Defaults to `false`; should
   // usually be kept on to improve performance.
   bool disable_cache = 2;
+
+  // Default security and isolation policy to apply to guest VMs. If left unspecified, reasonable defaults are used. Any
+  // same-type payload for an individual language overrides these settings within the scope of that language.
+  GuestPolicy default_policy = 3;
 }
 
 // # Guest Settings: Stanza

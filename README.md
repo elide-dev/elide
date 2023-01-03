@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://nextjs.org">
+  <a href="https://github.com/elide-dev/v3">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./creative/logo/logo-wide-1200-w.png">
       <img src="./creative/logo/logo-wide-1200-w.png" height="300">

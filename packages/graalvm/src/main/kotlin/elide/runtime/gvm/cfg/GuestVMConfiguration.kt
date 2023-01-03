@@ -17,6 +17,9 @@ import java.nio.charset.StandardCharsets
  *   writing, only includes `js`.
  * @param primary Primary guest VM to boot and use as a server agent. Defaults to `js`.
  * @param charset Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`.
+ * @param vfs Virtual file system (VFS) configuration for the guest VM.
+ * @param inspector Debugger configuration (Chrome Inspector).
+ * @param enterprise GraalVM Enterprise Edition-specific configuration.
  */
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 @ConfigurationProperties("elide.gvm")
@@ -25,6 +28,7 @@ internal class GuestVMConfiguration(
   var languages: Set<String> = DEFAULT_LANGUAGES,
   var primary: EmbeddedScriptLanguage = EmbeddedScriptLanguage.JS,
   var charset: Charset? = null,
+  var vfs: GuestIOConfiguration? = null,
   var inspector: GuestVMInspectConfig? = null,
   var enterprise: GuestVMEEConfig? = null,
 ) : Toggleable {

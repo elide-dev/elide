@@ -192,12 +192,12 @@ import org.graalvm.polyglot.Value as GuestValue
 
     // `vm.js.esm`: maps to `js.esm-eval-*` to enable/disable ESM import support.
     VMRuntimeProperty.ofBoolean("vm.js.esm", "js.esm-eval-returns-exports") {
-      config.esm
+      config.esm.enabled
     },
 
     // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable ESM import support.
     VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
-      config.npm
+      config.npm.enabled
     },
 
     // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM32.

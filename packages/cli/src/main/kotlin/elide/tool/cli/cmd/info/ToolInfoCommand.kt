@@ -1,7 +1,7 @@
-package elide.tool.cli.info
+package elide.tool.cli.cmd.info
 
 import elide.annotations.Singleton
-import elide.tool.cli.AbstractSubcommand
+import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.ToolState
 import picocli.CommandLine.Command
 

@@ -3,10 +3,12 @@ package elide.tool.cli
 import ch.qos.logback.classic.Level
 import elide.annotations.Eager
 import elide.annotations.Singleton
+import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.bundle.ToolBundleCommand
 import elide.tool.cli.err.ToolError
-import elide.tool.cli.info.ToolInfoCommand
-import elide.tool.cli.repl.ToolShellCommand
+import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.repl.ToolShellCommand
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -30,6 +32,7 @@ import kotlin.system.exitProcess
   subcommands = [
     ToolInfoCommand::class,
     ToolShellCommand::class,
+    ToolBundleCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +
@@ -41,7 +44,9 @@ import kotlin.system.exitProcess
   )
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Singleton public class ElideTool internal constructor () : AbstractToolCommand() {
+@Singleton public class ElideTool internal constructor () :
+  AbstractToolCommand(),
+  AbstractBundlerSubcommand.BundlerParentCommand {
   public companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
@@ -140,7 +145,7 @@ import kotlin.system.exitProcess
     description = ["Activate verbose logging. Wins over `--quiet` when both are passed."],
     scope = ScopeType.INHERIT,
   )
-  internal var verbose: Boolean by Delegates.observable(false) { _, _, active ->
+  override var verbose: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       setLoggingLevel(Level.INFO)
       logging.info("Verbose logging enabled.")
@@ -153,7 +158,7 @@ import kotlin.system.exitProcess
     description = ["Squelch most logging"],
     scope = ScopeType.INHERIT,
   )
-  internal var quiet: Boolean by Delegates.observable(false) { _, _, active ->
+  override var quiet: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       setLoggingLevel(Level.OFF)
     }
@@ -165,7 +170,7 @@ import kotlin.system.exitProcess
     description = ["Activate debugging features and extra logging"],
     scope = ScopeType.INHERIT,
   )
-  internal var debug: Boolean by Delegates.observable(false) { _, _, active ->
+  override var debug: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       logging.trace("Debug mode enabled.")
       setLoggingLevel(Level.TRACE)
@@ -180,7 +185,7 @@ import kotlin.system.exitProcess
     defaultValue = "true",
     scope = ScopeType.INHERIT,
   )
-  internal var pretty: Boolean = false
+  override var pretty: Boolean = false
 
   /** Request timeout value to apply. */
   @Option(

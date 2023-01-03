@@ -1,7 +1,7 @@
 package elide.tool.cli
 
-import elide.tool.cli.AbstractSubcommand.OutputController
-import elide.tool.cli.AbstractSubcommand.ToolContext
+import elide.tool.cli.cmd.AbstractSubcommand.OutputController
+import elide.tool.cli.cmd.AbstractSubcommand.ToolContext
 import org.graalvm.polyglot.Context as VMContext
 
 /**

@@ -1,13 +1,21 @@
-package elide.tool.cli
+package elide.tool.cli.cmd
 
 import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.gvm.ContextFactory
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.VMProperty
+import elide.tool.bundler.AbstractBundlerSubcommand
+import elide.tool.cli.*
+import elide.tool.cli.GuestLanguage
+import elide.tool.cli.OutputCallable
+import elide.tool.cli.Statics
+import elide.tool.cli.ToolState
+import elide.tool.cli.VMCallable
 import elide.tool.cli.err.AbstractToolError
 import kotlinx.coroutines.*
 import org.graalvm.polyglot.Language
+import picocli.CommandLine.ParentCommand
 import java.io.BufferedReader
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
@@ -19,7 +27,6 @@ import java.util.LinkedList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
 import kotlin.coroutines.CoroutineContext
 
@@ -30,6 +37,7 @@ import kotlin.coroutines.CoroutineContext
   CoroutineScope,
   Closeable,
   AutoCloseable,
+  AbstractBundlerSubcommand.BundlerParentCommand,
   AbstractToolCommand() {
   protected companion object {
     private val _stdout = System.out
@@ -37,30 +45,10 @@ import kotlin.coroutines.CoroutineContext
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
     private val _engine = VMEngine.create()
-//    private lateinit var context: VMContext
-//    private val contextInitialized = AtomicBoolean(false)
     private val logging: Logger = Statics.logging
     private val threadFactory: ToolThreadFactory = ToolThreadFactory()
     private val threadedExecutor: ExecutorService = Executors.newCachedThreadPool(threadFactory)
     private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
-
-//    /** @return Initialized VM context. */
-//    @JvmStatic private fun acquireContext(language: GuestLanguage, builder: (VMContext.Builder) -> Unit): VMContext {
-//      return if (contextInitialized.get()) {
-//        context
-//      } else {
-//        check(!contextInitialized.get()) {
-//          "Cannot initialize context more than once"
-//        }
-//
-//        val temp = VMContext.newBuilder(language.id)
-//        builder.invoke(temp)
-//        context = temp.build()
-//        contextInitialized.compareAndSet(false, true)
-//        logging.debug("Context initialized.")
-//        context
-//      }
-//    }
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -293,6 +281,18 @@ import kotlin.coroutines.CoroutineContext
 
   /** Execution context for the current tool run. */
   protected lateinit var context: ToolContext<State>
+
+  /** @inheritDoc */
+  override val debug: Boolean get() = base.debug
+
+  /** @inheritDoc */
+  override val verbose: Boolean get() = base.verbose
+
+  /** @inheritDoc */
+  override val quiet: Boolean get() = base.quiet
+
+  /** @inheritDoc */
+  override val pretty: Boolean get() = base.pretty
 
   // Base execution context.
   private val baseExecContext: CoroutineContext = Dispatchers.Default + CoroutineName("elide")

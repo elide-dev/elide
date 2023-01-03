@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package elide.tool.bundler
 
 import picocli.CommandLine
@@ -6,7 +8,7 @@ import java.io.File
 /**
  * TBD.
  */
-internal class CommonBundleOptions {
+public class CommonBundleOptions {
   /** Bundle file we are working with, as applicable. */
   @set:CommandLine.Option(
     names = ["-f", "--bundle"],

@@ -160,7 +160,7 @@ npm_lit_labs_task = "2.0.0"
 sqlite = "3.40.0.0"
 snappy = "1.1.8.4"
 msgpack = "0.9.3"
-larray = "0.4.0"
+larray = "0.2.1"
 google_api_common = "2.3.1"
 google_html_types = "1.0.8"
 reactivestreams = "1.0.4"
@@ -171,6 +171,7 @@ shadow_plugin = "7.1.2"
 gcloud_sdk = "26.1.2"
 gcloud_native = "0.14.1"
 jib = "3.3.1"
+jimfs = "1.2"
 commons_compress = "1.22"
 commons_csv = "1.9.0"
 commons_pool = "2.11.1"
@@ -549,7 +550,7 @@ testcontainers_gcloud = { group = "org.testcontainers", name = "gcloud", version
 koin_core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin_annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin_ksp" }
 koin_test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-koint_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
+koin_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
 koin_test_junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 koin_test_junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 arrow_bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
@@ -567,6 +568,7 @@ larray_core = {  group = "org.xerial.larray", name = "larray", version.ref = "la
 larray_buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
 larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
+jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 ## Plugin Aliases
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }

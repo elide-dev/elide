@@ -6123,6 +6123,7 @@ public final class tools/elide/meta/EndpointType : java/lang/Enum, com/google/pr
 }
 
 public final class tools/elide/meta/GeneralLanguageSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GeneralLanguageSettingsOrBuilder {
+	public static final field DEFAULT_POLICY_FIELD_NUMBER I
 	public static final field DISABLE_CACHE_FIELD_NUMBER I
 	public static final field ENABLED_FIELD_NUMBER I
 	public fun equals (Ljava/lang/Object;)Z
@@ -6130,12 +6131,15 @@ public final class tools/elide/meta/GeneralLanguageSettings : com/google/protobu
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/meta/GeneralLanguageSettings;
+	public fun getDefaultPolicy ()Ltools/elide/meta/GuestPolicy;
+	public fun getDefaultPolicyOrBuilder ()Ltools/elide/meta/GuestPolicyOrBuilder;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getDisableCache ()Z
 	public fun getEnabled ()Z
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hasDefaultPolicy ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/GeneralLanguageSettings$Builder;
@@ -6177,6 +6181,7 @@ public final class tools/elide/meta/GeneralLanguageSettings$Builder : com/google
 	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
 	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
 	public fun clear ()Ltools/elide/meta/GeneralLanguageSettings$Builder;
+	public fun clearDefaultPolicy ()Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public fun clearDisableCache ()Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public fun clearEnabled ()Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -6196,11 +6201,16 @@ public final class tools/elide/meta/GeneralLanguageSettings$Builder : com/google
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/meta/GeneralLanguageSettings;
+	public fun getDefaultPolicy ()Ltools/elide/meta/GuestPolicy;
+	public fun getDefaultPolicyBuilder ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun getDefaultPolicyOrBuilder ()Ltools/elide/meta/GuestPolicyOrBuilder;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getDisableCache ()Z
 	public fun getEnabled ()Z
+	public fun hasDefaultPolicy ()Z
 	public final fun isInitialized ()Z
+	public fun mergeDefaultPolicy (Ltools/elide/meta/GuestPolicy;)Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
@@ -6214,6 +6224,8 @@ public final class tools/elide/meta/GeneralLanguageSettings$Builder : com/google
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GeneralLanguageSettings$Builder;
+	public fun setDefaultPolicy (Ltools/elide/meta/GuestPolicy$Builder;)Ltools/elide/meta/GeneralLanguageSettings$Builder;
+	public fun setDefaultPolicy (Ltools/elide/meta/GuestPolicy;)Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public fun setDisableCache (Z)Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public fun setEnabled (Z)Ltools/elide/meta/GeneralLanguageSettings$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -6235,10 +6247,14 @@ public final class tools/elide/meta/GeneralLanguageSettingsKt$Dsl {
 	public static final field Companion Ltools/elide/meta/GeneralLanguageSettingsKt$Dsl$Companion;
 	public synthetic fun <init> (Ltools/elide/meta/GeneralLanguageSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun _build ()Ltools/elide/meta/GeneralLanguageSettings;
+	public final fun clearDefaultPolicy ()V
 	public final fun clearDisableCache ()V
 	public final fun clearEnabled ()V
+	public final fun getDefaultPolicy ()Ltools/elide/meta/GuestPolicy;
 	public final fun getDisableCache ()Z
 	public final fun getEnabled ()Z
+	public final fun hasDefaultPolicy ()Z
+	public final fun setDefaultPolicy (Ltools/elide/meta/GuestPolicy;)V
 	public final fun setDisableCache (Z)V
 	public final fun setEnabled (Z)V
 }
@@ -6250,11 +6266,15 @@ public final class tools/elide/meta/GeneralLanguageSettingsKt$Dsl$Companion {
 public final class tools/elide/meta/GeneralLanguageSettingsKtKt {
 	public static final fun -initializegeneralLanguageSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/GeneralLanguageSettings;
 	public static final synthetic fun copy (Ltools/elide/meta/GeneralLanguageSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/GeneralLanguageSettings;
+	public static final fun getDefaultPolicyOrNull (Ltools/elide/meta/GeneralLanguageSettingsOrBuilder;)Ltools/elide/meta/GuestPolicy;
 }
 
 public abstract interface class tools/elide/meta/GeneralLanguageSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getDefaultPolicy ()Ltools/elide/meta/GuestPolicy;
+	public abstract fun getDefaultPolicyOrBuilder ()Ltools/elide/meta/GuestPolicyOrBuilder;
 	public abstract fun getDisableCache ()Z
 	public abstract fun getEnabled ()Z
+	public abstract fun hasDefaultPolicy ()Z
 }
 
 public final class tools/elide/meta/Guest {
@@ -6444,6 +6464,152 @@ public final class tools/elide/meta/GuestLanguage : java/lang/Enum, com/google/p
 	public static fun valueOf (Lcom/google/protobuf/Descriptors$EnumValueDescriptor;)Ltools/elide/meta/GuestLanguage;
 	public static fun valueOf (Ljava/lang/String;)Ltools/elide/meta/GuestLanguage;
 	public static fun values ()[Ltools/elide/meta/GuestLanguage;
+}
+
+public final class tools/elide/meta/GuestPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GuestPolicyOrBuilder {
+	public static final field ALLOW_ALL_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAllowAll ()Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/GuestPolicy;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/GuestPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hasAllowAll ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/GuestPolicy$Builder;
+	public static fun newBuilder (Ltools/elide/meta/GuestPolicy;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/GuestPolicy$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom ([B)Ltools/elide/meta/GuestPolicy;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/GuestPolicy$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/GuestPolicyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/GuestPolicy;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/GuestPolicy;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearAllowAll ()Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearPolicy ()Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun getAllowAll ()Z
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/GuestPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public fun hasAllowAll ()Z
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun mergeFrom (Ltools/elide/meta/GuestPolicy;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setAllowAll (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/GuestPolicy$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestPolicy$Builder;
+}
+
+public final class tools/elide/meta/GuestPolicy$PolicyCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
+	public static final field ALLOW_ALL Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static final field POLICY_NOT_SET Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static fun forNumber (I)Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public fun getNumber ()I
+	public static fun valueOf (I)Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static fun values ()[Ltools/elide/meta/GuestPolicy$PolicyCase;
+}
+
+public final class tools/elide/meta/GuestPolicyKt {
+	public static final field INSTANCE Ltools/elide/meta/GuestPolicyKt;
+}
+
+public final class tools/elide/meta/GuestPolicyKt$Dsl {
+	public static final field Companion Ltools/elide/meta/GuestPolicyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/GuestPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/GuestPolicy;
+	public final fun clearAllowAll ()V
+	public final fun clearPolicy ()V
+	public final fun getAllowAll ()Z
+	public final fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public final fun hasAllowAll ()Z
+	public final fun setAllowAll (Z)V
+}
+
+public final class tools/elide/meta/GuestPolicyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/GuestPolicy$Builder;)Ltools/elide/meta/GuestPolicyKt$Dsl;
+}
+
+public final class tools/elide/meta/GuestPolicyKtKt {
+	public static final fun -initializeguestPolicy (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/GuestPolicy;
+	public static final synthetic fun copy (Ltools/elide/meta/GuestPolicy;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/GuestPolicy;
+}
+
+public abstract interface class tools/elide/meta/GuestPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getAllowAll ()Z
+	public abstract fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public abstract fun hasAllowAll ()Z
 }
 
 public final class tools/elide/meta/GuestSettingsStanza : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GuestSettingsStanzaOrBuilder {
@@ -16102,6 +16268,469 @@ public abstract interface class tools/elide/struct/BloomFilterOrBuilder : com/go
 	public abstract fun getRounds ()I
 }
 
+public final class tools/elide/vfs/Bundle {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class tools/elide/vfs/BundleArtifacts : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/BundleArtifactsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/vfs/BundleArtifacts;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleArtifacts;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/BundleArtifacts;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom ([B)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/BundleArtifacts$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/BundleArtifactsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/BundleArtifacts;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/BundleArtifacts;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleArtifacts;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/BundleArtifacts;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/BundleArtifacts$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleArtifacts$Builder;
+}
+
+public final class tools/elide/vfs/BundleArtifactsKt {
+	public static final field INSTANCE Ltools/elide/vfs/BundleArtifactsKt;
+}
+
+public final class tools/elide/vfs/BundleArtifactsKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/BundleArtifactsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/BundleArtifacts$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/BundleArtifacts;
+}
+
+public final class tools/elide/vfs/BundleArtifactsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/BundleArtifacts$Builder;)Ltools/elide/vfs/BundleArtifactsKt$Dsl;
+}
+
+public final class tools/elide/vfs/BundleArtifactsKtKt {
+	public static final fun -initializebundleArtifacts (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleArtifacts;
+	public static final synthetic fun copy (Ltools/elide/vfs/BundleArtifacts;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleArtifacts;
+}
+
+public abstract interface class tools/elide/vfs/BundleArtifactsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/vfs/BundleHeader : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/BundleHeaderOrBuilder {
+	public static final field COMPRESSION_MODE_FIELD_NUMBER I
+	public static final field CRC32_FIELD_NUMBER I
+	public static final field FORMAT_VERSION_FIELD_NUMBER I
+	public static final field MAGIC_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCompressionMode ()Ltools/elide/data/CompressionMode;
+	public fun getCompressionModeValue ()I
+	public fun getCrc32 ()I
+	public static fun getDefaultInstance ()Ltools/elide/vfs/BundleHeader;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleHeader;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getFormatVersion ()I
+	public fun getMagic ()I
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/BundleHeader$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/BundleHeader;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/BundleHeader$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom ([B)Ltools/elide/vfs/BundleHeader;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/BundleHeader$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/BundleHeaderOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/BundleHeader;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/BundleHeader;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun clearCompressionMode ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun clearCrc32 ()Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun clearFormatVersion ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun clearMagic ()Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun getCompressionMode ()Ltools/elide/data/CompressionMode;
+	public fun getCompressionModeValue ()I
+	public fun getCrc32 ()I
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleHeader;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getFormatVersion ()I
+	public fun getMagic ()I
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/BundleHeader;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun setCompressionMode (Ltools/elide/data/CompressionMode;)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun setCompressionModeValue (I)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun setCrc32 (I)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun setFormatVersion (I)Ltools/elide/vfs/BundleHeader$Builder;
+	public fun setMagic (I)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/BundleHeader$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleHeader$Builder;
+}
+
+public final class tools/elide/vfs/BundleHeaderKt {
+	public static final field INSTANCE Ltools/elide/vfs/BundleHeaderKt;
+}
+
+public final class tools/elide/vfs/BundleHeaderKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/BundleHeaderKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/BundleHeader$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/BundleHeader;
+	public final fun clearCompressionMode ()V
+	public final fun clearCrc32 ()V
+	public final fun clearFormatVersion ()V
+	public final fun clearMagic ()V
+	public final fun getCompressionMode ()Ltools/elide/data/CompressionMode;
+	public final fun getCrc32 ()I
+	public final fun getFormatVersion ()I
+	public final fun getMagic ()I
+	public final fun setCompressionMode (Ltools/elide/data/CompressionMode;)V
+	public final fun setCrc32 (I)V
+	public final fun setFormatVersion (I)V
+	public final fun setMagic (I)V
+}
+
+public final class tools/elide/vfs/BundleHeaderKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/BundleHeader$Builder;)Ltools/elide/vfs/BundleHeaderKt$Dsl;
+}
+
+public final class tools/elide/vfs/BundleHeaderKtKt {
+	public static final fun -initializebundleHeader (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleHeader;
+	public static final synthetic fun copy (Ltools/elide/vfs/BundleHeader;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleHeader;
+}
+
+public abstract interface class tools/elide/vfs/BundleHeaderOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getCompressionMode ()Ltools/elide/data/CompressionMode;
+	public abstract fun getCompressionModeValue ()I
+	public abstract fun getCrc32 ()I
+	public abstract fun getFormatVersion ()I
+	public abstract fun getMagic ()I
+}
+
+public final class tools/elide/vfs/BundleInfo : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/BundleInfoOrBuilder {
+	public static final field ARTIFACTS_FIELD_NUMBER I
+	public static final field HEADER_FIELD_NUMBER I
+	public static final field TREE_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getArtifacts ()Ltools/elide/vfs/BundleArtifacts;
+	public fun getArtifactsOrBuilder ()Ltools/elide/vfs/BundleArtifactsOrBuilder;
+	public static fun getDefaultInstance ()Ltools/elide/vfs/BundleInfo;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleInfo;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getHeader ()Ltools/elide/vfs/BundleHeader;
+	public fun getHeaderOrBuilder ()Ltools/elide/vfs/BundleHeaderOrBuilder;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public fun getTree ()Ltools/elide/vfs/Filesystem;
+	public fun getTreeOrBuilder ()Ltools/elide/vfs/FilesystemOrBuilder;
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hasArtifacts ()Z
+	public fun hasHeader ()Z
+	public fun hasTree ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/BundleInfo$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/BundleInfo;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/BundleInfo$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom ([B)Ltools/elide/vfs/BundleInfo;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/BundleInfo$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/BundleInfo$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/BundleInfoOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/BundleInfo;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/BundleInfo;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/BundleInfo$Builder;
+	public fun clearArtifacts ()Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun clearHeader ()Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun clearTree ()Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/BundleInfo$Builder;
+	public fun getArtifacts ()Ltools/elide/vfs/BundleArtifacts;
+	public fun getArtifactsBuilder ()Ltools/elide/vfs/BundleArtifacts$Builder;
+	public fun getArtifactsOrBuilder ()Ltools/elide/vfs/BundleArtifactsOrBuilder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/BundleInfo;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getHeader ()Ltools/elide/vfs/BundleHeader;
+	public fun getHeaderBuilder ()Ltools/elide/vfs/BundleHeader$Builder;
+	public fun getHeaderOrBuilder ()Ltools/elide/vfs/BundleHeaderOrBuilder;
+	public fun getTree ()Ltools/elide/vfs/Filesystem;
+	public fun getTreeBuilder ()Ltools/elide/vfs/Filesystem$Builder;
+	public fun getTreeOrBuilder ()Ltools/elide/vfs/FilesystemOrBuilder;
+	public fun hasArtifacts ()Z
+	public fun hasHeader ()Z
+	public fun hasTree ()Z
+	public final fun isInitialized ()Z
+	public fun mergeArtifacts (Ltools/elide/vfs/BundleArtifacts;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/BundleInfo;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun mergeHeader (Ltools/elide/vfs/BundleHeader;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun mergeTree (Ltools/elide/vfs/Filesystem;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setArtifacts (Ltools/elide/vfs/BundleArtifacts$Builder;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setArtifacts (Ltools/elide/vfs/BundleArtifacts;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setHeader (Ltools/elide/vfs/BundleHeader$Builder;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setHeader (Ltools/elide/vfs/BundleHeader;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setTree (Ltools/elide/vfs/Filesystem$Builder;)Ltools/elide/vfs/BundleInfo$Builder;
+	public fun setTree (Ltools/elide/vfs/Filesystem;)Ltools/elide/vfs/BundleInfo$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/BundleInfo$Builder;
+}
+
+public final class tools/elide/vfs/BundleInfoKt {
+	public static final field INSTANCE Ltools/elide/vfs/BundleInfoKt;
+}
+
+public final class tools/elide/vfs/BundleInfoKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/BundleInfoKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/BundleInfo$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/BundleInfo;
+	public final fun clearArtifacts ()V
+	public final fun clearHeader ()V
+	public final fun clearTree ()V
+	public final fun getArtifacts ()Ltools/elide/vfs/BundleArtifacts;
+	public final fun getHeader ()Ltools/elide/vfs/BundleHeader;
+	public final fun getTree ()Ltools/elide/vfs/Filesystem;
+	public final fun hasArtifacts ()Z
+	public final fun hasHeader ()Z
+	public final fun hasTree ()Z
+	public final fun setArtifacts (Ltools/elide/vfs/BundleArtifacts;)V
+	public final fun setHeader (Ltools/elide/vfs/BundleHeader;)V
+	public final fun setTree (Ltools/elide/vfs/Filesystem;)V
+}
+
+public final class tools/elide/vfs/BundleInfoKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/BundleInfo$Builder;)Ltools/elide/vfs/BundleInfoKt$Dsl;
+}
+
+public final class tools/elide/vfs/BundleInfoKtKt {
+	public static final fun -initializebundleInfo (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleInfo;
+	public static final synthetic fun copy (Ltools/elide/vfs/BundleInfo;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/BundleInfo;
+	public static final fun getArtifactsOrNull (Ltools/elide/vfs/BundleInfoOrBuilder;)Ltools/elide/vfs/BundleArtifacts;
+	public static final fun getHeaderOrNull (Ltools/elide/vfs/BundleInfoOrBuilder;)Ltools/elide/vfs/BundleHeader;
+	public static final fun getTreeOrNull (Ltools/elide/vfs/BundleInfoOrBuilder;)Ltools/elide/vfs/Filesystem;
+}
+
+public abstract interface class tools/elide/vfs/BundleInfoOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getArtifacts ()Ltools/elide/vfs/BundleArtifacts;
+	public abstract fun getArtifactsOrBuilder ()Ltools/elide/vfs/BundleArtifactsOrBuilder;
+	public abstract fun getHeader ()Ltools/elide/vfs/BundleHeader;
+	public abstract fun getHeaderOrBuilder ()Ltools/elide/vfs/BundleHeaderOrBuilder;
+	public abstract fun getTree ()Ltools/elide/vfs/Filesystem;
+	public abstract fun getTreeOrBuilder ()Ltools/elide/vfs/FilesystemOrBuilder;
+	public abstract fun hasArtifacts ()Z
+	public abstract fun hasHeader ()Z
+	public abstract fun hasTree ()Z
+}
+
+public final class tools/elide/vfs/Config {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
 public final class tools/elide/vfs/Directory : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/DirectoryOrBuilder {
 	public static final field CHILDREN_FIELD_NUMBER I
 	public static final field NAME_FIELD_NUMBER I
@@ -16276,11 +16905,13 @@ public final class tools/elide/vfs/File : com/google/protobuf/GeneratedMessageV3
 	public static final field COMPRESSED_FIELD_NUMBER I
 	public static final field ENCODING_FIELD_NUMBER I
 	public static final field FINGERPRINT_FIELD_NUMBER I
+	public static final field KNOWN_FIELD_NUMBER I
 	public static final field MIME_FIELD_NUMBER I
 	public static final field MODIFIED_FIELD_NUMBER I
 	public static final field NAME_FIELD_NUMBER I
 	public static final field OFFSET_FIELD_NUMBER I
 	public static final field SIZE_FIELD_NUMBER I
+	public static final field TAIL_FIELD_NUMBER I
 	public fun containsAttributes (Ljava/lang/String;)Z
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getAttributes ()Ljava/util/Map;
@@ -16294,10 +16925,13 @@ public final class tools/elide/vfs/File : com/google/protobuf/GeneratedMessageV3
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/vfs/File;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
-	public fun getEncoding ()Ltools/elide/vfs/File$Encoding;
+	public fun getEncoding ()Ltools/elide/data/Encoding;
 	public fun getEncodingValue ()I
+	public fun getFileTypeCase ()Ltools/elide/vfs/File$FileTypeCase;
 	public fun getFingerprint ()Ltools/elide/vfs/File$FileFingerprint;
 	public fun getFingerprintOrBuilder ()Ltools/elide/vfs/File$FileFingerprintOrBuilder;
+	public fun getKnown ()Ltools/elide/vfs/KnownMimeType;
+	public fun getKnownValue ()I
 	public fun getMime ()Ljava/lang/String;
 	public fun getMimeBytes ()Lcom/google/protobuf/ByteString;
 	public fun getModified ()Lcom/google/protobuf/Timestamp;
@@ -16308,8 +16942,11 @@ public final class tools/elide/vfs/File : com/google/protobuf/GeneratedMessageV3
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getSerializedSize ()I
 	public fun getSize ()J
+	public fun getTail ()J
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasFingerprint ()Z
+	public fun hasKnown ()Z
+	public fun hasMime ()Z
 	public fun hasModified ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -16358,7 +16995,9 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/File$Builder;
+	public fun clearFileType ()Ltools/elide/vfs/File$Builder;
 	public fun clearFingerprint ()Ltools/elide/vfs/File$Builder;
+	public fun clearKnown ()Ltools/elide/vfs/File$Builder;
 	public fun clearMime ()Ltools/elide/vfs/File$Builder;
 	public fun clearModified ()Ltools/elide/vfs/File$Builder;
 	public fun clearName ()Ltools/elide/vfs/File$Builder;
@@ -16368,6 +17007,7 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/File$Builder;
 	public fun clearSize ()Ltools/elide/vfs/File$Builder;
+	public fun clearTail ()Ltools/elide/vfs/File$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -16387,11 +17027,14 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public fun getDefaultInstanceForType ()Ltools/elide/vfs/File;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
-	public fun getEncoding ()Ltools/elide/vfs/File$Encoding;
+	public fun getEncoding ()Ltools/elide/data/Encoding;
 	public fun getEncodingValue ()I
+	public fun getFileTypeCase ()Ltools/elide/vfs/File$FileTypeCase;
 	public fun getFingerprint ()Ltools/elide/vfs/File$FileFingerprint;
 	public fun getFingerprintBuilder ()Ltools/elide/vfs/File$FileFingerprint$Builder;
 	public fun getFingerprintOrBuilder ()Ltools/elide/vfs/File$FileFingerprintOrBuilder;
+	public fun getKnown ()Ltools/elide/vfs/KnownMimeType;
+	public fun getKnownValue ()I
 	public fun getMime ()Ljava/lang/String;
 	public fun getMimeBytes ()Lcom/google/protobuf/ByteString;
 	public fun getModified ()Lcom/google/protobuf/Timestamp;
@@ -16402,7 +17045,10 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public fun getOffset ()J
 	public fun getSize ()J
+	public fun getTail ()J
 	public fun hasFingerprint ()Z
+	public fun hasKnown ()Z
+	public fun hasMime ()Z
 	public fun hasModified ()Z
 	public final fun isInitialized ()Z
 	public fun mergeFingerprint (Ltools/elide/vfs/File$FileFingerprint;)Ltools/elide/vfs/File$Builder;
@@ -16424,13 +17070,15 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public fun putAttributes (Ljava/lang/String;Ljava/lang/String;)Ltools/elide/vfs/File$Builder;
 	public fun removeAttributes (Ljava/lang/String;)Ltools/elide/vfs/File$Builder;
 	public fun setCompressed (J)Ltools/elide/vfs/File$Builder;
-	public fun setEncoding (Ltools/elide/vfs/File$Encoding;)Ltools/elide/vfs/File$Builder;
+	public fun setEncoding (Ltools/elide/data/Encoding;)Ltools/elide/vfs/File$Builder;
 	public fun setEncodingValue (I)Ltools/elide/vfs/File$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/File$Builder;
 	public fun setFingerprint (Ltools/elide/vfs/File$FileFingerprint$Builder;)Ltools/elide/vfs/File$Builder;
 	public fun setFingerprint (Ltools/elide/vfs/File$FileFingerprint;)Ltools/elide/vfs/File$Builder;
+	public fun setKnown (Ltools/elide/vfs/KnownMimeType;)Ltools/elide/vfs/File$Builder;
+	public fun setKnownValue (I)Ltools/elide/vfs/File$Builder;
 	public fun setMime (Ljava/lang/String;)Ltools/elide/vfs/File$Builder;
 	public fun setMimeBytes (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/File$Builder;
 	public fun setModified (Lcom/google/protobuf/Timestamp$Builder;)Ltools/elide/vfs/File$Builder;
@@ -16442,29 +17090,10 @@ public final class tools/elide/vfs/File$Builder : com/google/protobuf/GeneratedM
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/File$Builder;
 	public fun setSize (J)Ltools/elide/vfs/File$Builder;
+	public fun setTail (J)Ltools/elide/vfs/File$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/File$Builder;
-}
-
-public final class tools/elide/vfs/File$Encoding : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
-	public static final field UNRECOGNIZED Ltools/elide/vfs/File$Encoding;
-	public static final field UTF_16 Ltools/elide/vfs/File$Encoding;
-	public static final field UTF_16_VALUE I
-	public static final field UTF_32 Ltools/elide/vfs/File$Encoding;
-	public static final field UTF_32_VALUE I
-	public static final field UTF_8 Ltools/elide/vfs/File$Encoding;
-	public static final field UTF_8_VALUE I
-	public static fun forNumber (I)Ltools/elide/vfs/File$Encoding;
-	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
-	public final fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
-	public final fun getNumber ()I
-	public final fun getValueDescriptor ()Lcom/google/protobuf/Descriptors$EnumValueDescriptor;
-	public static fun internalGetValueMap ()Lcom/google/protobuf/Internal$EnumLiteMap;
-	public static fun valueOf (I)Ltools/elide/vfs/File$Encoding;
-	public static fun valueOf (Lcom/google/protobuf/Descriptors$EnumValueDescriptor;)Ltools/elide/vfs/File$Encoding;
-	public static fun valueOf (Ljava/lang/String;)Ltools/elide/vfs/File$Encoding;
-	public static fun values ()[Ltools/elide/vfs/File$Encoding;
 }
 
 public final class tools/elide/vfs/File$FileFingerprint : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/File$FileFingerprintOrBuilder {
@@ -16593,6 +17222,17 @@ public abstract interface class tools/elide/vfs/File$FileFingerprintOrBuilder : 
 	public abstract fun getUncompressedOrBuilder ()Ltools/elide/vfs/File$FingerprintOrBuilder;
 	public abstract fun hasCompressed ()Z
 	public abstract fun hasUncompressed ()Z
+}
+
+public final class tools/elide/vfs/File$FileTypeCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
+	public static final field FILETYPE_NOT_SET Ltools/elide/vfs/File$FileTypeCase;
+	public static final field KNOWN Ltools/elide/vfs/File$FileTypeCase;
+	public static final field MIME Ltools/elide/vfs/File$FileTypeCase;
+	public static fun forNumber (I)Ltools/elide/vfs/File$FileTypeCase;
+	public fun getNumber ()I
+	public static fun valueOf (I)Ltools/elide/vfs/File$FileTypeCase;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/vfs/File$FileTypeCase;
+	public static fun values ()[Ltools/elide/vfs/File$FileTypeCase;
 }
 
 public final class tools/elide/vfs/File$Fingerprint : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/File$FingerprintOrBuilder {
@@ -16749,35 +17389,45 @@ public final class tools/elide/vfs/FileKt$Dsl {
 	public final synthetic fun clearAttributes (Lcom/google/protobuf/kotlin/DslMap;)V
 	public final fun clearCompressed ()V
 	public final fun clearEncoding ()V
+	public final fun clearFileType ()V
 	public final fun clearFingerprint ()V
+	public final fun clearKnown ()V
 	public final fun clearMime ()V
 	public final fun clearModified ()V
 	public final fun clearName ()V
 	public final fun clearOffset ()V
 	public final fun clearSize ()V
+	public final fun clearTail ()V
 	public final synthetic fun getAttributesMap ()Lcom/google/protobuf/kotlin/DslMap;
 	public final fun getCompressed ()J
-	public final fun getEncoding ()Ltools/elide/vfs/File$Encoding;
+	public final fun getEncoding ()Ltools/elide/data/Encoding;
+	public final fun getFileTypeCase ()Ltools/elide/vfs/File$FileTypeCase;
 	public final fun getFingerprint ()Ltools/elide/vfs/File$FileFingerprint;
+	public final fun getKnown ()Ltools/elide/vfs/KnownMimeType;
 	public final fun getMime ()Ljava/lang/String;
 	public final fun getModified ()Lcom/google/protobuf/Timestamp;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getOffset ()J
 	public final fun getSize ()J
+	public final fun getTail ()J
 	public final fun hasFingerprint ()Z
+	public final fun hasKnown ()Z
+	public final fun hasMime ()Z
 	public final fun hasModified ()Z
 	public final synthetic fun putAllAttributes (Lcom/google/protobuf/kotlin/DslMap;Ljava/util/Map;)V
 	public final fun putAttributes (Lcom/google/protobuf/kotlin/DslMap;Ljava/lang/String;Ljava/lang/String;)V
 	public final synthetic fun removeAttributes (Lcom/google/protobuf/kotlin/DslMap;Ljava/lang/String;)V
 	public final synthetic fun setAttributes (Lcom/google/protobuf/kotlin/DslMap;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun setCompressed (J)V
-	public final fun setEncoding (Ltools/elide/vfs/File$Encoding;)V
+	public final fun setEncoding (Ltools/elide/data/Encoding;)V
 	public final fun setFingerprint (Ltools/elide/vfs/File$FileFingerprint;)V
+	public final fun setKnown (Ltools/elide/vfs/KnownMimeType;)V
 	public final fun setMime (Ljava/lang/String;)V
 	public final fun setModified (Lcom/google/protobuf/Timestamp;)V
 	public final fun setName (Ljava/lang/String;)V
 	public final fun setOffset (J)V
 	public final fun setSize (J)V
+	public final fun setTail (J)V
 }
 
 public final class tools/elide/vfs/FileKt$Dsl$AttributesProxy : com/google/protobuf/kotlin/DslProxy {
@@ -16855,10 +17505,13 @@ public abstract interface class tools/elide/vfs/FileOrBuilder : com/google/proto
 	public abstract fun getAttributesOrDefault (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun getAttributesOrThrow (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun getCompressed ()J
-	public abstract fun getEncoding ()Ltools/elide/vfs/File$Encoding;
+	public abstract fun getEncoding ()Ltools/elide/data/Encoding;
 	public abstract fun getEncodingValue ()I
+	public abstract fun getFileTypeCase ()Ltools/elide/vfs/File$FileTypeCase;
 	public abstract fun getFingerprint ()Ltools/elide/vfs/File$FileFingerprint;
 	public abstract fun getFingerprintOrBuilder ()Ltools/elide/vfs/File$FileFingerprintOrBuilder;
+	public abstract fun getKnown ()Ltools/elide/vfs/KnownMimeType;
+	public abstract fun getKnownValue ()I
 	public abstract fun getMime ()Ljava/lang/String;
 	public abstract fun getMimeBytes ()Lcom/google/protobuf/ByteString;
 	public abstract fun getModified ()Lcom/google/protobuf/Timestamp;
@@ -16867,7 +17520,10 @@ public abstract interface class tools/elide/vfs/FileOrBuilder : com/google/proto
 	public abstract fun getNameBytes ()Lcom/google/protobuf/ByteString;
 	public abstract fun getOffset ()J
 	public abstract fun getSize ()J
+	public abstract fun getTail ()J
 	public abstract fun hasFingerprint ()Z
+	public abstract fun hasKnown ()Z
+	public abstract fun hasMime ()Z
 	public abstract fun hasModified ()Z
 }
 
@@ -17197,6 +17853,803 @@ public abstract interface class tools/elide/vfs/FilesystemOrBuilder : com/google
 	public abstract fun getRootOrBuilder ()Ltools/elide/vfs/TreeEntryOrBuilder;
 	public abstract fun hasMetadata ()Z
 	public abstract fun hasRoot ()Z
+}
+
+public final class tools/elide/vfs/GuestVFSConfig : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/GuestVFSConfigOrBuilder {
+	public static final field CASE_SENSITIVE_FIELD_NUMBER I
+	public static final field POLICY_FIELD_NUMBER I
+	public static final field READ_ONLY_FIELD_NUMBER I
+	public static final field ROOT_FIELD_NUMBER I
+	public static final field SYMBOLIC_LINKS_FIELD_NUMBER I
+	public static final field WORKING_DIRECTORY_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCaseSensitive ()Z
+	public static fun getDefaultInstance ()Ltools/elide/vfs/GuestVFSConfig;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSConfig;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getPolicy ()Ltools/elide/vfs/GuestVFSPolicy;
+	public fun getPolicyOrBuilder ()Ltools/elide/vfs/GuestVFSPolicyOrBuilder;
+	public fun getReadOnly ()Z
+	public fun getRoot ()Ljava/lang/String;
+	public fun getRootBytes ()Lcom/google/protobuf/ByteString;
+	public fun getSerializedSize ()I
+	public fun getSymbolicLinks ()Z
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun getWorkingDirectory ()Ljava/lang/String;
+	public fun getWorkingDirectoryBytes ()Lcom/google/protobuf/ByteString;
+	public fun hasPolicy ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/GuestVFSConfig;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom ([B)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/GuestVFSConfig$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/GuestVFSConfigOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/GuestVFSConfig;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/GuestVFSConfig;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearCaseSensitive ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearPolicy ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearReadOnly ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearRoot ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearSymbolicLinks ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun clearWorkingDirectory ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun getCaseSensitive ()Z
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSConfig;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getPolicy ()Ltools/elide/vfs/GuestVFSPolicy;
+	public fun getPolicyBuilder ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun getPolicyOrBuilder ()Ltools/elide/vfs/GuestVFSPolicyOrBuilder;
+	public fun getReadOnly ()Z
+	public fun getRoot ()Ljava/lang/String;
+	public fun getRootBytes ()Lcom/google/protobuf/ByteString;
+	public fun getSymbolicLinks ()Z
+	public fun getWorkingDirectory ()Ljava/lang/String;
+	public fun getWorkingDirectoryBytes ()Lcom/google/protobuf/ByteString;
+	public fun hasPolicy ()Z
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/GuestVFSConfig;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun mergePolicy (Ltools/elide/vfs/GuestVFSPolicy;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setCaseSensitive (Z)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setPolicy (Ltools/elide/vfs/GuestVFSPolicy$Builder;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setPolicy (Ltools/elide/vfs/GuestVFSPolicy;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setReadOnly (Z)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setRoot (Ljava/lang/String;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setRootBytes (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setSymbolicLinks (Z)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setWorkingDirectory (Ljava/lang/String;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+	public fun setWorkingDirectoryBytes (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSConfig$Builder;
+}
+
+public final class tools/elide/vfs/GuestVFSConfigKt {
+	public static final field INSTANCE Ltools/elide/vfs/GuestVFSConfigKt;
+}
+
+public final class tools/elide/vfs/GuestVFSConfigKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/GuestVFSConfigKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/GuestVFSConfig$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/GuestVFSConfig;
+	public final fun clearCaseSensitive ()V
+	public final fun clearPolicy ()V
+	public final fun clearReadOnly ()V
+	public final fun clearRoot ()V
+	public final fun clearSymbolicLinks ()V
+	public final fun clearWorkingDirectory ()V
+	public final fun getCaseSensitive ()Z
+	public final fun getPolicy ()Ltools/elide/vfs/GuestVFSPolicy;
+	public final fun getReadOnly ()Z
+	public final fun getRoot ()Ljava/lang/String;
+	public final fun getSymbolicLinks ()Z
+	public final fun getWorkingDirectory ()Ljava/lang/String;
+	public final fun hasPolicy ()Z
+	public final fun setCaseSensitive (Z)V
+	public final fun setPolicy (Ltools/elide/vfs/GuestVFSPolicy;)V
+	public final fun setReadOnly (Z)V
+	public final fun setRoot (Ljava/lang/String;)V
+	public final fun setSymbolicLinks (Z)V
+	public final fun setWorkingDirectory (Ljava/lang/String;)V
+}
+
+public final class tools/elide/vfs/GuestVFSConfigKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/GuestVFSConfig$Builder;)Ltools/elide/vfs/GuestVFSConfigKt$Dsl;
+}
+
+public final class tools/elide/vfs/GuestVFSConfigKtKt {
+	public static final fun -initializeguestVFSConfig (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSConfig;
+	public static final synthetic fun copy (Ltools/elide/vfs/GuestVFSConfig;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSConfig;
+	public static final fun getPolicyOrNull (Ltools/elide/vfs/GuestVFSConfigOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy;
+}
+
+public abstract interface class tools/elide/vfs/GuestVFSConfigOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getCaseSensitive ()Z
+	public abstract fun getPolicy ()Ltools/elide/vfs/GuestVFSPolicy;
+	public abstract fun getPolicyOrBuilder ()Ltools/elide/vfs/GuestVFSPolicyOrBuilder;
+	public abstract fun getReadOnly ()Z
+	public abstract fun getRoot ()Ljava/lang/String;
+	public abstract fun getRootBytes ()Lcom/google/protobuf/ByteString;
+	public abstract fun getSymbolicLinks ()Z
+	public abstract fun getWorkingDirectory ()Ljava/lang/String;
+	public abstract fun getWorkingDirectoryBytes ()Lcom/google/protobuf/ByteString;
+	public abstract fun hasPolicy ()Z
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/GuestVFSPolicyOrBuilder {
+	public static final field ALLOW_ALL_FIELD_NUMBER I
+	public static final field COMBINED_FIELD_NUMBER I
+	public static final field GUEST_FIELD_NUMBER I
+	public static final field HOST_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAllowAll ()Z
+	public fun getCombined ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public fun getCombinedOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder;
+	public static fun getDefaultInstance ()Ltools/elide/vfs/GuestVFSPolicy;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getGuest ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public fun getGuestOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getPolicyCase ()Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hasAllowAll ()Z
+	public fun hasCombined ()Z
+	public fun hasGuest ()Z
+	public fun hasHost ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/GuestVFSPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom ([B)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/GuestVFSPolicyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/GuestVFSPolicy;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/GuestVFSPolicy;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun clearAllowAll ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun clearCombined ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun clearGuest ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun clearHost ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun clearPolicy ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun getAllowAll ()Z
+	public fun getCombined ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public fun getCombinedBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun getCombinedOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getGuest ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public fun getGuestBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public fun getGuestOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public fun getHostBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public fun getPolicyCase ()Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public fun hasAllowAll ()Z
+	public fun hasCombined ()Z
+	public fun hasGuest ()Z
+	public fun hasHost ()Z
+	public final fun isInitialized ()Z
+	public fun mergeCombined (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/GuestVFSPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun mergeGuest (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun mergeHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setAllowAll (Z)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setCombined (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setCombined (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setGuest (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setGuest (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$Builder;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder {
+	public static final field HOST_FIELD_NUMBER I
+	public static final field VIRTUAL_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun getVirtual ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public fun getVirtualOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public fun hasHost ()Z
+	public fun hasVirtual ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom ([B)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun clearHost ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun clearVirtual ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public fun getHostBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public fun getVirtual ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public fun getVirtualBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public fun getVirtualOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public fun hasHost ()Z
+	public fun hasVirtual ()Z
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun mergeHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun mergeVirtual (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun setVirtual (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+	public fun setVirtual (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;
+}
+
+public abstract interface class tools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public abstract fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public abstract fun getVirtual ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public abstract fun getVirtualOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public abstract fun hasHost ()Z
+	public abstract fun hasVirtual ()Z
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$HostIOPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom ([B)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;
+}
+
+public abstract interface class tools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$PolicyCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
+	public static final field ALLOW_ALL Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static final field COMBINED Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static final field GUEST Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static final field HOST Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static final field POLICY_NOT_SET Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static fun forNumber (I)Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public fun getNumber ()I
+	public static fun valueOf (I)Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public static fun values ()[Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public static fun newBuilder (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom ([B)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public fun mergeFrom (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;
+}
+
+public abstract interface class tools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt {
+	public static final field INSTANCE Ltools/elide/vfs/GuestVFSPolicyKt;
+	public final fun -initializecombinedIOPolicy (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public final fun -initializehostIOPolicy (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public final fun -initializevirtualIOPolicy (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt {
+	public static final field INSTANCE Ltools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public final fun clearHost ()V
+	public final fun clearVirtual ()V
+	public final fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public final fun getVirtual ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public final fun hasHost ()Z
+	public final fun hasVirtual ()Z
+	public final fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)V
+	public final fun setVirtual (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicyKt$CombinedIOPolicyKt$Dsl;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/GuestVFSPolicyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/GuestVFSPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/GuestVFSPolicy;
+	public final fun clearAllowAll ()V
+	public final fun clearCombined ()V
+	public final fun clearGuest ()V
+	public final fun clearHost ()V
+	public final fun clearPolicy ()V
+	public final fun getAllowAll ()Z
+	public final fun getCombined ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public final fun getGuest ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public final fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public final fun getPolicyCase ()Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public final fun hasAllowAll ()Z
+	public final fun hasCombined ()Z
+	public final fun hasGuest ()Z
+	public final fun hasHost ()Z
+	public final fun setAllowAll (Z)V
+	public final fun setCombined (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;)V
+	public final fun setGuest (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;)V
+	public final fun setHost (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;)V
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/GuestVFSPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicyKt$Dsl;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt {
+	public static final field INSTANCE Ltools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicyKt$HostIOPolicyKt$Dsl;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt {
+	public static final field INSTANCE Ltools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt$Dsl {
+	public static final field Companion Ltools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy$Builder;)Ltools/elide/vfs/GuestVFSPolicyKt$VirtualIOPolicyKt$Dsl;
+}
+
+public final class tools/elide/vfs/GuestVFSPolicyKtKt {
+	public static final fun -initializeguestVFSPolicy (Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static final synthetic fun copy (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static final synthetic fun copy (Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static final synthetic fun copy (Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static final synthetic fun copy (Ltools/elide/vfs/GuestVFSPolicy;Lkotlin/jvm/functions/Function1;)Ltools/elide/vfs/GuestVFSPolicy;
+	public static final fun getCombinedOrNull (Ltools/elide/vfs/GuestVFSPolicyOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public static final fun getGuestOrNull (Ltools/elide/vfs/GuestVFSPolicyOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public static final fun getHostOrNull (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static final fun getHostOrNull (Ltools/elide/vfs/GuestVFSPolicyOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public static final fun getVirtualOrNull (Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder;)Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+}
+
+public abstract interface class tools/elide/vfs/GuestVFSPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getAllowAll ()Z
+	public abstract fun getCombined ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicy;
+	public abstract fun getCombinedOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$CombinedIOPolicyOrBuilder;
+	public abstract fun getGuest ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicy;
+	public abstract fun getGuestOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$VirtualIOPolicyOrBuilder;
+	public abstract fun getHost ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicy;
+	public abstract fun getHostOrBuilder ()Ltools/elide/vfs/GuestVFSPolicy$HostIOPolicyOrBuilder;
+	public abstract fun getPolicyCase ()Ltools/elide/vfs/GuestVFSPolicy$PolicyCase;
+	public abstract fun hasAllowAll ()Z
+	public abstract fun hasCombined ()Z
+	public abstract fun hasGuest ()Z
+	public abstract fun hasHost ()Z
+}
+
+public final class tools/elide/vfs/KnownMimeType : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field KNOWN_MIME_UNSPECIFIED Ltools/elide/vfs/KnownMimeType;
+	public static final field KNOWN_MIME_UNSPECIFIED_VALUE I
+	public static final field UNRECOGNIZED Ltools/elide/vfs/KnownMimeType;
+	public static fun forNumber (I)Ltools/elide/vfs/KnownMimeType;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getNumber ()I
+	public final fun getValueDescriptor ()Lcom/google/protobuf/Descriptors$EnumValueDescriptor;
+	public static fun internalGetValueMap ()Lcom/google/protobuf/Internal$EnumLiteMap;
+	public static fun valueOf (I)Ltools/elide/vfs/KnownMimeType;
+	public static fun valueOf (Lcom/google/protobuf/Descriptors$EnumValueDescriptor;)Ltools/elide/vfs/KnownMimeType;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/vfs/KnownMimeType;
+	public static fun values ()[Ltools/elide/vfs/KnownMimeType;
 }
 
 public final class tools/elide/vfs/Tree {

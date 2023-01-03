@@ -42,6 +42,10 @@ public abstract interface class elide/proto/ElideProtocol$ModelAdapterStrategy {
 public abstract interface class elide/proto/ProtocolModel {
 }
 
+public abstract interface class elide/proto/api/Named {
+	public abstract fun getName ()Ljava/lang/String;
+}
+
 public final class elide/proto/api/Protocol : java/util/ServiceLoader$Provider {
 	public static final field INSTANCE Lelide/proto/api/Protocol;
 	public final fun acquire (Lelide/proto/ElideProtocol$ImplementationLibrary;)Lelide/proto/ElideProtocol;

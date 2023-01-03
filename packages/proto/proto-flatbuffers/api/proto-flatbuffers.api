@@ -3460,16 +3460,24 @@ public final class elide/vfs/GuestVFSConfig : com/google/flatbuffers/Table {
 	public final fun getCaseSensitive ()Z
 	public final fun getPolicy ()Lelide/vfs/GuestVFSPolicy;
 	public final fun getReadOnly ()Z
+	public final fun getRoot ()Ljava/lang/String;
+	public final fun getRootAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun getSymbolicLinks ()Z
+	public final fun getWorkingDirectory ()Ljava/lang/String;
+	public final fun getWorkingDirectoryAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun policy (Lelide/vfs/GuestVFSPolicy;)Lelide/vfs/GuestVFSPolicy;
+	public final fun rootInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
+	public final fun workingDirectoryInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
 }
 
 public final class elide/vfs/GuestVFSConfig$Companion {
 	public final fun addCaseSensitive (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
 	public final fun addPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addReadOnly (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
+	public final fun addRoot (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addSymbolicLinks (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
-	public final fun createGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;ZZZI)I
+	public final fun addWorkingDirectory (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;ZZZIII)I
 	public final fun endGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;)I
 	public final fun getRootAsGuestVFSConfig (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSConfig;
 	public final fun getRootAsGuestVFSConfig (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSConfig;)Lelide/vfs/GuestVFSConfig;

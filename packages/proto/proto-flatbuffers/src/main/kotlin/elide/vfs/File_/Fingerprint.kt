@@ -16,8 +16,8 @@ class Fingerprint : Table() {
         __init(_i, _bb)
         return this
     }
-    val fingerprint : elide.vfs.File_.Fingerprint_.Anonymous0? get() = fingerprint(elide.vfs.File_.Fingerprint_.Anonymous0())
-    fun fingerprint(obj: elide.vfs.File_.Fingerprint_.Anonymous0) : elide.vfs.File_.Fingerprint_.Anonymous0? {
+    val fingerprint : elide.vfs.File_.Fingerprint_.FileFingerprint? get() = fingerprint(elide.vfs.File_.Fingerprint_.FileFingerprint())
+    fun fingerprint(obj: elide.vfs.File_.Fingerprint_.FileFingerprint) : elide.vfs.File_.Fingerprint_.FileFingerprint? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)

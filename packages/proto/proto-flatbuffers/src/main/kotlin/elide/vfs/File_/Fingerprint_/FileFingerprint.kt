@@ -7,12 +7,12 @@ import kotlin.math.sign
 import com.google.flatbuffers.*
 
 @Suppress("unused")
-class Anonymous0 : Table() {
+class FileFingerprint : Table() {
 
     fun __init(_i: Int, _bb: ByteBuffer)  {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Anonymous0 {
+    fun __assign(_i: Int, _bb: ByteBuffer) : FileFingerprint {
         __init(_i, _bb)
         return this
     }
@@ -46,18 +46,18 @@ class Anonymous0 : Table() {
     fun hashInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsAnonymous0(_bb: ByteBuffer): Anonymous0 = getRootAsAnonymous0(_bb, Anonymous0())
-        fun getRootAsAnonymous0(_bb: ByteBuffer, obj: Anonymous0): Anonymous0 {
+        fun getRootAsFileFingerprint(_bb: ByteBuffer): FileFingerprint = getRootAsFileFingerprint(_bb, FileFingerprint())
+        fun getRootAsFileFingerprint(_bb: ByteBuffer, obj: FileFingerprint): FileFingerprint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAnonymous0(builder: FlatBufferBuilder, crc32Offset: Int, hashOffset: Int) : Int {
+        fun createFileFingerprint(builder: FlatBufferBuilder, crc32Offset: Int, hashOffset: Int) : Int {
             builder.startTable(2)
             addHash(builder, hashOffset)
             addCrc32(builder, crc32Offset)
-            return endAnonymous0(builder)
+            return endFileFingerprint(builder)
         }
-        fun startAnonymous0(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startFileFingerprint(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addCrc32(builder: FlatBufferBuilder, crc32: Int) = builder.addOffset(0, crc32, 0)
         fun createCrc32Vector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -76,7 +76,7 @@ class Anonymous0 : Table() {
             return builder.endVector()
         }
         fun startHashVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun endAnonymous0(builder: FlatBufferBuilder) : Int {
+        fun endFileFingerprint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
         }

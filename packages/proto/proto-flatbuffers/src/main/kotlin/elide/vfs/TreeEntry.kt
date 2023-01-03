@@ -25,8 +25,8 @@ class TreeEntry : Table() {
             null
         }
     }
-    val entry : elide.vfs.TreeEntry_.Anonymous2? get() = entry(elide.vfs.TreeEntry_.Anonymous2())
-    fun entry(obj: elide.vfs.TreeEntry_.Anonymous2) : elide.vfs.TreeEntry_.Anonymous2? {
+    val entry : elide.vfs.TreeEntry_.TreeEntrySpec? get() = entry(elide.vfs.TreeEntry_.TreeEntrySpec())
+    fun entry(obj: elide.vfs.TreeEntry_.TreeEntrySpec) : elide.vfs.TreeEntry_.TreeEntrySpec? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)

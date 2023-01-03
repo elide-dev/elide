@@ -53,7 +53,7 @@ table DataFingerprint {
   fingerprint: [ubyte];
 
   // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
-  encoding: elide.core.encoding.Encoding;
+  encoding: elide.data.Encoding;
 }
 
 // Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
@@ -67,7 +67,7 @@ table DataContainer {
   integrity: [elide.data.DataFingerprint];
 
   // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
-  encoding: elide.core.encoding.Encoding;
+  encoding: elide.data.Encoding;
 }
 
 // Generic container for compressed data, which simply combines an enumerated `CompressionMode` with a blob of raw bytes

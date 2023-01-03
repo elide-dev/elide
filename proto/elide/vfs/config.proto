@@ -1,0 +1,132 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies structures and enumerations which configure guest virtual file system (VFS) behavior in Elide.
+ */
+syntax = "proto3";
+package elide.vfs;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "EVFS";
+option swift_prefix = "ElideVFS";
+option objc_class_prefix = "EVS";
+option java_package = "tools.elide.vfs";
+option csharp_namespace = "Elide.VFS";
+
+
+// # VFS: Policy
+//
+// Specifies configuration values which are included in a guest VM configuration record, and which relate to the guest
+// VM's behavior for file system access.
+message GuestVFSPolicy {
+  // ## VFS Policy: Host I/O.
+  //
+  // Specifies I/O policy configuration for host-side I/O. Allowing host-side I/O for the guest VM enables the guest VM
+  // to see and access the regular host file-system.
+  message HostIOPolicy {
+    // Nothing at this time.
+  }
+
+  // ## VFS Policy: Virtual I/O.
+  //
+  // Specifies I/O policy configuration for guest-side I/O. Allowing guest-side I/O for the guest VM enables the guest
+  // VM to see and access an in-memory filesystem dedicated to the guest.
+  message VirtualIOPolicy {
+    // Nothing at this time.
+  }
+
+  // ## VFS Policy: Combined.
+  //
+  // Specifies a combined I/O policy configuration which includes both host-side and guest-side I/O policies.
+  message CombinedIOPolicy {
+    // Policy for host I/O access.
+    HostIOPolicy host = 1;
+
+    // Policy for virtual I/O access.
+    VirtualIOPolicy virtual = 2;
+  }
+
+  // I/O policy to apply.
+  oneof policy {
+    // Policy: Allow all I/O.
+    //
+    // This policy allows completely unrestricted I/O for host-side operations and guest-side operations. Extreme care
+    // should be exercised before enabling this flag.
+    bool allow_all = 1;
+
+    // Policy: Guest-VFS only.
+    //
+    // Applies a policy which enables guest-side virtualized I/O only, with the enclosed settings enforced at runtime.
+    VirtualIOPolicy guest = 2;
+
+    // Policy: Host-VFS only.
+    //
+    // Applies a policy which enables host-side I/O only, with the enclosed settings enforced at runtime.
+    HostIOPolicy host = 3;
+
+    // Policy: Combined.
+    //
+    // Applies a policy which enables both host-side and guest-side I/O, with the enclosed settings enforced at runtime.
+    CombinedIOPolicy combined = 4;
+  }
+}
+
+// # VFS: Configuration
+//
+// Describes construction-time configuration values which are used to create a virtual file system for a guest VM. These
+// properties describe such settings as read-only status, support for virtual links, and so on. Guest VFS configuration
+// is typically derived at runtime from a combination of VFS policy (see [GuestVFSPolicy]) and top-level VM config.
+message GuestVFSConfig {
+  // Read only.
+  //
+  // Flipped to `true` if the guest virtual file system is operating in read-only mode. This is typically the case when
+  // executing at runtime, unless overridden by the developer. Read-only filesystem mode will raise an exception for any
+  // write calls sent to the VFS by the guest VM. Read-only mode does not affect the host's ability to write.
+  bool read_only = 1;
+
+  // Symlink support.
+  //
+  // Flipped to `true` if the underlying VFS implementation is expected to support virtual links. This flag is typically
+  // set by build tools to indicate that link-based resolution of files will be required for operation. Developers
+  // should not need to adjust this flag manually.
+  bool symbolic_links = 2;
+
+  // Case sensitivity.
+  //
+  // Flipped to `true` if the underlying VFS implementation is expected to enforce case sensitivity for file names. This
+  // flag is flipped for Unix or Linux-based VFS backends where case sensitivity is required. Developers should not need
+  // to adjust this flag manually.
+  bool case_sensitive = 3;
+
+  // Effective VFS policy.
+  //
+  // Provides a rendered VFS policy from all input configurations, which should be applied and enforced at runtime by
+  // the VFS implementation.
+  GuestVFSPolicy policy = 4;
+
+  // Root directory.
+  //
+  // Specifies the root path for the virtual file system. On different platforms (such as Windows), this value may be
+  // customized to maintain OS I/O compat. If unset, the default value is `/`.
+  string root = 5;
+
+  // Working directory.
+  //
+  // Specifies the working directory (default value) for the virtual file system. On different platforms (such as on
+  // Windows), this value may be customized to maintain OS I/O compat. If unset, the default value is `/`.
+  string working_directory = 6;
+}

@@ -30,7 +30,18 @@ option csharp_namespace = "Elide.VFS";
 
 import "google/protobuf/timestamp.proto";
 import "elide/crypto/crypto.proto";
+import "elide/data/encoding.proto";
 
+
+// # VFS: Known MIME-Type
+//
+// Enumerates known mime-types to the VM implementation, which can be expressed symbolically rather than in string form.
+// These types are only created for files which are expected to be frequently used by the VM FS.
+enum KnownMimeType {
+  // Unknown or unspecified known-mime-type; regular code should never use this value, as it also represents the default
+  // value if a known-mime-type is not specified, or if the specified value is not recognized.
+  KNOWN_MIME_UNSPECIFIED = 0;
+}
 
 // # VFS: File
 //
@@ -41,20 +52,6 @@ import "elide/crypto/crypto.proto";
 // See individual properties for more information. `File` objects can only be held by `TreeEntry` objects. `Directory`
 // objects refer to their child `TreeEntry` constituents.
 message File {
-  // File Encoding
-  //
-  // Describes supported file encodings. By default, files are encoded with `UTF-8`.
-  enum Encoding {
-    // Default encoding: UTF-8.
-    UTF_8 = 0;
-
-    // Encoding: UTF-16.
-    UTF_16 = 1;
-
-    // Encoding: UTF-32.
-    UTF_32 = 2;
-  }
-
   // Cryptographic fingerprint of file data.
   message Fingerprint {
     // Specifies the held fingerprint data.
@@ -91,20 +88,29 @@ message File {
   // Offset at which the file begins within the compressed filesystem blob.
   uint64 offset = 4;
 
+  // Offset at which the file ends within the compressed filesystem blob.
+  uint64 tail = 5;
+
   // Describes the encoding of the file.
-  Encoding encoding = 5;
+  elide.data.Encoding encoding = 6;
 
   // Describes the last time this file was modified. This value is only available in circumstances where the VFS is
   // running with change tracking enabled (namely, during development). In production, this value will be set to a
   // consistent timestamp for all assets.
-  google.protobuf.Timestamp modified = 6;
+  google.protobuf.Timestamp modified = 7;
 
   // Mime type assigned to this file, or resolved for this file, as applicable/if available at build time.
-  string mime = 7;
+  oneof file_type {
+    // Specifies a known MIME type for this file, from the [KnownMimeType] enumeration.
+    KnownMimeType known = 8;
+
+    // Specifies a string for a mime-type. This is only used if the mime-type is not known to the VM implementation.
+    string mime = 9;
+  }
 
   // Fingerprints of compressed and regular file representations, as applicable.
-  FileFingerprint fingerprint = 8;
+  FileFingerprint fingerprint = 10;
 
   // Extended attributes for this file.
-  map<string, string> attributes = 9;
+  map<string, string> attributes = 11;
 }

@@ -887,6 +887,7 @@ public final class elide/data/DataContainer : com/google/flatbuffers/Table {
 	public fun <init> ()V
 	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/data/DataContainer;
 	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getEncoding ()I
 	public final fun getIntegrityLength ()I
 	public final fun getRawAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun getRawLength ()I
@@ -897,9 +898,10 @@ public final class elide/data/DataContainer : com/google/flatbuffers/Table {
 }
 
 public final class elide/data/DataContainer$Companion {
+	public final fun addEncoding (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addIntegrity (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addRaw (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
-	public final fun createDataContainer (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
+	public final fun createDataContainer (Lcom/google/flatbuffers/FlatBufferBuilder;III)I
 	public final fun createIntegrityVector (Lcom/google/flatbuffers/FlatBufferBuilder;[I)I
 	public final fun createRawVector-VU-fvBY (Lcom/google/flatbuffers/FlatBufferBuilder;[B)I
 	public final fun endDataContainer (Lcom/google/flatbuffers/FlatBufferBuilder;)I
@@ -985,6 +987,7 @@ public final class elide/data/DataFingerprint : com/google/flatbuffers/Table {
 	public final fun __init (ILjava/nio/ByteBuffer;)V
 	public final fun fingerprint-Wa3L5BU (I)B
 	public final fun fingerprintInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
+	public final fun getEncoding ()I
 	public final fun getFingerprintAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun getFingerprintLength ()I
 	public final fun getHash ()I
@@ -995,10 +998,11 @@ public final class elide/data/DataFingerprint : com/google/flatbuffers/Table {
 }
 
 public final class elide/data/DataFingerprint$Companion {
+	public final fun addEncoding (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addHash (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addSalt (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
-	public final fun createDataFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;III)I
+	public final fun createDataFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;IIII)I
 	public final fun createFingerprintVector-VU-fvBY (Lcom/google/flatbuffers/FlatBufferBuilder;[B)I
 	public final fun createSaltVector-VU-fvBY (Lcom/google/flatbuffers/FlatBufferBuilder;[B)I
 	public final fun endDataFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;)I
@@ -3143,6 +3147,70 @@ public final class elide/structs/BloomFilter_/FilterLayer$Companion {
 	public final fun validateVersion ()V
 }
 
+public final class elide/vfs/BundleArtifacts : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/BundleArtifacts$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/BundleArtifacts;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+}
+
+public final class elide/vfs/BundleArtifacts$Companion {
+	public final fun endBundleArtifacts (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsBundleArtifacts (Ljava/nio/ByteBuffer;)Lelide/vfs/BundleArtifacts;
+	public final fun getRootAsBundleArtifacts (Ljava/nio/ByteBuffer;Lelide/vfs/BundleArtifacts;)Lelide/vfs/BundleArtifacts;
+	public final fun startBundleArtifacts (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/BundleHeader : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/BundleHeader$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/BundleHeader;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getCompressionMode ()I
+	public final fun getCrc32-pVg5ArA ()I
+	public final fun getFormatVersion-pVg5ArA ()I
+	public final fun getMagic-pVg5ArA ()I
+}
+
+public final class elide/vfs/BundleHeader$Companion {
+	public final fun addCompressionMode (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addCrc32-Qn1smSk (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addFormatVersion-Qn1smSk (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addMagic-Qn1smSk (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createBundleHeader-Z7WGp-I (Lcom/google/flatbuffers/FlatBufferBuilder;IIII)I
+	public final fun endBundleHeader (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsBundleHeader (Ljava/nio/ByteBuffer;)Lelide/vfs/BundleHeader;
+	public final fun getRootAsBundleHeader (Ljava/nio/ByteBuffer;Lelide/vfs/BundleHeader;)Lelide/vfs/BundleHeader;
+	public final fun startBundleHeader (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/BundleInfo : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/BundleInfo$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/BundleInfo;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun artifacts (Lelide/vfs/BundleArtifacts;)Lelide/vfs/BundleArtifacts;
+	public final fun getArtifacts ()Lelide/vfs/BundleArtifacts;
+	public final fun getHeader ()Lelide/vfs/BundleHeader;
+	public final fun getTree ()Lelide/vfs/Filesystem;
+	public final fun header (Lelide/vfs/BundleHeader;)Lelide/vfs/BundleHeader;
+	public final fun tree (Lelide/vfs/Filesystem;)Lelide/vfs/Filesystem;
+}
+
+public final class elide/vfs/BundleInfo$Companion {
+	public final fun addArtifacts (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addHeader (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addTree (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createBundleInfo (Lcom/google/flatbuffers/FlatBufferBuilder;III)I
+	public final fun endBundleInfo (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsBundleInfo (Ljava/nio/ByteBuffer;)Lelide/vfs/BundleInfo;
+	public final fun getRootAsBundleInfo (Ljava/nio/ByteBuffer;Lelide/vfs/BundleInfo;)Lelide/vfs/BundleInfo;
+	public final fun startBundleInfo (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
 public final class elide/vfs/Directory : com/google/flatbuffers/Table {
 	public static final field Companion Lelide/vfs/Directory$Companion;
 	public fun <init> ()V
@@ -3178,19 +3246,19 @@ public final class elide/vfs/File : com/google/flatbuffers/Table {
 	public final fun attributes (Lelide/vfs/File_/AttributesEntry;I)Lelide/vfs/File_/AttributesEntry;
 	public final fun attributesByKey (Lelide/vfs/File_/AttributesEntry;Ljava/lang/String;)Lelide/vfs/File_/AttributesEntry;
 	public final fun attributesByKey (Ljava/lang/String;)Lelide/vfs/File_/AttributesEntry;
+	public final fun fileType (Lelide/vfs/File_/FileTypeSpec;)Lelide/vfs/File_/FileTypeSpec;
 	public final fun fingerprint (Lelide/vfs/File_/FileFingerprint;)Lelide/vfs/File_/FileFingerprint;
 	public final fun getAttributesLength ()I
 	public final fun getCompressed-s-VKNKU ()J
 	public final fun getEncoding ()I
+	public final fun getFileType ()Lelide/vfs/File_/FileTypeSpec;
 	public final fun getFingerprint ()Lelide/vfs/File_/FileFingerprint;
-	public final fun getMime ()Ljava/lang/String;
-	public final fun getMimeAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun getModified ()Lgoogle/protobuf/Timestamp;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getNameAsByteBuffer ()Ljava/nio/ByteBuffer;
 	public final fun getOffset-s-VKNKU ()J
 	public final fun getSize-s-VKNKU ()J
-	public final fun mimeInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
+	public final fun getTail-s-VKNKU ()J
 	public final fun modified (Lgoogle/protobuf/Timestamp;)Lgoogle/protobuf/Timestamp;
 	public final fun nameInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
 }
@@ -3199,14 +3267,15 @@ public final class elide/vfs/File$Companion {
 	public final fun addAttributes (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addCompressed-2TYgG_w (Lcom/google/flatbuffers/FlatBufferBuilder;J)V
 	public final fun addEncoding (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addFileType (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
-	public final fun addMime (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addModified (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addName (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addOffset-2TYgG_w (Lcom/google/flatbuffers/FlatBufferBuilder;J)V
 	public final fun addSize-2TYgG_w (Lcom/google/flatbuffers/FlatBufferBuilder;J)V
+	public final fun addTail-2TYgG_w (Lcom/google/flatbuffers/FlatBufferBuilder;J)V
 	public final fun createAttributesVector (Lcom/google/flatbuffers/FlatBufferBuilder;[I)I
-	public final fun createFile-7QD3gBo (Lcom/google/flatbuffers/FlatBufferBuilder;IJJJIIIII)I
+	public final fun createFile-lpgzaGE (Lcom/google/flatbuffers/FlatBufferBuilder;IJJJJIIIII)I
 	public final fun endFile (Lcom/google/flatbuffers/FlatBufferBuilder;)I
 	public final fun getRootAsFile (Ljava/nio/ByteBuffer;)Lelide/vfs/File;
 	public final fun getRootAsFile (Ljava/nio/ByteBuffer;Lelide/vfs/File;)Lelide/vfs/File;
@@ -3241,18 +3310,6 @@ public final class elide/vfs/File_/AttributesEntry$Companion {
 	public final fun validateVersion ()V
 }
 
-public final class elide/vfs/File_/Encoding {
-	public static final field Companion Lelide/vfs/File_/Encoding$Companion;
-	public static final field UTF16 I
-	public static final field UTF32 I
-	public static final field UTF8 I
-}
-
-public final class elide/vfs/File_/Encoding$Companion {
-	public final fun getNames ()[Ljava/lang/String;
-	public final fun name (I)Ljava/lang/String;
-}
-
 public final class elide/vfs/File_/FileFingerprint : com/google/flatbuffers/Table {
 	public static final field Companion Lelide/vfs/File_/FileFingerprint$Companion;
 	public fun <init> ()V
@@ -3275,14 +3332,36 @@ public final class elide/vfs/File_/FileFingerprint$Companion {
 	public final fun validateVersion ()V
 }
 
+public final class elide/vfs/File_/FileTypeSpec : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/File_/FileTypeSpec$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/File_/FileTypeSpec;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getKnown ()I
+	public final fun getMime ()Ljava/lang/String;
+	public final fun getMimeAsByteBuffer ()Ljava/nio/ByteBuffer;
+	public final fun mimeInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
+}
+
+public final class elide/vfs/File_/FileTypeSpec$Companion {
+	public final fun addKnown (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addMime (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createFileTypeSpec (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
+	public final fun endFileTypeSpec (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsFileTypeSpec (Ljava/nio/ByteBuffer;)Lelide/vfs/File_/FileTypeSpec;
+	public final fun getRootAsFileTypeSpec (Ljava/nio/ByteBuffer;Lelide/vfs/File_/FileTypeSpec;)Lelide/vfs/File_/FileTypeSpec;
+	public final fun startFileTypeSpec (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
 public final class elide/vfs/File_/Fingerprint : com/google/flatbuffers/Table {
 	public static final field Companion Lelide/vfs/File_/Fingerprint$Companion;
 	public fun <init> ()V
 	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/File_/Fingerprint;
 	public final fun __init (ILjava/nio/ByteBuffer;)V
-	public final fun fingerprint (Lelide/vfs/File_/Fingerprint_/Anonymous0;)Lelide/vfs/File_/Fingerprint_/Anonymous0;
+	public final fun fingerprint (Lelide/vfs/File_/Fingerprint_/FileFingerprint;)Lelide/vfs/File_/Fingerprint_/FileFingerprint;
 	public final fun getAlgorithm ()I
-	public final fun getFingerprint ()Lelide/vfs/File_/Fingerprint_/Anonymous0;
+	public final fun getFingerprint ()Lelide/vfs/File_/Fingerprint_/FileFingerprint;
 }
 
 public final class elide/vfs/File_/Fingerprint$Companion {
@@ -3296,10 +3375,10 @@ public final class elide/vfs/File_/Fingerprint$Companion {
 	public final fun validateVersion ()V
 }
 
-public final class elide/vfs/File_/Fingerprint_/Anonymous0 : com/google/flatbuffers/Table {
-	public static final field Companion Lelide/vfs/File_/Fingerprint_/Anonymous0$Companion;
+public final class elide/vfs/File_/Fingerprint_/FileFingerprint : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/File_/Fingerprint_/FileFingerprint$Companion;
 	public fun <init> ()V
-	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/File_/Fingerprint_/Anonymous0;
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/File_/Fingerprint_/FileFingerprint;
 	public final fun __init (ILjava/nio/ByteBuffer;)V
 	public final fun crc32-Wa3L5BU (I)B
 	public final fun crc32InByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
@@ -3311,17 +3390,17 @@ public final class elide/vfs/File_/Fingerprint_/Anonymous0 : com/google/flatbuff
 	public final fun hashInByteBuffer (Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;
 }
 
-public final class elide/vfs/File_/Fingerprint_/Anonymous0$Companion {
+public final class elide/vfs/File_/Fingerprint_/FileFingerprint$Companion {
 	public final fun addCrc32 (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addHash (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
-	public final fun createAnonymous0 (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
 	public final fun createCrc32Vector-VU-fvBY (Lcom/google/flatbuffers/FlatBufferBuilder;[B)I
+	public final fun createFileFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
 	public final fun createHashVector-VU-fvBY (Lcom/google/flatbuffers/FlatBufferBuilder;[B)I
-	public final fun endAnonymous0 (Lcom/google/flatbuffers/FlatBufferBuilder;)I
-	public final fun getRootAsAnonymous0 (Ljava/nio/ByteBuffer;)Lelide/vfs/File_/Fingerprint_/Anonymous0;
-	public final fun getRootAsAnonymous0 (Ljava/nio/ByteBuffer;Lelide/vfs/File_/Fingerprint_/Anonymous0;)Lelide/vfs/File_/Fingerprint_/Anonymous0;
-	public final fun startAnonymous0 (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun endFileFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsFileFingerprint (Ljava/nio/ByteBuffer;)Lelide/vfs/File_/Fingerprint_/FileFingerprint;
+	public final fun getRootAsFileFingerprint (Ljava/nio/ByteBuffer;Lelide/vfs/File_/Fingerprint_/FileFingerprint;)Lelide/vfs/File_/Fingerprint_/FileFingerprint;
 	public final fun startCrc32Vector (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun startFileFingerprint (Lcom/google/flatbuffers/FlatBufferBuilder;)V
 	public final fun startHashVector (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun validateVersion ()V
 }
@@ -3373,13 +3452,146 @@ public final class elide/vfs/Filesystem_/Metadata$Companion {
 	public final fun validateVersion ()V
 }
 
+public final class elide/vfs/GuestVFSConfig : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSConfig$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSConfig;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getCaseSensitive ()Z
+	public final fun getPolicy ()Lelide/vfs/GuestVFSPolicy;
+	public final fun getReadOnly ()Z
+	public final fun getSymbolicLinks ()Z
+	public final fun policy (Lelide/vfs/GuestVFSPolicy;)Lelide/vfs/GuestVFSPolicy;
+}
+
+public final class elide/vfs/GuestVFSConfig$Companion {
+	public final fun addCaseSensitive (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
+	public final fun addPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addReadOnly (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
+	public final fun addSymbolicLinks (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
+	public final fun createGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;ZZZI)I
+	public final fun endGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsGuestVFSConfig (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSConfig;
+	public final fun getRootAsGuestVFSConfig (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSConfig;)Lelide/vfs/GuestVFSConfig;
+	public final fun startGuestVFSConfig (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/GuestVFSPolicy : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSPolicy$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getPolicy ()Lelide/vfs/GuestVFSPolicy_/PolicySetting;
+	public final fun policy (Lelide/vfs/GuestVFSPolicy_/PolicySetting;)Lelide/vfs/GuestVFSPolicy_/PolicySetting;
+}
+
+public final class elide/vfs/GuestVFSPolicy$Companion {
+	public final fun addPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createGuestVFSPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;I)I
+	public final fun endGuestVFSPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsGuestVFSPolicy (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy;
+	public final fun getRootAsGuestVFSPolicy (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSPolicy;)Lelide/vfs/GuestVFSPolicy;
+	public final fun startGuestVFSPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/CombinedIOPolicy : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun getHost ()Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun getVirtual ()Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun host (Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;)Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun virtual (Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;)Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+}
+
+public final class elide/vfs/GuestVFSPolicy_/CombinedIOPolicy$Companion {
+	public final fun addHost (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addVirtual (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createCombinedIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
+	public final fun endCombinedIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsCombinedIOPolicy (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;
+	public final fun getRootAsCombinedIOPolicy (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;)Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;
+	public final fun startCombinedIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/HostIOPolicy : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSPolicy_/HostIOPolicy$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/HostIOPolicy$Companion {
+	public final fun endHostIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsHostIOPolicy (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun getRootAsHostIOPolicy (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;)Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun startHostIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/PolicySetting : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSPolicy_/PolicySetting$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/PolicySetting;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+	public final fun combined (Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;)Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;
+	public final fun getAllowAll ()Z
+	public final fun getCombined ()Lelide/vfs/GuestVFSPolicy_/CombinedIOPolicy;
+	public final fun getGuest ()Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun getHost ()Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+	public final fun guest (Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;)Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun host (Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;)Lelide/vfs/GuestVFSPolicy_/HostIOPolicy;
+}
+
+public final class elide/vfs/GuestVFSPolicy_/PolicySetting$Companion {
+	public final fun addAllowAll (Lcom/google/flatbuffers/FlatBufferBuilder;Z)V
+	public final fun addCombined (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addGuest (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun addHost (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
+	public final fun createPolicySetting (Lcom/google/flatbuffers/FlatBufferBuilder;ZIII)I
+	public final fun endPolicySetting (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsPolicySetting (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/PolicySetting;
+	public final fun getRootAsPolicySetting (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSPolicy_/PolicySetting;)Lelide/vfs/GuestVFSPolicy_/PolicySetting;
+	public final fun startPolicySetting (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/VirtualIOPolicy : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy$Companion;
+	public fun <init> ()V
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun __init (ILjava/nio/ByteBuffer;)V
+}
+
+public final class elide/vfs/GuestVFSPolicy_/VirtualIOPolicy$Companion {
+	public final fun endVirtualIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsVirtualIOPolicy (Ljava/nio/ByteBuffer;)Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun getRootAsVirtualIOPolicy (Ljava/nio/ByteBuffer;Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;)Lelide/vfs/GuestVFSPolicy_/VirtualIOPolicy;
+	public final fun startVirtualIOPolicy (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun validateVersion ()V
+}
+
+public final class elide/vfs/KnownMimeType {
+	public static final field Companion Lelide/vfs/KnownMimeType$Companion;
+	public static final field KNOWNMIMEUNSPECIFIED I
+}
+
+public final class elide/vfs/KnownMimeType$Companion {
+	public final fun getNames ()[Ljava/lang/String;
+	public final fun name (I)Ljava/lang/String;
+}
+
 public final class elide/vfs/TreeEntry : com/google/flatbuffers/Table {
 	public static final field Companion Lelide/vfs/TreeEntry$Companion;
 	public fun <init> ()V
 	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/TreeEntry;
 	public final fun __init (ILjava/nio/ByteBuffer;)V
-	public final fun entry (Lelide/vfs/TreeEntry_/Anonymous2;)Lelide/vfs/TreeEntry_/Anonymous2;
-	public final fun getEntry ()Lelide/vfs/TreeEntry_/Anonymous2;
+	public final fun entry (Lelide/vfs/TreeEntry_/TreeEntrySpec;)Lelide/vfs/TreeEntry_/TreeEntrySpec;
+	public final fun getEntry ()Lelide/vfs/TreeEntry_/TreeEntrySpec;
 	public final fun getParent ()Lelide/vfs/TreeEntry;
 	public final fun parent (Lelide/vfs/TreeEntry;)Lelide/vfs/TreeEntry;
 }
@@ -3395,10 +3607,10 @@ public final class elide/vfs/TreeEntry$Companion {
 	public final fun validateVersion ()V
 }
 
-public final class elide/vfs/TreeEntry_/Anonymous2 : com/google/flatbuffers/Table {
-	public static final field Companion Lelide/vfs/TreeEntry_/Anonymous2$Companion;
+public final class elide/vfs/TreeEntry_/TreeEntrySpec : com/google/flatbuffers/Table {
+	public static final field Companion Lelide/vfs/TreeEntry_/TreeEntrySpec$Companion;
 	public fun <init> ()V
-	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/TreeEntry_/Anonymous2;
+	public final fun __assign (ILjava/nio/ByteBuffer;)Lelide/vfs/TreeEntry_/TreeEntrySpec;
 	public final fun __init (ILjava/nio/ByteBuffer;)V
 	public final fun directory (Lelide/vfs/Directory;)Lelide/vfs/Directory;
 	public final fun file (Lelide/vfs/File;)Lelide/vfs/File;
@@ -3406,14 +3618,14 @@ public final class elide/vfs/TreeEntry_/Anonymous2 : com/google/flatbuffers/Tabl
 	public final fun getFile ()Lelide/vfs/File;
 }
 
-public final class elide/vfs/TreeEntry_/Anonymous2$Companion {
+public final class elide/vfs/TreeEntry_/TreeEntrySpec$Companion {
 	public final fun addDirectory (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
 	public final fun addFile (Lcom/google/flatbuffers/FlatBufferBuilder;I)V
-	public final fun createAnonymous2 (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
-	public final fun endAnonymous2 (Lcom/google/flatbuffers/FlatBufferBuilder;)I
-	public final fun getRootAsAnonymous2 (Ljava/nio/ByteBuffer;)Lelide/vfs/TreeEntry_/Anonymous2;
-	public final fun getRootAsAnonymous2 (Ljava/nio/ByteBuffer;Lelide/vfs/TreeEntry_/Anonymous2;)Lelide/vfs/TreeEntry_/Anonymous2;
-	public final fun startAnonymous2 (Lcom/google/flatbuffers/FlatBufferBuilder;)V
+	public final fun createTreeEntrySpec (Lcom/google/flatbuffers/FlatBufferBuilder;II)I
+	public final fun endTreeEntrySpec (Lcom/google/flatbuffers/FlatBufferBuilder;)I
+	public final fun getRootAsTreeEntrySpec (Ljava/nio/ByteBuffer;)Lelide/vfs/TreeEntry_/TreeEntrySpec;
+	public final fun getRootAsTreeEntrySpec (Ljava/nio/ByteBuffer;Lelide/vfs/TreeEntry_/TreeEntrySpec;)Lelide/vfs/TreeEntry_/TreeEntrySpec;
+	public final fun startTreeEntrySpec (Lcom/google/flatbuffers/FlatBufferBuilder;)V
 	public final fun validateVersion ()V
 }
 

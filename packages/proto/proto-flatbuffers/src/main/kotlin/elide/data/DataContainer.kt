@@ -43,6 +43,11 @@ class DataContainer : Table() {
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
+    val encoding : Int
+        get() {
+            val o = __offset(8)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsDataContainer(_bb: ByteBuffer): DataContainer = getRootAsDataContainer(_bb, DataContainer())
@@ -50,13 +55,14 @@ class DataContainer : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDataContainer(builder: FlatBufferBuilder, rawOffset: Int, integrityOffset: Int) : Int {
-            builder.startTable(2)
+        fun createDataContainer(builder: FlatBufferBuilder, rawOffset: Int, integrityOffset: Int, encoding: Int) : Int {
+            builder.startTable(3)
+            addEncoding(builder, encoding)
             addIntegrity(builder, integrityOffset)
             addRaw(builder, rawOffset)
             return endDataContainer(builder)
         }
-        fun startDataContainer(builder: FlatBufferBuilder) = builder.startTable(2)
+        fun startDataContainer(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addRaw(builder: FlatBufferBuilder, raw: Int) = builder.addOffset(0, raw, 0)
         fun createRawVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -75,6 +81,7 @@ class DataContainer : Table() {
             return builder.endVector()
         }
         fun startIntegrityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(2, encoding, 0)
         fun endDataContainer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

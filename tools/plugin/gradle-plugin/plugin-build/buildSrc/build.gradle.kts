@@ -2,7 +2,7 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-val kotlinVersion = "1.8.0-RC2"
+val kotlinVersion = "1.8.0"
 
 plugins {
     `kotlin-dsl`

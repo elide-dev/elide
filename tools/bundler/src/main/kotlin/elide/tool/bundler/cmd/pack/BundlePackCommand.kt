@@ -1,8 +1,9 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package elide.tool.bundler.cmd.pack
 
 import picocli.CommandLine.Command
 import elide.tool.bundler.AbstractBundlerSubcommand
-import elide.tool.bundler.BundlerOperation
 import elide.tool.bundler.cfg.ElideBundlerTool.ELIDE_TOOL_VERSION
 
 /** Implements the `bundle pack` command. */
@@ -12,7 +13,7 @@ import elide.tool.bundler.cfg.ElideBundlerTool.ELIDE_TOOL_VERSION
   mixinStandardHelpOptions = true,
   version = [ELIDE_TOOL_VERSION],
 )
-internal class BundlePackCommand : AbstractBundlerSubcommand() {
+public class BundlePackCommand : AbstractBundlerSubcommand() {
   internal companion object {
     internal const val CMD_NAME = "pack"
   }

@@ -1,14 +1,11 @@
-package elide.tool.cli.repl
+package elide.tool.cli.cmd.repl
 
-import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.VMFacade
-import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
-import elide.tool.cli.AbstractSubcommand
+import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.ToolState
 import elide.tool.cli.err.ShellError

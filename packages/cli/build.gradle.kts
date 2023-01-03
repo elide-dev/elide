@@ -77,6 +77,7 @@ dependencies {
   implementation(project(":packages:core"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm"))
+  implementation(project(":tools:bundler"))
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))

@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package elide.tool.bundler
 
 import ch.qos.logback.classic.Level
@@ -30,7 +32,7 @@ import kotlin.system.exitProcess
     BundleUnpackCommand::class,
   ],
 )
-public class Bundler : Runnable {
+public class Bundler : Runnable, AbstractBundlerSubcommand.BundlerParentCommand {
   public companion object {
     internal const val CMD_NAME = "bundler"
 
@@ -92,7 +94,7 @@ public class Bundler : Runnable {
     description = ["Activate verbose logging. Wins over `--quiet` when both are passed."],
     scope = CommandLine.ScopeType.INHERIT,
   )
-  internal var verbose: Boolean by Delegates.observable(false) { _, _, active ->
+  override var verbose: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       setLoggingLevel(Level.INFO)
       logging.info("Verbose logging enabled.")
@@ -105,7 +107,7 @@ public class Bundler : Runnable {
     description = ["Squelch most logging"],
     scope = CommandLine.ScopeType.INHERIT,
   )
-  internal var quiet: Boolean by Delegates.observable(false) { _, _, active ->
+  override var quiet: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       setLoggingLevel(Level.OFF)
     }
@@ -117,7 +119,7 @@ public class Bundler : Runnable {
     description = ["Activate debugging features and extra logging"],
     scope = CommandLine.ScopeType.INHERIT,
   )
-  internal var debug: Boolean by Delegates.observable(false) { _, _, active ->
+  override var debug: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
       logging.trace("Debug mode enabled.")
       setLoggingLevel(Level.TRACE)
@@ -132,7 +134,7 @@ public class Bundler : Runnable {
     defaultValue = "true",
     scope = CommandLine.ScopeType.INHERIT,
   )
-  internal var pretty: Boolean = false
+  override var pretty: Boolean = false
 
   override fun run() {
     // nothing to do at entry

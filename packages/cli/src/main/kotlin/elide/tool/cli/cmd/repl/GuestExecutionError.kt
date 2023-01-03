@@ -1,4 +1,4 @@
-package elide.tool.cli.repl
+package elide.tool.cli.cmd.repl
 
 import elide.tool.cli.err.AbstractToolError
 

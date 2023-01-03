@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package elide.tool.bundler
 
 import elide.runtime.Logger
@@ -14,7 +16,7 @@ import java.io.File
  * can then seamlessly receive the input parameters they need to operate. This class is also in charge of providing the
  * sub-command implementations with execution, logging, output, and I/O tools.
  */
-internal abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoCloseable {
+public abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoCloseable {
   /** Context in which sub-commands run. */
   interface CommandContext {
     /** Indicate whether debug mode is active. */
@@ -31,13 +33,31 @@ internal abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoClo
 
     /** Whether we should wait/consume from `stdin`. */
     val stdin: Boolean
+
+    /** Indicate whether pretty-mode is active. */
+    val pretty: Boolean
+  }
+
+  /** Interface which bundler parent commands are expected to provide. */
+  interface BundlerParentCommand {
+    /** Indicate whether debug mode is active. */
+    val debug: Boolean
+
+    /** Indicate whether verbose-mode is active. */
+    val verbose: Boolean
+
+    /** Indicate whether quiet-mode is active. */
+    val quiet: Boolean
+
+    /** Indicate whether pretty-mode is active. */
+    val pretty: Boolean
   }
 
   // Logger for all sub-commands.
   protected val logging: Logger = Statics.logging
 
   // Top-level `Bundler` instance which is hosting this sub-command action.
-  @ParentCommand protected lateinit var top: Bundler
+  @ParentCommand protected lateinit var top: BundlerParentCommand
 
   // Common options for all bundle-handling sub-commands.
   @Mixin(name = "Common bundle options") protected lateinit var bundle: CommonBundleOptions
@@ -56,6 +76,7 @@ internal abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoClo
     override val quiet: Boolean get() = top.quiet
     override val file: File? get() = bundle.file
     override val stdin: Boolean get() = bundle.stdin
+    override val pretty: Boolean get() = top.pretty
   })
 
   /** Close any command resources. */

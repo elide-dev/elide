@@ -1,3 +1,5 @@
+@file:Suppress("RedundantVisibilityModifier")
+
 package elide.tool.bundler.cmd.inspect
 
 import picocli.CommandLine.Command
@@ -11,7 +13,7 @@ import elide.tool.bundler.cfg.ElideBundlerTool.ELIDE_TOOL_VERSION
   mixinStandardHelpOptions = true,
   version = [ELIDE_TOOL_VERSION],
 )
-internal class BundleInspectCommand : AbstractBundlerSubcommand() {
+public class BundleInspectCommand : AbstractBundlerSubcommand() {
   internal companion object {
     internal const val CMD_NAME = "inspect"
   }

@@ -1,0 +1,76 @@
+{
+  "resources" : {
+    "includes" : [ {
+      "pattern" : "\\QMETA-INF/bundler.kotlin_module\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer/elide.tool.bundler.Bundler$Companion$ToolConfigurator\\E"
+    }, {
+      "pattern" : "\\QElideTool_en_US.properties\\E"
+    }, {
+      "pattern" : "\\Qelide.yml\\E"
+    }, {
+      "pattern" : "\\Qlogback.xml\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/proto-protobuf.kotlin_module\\E"
+    }, {
+      "pattern" : "\\Qelide/assets/bundle.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/assets/embedded.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/base/language.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/cli/tool.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/crypto/crypto.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/data/data.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/data/encoding.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/data/secrets/token.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/meta/app.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/meta/guest.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/meta/syntax.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/model/model.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/page/media.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/page/page.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/page/semantic.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/structs/bloom.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/vfs/bundle.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/vfs/config.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/vfs/file.proto\\E"
+    }, {
+      "pattern" : "\\Qelide/vfs/tree.proto\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/proto-flatbuffers.kotlin_module\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/proto-core.kotlin_module\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/elide/protocol/model.json\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/base.kotlin_module\\E"
+    }, {
+      "pattern" : "\\QMETA-INF/core.kotlin_module\\E"
+    } ],
+    "excludes" : [ ]
+  },
+  "bundles": [
+    {
+      "name": "BundlerTool",
+      "locales": [
+        "en-US"
+      ]
+    }
+  ]
+}

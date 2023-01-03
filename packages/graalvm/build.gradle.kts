@@ -105,6 +105,8 @@ dependencies {
   implementation(libs.kotlinx.serialization.json.jvm)
 
   // General
+  implementation(libs.jimfs)
+  implementation(libs.flatbuffers.java.core)
   implementation(libs.lmax.disruptor.core)
   implementation(libs.lmax.disruptor.proxy)
 

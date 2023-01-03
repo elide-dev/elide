@@ -27,10 +27,11 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
     }
 
     // Create a stream for the provided `target`, optionally in `parallel` mode (but only if `safe` to do so).
-    internal fun <X> toStream(target: Stream<X>, parallel: Boolean, safe: Boolean): Stream<X> = target.apply {
+    internal fun <X> toStream(target: Stream<X>, parallel: Boolean, safe: Boolean): Stream<X> = target.let {
       // if parallel streaming is requested and the backing map is threadsafe, then shift the stream to parallel mode.
-      if (safe && parallel) parallel()
+      if (safe && parallel) it.parallel()
       else if (!safe && parallel) error("Cannot request parallel stream with non-threadsafe map")
+      else it
     }
   }
 

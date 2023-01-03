@@ -1,11 +1,13 @@
 package elide.runtime.intrinsics.js
 
+import elide.proto.api.Symbolic
+
 /**
  * TBD.
  */
-public interface Symbol {
+public interface Symbol : Symbolic<String> {
   /**
    * TBD.
    */
-  public val symbol: String
+  public override val symbol: String
 }

@@ -29,7 +29,7 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 ktlint {
@@ -49,7 +49,7 @@ kotlin {
 
   target.compilations.all {
     kotlinOptions {
-      jvmTarget = "11"
+      jvmTarget = Elide.javaTargetMaximum
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage

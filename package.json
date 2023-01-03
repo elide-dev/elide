@@ -29,7 +29,7 @@
     "esbuild": "0.15.15",
     "gradle-upgrade-interactive": "^0.7.4",
     "grpc-web": "1.4.2",
-    "husky": "^8.0.2",
+    "husky": "^8.0.3",
     "lint-staged": "^13.0.3",
     "lit": "2.4.1",
     "lit-element": "3.2.2",

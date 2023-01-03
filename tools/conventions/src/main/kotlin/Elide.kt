@@ -40,7 +40,6 @@ object Elide {
 
   /** Compiler args to include in Kotlin JVM targets (beta). */
   val jvmCompilerArgsBeta = jvmCompilerArgs.plus(listOf(
-    "-opt",
     "-Xallow-unstable-dependencies",
     "-Xemit-jvm-type-annotations",
   ))

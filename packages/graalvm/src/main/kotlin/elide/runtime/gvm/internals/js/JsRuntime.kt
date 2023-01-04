@@ -201,6 +201,11 @@ internal class JsRuntime @Inject constructor (
       config.npm.enabled
     },
 
+    // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable ESM import support.
+    VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
+      config.npm.modules
+    },
+
     // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM32.
     VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
       config.wasm

@@ -95,10 +95,10 @@ public class JsRuntimeConfig(
     public const val DEFAULT_WASM: Boolean = false  // temporary default
 
     /** Default enablement of ESM features. */
-    public const val DEFAULT_ESM: Boolean = false  // temporary default
+    public const val DEFAULT_ESM: Boolean = true
 
     /** Default enablement of Node module resolution features. */
-    public const val DEFAULT_NPM: Boolean = false  // temporary default
+    public const val DEFAULT_NPM: Boolean = true
 
     /** Default location for NPM modules. */
     public const val DEFAULT_NPM_MODULES: String = "node_modules"

@@ -4,11 +4,13 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.util.UUID
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Requires
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
+import java.nio.file.Files
 
 /**
  * # VFS: Host.
@@ -48,6 +50,9 @@ internal class HostVFSImpl private constructor (
   ) : VFSBuilder<HostVFSImpl> {
     /** Factory for creating new [Builder] instances. */
     companion object BuilderFactory : VFSBuilderFactory<HostVFSImpl, Builder> {
+      /** Whether to default to using temp-space. */
+      const val DEFAULT_USE_TEMP = false
+
       /** @inheritDoc */
       override fun newBuilder(): Builder = Builder()
 
@@ -63,15 +68,17 @@ internal class HostVFSImpl private constructor (
     }
 
     /** @inheritDoc */
-    override fun build(): HostVFSImpl = HostVFSImpl(EffectiveGuestVFSConfig(
-      readOnly = readOnly,
-      root = root,
-      policy = policy,
-      workingDirectory = workingDirectory,
-      caseSensitive = caseSensitive,
-      supportsSymbolicLinks = enableSymlinks,
-      bundle = null,
-    ))
+    override fun build(): HostVFSImpl {
+      return HostVFSImpl(EffectiveGuestVFSConfig(
+        readOnly = readOnly,
+        root = root,
+        policy = policy,
+        workingDirectory = workingDirectory,
+        caseSensitive = caseSensitive,
+        supportsSymbolicLinks = enableSymlinks,
+        bundle = null,
+      ))
+    }
   }
 
   /**

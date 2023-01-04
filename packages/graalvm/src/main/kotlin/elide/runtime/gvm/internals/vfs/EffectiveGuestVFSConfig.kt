@@ -17,7 +17,7 @@ import java.net.URI
  * @param root Root directory to apply for this virtual filesystem.
  * @param workingDirectory Current-working-directory to apply for this virtual filesystem.
  */
-internal data class EffectiveGuestVFSConfig internal constructor (
+public data class EffectiveGuestVFSConfig internal constructor (
   val readOnly: Boolean = DEFAULT_READ_ONLY,
   val caseSensitive: Boolean = DEFAULT_CASE_SENSITIVE,
   val supportsSymbolicLinks: Boolean = DEFAULT_SUPPORT_SYMBOLIC_LINKS,
@@ -26,7 +26,7 @@ internal data class EffectiveGuestVFSConfig internal constructor (
   val root: String = DEFAULT_ROOT,
   val workingDirectory: String = DEFAULT_CWD,
 ) {
-  companion object {
+  internal companion object {
     private const val DEFAULT_READ_ONLY = true
     private const val DEFAULT_CASE_SENSITIVE = true
     private const val DEFAULT_SUPPORT_SYMBOLIC_LINKS = false
@@ -35,7 +35,7 @@ internal data class EffectiveGuestVFSConfig internal constructor (
     private val DEFAULT_POLICY: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS
 
     /** Default settings. */
-    @JvmStatic val DEFAULTS: EffectiveGuestVFSConfig = EffectiveGuestVFSConfig()
+    @JvmStatic internal val DEFAULTS: EffectiveGuestVFSConfig = EffectiveGuestVFSConfig()
 
     /** Settings constructor. */
     @JvmStatic fun empty(

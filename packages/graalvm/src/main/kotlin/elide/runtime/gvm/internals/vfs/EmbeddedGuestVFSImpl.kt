@@ -22,9 +22,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.net.URI
-import java.nio.ByteBuffer
 import java.nio.file.FileSystem
-import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
@@ -166,7 +164,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     internal var file: File? = null,
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
     /** TBD. */
-    internal companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
+    companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
       /** @inheritDoc */
       override fun newBuilder(): Builder = Builder()
 
@@ -244,7 +242,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   /** Factory to create new embedded VFS implementations. */
-  internal companion object EmbeddedVFSFactory : VFSFactory<EmbeddedGuestVFSImpl, Builder> {
+  companion object EmbeddedVFSFactory : VFSFactory<EmbeddedGuestVFSImpl, Builder> {
     /** Default in-memory filesystem features. */
     private val defaultFeatures = listOf(
       Feature.FILE_CHANNEL,
@@ -622,4 +620,10 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
   /** @inheritDoc */
   override fun logging(): Logger = logging
+
+  /** @inheritDoc */
+  override fun allowsHostFileAccess(): Boolean = false
+
+  /** @inheritDoc */
+  override fun allowsHostSocketAccess(): Boolean = false
 }

@@ -19,4 +19,10 @@ package elide.tool.cli.err
 
   /** A file type is mismatched with a guest language. */
   FILE_TYPE_MISMATCH,
+
+  /** A filesystem bundle could not be located. */
+  BUNDLE_NOT_FOUND,
+
+  /** A filesystem bundle could not be loaded due to a permission error. */
+  BUNDLE_NOT_ALLOWED,
 }

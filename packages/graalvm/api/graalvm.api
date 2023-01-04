@@ -399,6 +399,11 @@ public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Defi
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {
+	public abstract fun allowsHostFileAccess ()Z
+	public abstract fun allowsHostSocketAccess ()Z
+}
+
 public abstract interface class elide/runtime/gvm/internals/VMProperty {
 	public fun active ()Z
 	public abstract fun getSymbol ()Ljava/lang/String;
@@ -624,37 +629,146 @@ public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Def
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {
+	public static final field GUEST Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static final field HOST Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessDomain;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessRequest {
+	public fun <init> (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public final fun component4 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessRequest;Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDomain ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public final fun getPath ()Ljava/nio/file/Path;
+	public final fun getScope ()Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public final fun getType ()Ljava/util/Set;
+	public fun hashCode ()I
+	public final fun isExecute ()Z
+	public final fun isRead ()Z
+	public final fun isWrite ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResponse {
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/AccessResult;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun allow (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public static final fun deny (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public final fun getErr ()Ljava/lang/Throwable;
+	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public final fun getReason ()Ljava/lang/String;
+	public static final fun unsupported (Ljava/lang/Throwable;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum {
+	public static final field ALLOW Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static final field DENY Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessResult;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum {
+	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static final field FILE Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static final field UNSPECIFIED Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessScope;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessType : java/lang/Enum {
+	public static final field DELETE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static final field EXECUTE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static final field READ Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static final field WRITE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessType;
+}
+
+public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
+	public fun <init> ()V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public final fun component5 ()Ljava/net/URI;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/net/URI;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/net/URI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBundle ()Ljava/net/URI;
+	public final fun getCaseSensitive ()Z
+	public static final fun getDEFAULTS$graalvm ()Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public final fun getReadOnly ()Z
+	public final fun getRoot ()Ljava/lang/String;
+	public final fun getSupportsSymbolicLinks ()Z
+	public final fun getWorkingDirectory ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final fun withPolicy (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;ZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+}
+
+public abstract class elide/runtime/gvm/internals/vfs/GuestIOException : java/io/IOException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy {
 	public static final field Companion Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion;
 	public static final field DEFAULT_READ_ONLY Z
 	public fun <init> ()V
-	public fun <init> (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;Z)V
-	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
-	public final fun component2 ()Z
-	public final fun copy (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;Z)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public final fun getMode ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
 	public final fun getReadOnly ()Z
 	public fun hashCode ()I
-	public final fun setMode (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;)V
 	public final fun setReadOnly (Z)V
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public final fun getDEFAULT_MODE ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
 }
 
-public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode : java/lang/Enum {
-	public static final field CLASSPATH Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
-	public static final field GUEST Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
-	public static final field HOST Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
-	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
-	public static fun values ()[Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Mode;
+public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/EmbeddedGuestVFS;
+	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+}
+
+public final class elide/runtime/gvm/vfs/HostVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/HostVFS;
+	public final fun acquire ()Lelide/runtime/gvm/internals/GuestVFS;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/Blob {

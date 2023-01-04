@@ -338,7 +338,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     /**
      * Wire together the guest-side of a dual test.
      *
-     * @param defer Whether to defer for additional assertions.
      * @param guestOperation Operation to run on the guest.
      */
     abstract fun guest(guestOperation: VMContext.() -> String)

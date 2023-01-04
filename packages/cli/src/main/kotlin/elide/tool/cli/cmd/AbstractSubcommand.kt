@@ -5,6 +5,8 @@ import elide.runtime.Logger
 import elide.runtime.gvm.ContextFactory
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS
+import elide.runtime.gvm.vfs.HostVFS
 import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage
@@ -13,16 +15,19 @@ import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.VMCallable
 import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.err.ShellError
 import kotlinx.coroutines.*
 import org.graalvm.polyglot.Language
-import picocli.CommandLine.ParentCommand
 import java.io.BufferedReader
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 import java.io.Closeable
+import java.io.File
+import java.io.IOException
 import java.io.InputStream
 import java.io.PrintStream
 import java.lang.Runnable
+import java.net.URI
 import java.util.LinkedList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -437,13 +442,48 @@ import kotlin.coroutines.CoroutineContext
   /**
    * TBD.
    */
+  @Suppress("DEPRECATION")
   protected open fun withVM(
     context: ToolContext<State>,
+    fsBundleUri: URI?,
+    hostIO: Boolean,
     contextBuilder: (VMContext.Builder) -> Unit = {},
     op: VMCallable<State>,
   ) {
     logging.debug("Acquiring VM context for CLI tool")
-    vmContextFactory.acquire(contextBuilder) {
+    val wrappedBuilder: (VMContext.Builder) -> Unit = {
+      // configure the VM as normal
+      contextBuilder.invoke(it)
+
+      // if we have a virtualized FS, mount it
+      if (fsBundleUri != null && !hostIO) {
+        // check the bundle URI
+        if (fsBundleUri.scheme == "classpath:") {
+          logging.debug("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
+          throw ShellError.BUNDLE_NOT_FOUND.asError()
+        } else {
+          // make sure the file can be read
+          val file = try {
+            logging.trace("Checking bundle at URI '$fsBundleUri'")
+            File(fsBundleUri)
+          } catch (err: IOException) {
+            throw ShellError.BUNDLE_NOT_FOUND.asError()
+          }
+          logging.trace("Checking existence of '$fsBundleUri'")
+          if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
+
+          logging.trace("Checking readability of '$fsBundleUri'")
+          if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
+          logging.debug("Mounting guest filesystem at URI: '$fsBundleUri'")
+          it.fileSystem(EmbeddedGuestVFS.forBundle(fsBundleUri))
+        }
+      } else if (hostIO) {
+        // if we're doing host I/O, mount that instead
+        logging.debug("Command-line flags indicate host I/O; mounting host filesystem")
+        it.fileSystem(HostVFS.acquire())
+      }
+    }
+    vmContextFactory.acquire(wrappedBuilder) {
       try {
         enter()
         op.invoke(context, this)

@@ -74,7 +74,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   /** @inheritDoc */
-  override fun close() = backing.close()
+  override fun close(): Unit = backing.close()
 
   /** @inheritDoc */
   override fun getSeparator(): String = backing.separator

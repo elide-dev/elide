@@ -2,6 +2,7 @@ package elide.tool.cli
 
 import ch.qos.logback.classic.Level
 import elide.annotations.Eager
+import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
@@ -13,6 +14,7 @@ import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
+import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
 import org.slf4j.LoggerFactory
 import picocli.CommandLine
@@ -139,6 +141,9 @@ import kotlin.system.exitProcess
     ((LoggerFactory.getLogger("ROOT")) as ch.qos.logback.classic.Logger).level = level
   }
 
+  // Bean context.
+  @Inject internal lateinit var beanContext: BeanContext
+
   /** Verbose logging mode (wins over `--quiet`). */
   @set:Option(
     names = ["-v", "--verbose"],
@@ -197,5 +202,8 @@ import kotlin.system.exitProcess
   internal var timeout: Int = 30
 
   // Nothing here (an empty tool run cannot occur anyway).
-  override fun run() {}
+  override fun run() {
+    // proxy to the `shell` command for a naked run
+    beanContext.getBean(ToolShellCommand::class.java).run()
+  }
 }

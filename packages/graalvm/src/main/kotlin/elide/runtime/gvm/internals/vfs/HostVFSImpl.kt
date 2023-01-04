@@ -47,12 +47,12 @@ internal class HostVFSImpl private constructor (
     override var enableSymlinks: Boolean = GuestIOConfiguration.DEFAULT_SYMLINKS,
   ) : VFSBuilder<HostVFSImpl> {
     /** Factory for creating new [Builder] instances. */
-    internal companion object BuilderFactory : VFSBuilderFactory<HostVFSImpl, Builder> {
+    companion object BuilderFactory : VFSBuilderFactory<HostVFSImpl, Builder> {
       /** @inheritDoc */
-      override fun newBuilder() = Builder()
+      override fun newBuilder(): Builder = Builder()
 
       /** @inheritDoc */
-      override fun newBuilder(builder: Builder) = Builder().apply {
+      override fun newBuilder(builder: Builder): Builder = Builder().apply {
         readOnly = builder.readOnly
         root = builder.root
         policy = builder.policy
@@ -92,7 +92,7 @@ internal class HostVFSImpl private constructor (
     override fun create(config: EffectiveGuestVFSConfig): HostVFSImpl = HostVFSImpl(config)
 
     /** @inheritDoc */
-    override fun create(builder: VFSBuilder<HostVFSImpl>) = builder.build()
+    override fun create(builder: VFSBuilder<HostVFSImpl>): HostVFSImpl = builder.build()
   }
 
   /** Factory bridge from Micronaut-driven configuration to a host-based VFS implementation. */
@@ -121,4 +121,10 @@ internal class HostVFSImpl private constructor (
 
   /** @inheritDoc */
   override fun logging(): Logger = logging
+
+  /** @inheritDoc */
+  override fun allowsHostFileAccess(): Boolean = true
+
+  /** @inheritDoc */
+  override fun allowsHostSocketAccess(): Boolean = true
 }

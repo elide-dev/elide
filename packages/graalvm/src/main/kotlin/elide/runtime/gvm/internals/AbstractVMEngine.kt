@@ -20,6 +20,7 @@ import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.PolyglotAccess
+import org.graalvm.polyglot.io.IOAccess
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
 
@@ -150,15 +151,15 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
   // Context builder factory. Provided to the context manager.
   internal fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
     *guestConfig.languages.toTypedArray()
-  ).engine(engine)
+  ).engine(engine).apply {
+    // configure baseline settings for the builder according to the implemented VM
+    configureVM(this)
+  }
 
   // Context configuration function. Provided to the context manager.
   internal fun spawn(builder: VMContext.Builder): VMContext {
-    // 1: configure the builder according to the implemented VM
-    configureVM(builder)
-
     // 2: build the context
-    val ctx = builder.build().apply {
+    return builder.build().apply {
       // 3: resolve target language bindings
       val globals = getBindings(language().symbol)
       val overlay = MutableIntrinsicBindings.Factory.create()
@@ -174,20 +175,18 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
       // 6: prepare runtime with language-specific init
       prepare(this, globals)
     }
-    return ctx
   }
 
   /**
    * TBD.
    */
+  @Suppress("DEPRECATION")
   private fun configureVM(builder: VMContext.Builder) {
     // set strong secure baseline for context guest access
     builder
-//      .fileSystem(filesystem)  @TODO(sgammon): implement filesystem
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowHostAccess(HostAccess.SCOPED)
       .allowPolyglotAccess(PolyglotAccess.NONE)
-//      .allowIO(false)
       .allowInnerContextOptions(false)
       .allowCreateThread(false)
       .allowCreateProcess(false)
@@ -196,6 +195,8 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
       .allowNativeAccess(false)
       .allowExperimentalOptions(true)
       .allowValueSharing(true)
+      .fileSystem(filesystem)
+      .allowIO(true)
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {

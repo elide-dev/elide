@@ -29,7 +29,7 @@ internal typealias FilesystemInfo = tools.elide.vfs.Filesystem
 // -- Policy: Access Types, Domains, Scopes -- //
 
 /** TBD. */
-internal enum class AccessType {
+public enum class AccessType {
   /** TBD. */
   READ,
 
@@ -44,7 +44,7 @@ internal enum class AccessType {
 }
 
 /** TBD. */
-internal enum class AccessDomain {
+public enum class AccessDomain {
   /** TBD. */
   HOST,
 
@@ -53,7 +53,7 @@ internal enum class AccessDomain {
 }
 
 /** TBD. */
-internal enum class AccessScope {
+public enum class AccessScope {
   /** TBD. */
   UNSPECIFIED,
 
@@ -65,7 +65,7 @@ internal enum class AccessScope {
 }
 
 /** TBD. */
-internal data class AccessRequest(
+public data class AccessRequest(
   /** TBD. */
   val type: Set<AccessType>,
 
@@ -89,7 +89,7 @@ internal data class AccessRequest(
 }
 
 /** TBD. */
-internal enum class AccessResult {
+public enum class AccessResult {
   /** TBD. */
   ALLOW,
 
@@ -98,15 +98,15 @@ internal enum class AccessResult {
 }
 
 /** TBD. */
-internal class AccessResponse private constructor (
+public class AccessResponse private constructor (
   /** TBD. */
-  val policy: AccessResult,
+  public val policy: AccessResult,
 
   /** TBD. */
-  val reason: String? = null,
+  public val reason: String? = null,
 
   /** TBD. */
-  val err: Throwable? = null,
+  public val err: Throwable? = null,
 ) {
   internal companion object {
     private val ALLOW_DEFAULT: AccessResponse = AccessResponse(AccessResult.ALLOW)

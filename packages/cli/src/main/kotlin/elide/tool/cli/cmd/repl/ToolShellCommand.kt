@@ -11,10 +11,12 @@ import elide.tool.cli.ToolState
 import elide.tool.cli.err.ShellError
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.io.IOAccess
 import org.graalvm.polyglot.management.ExecutionEvent
 import org.graalvm.polyglot.management.ExecutionListener
 import picocli.CommandLine.ArgGroup
@@ -23,6 +25,7 @@ import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.io.File
+import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.EnumSet
@@ -30,7 +33,7 @@ import java.util.Scanner
 import java.util.stream.Stream
 import kotlin.io.path.Path
 
-/** TBD. */
+/** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
   aliases = ["shell", "r"],
@@ -41,7 +44,6 @@ import kotlin.io.path.Path
   usageHelpAutoWidth = true,
   synopsisHeading = "",
   customSynopsis = [
-    " @|bold,fg(magenta) " + elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION + "|@",
     "",
     " Usage:  elide @|bold,fg(cyan) run|@ [OPTIONS] FILE",
     "    or:  elide @|bold,fg(cyan) run|@ [OPTIONS] @|bold,fg(cyan) --stdin|@",
@@ -142,19 +144,48 @@ import kotlin.io.path.Path
   )
   internal var executeLiteral: Boolean = false
 
+  /** Specifies the file-system to mount and use for guest VM access. */
+  @Option(
+    names = ["--filesystem", "-fs"],
+    description = ["Mount a virtual filesystem bundle for guest VM use"],
+    arity = "0..1",
+    paramLabel = "FILE|URI",
+  )
+  internal var filesystem: String? = null
+
   /** Host access settings. */
   class HostAccessSettings {
-    /** Whether to activate NPM support. */
+    /** Whether to allow all host access. */
     @Option(
-      names = ["--allow-all"],
-      description = ["Whether to allow host access."],
-      defaultValue = "true",
+      names = ["--host:allow-all"],
+      description = ["Whether to allow host access. Careful, this can be dangerous!"],
+      defaultValue = "false",
     )
-    internal var allowAll: Boolean = true
+    internal var allowAll: Boolean = false
+
+    /** Whether to allow host I/O access. */
+    @Option(
+      names = ["--host:allow-io"],
+      description = ["Allows I/O access to the host from guest VMs"],
+      defaultValue = "false",
+    )
+    internal var allowIo: Boolean = false
+
+    /** Whether to allow host environment access. */
+    @Option(
+      names = ["--host:allow-env"],
+      description = ["Allows environment access to the host from guest VMs"],
+      defaultValue = "false",
+    )
+    internal var allowEnv: Boolean = false
 
     /** Apply access control settings to the target [context]. */
-    fun apply(context: VMContext.Builder) {
+    @Suppress("DEPRECATION") fun apply(context: VMContext.Builder) {
       if (allowAll) context.allowAllAccess(true)
+      else {
+        if (allowIo) context.allowIO(true)
+        if (allowEnv) context.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
+      }
     }
 
     companion object {
@@ -355,6 +386,13 @@ import kotlin.io.path.Path
     }
   }
 
+  // Make sure the file-system bundle specified by `bundleSpec` is usable.
+  private fun checkFsBundle(bundleSpec: String?): URI? = when {
+    bundleSpec.isNullOrBlank() -> null
+    bundleSpec.startsWith("classpath:") -> URI.create(bundleSpec)
+    else -> File(bundleSpec).toURI()
+  }
+
   /** @inheritDoc */
   override fun initializeVM(base: ToolState): Boolean {
     val baseProps: Stream<VMProperty> = emptyList<VMProperty>().stream()
@@ -382,12 +420,23 @@ import kotlin.io.path.Path
       return
     }
 
+    // resolve the language to use
     val lang = language.resolve()
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     val engineLang = supported.find { it.first == lang }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language context ('${lang.id}')")
 
-    withVM(context, accessControl::apply) {
+    // resolve the file-system bundle to use
+    val bundleUri = checkFsBundle(filesystem)
+    if (bundleUri != null) {
+      logging.debug("File-system bundle specified: $bundleUri")
+    } else {
+      logging.debug("No file-system bundle specified")
+    }
+
+    withVM(context, bundleUri, hostIO = (
+      bundleUri != null && (accessControl.allowIo || accessControl.allowAll)
+    ), accessControl::apply) {
       // warn about experimental status, as applicable
       logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")
 

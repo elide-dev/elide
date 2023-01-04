@@ -44,7 +44,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @param VFS Concrete virtual file system type under implementation.
    */
-  internal interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
+  interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
     /**
      * ### Read-only status
      *
@@ -207,7 +207,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @see newBuilder to create an empty VFS implementation builder, or to clone an existing builder.
    */
-  internal interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a new VFS implementation builder, of type [VFS].
      *
@@ -229,7 +229,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    * Specifies the expected API surface of a VFS implementation's companion object, which should be equipped to create
    * and resolve VFS implementations using the [VFSBuilder] and [VFSBuilderFactory].
    */
-  internal interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
+  interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a [VFS] implementation with no backing data, and configured with defaults.
      *

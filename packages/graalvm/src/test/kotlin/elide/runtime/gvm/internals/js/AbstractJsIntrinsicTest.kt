@@ -10,6 +10,7 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
 import org.junit.jupiter.api.Assertions.*
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
@@ -35,6 +36,16 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   // JS runtime.
   @Inject lateinit var jsvm: JsRuntime
+
+  // Build a customized guest context from scratch.
+  override fun buildContext(engine: Engine, conf: (Context.Builder.() -> Unit)?): Context.Builder {
+    throw UnsupportedOperationException("not supported for this test case")
+  }
+
+  // Prepare an operation with a customized guest context.
+  override fun <V : Any> withContext(op: Context.() -> V, conf: (Context.Builder.() -> Unit)?): V {
+    throw UnsupportedOperationException("not supported for this test case")
+  }
 
   // Run the provided `op` with an active (and exclusively owned) JS VM context.
   override fun <V: Any> withContext(op: VMContext.() -> V): V = runBlocking {

@@ -1,6 +1,5 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.runtime.gvm.internals.DualTestCase
 import elide.testing.annotations.Test
 import elide.runtime.gvm.internals.GuestVFS
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -12,7 +11,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 /** Baseline abstract tests for VFS implementations ([GuestVFS]). */
-internal abstract class AbstractVFSTest<VFS, Builder, Factory> : DualTestCase()
+internal abstract class AbstractVFSTest<VFS, Builder, Factory>
   where VFS: AbstractBaseVFS<VFS>,
         Builder: AbstractBaseVFS.VFSBuilder<VFS>,
         Factory: AbstractBaseVFS.VFSFactory<VFS, Builder> {

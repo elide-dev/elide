@@ -108,11 +108,16 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     debugLog {
       "Checking access to path: $path, modes: $modes, linkOptions: $linkOptions"
     }
-    val accessTypes = EnumSet.copyOf(modes.map { it.toAccessType() })
+    // @TODO(sgammon): why is it doing this
+    val accessTypes = if (modes.isEmpty()) {
+      EnumSet.of(AccessType.READ)
+    } else {
+      EnumSet.copyOf(modes.map { it.toAccessType() })
+    }
 
     checkPolicy(
-      path = path,
       type = accessTypes,
+      path = path,
       domain = AccessDomain.GUEST,
     ).let { response ->
       if (response.policy != AccessResult.ALLOW) {

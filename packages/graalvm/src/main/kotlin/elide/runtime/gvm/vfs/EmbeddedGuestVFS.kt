@@ -10,6 +10,23 @@ public object EmbeddedGuestVFS {
   /** @return Empty embedded VFS. */
   public fun empty(): GuestVFS = EmbeddedGuestVFSImpl.create()
 
+  /** @return Empty embedded VFS, but writable. */
+  public fun writable(): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setReadOnly(false)
+    .build()
+
+  /** @return Embedded VFS backed by [bundle], but writable. */
+  public fun writable(bundle: URI): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setBundlePath(bundle)
+    .setReadOnly(false)
+    .build()
+
+  /** @return Embedded VFS backed by [bundle], but writable. */
+  public fun writable(bundle: File): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setBundleFile(bundle)
+    .setReadOnly(false)
+    .build()
+
   /** @return Embedded VFS backed by the provided [bundle] URI. */
   public fun forBundle(bundle: URI): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
     .setBundlePath(bundle)

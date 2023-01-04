@@ -764,6 +764,9 @@ public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
 	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun forBundle (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun forBundle (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
 }
 
 public final class elide/runtime/gvm/vfs/HostVFS {

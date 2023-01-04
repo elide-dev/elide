@@ -2,8 +2,12 @@ package elide.runtime.gvm.internals.vfs
 
 import elide.runtime.Logger
 import elide.runtime.gvm.internals.GuestVFS
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.nio.file.*
 import java.util.EnumSet
+import kotlin.jvm.Throws
 
 /**
  * # VFS: Guest Base
@@ -16,13 +20,13 @@ import java.util.EnumSet
  * status, file membership, and so on. See the methods [enforce] and [checkPolicy] for more information.
  *
  * @see GuestVFS for the public API of guest VFS implementations.
- * @see AbstractBackedGuestVFS for a concrete implementation of a guest VFS backed by a real file system.
+ * @see AbstractDelegateVFS for a concrete implementation of a guest VFS backed by a real file system.
  * @param VFS Concrete virtual file system type under implementation.
  * @param config Effective guest VFS configuration to apply.
  */
-internal abstract class AbstractGuestVFS<VFS> protected constructor (
-  private val config: EffectiveGuestVFSConfig,
-) : GuestVFS where VFS: AbstractGuestVFS<VFS> {
+internal abstract class AbstractBaseVFS<VFS> protected constructor (
+  internal val config: EffectiveGuestVFSConfig,
+) : GuestVFS where VFS: AbstractBaseVFS<VFS> {
   internal companion object {
     /** Root system default value. */
     const val ROOT_SYSTEM_DEFAULT = "/"
@@ -40,7 +44,7 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
    *
    * @param VFS Concrete virtual file system type under implementation.
    */
-  internal interface VFSBuilder<VFS> where VFS: AbstractGuestVFS<VFS> {
+  internal interface VFSBuilder<VFS> where VFS: AbstractBaseVFS<VFS> {
     /**
      * ### Read-only status
      *
@@ -122,7 +126,10 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
      * @param readOnly Whether the file-system should be considered read-only.
      * @return This builder.
      */
-    fun setReadOnly(readOnly: Boolean): VFSBuilder<VFS>
+    fun setReadOnly(readOnly: Boolean): VFSBuilder<VFS> {
+      this.readOnly = readOnly
+      return this
+    }
 
     /**
      * Set the [caseSensitive] status of the file-system managed by this VFS implementation.
@@ -131,7 +138,10 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
      * @param caseSensitive Whether the file-system should be considered case-sensitive.
      * @return This builder.
      */
-    fun setCaseSensitive(caseSensitive: Boolean): VFSBuilder<VFS>
+    fun setCaseSensitive(caseSensitive: Boolean): VFSBuilder<VFS> {
+      this.caseSensitive = caseSensitive
+      return this
+    }
 
     /**
      * Set the [enableSymlinks] setting of the file-system managed by this VFS implementation.
@@ -140,7 +150,10 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
      * @param enableSymlinks Whether the file-system should expect symbolic link support.
      * @return This builder.
      */
-    fun setEnableSymlinks(enableSymlinks: Boolean): VFSBuilder<VFS>
+    fun setEnableSymlinks(enableSymlinks: Boolean): VFSBuilder<VFS> {
+      this.enableSymlinks = enableSymlinks
+      return this
+    }
 
     /**
      * Set the [root] path of the file-system managed by this VFS implementation.
@@ -149,7 +162,10 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
      * @param root Root file path to apply.
      * @return This builder.
      */
-    fun setRoot(root: String): VFSBuilder<VFS>
+    fun setRoot(root: String): VFSBuilder<VFS> {
+      this.root = root
+      return this
+    }
 
     /**
      * Set the initial [workingDirectory] path of the file-system managed by this VFS implementation.
@@ -158,7 +174,10 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
      * @param workingDirectory Current-working-directory file path to apply.
      * @return This builder.
      */
-    fun setWorkingDirectory(workingDirectory: String): VFSBuilder<VFS>
+    fun setWorkingDirectory(workingDirectory: String): VFSBuilder<VFS> {
+      this.workingDirectory = workingDirectory
+      return this
+    }
 
     /**
      * Set the active [policy] for guest I/O operations.
@@ -188,7 +207,7 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
    *
    * @see newBuilder to create an empty VFS implementation builder, or to clone an existing builder.
    */
-  internal interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractGuestVFS<VFS>, Builder: VFSBuilder<VFS> {
+  internal interface VFSBuilderFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a new VFS implementation builder, of type [VFS].
      *
@@ -210,7 +229,7 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
    * Specifies the expected API surface of a VFS implementation's companion object, which should be equipped to create
    * and resolve VFS implementations using the [VFSBuilder] and [VFSBuilderFactory].
    */
-  internal interface VFSFactory<VFS, Builder> where VFS: AbstractGuestVFS<VFS>, Builder: VFSBuilder<VFS> {
+  internal interface VFSFactory<VFS, Builder> where VFS: AbstractBaseVFS<VFS>, Builder: VFSBuilder<VFS> {
     /**
      * Create a [VFS] implementation with no backing data, and configured with defaults.
      *
@@ -273,9 +292,12 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
-  ): AccessResponse {
-    TODO("not yet implemented")
-  }
+  ): AccessResponse = checkPolicy(
+    type,
+    domain,
+    path,
+    scope,
+  )
 
   /**
    * Subclass API: Enforcement.
@@ -319,8 +341,33 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
    * @param scope Whether this path is known to be a file, or directory, or it is not known.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
-  protected fun checkPolicy(
+  internal fun checkPolicy(
     type: AccessType,
+    domain: AccessDomain,
+    path: Path,
+    scope: AccessScope = AccessScope.UNSPECIFIED,
+  ): AccessResponse = checkPolicy(AccessRequest(
+    type = setOf(type),
+    domain = domain,
+    scope = scope,
+    path = path,
+  ))
+
+  /**
+   * Subclass API: Policy check (multiple [type]s).
+   *
+   * This method is defined by a given subclass implementation of the VFS system, and is charged with evaluating guest
+   * I/O policy for a given request. This method is called by [enforce] when the request is deemed sane, and the policy
+   * check is the only remaining step.
+   *
+   * @param type Multiple types of access which are being requested.
+   * @param domain Access domain for this request: is it coming from the guest, or the host?
+   * @param path Path to the file or directory being accessed.
+   * @param scope Whether this path is known to be a file, or directory, or it is not known.
+   * @return Response from the policy check, indicating whether the request is allowed.
+   */
+  internal fun checkPolicy(
+    type: Set<AccessType>,
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
@@ -342,4 +389,55 @@ internal abstract class AbstractGuestVFS<VFS> protected constructor (
    * @return Response from the policy check, indicating whether the request is allowed.
    */
   protected abstract fun checkPolicy(request: AccessRequest): AccessResponse
+
+  /**
+   * Subclass API: Parse a path.
+   *
+   * This method is used to parse a series of path [segments] into a path which is compatible with the backing file
+   * system. The file system in question is responsible for parsing the path and ensuring validity. Paths returned from
+   * this method may be specialized to a given file-system implementation.
+   *
+   * @param segments Path segments to parse.
+   * @return Parsed path.
+   */
+  internal abstract fun getPath(vararg segments: String): Path
+
+  /**
+   * Subclass API: Read a file.
+   *
+   * This method is used to read an arbitrary file from the embedded file-system, as a shortcut to be used outside the
+   * regular guest VM context. In this case, the read is considered a "host read," which is not subject to guest I/O
+   * policy restrictions.
+   *
+   * Host reads are still subject to any policy restrictions and isolation: for example, if an embedded VFS backed by a
+   * file or jailed directory is used, the host reads are still scoped to these policies. To control host reads within
+   * the scope of the VFS system, a sub-class may override this method or [checkPolicy].
+   *
+   * @param path Path of the file to read.
+   * @param options Open options to use when reading the file.
+   * @return Input stream for the file in question.
+   * @throws IOException if the read operation cannot be completed.
+   * @throws AccessDeniedException if the read operation cannot be completed because of a policy violation.
+   */
+  @Throws(IOException::class)
+  internal abstract fun readStream(path: Path, vararg options: OpenOption): InputStream
+
+  /**
+   * Subclass API: Write a file.
+   *
+   * This method is used to write to an arbitrary file within the embedded file-system, as a shortcut to be used outside
+   * the regular guest VM context. In this case, the write operation is considered a "host write," which is not subject
+   * to guest I/O policy restrictions.
+   *
+   * Host writes are still subject to any policy restrictions and isolation: for example, if an embedded VFS backed by a
+   * file or jailed directory is used, the host writes are still scoped to these policies. To control host writes within
+   * the scope of the VFS system, a sub-class may override this method or [checkPolicy].
+   *
+   * @param path Path of the file we intend to write to.
+   * @param options Open options to use when writing to the file.
+   * @return Output stream for the file in question.
+   * @throws IOException if the write operation cannot be completed.
+   * @throws AccessDeniedException if the write operation cannot be completed because of a policy violation.
+   */
+  internal abstract fun writeStream(path: Path, vararg options: OpenOption): OutputStream
 }

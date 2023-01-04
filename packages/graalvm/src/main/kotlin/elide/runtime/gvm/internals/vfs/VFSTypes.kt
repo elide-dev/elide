@@ -8,17 +8,22 @@ import java.nio.file.Path
 /**
  * TBD.
  */
-internal typealias FileRecord = elide.vfs.File
+internal typealias FileRecord = tools.elide.vfs.File
 
 /**
  * TBD.
  */
-internal typealias DirectoryRecord = elide.vfs.Directory
+internal typealias DirectoryRecord = tools.elide.vfs.Directory
 
 /**
  * TBD.
  */
-internal typealias FileTreeEntry = elide.vfs.TreeEntry
+internal typealias FileTreeEntry = tools.elide.vfs.TreeEntry
+
+/**
+ * TBD.
+ */
+internal typealias FilesystemInfo = tools.elide.vfs.Filesystem
 
 
 // -- Policy: Access Types, Domains, Scopes -- //
@@ -62,7 +67,7 @@ internal enum class AccessScope {
 /** TBD. */
 internal data class AccessRequest(
   /** TBD. */
-  val type: AccessType,
+  val type: Set<AccessType>,
 
   /** TBD. */
   val domain: AccessDomain,
@@ -72,7 +77,16 @@ internal data class AccessRequest(
 
   /** TBD. */
   val path: Path,
-)
+) {
+  /** Whether this operation constitutes a read, with no writes. */
+  val isRead: Boolean get() = type.contains(AccessType.READ) && !isWrite
+
+  /** Whether this operation constitutes an execution. */
+  val isExecute: Boolean get() = type.contains(AccessType.EXECUTE)
+
+  /** Whether this operation constitutes a write (or delete). */
+  val isWrite: Boolean get() = type.contains(AccessType.WRITE) || type.contains(AccessType.DELETE)
+}
 
 /** TBD. */
 internal enum class AccessResult {

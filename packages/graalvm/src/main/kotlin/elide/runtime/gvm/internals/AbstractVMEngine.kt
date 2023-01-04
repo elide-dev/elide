@@ -10,7 +10,6 @@ import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-//import elide.server.ServerInitializer
 import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
@@ -20,7 +19,6 @@ import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.PolyglotAccess
-import org.graalvm.polyglot.io.IOAccess
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
 

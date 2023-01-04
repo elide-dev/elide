@@ -16,7 +16,6 @@ import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.io.IOAccess
 import org.graalvm.polyglot.management.ExecutionEvent
 import org.graalvm.polyglot.management.ExecutionListener
 import picocli.CommandLine.ArgGroup

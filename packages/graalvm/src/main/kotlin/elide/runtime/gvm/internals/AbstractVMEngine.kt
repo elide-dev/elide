@@ -26,7 +26,7 @@ import java.util.stream.Stream
  * TBD.
  */
 internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Code: ExecutableScript> constructor (
-  internal val contextManager: ContextManager<VMContext, VMContext.Builder>,
+  private val contextManager: ContextManager<VMContext, VMContext.Builder>,
   protected val language: GraalVMGuest,
   protected val config: Config,
 ) : VMEngineImpl<Config>/*, ServerInitializer*/ {

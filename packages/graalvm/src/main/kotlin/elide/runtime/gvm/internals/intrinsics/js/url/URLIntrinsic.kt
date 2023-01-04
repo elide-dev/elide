@@ -415,14 +415,14 @@ import kotlin.reflect.*
     }
 
     /** @inheritDoc */
-    override fun equals(other: Any?): Boolean = when (other) {
-      null -> false
-      is ParsedURL -> when {
+    override fun equals(other: Any?): Boolean {
+      if (other?.javaClass != this.javaClass)
+        return false
+      return when {
         this === other -> true  // if they are the exact same object, they are equal
         hashCode() != other.hashCode() -> false  // comparison hashcode differs
         else -> true  // they are functionally the same
       }
-      else -> false
     }
 
     /** @inheritDoc */
@@ -1120,9 +1120,13 @@ import kotlin.reflect.*
     @Polyglot override fun compareTo(other: URLValue): Int = target.get().absoluteString().compareTo(other.toString())
 
     /** @inheritDoc */
-    @Polyglot override fun equals(other: Any?): Boolean = when (other) {
-      is URLValue -> target.get().equals(other.target.get())
-      else -> false
+    @Polyglot override fun equals(other: Any?): Boolean {
+      if (other?.javaClass != this.javaClass)
+        return false
+      return when (other) {
+        is URLValue -> target.get().equals(other.target.get())
+        else -> false
+      }
     }
 
     /** @inheritDoc */

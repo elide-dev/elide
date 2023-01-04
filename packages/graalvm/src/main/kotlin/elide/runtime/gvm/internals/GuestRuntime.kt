@@ -1,4 +1,4 @@
-package elide.runtime.gvm.internals.intrinsics
+package elide.runtime.gvm.internals
 
 /**
  * TBD.

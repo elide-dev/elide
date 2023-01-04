@@ -1,7 +1,10 @@
 package elide.runtime.gvm.internals.vfs
 
 import elide.runtime.LogLevel
+import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.URI
 import java.nio.channels.SeekableByteChannel
 import java.nio.charset.Charset
@@ -25,16 +28,27 @@ import java.util.EnumSet
  * @param config Effective guest VFS configuration to apply.
  * @param backing Backing file-system instance which implements the FS to use.
  */
-internal abstract class AbstractBackedGuestVFS<VFS> protected constructor (
-  protected val config: EffectiveGuestVFSConfig,
+internal abstract class AbstractDelegateVFS<VFS> protected constructor (
+  config: EffectiveGuestVFSConfig,
   private val backing: FileSystem,
-) : GuestVFS, AbstractGuestVFS<VFS>(config) where VFS: AbstractGuestVFS<VFS> {
+) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS: AbstractBaseVFS<VFS> {
   internal companion object {
     /** Translate an [AccessMode] to an [AccessType]. */
     fun AccessMode.toAccessType(): AccessType = when (this) {
       AccessMode.READ -> AccessType.READ
       AccessMode.WRITE -> AccessType.WRITE
       AccessMode.EXECUTE -> AccessType.EXECUTE
+    }
+
+    /** Construct from a Micronaut-driven configuration. */
+    @JvmStatic internal fun withConfig(ioConfig: GuestIOConfiguration): EffectiveGuestVFSConfig {
+      return EffectiveGuestVFSConfig.withPolicy(
+        policy = ioConfig.policy,
+        caseSensitive = ioConfig.caseSensitive,
+        supportsSymbolicLinks = ioConfig.symlinks,
+        root = ioConfig.root,
+        workingDirectory = ioConfig.workingDirectory,
+      )
     }
   }
 
@@ -44,6 +58,19 @@ internal abstract class AbstractBackedGuestVFS<VFS> protected constructor (
     if (logger.isEnabled(LogLevel.DEBUG)) {
       logger.debug("VFS: ${message()}")
     }
+  }
+
+  /**
+   * Throw a well-formed [GuestIOException] for the provided [types], [path], and [message], which we declined for a
+   * guest I/O operation.
+   *
+   * @param types Access type that was denied.
+   * @param path Path that was denied.
+   * @param message Extra message, if any.
+   * @return Guest I/O exception with the provided inputs, to be thrown.
+   */
+  protected open fun notAllowed(types: Set<AccessType>, path: Path, message: String? = null): GuestIOException {
+    return GuestIOAccessDenied.forPath(path, types, message)
   }
 
   /** @inheritDoc */
@@ -56,10 +83,17 @@ internal abstract class AbstractBackedGuestVFS<VFS> protected constructor (
   override fun getPathSeparator(): String = backing.separator
 
   /** @inheritDoc */
-  override fun parsePath(uri: URI): Path = Path.of(uri)
+  override fun parsePath(uri: URI): Path = backing.getPath(uri.toString())
 
   /** @inheritDoc */
-  override fun parsePath(path: String): Path = Path.of(path)
+  override fun parsePath(path: String): Path = backing.getPath(path)
+
+  /** @inheritDoc */
+  override fun getPath(vararg segments: String): Path = if (segments.size == 1) {
+    backing.getPath(segments[0])
+  } else {
+    backing.getPath(segments[0], *segments.drop(1).toTypedArray())
+  }
 
   /** @inheritDoc */
   override fun toAbsolutePath(path: Path): Path = path.toAbsolutePath()
@@ -74,11 +108,24 @@ internal abstract class AbstractBackedGuestVFS<VFS> protected constructor (
     debugLog {
       "Checking access to path: $path, modes: $modes, linkOptions: $linkOptions"
     }
-    enforce(
+    val accessTypes = EnumSet.copyOf(modes.map { it.toAccessType() })
+
+    checkPolicy(
       path = path,
-      type = EnumSet.copyOf(modes.map { it.toAccessType() }),
+      type = accessTypes,
       domain = AccessDomain.GUEST,
-    )
+    ).let { response ->
+      if (response.policy != AccessResult.ALLOW) {
+        debugLog {
+          "Access check failed: response indicates `DENY`"
+        }
+        throw notAllowed(accessTypes, path)
+      } else {
+        debugLog {
+          "Access check passed: response indicates `ALLOW`"
+        }
+      }
+    }
   }
 
   /** @inheritDoc */
@@ -323,5 +370,55 @@ internal abstract class AbstractBackedGuestVFS<VFS> protected constructor (
       path1,
       path2,
     )
+  }
+
+  /** @inheritDoc */
+  override fun readStream(path: Path, vararg options: OpenOption): InputStream {
+    debugLog {
+      "Performing host-side read for path '$path' (options: '$options')"
+    }
+    enforce(
+      type = AccessType.READ,
+      domain = AccessDomain.HOST,
+      path = path,
+    )
+    return backing.provider().newInputStream(
+      path,
+      *options
+    )
+  }
+
+  /** @inheritDoc */
+  override fun writeStream(path: Path, vararg options: OpenOption): OutputStream {
+    debugLog {
+      "Performing host-side write for path '$path' (options: '$options')"
+    }
+    enforce(
+      type = AccessType.WRITE,
+      domain = AccessDomain.HOST,
+      path = path,
+    )
+    return backing.provider().newOutputStream(
+      path,
+      *options
+    )
+  }
+
+  /** @inheritDoc */
+  override fun checkPolicy(request: AccessRequest): AccessResponse {
+    // if we're in read-only mode, and the `request` represents an operation that writes (or deletes), we can reject it
+    // outright because we know it to be un-supported.
+    return if (config.readOnly && request.isWrite) {
+      debugLog {
+        "Write denied because filesystem is in read-only mode"
+      }
+      AccessResponse.deny("Filesystem is in read-only mode")
+    } else {
+      // otherwise, defer to the attached policy.
+      debugLog {
+        "Delegating policy check to attached policy"
+      }
+      config.policy.evaluateForPath(request)
+    }
   }
 }

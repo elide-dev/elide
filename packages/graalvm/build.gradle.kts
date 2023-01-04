@@ -113,12 +113,14 @@ dependencies {
   // Compression
   implementation(libs.lz4)
   implementation(libs.brotli)
+  implementation(libs.commons.compress)
 
   // Micronaut
   implementation(libs.micronaut.graal)
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
+  implementation(libs.micronaut.test.junit5)
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)

@@ -12,7 +12,7 @@ import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMRuntimeProperty
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-import elide.runtime.gvm.internals.intrinsics.GuestRuntime
+import elide.runtime.gvm.internals.GuestRuntime
 import io.micronaut.context.annotation.Requires
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -34,7 +34,8 @@ import org.graalvm.polyglot.Value as GuestValue
  */
 @Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
 @Requires(property = "elide.gvm.js.enabled", value = "true", defaultValue = "true")
-@GuestRuntime internal class JsRuntime @Inject constructor (
+@GuestRuntime
+internal class JsRuntime @Inject constructor (
   contextManager: ContextManager<VMContext, VMContext.Builder>,
   config: JsRuntimeConfig
 ) :

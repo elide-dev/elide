@@ -53,8 +53,6 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.async-stack-traces"),
       StaticProperty.active("js.atomics"),
       StaticProperty.active("js.bind-member-functions"),
-//      StaticProperty.active("js.commonjs-require"),
-//      StaticProperty.active("js.class-properties"),
       StaticProperty.active("js.direct-byte-buffer"),
       StaticProperty.active("js.disable-eval"),
       StaticProperty.active("js.esm-eval-returns-exports"),

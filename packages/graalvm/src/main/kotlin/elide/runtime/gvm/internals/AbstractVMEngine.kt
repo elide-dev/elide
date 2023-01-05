@@ -183,7 +183,6 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
     // set strong secure baseline for context guest access
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
-      .allowHostAccess(HostAccess.SCOPED)
       .allowPolyglotAccess(PolyglotAccess.NONE)
       .allowInnerContextOptions(false)
       .allowCreateThread(false)
@@ -195,6 +194,16 @@ internal abstract class AbstractVMEngine<Config : GuestRuntimeConfiguration, Cod
       .allowValueSharing(true)
       .fileSystem(filesystem)
       .allowIO(true)
+      .allowHostAccess(HostAccess.newBuilder(HostAccess.SCOPED)
+        .allowAccessAnnotatedBy(HostAccess.Export::class.java)
+        .allowArrayAccess(true)
+        .allowBufferAccess(true)
+        .allowAccessInheritance(true)
+        .allowIterableAccess(true)
+        .allowIteratorAccess(true)
+        .allowListAccess(true)
+        .allowMapAccess(true)
+        .build())
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {

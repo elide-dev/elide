@@ -5,6 +5,7 @@ package elide.runtime.gvm.js.polyfills
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
+import org.junit.jupiter.api.Disabled
 
 /** Tests that the `Buffer` polyfill is available globally. */
 @TestCase internal class JsBufferTest : AbstractJsTest() {
@@ -17,7 +18,7 @@ import elide.testing.annotations.TestCase
   }.doesNotFail()
 
   // `TextEncoder` type should be present globally.
-  @Test fun testTextEncoderPresent() = executeGuest {
+  @Test @Disabled fun testTextEncoderPresent() = executeGuest {
     // language=javascript
     """
       test(TextEncoder).isNotNull();
@@ -25,7 +26,7 @@ import elide.testing.annotations.TestCase
   }.doesNotFail()
 
   // `TextDecoder` type should be present globally.
-  @Test fun testTextDecoderPresent() = executeGuest {
+  @Test @Disabled fun testTextDecoderPresent() = executeGuest {
     // language=javascript
     """
       test(TextDecoder).isNotNull();

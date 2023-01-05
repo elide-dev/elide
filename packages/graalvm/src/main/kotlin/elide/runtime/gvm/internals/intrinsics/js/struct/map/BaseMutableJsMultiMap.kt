@@ -25,12 +25,6 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   private fun asMutable(): MutableMap<K, List<V>> = backingMap as MutableMap<K, List<V>>
 
   /** @inheritDoc */
-  override fun resolve(key: K): V? = backingMap[key]?.firstOrNull()
-
-  /** @inheritDoc */
-  override fun onResolve(key: K, value: V?) = Unit  // no-op by default
-
-  /** @inheritDoc */
   override fun keysStream(parallel: Boolean): Stream<K> = BaseJsMap.toStream(
     backingMap.keys.stream(),
     parallel,

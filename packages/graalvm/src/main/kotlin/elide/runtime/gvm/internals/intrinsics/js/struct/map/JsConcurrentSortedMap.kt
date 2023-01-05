@@ -7,24 +7,26 @@ import java.util.SortedMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
 
-/** TBD. */
+/** Implements a mutable, sorted, and thread-safe map for use with JavaScript; backed by a [ConcurrentSkipListMap]. */
 @Suppress("unused")
 internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMap: ConcurrentMap<K, V>) :
   BaseMutableJsMap<K, V>(backingMap, threadsafe = true),
   ConcurrentMap<K, V>,
   SortedMap<K, V> {
   /**
-   * TBD.
+   * Constructor: Empty.
+   *
+   * Internal-use-only constructor for an empty backed map.
    */
-  constructor() : this(concurrentSortedMapImpl())
+  constructor() : this(mapImpl())
 
   /** Concurrent & sorted map factory. */
   @Suppress("unused") internal companion object Factory {
     // Singleton empty map instance.
-    private val EMPTY_MAP = JsConcurrentSortedMap<Comparable<Any>, Any?>(concurrentSortedMapImpl())
+    private val EMPTY_MAP = JsConcurrentSortedMap<Comparable<Any>, Any?>(mapImpl())
 
     // Internal function to create a backing-map implementation.
-    @JvmStatic private fun <K: Any, V> concurrentSortedMapImpl(): ConcurrentMap<K, V> = ConcurrentSkipListMap()
+    @JvmStatic private fun <K: Any, V> mapImpl(): ConcurrentMap<K, V> = ConcurrentSkipListMap()
 
     /**
      * Return a sorted concurrent [JsConcurrentSortedMap] instance, which wraps the provided [map].
@@ -42,7 +44,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
      * @return Copied JS map instance.
      */
     @JvmStatic fun <K: Comparable<K>, V> copyOf(map: ConcurrentMap<K, V>): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
         putAll(map)
       })
     }
@@ -55,7 +57,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
      * @return Created JS map instance.
      */
     @JvmStatic fun <K: Comparable<K>, V> fromPairs(pairs: Collection<Pair<K, V>>): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
         pairs.forEach {
           put(it.first, it.second)
         }
@@ -70,7 +72,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
      * @return Created JS map instance.
      */
     @JvmStatic fun <K: Comparable<K>, V> fromEntries(entries: Collection<Map.Entry<K, V>>): JsConcurrentSortedMap<K, V>
-      = JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      = JsConcurrentSortedMap(mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
@@ -84,7 +86,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
      * @return Created JS map instance.
      */
     @JvmStatic fun <K: Comparable<K>, V> from(entries: Collection<Entry<K, V>>): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
@@ -104,7 +106,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
     @JvmStatic fun <K: Comparable<K>, V> unboundedEntries(
       entries: Iterable<Map.Entry<K, V>>
     ): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
@@ -122,7 +124,7 @@ internal class JsConcurrentSortedMap<K: Comparable<K>, V> constructor (backingMa
      * @return Created JS map instance.
      */
     @JvmStatic fun <K: Comparable<K>, V> unbounded(entries: Iterable<Entry<K, V>>): JsConcurrentSortedMap<K, V> {
-      return JsConcurrentSortedMap(concurrentSortedMapImpl<K, V>().apply {
+      return JsConcurrentSortedMap(mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }

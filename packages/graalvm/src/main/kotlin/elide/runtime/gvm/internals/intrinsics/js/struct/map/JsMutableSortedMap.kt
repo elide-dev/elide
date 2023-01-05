@@ -6,23 +6,25 @@ import java.util.Comparator
 import java.util.SortedMap
 import java.util.TreeMap
 
-/** TBD. */
+/** Implements a mutable and sorted map for use with JavaScript; backed by a [TreeMap]. */
 @Suppress("unused")
 internal class JsMutableSortedMap<K: Comparable<K>, V> private constructor (
   backingMap: MutableMap<K, V>
 ) : BaseMutableJsMap<K, V>(backingMap, sorted = true), MutableSortedMap<K, V> {
   /**
-   * TBD.
+   * Constructor: Empty.
+   *
+   * Internal-use-only constructor for an empty backed map.
    */
-  constructor() : this(sortedMapImpl())
+  constructor() : this(mapImpl())
 
   /** Immutable sorted map factory. */
-  @Suppress("unused") internal companion object Factory {
+  @Suppress("unused") internal companion object Factory : SortedMapFactory<JsMutableSortedMap<*, *>> {
     // Singleton empty map instance.
-    private val EMPTY_MAP = JsMutableSortedMap<Comparable<Any>, Any?>(sortedMapImpl())
+    private val EMPTY_MAP = JsMutableSortedMap<Comparable<Any>, Any?>(mapImpl())
 
     // Internal function to create a backing-map implementation.
-    @JvmStatic private fun <K: Comparable<K>, V> sortedMapImpl(): MutableMap<K, V> = TreeMap()
+    @JvmStatic private fun <K: Comparable<K>, V> mapImpl(): MutableMap<K, V> = TreeMap()
 
     /**
      * Return a sorted and mutable [JsMutableSortedMap] instance, which wraps the provided [map].
@@ -30,25 +32,31 @@ internal class JsMutableSortedMap<K: Comparable<K>, V> private constructor (
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    @JvmStatic fun <K: Comparable<K>, V> of(map: SortedMap<K, V>): JsMutableSortedMap<K, V> = JsMutableSortedMap(map)
+    @JvmStatic override fun <K: Comparable<K>, V> of(map: MutableMap<K, V>): JsMutableSortedMap<K, V> =
+      JsMutableSortedMap(TreeMap(map))
+
+    /**
+     * Return a copy of the provided sorted [map], but made sorted and mutable.
+     *
+     * @param map Existing map instance to wrap.
+     * @return Copy of the provided JS map instance.
+     */
+    @JvmStatic override fun <K : Comparable<K>, V> copyOf(map: Map<K, V>): JsMutableSortedMap<K, V> {
+      return JsMutableSortedMap(mapImpl<K, V>().apply {
+        putAll(map)
+      })
+    }
 
     /**
      * Return a sorted and mutable [JsMutableSortedMap] instance, created from the provided set of [pairs], each an
      * instance of [Pair] of type [K] and [V].
      *
      * @param pairs Pairs from which to create a JS map.
-     * @param presorted Whether the collection of entries is known to already be sorted. Defaults to `false`, in which
-     *   case the entries are sorted before key-wise insertion.
      * @return Created JS map instance.
      */
-    @JvmStatic fun <K: Comparable<K>, V> fromPairs(pairs: Collection<Pair<K, V>>, presorted: Boolean = false) =
-      JsMutableSortedMap(sortedMapImpl<K, V>().apply {
-        val sorted = if (presorted) {
-          pairs
-        } else {
-          pairs.sortedBy { it.first }
-        }
-        sorted.forEach {
+    @JvmStatic override fun <K: Comparable<K>, V> fromPairs(pairs: Collection<Pair<K, V>>) =
+      JsMutableSortedMap(mapImpl<K, V>().apply {
+        pairs.forEach {
           put(it.first, it.second)
         }
       })
@@ -58,20 +66,12 @@ internal class JsMutableSortedMap<K: Comparable<K>, V> private constructor (
      * [entries], each an instance of a normal Java [Map.Entry] of type [K] and [V].
      *
      * @param entries Map entries from which to create a JS map.
-     * @param presorted Whether the collection of entries is known to already be sorted. Defaults to `false`, in which
-     *   case the entries are sorted before key-wise insertion.
      * @return Created JS map instance.
      */
-    @JvmStatic fun <K: Comparable<K>, V> fromEntries(
+    @JvmStatic override fun <K: Comparable<K>, V> fromEntries(
       entries: Collection<Map.Entry<K, V>>,
-      presorted: Boolean = false,
-    ) = JsMutableSortedMap(sortedMapImpl<K, V>().apply {
-        val sorted = if (presorted) {
-          entries
-        } else {
-          entries.sortedBy { it.key }
-        }
-        sorted.forEach {
+    ) = JsMutableSortedMap(mapImpl<K, V>().apply {
+        entries.forEach {
           put(it.key, it.value)
         }
       })
@@ -81,21 +81,68 @@ internal class JsMutableSortedMap<K: Comparable<K>, V> private constructor (
      * [entries], each an instance of a JS [MapLike.Entry] of type [K] and [V].
      *
      * @param entries Map entries from which to create a JS map.
-     * @param presorted Whether the collection of entries is known to already be sorted. Defaults to `false`, in which
-     *   case the entries are sorted before key-wise insertion.
      * @return Created JS map instance.
      */
-    @JvmStatic fun <K: Comparable<K>, V> from(entries: Collection<MapLike.Entry<K, V>>, presorted: Boolean = false) =
-      JsMutableSortedMap(sortedMapImpl<K, V>().apply {
-        val sorted = if (presorted) {
-          entries
-        } else {
-          entries.sortedBy { it.key }
-        }
-        sorted.forEach {
+    @JvmStatic override fun <K: Comparable<K>, V> from(entries: Collection<MapLike.Entry<K, V>>) =
+      JsMutableSortedMap(mapImpl<K, V>().apply {
+        entries.forEach {
           put(it.key, it.value)
         }
       })
+
+    /**
+     * Return a sorted and mutable JavaScript map instance, created from the provided set of [entries], each an instance
+     * of a normal Java [Map.Entry] of type [K] and [V].
+     *
+     * This variant explicitly creates a map from an unbounded [Iterable]. If possible, [fromPairs] should be preferred,
+     * so that the underlying map implementation can be size-optimized during construction.
+     *
+     * @param entries Map entries from which to create a JS map.
+     * @return Created JS map instance.
+     */
+    @JvmStatic override fun <K : Comparable<K>, V> unboundedEntries(
+      entries: Iterable<Map.Entry<K, V>>
+    ): JsMutableSortedMap<K, V> = JsMutableSortedMap(mapImpl<K, V>().apply {
+      entries.forEach {
+        put(it.key, it.value)
+      }
+    })
+
+    /**
+     * Return a sorted and mutable JavaScript map instance, created from the provided set of [pairs], each an instance
+     * of [Pair] of type [K] and [V].
+     *
+     * This variant explicitly creates a map from an unbounded [Iterable]. If possible, [fromPairs] should be preferred,
+     * so that the underlying map implementation can be size-optimized during construction.
+     *
+     * @param pairs Pairs from which to create a JS map.
+     * @return Created JS map instance.
+     */
+    @JvmStatic override fun <K : Comparable<K>, V> unboundedPairs(
+      pairs: Iterable<Pair<K, V>>
+    ) = JsMutableSortedMap(mapImpl<K, V>().apply {
+      pairs.forEach {
+        put(it.first, it.second)
+      }
+    })
+
+    /**
+     * Return a sorted and mutable JavaScript map instance, created from the provided set of [entries], each an instance
+     * of a JS [MapLike.Entry] of type [K] and [V].
+     *
+     * This variant explicitly creates a map from an unbounded [Iterable]. If possible, [fromPairs] should be preferred,
+     * so that the underlying map implementation can be size-optimized during construction.
+     *
+     * @param entries Map entries from which to create a JS map.
+     * @return Created JS map instance.
+     */
+    @JvmStatic override fun <K : Comparable<K>, V> unbounded(
+      entries: Iterable<MapLike.Entry<K, V>>
+    ): JsMutableSortedMap<K, V> = JsMutableSortedMap(mapImpl<K, V>().apply {
+      entries.forEach {
+        put(it.key, it.value)
+      }
+    })
 
     /**
      * Return an empty mutable JS map instance that maintains sort order.
@@ -103,7 +150,8 @@ internal class JsMutableSortedMap<K: Comparable<K>, V> private constructor (
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic fun <K: Comparable<K>, V> empty(): JsMutableSortedMap<K, V> = EMPTY_MAP as JsMutableSortedMap<K, V>
+    @JvmStatic override fun <K: Comparable<K>, V> empty(): JsMutableSortedMap<K, V> =
+      EMPTY_MAP as JsMutableSortedMap<K, V>
   }
 
   // Shortcut to cast the current backing-map as a sorted map, which it is supposed to be.

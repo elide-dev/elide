@@ -6,7 +6,7 @@ import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
 import java.util.stream.Stream
 
-/** TBD. */
+/** Base implementation of a regular (non-mutable) JS map which is backed by a Java map. */
 internal sealed class BaseJsMap<K: Any, V> constructor (
   protected var backingMap: Map<K, V>,
   threadsafe: Boolean = false,
@@ -36,12 +36,6 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
   }
 
   /** @inheritDoc */
-  override fun resolve(key: K): V? = backingMap[key]
-
-  /** @inheritDoc */
-  override fun onResolve(key: K, value: V?) = Unit  // no-op by default
-
-  /** @inheritDoc */
   override fun keysStream(parallel: Boolean): Stream<K> = toStream(
     backingMap.keys.stream(),
     parallel,
@@ -68,7 +62,7 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
   override fun containsValue(value: V): Boolean = backingMap.containsValue(value)
 
   /** @inheritDoc */
-  override fun isEmpty(): Boolean = backingMap.isNotEmpty()
+  override fun isEmpty(): Boolean = backingMap.isEmpty()
 
   /** @inheritDoc */
   @get:Polyglot override val size: Int get() = backingMap.size

@@ -2,6 +2,8 @@ package elide.runtime.gvm.internals.intrinsics
 
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.TreeMap
 import java.util.TreeSet
 import java.util.function.BiFunction
@@ -22,7 +24,7 @@ internal interface GuestIntrinsic {
   /**
    * TBD.
    */
-  interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<JsSymbol, Any> {
+  interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<JsSymbol, Any>, ProxyObject {
     /** factory for creating empty bindings. */
     object Factory {
       /** @return Mutable intrinsic bindings backed by a map. */
@@ -30,11 +32,11 @@ internal interface GuestIntrinsic {
 
       /** @return Mutable intrinsic bindings backed by a map. */
       @JvmStatic fun wrap(target: MutableMap<JsSymbol, Any>): MutableIntrinsicBindings {
-        val bindingSet = TreeSet<JsSymbol>()
+        val bindingSet = TreeSet<String>()
         return object: MutableIntrinsicBindings, MutableMap<JsSymbol, Any> by target {
           // Check uniqueness of an intrinsic binding name.
           private fun checkName(key: JsSymbol) {
-            check(key !in bindingSet) {
+            check(key.symbol !in bindingSet) {
               "Intrinsic binding '$key' is already bound."
             }
           }
@@ -50,14 +52,18 @@ internal interface GuestIntrinsic {
           /** Clearing intrinsics is not allowed; this method always throws. */
           override fun clear() = notAllowed()
 
+          /** @inheritDoc */
           override fun put(key: JsSymbol, value: Any): Any? {
             checkName(key)
+            bindingSet.add(key.symbol)
             return target.put(key ,value)
           }
 
+          /** @inheritDoc */
           override fun putAll(from: Map<out JsSymbol, Any>) {
             from.keys.forEach {
               checkName(it)
+              bindingSet.add(it.symbol)
               target[it] = from[it]!!
             }
           }
@@ -73,6 +79,21 @@ internal interface GuestIntrinsic {
           /** @inheritDoc */
           override fun computeIfPresent(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any, out Any?>)
             = notAllowed()
+
+          /** @inheritDoc */
+          override fun getMember(key: String): Any = target[JsSymbol(key)] ?:
+            throw IllegalArgumentException("Intrinsic '$key' could not be resolved: not bound.")
+
+          /** @inheritDoc */
+          override fun getMemberKeys(): Any = bindingSet.toTypedArray()
+
+          /** @inheritDoc */
+          override fun hasMember(key: String): Boolean = bindingSet.contains(key)
+
+          /** @inheritDoc */
+          override fun putMember(key: String, value: Value?) = error(
+            "Cannot assign to `Intrinsics` members at runtime"
+          )
         }
       }
     }

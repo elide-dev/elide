@@ -11,7 +11,7 @@
 
     <logger name="tool" level="warn" />
 
-    <logger name="gvm:js.console" level="warn" />
+    <logger name="gvm:js.console" level="trace" />
     <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="warn" />
     <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="warn" />
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />

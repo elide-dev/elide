@@ -6,7 +6,7 @@ import elide.runtime.intrinsics.js.MutableMapLike
 import elide.runtime.intrinsics.js.err.TypeError
 import java.util.TreeMap
 
-/** TBD. */
+/** Abstract implementation of a mutable JS map, backed by a Java map. */
 internal sealed class BaseMutableJsMap<K: Any, V> constructor (
   map: MutableMap<K, V>,
   threadsafe: Boolean = false,
@@ -42,6 +42,9 @@ internal sealed class BaseMutableJsMap<K: Any, V> constructor (
   override fun putAll(from: Map<out K, V>) = asMutable().putAll(from)
 
   /** @inheritDoc */
+  override fun putIfAbsent(key: K, value: V): V? = asMutable().putIfAbsent(key, value)
+
+  /** @inheritDoc */
   @Polyglot override fun set(key: K, value: V) {
     asMutable()[key] = value
   }
@@ -66,7 +69,9 @@ internal sealed class BaseMutableJsMap<K: Any, V> constructor (
   /** @inheritDoc */
   @Throws(TypeError::class)
   @Polyglot override fun sort() = jsErrors {
-    backingMap = TreeMap<K, V>(backingMap)
+    if (backingMap.isNotEmpty()) {
+      backingMap = TreeMap<K, V>(backingMap)
+    }
   }
 
   /** @inheritDoc */

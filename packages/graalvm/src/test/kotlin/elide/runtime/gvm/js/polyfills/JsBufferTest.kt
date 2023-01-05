@@ -15,4 +15,20 @@ import elide.testing.annotations.TestCase
       test(Buffer).isNotNull();
     """
   }.doesNotFail()
+
+  // `TextEncoder` type should be present globally.
+  @Test fun testTextEncoderPresent() = executeGuest {
+    // language=javascript
+    """
+      test(TextEncoder).isNotNull();
+    """
+  }.doesNotFail()
+
+  // `TextDecoder` type should be present globally.
+  @Test fun testTextDecoderPresent() = executeGuest {
+    // language=javascript
+    """
+      test(TextDecoder).isNotNull();
+    """
+  }.doesNotFail()
 }

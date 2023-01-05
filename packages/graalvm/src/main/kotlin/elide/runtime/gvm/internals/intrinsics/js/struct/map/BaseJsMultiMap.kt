@@ -19,12 +19,6 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
   @Volatile protected var backingMap: Map<K, List<V>> = map
 
   /** @inheritDoc */
-  override fun resolve(key: K): V? = backingMap[key]?.firstOrNull()
-
-  /** @inheritDoc */
-  override fun onResolve(key: K, value: V?) = Unit  // no-op by default
-
-  /** @inheritDoc */
   override fun keysStream(parallel: Boolean): Stream<K> {
     TODO("Not yet implemented")
   }

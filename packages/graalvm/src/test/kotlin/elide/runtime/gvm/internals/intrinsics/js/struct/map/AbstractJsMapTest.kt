@@ -1,17 +1,21 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
 import elide.runtime.gvm.js.AbstractJsTest
+import elide.runtime.intrinsics.js.MutableMapLike
 import elide.runtime.intrinsics.js.MapLike as JsMapLike
 import elide.testing.annotations.Test
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest as test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
+import java.util.SortedMap
+import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 import kotlin.test.*
 
 /** Test for JavaScript `Map` and `MapLike` intrinsic behaviors. */
+@Suppress("UNCHECKED_CAST")
 internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapLike: AbstractJsMap<String, Any?> {
   // Build a generic map for testing, from test data.
   private fun allocateGeneric(): MapLike = spawnGeneric(testDataForGenericMap())
@@ -273,6 +277,12 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
         values.add(iterator.next().value!!)
       }
       assertEquals(5, values.size, "should have 5 values from entry iterator")
+      values.forEach {
+        assertNotNull(it.key)
+        assertDoesNotThrow {
+          it.value
+        }
+      }
     },
     test("$prefix should support iterating via `forEach`") {
       val subject = factory()
@@ -362,7 +372,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Storage --- //
 
     test("$prefix should be able to put a new value via subscript") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       subject["freshKey"] = 10L
 
@@ -376,7 +385,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals(10L, subject["freshKey"])
     },
     test("$prefix should be able to put a new value via `put()` method") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       @Suppress("ReplacePutWithAssignment")
       subject.put("freshKey", 10L)
@@ -391,10 +399,16 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals(10L, subject["freshKey"])
     },
     test("$prefix should be able to put a new value via `set()` method") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       @Suppress("ReplaceGetOrSet")
       subject.set("freshKey", 10L)
+      assertDoesNotThrow {
+        when (subject) {
+          is BaseMutableJsMap<String, Any?> -> subject.set("freshkey", 10L)
+          is BaseMutableJsMultiMap<String, Any?> -> subject.set("freshkey", 10L)
+          else -> {}
+        }
+      }
 
       assertNotNull(subject, "should not get `null` for test map")
       assertNotNull(subject["hello"], "should not get `null` for known-good value from generic map")
@@ -406,7 +420,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals(10L, subject["freshKey"])
     },
     test("$prefix should be able to overwrite a value via subscript") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
 
       assertNotNull(subject, "should not get `null` for test map")
@@ -419,7 +432,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals(2, subject["another"])
     },
     test("$prefix should be able to overwrite value via `put()` method") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
 
       assertNotNull(subject, "should not get `null` for test map")
@@ -433,7 +445,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals(2, subject["another"])
     },
     test("$prefix should be able to overwrite value via `set()` method") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
 
       assertNotNull(subject, "should not get `null` for test map")
@@ -451,7 +462,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
 
     test("$prefix should be able to add new values via `putAll()` method") {
       val otherMap = mapOf("freshKey" to 10L, "keyThree" to false)
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
 
       assertNull(subject["freshKey"])
@@ -465,7 +475,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Put if Absent --- //
 
     test("$prefix should be able to add new values if missing via `putIfAbsent()`") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
 
       assertEquals("hi", subject["hello"])
@@ -478,7 +487,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Remove --- //
 
     test("$prefix should be able to delete existing values via `remove()`") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       val originalSize = subject.size
       assertEquals("hi", subject["hello"])
@@ -490,7 +498,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertFalse(subject.isEmpty())
     },
     test("$prefix should not fail when deleting a missing value via `remove()`") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       val originalSize = subject.size
       assertNull(subject["idonotexist"])
@@ -501,7 +508,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertFalse(subject.isEmpty())
     },
     test("$prefix should not fail when deleting a value twice via `remove()`") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       val originalSize = subject.size
       assertNull(subject["idonotexist"])
@@ -520,8 +526,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Delete --- //
 
     test("$prefix should be able to delete existing values via `delete()`") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as BaseMutableJsMap<String, Any?>
+      val subject = factory() as MutableMapLike<String, Any?>
       val originalSize = subject.size
       assertEquals("hi", subject["hello"])
       subject.delete("hello")
@@ -532,8 +537,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertFalse(subject.isEmpty())
     },
     test("$prefix should not fail when deleting a missing value via `delete()`") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as BaseMutableJsMap<String, Any?>
+      val subject = factory() as MutableMapLike<String, Any?>
       val originalSize = subject.size
       assertNull(subject["idonotexist"])
       subject.delete("idonotexist")
@@ -543,8 +547,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertFalse(subject.isEmpty())
     },
     test("$prefix should not fail when deleting a value twice via `delete()`") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as BaseMutableJsMap<String, Any?>
+      val subject = factory() as MutableMapLike<String, Any?>
       val originalSize = subject.size
       assertNull(subject["idonotexist"])
       subject.delete("idonotexist")
@@ -562,7 +565,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Clear --- //
 
     test("$prefix should be able to drop all values via `clear()`") {
-      @Suppress("UNCHECKED_CAST")
       val subject = factory() as MutableMap<String, Any?>
       assertEquals("hi", subject["hello"])
       assertEquals(5, subject["test"])
@@ -574,7 +576,6 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertFalse(subject.isNotEmpty())
     },
     test("$prefix should not fail when `clear()`-ing an empty map") {
-      @Suppress("UNCHECKED_CAST")
       val subject = empty() as MutableMap<String, Any?>
       subject.clear()
       subject.clear()
@@ -583,9 +584,9 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Mutable Maps: Sort-in-Place --- //
 
     test("$prefix should be able to sort-in-place") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as BaseMutableJsMap<String, Any?>
+      val subject = factory() as AbstractJsMap<String, Any?>
       if (subject.sorted) return@test  // no-op
+      subject as MutableMapLike<String, Any?>
 
       // make sure we have un-sorted keys
       val keys = subject.keys
@@ -610,15 +611,14 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       )
     },
     test("$prefix should not fail for sort-in-place on empty map") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = empty() as BaseMutableJsMap<String, Any?>
+      val subject = empty() as MutableMapLike<String, Any?>
       subject.sort()
       subject.sort()
     },
     test("$prefix should sort-in-place in stable manner") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as BaseMutableJsMap<String, Any?>
+      val subject = factory() as AbstractJsMap<String, Any?>
       if (subject.sorted) return@test  // no-op
+      subject as MutableMapLike<String, Any?>
 
       // make sure we have un-sorted keys
       val keys = subject.keys
@@ -644,6 +644,21 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
         "map keys should be sorted after sort-in-place operation",
       )
     },
+
+    // --- Mutable Maps: Entries --- //
+
+    test("$prefix should, unfortunately, support mutable entries") {
+      val subject = factory() as MutableMap<String, Any?>
+      if ((subject as AbstractJsMap<*, *>).threadsafe) return@test
+
+      val mutable = subject.entries.first()
+      assertNotNull(mutable)
+      assertNotNull(mutable.key)
+      assertNotNull(mutable.value)
+      assertDoesNotThrow {
+        mutable.setValue("another value")
+      }
+    },
   )
 
   // Build test data for thread-safe map testing.
@@ -656,8 +671,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Concurrent Maps: Remove by Key & Value --- //
 
     test("$prefix should support removing by key/value pair") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as JsConcurrentMap<String, Any?>
+      val subject = factory() as ConcurrentMap<String, Any?>
 
       assertNull(subject["hellotest"])
       subject["hellotest"] = "check"
@@ -671,8 +685,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     // --- Concurrent Maps: Replace --- //
 
     test("$prefix should support replacing by key") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as JsConcurrentMap<String, Any?>
+      val subject = factory() as ConcurrentMap<String, Any?>
 
       assertNull(subject["hellotest"])
       subject["hellotest"] = "check"
@@ -680,8 +693,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       assertEquals("check2", subject["hellotest"])
     },
     test("$prefix should support replacing by key/value pair") {
-      @Suppress("UNCHECKED_CAST")
-      val subject = factory() as JsConcurrentMap<String, Any?>
+      val subject = factory() as ConcurrentMap<String, Any?>
 
       assertNull(subject["hellotest"])
       subject["hellotest"] = "check"
@@ -712,6 +724,126 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
         "sorted map keys should always be sorted",
       )
     },
+    test("$prefix should be able to cast as `SortedMap`") {
+      assertNotNull(
+        factory() as? SortedMap<String, Any?>
+      )
+    },
+
+    // --- Sorted Maps: Comparator --- //
+
+    test("$prefix should provide `null` as default comparator") {
+      val subject = factory() as SortedMap<String, Any?>
+      assertNull(subject.comparator())
+    },
+  ).plus(
+    // if this sorted map type is mutable, we have additional tests to run
+    if ((factory() as AbstractJsMap<*, *>).mutable) {
+      listOf(
+        test("$prefix should support sub-map slicing") {
+          val subject = factory() as SortedMap<String, Any?>
+
+          subject.clear()
+          assertEquals(0, subject.size)
+          assertTrue(subject.isEmpty())
+
+          subject["a"] = 1L
+          subject["b"] = 2L
+          subject["c"] = 3L
+          subject["d"] = 4L
+
+          // build a sub-map from `b`-`c`
+          val subMap = subject.subMap("b", "d")
+          assertEquals(2, subMap.size)
+          assertEquals(2L, subMap["b"])
+          assertEquals(3L, subMap["c"])
+          assertNull(subMap["a"])
+          assertNull(subMap["d"])
+        },
+        test("$prefix should support head-map slicing") {
+          val subject = factory() as SortedMap<String, Any?>
+
+          subject.clear()
+          assertEquals(0, subject.size)
+          assertTrue(subject.isEmpty())
+
+          subject["a"] = 1L
+          subject["b"] = 2L
+          subject["c"] = 3L
+          subject["d"] = 4L
+
+          // build a sub-map from `b`-`c`
+          val subMap = subject.headMap("c")
+          assertEquals(2, subMap.size)
+          assertEquals(1L, subMap["a"])
+          assertEquals(2L, subMap["b"])
+          assertNull(subMap["c"])
+          assertNull(subMap["d"])
+        },
+        test("$prefix should support tail-map slicing") {
+          val subject = factory() as SortedMap<String, Any?>
+
+          subject.clear()
+          assertEquals(0, subject.size)
+          assertTrue(subject.isEmpty())
+
+          subject["a"] = 1L
+          subject["b"] = 2L
+          subject["c"] = 3L
+          subject["d"] = 4L
+
+          // build a sub-map from `b`-`c`
+          val subMap = subject.tailMap("c")
+          assertEquals(2, subMap.size)
+          assertEquals(3L, subMap["c"])
+          assertEquals(4L, subMap["d"])
+          assertNull(subMap["a"])
+          assertNull(subMap["b"])
+        },
+        test("$prefix should be able to retrieve the first key") {
+          val subject = factory() as SortedMap<String, Any?>
+
+          subject.clear()
+          assertEquals(0, subject.size)
+          assertTrue(subject.isEmpty())
+
+          subject["a"] = 1L
+          subject["z"] = 2L
+          val first = subject.firstKey()
+          assertNotNull(first)
+          assertEquals("a", first)
+        },
+        test("$prefix should be able to retrieve the last key") {
+          val subject = factory() as SortedMap<String, Any?>
+
+          subject.clear()
+          assertEquals(0, subject.size)
+          assertTrue(subject.isEmpty())
+
+          subject["a"] = 1L
+          subject["z"] = 2L
+          val last = subject.lastKey()
+          assertNotNull(last)
+          assertEquals("z", last)
+        },
+        test("$prefix should throw `NoSuchElement` for `firstKey()` when empty") {
+          val subject = factory() as SortedMap<String, Any?>
+          subject.clear()
+          assertFailsWith<NoSuchElementException> {
+            subject.firstKey()
+          }
+        },
+        test("$prefix should throw `NoSuchElement` for `lastKey()` when empty") {
+          val subject = factory() as SortedMap<String, Any?>
+          subject.clear()
+          assertFailsWith<NoSuchElementException> {
+            subject.lastKey()
+          }
+        },
+      )
+    } else {
+      emptyList()
+    }
   )
 
   // Build test data for multi-map testing.
@@ -723,5 +855,22 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   }
 
   /** Test: Multi-map behaviors. */
-  protected open fun testMapMulti(prefix: String, factory: () -> MapLike): List<DynamicTest> = listOf()
+  protected open fun testMapMulti(prefix: String, factory: () -> MapLike): List<DynamicTest> = listOf(
+    // -- Multi-Maps: Multiple Values -- //
+
+    test("$prefix should support multiple values per key") {
+      val subject = factory() as BaseJsMultiMap<String, Any>
+      assertNotNull(subject["hello"])
+      assertEquals("hi", subject["hello"])
+      val all = subject.getAll("hello")
+      assertEquals("hi", all[0])
+      assertEquals("again", all[1])
+    },
+    test("$prefix should return empty list for missing key with `getAll()`") {
+      val subject = factory() as BaseJsMultiMap<String, Any>
+      val all = subject.getAll("missing")
+      assertNotNull(all)
+      assertTrue(all.isEmpty())
+    },
+  )
 }

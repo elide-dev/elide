@@ -24,7 +24,7 @@ import java.net.URI as NativeURL
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.*
 
-/** Implements an intrinsic for the `URL` global defined by the Fetch API. */
+/** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
 @Intrinsic internal class URLIntrinsic : AbstractJsIntrinsic() {
   internal companion object {
     /** Global where the `URL` constructor is mounted. */
@@ -964,8 +964,7 @@ import kotlin.reflect.*
   /** URL value class implementation. */
   internal class URLValue private constructor (private val target: AtomicReference<ParsedURL>) :
     Comparable<URLValue>,
-    BaseURLType,
-    ProxyInstantiable {
+    BaseURLType {
     /** `URL` value factory. */
     internal companion object Factory : URL.URLConstructors, URL.URLStaticMethods {
       // -- Factories: Java -- //
@@ -1016,10 +1015,6 @@ import kotlin.reflect.*
         } else throw valueError(
           "Cannot construct URL from empty string value"
         )
-
-      // Shortcut to parse a guest string as a URL (used internally only).
-      @JvmStatic private fun parseString(url: GuestValue): AtomicReference<ParsedURL> =
-        parseString(url, null)
 
       // Relative entrypoint for string parsing (with base URL).
       @Suppress("UNUSED_PARAMETER")
@@ -1083,23 +1078,6 @@ import kotlin.reflect.*
       is URLValue -> AtomicReference(target.target.get())
       else -> throw typeError("Cannot construct URL from: $target")
     })
-
-    /**
-     * Constructor: Guest.
-     *
-     * Creates a new instance of [URLValue] from the provided [arguments]. Expects either one or two arguments, which
-     * are the raw URL value and the base URL to consider when parsing the URL, respectively.
-     *
-     * @param arguments Arguments from a guest construction.
-     * @return A new instance of [URLValue].
-     */
-    @Polyglot override fun newInstance(vararg arguments: Value): Any {
-      return when {
-        arguments.size == 1 -> URLValue(arguments[0])
-        arguments.size > 1 -> URLValue(arguments[0], arguments[1])
-        else -> throw typeError("Cannot construct URL from: $arguments")
-      }
-    }
 
     // Run the provided `op` to mutate the current URL, which returns a new URL value; after the transformation is done,
     // replace the current atomic URL reference with the updated reference.

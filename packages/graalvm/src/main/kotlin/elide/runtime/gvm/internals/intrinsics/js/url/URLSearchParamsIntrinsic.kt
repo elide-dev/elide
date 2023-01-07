@@ -21,9 +21,7 @@ import elide.runtime.intrinsics.js.URLMutableSearchParams as IMutableSearchParam
 import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
 import org.graalvm.polyglot.Value as GuestValue
 
-/**
- * TBD.
- */
+/** Implements an intrinsic for the `URLSearchParams` global defined by the WhatWG URL Specification. */
 @Suppress("RedundantVisibilityModifier")
 @Intrinsic(URLSearchParamsIntrinsic.GLOBAL_URL_SEARCH_PARAMS)
 internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {

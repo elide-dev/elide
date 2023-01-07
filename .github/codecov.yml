@@ -34,3 +34,5 @@ github_checks:
 
 ignore:
   - "tools/plugin/gradle-plugin"
+  - "packages/proto/proto-flatbuffers"
+  - "packages/graalvm/src/main/kotlin/elide/runtime/feature"

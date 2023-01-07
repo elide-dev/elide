@@ -10,11 +10,11 @@ import elide.runtime.intrinsics.js.err.TypeError
 import java.util.TreeMap
 import java.util.stream.Stream
 
-/** TBD. */
+/** Implements a JS-compatible map structure which is mutable and accepts multiple values per key. */
 internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   map: MutableMap<K, MutableList<V>>,
-  threadsafe: Boolean = false,
-  sorted: Boolean = false,
+  threadsafe: Boolean,
+  sorted: Boolean,
 ) : BaseJsMultiMap<K, V>(
   map,
   threadsafe = threadsafe,
@@ -76,9 +76,6 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   override val values: MutableCollection<V> get() = backingMap.values.flatten().toMutableList()
 
   /** @inheritDoc */
-  @get:Polyglot override val size: Int get() = backingMap.size
-
-  /** @inheritDoc */
   override fun getOrDefault(key: K, defaultValue: V): V = backingMap[key]?.firstOrNull() ?: defaultValue
 
   /** @inheritDoc */
@@ -107,12 +104,10 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   )
 
   /** @inheritDoc */
-  @Polyglot override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = backingMap.entries.stream().forEach {
-    entries().forEach { inner ->
-      when (val entry = inner.value) {
-        null -> {}
-        else -> op.invoke(entry)
-      }
+  @Polyglot override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = entries().forEach { inner ->
+    when (val entry = inner.value) {
+      null -> {}
+      else -> op.invoke(entry)
     }
   }
 
@@ -121,6 +116,16 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
     val previousValue = get(key)
     set(key, value)
     return previousValue
+  }
+
+  /** @inheritDoc */
+  override fun putIfAbsent(key: K, value: V): V? {
+    return if (!backingMap.containsKey(key)) {
+      asMutable()[key] = mutableListOf(value)
+      null
+    } else {
+      backingMap[key]?.firstOrNull()
+    }
   }
 
   /** @inheritDoc */

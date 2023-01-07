@@ -14,6 +14,8 @@ import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.Serializable
 import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
@@ -962,8 +964,9 @@ import kotlin.reflect.*
   /** URL value class implementation. */
   internal class URLValue private constructor (private val target: AtomicReference<ParsedURL>) :
     Comparable<URLValue>,
-    BaseURLType {
-//    ProxyObject {
+    BaseURLType,
+    ProxyInstantiable {
+    /** `URL` value factory. */
     internal companion object Factory : URL.URLConstructors, URL.URLStaticMethods {
       // -- Factories: Java -- //
 
@@ -1080,6 +1083,23 @@ import kotlin.reflect.*
       is URLValue -> AtomicReference(target.target.get())
       else -> throw typeError("Cannot construct URL from: $target")
     })
+
+    /**
+     * Constructor: Guest.
+     *
+     * Creates a new instance of [URLValue] from the provided [arguments]. Expects either one or two arguments, which
+     * are the raw URL value and the base URL to consider when parsing the URL, respectively.
+     *
+     * @param arguments Arguments from a guest construction.
+     * @return A new instance of [URLValue].
+     */
+    @Polyglot override fun newInstance(vararg arguments: Value): Any {
+      return when {
+        arguments.size == 1 -> URLValue(arguments[0])
+        arguments.size > 1 -> URLValue(arguments[0], arguments[1])
+        else -> throw typeError("Cannot construct URL from: $arguments")
+      }
+    }
 
     // Run the provided `op` to mutate the current URL, which returns a new URL value; after the transformation is done,
     // replace the current atomic URL reference with the updated reference.

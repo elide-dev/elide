@@ -38,8 +38,7 @@ import org.graalvm.polyglot.Value as GuestValue
 internal class JsRuntime @Inject constructor (
   contextManager: ContextManager<VMContext, VMContext.Builder>,
   config: JsRuntimeConfig
-) :
-  AbstractVMEngine<JsRuntimeConfig, JsExecutableScript>(contextManager, JAVASCRIPT, config) {
+) : AbstractVMEngine<JsRuntimeConfig, JsExecutableScript>(contextManager, JAVASCRIPT, config) {
   @OptIn(ExperimentalSerializationApi::class)
   private companion object {
     const val DEFAULT_STREAM_ENCODING: String = "UTF-8"

@@ -145,12 +145,12 @@ import java.util.EnumSet
   }
 
   /**
-   * TBD.
+   * @return The current state of this executable script record.
    */
   public fun state(): State
 
   /**
-   * TBD.
+   * @return The [InvocationMode]s supported by this script.
    */
   public fun invocation(): EnumSet<InvocationMode>
 

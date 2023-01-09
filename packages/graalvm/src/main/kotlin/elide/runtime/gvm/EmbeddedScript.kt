@@ -3,6 +3,4 @@ package elide.runtime.gvm
 /**
  * TBD.
  */
-internal interface EmbeddedScript : ExecutableScript {
-  //
-}
+internal interface EmbeddedScript : ExecutableScript

@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js
 
 import elide.runtime.intrinsics.js.err.AbstractJSException
+import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import kotlin.reflect.KClass
@@ -18,6 +19,20 @@ import kotlin.reflect.full.companionObjectInstance
   @Suppress("UNCHECKED_CAST")
   private fun <E: AbstractJSException> wrapped(message: String, cause: Throwable? = null, type: KClass<out E>): E {
     return (type.companionObjectInstance as AbstractJSException.ErrorFactory<E>).create(message, cause)
+  }
+
+  /**
+   * Wrap a caught [throwable] in a JavaScript error; if no error type is specified, a [ValueError] will be raised.
+   *
+   * @param throwable Caught error to wrap.
+   * @return Constructed JS exception type.
+   */
+  fun wrap(throwable: Throwable, type: KClass<out Error>? = null): Error {
+    return if (type == null) {
+      wrapped(throwable, TypeError::class)
+    } else {
+      wrapped(throwable, type)
+    }
   }
 
   /**

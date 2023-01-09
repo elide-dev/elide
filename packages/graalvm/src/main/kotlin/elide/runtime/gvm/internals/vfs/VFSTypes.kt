@@ -38,9 +38,6 @@ public enum class AccessType {
 
   /** TBD. */
   DELETE,
-
-  /** TBD. */
-  EXECUTE,
 }
 
 /** TBD. */

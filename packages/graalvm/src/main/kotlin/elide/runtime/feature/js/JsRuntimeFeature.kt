@@ -47,6 +47,9 @@ internal class JsRuntimeFeature : FrameworkFeature {
     }
     if (registerV3) {
       registerClassForReflection(access, "elide.runtime.gvm.internals.js.JsRuntime")
+      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator")
+      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult")
+      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl")
       registeredIntrinsics.forEach {
         registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.${it}")
       }

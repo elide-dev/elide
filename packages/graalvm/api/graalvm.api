@@ -893,11 +893,12 @@ public abstract interface class elide/runtime/intrinsics/js/JavaScriptConsole {
 public abstract interface class elide/runtime/intrinsics/js/JavaScriptStreams {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/JsIterator : java/util/Iterator, kotlin/jvm/internal/markers/KMappedMarker {
+public abstract interface class elide/runtime/intrinsics/js/JsIterator : java/util/Iterator, kotlin/jvm/internal/markers/KMappedMarker, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyIterator {
+	public fun getIterator ()Ljava/lang/Object;
+	public fun getNext ()Ljava/lang/Object;
 	public abstract fun next ()Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 	public fun return (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
-	public fun throw (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
-	public static synthetic fun throw$default (Lelide/runtime/intrinsics/js/JsIterator;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public fun throw (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 }
 
 public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorFactory {
@@ -905,11 +906,21 @@ public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorFactory {
 	public static final fun forIterator (Ljava/util/Iterator;)Lelide/runtime/intrinsics/js/JsIterator;
 }
 
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorImpl : elide/runtime/intrinsics/js/JsIterator {
+	public fun <init> (Ljava/util/Iterator;)V
+	public fun getIterator ()Ljava/lang/Object;
+	public fun hasNext ()Z
+	public fun next ()Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public synthetic fun next ()Ljava/lang/Object;
+	public fun remove ()V
+}
+
 public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult {
-	public synthetic fun <init> (Ljava/lang/Object;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/Object;ZLjava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getDone ()Z
 	public final fun getValue ()Ljava/lang/Object;
 	public static final fun of (Ljava/lang/Object;Z)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public static final fun ofErr (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/JsPromise {

@@ -1,7 +1,11 @@
 package elide.runtime.intrinsics.js
 
+
 import elide.annotations.core.Polyglot
+import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.err.Error
+import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyIterator
 
 /**
  * # JS: Iterator
@@ -9,9 +13,10 @@ import elide.runtime.intrinsics.js.err.Error
  * Implements a standards-compliant JavaScript iterator, which either provides streamed values as it is polled, or fails
  * upon value access if an error is encountered.
  *
+ * @see ProxyIterator for GraalVM's Truffle iterator interface.
  * @see JsIteratorResult for a result type that can be returned by an iterator.
  */
-public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>> {
+public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, ProxyIterator, ProxyIterable {
   /** Represents an inner iterator value. */
   public class JsIteratorResult<T> private constructor (
     private val held: T?,
@@ -37,6 +42,26 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>> {
   }
 
   /**
+   * Default implementation of a JavaScript-compatible iterator, via [JsIterator] of [T] and [ProxyIterator].
+   *
+   * @see JsIterator for the Elide-specific interface for JavaScript iterators.
+   * @see ProxyIterator for the interface provided by Truffle to mimic iterators.
+   * @see ProxyIterable for the interface provided by Truffle to mimic iterable objects.
+   */
+  public class JsIteratorImpl<T> (private val iter: Iterator<T>) : JsIterator<T> {
+    @Polyglot override fun hasNext(): Boolean = iter.hasNext()
+
+    @Polyglot override fun next(): JsIteratorResult<T> = try {
+      JsIteratorResult.of(iter.next(), !hasNext())
+    } catch (err: Throwable) {
+      JsIteratorResult.ofErr(JsError.wrap(err))
+    }
+
+    /** @inheritDoc */
+    override fun getIterator(): Any = this
+  }
+
+  /**
    * ## JS: Iterator Factory
    *
    * Factory helper for creating JavaScript iterators. Static constructor methods for iterators are available on this
@@ -44,16 +69,7 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>> {
    */
   public object JsIteratorFactory {
     /** Wrap the provided [iterator] in a JS iterator proxy. */
-    @JvmStatic public fun <T> forIterator(iterator: Iterator<T>): JsIterator<T> = object: JsIterator<T> {
-      /** @inheritDoc */
-      @Polyglot override fun hasNext(): Boolean = iterator.hasNext()
-
-      /** @inheritDoc */
-      @Polyglot override fun next(): JsIteratorResult<T> = JsIteratorResult.of(
-        value = iterator.next(),
-        done = !iterator.hasNext(),
-      )
-    }
+    @JvmStatic public fun <T> forIterator(iterator: Iterator<T>): JsIterator<T> = JsIteratorImpl(iterator)
   }
 
   /**
@@ -89,4 +105,10 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>> {
    * @return The next value from the iterator.
    */
   @Polyglot override fun next(): JsIteratorResult<T>
+
+  /** @inheritDoc */
+  @Polyglot override fun getNext(): T? = next().value
+
+  /** @inheritDoc */
+  override fun getIterator(): Any = this
 }

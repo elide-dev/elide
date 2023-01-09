@@ -8,9 +8,7 @@ import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import java.util.*
 
 /** Implementation of an [AbstractGVMScript] for the [JsRuntime]. */
-internal class JsExecutableScript private constructor (
-  source: ScriptSource,
-) : AbstractGVMScript(JAVASCRIPT, source) {
+internal class JsExecutableScript private constructor (source: ScriptSource) : AbstractGVMScript(JAVASCRIPT, source) {
   private companion object {
     /** Mime type for regular JS. */
     const val MIME_TYPE_JS = "application/javascript"

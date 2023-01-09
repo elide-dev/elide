@@ -96,7 +96,7 @@ import kotlin.reflect.full.companionObjectInstance
   /**
    * TBD.
    */
-  @Throws(elide.runtime.intrinsics.js.err.Error::class)
+  @Throws(Error::class)
   fun <R: Any> jsErrors(op: () -> R): R {
     return try {
       op.invoke()

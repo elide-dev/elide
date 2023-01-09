@@ -37,7 +37,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     fun AccessMode.toAccessType(): AccessType = when (this) {
       AccessMode.READ -> AccessType.READ
       AccessMode.WRITE -> AccessType.WRITE
-      AccessMode.EXECUTE -> AccessType.EXECUTE
+      AccessMode.EXECUTE -> error("`EXECUTE` access mode is not supported by Elide VFS")
     }
 
     /** Construct from a Micronaut-driven configuration. */

@@ -2,6 +2,7 @@ package elide.runtime.gvm.internals.intrinsics.js.fetch
 
 import elide.annotations.core.Polyglot
 import elide.runtime.intrinsics.js.*
+import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -10,6 +11,7 @@ internal class FetchRequestIntrinsic internal constructor (
   targetUrl: String,
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
+  private val bodyData: InputStream? = null,
 ) : FetchMutableRequest {
   /** Construct a new `Request` from a plain string URL. */
   @Polyglot constructor (url: String) : this(targetUrl = url)
@@ -56,7 +58,11 @@ internal class FetchRequestIntrinsic internal constructor (
   // -- Interface: Immutable HTTP Request -- //
 
   /** @inheritDoc */
-  @get:Polyglot override val body: ReadableStream get() = TODO("Not yet implemented")
+  @get:Polyglot override val body: ReadableStream? get() {
+    if (bodyData == null) return null
+    if (!bodyConsumed.get()) bodyConsumed.set(true)
+    return ReadableStream.wrap(bodyData)
+  }
 
   /** @inheritDoc */
   @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()

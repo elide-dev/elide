@@ -5,10 +5,10 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import org.jetbrains.kotlin.konan.target.HostManager
 import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
+    kotlin("kapt")
     id("dev.elide.build")
     id("dev.elide.build.multiplatform")
 }
@@ -19,7 +19,10 @@ version = rootProject.version as String
 kotlin {
     explicitApi()
 
-    jvm()
+    jvm {
+        withJava()
+    }
+
     wasm32()
     js(IR) {
         nodejs {}
@@ -49,6 +52,9 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test"))
                 implementation(project(":packages:test"))
+                configurations["kapt"].dependencies.add(
+                    libs.micronaut.inject.java.asProvider().get()
+                )
             }
         }
         val jvmMain by getting {

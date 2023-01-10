@@ -1207,6 +1207,12 @@ import kotlin.reflect.*
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `URL`
-    bindings[URL_SYMBOL] = URLValue::class.java
+    bindings[URL_SYMBOL] = ProxyInstantiable { arguments ->
+      when (arguments.size) {
+        1 -> URLValue(arguments[0])
+        2 -> URLValue(arguments[0], arguments[1])
+        else -> throw valueError("Invalid number of arguments: ${arguments.size}")
+      }
+    }
   }
 }

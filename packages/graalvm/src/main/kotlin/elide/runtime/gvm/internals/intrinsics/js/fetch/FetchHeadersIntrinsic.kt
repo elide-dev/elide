@@ -1,20 +1,82 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
 import elide.annotations.core.Polyglot
+import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMultiMap
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableHeaders
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.JsIterator
+import elide.runtime.intrinsics.js.MultiMapLike
 import org.graalvm.polyglot.Value
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.stream.Collectors
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
 internal class FetchHeadersIntrinsic private constructor (
-  initialData: MutableMap<String, SortedSet<String>>?
-) : FetchMutableHeaders {
+  initialData: JsMutableMultiMap<String, String>?,
+
   // Internal data map.
-  private val data: MutableMap<String, SortedSet<String>> = initialData ?: allocateMap()
+  private val data: JsMutableMultiMap<String, String> = initialData ?: allocateMap()
+) : FetchMutableHeaders, MultiMapLike<String, String> by data {
+  /** Factory for creating new mutable [FetchHeaders] implementations. */
+  internal companion object Factory : FetchHeaders.Factory<FetchHeadersIntrinsic> {
+    // Allocate an empty sorted map.
+    @JvmStatic private fun allocateMap(): JsMutableMultiMap<String, String> = JsMutableMultiMap.empty()
+
+    /**
+     * Create an empty set of immutable fetch headers.
+     *
+     * @return Immutable and empty set of fetch headers.
+     */
+    @JvmStatic override fun empty(): FetchHeadersIntrinsic = FetchHeadersIntrinsic()
+
+    /**
+     * Create a set of immutable fetch headers from the provided set of [pairs].
+     *
+     * @return Immutable set of fetch headers.
+     */
+    @JvmStatic override fun fromPairs(pairs: Collection<Pair<String, String>>): FetchHeadersIntrinsic {
+      TODO("Not yet implemented")
+    }
+
+    /**
+     * Create a set of immutable fetch headers from the provided set of [pairs].
+     *
+     * @return Immutable set of fetch headers.
+     */
+    @JvmStatic override fun from(vararg pairs: Pair<String, String>): FetchHeadersIntrinsic {
+      TODO("Not yet implemented")
+    }
+
+    /**
+     * Create a set of immutable fetch headers from the provided [map] data.
+     *
+     * @return Immutable set of fetch headers.
+     */
+    @JvmStatic override fun fromMap(map: Map<String, String>): FetchHeadersIntrinsic {
+      TODO("Not yet implemented")
+    }
+
+    /**
+     * Create a set of immutable fetch headers from the provided [map] data.
+     *
+     * @return Immutable set of fetch headers.
+     */
+    @JvmStatic override fun fromMultiMap(map: Map<String, List<String>>): FetchHeadersIntrinsic {
+      TODO("Not yet implemented")
+    }
+
+    /**
+     * Create an immutable copy of the provided [previous] fetch headers.
+     *
+     * @return Immutable copy of the provided fetch headers.
+     */
+    @JvmStatic override fun from(previous: FetchHeaders): FetchHeadersIntrinsic {
+      TODO("Not yet implemented")
+    }
+  }
+
 
   // Computed joined value cache.
   private val valueCache: SortedMap<String, String> = TreeMap(String.CASE_INSENSITIVE_ORDER)
@@ -44,7 +106,7 @@ internal class FetchHeadersIntrinsic private constructor (
           if (it.isNotEmpty()) {
             val value = initialValue.getMember(it)
             if (value != null && value.isString) {
-              buf[it] = sortedSetOf(value.asString())
+              buf.append(it, value.asString())
             }
           }
         }
@@ -62,7 +124,7 @@ internal class FetchHeadersIntrinsic private constructor (
         iterWrap.forEach { mapKey ->
           val mapValue = initialValue.getHashValueOrDefault(mapKey, null) ?: return@forEach
           if (mapValue.isString) {
-            buf[mapKey] = sortedSetOf(mapValue.asString())
+            buf.append(mapKey, mapValue.asString())
           }
         }
         buf
@@ -76,18 +138,7 @@ internal class FetchHeadersIntrinsic private constructor (
   )
 
   /** @return Copy of internal data. */
-  private fun internalDataForCopy(): MutableMap<String, SortedSet<String>> {
-    return TreeMap(data)
-  }
-
-  /** Typed constructors. */
-  companion object {
-    // Allocate an empty sorted map.
-    @JvmStatic private fun allocateMap(): SortedMap<String, SortedSet<String>> = TreeMap(String.CASE_INSENSITIVE_ORDER)
-
-    /** @return Empty `Headers` container. */
-    @JvmStatic @Polyglot fun empty(): FetchHeadersIntrinsic = FetchHeadersIntrinsic()
-  }
+  private fun internalDataForCopy(): JsMutableMultiMap<String, String> = data
 
   // Whether the headers map is locked for iteration.
   private val locked: AtomicBoolean = AtomicBoolean(false)
@@ -119,23 +170,6 @@ internal class FetchHeadersIntrinsic private constructor (
   }
 
   /** @inheritDoc */
-  @Polyglot override fun get(name: String): String? {
-    val value = data[name]
-    return if (value?.isNotEmpty() == true) {
-      if (value.size == 1) {
-        value.first()
-      } else {
-        valueCache.computeIfAbsent(name) {
-          value.joinToString(", ")
-        }
-      }
-    } else null
-  }
-
-  /** @inheritDoc */
-  @Polyglot override fun has(name: String): Boolean = data.containsKey(name)
-
-  /** @inheritDoc */
   @Polyglot override fun keys(): JsIterator<String> = lockForIteration {
     JsIteratorFactory.forIterator(data.keys.iterator())
   }
@@ -150,32 +184,10 @@ internal class FetchHeadersIntrinsic private constructor (
   }
 
   /** @inheritDoc */
-  @Polyglot override fun entries(): JsIterator<Array<String>> = lockForIteration {
-    data.keys.map {
-      arrayOf(it, get(it)!!)
-    }.let {
-      JsIteratorFactory.forIterator(it.iterator())
-    }
-  }
-
-  /** @inheritDoc */
-  @Polyglot override fun forEach(op: (value: String, name: String) -> Unit) {
-    TODO("Functional header iteration is not implemented yet")
-  }
-
-  /** @inheritDoc */
-  @Polyglot override fun forEach(op: (value: String, name: String, obj: FetchHeaders) -> Unit) {
-    TODO("Functional header iteration is not implemented yet")
-  }
-
-  /** @inheritDoc */
   @Polyglot override fun append(name: String, value: String): Unit = onlyIfUnlocked {
-    if (data.containsKey(name)) {
-      data[name]!!.add(value)
-      trimCache(name)  // only possibly present if there is already a value of some kind.
-    } else {
-      data[name] = sortedSetOf(value)
-    }
+    val has = data.has(name)
+    data.append(name, value)
+    if (has) trimCache(name)
   }
 
   /** @inheritDoc */
@@ -186,11 +198,23 @@ internal class FetchHeadersIntrinsic private constructor (
 
   /** @inheritDoc */
   @Polyglot override fun set(name: String, value: String): Unit = onlyIfUnlocked {
-    if (data.containsKey(name)) {
-      data[name]!!.add(value)
-      trimCache(name)
-    } else {
-      data[name] = sortedSetOf(value)
-    }
+    val has = data.has(name)
+    data.set(name, value)
+    if (has) trimCache(name)
+  }
+
+  /** @inheritDoc */
+  override fun render(flatten: Boolean): Map<String, List<String>> {
+    return data.keys.stream().parallel().map {
+      val value = data.getAll(it)
+      it to if (flatten) {
+        listOf(value.joinToString(", "))
+      } else {
+        value
+      }
+    }.collect(Collectors.toMap(
+      { it.first },
+      { it.second },
+    ))
   }
 }

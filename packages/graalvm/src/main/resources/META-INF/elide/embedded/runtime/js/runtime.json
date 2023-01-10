@@ -1,7 +1,8 @@
 {
   "engine": "v3",
+  "language": "JAVASCRIPT",
   "vfs": [
-    "js.modules.tar.gz"
+    { "name": "js.modules.tar.gz" }
   ],
   "artifacts": [
     { "name": "polyfills.js" },

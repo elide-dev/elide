@@ -6,11 +6,15 @@ import elide.runtime.gvm.GuestLanguage
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * TBD.
+ * Abstract Guest VM script.
+ *
+ * Implements an [EmbeddedScript] type  for use with GraalVM types, such as [GraalVMGuest] (enumerating a supported
+ * language) and related framework types like [ExecutableScript].
  */
 internal abstract class AbstractGVMScript protected constructor (
   private val language: GraalVMGuest,
   private val source: ExecutableScript.ScriptSource,
+  private val spec: String,
   map: ExecutableScript.SourceMap? = null,
 ) : EmbeddedScript {
   /** Atomic internal state for this script. */

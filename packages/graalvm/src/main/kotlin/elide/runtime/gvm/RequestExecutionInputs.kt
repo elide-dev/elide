@@ -1,6 +1,7 @@
 package elide.runtime.gvm
 
 import elide.annotations.core.Polyglot
+import org.graalvm.polyglot.Value
 
 /**
  * # Execution Inputs: Server Request
@@ -19,7 +20,7 @@ import elide.annotations.core.Polyglot
  * @param Request concrete request type adapted by an implementor of this interface.
  * @see MicronautRequestExecutionInputs Micronaut implementation of this interface.
  */
-public interface RequestExecutionInputs<Request : Any> {
+public interface RequestExecutionInputs<Request : Any> : ExecutionInputs {
   /** Default values to use for request inputs. */
   public object Defaults {
     /** Default path value to use. */
@@ -35,7 +36,7 @@ public interface RequestExecutionInputs<Request : Any> {
    *
    * @return HTTP request backing this set of inputs.
    */
-  public fun request(): Request?
+  public fun request(): Request
 
   /**
    * ## HTTP: Path
@@ -48,4 +49,7 @@ public interface RequestExecutionInputs<Request : Any> {
   @Polyglot public fun path(): String {
     return Defaults.DEFAULT_PATH
   }
+
+  /** @inheritDoc */
+  override fun allInputs(): Array<Any> = arrayOf(request())
 }

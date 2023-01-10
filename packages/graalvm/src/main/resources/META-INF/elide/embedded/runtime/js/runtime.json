@@ -1,4 +1,10 @@
 {
   "engine": "v3",
-  "artifacts": [{ "name": "facade.js" }]
+  "vfs": [
+    "js.modules.tar.gz"
+  ],
+  "artifacts": [
+    { "name": "polyfills.js" },
+    { "name": "facade.js" }
+  ]
 }

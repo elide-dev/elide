@@ -17,6 +17,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import tools.elide.crypto.HashAlgorithm
+import tools.elide.vfs.Filesystem
 import tools.elide.vfs.TreeEntry
 import java.io.File
 import java.io.IOException
@@ -25,6 +26,7 @@ import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
+import java.util.stream.Collector
 import java.util.zip.GZIPInputStream
 import kotlin.io.path.toPath
 
@@ -163,7 +165,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     internal var path: URI? = null,
     internal var file: File? = null,
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
-    /** TBD. */
+    /** Factory for embedded VFS implementations. */
     companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
       /** @inheritDoc */
       override fun newBuilder(): Builder = Builder()
@@ -383,36 +385,40 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
-    @JvmStatic private fun metadataForTarball(tarball: ArchiveInputStream, memoryFS: FileSystem): FilesystemInfo {
+    @JvmStatic private fun metadataForTarball(
+      inputs: Iterable<ArchiveInputStream>,
+      memoryFS: FileSystem,
+    ): FilesystemInfo {
       val fs = FilesystemInfo.newBuilder()
       val root = FileTreeEntry.newBuilder()
       val rootDir = DirectoryRecord.newBuilder()
       var offset = 0L
       rootDir.name = "/"
 
-      var entry = tarball.nextEntry
-      while (entry != null) {
-        // provision a new generic tree entry, which carries either a file or directory but never both
-        val fsEntry = FileTreeEntry.newBuilder()
-        if (entry.isDirectory) {
-          // recursively drives the stream until a non-matching entry, which is returned as `next`.
-          val (dir, next) = metadataForTarballDirectory(
-            entry,
-            tarball,
-            memoryFS,
-            entry.name,
-          )
-          fsEntry.setDirectory(dir)
-          rootDir.addChildren(fsEntry)
-          entry = next
-        } else {
-          val file = fileForEntry(entry, offset)
-          offset += entry.size
+      val inputset = inputs.iterator()
+      var tarball: ArchiveInputStream? = inputset.next()
 
-          // read the file into the buffer
-          if (!tarball.canReadEntryData(entry)) {
-            throw IOException("Cannot read entry data for ${entry.name}")
+      while (tarball != null) {
+        var entry = tarball.nextEntry
+        while (entry != null) {
+          // provision a new generic tree entry, which carries either a file or directory but never both
+          val fsEntry = FileTreeEntry.newBuilder()
+          if (entry.isDirectory) {
+            // recursively drives the stream until a non-matching entry, which is returned as `next`.
+            val (dir, next) = metadataForTarballDirectory(
+              entry,
+              tarball,
+              memoryFS,
+              entry.name,
+            )
+            fsEntry.setDirectory(dir)
+            rootDir.addChildren(fsEntry)
+            entry = next
           } else {
+            val file = fileForEntry(entry, offset)
+            offset += entry.size
+
+            // read the file into the buffer
             val filedata = ByteArray(entry.size.toInt())
             tarball.read(filedata)
 
@@ -422,22 +428,30 @@ internal class EmbeddedGuestVFSImpl private constructor (
               filedata,
               file,
             )
-          }
 
-          val lastmod = entry.lastModifiedDate
-          if (lastmod != null) {
-            val instant = lastmod.toInstant()
-            file.setModified(Timestamp.newBuilder()
-              .setSeconds(instant.epochSecond)
-              .setNanos(instant.nano))
-          }
-          fsEntry.setFile(file)
-          rootDir.addChildren(fsEntry)
+            val lastmod = entry.lastModifiedDate
+            if (lastmod != null) {
+              val instant = lastmod.toInstant()
+              file.setModified(Timestamp.newBuilder()
+                .setSeconds(instant.epochSecond)
+                .setNanos(instant.nano))
+            }
+            fsEntry.setFile(file)
+            rootDir.addChildren(fsEntry)
 
-          // grab next entry
-          entry = tarball.nextEntry
+            // grab next entry
+            entry = tarball.nextEntry
+          }
+        }
+
+        // seek to next tarball input, if available
+        tarball = if (inputset.hasNext()) {
+          inputset.next()
+        } else {
+          null
         }
       }
+
       root.setDirectory(rootDir)
       fs.setRoot(root)
       return fs.build()
@@ -450,32 +464,36 @@ internal class EmbeddedGuestVFSImpl private constructor (
       TODO("not yet implemented")
     }
 
-    /** @return Loaded bundle from the provided input [stream], from the specified [format]. */
+    /** @return Loaded bundle from the provided input [streams], from the specified [format]. */
     @JvmStatic private fun loadBundle(
-      stream: InputStream,
-      type: BundleFormat,
+      streams: List<Pair<InputStream, BundleFormat>>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
-      return when (type) {
-        BundleFormat.ELIDE_INTERNAL,
-        BundleFormat.TARBALL -> TarArchiveInputStream(stream)
-        BundleFormat.TARBALL_COMPRESSED -> TarArchiveInputStream(GZIPInputStream(stream))
-      }.use { buf ->
-        // step 1: load or generate the file-tree metadata
-        if (type == BundleFormat.ELIDE_INTERNAL) {
-          loadMetadataFromElideBundle(buf)
+      // build a new empty in-memory FS
+      val inMemoryFS = Jimfs.newFileSystem(
+        "elide-${UUID.random()}",
+        fsConfig.build(),
+      )
+
+      // read each input tarball and compose the resulting structures
+      return streams.parallelStream().map { input ->
+        when (input.second) {
+          BundleFormat.ELIDE_INTERNAL,
+          BundleFormat.TARBALL -> TarArchiveInputStream(input.first) to input.second
+          BundleFormat.TARBALL_COMPRESSED -> TarArchiveInputStream(GZIPInputStream(input.first)) to input.second
+        }
+      }.map { input ->
+        if (input.second == BundleFormat.ELIDE_INTERNAL) {
+          loadMetadataFromElideBundle(input.first)
           TODO("not yet implemented")
         } else {
-          // build a new empty in-memory FS
-          val inMemoryFS = Jimfs.newFileSystem(
-            "elide-${UUID.random()}",
-            fsConfig.build(),
-          )
-
-          // decode metadata from tarball while writing entries to new FS
-          metadataForTarball(buf, inMemoryFS) to inMemoryFS
+          metadataForTarball(listOf(input.first), inMemoryFS)
         }
-      }
+      }.reduce { left, right ->
+        left.toBuilder().mergeFrom(right).build()
+      }.orElse(
+        FilesystemInfo.getDefaultInstance()
+      ) to inMemoryFS  // <-- map the return filesystem to the in-memory FS we built
     }
 
     /** @return Loaded bundle from the provided input [stream], guessing the format from the file's [name]. */
@@ -485,7 +503,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
-      return loadBundle(stream, when {
+      return loadBundle(listOf(stream to when {
         name.endsWith(".tar") -> BundleFormat.TARBALL
         name.endsWith(".tar.gz") -> BundleFormat.TARBALL_COMPRESSED
         name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
@@ -493,7 +511,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           "Failed to load bundle from file '$name': unknown format. " +
           "Please provide `.tar`, `.tar.gz`, or `.evfs`."
         )
-      }, fsConfig)
+      }), fsConfig)
     }
 
     /** @return Bundle pair loaded from the provided [file]. */
@@ -580,7 +598,10 @@ internal class EmbeddedGuestVFSImpl private constructor (
   /** Factory bridge from Micronaut-driven configuration to the Embedded VFS implementation. */
   @Factory internal class EmbeddedVFSConfigurationFactory {
     /**
-     * TBD.
+     * Spawn an embedded VFS implementation driven by Micronaut-style configuration.
+     *
+     * @param ioConfig Guest I/O configuration to use for creating the VFS.
+     * @return Embedded VFS implementation built according to the provided [config].
      */
     @Bean @Singleton internal fun spawn(ioConfig: GuestIOConfiguration): EmbeddedGuestVFSImpl {
       // generate an effective configuration

@@ -5,32 +5,103 @@ import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
+import elide.runtime.gvm.BasicExecutionInputs
+import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.cfg.JsRuntimeConfig
+import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.AbstractVMEngine
-import elide.runtime.gvm.internals.InvocationBindings
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMRuntimeProperty
+import elide.runtime.gvm.internals.GuestRuntime
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-import elide.runtime.gvm.internals.GuestRuntime
 import io.micronaut.context.annotation.Requires
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.Value
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.Stream
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
 /**
- * TBD.
+ * # JavaScript Runtime
+ *
+ * Implements a guest runtime for Elide which is powered by ECMAScript-compliant JavaScript code. The JavaScript runtime
+ * is based on GraalJS (as distinguished from Graal's NodeJS engine). As a pure JavaScript environment, GraalJS does not
+ * support the standard set of NodeJS intrinsics that might, collectively, be considered the "Node APIs."
+ *
+ * Elide's JavaScript engine implementation helps bridge this gap, by adding support for now-standard interfaces (such
+ * as CloudFlare's Workers APIs), and by wiring together polyglot support across other guests and the main host app.
+ *
+ * &nbsp;
+ *
+ * ## Architecture of the JS VM
+ *
+ * The JavaScript runtime is based on a set of components which, together, form a cohesive JavaScript runtime. These
+ * components are outlined below:
+ *
+ * - **[JsRuntime] (this class)**: implements [AbstractVMEngine] with JavaScript-specific types, configurations, and
+ *   invocation bindings. This class is responsible for directly executing guest JavaScript code, and for consistently
+ *   configuring each JavaScript guest environment.
+ *
+ * - **JS guest implementation types:** this would include [JsRuntimeConfig], [JsExecutableScript], and
+ *   [JsInvocationBindings], which together explain to Elide how to configure the VM and invoke guest code.
+ *
+ * - **JS intrinsics**: implementations of standard APIs in Java/Kotlin, which are exposed for guest code use in JS via
+ *   globals or built-in modules. JavaScript intrinsics are managed by the [IntrinsicsManager], which uses a suite of
+ *   [IntrinsicsResolver] instances to locate and mount intrinsics within the guest environment.
+ *
+ * - **JS facade and polyfills**: this code is written in TypeScript or JavaScript, and forms the substrate upon which
+ *   guest JavaScript code runs. Sometimes, JS intrinsics are exposed only via JS facade code, which helps smooth over
+ *   type inconsistencies across languages and offer a fully native JavaScript dev experience (i.e. TypeScript typings,
+ *   source maps, and so forth).
+ *
+ * Like all Elide guest VMs, the JavaScript VM also supports the use of a virtualized file-system, which can be backed
+ * by a tarball or Elide VFS file. Files made available via file-system settings are supported for import via regular
+ * NodeJS `require(...)` calls, as well as ECMAScript Module (ESM) imports (`import ... from ...`).
+ *
+ * &nbsp;
+ *
+ * ### Building a JS context
+ *
+ * Contexts are managed and acquired through the active [ContextManager] implementation. The [ContextManager] is
+ * configured with methods from this implementation in order to configure VM contexts consistently. The context manager
+ * is charged with managing safe multi-threaded access to the active suite of VM contexts (one or more depending on
+ * operating context).
+ *
+ * &nbsp;
+ *
+ * ### Execution of guest code
+ *
+ * In CLI contexts, the VM is designed to spin up only one responding runtime instance, and manage access to it through
+ * calling threads. In server contexts, the VM spins up a configurable number of responding VM contexts, each of which
+ * are bound to the same VM engine and share a code cache. Requests are dispatched across these instances, each with a
+ * dedicated native thread, using a ring-buffer and disruptor pattern.
+ *
+ * &nbsp;
+ *
+ * ## Configuring the VM
+ *
+ * Most configuration of the VM is automatic and needs no user intervention. The VM is configured with sensible and
+ * modern defaults, and with strong host app isolation. There is a set of VM properties which are configurable through
+ * Micronaut-style app configuration, available to each guest; then, on top of these standard properties, guest VMs can
+ * define their own configurable properties which map to VM configurations.
+ *
+ * Basic properties which must be configured for the JS VM include:
+ * - `elide.gvm.enabled`: Must be flipped to `true` (the default value) to enable guest execution at all.
+ * - `elide.gvm.js.enabled`: Must be flipped to `true` (the default value) to enable JavaScript guest code execution.
+ *
+ * Properties which can further be configured by the developer include:
+ * - All properties from [elide.runtime.gvm.cfg.GuestRuntimeConfiguration].
+ * - All properties from [JsRuntimeConfig].
  */
 @Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
 @Requires(property = "elide.gvm.js.enabled", value = "true", defaultValue = "true")
@@ -38,7 +109,11 @@ import org.graalvm.polyglot.Value as GuestValue
 internal class JsRuntime @Inject constructor (
   contextManager: ContextManager<VMContext, VMContext.Builder>,
   config: JsRuntimeConfig
-) : AbstractVMEngine<JsRuntimeConfig, JsExecutableScript>(contextManager, JAVASCRIPT, config) {
+) : AbstractVMEngine<
+  JsRuntimeConfig,
+  JsExecutableScript,
+  JsInvocationBindings,
+>(contextManager, JAVASCRIPT, config) {
   @OptIn(ExperimentalSerializationApi::class)
   private companion object {
     const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
@@ -87,14 +162,11 @@ internal class JsRuntime @Inject constructor (
     // Root where we can find runtime-related files.
     private const val embeddedRoot = "/META-INF/elide/embedded/runtime/js"
 
-    // Runtime descriptor.
-    private const val runtimeManifest = "runtime.json"
-
     // Info about the runtime, loaded from the runtime bundle manifest.
-    private val runtimeInfo: RuntimeInfo
+    private val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
 
     // Assembled runtime init code, loaded from `runtimeInfo`.
-    private val runtimeInit: Source
+    private val runtimeInit: AtomicReference<Source> = AtomicReference(null)
 
     // Whether runtime assets have loaded yet.
     private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
@@ -110,24 +182,26 @@ internal class JsRuntime @Inject constructor (
         )).let { manifestFile ->
           // decode manifest from JSON to discover injected artifacts
           Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile).also {
-            runtimeInfo = it
+            runtimeInfo.set(it)
           }
 
           // collect JS runtime internal sources as a string
-          val collectedRuntimeSource = runtimeInfo.artifacts.parallelStream().flatMap {
+          val collectedRuntimeSource = runtimeInfo.get().artifacts.stream().flatMap {
             (JsRuntime::class.java.getResourceAsStream("$embeddedRoot/${it.name}") ?: error(
               "Failed to locate embedded JS runtime artifact: ${it.name}"
             )).bufferedReader(StandardCharsets.UTF_8).lines()
+          }.filter {
+            it.isNotBlank() && !it.startsWith("//")
           }.collect(Collectors.joining("\n"))
 
           // load each file into a giant blob which can be used to pre-load contexts
-          runtimeInit = Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
+          runtimeInit.set(Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
             .encoding(StandardCharsets.UTF_8)
             .cached(true)
             .internal(true)
             .interactive(false)
             .mimeType("application/javascript")
-            .build()
+            .build())
 
           runtimeReady.compareAndSet(
             false,
@@ -140,24 +214,6 @@ internal class JsRuntime @Inject constructor (
       }
     }
   }
-
-  /**
-   * TBD.
-   */
-  @Serializable
-  internal data class RuntimeInfo(
-    val engine: String,
-    val artifacts: List<RuntimeArtifact> = emptyList(),
-    val entry: String? = null,
-  )
-
-  /**
-   * TBD.
-   */
-  @Serializable
-  internal data class RuntimeArtifact(
-    val name: String,
-  )
 
   // Resolve the expected configuration symbol for the given ECMA standard level.
   private val JsLanguageLevel.symbol: String get() = when (this) {
@@ -222,16 +278,41 @@ internal class JsRuntime @Inject constructor (
     // initialize the runtime
     context.enter()
     try {
-      context.eval(runtimeInit)
-      context.leave()
+      context.eval(runtimeInit.get())
     } catch (err: Throwable) {
       logger.error("Fatal error: Failed to initialize JavaScript runtime", err)
       throw err
+    } finally {
+      context.leave()
     }
   }
 
   /** @inheritDoc */
-  override fun execute(context: VMContext, script: JsExecutableScript, bindings: InvocationBindings): GuestValue {
+  override fun <Inputs : ExecutionInputs> execute(
+    context: Context,
+    script: JsExecutableScript,
+    bindings: JsInvocationBindings,
+    inputs: Inputs,
+  ): Value {
+    // resolve an execution adapter
+    when (inputs) {
+      // if we're using a request as the basis for this execution, use the request-based adapters.
+      is RequestExecutionInputs<*> -> when (inputs) {
+        // request backed by micronaut
+        is JsMicronautRequestExecutionInputs -> JsServerAdapter()
+        else -> error("Unrecognized request execution type: '${inputs::class.java.name}'")
+      }.bind(
+        script,
+        bindings,
+        inputs
+      )
+
+      // otherwise, it has to be a basic execution.
+      is BasicExecutionInputs -> {
+
+      }
+    }
+
     TODO("Not yet implemented")
   }
 }

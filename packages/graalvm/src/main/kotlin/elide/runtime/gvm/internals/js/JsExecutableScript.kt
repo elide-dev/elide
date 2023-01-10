@@ -8,16 +8,19 @@ import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import java.util.*
 
 /** Implementation of an [AbstractGVMScript] for the [JsRuntime]. */
-internal class JsExecutableScript private constructor (source: ScriptSource) : AbstractGVMScript(JAVASCRIPT, source) {
-  private companion object {
+internal class JsExecutableScript private constructor (
+  source: Pair<ScriptSource, String>,
+  private val scriptType: ScriptType? = null,
+) : AbstractGVMScript(JAVASCRIPT, source.first, source.second) {
+  internal companion object {
     /** Mime type for regular JS. */
-    const val MIME_TYPE_JS = "application/javascript"
+    private const val MIME_TYPE_JS = "application/javascript"
 
     /** Mime type for TypeScript. */
-    const val MIME_TYPE_TS = "application/typescript"
+    private const val MIME_TYPE_TS = "application/typescript"
 
     /** MIME type for ECMA modules. */
-    const val MIME_TYPE_JS_MODULE = "application/javascript+module"
+    private const val MIME_TYPE_JS_MODULE = "application/javascript+module"
 
     /** Extension expected for JS modules. */
     const val JS_MODULE_EXTENSION = ".mjs"
@@ -26,13 +29,22 @@ internal class JsExecutableScript private constructor (source: ScriptSource) : A
     const val TS_MODULE_EXTENSION = ".ts"
 
     /** Script type designation for a regular JS script. */
-    private val JS_SCRIPT = ScriptType.fromMime(MIME_TYPE_JS)
+    internal val JS_SCRIPT = ScriptType.fromMime(MIME_TYPE_JS)
 
     /** Script type designation for a TypeScript script. */
-    private val TS_SCRIPT = ScriptType.fromMime(MIME_TYPE_TS)
+    internal val TS_SCRIPT = ScriptType.fromMime(MIME_TYPE_TS)
 
     /** Script type designation for a JS module. */
-    private val JS_MODULE = ScriptType.fromMime(MIME_TYPE_JS_MODULE)
+    internal val JS_MODULE = ScriptType.fromMime(MIME_TYPE_JS_MODULE)
+
+    /** @return JavaScript executable script wrapping the provided [ScriptSource]. */
+    @JvmStatic internal fun of(source: ScriptSource, spec: String): JsExecutableScript = JsExecutableScript(
+      source to spec
+    )
+
+    /** @return JavaScript executable script wrapping the provided [ScriptSource] and explicit [type]. */
+    @JvmStatic internal fun of(source: ScriptSource, type: ScriptType, spec: String): JsExecutableScript =
+      JsExecutableScript(source to spec, type)
   }
 
   /** @inheritDoc */
@@ -42,6 +54,7 @@ internal class JsExecutableScript private constructor (source: ScriptSource) : A
 
   /** @inheritDoc */
   override fun type(): ScriptType = when {
+    scriptType != null -> scriptType
     source().extension?.endsWith(JS_MODULE_EXTENSION) == true -> JS_MODULE
     source().extension?.endsWith(TS_MODULE_EXTENSION) == true -> TS_SCRIPT
     else -> JS_SCRIPT

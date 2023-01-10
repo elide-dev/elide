@@ -16,6 +16,11 @@ internal class JsRuntimeFeature : FrameworkFeature {
   private companion object {
     private const val registerV1 = true
     private const val registerV3 = true
+
+    private val registeredPackages: List<String> = listOf(
+        "struct.map",
+    )
+
     private val registeredIntrinsics: List<String> = listOf(
       // Core Intrinsics
       "base64.Base64Intrinsic",
@@ -30,6 +35,9 @@ internal class JsRuntimeFeature : FrameworkFeature {
       // URL API
       "url.URLIntrinsic",
       "url.URLIntrinsic${'$'}URLValue",
+      "url.URLSearchParamsIntrinsic",
+      "url.URLSearchParamsIntrinsic${'$'}URLSearchParams",
+      "url.URLSearchParamsIntrinsic${'$'}MutableURLSearchParams",
     )
   }
 
@@ -53,6 +61,9 @@ internal class JsRuntimeFeature : FrameworkFeature {
       registeredIntrinsics.forEach {
         registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.${it}")
       }
+      registeredPackages.forEach {
+        registerPackageForReflection(access, "elide.runtime.intrinsics.js.$it")
+      }
     }
   }
 
@@ -65,8 +76,13 @@ internal class JsRuntimeFeature : FrameworkFeature {
 
   /** @inheritDoc */
   override fun isInConfiguration(access: Feature.IsInConfigurationAccess): Boolean {
-    println("supported languages at build time: " + Engine.create().languages)
-    return true
+    return (
+      // JavaScript guest language support must be enabled
+      Engine.create().languages.containsKey("js") &&
+
+      // the JS runtime must be in the classpath
+      access.findClassByName("elide.runtime.gvm.internals.js.JsRuntime") != null
+    )
   }
 
   /** @inheritDoc */

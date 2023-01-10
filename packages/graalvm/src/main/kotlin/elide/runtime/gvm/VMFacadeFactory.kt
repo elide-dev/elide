@@ -38,7 +38,7 @@ import org.graalvm.polyglot.Context as VMContext
 
     val language = languages.first()
     val impl = resolveVMFactoryImpl(language)
-    val vm = beanContext.getBean(impl.java) as AbstractVMEngine<*, *>
+    val vm = beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>
     return object: VMFacade by vm {
       /* No overrides at this time. */
     }

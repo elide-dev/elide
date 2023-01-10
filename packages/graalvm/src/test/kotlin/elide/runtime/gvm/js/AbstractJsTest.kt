@@ -14,8 +14,10 @@ import elide.runtime.gvm.internals.js.JsRuntime
 import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.io.FileSystem
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -41,6 +43,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     ctx: Context,
     bind: Boolean,
     bindUtils: Boolean,
+    esm: Boolean,
     op: Context.() -> String,
   ): Value {
     // resolve the script
@@ -73,10 +76,27 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     val hasErr = AtomicBoolean(false)
     val subjectErr: AtomicReference<Throwable> = AtomicReference(null)
 
+    // build a source chunk for the test script
+    val src = Source.newBuilder(
+      "js",
+      script,
+      if (esm) "test.mjs" else "test.js",
+    ).interactive(
+      false
+    ).cached(
+      false
+    ).internal(
+      false
+    ).mimeType(
+      if (esm) "application/javascript+module" else "application/javascript"
+    ).encoding(
+      StandardCharsets.UTF_8
+    ).build()
+
     // execute script
     val returnValue = try {
       ctx.enter()
-      ctx.eval("js", script)
+      ctx.eval(src)
     } catch (err: Throwable) {
       hasErr.set(true)
       subjectErr.set(err)
@@ -126,12 +146,24 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     }
   }
 
+  // Run the provided factory to produce an ESM script, then run that test within a warmed `Context`.
+  fun executeESM(bind: Boolean = true, op: Context.() -> String) = GuestTestExecution(::withContext) {
+    executeGuestInternal(
+      this,
+      bind,
+      bindUtils = true,
+      esm = true,
+      op,
+    )
+  }
+
   // Run the provided factory to produce a script, then run that test within a warmed `Context`.
   override fun executeGuest(bind: Boolean, op: Context.() -> String) = GuestTestExecution(::withContext) {
     executeGuestInternal(
       this,
       bind,
       bindUtils = true,
+      esm = false,
       op,
     )
   }
@@ -145,6 +177,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
       this,
       bind = true,
       bindUtils = true,
+      esm = false,
       op,
     )
   }
@@ -158,6 +191,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
         this,
         bind = true,
         bindUtils = true,
+        esm = false,
         op,
       )
     }
@@ -168,9 +202,10 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     /**
      * Wire together the guest-side of a dual test.
      *
+     * @param esm Whether to execute as an ESM module.
      * @param guestOperation Operation to run on the guest.
      */
-    abstract fun guest(guestOperation: Context.() -> String)
+    abstract fun guest(esm: Boolean = false, guestOperation: Context.() -> String)
 
     /**
      * Wire together the guest-side of a dual test, but defer for additional assertions.
@@ -191,11 +226,12 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
 
     return object : DualTestExecutionProxy() {
       /** @inheritDoc */
-      override fun guest(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
+      override fun guest(esm: Boolean, guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
           bind,
           bindUtils = true,
+          esm = esm,
           guestOperation,
         )
       }.doesNotFail()
@@ -206,6 +242,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
           this,
           bind,
           bindUtils = true,
+          esm = false,
           guestOperation,
         )
       }

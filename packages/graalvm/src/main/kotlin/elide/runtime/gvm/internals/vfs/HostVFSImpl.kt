@@ -76,7 +76,7 @@ internal class HostVFSImpl private constructor (
         workingDirectory = workingDirectory,
         caseSensitive = caseSensitive,
         supportsSymbolicLinks = enableSymlinks,
-        bundle = null,
+        bundle = emptyList(),
       ))
     }
   }

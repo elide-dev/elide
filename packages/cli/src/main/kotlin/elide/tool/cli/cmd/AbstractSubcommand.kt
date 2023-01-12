@@ -445,7 +445,7 @@ import kotlin.coroutines.CoroutineContext
   @Suppress("DEPRECATION")
   protected open fun withVM(
     context: ToolContext<State>,
-    fsBundleUri: URI?,
+    fsBundleUris: List<URI>,
     hostIO: Boolean,
     contextBuilder: (VMContext.Builder) -> Unit = {},
     op: VMCallable<State>,
@@ -456,27 +456,32 @@ import kotlin.coroutines.CoroutineContext
       contextBuilder.invoke(it)
 
       // if we have a virtualized FS, mount it
-      if (fsBundleUri != null && !hostIO) {
-        // check the bundle URI
-        if (fsBundleUri.scheme == "classpath:") {
-          logging.debug("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
-          throw ShellError.BUNDLE_NOT_FOUND.asError()
-        } else {
-          // make sure the file can be read
-          val file = try {
-            logging.trace("Checking bundle at URI '$fsBundleUri'")
-            File(fsBundleUri)
-          } catch (err: IOException) {
+      if (fsBundleUris.isNotEmpty() && !hostIO) {
+        val bundles = fsBundleUris.map { fsBundleUri ->
+          // check the bundle URI
+          if (fsBundleUri.scheme == "classpath:") {
+            logging.debug("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
             throw ShellError.BUNDLE_NOT_FOUND.asError()
+          } else {
+            // make sure the file can be read
+            val file = try {
+              logging.trace("Checking bundle at URI '$fsBundleUri'")
+              File(fsBundleUri)
+            } catch (err: IOException) {
+              throw ShellError.BUNDLE_NOT_FOUND.asError()
+            }
+            logging.trace("Checking existence of '$fsBundleUri'")
+            if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
+            logging.trace("Checking readability of '$fsBundleUri'")
+            if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
+            logging.debug("Mounting guest filesystem at URI: '$fsBundleUri'")
+            fsBundleUri
           }
-          logging.trace("Checking existence of '$fsBundleUri'")
-          if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
-
-          logging.trace("Checking readability of '$fsBundleUri'")
-          if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
-          logging.debug("Mounting guest filesystem at URI: '$fsBundleUri'")
-          it.fileSystem(EmbeddedGuestVFS.forBundle(fsBundleUri))
         }
+
+        it.fileSystem(EmbeddedGuestVFS.forBundle(
+          *bundles.toTypedArray(),
+        ))
       } else if (hostIO) {
         // if we're doing host I/O, mount that instead
         logging.debug("Command-line flags indicate host I/O; mounting host filesystem")

@@ -22,7 +22,7 @@ public data class EffectiveGuestVFSConfig internal constructor (
   val caseSensitive: Boolean = DEFAULT_CASE_SENSITIVE,
   val supportsSymbolicLinks: Boolean = DEFAULT_SUPPORT_SYMBOLIC_LINKS,
   val policy: GuestVFSPolicy = DEFAULT_POLICY,
-  val bundle: URI? = null,
+  val bundle: List<URI> = emptyList(),
   val root: String = DEFAULT_ROOT,
   val workingDirectory: String = DEFAULT_CWD,
 ) {

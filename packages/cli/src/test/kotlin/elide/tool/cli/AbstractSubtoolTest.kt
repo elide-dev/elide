@@ -10,9 +10,13 @@ abstract class AbstractSubtoolTest {
    */
   abstract fun subcommand(): Runnable
 
-  @Test fun testRunPlain() {
+  protected open fun runCommand() {
+    subcommand().run()
+  }
+
+  @Test open fun testRunPlain() {
     assertDoesNotThrow {
-      subcommand().run()
+      runCommand()
     }
   }
 }

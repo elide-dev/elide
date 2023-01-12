@@ -1,17 +1,22 @@
 <configuration>
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <encoder>
-            <pattern>%cyan(%d{HH:mm:ss.SSS}) %highlight(%-5level) %magenta(elide) - %msg%n</pattern>
+            <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
     </appender>
 
     <logger name="io.micronaut.context.env" level="off"/>
     <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
 
-    <logger name="tool" level="warn" />
-
     <logger name="gvm:js.console" level="trace" />
+
+    <logger name="org.jline" level="error" />
+    <logger name="info.picocli" level="error" />
+
+    <logger name="elide.tool.cli.cmd.repl.ToolShellCommand" level="warn" />
     <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="warn" />
     <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="warn" />
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />

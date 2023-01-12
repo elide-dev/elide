@@ -29,7 +29,7 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 ktlint {
@@ -84,6 +84,14 @@ dependencies {
 
   implementation(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
+  implementation(libs.picocli.jline3)
+  implementation(libs.kotter)
+  implementation(libs.slf4j.jul)
+  implementation(libs.jline.all)
+  implementation(libs.jline.builtins)
+  implementation(libs.jline.graal) {
+    exclude(group = "org.slf4j", module = "slf4j-jdk14")
+  }
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.jdk8)
@@ -167,6 +175,9 @@ tasks.test {
 tasks.named<JavaExec>("run") {
   systemProperty("micronaut.environments", "dev")
   systemProperty("picocli.ansi", "tty")
+  jvmArgs(
+    "--add-opens=java.base/java.io=ALL-UNNAMED",
+  )
   standardInput = System.`in`
   standardOutput = System.out
 }
@@ -225,6 +236,7 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
+  "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "org.slf4j.LoggerFactory",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",

@@ -326,6 +326,7 @@ closure_compiler = { group = "com.google.javascript", name = "closure-compiler",
 closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure_stylesheets" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
+picocli_jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
 picocli_jansi_graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli_jansi_graalvm" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j_jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
@@ -560,8 +561,14 @@ arrow_optics_ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", ve
 arrow_fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 lmax_disruptor_core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
 lmax_disruptor_proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
+jline_all = { module = "org.jline:jline", version.ref = "jline" }
+jline_builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
+jline_graal = { module = "org.jline:jline-graal", version.ref = "jline" }
+jline_console = { module = "org.jline:jline-console", version.ref = "jline" }
 jline_terminal_core = { module = "org.jline:jline-terminal", version.ref = "jline" }
 jline_terminal_jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
+jline_reader = { module = "org.jline:jline-reader", version.ref = "jline" }
+jline_style = { module = "org.jline:jline-style", version.ref = "jline" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
 larray_core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }

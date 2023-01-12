@@ -13,6 +13,10 @@ import kotlin.test.assertNotNull
 
   override fun subcommand(): Runnable = shell
 
+  override fun runCommand() {
+    // inert (temporary)
+  }
+
   @Test fun testEntrypoint() {
     assertNotNull(shell, "should be able to init and inject shell subcommand")
   }

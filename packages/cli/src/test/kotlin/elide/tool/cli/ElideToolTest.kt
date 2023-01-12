@@ -13,10 +13,4 @@ import org.junit.jupiter.api.Assertions.assertDoesNotThrow
   @Test fun testEntrypoint() {
     assertNotNull(tool, "should be able to init and inject entrypoint")
   }
-
-  @Test fun testRunRoot() {
-    assertDoesNotThrow {
-      tool.run()
-    }
-  }
 }

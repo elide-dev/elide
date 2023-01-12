@@ -77,9 +77,6 @@ internal class JsRuntimeFeature : FrameworkFeature {
   /** @inheritDoc */
   override fun isInConfiguration(access: Feature.IsInConfigurationAccess): Boolean {
     return (
-      // JavaScript guest language support must be enabled
-      Engine.create().languages.containsKey("js") &&
-
       // the JS runtime must be in the classpath
       access.findClassByName("elide.runtime.gvm.internals.js.JsRuntime") != null
     )

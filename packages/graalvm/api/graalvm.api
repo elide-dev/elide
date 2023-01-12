@@ -399,8 +399,10 @@ public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/C
 	public abstract fun allowsHostSocketAccess ()Z
 }
 
-public abstract interface class elide/runtime/gvm/internals/VMProperty {
+public abstract interface class elide/runtime/gvm/internals/VMProperty : java/lang/Comparable {
 	public fun active ()Z
+	public fun compareTo (Lelide/runtime/gvm/internals/VMProperty;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public abstract fun getSymbol ()Ljava/lang/String;
 	public abstract fun value ()Ljava/lang/String;
 }
@@ -721,14 +723,14 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public final fun component5 ()Ljava/net/URI;
+	public final fun component5 ()Ljava/util/List;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/lang/String;
-	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/net/URI;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/net/URI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBundle ()Ljava/net/URI;
+	public final fun getBundle ()Ljava/util/List;
 	public final fun getCaseSensitive ()Z
 	public static final fun getDEFAULTS$graalvm ()Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
 	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
@@ -771,8 +773,8 @@ public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
 public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
 	public static final field INSTANCE Lelide/runtime/gvm/vfs/EmbeddedGuestVFS;
 	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
-	public final fun forBundle (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
-	public final fun forBundle (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle ([Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle ([Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable ()Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;

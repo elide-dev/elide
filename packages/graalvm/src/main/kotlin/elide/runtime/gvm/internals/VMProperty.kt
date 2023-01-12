@@ -1,7 +1,7 @@
 package elide.runtime.gvm.internals
 
 /** Abstract base interface for a guest VM configuration property. */
-public sealed interface VMProperty {
+public sealed interface VMProperty : Comparable<VMProperty> {
   /** Symbol to use for this property with the guest VM. */
   public val symbol: String
 
@@ -14,5 +14,9 @@ public sealed interface VMProperty {
     "false", "no", "off", "inactive", "disabled", "", " " -> false
     null -> false
     else -> true
+  }
+
+  override fun compareTo(other: VMProperty): Int {
+    return this.symbol.compareTo(other.symbol)
   }
 }

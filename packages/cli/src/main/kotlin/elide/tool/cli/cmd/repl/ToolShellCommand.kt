@@ -3,10 +3,12 @@ package elide.tool.cli.cmd.repl
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import elide.annotations.Singleton
+import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.VMFacade
 import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.AbstractSubcommand
@@ -48,6 +50,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import java.util.stream.Stream
+import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -116,8 +119,78 @@ import org.graalvm.polyglot.Engine as VMEngine
     internal fun resolve(): GuestLanguage = GuestLanguage.JS
   }
 
+  /** Specifies debugger/inspector settings. */
+  @Introspected @ReflectiveAccess class DebugConfig {
+    /** Specifies whether the debugger should suspend immediately at execution start. */
+    @Option(
+      names = ["--debug:suspend"],
+      description = ["Whether the debugger should suspend execution immediately."],
+      defaultValue = "false",
+    )
+    internal var suspend: Boolean = false
+
+    /** Specifies the port the debugger should bind to. */
+    @Option(
+      names = ["--debug:port"],
+      description = ["Set the port the debugger binds to"],
+      defaultValue = "4200",
+    )
+    internal var port: Int = 0
+
+    /** Specifies the host the debugger should bind to. */
+    @Option(
+      names = ["--debug:host"],
+      description = ["Set the host the debugger binds to"],
+      defaultValue = "localhost",
+    )
+    internal var host: String = ""
+
+    /** Specifies the path the debugger should bind to. */
+    @Option(
+      names = ["--debug:path"],
+      description = ["Set a custom path for the debugger"],
+    )
+    internal var path: String? = null
+
+    /** Specifies paths where sources are available. */
+    @Option(
+      names = ["--debug:sources"],
+      arity = "0..N",
+      description = ["Add a source directory to the inspector path. Specify 0-N times."],
+    )
+    internal var sources: List<String> = emptyList()
+
+    /** Apply configuration to the VM based on the provided arguments. */
+    internal fun apply(debug: Boolean): Stream<VMProperty> {
+      return (if (!debug) emptyList<VMProperty>() else listOfNotNull(
+        // inspector activation and path
+        if (host.isNotBlank() && port > 0) {
+          VMStaticProperty.of("inspect", "$host:$port")
+        } else if (port > 0) {
+          VMStaticProperty.of("inspect", "localhost:$port")
+        } else {
+          VMStaticProperty.active("inspect")
+        },
+
+        // whether inspector should suspend
+        VMStaticProperty.of("inspect.Suspend", suspend.toString()),
+
+        // if specified, add custom `path`
+        when (val p = path) {
+          null -> null
+          else -> VMStaticProperty.of("inspect.Path", p)
+        },
+      ).plus(sources.joinToString(",").let { targets ->
+        // format + add any custom source directories
+        if (targets.isEmpty()) emptyList() else listOf(
+          VMStaticProperty.of("inspect.SourcePath", targets)
+        )
+      })).stream()
+    }
+  }
+
   /** Settings which apply to JavaScript only. */
-  class JavaScriptSettings {
+  @Introspected @ReflectiveAccess class JavaScriptSettings {
     /** Whether to activate JS strict mode. */
     @Option(
       names = ["--js:strict"],
@@ -150,9 +223,34 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
     internal var esm: Boolean = false
 
+    /** Whether to activate WASM support. */
+    @Option(
+      names = ["--js:wasm"],
+      description = ["Whether to enable WebAssembly support. Experimental."],
+      defaultValue = "false",
+    )
+    internal var wasm: Boolean = false
+
     /** Apply configuration to the JS VM based on the provided arguments. */
-    internal fun apply(): Stream<VMProperty> {
-      return Stream.empty()
+    internal fun apply(): Stream<out VMProperty> {
+      return listOfNotNull(
+        // set strict mode
+        VMStaticProperty.active("js.strict"),
+
+        // set ECMA version
+        VMStaticProperty.of("js.ecmascript-version", if (ecma.name.startsWith("ES")) {
+          ecma.name.substring(2)
+        } else {
+          ecma.name
+        }),
+
+        // if WASM is enabled, pass a prop for it
+        if (wasm) {
+          VMStaticProperty.active("js.webassembly")
+        } else {
+          null
+        }
+      ).stream()
     }
   }
 
@@ -238,6 +336,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     validate = false,
     heading = "%nAccess Control:%n",
   ) internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
+
+  /** Debugger settings. */
+  @ArgGroup(
+    exclusive = true,
+    heading = "%nDebugging:%n",
+  ) internal var debugging: DebugConfig = DebugConfig()
 
   /** Language selector. */
   @ArgGroup(
@@ -664,7 +768,10 @@ import org.graalvm.polyglot.Engine as VMEngine
     when (language.resolve()) {
       GuestLanguage.JS -> {
         logging.debug("Configuring JS VM")
-        configureVM(Stream.concat(baseProps, jsSettings.apply()))
+        configureVM(Stream.concat(
+          Stream.concat(baseProps, jsSettings.apply()),
+          debugging.apply(debug),
+        ))
 
         logging.debug("Acquiring JavaScript VM (tool state/args indicate JS)")
         vm = vmFactory.acquireVM(GuestLanguage.JS)

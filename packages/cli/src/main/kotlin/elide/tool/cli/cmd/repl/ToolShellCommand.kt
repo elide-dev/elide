@@ -1,36 +1,59 @@
 package elide.tool.cli.cmd.repl
 
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.ConsoleAppender
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.VMFacade
 import elide.runtime.gvm.internals.VMProperty
-import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.ToolState
+import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.err.ShellError
+import elide.tool.cli.output.JLineLogbackAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import io.micronaut.core.io.IOUtils
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotException
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.management.ExecutionEvent
 import org.graalvm.polyglot.management.ExecutionListener
-import picocli.CommandLine.ArgGroup
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import picocli.CommandLine.Parameters
+import org.jline.builtins.ConfigurationPath
+import org.jline.builtins.Nano.SyntaxHighlighter
+import org.jline.console.impl.Builtins
+import org.jline.console.impl.SystemHighlighter
+import org.jline.console.impl.SystemRegistryImpl
+import org.jline.reader.*
+import org.jline.reader.impl.DefaultParser
+import org.jline.reader.impl.history.DefaultHistory
+import org.jline.terminal.Size
+import org.jline.terminal.Terminal
+import org.jline.terminal.TerminalBuilder
+import org.slf4j.LoggerFactory
+import picocli.CommandLine.*
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.util.EnumSet
-import java.util.Scanner
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Supplier
 import java.util.stream.Stream
 import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
+import org.graalvm.polyglot.Context as VMContext
+import org.graalvm.polyglot.Engine as VMEngine
+
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
@@ -56,6 +79,20 @@ import kotlin.io.path.Path
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
   internal companion object {
     private val logging: Logger = Logging.of(ToolShellCommand::class)
+    private const val CONFIG_PATH_APP = "/etc/elide"
+    private const val CONFIG_PATH_USR = "~/.elide"
+  }
+
+  /** [SystemRegistryImpl] that filters for special REPL commands. */
+  private class ReplSystemRegistry(
+    parser: Parser,
+    terminal: Terminal,
+    workDir: Supplier<Path>,
+    configPath: ConfigurationPath,
+  ) : SystemRegistryImpl(parser, terminal, workDir, configPath) {
+    override fun isCommandOrScript(command: String): Boolean {
+      return command.startsWith("!") || super.isCommandOrScript(command)
+    }
   }
 
   /** Allows selecting a language by name. */
@@ -118,6 +155,9 @@ import kotlin.io.path.Path
       return Stream.empty()
     }
   }
+
+  // Whether the last-seen command was a user exit.
+  private val exitSeen = AtomicBoolean(false)
 
   /** Specifies the guest language to run. */
   @Option(
@@ -223,14 +263,30 @@ import kotlin.io.path.Path
   )
   internal var runnable: String? = null
 
-  /** VM facade to use for execution. */
+  // VM facade to use for execution.
   private lateinit var vm: VMFacade
+
+  // Language-specific syntax highlighter.
+  private val langSyntax: AtomicReference<SyntaxHighlighter?> = AtomicReference(null)
+
+  // Main operating terminal.
+  private val terminal: AtomicReference<Terminal?> = AtomicReference(null)
+
+  // Active line reader.
+  private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
 
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
+    val highlighter = langSyntax.get()
+    val lineReader = lineReader.get()
+
     val txt: CharSequence? = event.location.characters
     if (!txt.isNullOrBlank()) {
-      println(event.location.characters)
+      if (highlighter != null && lineReader != null) {
+        lineReader.printAbove(highlighter.highlight(txt.toString()))
+      } else {
+        println(txt)
+      }
     }
   }
 
@@ -261,51 +317,260 @@ import kotlin.io.path.Path
 
   // Execute a single chunk of code as a literal statement.
   private fun executeSingleStatement(language: GuestLanguage, ctx: VMContext, code: String) {
-    ExecutionListener.newBuilder().onEnter(::onStatementEnter).statements(true).attach(ctx.engine).use {
-      executeOneChunk(language, ctx, "stdin", code, interactive = false, literal = false)
+    executeOneChunk(language, ctx, "stdin", code, interactive = false, literal = false)
+  }
+
+  // Build or detect a terminal to use for interactive REPL use.
+  private fun buildTerminal(): Terminal = TerminalBuilder.builder()
+    .jansi(true)
+    .jna(false)  // not supported on M1 (crashes)
+    .color(pretty)
+    .encoding(StandardCharsets.UTF_8).build().apply {
+    val executeThread = Thread.currentThread()
+    if (width == 0 || height == 0) {
+      size = Size(120, 40)  // hard coded terminal size when redirecting
+    }
+    handle(Terminal.Signal.INT) {
+      executeThread.interrupt()
+    }
+    terminal.set(this)
+  }
+
+  // Build a parser for use by the line reader.
+  private fun buildParser(): Parser = DefaultParser().apply {
+    isEofOnUnclosedQuote = true
+    escapeChars = null
+    isEofOnUnclosedQuote = true
+    setRegexVariable(null)
+    setEofOnUnclosedBracket(DefaultParser.Bracket.CURLY, DefaultParser.Bracket.ROUND, DefaultParser.Bracket.SQUARE)
+    setRegexCommand("[:]{0,1}[a-zA-Z!]{1,}\\S*")  // change default regex to support shell commands
+  }
+
+  // Build a command history manager for use by the line reader.
+  private fun buildHistory(): History = DefaultHistory()
+
+  // Resolve the current guest language to a named syntax highlighting package.
+  private fun syntaxHighlightName(language: GuestLanguage): String = when (language) {
+    GuestLanguage.JS -> "JavaScript"
+  }
+
+  // Build a highlighting manager for use by the line reader.
+  private fun buildHighlighter(language: GuestLanguage, jnanorc: Path): Pair<SystemHighlighter, SyntaxHighlighter> {
+    logging.debug("Building highlighter with config path '$jnanorc'")
+    val commandHighlighter = SyntaxHighlighter.build(jnanorc, "COMMAND")
+    val argsHighlighter = SyntaxHighlighter.build(jnanorc, "ARGS")
+    val langHighlighter = SyntaxHighlighter.build(jnanorc, syntaxHighlightName(language))
+    return SystemHighlighter(commandHighlighter, argsHighlighter, langHighlighter) to langHighlighter
+  }
+
+  // Build a line reader for interactive REPL use.
+  @Suppress("UNUSED_PARAMETER")
+  private fun initCLI(
+    root: String,
+    language: GuestLanguage,
+    jnanorcFile: Path,
+    ctx: VMContext,
+    workDir: Supplier<Path>,
+    configPath: ConfigurationPath,
+    op: LineReader.(SystemRegistryImpl) -> Unit,
+  ) {
+    val parser = buildParser()
+    val terminal = buildTerminal()
+
+    // tweak unsupported commands for native images
+    val commands: MutableSet<Builtins.Command> = EnumSet.copyOf(Builtins.Command.values().toList())
+    commands.remove(Builtins.Command.TTOP)
+    val builtins = Builtins(commands, workDir, configPath, null)
+
+    val systemRegistry = ReplSystemRegistry(parser, terminal, workDir, configPath)
+    systemRegistry.setCommandRegistries(builtins)
+
+    // order matters: initialize these last, because they depend on `ReplSystemRegistry` being registered as a
+    // singleton, which happens in `setCommandRegistries`.
+    val (highlighter, langSyntax) = buildHighlighter(language, jnanorcFile)
+    val history = buildHistory()
+
+    val reader = LineReaderBuilder.builder()
+      .appName("elide")
+      .terminal(terminal)
+      .parser(parser)
+      .history(history)
+      .completer(systemRegistry.completer())
+      .highlighter(highlighter)
+      .variable(LineReader.HISTORY_FILE, Paths.get(root, "history"))
+      .option(LineReader.Option.INSERT_BRACKET, true)
+      .option(LineReader.Option.EMPTY_WORD_OPTIONS, false)
+      .option(LineReader.Option.AUTO_FRESH_LINE, true)
+      .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+      .option(LineReader.Option.CASE_INSENSITIVE, true)
+      .option(LineReader.Option.CASE_INSENSITIVE_SEARCH, true)
+      .option(LineReader.Option.USE_FORWARD_SLASH, true)
+      .option(LineReader.Option.INSERT_TAB, false)
+      .build()
+
+    this.lineReader.set(reader)
+    this.langSyntax.set(langSyntax)
+
+    builtins.setLineReader(reader)
+    history.attach(reader)
+    reader.apply {
+      op.invoke(this, systemRegistry)
     }
   }
 
-  // Wrap an interactive REPL session in exit protection.
-  private fun beginInteractiveSession(language: GuestLanguage, ctx: VMContext) {
-    // execution step listener
-    ExecutionListener.newBuilder().onEnter(::onStatementEnter).statements(true).attach(ctx.engine).use {
-      // watch for input until cancelled
-      val inbuf = Scanner(input.stdin)
+  // Initialize nano-rc syntax highlighting configurations.
+  private fun initNanorcConfig(rootPath: Path, userHome: String): File {
+    val jnanorcDir = rootPath.resolve("nanorc")
+    val jnanorcFile = Paths.get(
+      userHome,
+      "jnanorc",
+    ).toFile()
 
-      while (true) {
-        try {
-          print("elide (${language.id})> ")
-          val line = inbuf.nextLine() ?: break  // exit on empty line
-          logging.debug("Source line received; executing as statement")
-          logging.trace { "Code provided: '$line'" }
+    logging.debug("Checking nanorc root at path '${jnanorcFile.toPath()}'")
+    if (!jnanorcDir.exists()) {
+      logging.debug("Nano config directory does not exist. Creating...")
+      var jnanocDirReady = false
 
-          // build a source code chunk from the line
-          executeOneChunk(
-            language,
-            ctx,
-            "<shell:${language.id}>",
-            line,
-            interactive = true,
-            literal = true,
-          )
+      try {
+        File(jnanorcDir.absolutePathString()).mkdirs()
+        jnanocDirReady = true
+      } catch (e: Exception) {
+        logging.debug("Failed to create nanorc directory: ${e.message}")
+      }
+      if (jnanocDirReady) {
+        // copy syntax files
+        listOf(
+          "dark.nanorctheme",
+          "light.nanorctheme",
+          "args.nanorc",
+          "command.nanorc",
+          "javascript.nanorc",
+          "json.nanorc",
+        ).forEach {
+          val target = jnanorcDir.resolve(it)
+          logging.debug("- Initializing syntax file '$it' ($target)")
+          val fileStream = ToolShellCommand::class.java.getResourceAsStream("/nanorc/$it") ?: return@forEach
+          val contents = IOUtils.readText(fileStream.bufferedReader(StandardCharsets.UTF_8))
 
-        } catch (exc: NoSuchElementException) {
-          logging.debug("User expressed no input: exiting.")
-          break
-        } catch (exc: PolyglotException) {
-          logging.trace("Caught polyglot exception", exc)
-          if (exc.isExit) {
-            logging.debug("Exception received is exit: finishing interactive session")
-            break  // exit on guest exit
-          } else {
-            logging.debug("Exception received is not exit: printing stack trace")
-            exc.printStackTrace()  // otherwise print exception
-            throw ShellError.USER_CODE_ERROR.asError()
+          try {
+            File(target.absolutePathString()).bufferedWriter(StandardCharsets.UTF_8).use { outbuf ->
+              outbuf.write(contents)
+            }
+          } catch (ioe: IOException) {
+            logging.debug("Failed to write nanorc config file.", ioe)
           }
-        } catch (interrupt: InterruptedException) {
-          logging.debug("Session interrupted; concluding")
-          break  // exit on interrupt
+        }
+      }
+    }
+
+    logging.debug("Checking syntax config at path '${jnanorcFile.toPath()}'")
+    if (!jnanorcFile.exists()) {
+      logging.debug("Syntax config does not exist. Writing...")
+      FileWriter(jnanorcFile).use { fw ->
+        fw.write(
+          """
+          theme ${rootPath.absolutePathString()}/nanorc/dark.nanorctheme
+          """.trimIndent()
+        )
+        fw.write("\n")
+        fw.write(
+          """
+          include ${rootPath.absolutePathString()}/nanorc/*.nanorc
+          """.trimIndent()
+        )
+        fw.write("\n")
+      }
+    }
+    return jnanorcFile
+  }
+
+  // Redirect logging calls to JLine for output.
+  private fun redirectLoggingToJLine(lineReader: LineReader) {
+    val rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME) as ch.qos.logback.classic.Logger
+    val current = rootLogger.getAppender("STDOUT") as ConsoleAppender<ILoggingEvent>
+    val ctx = current.context
+    val appender = JLineLogbackAppender(ctx, lineReader)
+    rootLogger.detachAndStopAllAppenders()
+    rootLogger.addAppender(appender)
+    appender.start()
+  }
+
+  // Wrap an interactive REPL session in exit protection.
+  private fun beginInteractiveSession(language: GuestLanguage, engine: VMEngine, ctx: VMContext) {
+    // resolve working directory
+    val workDir = Supplier { Paths.get(System.getProperty("user.dir")) }
+    val userHome = CONFIG_PATH_USR.replaceFirst("~", System.getProperty("user.home"))
+    val userConfigPath = Paths.get(userHome)
+    val root = userConfigPath.absolutePathString()
+    val rootPath = Path(root)
+
+    // calculate config path
+    val configPath = ConfigurationPath(
+      Paths.get(CONFIG_PATH_APP),
+      userConfigPath,
+    )
+
+    // initialize syntax highlighting configurations
+    val jnanorcFile = initNanorcConfig(rootPath, userHome)
+
+    // execution step listener
+    ExecutionListener.newBuilder().onEnter(::onStatementEnter).statements(true).attach(engine).use {
+      initCLI(root, language, jnanorcFile.toPath(), ctx, workDir, configPath) { registry ->
+        // before beginning execution loop, redirect logging to a new appender, which will add logs *above* the user
+        // input section of an interactive session.
+        redirectLoggingToJLine(this)
+
+        while (true) {
+          try {
+            // clean up from potential previous execution
+            registry.cleanUp()
+
+            // read line and execute
+            val line = readLine("elide (${language.id})> ") ?: break  // exit on empty line
+            logging.debug("Source line received; executing as statement")
+            logging.trace { "Code provided: '$line'" }
+
+            // build a source code chunk from the line
+            executeOneChunk(
+              language,
+              ctx,
+              "<shell:${language.id}>",
+              line,
+              interactive = true,
+              literal = true,
+            )
+            exitSeen.set(false)
+
+          } catch (exc: NoSuchElementException) {
+            logging.debug("User expressed no input: exiting.")
+            break
+          } catch (exc: PolyglotException) {
+            logging.trace("Caught polyglot exception", exc)
+            if (exc.isExit) {
+              logging.debug("Exception received is exit: finishing interactive session")
+              break  // exit on guest exit
+            } else {
+              logging.debug("Exception received is not exit: printing stack trace")
+              exc.printStackTrace()  // otherwise print exception
+              throw ShellError.USER_CODE_ERROR.asError()
+            }
+          } catch (userInterrupt: UserInterruptException) {
+            if (exitSeen.get()) {
+              break  // we've already seen the exit, so we need to break
+            } else try {
+              exitSeen.compareAndExchange(false, true)
+              println("ctrl+c caught; do it again to exit")
+              continue
+            } catch (ioe: Exception) {
+              break  // just in case
+            }
+          } catch (eof: EndOfFileException) {
+            continue
+          } catch (interrupt: InterruptedException) {
+            println("Interrupted (sys)")
+            logging.debug("Session interrupted; concluding")
+            break  // exit on interrupt
+          }
         }
       }
     }
@@ -453,7 +718,7 @@ import kotlin.io.path.Path
           }
         } else {
           logging.debug("Beginning interactive guest session")
-          beginInteractiveSession(lang, it)
+          beginInteractiveSession(lang, it.engine, it)
         }
 
         // run a script as a file, or perhaps a string literal

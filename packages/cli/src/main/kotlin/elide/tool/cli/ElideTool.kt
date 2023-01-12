@@ -17,6 +17,7 @@ import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
 import org.slf4j.LoggerFactory
+import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
@@ -64,18 +65,27 @@ import kotlin.system.exitProcess
     private val logging = Statics.logging
 
     // Maybe install terminal support for Windows if it is needed.
-    private fun installWindowsTerminalSupport(op: () -> Int) {
-      exitProcess(if (System.getProperty("os.name") == "Windows") {
+    private fun installWindowsTerminalSupport(op: () -> Int): Int {
+      return if (System.getProperty("os.name") == "Windows") {
         AnsiConsole.windowsInstall().use {
           op.invoke()
         }
       } else {
         op.invoke()
+      }
+    }
+
+    // Install static classes/perform static initialization.
+    private fun installStatics(op: () -> Int) {
+      SLF4JBridgeHandler.removeHandlersForRootLogger()
+      SLF4JBridgeHandler.install()
+      exitProcess(installWindowsTerminalSupport {
+        op.invoke()
       })
     }
 
     /** CLI entrypoint and [args]. */
-    @JvmStatic public fun main(args: Array<String>): Unit = installWindowsTerminalSupport {
+    @JvmStatic public fun main(args: Array<String>): Unit = installStatics {
       exec(args)
     }
 

@@ -25,11 +25,11 @@ group = "dev.elide.tools"
 version = rootProject.version as String
 
 val entrypoint = "elide.tool.bundler.Bundler"
-val javaVersion = "19"
+val javaVersion = "17"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_19
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 buildConfig {

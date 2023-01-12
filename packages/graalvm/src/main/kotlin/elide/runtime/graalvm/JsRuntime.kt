@@ -57,6 +57,14 @@ public class JsRuntime private constructor() {
     private const val RENDER_ENTRYPOINT = "renderContent"
     private const val STREAM_ENTRYPOINT = "renderStream"
     private const val manifest = "/META-INF/elide/embedded/runtime/runtime-js.json"
+    internal val WASM_SUPPORTED = wasmSupported()
+
+    // Determine if WASM should be enabled by default.
+    @JvmStatic private fun wasmSupported(): Boolean = (
+      System.getProperty("elide.wasm", "false") == "true" || (
+      System.getProperty("os.arch", "not-x86") == "x86_64" &&
+      Engine.create().languages.containsKey("wasm")
+    ))
 
     // Hard-coded JS VM options.
     private val baseOptions : List<JSVMProperty> = listOf(
@@ -75,7 +83,7 @@ public class JsRuntime private constructor() {
     // Options which can be controlled via user-configured inputs.
     private val configurableOptions : List<JSVMProperty> = listOf(
       RuntimeProperty("vm.js.ecma", "js.ecmascript-version", "2022"),
-      RuntimeProperty("vm.js.wasm", "js.webassembly", "false"),
+      RuntimeProperty("vm.js.wasm", "js.webassembly", WASM_SUPPORTED.toString()),
     )
 
     // Options which must be evaluated at the time a context is created.

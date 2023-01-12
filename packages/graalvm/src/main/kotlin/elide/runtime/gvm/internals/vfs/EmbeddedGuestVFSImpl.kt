@@ -17,7 +17,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import tools.elide.crypto.HashAlgorithm
-import tools.elide.vfs.Filesystem
 import tools.elide.vfs.TreeEntry
 import java.io.File
 import java.io.IOException
@@ -26,7 +25,6 @@ import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
-import java.util.stream.Collector
 import java.util.zip.GZIPInputStream
 import kotlin.io.path.toPath
 
@@ -150,9 +148,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
    * @param workingDirectory Working directory of the file-system.
    * @param policy Policy to apply to moderate guest I/O access to the file-system in question.
    * @param bundle Bundle file to load the file-system from.
-   * @param path Path to the bundle file, as a regular host-filesystem path, or `classpath:`-prefixed URI for a resource
-   *   which should be fetched from the host app class-path.
-   * @param file File to load as the bundle-file, if one happens to be on hand already.
+   * @param paths Paths to the bundle files, as regular host-filesystem paths, or `classpath:`-prefixed URIs for
+   *   resources which should be fetched from the host app class-path.
+   * @param files Files to load as file-system bundles.
    */
   @Suppress("unused") internal data class Builder (
     override var readOnly: Boolean = true,
@@ -162,8 +160,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
     override var workingDirectory: String = DEFAULT_CWD,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,
     internal var bundle: Pair<FilesystemInfo, FileSystem>? = null,
-    internal var path: URI? = null,
-    internal var file: File? = null,
+    internal var paths: List<URI> = emptyList(),
+    internal var files: List<File> = emptyList(),
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
     /** Factory for embedded VFS implementations. */
     companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
@@ -177,7 +175,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /**
      * Set the [bundle] to use directly (pre-loaded from some data source).
      *
-     * Note that setting this property force-unsets [path] and [file].
+     * Note that setting this property force-unsets [paths] and [files].
      *
      * @see bundle to set this value as a property.
      * @param bundle [FilesystemInfo] and [FileSystem] pair to use as the bundle.
@@ -185,42 +183,42 @@ internal class EmbeddedGuestVFSImpl private constructor (
      */
     fun setBundle(bundle: Pair<FilesystemInfo, FileSystem>): VFSBuilder<EmbeddedGuestVFSImpl> {
       this.bundle = bundle
-      this.path = null
-      this.file = null
+      this.paths = emptyList()
+      this.files = emptyList()
       return this
     }
 
     /**
-     * Set the [path] to load the bundle file from; can be a regular file-path, or a `classpath:`-prefixed path to load
+     * Set the [paths] to load the bundle file from; can be a regular file-path, or a `classpath:`-prefixed path to load
      * a resource from the host app classpath.
      *
-     * Note that setting this property force-unsets [bundle] and [file].
+     * Note that setting this property force-unsets [bundle] and [files].
      *
-     * @see path to set this value as a property.
-     * @param path URI to the bundle file to load.
+     * @see paths to set this value as a property.
+     * @param paths URI to the bundle file to load.
      * @return This builder.
      */
-    fun setBundlePath(path: URI): VFSBuilder<EmbeddedGuestVFSImpl> {
-      this.path = path
+    fun setBundlePaths(paths: List<URI>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.paths = paths
       this.bundle = null
-      this.file = null
+      this.files = emptyList()
       return this
     }
 
     /**
-     * Set the [file] to load the bundle data from; expected to be a valid and readable regular file, which is a
+     * Set the [files] to load the bundle data from; expected to be a valid and readable regular file, which is a
      * tarball, a compressed tar-ball, or a bundle in Elide's internal format.
      *
-     * Note that setting this property force-unsets [bundle] and [path].
+     * Note that setting this property force-unsets [bundle] and [paths].
      *
-     * @see file to set this value as a property.
-     * @param file File to load bundle data from.
+     * @see files to set this value as a property.
+     * @param files File to load bundle data from.
      * @return This builder.
      */
-    fun setBundleFile(file: File): VFSBuilder<EmbeddedGuestVFSImpl> {
-      this.file = file
+    fun setBundleFiles(files: List<File>): VFSBuilder<EmbeddedGuestVFSImpl> {
+      this.files = files
       this.bundle = null
-      this.path = null
+      this.paths = emptyList()
       return this
     }
 
@@ -228,7 +226,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     override fun build(): EmbeddedGuestVFSImpl {
       val config = EffectiveGuestVFSConfig.fromBuilder(this)
       val fsConfig = config.buildFs()
-      val (tree, bundle) = when (val bundle = resolveBundle(this, fsConfig)) {
+      val (tree, bundle) = when (val bundle = resolveBundles(this, fsConfig)) {
         null -> null to null
         else -> bundle
       }
@@ -465,7 +463,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }
 
     /** @return Loaded bundle from the provided input [streams], from the specified [format]. */
-    @JvmStatic private fun loadBundle(
+    @JvmStatic private fun loadBundlesToMemoryFS(
       streams: List<Pair<InputStream, BundleFormat>>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
@@ -496,67 +494,81 @@ internal class EmbeddedGuestVFSImpl private constructor (
       ) to inMemoryFS  // <-- map the return filesystem to the in-memory FS we built
     }
 
-    /** @return Loaded bundle from the provided input [stream], guessing the format from the file's [name]. */
-    @JvmStatic private fun loadBundle(
-      stream: InputStream,
-      name: String,
+    /** @return Loaded bundles from the provided input [streams], guessing the format from the file's name. */
+    @JvmStatic private fun loadBundles(
+      streams: List<Pair<String, InputStream>>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
-      return loadBundle(listOf(stream to when {
-        name.endsWith(".tar") -> BundleFormat.TARBALL
-        name.endsWith(".tar.gz") -> BundleFormat.TARBALL_COMPRESSED
-        name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
-        else -> error(
-          "Failed to load bundle from file '$name': unknown format. " +
-          "Please provide `.tar`, `.tar.gz`, or `.evfs`."
-        )
-      }), fsConfig)
+      return loadBundlesToMemoryFS(streams.map { (name, stream) ->
+        stream to when {
+          name.endsWith(".tar") -> BundleFormat.TARBALL
+          name.endsWith(".tar.gz") -> BundleFormat.TARBALL_COMPRESSED
+          name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
+          else -> error(
+            "Failed to load bundle from file '$name': unknown format. " +
+            "Please provide `.tar`, `.tar.gz`, or `.evfs`."
+          )
+        }
+      }, fsConfig)
     }
 
-    /** @return Bundle pair loaded from the provided [file]. */
-    @JvmStatic internal fun loadBundleFromFile(
-      file: File?,
+    /** @return Bundle pair loaded from the provided [files]. */
+    @JvmStatic internal fun loadBundleFiles(
+      files: List<File>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem>? {
-      if (file == null)
-        return null
-      if (!file.exists())
-        throw IOException("Cannot load bundle from file '${file.path}': Does not exist or not a regular file")
-      if (!file.canRead())
-        throw AccessDeniedException(file, reason = "Cannot read bundle: access denied.")
-      return loadBundle(file.inputStream(), file.name, fsConfig)
+      // if we got no paths, we have no bundles
+      if (files.isEmpty()) return null
+
+      val sources = files.map { file ->
+        if (!file.exists())
+          throw IOException("Cannot load bundle from file '${file.path}': Does not exist or not a regular file")
+        if (!file.canRead())
+          throw AccessDeniedException(file, reason = "Cannot read bundle: access denied.")
+
+        // hand back name + input stream so we can call `loadBundles`
+        file.name to file.inputStream()
+      }
+      return loadBundles(sources, fsConfig)
     }
 
     /** @return Bundle pair loaded from the provided [URI]. */
-    @JvmStatic internal fun loadBundleFromURI(
-      path: URI?,
+    @JvmStatic internal fun loadBundleURIs(
+      paths: List<URI>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem>? {
-      return when {
-        path == null -> null
-        path.scheme == "file" -> loadBundleFromFile(path.toPath().toFile(), fsConfig)
-        path.scheme == "classpath" -> {
-          val filename = path.scheme.replace("classpath:", "")
-          val target = EmbeddedGuestVFSImpl::class.java.getResourceAsStream(filename) ?: error(
-            "Failed to load bundle from path '$path': Not found"
-          )
-          loadBundle(target, filename, fsConfig)
-        }
+      // if we got no paths, we have no bundles
+      if (paths.isEmpty()) return null
 
-        else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}'")
+      val sources = paths.map { path ->
+        when (path.scheme) {
+          "file" -> path.toPath().toFile().let { file ->
+            file.name to file.inputStream()
+          }
+
+          "classpath" -> {
+            val filename = path.scheme.replace("classpath:", "")
+            val target = EmbeddedGuestVFSImpl::class.java.getResourceAsStream(filename) ?: error(
+              "Failed to load bundle from path '$path': Not found"
+            )
+            filename to target
+          }
+          else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}'")
+        }
       }
+      return loadBundles(sources, fsConfig)
     }
 
     /** @return Resolve bundle input data from the provided [builder]. */
-    @JvmStatic internal fun resolveBundle(
+    @JvmStatic internal fun resolveBundles(
       builder: Builder,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem>? {
       return when {
         builder.bundle != null -> builder.bundle
-        builder.file != null -> loadBundleFromFile(builder.file, fsConfig)
-        builder.path != null -> loadBundleFromURI(builder.path, fsConfig)
+        builder.files.isNotEmpty() -> loadBundleFiles(builder.files, fsConfig)
+        builder.paths.isNotEmpty() -> loadBundleURIs(builder.paths, fsConfig)
         else -> null
       }
     }
@@ -615,14 +627,14 @@ internal class EmbeddedGuestVFSImpl private constructor (
         policy = config.policy
         root = config.root
         workingDirectory = config.workingDirectory
-        if (config.bundle != null) {
-          path = config.bundle
+        if (config.bundle.isNotEmpty()) {
+          paths = config.bundle
         }
       }
 
       // resolve the filesystem tree and data-bag based on the settings provided to the builder
       val fsConfig = config.buildFs()
-      val (tree, fs) = when (val bundle = resolveBundle(builder, fsConfig)) {
+      val (tree, fs) = when (val bundle = resolveBundles(builder, fsConfig)) {
         null -> null to null
         else -> bundle
       }

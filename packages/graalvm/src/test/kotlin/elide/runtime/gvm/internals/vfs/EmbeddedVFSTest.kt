@@ -35,7 +35,7 @@ import kotlin.test.assertTrue
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleFromURI(sampleTarball.toURI(), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -73,7 +73,7 @@ import kotlin.test.assertTrue
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleFromURI(sampleTarball.toURI(), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -156,7 +156,7 @@ import kotlin.test.assertTrue
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleFromURI(sampleTarball.toURI(), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")
@@ -194,7 +194,7 @@ import kotlin.test.assertTrue
     val effective = EffectiveGuestVFSConfig.DEFAULTS
     val fsConfig = effective.buildFs()
 
-    val result = EmbeddedGuestVFSImpl.loadBundleFromURI(sampleTarball.toURI(), fsConfig)
+    val result = EmbeddedGuestVFSImpl.loadBundleURIs(listOf(sampleTarball.toURI()), fsConfig)
     assertNotNull(result, "should not get `null` from `loadBundleFromURI` for known-good input")
     val (tree, databag) = result
     assertNotNull(tree, "should not get `null` from `loadBundleFromURI` for known-good input")

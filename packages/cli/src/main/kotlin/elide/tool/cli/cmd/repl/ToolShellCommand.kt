@@ -187,10 +187,10 @@ import org.graalvm.polyglot.Engine as VMEngine
   @Option(
     names = ["--filesystem", "-fs"],
     description = ["Mount a virtual filesystem bundle for guest VM use"],
-    arity = "0..1",
+    arity = "0..N",
     paramLabel = "FILE|URI",
   )
-  internal var filesystem: String? = null
+  internal var filesystems: List<String> = emptyList()
 
   /** Host access settings. */
   class HostAccessSettings {
@@ -691,22 +691,24 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.debug("Initializing language context ('${lang.id}')")
 
     // resolve the file-system bundle to use
-    val bundleUri = checkFsBundle(filesystem)
-    if (bundleUri != null) {
-      logging.debug("File-system bundle specified: $bundleUri")
+    val bundleUris = filesystems.mapNotNull {
+      checkFsBundle(it)
+    }
+    if (bundleUris.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
+      logging.debug("File-system bundle(s) specified: ${bundleUris.joinToString(",")}")
     } else {
-      logging.debug("No file-system bundle specified")
+      logging.debug("No file-system bundles specified")
     }
 
-    withVM(context, bundleUri, hostIO = (
-      bundleUri != null && (accessControl.allowIo || accessControl.allowAll)
+    withVM(context, bundleUris, hostIO = (
+      bundleUris.isEmpty() && (accessControl.allowIo || accessControl.allowAll)
     ), accessControl::apply) {
       // warn about experimental status, as applicable
       logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")
 
       when (val scriptTargetOrCode = runnable) {
         // run in interactive mode
-        null -> if (useStdin || runnable == "-") {
+        null, "-" -> if (useStdin || runnable == "-") {
           // consume from stdin
           input.buffer.use { buffer ->
             readExecuteCode(

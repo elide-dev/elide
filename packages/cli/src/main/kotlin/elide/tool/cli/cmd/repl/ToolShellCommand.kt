@@ -35,7 +35,6 @@ import org.jline.terminal.Size
 import org.jline.terminal.Terminal
 import org.jline.terminal.TerminalBuilder
 import org.jline.utils.AttributedString
-import org.jline.utils.AttributedStringBuilder
 import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
@@ -49,10 +48,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import java.util.stream.Stream

@@ -706,7 +706,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
       when (val scriptTargetOrCode = runnable) {
         // run in interactive mode
-        null -> if (useStdin) {
+        null -> if (useStdin || runnable == "-") {
           // consume from stdin
           input.buffer.use { buffer ->
             readExecuteCode(

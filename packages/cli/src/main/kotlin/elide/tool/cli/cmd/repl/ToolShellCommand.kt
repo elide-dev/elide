@@ -34,6 +34,9 @@ import org.jline.reader.impl.history.DefaultHistory
 import org.jline.terminal.Size
 import org.jline.terminal.Terminal
 import org.jline.terminal.TerminalBuilder
+import org.jline.utils.AttributedString
+import org.jline.utils.AttributedStringBuilder
+import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
@@ -46,7 +49,10 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import java.util.stream.Stream
@@ -257,6 +263,24 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Whether the last-seen command was a user exit.
   private val exitSeen = AtomicBoolean(false)
 
+  // Last-seen statement executed by the VM.
+  private val allSeenStatements = LinkedList<String>()
+
+  // Count of statement lines seen; used as an offset for the length of `allSeenStatements`.
+  private val statementCounter = AtomicInteger(0)
+
+  // VM facade to use for execution.
+  private lateinit var vm: VMFacade
+
+  // Language-specific syntax highlighter.
+  private val langSyntax: AtomicReference<SyntaxHighlighter?> = AtomicReference(null)
+
+  // Main operating terminal.
+  private val terminal: AtomicReference<Terminal?> = AtomicReference(null)
+
+  // Active line reader.
+  private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
+
   /** Specifies the guest language to run. */
   @Option(
     names = ["--languages"],
@@ -367,18 +391,6 @@ import org.graalvm.polyglot.Engine as VMEngine
   )
   internal var runnable: String? = null
 
-  // VM facade to use for execution.
-  private lateinit var vm: VMFacade
-
-  // Language-specific syntax highlighter.
-  private val langSyntax: AtomicReference<SyntaxHighlighter?> = AtomicReference(null)
-
-  // Main operating terminal.
-  private val terminal: AtomicReference<Terminal?> = AtomicReference(null)
-
-  // Active line reader.
-  private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
-
   // Executed when a guest statement is entered.
   private fun onStatementEnter(event: ExecutionEvent) {
     val highlighter = langSyntax.get()
@@ -414,7 +426,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     }
 
     logging.trace("Code chunk built. Evaluating")
-    val result = ctx.eval(source)
+    val result = try {
+      ctx.eval(source)
+    } catch (exc: PolyglotException) {
+      logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
+      throw exc
+    }
     logging.trace("Code chunk evaluation complete")
     return result
   }
@@ -599,6 +616,139 @@ import org.graalvm.polyglot.Engine as VMEngine
     appender.start()
   }
 
+  // Given an error location (in interactive mode), fetch the source, plus `contextLines` on each side of the error.
+  private fun errorContextLines(exc: PolyglotException, contextLines: Int = 1): Pair<Int, List<String>> {
+    val errorBase = minOf(0, exc.sourceLocation.startLine - contextLines)
+    val totalLines = exc.sourceLocation.endLine - exc.sourceLocation.startLine + (contextLines * 2)
+    val ctxLines = ArrayList<String>(totalLines)
+    val baseOnHand = minOf(0, statementCounter.get())
+    val errorTail = errorBase + (exc.sourceLocation.endLine - exc.sourceLocation.startLine)
+    val topLine = maxOf(statementCounter.get(), errorTail)
+
+    return when {
+      // cannot resolve: we don't have those lines (they are too early for our buffer)
+      errorBase < baseOnHand -> -1 to emptyList()
+
+      // otherwise, resolve from seen statements
+      else -> {
+        ctxLines.addAll(allSeenStatements.subList(errorBase, topLine))
+        (errorBase + 1) to ctxLines
+      }
+    }
+  }
+
+  // Given an error, render a table explaining the error, along with any source context if we have it.
+  @Suppress("UNUSED_PARAMETER") private fun displayFormattedError(
+    exc: Throwable,
+    message: String,
+    advice: String? = null,
+    internal: Boolean = false,
+  ) {
+    val term = terminal.get() ?: return
+    val reader = lineReader.get() ?: return
+    if (exc !is PolyglotException) return
+
+    // begin calculating with source context
+    val middlePrefix = "║ "
+    val errPrefix = "→ "
+    val stopPrefix = "✗ "
+    val lineContextTemplate = "$middlePrefix%lineNum┊ %lineText"
+    val errContextPrefix = "$errPrefix%lineNum┊ %lineText"
+    val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
+
+    val (startingLineNumber, errorContext) = errorContextLines(exc)
+    val endingLineNumber = exc.sourceLocation.endLine
+    val lineDigits = endingLineNumber.toString().length
+    val errRange = exc.sourceLocation.startLine..exc.sourceLocation.endLine
+    val lineContextRendered = errorContext.mapIndexed { index, line ->
+      val lineNumber = startingLineNumber + index
+
+      (if (lineNumber in errRange) {
+        // it's an error line
+        errContextPrefix
+      } else if (index == errorContext.lastIndex) {
+        stopContextPrefix
+      } else {
+        // it's a context line
+        lineContextTemplate
+      }).replace("%lineNum", lineNumber.toString().padStart(lineDigits + 1, ' '))
+        .replace("%lineText", line)
+    }
+
+    val pad = 2 * 2
+    val maxErrLineSize = lineContextRendered.maxOf { it.length } + pad
+    val width = minOf(maxOf(message.length + pad, maxErrLineSize, (advice?.length ?: 0) + pad), term.width)
+    val textWidth = width - (pad / 2)
+    val top = ("╔" + "═".repeat(textWidth) + "╗")
+    val bottom = ("╚" + "═".repeat(textWidth) + "╝")
+    val divider = ("╟" + "─".repeat(textWidth) + "╢")
+
+    // render error string
+    val rendered = StringBuilder().apply {
+      append("\n")
+      appendLine(top)
+      // ╔══════════════════════╗
+      // ║ 1┊ (code)            ║
+      // → 2┊ (err)             ║
+      lineContextRendered.forEach {
+        appendLine(it.padEnd(textWidth + 1, ' ') + "║")
+      }
+      // ╟──^───────────────────╢
+      appendLine(divider)
+      // ║ SomeError: A message ║
+      append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
+      appendLine(bottom)
+      // ╚══════════════════════╝
+      append("\n")
+    }.toString()
+
+    // format error string
+    val style = AttributedStyle.BOLD.foreground(AttributedStyle.RED)
+    val formatted = AttributedString(rendered, style)
+    reader.printAbove(formatted)
+  }
+
+  // Handle an error which occurred within guest code.
+  private fun processUserCodeError(language: GuestLanguage, exc: PolyglotException): Throwable? {
+    when {
+      exc.isSyntaxError -> displayFormattedError(
+        exc,
+        exc.message ?: "Syntax error",
+        "Check ${language.label} syntax",
+      )
+
+      exc.isIncompleteSource -> displayFormattedError(
+        exc,
+        exc.message ?: "Syntax error",
+        "${language.label} syntax is incomplete",
+      )
+
+      exc.isHostException -> displayFormattedError(
+        exc,
+        exc.message ?: "An runtime error was thrown",
+      )
+
+      exc.isGuestException -> displayFormattedError(
+        exc,
+        exc.message ?: "An error was thrown",
+      )
+
+      // @TODO(sgammon): interrupts
+      exc.isInterrupted -> {}
+
+      // @TODO(sgammon): resource exhaustion
+      exc.isResourceExhausted -> {}
+
+      exc.isInternalError -> displayFormattedError(
+        exc,
+        exc.message ?: "An error was thrown",
+        internal = true,
+      )
+    }
+    return null
+//    return ShellError.USER_CODE_ERROR.asError()
+  }
+
   // Wrap an interactive REPL session in exit protection.
   private fun beginInteractiveSession(language: GuestLanguage, engine: VMEngine, ctx: VMContext) {
     // resolve working directory
@@ -634,6 +784,13 @@ import org.graalvm.polyglot.Engine as VMEngine
             logging.debug("Source line received; executing as statement")
             logging.trace { "Code provided: '$line'" }
 
+            allSeenStatements.add(line)
+            val statement = statementCounter.incrementAndGet()
+            logging.trace { "Statement counter: $statement" }
+            if (statement > 1000L) {
+              allSeenStatements.drop(1)  // drop older lines at the 1000-statement mark
+            }
+
             // build a source code chunk from the line
             executeOneChunk(
               language,
@@ -655,8 +812,10 @@ import org.graalvm.polyglot.Engine as VMEngine
               break  // exit on guest exit
             } else {
               logging.debug("Exception received is not exit: printing stack trace")
-              exc.printStackTrace()  // otherwise print exception
-              throw ShellError.USER_CODE_ERROR.asError()
+              when (val throwable = processUserCodeError(language, exc)) {
+                null -> continue
+                else -> throw throwable
+              }
             }
           } catch (userInterrupt: UserInterruptException) {
             if (exitSeen.get()) {

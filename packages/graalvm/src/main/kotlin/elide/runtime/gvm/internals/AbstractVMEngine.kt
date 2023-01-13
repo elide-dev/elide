@@ -7,13 +7,12 @@ import elide.runtime.gvm.*
 import elide.runtime.gvm.VMEngineImpl
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
-import elide.runtime.gvm.internals.js.JsExecutableScript
 import elide.runtime.gvm.internals.js.JsInvocationBindings
-import elide.runtime.gvm.internals.js.JsMicronautRequestExecutionInputs
 import elide.runtime.ssr.HeaderMap
 import elide.runtime.ssr.ServerResponse
 import elide.util.RuntimeFlag
@@ -76,7 +75,7 @@ internal abstract class AbstractVMEngine<
   private val contextManager: ContextManager<VMContext, VMContext.Builder>,
   protected val language: GraalVMGuest,
   protected val config: Config,
-) : VMEngineImpl<Config>/*, ServerInitializer*/ {
+) : VMEngineImpl<Config> {
   internal companion object {
     /** Manifest name for runtime info. */
     internal const val runtimeManifest = "runtime.json"
@@ -398,7 +397,7 @@ internal abstract class AbstractVMEngine<
           val bindings = resolve(
             this,
             initialized,
-            GVMInvocationBindings.DispatchStyle.SERVER,
+            DispatchStyle.SERVER,
           )
 
           // execute the script and obtain an output value
@@ -409,7 +408,7 @@ internal abstract class AbstractVMEngine<
             args,
           )
           logging.info("Server out", out)
-          TODO("inspect render output for promise or string")
+          TODO("server response handling not yet implemented")
         }
       }
     }
@@ -568,7 +567,7 @@ internal abstract class AbstractVMEngine<
           when (val bindings = resolve(
             this,
             initialized,
-            GVMInvocationBindings.DispatchStyle.RENDER,
+            DispatchStyle.RENDER,
           )) {
             // we are executing a sidecar render call
             is JsInvocationBindings.JsRender -> {
@@ -592,7 +591,7 @@ internal abstract class AbstractVMEngine<
             // the binding supports multiple interfaces
             is JsInvocationBindings.JsCompound -> {
               // we should be dealing with a render function
-              if (!bindings.supported().contains(GVMInvocationBindings.DispatchStyle.RENDER))
+              if (!bindings.supported().contains(DispatchStyle.RENDER))
                 error("Cannot invoke embedded SSR script: `render` function not exported")
 
               val entry = bindings.mapped.entries.find {
@@ -612,21 +611,14 @@ internal abstract class AbstractVMEngine<
                 throw exc
               }
 
-              logging.info("Render out", out)
-              TODO("inspect render output for promise or string")
+              handleRenderOutput(
+                out,
+                receiver,
+              )
             }
 
             else -> error("Unsupported JS invocation binding: $bindings")
           }
-//          val out = execute(
-//            this,
-//            initialized,
-//            bindings,
-//            JsMicronautRequestExecutionInputs.of(
-//              request as HttpRequest<Any>,
-//              context,
-//            ),
-//          )
         }
       }
     }
@@ -653,7 +645,11 @@ internal abstract class AbstractVMEngine<
   }
 
   /**
-   * TBD.
+   * Initialize a guest [script] within the provided [context].
+   *
+   * @param context VM context with which to initialize the script.
+   * @param script Guest script to initialize.
+   * @return Casted, checked, initialized script.
    */
   @Suppress("UNUSED_PARAMETER", "UNCHECKED_CAST")
   private fun initializeScript(context: VMContext, script: ExecutableScript): Code {
@@ -719,7 +715,12 @@ internal abstract class AbstractVMEngine<
   /**
    * ## Implementation: Prepare bindings.
    *
-   * TBD.
+   * This method offers the runtime implementation an opportunity to prepare the provided [context] for use with guest
+   * code. The provided [globals] are made available after registration of any intrinsics, as applicable, and the
+   * [context] provided is configured with the expected set of [VMProperty] instances, according to [configure].
+   *
+   * @param context Context to prepare for use with guest code.
+   * @param globals Global language bindings which are active for this context.
    */
   protected abstract fun prepare(context: VMContext, globals: GuestValue)
 
@@ -728,18 +729,28 @@ internal abstract class AbstractVMEngine<
   /**
    * ## Implementation: Resolve.
    *
-   * TBD.
+   * This method is dispatched by the abstract VM implementation in order to resolve a concrete set of invocation
+   * [Bindings] for the provided [script] and dispatch [mode] (as applicable); if no [mode] is available, a sensible
+   * default entry-point should be chosen (or an error thrown).
+   *
+   * @param context Context with which to resolve bindings for the provided [script].
+   * @param script Guest code script to resolve bindings for.
+   * @param mode Desired dispatch style for this script, if known.
+   * @return Set of initialized invocation [Bindings].
    */
-  protected abstract fun resolve(
-    context: VMContext,
-    script: Code,
-    mode: GVMInvocationBindings.DispatchStyle? = null,
-  ): Bindings
+  protected abstract fun resolve(context: VMContext, script: Code, mode: DispatchStyle? = null): Bindings
 
   /**
    * ## Implementation: Execution.
    *
-   * TBD.
+   * Called from the abstract VM implementation when execution of a given [script] and [bindings] pair should actually
+   * take place; the provided [inputs] should be understood by the implementation and translated as needed.
+   *
+   * @param context Context within which this execution should take place.
+   * @param script Guest code script under evaluation/execution.
+   * @param bindings Resolved bindings from [resolve] for the provided [script].
+   * @param inputs Inputs to the script, if any.
+   * @return Result of the execution, if any.
    */
   protected abstract fun <Inputs: ExecutionInputs> execute(
     context: VMContext,

@@ -2,6 +2,8 @@ package elide.annotations
 
 
 /**
+ * # Annotation: Generated
+ *
  * Marks a given Java or Kotlin class as "Generated," which excuses it from coverage requirements and other tooling
  * strictness; should be used sparingly.
  */

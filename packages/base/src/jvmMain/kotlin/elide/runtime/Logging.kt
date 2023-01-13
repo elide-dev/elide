@@ -5,7 +5,7 @@ import kotlin.reflect.KClass
 
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
-@Suppress("unused") public actual class Logging private constructor () {
+public actual class Logging private constructor () {
   public companion object {
     // Singleton logging manager instance.
     private val singleton = Logging()

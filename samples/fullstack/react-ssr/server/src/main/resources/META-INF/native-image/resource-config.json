@@ -50,30 +50,8 @@
         "pattern": "\\Qbootstrap.properties\\E"
       },
       {
-        "pattern": "\\Qembedded/runtime/abort-controller.js\\E"
-      },
-      {
-        "pattern": "\\Qembedded/runtime/invoke.js\\E"
-      },
-      {
-        "pattern": "\\Qembedded/runtime/preamble.js\\E"
-      },
-      {
-        "pattern": "\\Qembedded/runtime/runtime-js.json\\E"
-      },
-      {
-        "pattern": "\\Qembedded/embedded.assets.pb\\E"
-      },
-      {
-        "pattern": "\\Qembedded/node-dev.opt.js\\E"
-      },
-      {
-        "pattern": "\\Qembedded/node.opt.js\\E"
-      },
-      {
-        "pattern": "\\Qembedded/node-prod.opt.js\\E"
-      },
-      {
+        "pattern": "\\QMETA-INF/elide/*\\E"
+      },      {
         "pattern": "\\Qlogback.xml\\E"
       },
       {

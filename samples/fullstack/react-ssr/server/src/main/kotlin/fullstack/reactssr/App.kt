@@ -32,8 +32,8 @@ object App : Application {
   /** GET `/`: Controller for index page. */
   @Page class Index : PageWithProps<HelloProps>(HelloProps.serializer()) {
     /** @return Props to use when rendering this page. */
-    override suspend fun props(request: RequestState): HelloProps {
-      return HelloProps(name = "Elide v3")
+    override suspend fun props(state: RequestState): HelloProps {
+      return HelloProps(name = state.request.parameters["name"] ?: "Elide v3")
     }
 
     // Serve the root page.

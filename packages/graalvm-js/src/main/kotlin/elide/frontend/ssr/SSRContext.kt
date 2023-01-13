@@ -2,7 +2,7 @@ package elide.frontend.ssr
 
 /** Context access utility for SSR-shared state. */
 public class SSRContext<State: Any> private constructor (
-  private val data: SSRStateContainer<State>? = null,
+  private val data: State? = null,
 ) {
   public companion object {
     /** Key where shared state is placed in the execution input data map. */
@@ -24,7 +24,7 @@ public class SSRContext<State: Any> private constructor (
     public fun <State : Any> typed(ctx: dynamic = null): SSRContext<State> {
       return if (ctx != null) {
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-        SSRContext(ctx as? SSRStateContainer<State>)
+        SSRContext(ctx as State)
       } else {
         SSRContext()
       }
@@ -48,20 +48,11 @@ public class SSRContext<State: Any> private constructor (
 
   /** @return State container managed by this context. */
   public val state: State? get() {
-    return data?.state()
+    return data
   }
 
   /** @return Active SSR request context. */
   public val context: dynamic get() {
-    return data?.context()
-  }
-
-  /** @return Current request path. */
-  public val path: String? get() {
-    val path = data?.path()
-    if (path == null) {
-      console.error("No current request path available")
-    }
-    return path
+    return data
   }
 }

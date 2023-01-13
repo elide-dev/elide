@@ -18,7 +18,7 @@
     "@lit-labs/ssr": "2.2.3",
     "@lit-labs/ssr-client": "1.0.1",
     "@lit-labs/task": "2.0.0",
-    "@lit-labs/virtualizer": "0.7.2",
+    "@lit-labs/virtualizer": "1.0.1",
     "@lit/localize": "0.11.4",
     "@lit/localize-tools": "0.6.5",
     "@types/google-protobuf": "3.15.6",

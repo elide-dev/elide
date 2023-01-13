@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/elide",
-  "version": "1.0.0-alpha3-b1-snap7",
+  "version": "1.0.0-alpha3-b3",
   "description": "Elide polyglot application runtime",
   "homepage": "https://elide.dev",
   "license": "(MIT OR Apache-2.0)",

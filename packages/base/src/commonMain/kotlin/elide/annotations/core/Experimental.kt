@@ -1,7 +1,10 @@
 package elide.annotations.core
 
 /**
+ * # Annotation: Experimental
  *
+ * Marks a type or member as experimental. Experimental types and members may generate compile warnings if used without
+ * opt-in flags.
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)

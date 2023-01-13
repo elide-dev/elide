@@ -1,9 +1,7 @@
-@file:Suppress("unused")
-
 package elide.runtime
 
 /** Describes the interface for loggers shared across platforms. */
-@Suppress("unused") public expect interface Logger {
+public expect interface Logger {
   /**
    * Indicate whether the provided [level] is enabled for the current logger.
    *

@@ -2,6 +2,8 @@ package elide.annotations
 
 
 /**
+ * # Annotation: API
+ *
  * Marks an application-level class as an API interface, which defines the abstract surface of a single unit of business
  * logic; combined with [Logic], classes annotated with `API` constitute a set of interface and implementation pairs.
  *

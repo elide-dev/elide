@@ -6,17 +6,13 @@ import com.oracle.svm.core.annotate.AutomaticFeature
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
 import org.graalvm.nativeimage.hosted.Feature
-import org.graalvm.polyglot.Engine
 
 
-/** GraalVM feature which enables reflection required for the [elide.runtime.graalvm.JsRuntime]. */
+/** GraalVM feature which enables reflection required for the Elide JavaScript guest runtime. */
 @VMFeature
 @AutomaticFeature
 internal class JsRuntimeFeature : FrameworkFeature {
   private companion object {
-    private const val registerV1 = true
-    private const val registerV3 = true
-
     private val registeredPackages: List<String> = listOf(
         "struct.map",
     )
@@ -48,22 +44,15 @@ internal class JsRuntimeFeature : FrameworkFeature {
    * @param access Before-analysis info for a given GraalVM image.
    */
   private fun registerJsRuntimeTypes(access: Feature.BeforeAnalysisAccess) {
-    // legacy: register old JS runtime classes
-    if (registerV1) {
-      registerClassForReflection(access, "elide.runtime.graalvm.JsRuntime")
-      registerClassForReflection(access, "elide.runtime.graalvm.JsRuntime${'$'}ExecutionInputs")
+    registerClassForReflection(access, "elide.runtime.gvm.internals.js.JsRuntime")
+    registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator")
+    registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult")
+    registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl")
+    registeredIntrinsics.forEach {
+      registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.${it}")
     }
-    if (registerV3) {
-      registerClassForReflection(access, "elide.runtime.gvm.internals.js.JsRuntime")
-      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator")
-      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult")
-      registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl")
-      registeredIntrinsics.forEach {
-        registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.${it}")
-      }
-      registeredPackages.forEach {
-        registerPackageForReflection(access, "elide.runtime.intrinsics.js.$it")
-      }
+    registeredPackages.forEach {
+      registerPackageForReflection(access, "elide.runtime.intrinsics.js.$it")
     }
   }
 

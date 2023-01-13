@@ -1,6 +1,5 @@
 package elide.runtime.graalvm
 
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -8,29 +7,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
 
 /** Basic tests for polyglot script functionality via Graal. */
 class PolyglotScriptTest {
-  @Test @Disabled fun testAcquireRuntime() {
-    val runtime = JsRuntime.acquire()
-    assertNotNull(runtime, "should be able to acquire JS runtime instance")
-  }
-
-  @Test @Disabled fun testLoadEmbeddedScript() {
-    val embedded = JsRuntime.Script.embedded(
-      "simple.js"
-    )
-    assertNotNull(embedded, "should be able to create embedded script spec")
-    val loaded = runBlocking {
-      embedded.load()
-    }
-    assertNotNull(loaded, "script should be loadable from embedded space in JAR")
-  }
-
   @Test fun basicPolyglotInlineTest() {
     val polyglot: Context = Context.create()
     val array: Value = polyglot.eval("js", "[1,2,42,4]")

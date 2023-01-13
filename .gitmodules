@@ -6,3 +6,7 @@
 	path = tools/third_party/jetbrains/compose
 	url = git@github.com:elide-tools/compose.git
 	branch = mirror/web
+[submodule "runtime"]
+	path = tools/runtime
+	url = git@github.com:elide-dev/runtime.git
+	branch = main

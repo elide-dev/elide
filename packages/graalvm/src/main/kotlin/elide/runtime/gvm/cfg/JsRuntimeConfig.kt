@@ -6,7 +6,7 @@ import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLeve
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.time.ZoneId
-import java.util.Locale
+import java.util.*
 
 /**
  * # JS VM Configuration

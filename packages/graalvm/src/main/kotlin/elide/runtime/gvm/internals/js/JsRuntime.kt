@@ -1,19 +1,15 @@
 package elide.runtime.gvm.internals.js
 
 import elide.annotations.Inject
-import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.gvm.BasicExecutionInputs
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.cfg.JsRuntimeConfig
 import elide.runtime.gvm.internals.*
-import elide.runtime.gvm.internals.AbstractVMEngine
-import elide.runtime.gvm.internals.GuestRuntime
+import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import io.micronaut.context.annotation.Requires
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -27,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.Stream
+import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 

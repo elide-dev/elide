@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import java.util.SortedMap
+import java.util.*
 
 /**
  * TBD.

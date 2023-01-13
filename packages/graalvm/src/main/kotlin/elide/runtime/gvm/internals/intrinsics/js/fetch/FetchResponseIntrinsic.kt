@@ -1,8 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
 import elide.annotations.core.Polyglot
-import elide.runtime.intrinsics.js.*
+import elide.runtime.intrinsics.js.FetchHeaders
+import elide.runtime.intrinsics.js.FetchMutableResponse
 import elide.runtime.intrinsics.js.FetchResponse.Defaults
+import elide.runtime.intrinsics.js.ReadableStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference

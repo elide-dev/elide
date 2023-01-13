@@ -5,7 +5,7 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.IntrinsicsResolver
 import io.micronaut.context.annotation.Infrastructure
-import java.util.ServiceLoader
+import java.util.*
 
 /** Resolves installed guest intrinsics via the JVM service loader mechanism. */
 @Context @Singleton @Infrastructure internal class ServiceIntrinsicsResolver : IntrinsicsResolver {

@@ -4,8 +4,6 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.intrinsics.js.ReadableStream
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Value
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer

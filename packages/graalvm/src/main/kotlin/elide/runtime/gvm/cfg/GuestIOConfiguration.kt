@@ -1,5 +1,6 @@
 package elide.runtime.gvm.cfg
 
+import elide.runtime.gvm.cfg.GuestIOConfiguration.Mode
 import elide.runtime.gvm.internals.vfs.AbstractBaseVFS
 import elide.runtime.gvm.internals.vfs.GuestVFSPolicy
 import io.micronaut.context.annotation.ConfigurationProperties

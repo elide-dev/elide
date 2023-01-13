@@ -5,13 +5,12 @@ import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.internals.js.JsExecutableScript
 import elide.runtime.gvm.internals.js.JsMicronautRequestExecutionInputs
+import elide.runtime.gvm.js.JavaScript.embedded
+import elide.runtime.gvm.js.JavaScript.literal
 import elide.server.type.RequestState
 import io.micronaut.http.HttpRequest
-import java.io.File
 import java.io.InputStream
 import java.io.Reader
-import java.net.URI
-import java.nio.file.Path
 
 /**
  * # Guest VM: JavaScript

@@ -11,11 +11,10 @@ import elide.runtime.Logging
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.TreeSet
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
@@ -23,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
+import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Context as VMContext
 
 /** TBD. */

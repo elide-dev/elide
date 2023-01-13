@@ -84,8 +84,8 @@ public final class elide/server/SSRExtensionsKt {
 	public static final field EMBEDDED_ROOT Ljava/lang/String;
 	public static final field NODE_SSR_DEFAULT_PATH Ljava/lang/String;
 	public static final fun getDEFAULT_INVOCATION_BASE ()Ljava/lang/String;
-	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;ZLjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun streamSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -94,6 +94,10 @@ public final class elide/server/SSRExtensionsKt {
 
 public abstract interface class elide/server/ServerInitializer {
 	public fun initialize ()V
+}
+
+public abstract interface class elide/server/StreamingSuspensionRenderer {
+	public abstract fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/server/SuspensionRenderer {
@@ -567,31 +571,17 @@ public class elide/server/runtime/jvm/UncaughtExceptionHandler : java/lang/Threa
 	public fun uncaughtException (Ljava/lang/Thread;Ljava/lang/Throwable;)V
 }
 
-public final synthetic class elide/server/ssr/$ServerSSRRenderer$SSRInitializer$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
 public final class elide/server/ssr/ServerSSRRenderer : elide/server/SuspensionRenderer {
 	public static final field Companion Lelide/server/ssr/ServerSSRRenderer$Companion;
 	public static final field ssrId Ljava/lang/String;
-	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;)V
-	public synthetic fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/gvm/ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;)V
+	public synthetic fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/gvm/ExecutableScript;Ljava/lang/StringBuilder;Ljava/util/concurrent/atomic/AtomicReference;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun renderResponse (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun renderSuspendAsync (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun renderSuspendAsync$default (Lelide/server/ssr/ServerSSRRenderer;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun renderSuspendAsync (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/server/ssr/ServerSSRRenderer$Companion {
-}
-
-public final class elide/server/ssr/ServerSSRRenderer$SSRInitializer : elide/server/ServerInitializer {
-	public fun <init> ()V
-	public fun initialize ()V
 }
 
 public final class kotlinx/html/Api_extKt {

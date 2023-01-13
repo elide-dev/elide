@@ -1,1 +1,1 @@
-FROM us-docker.pkg.dev/elide-fw/tools/codespace:latest
+FROM us-docker.pkg.dev/elide-fw/tools/codespace:latest@sha256:3271a9cbb8026aefd75436492ccba95491d8b6b4f8a62ed243b3b8f36172cf9d

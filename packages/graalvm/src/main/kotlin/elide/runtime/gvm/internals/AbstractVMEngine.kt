@@ -447,7 +447,7 @@ internal abstract class AbstractVMEngine<
   }
 
   // Decode a `ServerResponse` value from a guest script.
-  private fun decodeServerResponse(hasMembers: Boolean, value: Value): ServerResponse {
+  private fun decodeServerResponse(hasMembers: Boolean, value: GuestValue): ServerResponse {
     return object: ServerResponse {
       override val status: Int? get() = (
         if (hasMembers && value.hasMember("status")) {
@@ -507,7 +507,7 @@ internal abstract class AbstractVMEngine<
 
   // Handle a render output value, which should either be a `String`, `ServerResponse`, or one of those wrapped in a
   // `Promise`.
-  private fun handleRenderOutput(out: Value, receiver: StreamingReceiver) {
+  private fun handleRenderOutput(out: GuestValue, receiver: StreamingReceiver) {
     when (val meta = out.metaObject) {
       null -> error("Failed to resolve meta-object for `render` output")
       else -> when {
@@ -522,7 +522,7 @@ internal abstract class AbstractVMEngine<
 
         // otherwise, if the function returns a promise, we should wait on the output and re-dispatch.
         meta.metaSimpleName == "Promise" -> {
-          val resultReceiver: Consumer<Value> = Consumer {
+          val resultReceiver: Consumer<GuestValue> = Consumer {
             handleRenderOutput(it, receiver)
           }
           out.invokeMember("then", resultReceiver)

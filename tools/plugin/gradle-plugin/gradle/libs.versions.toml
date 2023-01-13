@@ -39,8 +39,8 @@ auto_service = "1.0.1"
 kover = "0.6.1"
 testLoggerPlugin = "3.2.0"
 
-micronaut = "3.7.5"
-micronaut_plugin = "3.6.5"
+micronaut = "3.8.1"
+micronaut_plugin = "3.7.0"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

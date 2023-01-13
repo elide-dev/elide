@@ -4,7 +4,6 @@ import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.*
-import elide.runtime.gvm.VMEngineImpl
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
@@ -18,16 +17,15 @@ import elide.runtime.ssr.ServerResponse
 import elide.util.RuntimeFlag
 import io.micronaut.http.HttpRequest
 import kotlinx.coroutines.*
-import org.graalvm.polyglot.Context as VMContext
-import org.graalvm.polyglot.Value as GuestValue
 import kotlinx.serialization.Serializable
 import org.graalvm.polyglot.*
-import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Consumer
 import java.util.stream.Stream
+import org.graalvm.polyglot.Context as VMContext
+import org.graalvm.polyglot.Value as GuestValue
 
 /**
  * # Guest VM Engine

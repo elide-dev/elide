@@ -2,12 +2,13 @@ package elide.runtime.gvm.internals.vfs
 
 import elide.runtime.Logger
 import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSBuilder
+import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSFactory
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.*
-import java.util.EnumSet
-import kotlin.jvm.Throws
+import java.util.*
 
 /**
  * # VFS: Guest Base

@@ -8,10 +8,9 @@ import kotlinx.coroutines.jdk9.awaitSingle
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.net.URI
-import java.net.http.HttpRequest as JavaNetHttpRequest
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import java.net.http.HttpRequest as JavaNetHttpRequest
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
 internal class FetchRequestIntrinsic internal constructor (

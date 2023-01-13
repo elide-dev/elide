@@ -4,19 +4,9 @@ import elide.annotations.core.Polyglot
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
-import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
-import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMultiMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseMutableJsMultiMap
-import elide.runtime.intrinsics.js.JsIterator
-import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
-import elide.runtime.intrinsics.js.MapLike.Entry
-import elide.runtime.intrinsics.js.MultiMapLike
-import elide.runtime.intrinsics.js.MutableMultiMapLike
-import io.micronaut.http.MutableHttpParameters
 import elide.runtime.intrinsics.js.URLMutableSearchParams as IMutableSearchParams
 import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
 import org.graalvm.polyglot.Value as GuestValue

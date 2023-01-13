@@ -4,8 +4,8 @@ import elide.annotations.core.Polyglot
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMultiMap
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableHeaders
-import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.JsIterator
+import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MultiMapLike
 import org.graalvm.polyglot.Value
 import java.util.*

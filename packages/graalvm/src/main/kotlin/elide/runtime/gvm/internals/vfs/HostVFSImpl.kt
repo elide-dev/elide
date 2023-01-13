@@ -4,13 +4,11 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.util.UUID
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Requires
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
-import java.nio.file.Files
 
 /**
  * # VFS: Host.

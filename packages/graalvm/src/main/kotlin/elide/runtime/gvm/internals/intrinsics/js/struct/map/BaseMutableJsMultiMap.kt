@@ -7,7 +7,7 @@ import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.js.MutableMultiMapLike
 import elide.runtime.intrinsics.js.err.TypeError
-import java.util.TreeMap
+import java.util.*
 import java.util.stream.Stream
 
 /** Implements a JS-compatible map structure which is mutable and accepts multiple values per key. */

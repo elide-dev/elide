@@ -2,9 +2,7 @@ package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
 import elide.annotations.core.Polyglot
 import elide.runtime.intrinsics.js.MapLike
-import java.util.Comparator
-import java.util.SortedMap
-import java.util.TreeMap
+import java.util.*
 
 /** Implements a mutable and sorted map for use with JavaScript; backed by a [TreeMap]. */
 @Suppress("unused")

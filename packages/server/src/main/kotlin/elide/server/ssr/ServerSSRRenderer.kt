@@ -2,21 +2,16 @@
 
 package elide.server.ssr
 
-//import elide.annotations.Context
 import elide.annotations.core.Polyglot
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
 import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.js.JavaScript
 import elide.runtime.ssr.ServerResponse
-//import elide.server.Application
-//import elide.server.ServerInitializer
 import elide.server.SuspensionRenderer
-//import elide.server.annotations.Eager
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
 import elide.server.type.RequestState
@@ -45,20 +40,6 @@ public class ServerSSRRenderer constructor(
     /** ID in the DOM where SSR data is affixed, if present. */
     public const val ssrId: String = "ssr-data"
   }
-
-  /** SSR service initializer. */
-//  @Context @Eager public class SSRInitializer : ServerInitializer {
-//    override fun initialize() {
-//      Application.Initialization.initializeOnWarmup {
-//        val maybeEmbedded = JsRuntime.Script.embedded()
-//        if (maybeEmbedded.valid()) {
-//          JsRuntime.acquire().apply {
-//            prewarmScript(maybeEmbedded)
-//          }
-//        }
-//      }
-//    }
-//  }
 
   // Logger.
   private val logging: Logger = Logging.of(ServerSSRRenderer::class)

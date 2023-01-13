@@ -1,7 +1,7 @@
 package elide.runtime.gvm
 
 import elide.runtime.gvm.internals.GraalVMGuest
-import java.util.EnumSet
+import java.util.*
 
 /**
  * TBD.

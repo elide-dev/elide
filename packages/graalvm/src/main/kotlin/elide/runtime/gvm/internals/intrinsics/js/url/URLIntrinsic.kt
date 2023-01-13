@@ -1,28 +1,27 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
 import elide.annotations.core.Polyglot
-import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
-import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
-import org.graalvm.polyglot.Value
+import elide.runtime.intrinsics.js.err.TypeError
+import elide.runtime.intrinsics.js.err.ValueError
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.Serializable
 import java.net.URI
 import java.util.concurrent.atomic.AtomicBoolean
-import org.graalvm.polyglot.Value as GuestValue
-import java.net.URI as NativeURL
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.*
+import org.graalvm.polyglot.Value as GuestValue
+import java.net.URI as NativeURL
 
 /** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
 @Intrinsic internal class URLIntrinsic : AbstractJsIntrinsic() {

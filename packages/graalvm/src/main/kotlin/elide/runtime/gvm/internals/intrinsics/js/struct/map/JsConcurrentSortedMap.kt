@@ -2,8 +2,7 @@ package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.js.MapLike.Entry
-import java.util.Comparator
-import java.util.SortedMap
+import java.util.*
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
 

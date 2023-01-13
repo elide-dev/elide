@@ -1,7 +1,6 @@
 package elide.runtime.intrinsics.js
 
 import elide.annotations.core.Polyglot
-import elide.runtime.intrinsics.js.err.TypeError
 
 /**
  * # JavaScript: `URL` (Mutable)

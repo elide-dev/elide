@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals
 
 import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import org.graalvm.polyglot.Value as GuestValue
 
 /**

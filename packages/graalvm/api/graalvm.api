@@ -142,9 +142,9 @@ public final class elide/runtime/gvm/ExecutableScript$ScriptSource {
 	public static final fun fromEmbedded-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun fromFile-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun fromResource-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun getLITERAL-ulLWtvI ()Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
-	public static final fun literal-ulLWtvI ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
@@ -186,15 +186,32 @@ public final class elide/runtime/gvm/ExecutableScript$State : java/lang/Enum {
 }
 
 public abstract interface class elide/runtime/gvm/ExecutionInputs {
+	public static final field Companion Lelide/runtime/gvm/ExecutionInputs$Companion;
 	public abstract fun allInputs ()[Ljava/lang/Object;
+	public fun buildArguments ()[Ljava/lang/Object;
+	public static fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+}
+
+public final class elide/runtime/gvm/ExecutionInputs$Companion {
+	public final fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+}
+
+public final class elide/runtime/gvm/ExecutionInputs$Empty : elide/runtime/gvm/ExecutionInputs {
+	public static final field INSTANCE Lelide/runtime/gvm/ExecutionInputs$Empty;
+	public fun allInputs ()[Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/gvm/GuestLanguage {
+	public static final field Companion Lelide/runtime/gvm/GuestLanguage$Companion;
 	public fun getInvocationModes ()Ljava/util/EnumSet;
 	public abstract fun getLabel ()Ljava/lang/String;
 	public fun getSupportsSSR ()Z
 	public fun getSupportsStreamingSSR ()Z
 	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/GuestLanguage$Companion {
+	public final fun getJAVASCRIPT ()Lelide/runtime/gvm/GuestLanguage;
 }
 
 public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
@@ -224,10 +241,11 @@ public abstract interface class elide/runtime/gvm/VMEngine : elide/runtime/gvm/V
 }
 
 public abstract interface class elide/runtime/gvm/VMFacade {
-	public abstract fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun executeBlocking (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
-	public abstract fun executeStreaming (Lelide/runtime/gvm/ExecutableScript;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeBlocking (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;)Ljava/lang/Object;
+	public abstract fun executeRender (Lelide/runtime/gvm/ExecutableScript;Lio/micronaut/http/HttpRequest;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeStreaming (Lelide/runtime/gvm/ExecutableScript;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
 	public abstract fun prewarmScript (Lelide/runtime/gvm/ExecutableScript;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -392,6 +410,14 @@ public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Defi
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
+	public static final field JAVASCRIPT Lelide/runtime/gvm/internals/GraalVMGuest;
+	public fun getLabel ()Ljava/lang/String;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/GraalVMGuest;
+	public static fun values ()[Lelide/runtime/gvm/internals/GraalVMGuest;
 }
 
 public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {
@@ -770,6 +796,19 @@ public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 }
 
+public final class elide/runtime/gvm/js/JavaScript {
+	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript;
+	public static final fun embedded (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript;
+	public static final fun literal (Ljava/lang/CharSequence;)Lelide/runtime/gvm/ExecutableScript;
+}
+
+public final class elide/runtime/gvm/js/JavaScript$Inputs {
+	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript$Inputs;
+	public static final fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+	public static final fun requestState (Lelide/server/type/RequestState;Ljava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
+	public static synthetic fun requestState$default (Lelide/server/type/RequestState;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
+}
+
 public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
 	public static final field INSTANCE Lelide/runtime/gvm/vfs/EmbeddedGuestVFS;
 	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
@@ -825,12 +864,27 @@ public abstract interface class elide/runtime/intrinsics/js/FetchMutableHeaders 
 }
 
 public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest : elide/runtime/intrinsics/js/FetchRequest {
+	public static final field DefaultFactory Lelide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory;
+	public static fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public static fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
 	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun getMethod ()Ljava/lang/String;
 	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun setHeaders (Lelide/runtime/intrinsics/js/FetchHeaders;)V
 	public abstract fun setMethod (Ljava/lang/String;)V
 	public abstract fun setUrl (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory : elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public synthetic fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+	public fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public synthetic fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public abstract fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+	public abstract fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/FetchMutableResponse : elide/runtime/intrinsics/js/FetchResponse {

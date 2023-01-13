@@ -18,9 +18,7 @@ import kotlinx.serialization.protobuf.*
 import kotlinx.serialization.protobuf.internal.isPackable
 import kotlinx.serialization.protobuf.schema.ProtoBufSyntaxVersion.*
 
-/**
- *
- */
+/** Implementation of a protocol buffer syntax generator, from Kotlin models; supports proto syntax 2 and 3. */
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
 internal open class ProtoBufSchemaGeneratorImpl (
   protected val options: ProtoBufGeneratorOptions,
@@ -541,7 +539,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
   private fun createLegacyMapType(
     messageType: TypeDefinition,
     index: Int,
-    description: String
+    description: String,
   ): TypeDefinition {
     val messageDescriptor = messageType.descriptor
     val fieldDescriptor = messageDescriptor.getElementDescriptor(index)

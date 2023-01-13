@@ -180,7 +180,6 @@ subprojects {
       dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
       dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
-//      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:$mermaidDokka")
     }
   }
 

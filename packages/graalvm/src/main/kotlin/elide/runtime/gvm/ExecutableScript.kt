@@ -1,5 +1,7 @@
 package elide.runtime.gvm
 
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.EnumSet
 
 /**
@@ -49,7 +51,7 @@ import java.util.EnumSet
    * - [State.UNINITIALIZED]: The script has just been created and has not yet initialized at all.
    * - [State.PARSED]: The script has been linked and parsed, but has not been evaluated yet.
    * - [State.EVALUATED]: The script has been evaluated but has not been executed yet.
-   * - [State.EXECUTED]: The script has executed before and is fully cached.
+   * - [State.EXECUTED]: The script has executed before and is fully cached, configuration permitting.
    */
   public enum class State {
     /** The script has just been created and has not yet initialized at all. */
@@ -59,10 +61,10 @@ import java.util.EnumSet
     PARSED,
 
     /** The script has been evaluated but has not been executed yet. */
-    EXECUTED,
+    EVALUATED,
 
     /** The script has executed before and is fully cached. */
-    EVALUATED,
+    EXECUTED,
   }
 
   /**
@@ -84,6 +86,12 @@ import java.util.EnumSet
 
     /** Tests equality between two [ScriptType] instances. */
     internal fun `is`(other: ScriptType): Boolean = spec == other.spec
+
+    /** @return Raw MIME type. */
+    internal fun asMimeType(): String = spec.drop(MIME_TYPE_PREFIX.length + 1)
+
+    /** @return Expected character set for the script. */
+    internal fun charset(): Charset = StandardCharsets.UTF_8  // @TODO(sgammon): make this configurable
   }
 
   /**
@@ -118,19 +126,41 @@ import java.util.EnumSet
       /** @return Script source which references an embedded script by [name]. */
       @JvmStatic fun fromEmbedded(name: String) = ScriptSource("$PROTOCOL_EMBEDDED://$name")
 
-      /** @return Script source which references a literal script value. */
-      @JvmStatic fun literal() = LITERAL_SCRIPT
+      /** Symbol for a literal script. */
+      @JvmStatic val LITERAL: ScriptSource = LITERAL_SCRIPT
     }
 
     /** @return Filename for this script source. */
     internal val filename: String get() = if (target == PROTOCOL_LITERAL) {
       "literal"
-    } else target.substringAfterLast("://")
+    } else target.split("/").last()
+
+    /** @return Path value for this script resource, as applicable (or an empty string). */
+    internal val path: String get() = if (target == PROTOCOL_LITERAL) {
+      ""
+    } else when {
+      isEmbedded -> target.drop(PROTOCOL_EMBEDDED.length + 3)
+      isResource -> target.drop(PROTOCOL_CLASSPATH.length + 3)
+      isFile -> target.drop(PROTOCOL_FILE.length + 3)
+      else -> target
+    }
 
     /** @return Extension for this script resource, if present. */
     internal val extension: String? get() = filename.substringAfterLast(".").ifBlank {
       null
     }
+
+    /** @return Indication that this script is a literal value. */
+    internal val isLiteral: Boolean get() = target == PROTOCOL_LITERAL
+
+    /** @return Indication that this script is a classpath resource. */
+    internal val isResource: Boolean get() = target.startsWith(PROTOCOL_CLASSPATH)
+
+    /** @return Indication that this script is an embedded resource. */
+    internal val isEmbedded: Boolean get() = target.startsWith(PROTOCOL_EMBEDDED)
+
+    /** @return Indication that this script is a file resource. */
+    internal val isFile: Boolean get() = target.startsWith(PROTOCOL_FILE)
   }
 
   /**

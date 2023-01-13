@@ -2,25 +2,30 @@
 
 package elide.server
 
-import elide.runtime.graalvm.JsRuntime
+import elide.runtime.gvm.js.JavaScript
 import elide.server.controller.ElideController
 import elide.server.ssr.ServerSSRRenderer
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
+import kotlinx.coroutines.*
+import kotlinx.coroutines.reactive.publish
+import kotlinx.coroutines.reactor.mono
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 // Path within app JARs for embedded script assets.
-public const val EMBEDDED_ROOT: String = "META-INF/elide/embedded"
+public const val EMBEDDED_ROOT: String = "embedded"
 
 // Production script name default.
-private const val NODE_PROD_DEFAULT: String = "node-prod.pack.js"
+private const val NODE_PROD_DEFAULT: String = "elide-ssr.prod.mjs"
 
 // Development script name default.
-private const val NODE_DEV_DEFAULT: String = "node-dev.opt.js"
+private const val NODE_DEV_DEFAULT: String = "elide-ssr.dev.mjs"
 
 // Default name if no mode is specified or resolvable.
 public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
@@ -49,7 +54,6 @@ public const val DEFAULT_SSR_DOM_ID: String = "root"
  * @param attrs Set of additional attribute pairs to apply in the DOM to the root element. Defaults to an empty set.
  * @param path Path within the embedded asset area of the JAR from which to load the SSR script. Defaults to
  *    `node-prod.js`, which is the default value used by the Node/Kotlin toolchain provided by Elide.
- * @param streamed Whether to enable streaming SSR.
  * @param embeddedRoot Resource folder path where embedded scripts are held. Defaults to `embedded`.
  */
 @Suppress("LongParameterList")
@@ -60,22 +64,14 @@ public suspend fun BODY.injectSSR(
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
   path: String? = null,
-  streamed: Boolean = false,
   embeddedRoot: String? = null,
 ) {
   val rendered = ServerSSRRenderer(
     this,
     handler,
     request,
-    if (path != null && embeddedRoot != null) {
-      JsRuntime.Script.embedded(
-        path = path,
-        embeddedRoot = embeddedRoot,
-      )
-    } else {
-      JsRuntime.Script.embedded()
-    },
-  ).renderSuspendAsync(streamed)
+    JavaScript.embedded(path = "${embeddedRoot ?: EMBEDDED_ROOT}/${path ?: NODE_SSR_DEFAULT_PATH}"),
+  ).renderSuspendAsync()
 
   MAIN(
     attributesMapOf(
@@ -130,7 +126,6 @@ public suspend fun BODY.streamSSR(
   attrs = attrs,
   path = path,
   embeddedRoot = embeddedRoot,
-  streamed = true,
 )
 
 /**
@@ -148,38 +143,31 @@ public suspend fun BODY.streamSSR(
  * @return HTTP response wrapping the generated React SSR output, or an HTTP response which serves a 404 if the asset
  *    could not be located at the specified path.
  */
-@Suppress("UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER", "ReactiveStreamsUnusedPublisher")
 public suspend fun ssr(
   request: HttpRequest<*>,
   path: String = NODE_SSR_DEFAULT_PATH,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
   block: suspend HTML.() -> Unit
-): MutableHttpResponse<ByteArrayOutputStream> {
-  return if (path.isBlank()) {
-    HttpResponse.notFound()
-  } else {
-    return response.body(
-      SSRContent(builder = block).render()
-    ).characterEncoding(StandardCharsets.UTF_8).contentType(
-      "text/html; charset=utf-8"
-    )
-  }
-}
+): Mono<HttpResponse<Publisher<ByteArrayOutputStream>>> {
+  // prepare a render job
+  return mono {
+    if (path.isBlank()) {
+      HttpResponse.notFound()
+    } else {
+      response.body(publish {
+        val outputStream = ByteArrayOutputStream()
+        outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
+          appendHTML(prettyPrint = false,).htmlSuspend(
+            block = block
+          )
+          flush()
+        }
 
-// SSR content rendering and container utility.
-internal class SSRContent(
-  private val prettyhtml: Boolean = false,
-  private val builder: suspend HTML.() -> Unit
-) : SuspensionRenderer<ByteArrayOutputStream> {
-  override suspend fun render(): ByteArrayOutputStream {
-    val baos = ByteArrayOutputStream()
-    baos.bufferedWriter(StandardCharsets.UTF_8).use {
-      it.appendHTML(
-        prettyPrint = prettyhtml,
-      ).htmlSuspend(
-        block = builder
+        send(outputStream)
+      }).characterEncoding(StandardCharsets.UTF_8).contentType(
+        "text/html;charset=utf-8"
       )
     }
-    return baos
   }
 }

@@ -8,24 +8,20 @@ import java.util.concurrent.CompletableFuture
 
 /** Implements an adapter to [JsRuntime] for server-side use. */
 internal class JsServerAdapter : AbstractVMAdapter<
-  HttpResponse<InputStream>,
+  HttpResponse<Publisher<InputStream>>,
   JsInvocationBindings,
   JsExecutableScript,
   JsMicronautRequestExecutionInputs,
 >() {
   /** JavaScript server execution wrapper (for an in-flight VM execution). */
   inner class JsServerExecution (
-    stream: Publisher<HttpResponse<InputStream>>,
-    op: CompletableFuture<HttpResponse<InputStream>>,
-  ) : VMStreamingExecution(
-    stream,
-    op,
-  ) {
+    op: CompletableFuture<HttpResponse<Publisher<InputStream>>>,
+  ) : VMStreamingExecution(op) {
     /** @inheritDoc */
     override val done: Boolean get() = op.isDone
 
     /** @inheritDoc */
-    override fun execute(): PromiseLike<HttpResponse<InputStream>> {
+    override fun execute(): PromiseLike<HttpResponse<Publisher<InputStream>>> {
       TODO("Not yet implemented")
     }
   }
@@ -35,7 +31,7 @@ internal class JsServerAdapter : AbstractVMAdapter<
     script: JsExecutableScript,
     bindings: JsInvocationBindings,
     inputs: JsMicronautRequestExecutionInputs
-  ): AbstractVMExecution<HttpResponse<InputStream>> {
+  ): AbstractVMExecution<HttpResponse<Publisher<InputStream>>> {
     TODO("Not yet implemented")
   }
 }

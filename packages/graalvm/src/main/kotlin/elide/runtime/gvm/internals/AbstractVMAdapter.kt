@@ -102,11 +102,9 @@ internal abstract class AbstractVMAdapter<
    *
    * The simplest implementation of a streaming execution wraps a [CompletableFuture]-compatible [Publisher].
    *
-   * @param stream Stream which produces chunks of [Output] content until the operation ([op]) completes.
    * @param op Publisher which is wrapped by this execution, and expected to produce one or more [Output] results.
    */
   internal abstract inner class VMStreamingExecution (
-    protected val stream: Publisher<Output>,
     protected val op: CompletableFuture<Output>,
   ) : AbstractVMExecution<Output>(), PromiseLike<Output>, Future<Output> by op, CompletionStage<Output> by op
 

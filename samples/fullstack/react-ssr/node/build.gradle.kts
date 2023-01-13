@@ -32,7 +32,7 @@ elide {
 
     runtime {
       inject(true)
-      languageLevel(JsLanguageLevel.ES2020)
+      languageLevel(JsLanguageLevel.ES2022)
     }
   }
 }

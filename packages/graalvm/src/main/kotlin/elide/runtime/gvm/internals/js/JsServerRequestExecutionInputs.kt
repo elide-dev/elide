@@ -14,8 +14,11 @@ import java.util.concurrent.atomic.AtomicBoolean
  * compatible with [FetchRequest].
  *
  * @see JsMicronautRequestExecutionInputs for an implementation of this input shape based on Micronaut types.
+ * @param state State ("props") provided for a single execution run against these inputs.
  */
-internal abstract class JsServerRequestExecutionInputs<Request: Any> : RequestExecutionInputs<Request>, FetchRequest {
+internal abstract class JsServerRequestExecutionInputs<Request: Any> (
+  private val state: Any? = null,
+) : RequestExecutionInputs<Request>, FetchRequest {
   /** Internal indicator of whether the request body stream has been consumed. */
   protected val consumed: AtomicBoolean = AtomicBoolean(false)
 
@@ -106,6 +109,17 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> : RequestEx
    * @return Parsed URL instance for this request.
    */
   protected abstract fun getURL(): URI
+
+  /**
+   * JavaScript server execution inputs: State.
+   *
+   * Provide, in literal form, the state value ("props") yielded by the active serving controller, as applicable. Apps
+   * may use this mechanism to share a value with a guest execution. For SSR-enabled controllers, which is automatically
+   * set to the output of the `state()` method.
+   *
+   * @return Active state for this request/response cycle, if any, otherwise, `null`.
+   */
+  protected open fun getState(): Any? = state
 
   /**
    * JavaScript server execution inputs: Body status.

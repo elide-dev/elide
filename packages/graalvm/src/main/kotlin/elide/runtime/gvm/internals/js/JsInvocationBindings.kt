@@ -128,10 +128,10 @@ internal sealed class JsInvocationBindings constructor (
     ASYNC_FUNCTION,
 
     /** Indicates a server-capable interface, which exports a `fetch` function (async). */
-    SERVER_ASYNC,
+    SERVER,
 
     /** Indicates an SSR-capable interface, which exports a `render` function (async). */
-    RENDER_ASYNC,
+    RENDER,
 
     /** Special type of entrypoint which indicates support for multiple [JsEntrypointType]s. */
     COMPOUND,
@@ -202,65 +202,68 @@ internal sealed class JsInvocationBindings constructor (
     }
 
     // Resolve the target `entry`point as an exported module object.
-    @JvmStatic private fun resolveObject(entry: GuestValue): JsInvocationBindings = when {
-      // are there multiple default exports? if so, we will need to resolve them all into a compound binding.
-      entry.memberKeys.size > 1 -> {
-        var expected = 0
-        val hasServer = entry.hasMember("fetch")
-        if (hasServer) expected += 1
-        val hasRender = entry.hasMember("render")
-        if (hasRender) expected += 1
-        if (expected == 0) error("No usable bindings found for `default` export from guest script")
-        val bindings = ArrayList<JsInvocationBindings>(expected)
+    @JvmStatic private fun resolveObject(entry: GuestValue): JsInvocationBindings {
+      return when {
+        // are there multiple default exports? if so, we will need to resolve them all into a compound binding.
+        entry.memberKeys.size > 1 -> {
+          var expected = 0
+          val hasServer = entry.hasMember("fetch")
+          if (hasServer) expected += 1
+          val hasRender = entry.hasMember("render")
+          if (hasRender) expected += 1
+          if (expected == 0) error("No usable bindings found for `default` export from guest script")
+          val bindings = ArrayList<JsInvocationBindings>(expected)
 
-        // resolve server binding
-        if (hasServer) {
-          val binding = entry.getMember("fetch") ?: error("Failed to resolve detected `fetch` binding")
+          // resolve server binding
+          if (hasServer) {
+            val binding = entry.getMember("fetch") ?: error("Failed to resolve detected `fetch` binding")
+            val entrypoint = JsServer(
+              value = binding,
+              async = functionIsAsync(binding),
+            )
+            if (!hasRender) {
+              // we can shortcut and return the binding directly, because it is the only one.
+              return entrypoint
+            }
+            bindings.add(entrypoint)
+          }
 
-          bindings.add(JsServer(
-            value = binding,
-            async = functionIsAsync(binding),
-          ))
-        }
-
-        // resolve render binding
-        if (hasRender) {
+          // resolve render binding
           val binding = entry.getMember("render") ?: error("Failed to resolve detected `render` binding")
-          bindings.add(JsRender(
-            value = binding,
-            async = functionIsAsync(binding),
-          ))
+          val entrypoint = JsRender(value = binding)
+
+          if (!hasServer) {
+            return entrypoint
+          }
+          bindings.add(entrypoint)
+
+          JsCompound(
+            entry,
+            bindings,
+          )
         }
 
-        JsCompound(
-          entry,
-          bindings,
-        )
-      }
+        // first up: `render`. if this is present, the script is exporting a binding for an SSR sidecar execution.
+        entry.hasMember("render") -> entry.getMember("render").let { renderEntry ->
+          // the returned entrypoint must be executable
+          if (!renderEntry.canExecute()) error("`render` must be executable")
+          JsRender(value = renderEntry)
+        }
 
-      // first up: `render`. if this is present, the script is exporting a binding for an SSR sidecar execution.
-      entry.hasMember("render") -> entry.getMember("render").let { renderEntry ->
-        // the returned entrypoint must be executable
-        if (!renderEntry.canExecute()) error("`render` must be an async function")
-        JsRender(
-          value = renderEntry,
-          async = functionIsAsync(renderEntry),
-        )
-      }
+        // next up: `fetch`. if this is present, the script is exporting a binding for a server.
+        entry.hasMember("fetch") -> entry.getMember("fetch").let { fetchEntry ->
+          // the returned entrypoint must be executable
+          if (!fetchEntry.canExecute()) error("`fetch` must be executable")
+          JsServer(
+            value = fetchEntry,
+            async = functionIsAsync(fetchEntry),
+          )
+        }
 
-      // next up: `fetch`. if this is present, the script is exporting a binding for a server.
-      entry.hasMember("fetch") -> entry.getMember("fetch").let { fetchEntry ->
-        // the returned entrypoint must be executable
-        if (!fetchEntry.canExecute()) error("`fetch` must be an async function")
-        JsServer(
-          value = fetchEntry,
-          async = functionIsAsync(fetchEntry),
-        )
+        // if we arrive at this error, there was an `export default {...}`, but it did not provide any named methods
+        // which we were able to recognize.
+        else -> error("No supported binding found on `export default` provided by guest script")
       }
-
-      // if we arrive at this error, there was an `export default {...}`, but it did not provide any named methods
-      // which we were able to recognize.
-      else -> error("No supported binding found on `export default` provided by guest script")
     }
 
     /**
@@ -280,21 +283,26 @@ internal sealed class JsInvocationBindings constructor (
 
       // if the exported value has members, there are typically exports to traverse.
       value.hasMembers() -> {
-        // typically, we're only looking for the `default` export from the entrypoint.
-        if (!value.hasMember("default")) error("Guest script has no exported `default`")
+        // look for top-level member called `render` (we need this for KJS)
+        if (value.hasMember("render")) {
+          resolveObject(value)
+        } else {
+          // typically, we're only looking for the `default` export from the entrypoint.
+          if (!value.hasMember("default")) error("Guest script has no exported `default`")
 
-        // grab the entrypoint and traverse to discover the exported bindings.
-        val entry = value.getMember("default")
-        when {
-          // if the entrypoint itself can be executed, there was an `export default function() {}`... so far so good.
-          entry.canExecute() -> resolveFunction(entry, listOf("default"))
+          // grab the entrypoint and traverse to discover the exported bindings.
+          val entry = value.getMember("default")
+          when {
+            // if the entrypoint itself can be executed, there was an `export default function() {}`... so far so good.
+            entry.canExecute() -> resolveFunction(entry, listOf("default"))
 
-          // if the entrypoint has members, it means there was an `export default {}`... so far so good.
-          entry.hasMembers() -> resolveObject(entry)
+            // if the entrypoint has members, it means there was an `export default {}`... so far so good.
+            entry.hasMembers() -> resolveObject(entry)
 
-          // if we arrive at this error, the exported value was neither an object, nor a function, so we don't know what
-          // to do with it.
-          else -> error("Failed to resolve entrypoint from default export in guest script")
+            // if we arrive at this error, the exported value was neither an object, nor a function, so we don't know
+            // what to do with it.
+            else -> error("Failed to resolve entrypoint from default export in guest script")
+          }
         }
       }
 
@@ -371,7 +379,7 @@ internal sealed class JsInvocationBindings constructor (
     value = value,
     name = "fetch",
     path = listOf("default", "fetch"),
-    type = if (async) JsEntrypointType.SERVER_ASYNC else error("Exported `fetch` method must be `async`"),
+    type = if (async) JsEntrypointType.SERVER else error("Exported `fetch` method must be `async`"),
     modes = EnumSet.of(DispatchStyle.SERVER),
   )
 
@@ -388,13 +396,12 @@ internal sealed class JsInvocationBindings constructor (
    * according to convention, is `default.render`, so this is also omitted.
    *
    * @param value Guest value implementing this function.
-   * @param async Whether the function operates asynchronously (returns a `Promise`).
    */
-  internal class JsRender (value: GuestValue, async: Boolean) : JsInvocationBindings(
+  internal class JsRender (value: GuestValue) : JsInvocationBindings(
     value = value,
     name = "render",
     path = listOf("default", "render"),
-    type = if (async) JsEntrypointType.RENDER_ASYNC else error("Exported `render` method must be `async`"),
+    type = JsEntrypointType.RENDER,
     modes = EnumSet.of(DispatchStyle.RENDER),
   )
 

@@ -37,7 +37,10 @@ internal class FetchHeadersIntrinsic private constructor (
      * @return Immutable set of fetch headers.
      */
     @JvmStatic override fun fromPairs(pairs: Collection<Pair<String, String>>): FetchHeadersIntrinsic {
-      TODO("Not yet implemented")
+      return FetchHeadersIntrinsic(
+        initialData = null,
+        data = JsMutableMultiMap.fromPairs(pairs),
+      )
     }
 
     /**
@@ -46,7 +49,10 @@ internal class FetchHeadersIntrinsic private constructor (
      * @return Immutable set of fetch headers.
      */
     @JvmStatic override fun from(vararg pairs: Pair<String, String>): FetchHeadersIntrinsic {
-      TODO("Not yet implemented")
+      return FetchHeadersIntrinsic(
+        initialData = null,
+        data = JsMutableMultiMap.fromPairs(pairs.toList()),
+      )
     }
 
     /**
@@ -55,7 +61,10 @@ internal class FetchHeadersIntrinsic private constructor (
      * @return Immutable set of fetch headers.
      */
     @JvmStatic override fun fromMap(map: Map<String, String>): FetchHeadersIntrinsic {
-      TODO("Not yet implemented")
+      return FetchHeadersIntrinsic(
+        initialData = null,
+        data = JsMutableMultiMap.copyOf(map),
+      )
     }
 
     /**
@@ -64,7 +73,14 @@ internal class FetchHeadersIntrinsic private constructor (
      * @return Immutable set of fetch headers.
      */
     @JvmStatic override fun fromMultiMap(map: Map<String, List<String>>): FetchHeadersIntrinsic {
-      TODO("Not yet implemented")
+      return FetchHeadersIntrinsic(
+        initialData = null,
+        data = JsMutableMultiMap.fromPairs(map.entries.flatMap {
+          it.value.map { value ->
+            it.key to value
+          }
+        }),
+      )
     }
 
     /**
@@ -73,7 +89,13 @@ internal class FetchHeadersIntrinsic private constructor (
      * @return Immutable copy of the provided fetch headers.
      */
     @JvmStatic override fun from(previous: FetchHeaders): FetchHeadersIntrinsic {
-      TODO("Not yet implemented")
+      val concrete = previous as? FetchHeadersIntrinsic ?: error(
+        "Failed to cast `FetchHeaders` as only known concrete class `FetchHeadersIntrinsic"
+      )
+      return FetchHeadersIntrinsic(
+        initialData = null,
+        data = concrete.internalDataForCopy(),
+      )
     }
   }
 

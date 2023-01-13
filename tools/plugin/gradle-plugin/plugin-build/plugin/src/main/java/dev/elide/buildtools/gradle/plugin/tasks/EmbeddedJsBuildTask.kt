@@ -47,9 +47,9 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         private val defaultTargetType: BundleTarget = BundleTarget.EMBEDDED
         private const val defaultTargetTypeName: String = BundleTarget.EMBEDDED_NAME
 
-        private const val defaultEcmaVersion: String = "2020"
+        private const val defaultEcmaVersion: String = "2022"
         private const val defaultLibraryName: String = "embedded"
-        private const val defaultEntrypointName: String = "main.js"
+        private const val defaultEntrypointName: String = "main.mjs"
         private const val defaultOutputConfig: String = "embedded-js/compile.js"
         private const val defaultProcessShim: String = "embedded-js/shim.process.js"
         internal const val esbuildConfigTemplatePath: String = "/dev/elide/buildtools/js/esbuild-wrapper.js.hbs"
@@ -239,7 +239,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 val targetEmbeddedTask = "${activeMode.name.lowercase()}EmbeddedExecutable"
 
                 // create a synthesized distribution as an output
-                val mainDist = project.configurations.create("nodeSsrDist") {
+                val mainDist = project.configurations.create("elideSsrDist") {
                     it.isCanBeConsumed = true
                     it.isCanBeResolved = false
                 }
@@ -303,21 +303,20 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
 
                 // setup properties
                 it.outputBundleName.set(buildString {
-                    append(project.name)
+                    append("elide-ssr")
                     when (mode) {
-                        BuildMode.PRODUCTION -> append("-prod")
-                        BuildMode.DEVELOPMENT -> append("-dev")
+                        BuildMode.PRODUCTION -> append(".prod")
+                        BuildMode.DEVELOPMENT -> append(".dev")
                     }
-                    append(".js")
+                    append(".mjs")
                 })
-                it.outputBundleName.set(buildString {
-                    append(project.name)
+                it.outputOptimizedName.set(buildString {
+                    append("elide-ssr.pack")
                     when (mode) {
-                        BuildMode.PRODUCTION -> append("-prod")
-                        BuildMode.DEVELOPMENT -> append("-dev")
+                        BuildMode.PRODUCTION -> append(".prod")
+                        BuildMode.DEVELOPMENT -> append(".dev")
                     }
-                    append(".opt")
-                    append(".js")
+                    append(".mjs")
                 })
                 it.outputBundleFolder.set(
                     File("${project.buildDir}/distributions").absolutePath
@@ -381,7 +380,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             )
 
             // create a distribution for the bundle
-            val nodeDist = project.configurations.create("nodeSsrDist${mode.name.lowercase().capitalized()}") {
+            val nodeDist = project.configurations.create("elideSsrDist${mode.name.lowercase().capitalized()}") {
                 it.isCanBeConsumed = true
                 it.isCanBeResolved = false
             }
@@ -456,8 +455,8 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         option = "mode",
         description = (
             "Build mode: `${BuildMode.DEVELOPMENT_NAME}` or `${BuildMode.PRODUCTION_NAME}`. Passed to Node. " +
-                "Defaults to `$defaultTargetModeName`."
-            ),
+            "Defaults to `$defaultTargetModeName`."
+        ),
     )
     internal var mode: BuildMode = defaultTargetMode
 
@@ -467,8 +466,8 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         option = "target",
         description = (
             "Type of target to build: `${BundleTarget.EMBEDDED_NAME}`, `${BundleTarget.NODE_NAME}`, or " +
-                "`${BundleTarget.WEB_NAME}`. Defaults to `$defaultTargetTypeName`."
-            ),
+            "`${BundleTarget.WEB_NAME}`. Defaults to `$defaultTargetTypeName`."
+        ),
     )
     internal var target: BundleTarget = defaultTargetType
 
@@ -478,8 +477,8 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         option = "format",
         description = (
             "Format of the bundle to build: `${BundleType.IIFE_NAME}`, `${BundleType.COMMON_JS_NAME}`, or " +
-                "`${BundleType.ESM_NAME}`. Defaults to the value stipulated by `target`."
-            ),
+            "`${BundleType.ESM_NAME}`. Defaults to the value implied by `target`."
+        ),
     )
     internal var format: BundleType = target.bundleType
 
@@ -489,8 +488,8 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         option = "tool",
         description = (
             "Tool to use for JS bundling. Supported values are `${BundleTool.ESBUILD_NAME}` or " +
-                "`${BundleTool.WEBPACK_NAME}`. Defaults to the value stipulated by `target`."
-            ),
+            "`${BundleTool.WEBPACK_NAME}`. Defaults to the value stipulated by `target`."
+        ),
     )
     internal var tool: BundleTool = target.bundleTool
 

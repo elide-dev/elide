@@ -5,6 +5,7 @@ import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.InvocationMode
 import elide.runtime.gvm.internals.AbstractGVMScript
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
+import org.graalvm.polyglot.Context
 import java.util.*
 
 /** Implementation of an [AbstractGVMScript] for the [JsRuntime]. */

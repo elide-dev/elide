@@ -70,7 +70,7 @@ public open class ElideServerHandler @Inject constructor(objects: ObjectFactory)
     /** Configures SSR features for Elide server targets. */
     public open class ServerSSRHandler {
         internal companion object {
-            internal const val defaultSsrConfiguration: String = "nodeSsrDist"
+            internal const val defaultSsrConfiguration: String = "elideSsrDist"
         }
 
         /** Name of the target project to pull assets from. */

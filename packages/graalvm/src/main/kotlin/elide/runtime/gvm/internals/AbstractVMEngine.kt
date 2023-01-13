@@ -10,15 +10,24 @@ import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
+import elide.runtime.gvm.internals.js.JsExecutableScript
+import elide.runtime.gvm.internals.js.JsInvocationBindings
+import elide.runtime.gvm.internals.js.JsMicronautRequestExecutionInputs
+import elide.runtime.ssr.HeaderMap
+import elide.runtime.ssr.ServerResponse
 import elide.util.RuntimeFlag
+import io.micronaut.http.HttpRequest
+import kotlinx.coroutines.*
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
 import kotlinx.serialization.Serializable
 import org.graalvm.polyglot.*
+import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.Proxy
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.function.Consumer
 import java.util.stream.Stream
 
 /**
@@ -368,28 +377,330 @@ internal abstract class AbstractVMEngine<
   }
 
   /** @inheritDoc */
-  override suspend fun executeStreaming(script: ExecutableScript, vararg args: Any?, receiver: StreamingReceiver): Job {
-    TODO("Not yet implemented")
+  override suspend fun executeStreaming(
+    script: ExecutableScript,
+    args: ExecutionInputs,
+    receiver: StreamingReceiver,
+  ): Job {
+    require(script.language().symbol == language.symbol) {
+      "Cannot execute script of type '${script.language().label}' with VM '${this::class.simpleName}'"
+    }
+    require(script.invocation().contains(InvocationMode.STREAMING)) {
+      "Cannot execute script '$script' via streaming interface: It does not support streaming"
+    }
+    return coroutineScope {
+      launch {
+        contextManager {
+          // "initialize" the script, which includes parsing, compiling, and resolving exports, etc.
+          val initialized = initializeScript(this, script)
+
+          // resolve in vocation bindings adapters for this script
+          val bindings = resolve(
+            this,
+            initialized,
+            GVMInvocationBindings.DispatchStyle.SERVER,
+          )
+
+          // execute the script and obtain an output value
+          val out = execute(
+            this,
+            initialized,
+            bindings,
+            args,
+          )
+          logging.info("Server out", out)
+          TODO("inspect render output for promise or string")
+        }
+      }
+    }
   }
 
   /** @inheritDoc */
   override suspend fun <R> executeAsync(
     script: ExecutableScript,
     returnType: Class<R>,
-    vararg args: Any?
+    args: ExecutionInputs?,
   ): Deferred<R?> {
-    TODO("Not yet implemented")
+    require(script.language().symbol == language.symbol) {
+      "Cannot execute script of type '${script.language().label}' with VM '${this::class.simpleName}'"
+    }
+    require(script.invocation().contains(InvocationMode.ASYNC)) {
+      "Cannot execute script '$script' via async interface: It does not support async invocation"
+    }
+    return coroutineScope {
+      async {
+        contextManager {
+          // "initialize" the script, which includes parsing, compiling, and resolving exports, etc.
+          val initialized = initializeScript(this, script)
+
+          // resolve in vocation bindings adapters for this script
+          val bindings = resolve(this, initialized)
+
+          // execute the script and obtain an output value
+          val out = execute(
+            this,
+            initialized,
+            bindings,
+            args ?: ExecutionInputs.EMPTY,
+          )
+          out.`as`(returnType)
+        }
+      }
+    }
+  }
+
+  // Decode a `ServerResponse` value from a guest script.
+  private fun decodeServerResponse(hasMembers: Boolean, value: Value): ServerResponse {
+    return object: ServerResponse {
+      override val status: Int? get() = (
+        if (hasMembers && value.hasMember("status")) {
+          value.getMember("status").asInt()
+        } else {
+          null
+        }
+      )
+
+      override val headers: HeaderMap? get() = (
+        if (hasMembers && value.hasMember("headers")) {
+          val headersData = value.getMember("headers")
+          if (!headersData.isNull && headersData.hasMembers()) {
+            headersData.memberKeys.associateWith { key ->
+              headersData.getMember(key).asString()
+            }
+          } else {
+            null
+          }
+        } else {
+          null
+        }
+      )
+
+      override val content: String get() = (
+        if (hasMembers && value.hasMember("content")) {
+          value.getMember("content").asString()
+        } else {
+          ""
+        }
+      )
+
+      override val hasContent: Boolean get() = (
+        hasMembers && value.getMember("hasContent")?.asBoolean() ?: content.isNotBlank()
+      )
+
+      override val fin: Boolean get() = (
+        hasMembers && value.getMember("fin")?.asBoolean() ?: false
+      )
+    }
+  }
+
+  // Build a callable function which can receive streamed render output.
+  private fun buildRenderProxy(receiver: StreamingReceiver) : ProxyExecutable {
+    return ProxyExecutable { arguments ->
+      val chunk = arguments.firstOrNull()
+      if (chunk != null) {
+        val hasMembers = chunk.hasMembers()
+        receiver.invoke(decodeServerResponse(
+          hasMembers,
+          chunk,
+        ))
+      }
+      null  // no return value
+    }
+  }
+
+  // Handle a render output value, which should either be a `String`, `ServerResponse`, or one of those wrapped in a
+  // `Promise`.
+  private fun handleRenderOutput(out: Value, receiver: StreamingReceiver) {
+    when (val meta = out.metaObject) {
+      null -> error("Failed to resolve meta-object for `render` output")
+      else -> when {
+        out.isNull -> logging.warn("Received `null` from `render` in guest script; skipping")
+
+        // if the function returned a string directly, emit it as the final chunk
+        out.isString -> receiver.invoke(object: ServerResponse {
+          override val content: String get() = meta.asString()
+          override val hasContent: Boolean get() = true
+          override val fin: Boolean get() = true
+        })
+
+        // otherwise, if the function returns a promise, we should wait on the output and re-dispatch.
+        meta.metaSimpleName == "Promise" -> {
+          val resultReceiver: Consumer<Value> = Consumer {
+            handleRenderOutput(it, receiver)
+          }
+          out.invokeMember("then", resultReceiver)
+        }
+
+        // otherwise, consider it a `ServerResponse`.
+        out.hasMembers() -> receiver.invoke(decodeServerResponse(
+          true,
+          out,
+        ))
+
+        else -> error("Failed to resolve `render` output: Unrecognized value $out")
+      }
+    }
   }
 
   /** @inheritDoc */
-  override suspend fun <R> execute(script: ExecutableScript, returnType: Class<R>, vararg args: Any?): R? {
-    TODO("Not yet implemented")
+  @Suppress("UNCHECKED_CAST", "IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION")
+  override suspend fun executeRender(
+    script: ExecutableScript,
+    request: HttpRequest<*>,
+    context: Any?,
+    receiver: StreamingReceiver
+  ): Job {
+    require(script.language().symbol == language.symbol) {
+      "Cannot execute script of type '${script.language().label}' with VM '${this::class.simpleName}'"
+    }
+    require(script.invocation().contains(InvocationMode.STREAMING)) {
+      "Cannot execute script '$script' via streaming render interface: It does not support streaming invocation"
+    }
+    return coroutineScope {
+      async {
+        contextManager {
+          // "initialize" the script, which includes parsing, compiling, and resolving exports, etc.
+          val initialized = initializeScript(this, script)
+
+          // resolve in vocation bindings adapters for this script
+
+          // execute the script and obtain an output value
+          when (val bindings = resolve(
+            this,
+            initialized,
+            GVMInvocationBindings.DispatchStyle.RENDER,
+          )) {
+            // we are executing a sidecar render call
+            is JsInvocationBindings.JsRender -> {
+              val out = try {
+                bindings.mapped.values.first().value.execute(
+                  FetchRequestIntrinsic.forRequest(request),
+                  context,
+                  buildRenderProxy(receiver),
+                )
+              } catch (exc: PolyglotException) {
+                logging.error("Failed to dispatch `render` method for SSR script", exc)
+                throw exc
+              }
+
+              handleRenderOutput(
+                out,
+                receiver,
+              )
+            }
+
+            // the binding supports multiple interfaces
+            is JsInvocationBindings.JsCompound -> {
+              // we should be dealing with a render function
+              if (!bindings.supported().contains(GVMInvocationBindings.DispatchStyle.RENDER))
+                error("Cannot invoke embedded SSR script: `render` function not exported")
+
+              val entry = bindings.mapped.entries.find {
+                it.key.type == JsInvocationBindings.JsEntrypointType.RENDER
+              } ?: error(
+                "Entrypoint unresolved: `render` (for embedded script binding $bindings)"
+              )
+
+              val out = try {
+                entry.value.value.execute(
+                  FetchRequestIntrinsic.forRequest(request),
+                  context,
+                  receiver,
+                )
+              } catch (exc: PolyglotException) {
+                logging.error("Failed to dispatch `render` method for SSR script", exc)
+                throw exc
+              }
+
+              logging.info("Render out", out)
+              TODO("inspect render output for promise or string")
+            }
+
+            else -> error("Unsupported JS invocation binding: $bindings")
+          }
+//          val out = execute(
+//            this,
+//            initialized,
+//            bindings,
+//            JsMicronautRequestExecutionInputs.of(
+//              request as HttpRequest<Any>,
+//              context,
+//            ),
+//          )
+        }
+      }
+    }
   }
 
   /** @inheritDoc */
-  override fun <R> executeBlocking(script: ExecutableScript, returnType: Class<R>, vararg args: Any?): R? {
-    TODO("Not yet implemented")
+  override suspend fun <R> execute(
+    script: ExecutableScript,
+    returnType: Class<R>,
+    args: ExecutionInputs?,
+  ): R? = executeAsync(
+    script,
+    returnType,
+    args,
+  ).await()
+
+  /** @inheritDoc */
+  override fun <R> executeBlocking(
+    script: ExecutableScript,
+    returnType: Class<R>,
+    args: ExecutionInputs?,
+  ): R? = runBlocking {
+    execute(script, returnType, args)
   }
+
+  /**
+   * TBD.
+   */
+  @Suppress("UNUSED_PARAMETER", "UNCHECKED_CAST")
+  private fun initializeScript(context: VMContext, script: ExecutableScript): Code {
+    return when (script) {
+      is AbstractGVMScript -> {
+        when (script.state()) {
+          // if the script is not even initialized, we may need to load it from disk, or from the classpath.
+          ExecutableScript.State.UNINITIALIZED -> {
+            try {
+              script.load()
+            } catch (exc: Throwable) {
+              logging.error(
+                "Failed to call `load` on script '$script'",
+                exc,
+              )
+              throw exc
+            }
+
+            // if no error was encountered, recurse to next step
+            initializeScript(context, script)
+          }
+
+          // if the script has not been `EVALUATED` yet, we must evaluate it before execution
+          ExecutableScript.State.PARSED -> {
+            try {
+              script.evaluate(context)  // primes a value cache
+              script as Code
+            } catch (exc: PolyglotException) {
+              logging.error(
+                "Failed to evaluate guest script '$script'",
+                exc,
+              )
+              throw exc
+            }
+          }
+
+          // otherwise, we are ready to execute
+          ExecutableScript.State.EVALUATED, ExecutableScript.State.EXECUTED -> script as Code
+        }
+      }
+      else -> error(
+        "Cannot execute script of type '${script::class.java.simpleName}' via GraalVM engine"
+      )
+    }
+  }
+
+  // -- VM: Configuration -- //
 
   /**
    * ## Implementation: Configure.
@@ -410,7 +721,20 @@ internal abstract class AbstractVMEngine<
    *
    * TBD.
    */
-  protected abstract fun prepare(context: VMContext, bindings: GuestValue)
+  protected abstract fun prepare(context: VMContext, globals: GuestValue)
+
+  // -- VM: Execution -- //
+
+  /**
+   * ## Implementation: Resolve.
+   *
+   * TBD.
+   */
+  protected abstract fun resolve(
+    context: VMContext,
+    script: Code,
+    mode: GVMInvocationBindings.DispatchStyle? = null,
+  ): Bindings
 
   /**
    * ## Implementation: Execution.

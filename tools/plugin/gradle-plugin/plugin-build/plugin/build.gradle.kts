@@ -119,8 +119,8 @@ pluginBundle {
     }
 }
 
-val minimumMicronaut = "3.6.3"
-val preferredMicronaut = "3.6.5"
+val minimumMicronaut = "3.7.0"
+val preferredMicronaut = "3.7.0"
 val defaultJavaMin = "11"
 val defaultJavaMax = "19"
 

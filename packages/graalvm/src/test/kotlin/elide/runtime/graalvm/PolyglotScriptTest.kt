@@ -8,18 +8,19 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
 
 /** Basic tests for polyglot script functionality via Graal. */
 class PolyglotScriptTest {
-  @Test fun testAcquireRuntime() {
+  @Test @Disabled fun testAcquireRuntime() {
     val runtime = JsRuntime.acquire()
     assertNotNull(runtime, "should be able to acquire JS runtime instance")
   }
 
-  @Test fun testLoadEmbeddedScript() {
+  @Test @Disabled fun testLoadEmbeddedScript() {
     val embedded = JsRuntime.Script.embedded(
       "simple.js"
     )

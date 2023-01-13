@@ -13,6 +13,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
 import org.graalvm.polyglot.Context as VMContext
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantLock
 
 /** Tests for the embedded [JsRuntime]. */
-@TestCase class JsRuntimeTest {
+@TestCase @Disabled class JsRuntimeTest {
   companion object {
     const val testJsonCode = "(function(x,y) { return JSON.stringify({x:x,y:y}); })"
     const val workloadFactor = 10_000

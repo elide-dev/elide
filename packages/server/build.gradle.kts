@@ -46,6 +46,7 @@ dependencies {
   api(project(":packages:model"))
   api(project(":packages:ssr"))
   api(project(":packages:graalvm"))
+  api(libs.reactor.core)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
@@ -107,6 +108,7 @@ dependencies {
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.coroutines.reactor)
   implementation(libs.kotlinx.coroutines.reactive)
 
   // General

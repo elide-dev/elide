@@ -7,8 +7,6 @@ import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
 import io.micronaut.context.BeanContext
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
 import kotlin.reflect.KClass
 import org.graalvm.polyglot.Context as VMContext
 
@@ -43,11 +41,6 @@ import org.graalvm.polyglot.Context as VMContext
       /* No overrides at this time. */
     }
   }
-
-  /**
-   * TBD.
-   */
-  @Factory internal fun acquireVM(): VMFacade = TODO("not yet implemented")
 
   /**
    * TBD.

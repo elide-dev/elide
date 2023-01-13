@@ -177,7 +177,7 @@ graalvmNative {
     enableExperimentalPredefinedClasses.set(false)
     enableExperimentalUnsafeAllocationTracing.set(false)
     trackReflectionMetadata.set(true)
-    enabled.set(true)
+    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
 
     modes {
       standard {}

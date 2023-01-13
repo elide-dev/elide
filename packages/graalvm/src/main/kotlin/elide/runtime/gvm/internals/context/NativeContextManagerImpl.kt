@@ -393,6 +393,10 @@ import org.graalvm.polyglot.Context as VMContext
 
   /** @inheritDoc */
   override fun <R> acquire(builder: ((VMContext.Builder) -> Unit)?, operation: VMContext.() -> R): R {
+    if (!initialized.get()) {
+      // @TODO(sgammon): activation of disruptor that isn't based on inherent race condition
+      activate(start = true)
+    }
     val ctx = allocateContext(builder)
     try {
       ctx.enter()

@@ -1,5 +1,6 @@
 package elide.runtime.gvm
 
+import elide.runtime.gvm.internals.GraalVMGuest
 import java.util.EnumSet
 
 /**
@@ -30,4 +31,10 @@ public interface GuestLanguage {
    * TBD.
    */
   public val invocationModes: EnumSet<InvocationMode> get() = EnumSet.allOf(InvocationMode::class.java)
+
+  /** Well-known guest languages. */
+  public companion object {
+    /** JavaScript as a guest language. */
+    public val JAVASCRIPT: GuestLanguage = GraalVMGuest.JAVASCRIPT
+  }
 }

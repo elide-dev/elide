@@ -2,16 +2,21 @@
 
 package elide.server.ssr
 
-import elide.annotations.Context
+//import elide.annotations.Context
 import elide.annotations.core.Polyglot
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.graalvm.JsRuntime
+import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.VMFacadeFactory
+import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.js.JavaScript
 import elide.runtime.ssr.ServerResponse
-import elide.server.Application
-import elide.server.ServerInitializer
+//import elide.server.Application
+//import elide.server.ServerInitializer
 import elide.server.SuspensionRenderer
-import elide.server.annotations.Eager
+//import elide.server.annotations.Eager
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
 import elide.server.type.RequestState
@@ -32,7 +37,7 @@ public class ServerSSRRenderer constructor(
   private val body: BODY,
   private val handler: ElideController,
   private val request: HttpRequest<*>,
-  private val script: JsRuntime.ExecutableScript,
+  private val script: ExecutableScript,
   private val buffer: StringBuilder = StringBuilder(),
   private var job: AtomicReference<Job?> = AtomicReference(null),
 ) : SuspensionRenderer<ByteArrayOutputStream> {
@@ -42,24 +47,24 @@ public class ServerSSRRenderer constructor(
   }
 
   /** SSR service initializer. */
-  @Context @Eager public class SSRInitializer : ServerInitializer {
-    override fun initialize() {
-      Application.Initialization.initializeOnWarmup {
-        val maybeEmbedded = JsRuntime.Script.embedded()
-        if (maybeEmbedded.valid()) {
-          JsRuntime.acquire().apply {
-            prewarmScript(maybeEmbedded)
-          }
-        }
-      }
-    }
-  }
+//  @Context @Eager public class SSRInitializer : ServerInitializer {
+//    override fun initialize() {
+//      Application.Initialization.initializeOnWarmup {
+//        val maybeEmbedded = JsRuntime.Script.embedded()
+//        if (maybeEmbedded.valid()) {
+//          JsRuntime.acquire().apply {
+//            prewarmScript(maybeEmbedded)
+//          }
+//        }
+//      }
+//    }
+//  }
 
   // Logger.
   private val logging: Logger = Logging.of(ServerSSRRenderer::class)
 
   /** Execute the provided operation with any prepared SSR execution context. */
-  internal suspend fun prepareContext(op: suspend (JsRuntime.ExecutionInputs<*>) -> StringBuilder): String {
+  internal suspend fun prepareContext(op: suspend (ExecutionInputs, Any?) -> StringBuilder): String {
     return if (handler is PageWithProps<*>) {
       // build context
       val state = RequestState(
@@ -68,10 +73,11 @@ public class ServerSSRRenderer constructor(
       )
       val (props, serialized) = handler.finalizeAsync(state).await()
       val buf = op.invoke(
-        JsRuntime.ExecutionInputs.fromRequestState(
+        JavaScript.Inputs.requestState(
           state,
           props,
-        )
+        ),
+        props,
       )
       if (props != null && serialized != null) {
         val subBuffer = StringBuilder()
@@ -85,7 +91,7 @@ public class ServerSSRRenderer constructor(
       }
       buf.toString()
     } else {
-      op.invoke(JsRuntime.ExecutionInputs.EMPTY as JsRuntime.ExecutionInputs<*>).toString()
+      op.invoke(JavaScript.Inputs.EMPTY, null).toString()
     }
   }
 
@@ -104,33 +110,25 @@ public class ServerSSRRenderer constructor(
    *
    * @return String render result from [script].
    */
-  public suspend fun renderSuspendAsync(streamed: Boolean = false): Deferred<String> = coroutineScope {
+  public suspend fun renderSuspendAsync(): Deferred<String> = coroutineScope {
     return@coroutineScope async {
-      prepareContext { ctx ->
-        val js = JsRuntime.acquire()
+      prepareContext { _, props ->
+        val js = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
+          error("Failed to resolve JavaScript runtime provider")
+        }.acquireVM(
+          GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
+        )
 
-        if (!streamed) {
-          val renderedContent = js.executeAsync(
+        buffer.apply {
+          logging.trace("Starting SSR execution")
+          val op = js.executeRender(
             script,
-            String::class.java,
-            *ctx.buildArguments(),
+            request,
+            receiver = ::chunkReady,
+            context = props,
           )
-
-          // then apply rendered content
-          buffer.apply {
-            append(renderedContent.await())
-          }
-        } else {
-          buffer.apply {
-            logging.trace("Starting SSR execution")
-            val op = js.executeStreaming(
-              script,
-              *ctx.buildArguments(),
-              receiver = ::chunkReady
-            )
-            job.set(op)
-            op.join()
-          }
+          job.set(op)
+          op.join()
         }
       }
     }

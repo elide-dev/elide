@@ -21,7 +21,6 @@ import kotlinx.serialization.json.decodeFromStream
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
-import org.graalvm.polyglot.Value
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
@@ -121,6 +120,14 @@ internal class JsRuntime @Inject constructor (
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "ElideDebug"
+    internal val WASM_SUPPORTED = wasmSupported()
+
+    // Determine if WASM should be enabled by default.
+    @JvmStatic private fun wasmSupported(): Boolean = (
+      System.getProperty("elide.wasm", "false") == "true" || (
+      System.getProperty("os.arch", "not-x86") == "x86_64" &&
+      Engine.create().languages.containsKey("wasm")
+    ))
 
     // Hard-coded JS VM options.
     val baseOptions : List<VMProperty> = listOf(
@@ -261,7 +268,11 @@ internal class JsRuntime @Inject constructor (
 
     // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM32.
     VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
-      config.wasm
+      if (WASM_SUPPORTED) {
+        config.wasm
+      } else {
+        false
+      }
     },
 
     // `vm.js.v8-compat`: maps to `js.v8-compat` and controls compatibility shims for V8
@@ -271,7 +282,7 @@ internal class JsRuntime @Inject constructor (
   )).stream()
 
   /** @inheritDoc */
-  override fun prepare(context: VMContext, bindings: GuestValue) {
+  override fun prepare(context: VMContext, globals: GuestValue) {
     if (logger.isEnabled(LogLevel.TRACE))
       logger.trace("Preparing JS VM context: $context")
 
@@ -288,14 +299,22 @@ internal class JsRuntime @Inject constructor (
   }
 
   /** @inheritDoc */
+  override fun resolve(
+    context: Context,
+    script: JsExecutableScript,
+    mode: GVMInvocationBindings.DispatchStyle?,
+  ): JsInvocationBindings = JsInvocationBindings.resolve(script, script.evaluate(context))
+
+  /** @inheritDoc */
+  @Suppress("UNREACHABLE_CODE")
   override fun <Inputs : ExecutionInputs> execute(
     context: Context,
     script: JsExecutableScript,
     bindings: JsInvocationBindings,
     inputs: Inputs,
-  ): Value {
+  ): GuestValue {
     // resolve an execution adapter
-    when (inputs) {
+    return when (inputs) {
       // if we're using a request as the basis for this execution, use the request-based adapters.
       is RequestExecutionInputs<*> -> when (inputs) {
         // request backed by micronaut
@@ -305,14 +324,14 @@ internal class JsRuntime @Inject constructor (
         script,
         bindings,
         inputs
-      )
+      ).execute().let { _ ->
+        TODO("not yet implemented")
+      }
 
       // otherwise, it has to be a basic execution.
-      is BasicExecutionInputs -> {
+//      is BasicExecutionInputs -> TODO("Non-server VM inputs are not supported yet")
 
-      }
+      else -> TODO("Non-server VM inputs are not supported yet")
     }
-
-    TODO("Not yet implemented")
   }
 }

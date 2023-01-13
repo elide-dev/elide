@@ -15,7 +15,7 @@ public enum class BundleTarget(
     internal val bundleTool: BundleTool,
 ) {
     /** The bundle is being assembled for use in an embedded (VM) context. */
-    EMBEDDED("neutral", BundleType.IIFE, BundleTool.ESBUILD),
+    EMBEDDED("neutral", BundleType.ESM, BundleTool.ESBUILD),
 
     /** The bundle is being assembled for use with NodeJS. */
     NODE("node", BundleType.COMMON_JS, BundleTool.ESBUILD),

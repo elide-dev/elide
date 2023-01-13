@@ -15,7 +15,7 @@ import kotlin.test.*
 @TestCase internal class JsInvocationBindingsTest : AbstractJsTest() {
   // Stubbed literal script.
   private val script = JsExecutableScript.of(
-    ScriptSource.literal(),
+    ScriptSource.LITERAL,
     JsExecutableScript.JS_MODULE,
     "/* (stubbed) */",
   )
@@ -224,7 +224,7 @@ import kotlin.test.*
     assertNotNull(resolved, "should not get `null` from `JsInvocationBindings.entrypoint`")
     val bindings = resolved.bindings
     assertTrue(bindings is JsInvocationBindings.JsServer, "resolved binding should be JS server")
-    assertEquals(JsInvocationBindings.JsEntrypointType.SERVER_ASYNC, bindings.types.first())
+    assertEquals(JsInvocationBindings.JsEntrypointType.SERVER, bindings.types.first())
   }
 
   @Test fun testBindingsResolveRender() = executeESM {
@@ -247,7 +247,7 @@ import kotlin.test.*
     assertNotNull(resolved, "should not get `null` from `JsInvocationBindings.entrypoint`")
     val bindings = resolved.bindings
     assertTrue(bindings is JsInvocationBindings.JsRender, "resolved binding should be JS render")
-    assertEquals(JsInvocationBindings.JsEntrypointType.RENDER_ASYNC, bindings.types.first())
+    assertEquals(JsInvocationBindings.JsEntrypointType.RENDER, bindings.types.first())
   }
 
   @Test fun testBindingsResolveCompound() = executeESM {
@@ -286,6 +286,27 @@ import kotlin.test.*
     )
   }
 
+  @Test fun testBindingsRenderKotlinJSStyle() = executeESM {
+    // language=javascript
+    """
+      export async function render(reques, responder, context) {  // intentionally not default
+        return true;  // stubbed, should be a response
+      };
+    """
+  }.thenAssert {
+    val exec = it.returnValue() ?: error("Failed to resolve return value from guest script for binding resolution test")
+    val resolved = assertDoesNotThrow {
+      JsInvocationBindings.entrypoint(
+        script,
+        exec,
+      )
+    }
+    assertNotNull(resolved, "should not get `null` from `JsInvocationBindings.entrypoint`")
+    val bindings = resolved.bindings
+    assertTrue(bindings is JsInvocationBindings.JsRender, "resolved binding should be JS render")
+    assertEquals(JsInvocationBindings.JsEntrypointType.RENDER, bindings.types.first())
+  }
+
   @Test fun testBindingServerFailsIfNotAsync() = executeESM {
     // language=javascript
     """
@@ -305,46 +326,10 @@ import kotlin.test.*
     }
   }
 
-  @Test fun testBindingRenderFailsIfNotAsync() = executeESM {
-    // language=javascript
-    """
-      export default {
-        render(request, responder, context) {  // intentionally not async
-          return true;  // stubbed, should be a response
-        }
-      };
-    """
-  }.thenAssert {
-    val exec = it.returnValue() ?: error("Failed to resolve return value from guest script for binding resolution test")
-    assertFailsWith<IllegalStateException> {
-      JsInvocationBindings.entrypoint(
-        script,
-        exec,
-      )
-    }
-  }
-
   @Test fun testBindingServerFailsIfNotDefault() = executeESM {
     // language=javascript
     """
       export async function fetch(request) {  // intentionally not default
-        return true;  // stubbed, should be a response
-      };
-    """
-  }.thenAssert {
-    val exec = it.returnValue() ?: error("Failed to resolve return value from guest script for binding resolution test")
-    assertFailsWith<IllegalStateException> {
-      JsInvocationBindings.entrypoint(
-        script,
-        exec,
-      )
-    }
-  }
-
-  @Test fun testBindingRenderFailsIfNotDefault() = executeESM {
-    // language=javascript
-    """
-      export async function render(reques, responder, context) {  // intentionally not default
         return true;  // stubbed, should be a response
       };
     """

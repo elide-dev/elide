@@ -3,7 +3,7 @@ package elide.runtime.ssr
 import elide.annotations.core.Polyglot
 
 /**
- * TBD
+ * TBD.
  */
 public sealed class StreamResponse @Polyglot constructor (
   override val status: Int = 200,

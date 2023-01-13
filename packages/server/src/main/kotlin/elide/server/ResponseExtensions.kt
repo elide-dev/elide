@@ -12,6 +12,7 @@ import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableR
 import kotlinx.css.CssBuilder
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import org.reactivestreams.Publisher
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
@@ -42,6 +43,12 @@ public typealias StreamedAssetResponse = HttpResponse<StreamedAsset>
 public interface SuspensionRenderer<R> {
   /** @return Rendered result. */
   public suspend fun render(): R
+}
+
+/** Describes the expected interface for a streaming response rendered via co-routines. */
+public interface StreamingSuspensionRenderer<R> {
+  /** @return Rendered result. */
+  public suspend fun render(): Publisher<R>
 }
 
 /**

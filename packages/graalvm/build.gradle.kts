@@ -101,6 +101,8 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
+  implementation(libs.kotlinx.coroutines.reactor)
+  implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
 

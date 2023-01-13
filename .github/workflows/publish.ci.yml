@@ -246,15 +246,19 @@ jobs:
             -x test
             :packages:base:publish
             :packages:bom:publish
+            :packages:core:publish
             :packages:frontend:publish
             :packages:graalvm:publish
             :packages:graalvm-js:publish
             :packages:graalvm-react:publish
             :packages:model:publish
             :packages:platform:publish
-            :packages:proto:publish
-            :packages:rpc-js:publish
-            :packages:rpc-jvm:publish
+            :packages:proto:proto-core:publish
+            :packages:proto:proto-flatbuffers:publish
+            :packages:proto:proto-protobuf:publish
+            :packages:proto:proto-kotlinx:publish
+            :packages:rpc:publish
             :packages:server:publish
             :packages:ssg:publish
+            :packages:ssr:publish
             :packages:test:publish

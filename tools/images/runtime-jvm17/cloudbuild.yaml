@@ -17,6 +17,7 @@ steps:
       "--use"
     ]
   - name: "gcr.io/cloud-builders/docker"
+    dir: "tools/images/runtime-jvm17"
     args: [
       "buildx",
       "build",

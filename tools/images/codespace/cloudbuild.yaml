@@ -9,6 +9,7 @@ steps:
       "all"
     ]
   - name: "gcr.io/cloud-builders/docker"
+    dir: "tools/images/codespace"
     args: ["build", "-t", "us-docker.pkg.dev/elide-fw/tools/codespace", "."]
 images: ["us-docker.pkg.dev/elide-fw/tools/codespace"]
 options:

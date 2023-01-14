@@ -47,7 +47,16 @@ dependencies {
 }
 
 task<Copy>("locateCopyJUnitReports") {
-  val testReportPaths: List<String> = rootProject.allprojects.map {
+  val testReportPaths: List<String> = rootProject.allprojects.filter { project ->
+    !listOf(
+      "proto",
+      "sample",
+      "docs",
+      "benchmarks",
+    ).any {
+      project.path.contains(it) || project.name.contains(it)
+    }
+  }.map {
     val path = file("${it.buildDir}/test-results/test")
     if (path.exists()) {
       java.util.Optional.of(path)
@@ -99,6 +108,8 @@ task("mergeJUnitReports") {
 
 tasks.create("reports") {
   dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
-  dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
   dependsOn(tasks.named("mergeJUnitReports"))
+
+  // @TODO(sgammon): broken by proto module
+  // dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
 }

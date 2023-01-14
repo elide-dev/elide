@@ -1,0 +1,44 @@
+// Generated from tool.proto
+
+include "../crypto/crypto.fbs";
+include "../data/data.fbs";
+include "../data/encoding.fbs";
+include "../data/secrets/token.fbs";
+
+namespace elide.cli;
+
+table LocalAuthToken {
+  auth_token:elide.cli.LocalAuthToken_.Anonymous1;
+}
+
+namespace elide.cli.LocalAuthToken_;
+
+table Anonymous1 {
+  user_token:elide.data.secrets.Token;
+}
+
+namespace elide.cli;
+
+table CommandLineConfig {
+  defaults:elide.cli.ElideToolOptions;
+  settings:elide.cli.ElideToolOptions;
+}
+
+table ElideToolOptions {
+  output:elide.cli.ElideToolOptions_.OutputOptions;
+}
+
+namespace elide.cli.ElideToolOptions_;
+
+table OutputOptions {
+  verbose:bool;
+  quiet:bool;
+  pretty:bool;
+}
+
+namespace elide.cli;
+
+table ElideToolState {
+  auth:elide.cli.LocalAuthToken;
+  config:elide.cli.CommandLineConfig;
+}

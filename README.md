@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://nextjs.org">
+  <a href="https://github.com/elide-dev/v3">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./creative/logo/logo-wide-1200-w.png">
       <img src="./creative/logo/logo-wide-1200-w.png" height="300">
@@ -20,14 +20,15 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.7.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Java 17](https://img.shields.io/badge/Java-17-blue.svg?logo=java)](https://openjdk.org/projects/jdk/17/)
-[![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://reactjs.org/)
+[![Java 19](https://img.shields.io/badge/Java-19-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
 [![GraalVM](https://img.shields.io/badge/GraalVM-22.3.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
+[![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
 _**Elide is currently in alpha.**_
 
-Latest version: `1.0-v3-alpha1-rc38`
+Latest version: `1.0-v3-alpha3-b4`
 
 <hr />
 
@@ -36,11 +37,22 @@ Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
 ## Distinguishing features
 
-- **Pure Kotlin.** Write your core application logic and models once, and share them across platforms transparently.
-  Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing. Enjoy first-class support for
-  the full suite of KotlinX libraries, including [`serialization`](https://kotlinlang.org/docs/serialization.html),
+- **Full-stack development.** Share code across platforms with Kotlin Multiplatform. Quickly develop performant UIs in
+  Kotlin, TypeScript, or JavaScript, and execute them server-side (streaming SSR) or client-side (SPA).
+
+- **Countless ways to run.** Use SSR (server rendering), CSR (client rendering), or an isomorphic approach. Compile your
+  app to HTML via SSG. Run your app on a JVM, Node.js, JS runtime, or compile it to a native binary and run it without
+  a runtime at all.
+
+- **Pure Kotlin when you want it.** Write your core application logic and models once, and share them across platforms
+  transparently. Leverage [Kotest](https://kotest.io) for cross-platform, write-once-run-native testing. Enjoy
+  first-class support for the full suite of KotlinX libraries, including
+  [`serialization`](https://kotlinlang.org/docs/serialization.html),
   [`atomicfu`](https://github.com/Kotlin/kotlinx.atomicfu), [`coroutines`](https://github.com/Kotlin/kotlinx.coroutines)
   and [`datetime`](https://github.com/Kotlin/kotlinx-datetime).
+
+- **TypeScript/JavaScript when you need it.** Plug your Kotlin code into the JavaScript ecosystem with embedded guest VM
+  support for ES2022.
 
 - **Isomorphic SSR with React.** Write your UI in React, using JavaScript, TypeScript, or Kotlin. Package it for serving
   via [client-side rendering or hybrid isomorphic rendering](https://web.dev/rendering-on-the-web/) directly from your
@@ -250,29 +262,73 @@ The following version matrix indicates tested support across tool and platform v
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**  | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC** |
-| --------------------------------------------------------------- | --------- | ---------- | ----------- | ------------- | --------- | ----------------- |
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17` | `1.7.21`   | `22.3.x`    | `3.7.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11` | `1.7.21`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0` |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8`  | --         | --          | --            | --        | --                |
+| Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
+| --------------------------------------------------------------- |-------------|------------| ----------- | ------------- | --------- |--------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19`   | `1.8.0`    | `22.3.x`    | `3.7.x`       | `18.x`    | `3.21.11`/`1.51.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.0`    | `22.3.x`    | `3.7.x`       | `18.x`    | `3.21.1`/`1.51.0`  |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --         | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 
-[1]: https://kotlinlang.org/
-[2]: https://graalvm.org/
-[3]: https://micronaut.io/
-[4]: https://reactjs.org/
-[5]: https://developers.google.com/protocol-buffers
-[6]: https://grpc.io/
-[7]: https://developers.google.com/closure
-[8]: https://bazel.build/
-[9]: https://gradle.org/
-[10]: https://developers.google.com/speed/pagespeed/module
-[11]: https://github.com/sgammon/elide/tree/master
-[12]: https://github.com/sgammon/elide
-[13]: https://buf.build
-[14]: https://esbuild.github.io/
+## Contributing
+
+Elide is structured as a Gradle codebase, with additional support for Make and Node. Bazel is also coming soon. After
+cloning the project, you can run `make help` to get familiar with some standard local dev tasks.
+
+1) **Clone the repo.**
+   ```
+   git clone git@github.com:elide-dev/v3.git
+   ```
+2) **Install GraalVM.** You can download CE [here](https://www.graalvm.org/downloads/). Make sure to install the
+   `native-image`, `espresso`, and `js` tools after initially downloading, which you can do with:
+   ```
+   gu install native-image js espresso
+   gu rebuild-images
+   ```
+3) **Explore the Makefile.** The `Makefile` is self-describing. Run `make help` to see what it can do for you:
+  ```
+  Elide:
+  api-check                      Check API/ABI compatibility with current changes.
+  build                          Build the main library, and code-samples if SAMPLES=yes.
+  clean-docs                     Clean documentation targets.
+  clean-site                     Clean site targets.
+  clean                          Clean build outputs and caches.
+  cli-local                      Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+  cli                            Build the Elide command-line tool (native target).
+  distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
+  docs                           Generate docs for all library modules.
+  forceclean                     DANGER: Clean, distclean, and clear untracked files.
+  help                           Show this help text ('make help').
+  publish                        Publish a new version of all Elide packages.
+  relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
+  reports                        Generate reports for tests, coverage, etc.
+  serve-docs                     Serve documentation locally.
+  serve-site                     Serve Elide site locally.
+  site                           Generate the static Elide website.
+  test                           Run the library testsuite, and code-sample tests if SAMPLES=yes.
+  update-deps                    Perform interactive dependency upgrades across Yarn and Gradle.
+  update-jdeps                   Interactively update Gradle dependencies.
+  update-jsdeps                  Interactively update Yarn dependencies.
+  ```
+4) **Take a look at the Makefile flags.** The `Makefile` defines flags at the top of the source code:
+  ```
+  # Flags that control this makefile, along with their defaults:
+  #
+  # DEBUG ?= no
+  # STRICT ?= yes
+  # RELEASE ?= no
+  # JVMDEBUG ?= no
+  # NATIVE ?= no
+  # CI ?= no
+  # DRY ?= no
+  # SCAN ?= no
+  # IGNORE_ERRORS ?= no
+  # RELOCK ?= no
+  ```
+
+When committing to Elide, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+standard. This helps us keep changelogs clean and obvious.
 
 ## Reports
 
@@ -289,3 +345,19 @@ Code coverage is continuously reported to [Codecov](https://app.codecov.io/gh/el
 [SonarCloud](https://sonarcloud.io/project/overview?id=elide-dev_v3):
 
 [![Coverage grid](https://codecov.io/gh/elide-dev/v3/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
+
+
+[1]: https://kotlinlang.org/
+[2]: https://graalvm.org/
+[3]: https://micronaut.io/
+[4]: https://reactjs.org/
+[5]: https://developers.google.com/protocol-buffers
+[6]: https://grpc.io/
+[7]: https://developers.google.com/closure
+[8]: https://bazel.build/
+[9]: https://gradle.org/
+[10]: https://developers.google.com/speed/pagespeed/module
+[11]: https://github.com/sgammon/elide/tree/master
+[12]: https://github.com/sgammon/elide
+[13]: https://buf.build
+[14]: https://esbuild.github.io/

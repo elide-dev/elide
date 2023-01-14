@@ -13,8 +13,8 @@ plugins {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        gradlePluginPortal()
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+        gradlePluginPortal()
     }
 }
 

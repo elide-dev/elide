@@ -1,0 +1,121 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+include "../crypto/crypto.fbs";
+include "./encoding.fbs";
+
+/*
+ * Specifies core structures related to cryptographic operations and primitives. These records and enumerates are used
+ * throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
+ */
+namespace elide.data;
+
+// Specifies compression modes that are supported by the framework for pre-compressed assets stored inline within the
+// manifest. These inlined assets do not replace original source assets, which are enclosed in the resource JAR.
+enum CompressionMode : int {
+  // No compression.
+  IDENTITY = 0,
+
+  // Standard gzip-based compression.
+  GZIP = 1,
+
+  // Brotli-based compression.
+  BROTLI = 2,
+
+  // Snappy-based compression.
+  SNAPPY = 3,
+
+  // Deflate (zlib)-based compression.
+  DEFLATE = 4,
+}
+
+// Stores a generic cryptographic fingerprint of some arbitrary data. This is a utility record, which simply gathers the
+// specification of a hash algorithm with a raw data field storing the result of the hash.
+table DataFingerprint {
+  // Algorithm in use when fingerprinting the associated data.
+  hash: elide.crypto.HashAlgorithm;
+
+  // Salt value used when fingerprinting the associated data, if applicable. Generally appended to the end of the data
+  // to be fingerprinted.
+  salt: [ubyte];
+
+  // Content of the fingerprint/checksum calculated as part of this data fingerprint.
+  fingerprint: [ubyte];
+
+  // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
+  encoding: elide.data.Encoding;
+}
+
+// Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
+// cryptographic fingerprint calculated from the data.
+table DataContainer {
+  // Raw bytes for the data referenced by this container.
+  raw: [ubyte];
+
+  // Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
+  // held by this data container.
+  integrity: [elide.data.DataFingerprint];
+
+  // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
+  encoding: elide.data.Encoding;
+}
+
+// Generic container for compressed data, which simply combines an enumerated `CompressionMode` with a blob of raw bytes
+// which are expected to be compressed by the specified algorithm or tool.
+table CompressedData {
+  // Compression mode applied to this data. If no compression is active, `IDENTITY` may be specified as a default.
+  compression: elide.data.CompressionMode;
+
+  // Container holding the raw compressed data, and a fingerprint of the data in compressed form. This is unmodified raw
+  // bytes, aside from being compressed by the algorithm specified by `compression`.
+  data: elide.data.DataContainer;
+
+  // Size of the asset data before compression. To obtain the size of the data in compressed form, simply take the
+  // length of the data field itself. This value is expressed in bytes.
+  size: ulong;
+
+  // Holds an (optional) integrity fingerprint, calculated from the held data *before* compression, which maybe used to
+  // verify the consistency of the data held by this container after de-compression.
+  integrity: [elide.data.DataFingerprint];
+}
+
+// Specifies the structure of a data container which can also be a reference to a different resource or file-system
+// style-asset. Only one reference value may be filled in.
+table DataContainerRef {
+  // Specifies the reference subject for this record.
+  reference: elide.data.DataContainerRef_.ContainerReference;
+}
+
+namespace elide.data.DataContainerRef_;
+
+// Specifies a fingerprint and path pair.
+table FingerprintPathPair {
+  // Specifies the fingerprint information associated with, or calculated for, the subject info.
+  fingerprint: elide.data.DataFingerprint;
+
+  // Specifies the path for this data container reference.
+  path: string;
+}
+
+// Specifies the reference subject for this record.
+table ContainerReference {
+  // Specifies raw data which is enclosed as a value with this reference. In this case, a data blob and fingerprint
+  // are enclosed inline within the protocol buffer.
+  data: elide.data.CompressedData;
+
+  // Specifies a reference to a file resident in the application JAR or native image.
+  resource: elide.data.DataContainerRef_.FingerprintPathPair;
+
+  // Specifies a reference to a file resident on the filesystem outside of the built application.
+  filesystem: elide.data.DataContainerRef_.FingerprintPathPair;
+}

@@ -1,0 +1,12 @@
+{
+    "resources": {
+        "includes": [
+            {
+                "pattern": "\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
+            },
+            {
+                "pattern": "\\QMETA-INF/elide/embedded/runtime/js/runtime.json\\E"
+            }
+        ]
+    }
+}

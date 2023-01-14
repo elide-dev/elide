@@ -6,9 +6,6 @@
         </encoder>
     </appender>
 
-    <!-- JS Runtime -->
-    <logger name="elide.runtime.graalvm.JsRuntime" level="trace" />
-
     <!-- HTTP Access Log -->
     <logger name="http:access" additivity="false" level="off">
         <appender-ref ref="STDOUT" />

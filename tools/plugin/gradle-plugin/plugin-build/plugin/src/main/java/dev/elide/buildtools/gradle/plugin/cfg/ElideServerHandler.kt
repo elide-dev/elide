@@ -4,12 +4,16 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.EmbeddedScriptLanguage
+import java.util.SortedSet
+import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
+import elide.tool.ssg.SiteCompilerParams.Options as CompilerOptions
 
 /** Elide JVM server target settings. */
-@Suppress("RedundantVisibilityModifier", "MemberVisibilityCanBePrivate", "unused")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 public open class ElideServerHandler @Inject constructor(objects: ObjectFactory) {
     private companion object {
         /** Default scripting language to apply. */
@@ -66,7 +70,7 @@ public open class ElideServerHandler @Inject constructor(objects: ObjectFactory)
     /** Configures SSR features for Elide server targets. */
     public open class ServerSSRHandler {
         internal companion object {
-            internal const val defaultSsrConfiguration: String = "nodeSsrDist"
+            internal const val defaultSsrConfiguration: String = "elideSsrDist"
         }
 
         /** Name of the target project to pull assets from. */
@@ -94,6 +98,36 @@ public open class ElideServerHandler @Inject constructor(objects: ObjectFactory)
     public open class StaticSiteHandler {
         /** Whether the user configured a static site target in their build script. */
         internal val enabled: AtomicBoolean = AtomicBoolean(false)
+
+        /** Explicit manifest path; if not provided, one will be calculated/resolved. */
+        internal val manifest: AtomicReference<String?> = AtomicReference(null)
+
+        /** Explicit output path; if not provided, one will be calculated. */
+        internal val output: AtomicReference<String?> = AtomicReference(null)
+
+        /** Explicit target app path; if not provided, one will be calculated. */
+        internal val target: AtomicReference<String?> = AtomicReference(null)
+
+        /** Whether to run the SSG site task in verbose mode. */
+        internal val verbose: AtomicBoolean = AtomicBoolean(CompilerOptions.DEFAULTS.verbose)
+
+        /** Whether to run the SSG site task in debug mode. */
+        internal val debug: AtomicBoolean = AtomicBoolean(CompilerOptions.DEFAULTS.debug)
+
+        /** Whether to allow colorized/dynamic output. */
+        internal val pretty: AtomicBoolean = AtomicBoolean(CompilerOptions.DEFAULTS.pretty)
+
+        /** Whether to crawl for additional assets. */
+        internal val crawl: AtomicBoolean = AtomicBoolean(CompilerOptions.DEFAULTS.crawl)
+
+        /** Response timeout to apply when operating in HTTP mode. */
+        internal val timeout: AtomicInteger = AtomicInteger(CompilerOptions.DEFAULT_REQUEST_TIMEOUT)
+
+        /** Response timeout to apply when operating in HTTP mode. */
+        internal val extraOrigins: SortedSet<String> = ConcurrentSkipListSet()
+
+        /** Whether to ignore cert errors when operating in HTTP mode. */
+        internal val ignoreCertErrors: AtomicBoolean = AtomicBoolean(CompilerOptions.DEFAULTS.ignoreCertErrors)
 
         /** Enable a static site build run for a given server target. */
         public fun enable() {

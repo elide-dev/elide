@@ -68,7 +68,6 @@ public final class elide/model/token/Token {
 
 public final class elide/model/token/Token$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/model/token/Token$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/model/token/Token;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -113,7 +112,6 @@ public final class elide/model/token/TokenValue {
 
 public final class elide/model/token/TokenValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/model/token/TokenValue$$serializer;
-	public static final synthetic field descriptor Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/model/token/TokenValue;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
@@ -131,5 +129,489 @@ public final class elide/model/util/InstantFactory {
 	public static final field INSTANCE Lelide/model/util/InstantFactory;
 	public static final fun date (Lcom/google/protobuf/Timestamp;)Ljava/util/Date;
 	public static final fun instant (Lcom/google/protobuf/Timestamp;)Ljava/time/Instant;
+}
+
+public abstract interface annotation class kotlinx/serialization/protobuf/ProtoDeprecated : java/lang/annotation/Annotation {
+}
+
+public final class kotlinx/serialization/protobuf/ProtoDeprecated$Impl : kotlinx/serialization/protobuf/ProtoDeprecated {
+	public fun <init> ()V
+}
+
+public abstract interface annotation class kotlinx/serialization/protobuf/ProtoEnum : java/lang/annotation/Annotation {
+	public abstract fun aliases ()Z
+	public abstract fun unknownName ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/ProtoEnum$Impl : kotlinx/serialization/protobuf/ProtoEnum {
+	public fun <init> (Ljava/lang/String;Z)V
+	public final synthetic fun aliases ()Z
+	public final synthetic fun unknownName ()Ljava/lang/String;
+}
+
+public abstract interface annotation class kotlinx/serialization/protobuf/ProtoFieldName : java/lang/annotation/Annotation {
+	public abstract fun name ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/ProtoFieldName$Impl : kotlinx/serialization/protobuf/ProtoFieldName {
+	public fun <init> (Ljava/lang/String;)V
+	public final synthetic fun name ()Ljava/lang/String;
+}
+
+public abstract interface annotation class kotlinx/serialization/protobuf/ProtoFieldsPreserve : java/lang/annotation/Annotation {
+	public abstract fun name ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/ProtoFieldsPreserve$Impl : kotlinx/serialization/protobuf/ProtoFieldsPreserve {
+	public fun <init> (Ljava/lang/String;)V
+	public final synthetic fun name ()Ljava/lang/String;
+}
+
+public abstract interface annotation class kotlinx/serialization/protobuf/ProtoUnknown : java/lang/annotation/Annotation {
+}
+
+public final class kotlinx/serialization/protobuf/ProtoUnknown$Impl : kotlinx/serialization/protobuf/ProtoUnknown {
+	public fun <init> ()V
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions {
+	public static final field Companion Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;Ljava/util/Collection;ZLkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Map;Ljava/util/Collection;ZLkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Ljava/util/Collection;
+	public final fun component4 ()Z
+	public final fun component5 ()Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+	public final fun copy (Ljava/lang/String;Ljava/util/Map;Ljava/util/Collection;ZLkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;)Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;Ljava/lang/String;Ljava/util/Map;Ljava/util/Collection;ZLkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEmitWarningComments ()Z
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun getPackageOptions ()Ljava/util/Map;
+	public final fun getProtoOptions ()Ljava/util/Collection;
+	public final fun getSyntaxVersion ()Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions$Companion {
+	public final fun getDEFAULTS ()Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder {
+	public abstract fun generateSchemaText (Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder$DefaultImpls {
+	public static synthetic fun generateSchemaText$default (Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaBuilder;Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoBufSchemaGenerator {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaGenerator;
+	public final fun generateSchemaText (Ljava/util/List;Ljava/lang/String;Ljava/util/Map;)Ljava/lang/String;
+	public final fun generateSchemaText (Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;)Ljava/lang/String;
+	public final fun generateSchemaText (Lkotlinx/serialization/descriptors/SerialDescriptor;Ljava/lang/String;Ljava/util/Map;)Ljava/lang/String;
+	public static synthetic fun generateSchemaText$default (Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaGenerator;Ljava/util/List;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun generateSchemaText$default (Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaGenerator;Ljava/util/List;Lkotlinx/serialization/protobuf/schema/ProtoBufGeneratorOptions;ILjava/lang/Object;)Ljava/lang/String;
+	public static synthetic fun generateSchemaText$default (Lkotlinx/serialization/protobuf/schema/ProtoBufSchemaGenerator;Lkotlinx/serialization/descriptors/SerialDescriptor;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion : java/lang/Enum {
+	public static final field PROTO2 Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+	public static final field PROTO3 Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoBufSyntaxVersion;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption {
+	public abstract fun getBuiltin ()Z
+	public abstract fun getImports ()Ljava/util/Set;
+	public abstract fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public abstract fun getSymbol ()Ljava/lang/String;
+	public abstract fun getSymbolValue ()Ljava/lang/String;
+	public abstract fun getTargets ()Ljava/util/EnumSet;
+	public abstract fun getValue ()Ljava/lang/Object;
+	public abstract fun isPresent ()Z
+	public abstract fun render ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$All {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$All;
+	public final fun getDEFAULTS ()Ljava/util/List;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public abstract fun getSymbolValue ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption$DefaultImpls {
+	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Z
+	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/util/Set;
+	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/lang/String;
+	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Z
+	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$BooleanOption;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$DefaultImpls {
+	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Z
+	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/util/Set;
+	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/lang/String;
+	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Z
+	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field ALLOW_ALIAS Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumOption;
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumOptions;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public abstract fun getSymbolValue ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption$DefaultImpls {
+	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Z
+	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/util/Set;
+	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/lang/String;
+	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Z
+	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumTypeOption;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$EnumValueOptions;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FieldOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field CTYPE Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static final field JSTYPE Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static final field LAZY Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static final field PACKED Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static final field WEAK Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FieldOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$FieldOptions;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field CC_ENABLE_ARENAS Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field CC_GENERIC_SERVICES Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field CSHARP_NAMESPACE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field GO_PACKAGE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_GENERATE_EQUALS_AND_HASH Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_GENERIC_SERVICES Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_MULTIPLE_FILES Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_OUTER_CLASSNAME Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_PACKAGE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field JAVA_STRING_CHECK_UTF8 Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field OBJC_CLASS_PREFIX Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field OPTIMIZE_FOR Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field PHP_CLASS_PREFIX Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field PHP_METADATA_NAMESPACE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field PHP_NAMESPACE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field PY_GENERIC_SERVICES Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field RUBY_PACKAGE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static final field SWIFT_PREFIX Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions;
+	public final fun getDEFAULTS ()Ljava/util/List;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$Deprecated : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$Deprecated;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$Deprecated;ZILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$Deprecated;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDeprecated ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaGenerateEqualsAndHash : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaGenerateEqualsAndHash;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaGenerateEqualsAndHash;ZILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaGenerateEqualsAndHash;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getGenerateEqualsAndHash ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaMultipleFiles : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaMultipleFiles;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaMultipleFiles;ZILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaMultipleFiles;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMultipleFiles ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaOuterClassname : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaOuterClassname;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaOuterClassname;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaOuterClassname;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClassName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaPackage : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaPackage;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaPackage;Ljava/lang/String;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaPackage;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPackageName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaStringCheckUtf8 : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaStringCheckUtf8;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaStringCheckUtf8;ZILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$JavaStringCheckUtf8;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckUtf8 ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$OptimizeFor : kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption {
+	public fun <init> (Lcom/google/protobuf/DescriptorProtos$FileOptions$OptimizeMode;)V
+	public final fun component1 ()Lcom/google/protobuf/DescriptorProtos$FileOptions$OptimizeMode;
+	public final fun copy (Lcom/google/protobuf/DescriptorProtos$FileOptions$OptimizeMode;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$OptimizeFor;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$OptimizeFor;Lcom/google/protobuf/DescriptorProtos$FileOptions$OptimizeMode;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOptions$OptimizeFor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOptimizeFor ()Lcom/google/protobuf/DescriptorProtos$FileOptions$OptimizeMode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class kotlinx/serialization/protobuf/schema/ProtoOption$KnownFileOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;Ljava/lang/Object;Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;Ljava/lang/String;Ljava/util/EnumSet;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;Ljava/lang/Object;Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;Ljava/lang/String;Ljava/util/EnumSet;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getBuiltin ()Z
+	public fun getImports ()Ljava/util/Set;
+	public final fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption$FileOption;
+	public fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public fun getSymbol ()Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
+	public fun getTargets ()Ljava/util/EnumSet;
+	public fun getValue ()Ljava/lang/Object;
+	public fun isPresent ()Z
+	public fun render ()Ljava/lang/String;
+}
+
+public abstract class kotlinx/serialization/protobuf/schema/ProtoOption$KnownMessageOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;Ljava/lang/Object;Ljava/lang/String;Ljava/util/EnumSet;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;Ljava/lang/Object;Ljava/lang/String;Ljava/util/EnumSet;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getBuiltin ()Z
+	public fun getImports ()Ljava/util/Set;
+	public final fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public fun getSymbolValue ()Ljava/lang/String;
+	public fun getTargets ()Ljava/util/EnumSet;
+	public fun getValue ()Ljava/lang/Object;
+	public fun isPresent ()Z
+	public fun render ()Ljava/lang/String;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$KnownOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public abstract fun getBuiltin ()Z
+	public abstract fun getOption ()Lkotlinx/serialization/protobuf/schema/ProtoOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$KnownOption$DefaultImpls {
+	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Z
+	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/util/Set;
+	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/lang/String;
+	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Z
+	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$KnownOption;)Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public static final field MAP_ENTRY Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public static final field MESSAGE_SET_WIRE_FORMAT Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public static final field NO_STANDARD_DESCRIPTOR_ACCESSOR Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$Deprecated : kotlinx/serialization/protobuf/schema/ProtoOption$KnownMessageOption {
+	public fun <init> (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)V
+	public synthetic fun <init> (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public final fun copy (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$Deprecated;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$Deprecated;ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$Deprecated;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDeprecated ()Z
+	public fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$MessageSetWireFormat : kotlinx/serialization/protobuf/schema/ProtoOption$KnownMessageOption {
+	public fun <init> (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public final fun copy (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$MessageSetWireFormat;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$MessageSetWireFormat;ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$MessageSetWireFormat;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessageSetWireFormat ()Z
+	public fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$NoStandardDescriptorAccessor : kotlinx/serialization/protobuf/schema/ProtoOption$KnownMessageOption {
+	public fun <init> (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)V
+	public synthetic fun <init> (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public final fun copy (ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$NoStandardDescriptorAccessor;
+	public static synthetic fun copy$default (Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$NoStandardDescriptorAccessor;ZLkotlinx/serialization/protobuf/schema/ProtoOption$Scope;ILjava/lang/Object;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MessageOptions$NoStandardDescriptorAccessor;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNoStandardDescriptorAccessor ()Z
+	public fun getScope ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MethodOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$MethodOption;
+	public static final field IDEMPOTENCY_LEVEL Lkotlinx/serialization/protobuf/schema/ProtoOption$MethodOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$MethodOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$MethodOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$MethodOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$MethodOptions;
+}
+
+public abstract class kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public static final field Companion Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getSymbol ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$All : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> ()V
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$Companion {
+	public final fun getALL ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope$All;
+	public final fun getGLOBAL ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope$Global;
+	public final fun getNONE ()Lkotlinx/serialization/protobuf/schema/ProtoOption$Scope$None;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$Enum : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getEnumName ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$Global : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> ()V
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$Message : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getMessageName ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$None : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> ()V
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Scope$Package : kotlinx/serialization/protobuf/schema/ProtoOption$Scope {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getPackageName ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$ServiceOption : java/lang/Enum, kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public static final field DEPRECATED Lkotlinx/serialization/protobuf/schema/ProtoOption$ServiceOption;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$ServiceOption;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$ServiceOption;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$ServiceOptions {
+	public static final field INSTANCE Lkotlinx/serialization/protobuf/schema/ProtoOption$ServiceOptions;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$StringOption : kotlinx/serialization/protobuf/schema/ProtoOption {
+	public abstract fun getSymbolValue ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$StringOption$DefaultImpls {
+	public static fun getBuiltin (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Z
+	public static fun getImports (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/util/Set;
+	public static fun getSymbolValue (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/lang/String;
+	public static fun isPresent (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Z
+	public static fun render (Lkotlinx/serialization/protobuf/schema/ProtoOption$StringOption;)Ljava/lang/String;
+}
+
+public abstract interface class kotlinx/serialization/protobuf/schema/ProtoOption$SymbolicOption {
+	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public final class kotlinx/serialization/protobuf/schema/ProtoOption$Target : java/lang/Enum {
+	public static final field ENUM Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field ENUM_VALUE Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field FIELD Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field FILE Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field MESSAGE Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field METHOD Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static final field SERVICE Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static fun valueOf (Ljava/lang/String;)Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
+	public static fun values ()[Lkotlinx/serialization/protobuf/schema/ProtoOption$Target;
 }
 

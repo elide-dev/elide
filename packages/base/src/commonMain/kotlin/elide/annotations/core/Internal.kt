@@ -1,7 +1,10 @@
 package elide.annotations.core
 
 /**
+ * # Annotation: Internal
  *
+ * Marks a type or member as internal. Internal types and members may generate compile warnings if used outside the
+ * compile unit where they are defined.
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)

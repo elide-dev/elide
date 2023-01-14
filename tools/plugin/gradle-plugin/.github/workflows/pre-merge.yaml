@@ -16,11 +16,12 @@ env:
 jobs:
   preflight-checks:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
       - name: "Check: Dependency Review"
-        uses: actions/dependency-review-action@v3
+        uses: actions/dependency-review-action@c090f4e553673e6e505ea70d6a95362ee12adb94 # v3
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@55e685c48d84285a5b0418cd094606e199cca3b6 # tag=v1
 
@@ -43,16 +44,16 @@ jobs:
 
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d01f5f519f35cf82b318133761fd8b674632a8fe # v1
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Gradle Caches
       - name: Prime Gradle Caches
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
 
       ## Setup: Signing Keys
       - name: "Setup: Signing Keys"
@@ -73,7 +74,7 @@ jobs:
 
       ## Job: Run build
       - name: Run Gradle build
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -89,7 +90,7 @@ jobs:
 
       ## Job: Reports
       - name: Build reports
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
         if: ${{ matrix.os == 'ubuntu' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,7 +110,7 @@ jobs:
 
       ## Job: Run plugin
       - name: Run the plugin
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
         if: success()
         with:
           arguments: |
@@ -147,7 +148,7 @@ jobs:
 
       ## Job: Report Code Coverage
       - name: "Report: Codecov"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3
         continue-on-error: true
         if: ${{ matrix.os == 'ubuntu' }}
         with:

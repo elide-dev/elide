@@ -21,46 +21,36 @@ private val defaultEncoderWebsafe: Base64Kt.Encoder = Base64Kt.Encoder(
 private val defaultDecoder: Base64Kt.Decoder = Base64Kt.Decoder()
 
 /**
- * This class consists exclusively of static methods for obtaining
- * encoders and decoders for the Base64 encoding scheme. The
- * implementation of this class supports the following types of Base64
- * as specified in
- * [RFC 4648](http://www.ietf.org/rfc/rfc4648.txt) and
- * [RFC 2045](http://www.ietf.org/rfc/rfc2045.txt).
+ * # Base64: Common
  *
- *  * <a id="basic">**Basic**</a>
+ * This class consists exclusively of static methods for obtaining encoders and decoders for the Base64 encoding scheme.
+ * The implementation of this class supports the following types of Base64 as specified in
+ * [RFC 4648](http://www.ietf.org/rfc/rfc4648.txt) and [RFC 2045](http://www.ietf.org/rfc/rfc2045.txt).
  *
- *  Uses "The Base64 Alphabet" as specified in Table 1 of
- * RFC 4648 and RFC 2045 for encoding and decoding operation.
- * The encoder does not add any line feed (line separator)
- * character. The decoder rejects data that contains characters
+ * ## Basic
+ *
+ * Uses "The Base64 Alphabet" as specified in Table 1 of RFC 4648 and RFC 2045 for encoding and decoding operation. The
+ * encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters
  * outside the base64 alphabet.
  *
- *  * <a id="url">**URL and Filename safe**</a>
+ * ## "Web safe"
  *
- *  Uses the "URL and Filename safe Base64 Alphabet" as specified
- * in Table 2 of RFC 4648 for encoding and decoding. The
- * encoder does not add any line feed (line separator) character.
- * The decoder rejects data that contains characters outside the
- * base64 alphabet.
+ * Uses the "URL and Filename safe Base64 Alphabet" as specified in Table 2 of RFC 4648 for encoding and decoding. The
+ * encoder does not add any line feed (line separator) character. The decoder rejects data that contains characters
+ * outside the base64 alphabet.
  *
- *  * <a id="mime">**MIME**</a>
+ * ## MIME
  *
- *  Uses "The Base64 Alphabet" as specified in Table 1 of
- * RFC 2045 for encoding and decoding operation. The encoded output
- * must be represented in lines of no more than 76 characters each
- * and uses a carriage return `'\r'` followed immediately by
- * a linefeed `'\n'` as the line separator. No line separator
- * is added to the end of the encoded output. All line separators
- * or other characters not found in the base64 alphabet table are
- * ignored in decoding operation.
+ * Uses "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded
+ * output must be represented in lines of no more than 76 characters each and uses a carriage return `'\r'` followed
+ * immediately by a linefeed `'\n'` as the line separator. No line separator is added to the end of the encoded output.
+ * All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.
  *
- *  Unless otherwise noted, passing a `null` argument to a
- * method of this class will cause a `NullPointerException`
- * to be thrown.
+ * Unless otherwise noted, passing a `null` argument to a method of this class will cause a `NullPointerException` to be
+ * thrown.
  *
- * @author  Xueming Shen
- * @since   1.8
+ * @author Xueming Shen
+ * @author Sam Gammon
  */
 @Suppress(
   "DuplicatedCode",
@@ -72,9 +62,8 @@ private val defaultDecoder: Base64Kt.Decoder = Base64Kt.Decoder()
 )
 public object Base64Kt {
   /**
-   * This array is a lookup table that translates 6-bit positive integer
-   * index values into their "Base64 Alphabet" equivalents as specified
-   * in "Table 1: The Base64 Alphabet" of RFC 2045 (and RFC 4648).
+   * This array is a lookup table that translates 6-bit positive integer index values into their "Base64 Alphabet"
+   * equivalents as specified in "Table 1: The Base64 Alphabet" of RFC 2045 (and RFC 4648).
    */
   private val toBase64: CharArray = charArrayOf(
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -85,9 +74,8 @@ public object Base64Kt {
   )
 
   /**
-   * It's the lookup table for "URL and Filename safe Base64" as specified
-   * in Table 2 of the RFC 4648, with the '+' and '/' changed to '-' and
-   * '_'. This table is used when BASE64_URL is specified.
+   * It's the lookup table for "URL and Filename safe Base64" as specified in Table 2 of the RFC 4648, with the '+' and
+   * '/' changed to '-' and '_'. This table is used when BASE64_URL is specified.
    */
   private val toBase64URL: CharArray = charArrayOf(
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -98,19 +86,13 @@ public object Base64Kt {
   )
 
   /**
-   * Lookup table for decoding unicode characters drawn from the
-   * "Base64 Alphabet" (as specified in Table 1 of RFC 2045) into
-   * their 6-bit positive integer equivalents.  Characters that
-   * are not in the Base64 alphabet but fall within the bounds of
-   * the array are encoded to -1.
-   *
+   * Lookup table for decoding unicode characters drawn from the "Base64 Alphabet" (as specified in Table 1 of RFC 2045)
+   * into their 6-bit positive integer equivalents.  Characters that are not in the Base64 alphabet but fall within the
+   * bounds of the array are encoded to -1.
    */
   private val fromBase64 = IntArray(256)
 
-  /**
-   * Lookup table for decoding "URL and Filename safe Base64 Alphabet"
-   * as specified in Table2 of the RFC 4648.
-   */
+  /** Lookup table for decoding "URL and Filename safe Base64 Alphabet" as specified in Table2 of the RFC 4648. */
   private val fromBase64URL = IntArray(256)
 
   init {
@@ -127,37 +109,29 @@ public object Base64Kt {
   }
 
   /**
-   * Returns a [Encoder] that encodes using the
-   * [Basic](#basic) type base64 encoding scheme.
+   * Returns a [Encoder] that encodes using the [Basic](#basic) type base64 encoding scheme.
    *
-   * @return  A Base64 encoder.
+   * @return A Base64 encoder.
    */
   public val encoder: Encoder = Encoder(null, -1, true)
 
   /**
-   * Returns a [Decoder] that decodes using the
-   * [Basic](#basic) type base64 encoding scheme.
+   * Returns a [Decoder] that decodes using the [Basic](#basic) type base64 encoding scheme.
    *
-   * @return  A Base64 decoder.
+   * @return A Base64 decoder.
    */
   public val decoder: Decoder = Decoder()
 
   /**
-   * This class implements an encoder for encoding byte data using
-   * the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
+   * ## Base64: Encoder
    *
+   * This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648
+   * and RFC 2045. Instances of [Encoder] class are safe for use by multiple concurrent threads.
    *
-   *  Instances of [Encoder] class are safe for use by
-   * multiple concurrent threads.
+   * Unless otherwise noted, passing a `null` argument to a method of this class will cause a `NullPointerException` to
+   * be thrown.
    *
-   *
-   *  Unless otherwise noted, passing a `null` argument to
-   * a method of this class will cause a `NullPointerException` to be
-   * thrown.
-   *
-   * @see Decoder
-   *
-   * @since   1.8
+   * @see Decoder for base-64 decoding facilities.
    */
   public class Encoder internal constructor(
     private val newline: ByteArray?,
@@ -165,14 +139,10 @@ public object Base64Kt {
     private val doPadding: Boolean
     ) {
     public companion object {
-      /**
-       * Default encoder instance.
-       */
+      /** Default encoder instance. */
       public val DEFAULT: Encoder = defaultEncoder
 
-      /**
-       * Default encoder instance for un-padded encoding.
-       */
+      /** Default encoder instance for un-padded encoding. */
       public val DEFAULT_WEBSAFE: Encoder = defaultEncoderWebsafe
     }
 
@@ -189,14 +159,11 @@ public object Base64Kt {
     }
 
     /**
-     * Encodes all bytes from the specified byte array into a newly-allocated
-     * byte array using the [Base64] encoding scheme. The returned byte
-     * array is of the length of the resulting bytes.
+     * Encodes all bytes from the specified byte array into a newly-allocated byte array using the [Base64] encoding
+     * scheme. The returned byte array is of the length of the resulting bytes.
      *
-     * @param   src
-     * the byte array to encode
-     * @return  A newly-allocated byte array containing the resulting
-     * encoded bytes.
+     * @param src the byte array to encode
+     * @return A newly-allocated byte array containing the resulting encoded bytes.
      */
     public fun encode(src: ByteArray): ByteArray {
       val len = outLength(src.size) // dst array size
@@ -262,33 +229,23 @@ public object Base64Kt {
   }
 
   /**
-   * This class implements a decoder for decoding byte data using the
-   * Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
+   * ## Base64: Decoder
    *
+   * This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648
+   * and RFC 2045.
    *
-   *  The Base64 padding character `'='` is accepted and
-   * interpreted as the end of the encoded byte data, but is not
-   * required. So if the final unit of the encoded byte data only has
-   * two or three Base64 characters (without the corresponding padding
-   * character(s) padded), they are decoded as if followed by padding
-   * character(s). If there is a padding character present in the
-   * final unit, the correct number of padding character(s) must be
-   * present, otherwise `IllegalArgumentException` (
-   * `IOException` when reading from a Base64 stream) is thrown
-   * during decoding.
+   * The Base64 padding character `'='` is accepted and interpreted as the end of the encoded byte data, but is not
+   * required. So if the final unit of the encoded byte data only has two or three Base64 characters (without the
+   * corresponding padding character(s) padded), they are decoded as if followed by padding character(s). If there is a
+   * padding character present in the final unit, the correct number of padding character(s) must be present, otherwise
+   * `IllegalArgumentException` (`IOException` when reading from a Base64 stream) is thrown during decoding.
    *
+   * Instances of [Decoder] class are safe for use by multiple concurrent threads.
    *
-   *  Instances of [Decoder] class are safe for use by
-   * multiple concurrent threads.
+   * Unless otherwise noted, passing a `null` argument to a method of this class will cause a `NullPointerException` to
+   * be thrown.
    *
-   *
-   *  Unless otherwise noted, passing a `null` argument to
-   * a method of this class will cause a
-   * `NullPointerException` to be thrown.
-   *
-   * @see Encoder
-   *
-   * @since   1.8
+   * @see Encoder for base-64 encoding facilities.
    */
   public class Decoder {
     public companion object {
@@ -296,18 +253,12 @@ public object Base64Kt {
     }
 
     /**
-     * Decodes all bytes from the input byte array using the [Base64]
-     * encoding scheme, writing the results into a newly-allocated output
-     * byte array. The returned byte array is of the length of the resulting
-     * bytes.
+     * Decodes all bytes from the input byte array using the [Base64] encoding scheme, writing the results into a
+     * newly-allocated output byte array. The returned byte array is of the length of the resulting bytes.
      *
-     * @param   src
-     * the byte array to decode
-     *
-     * @return  A newly-allocated byte array containing the decoded bytes.
-     *
-     * @throws  IllegalArgumentException
-     * if `src` is not in valid Base64 scheme
+     * @param src the byte array to decode
+     * @return A newly-allocated byte array containing the decoded bytes.
+     * @throws IllegalArgumentException if `src` is not in valid Base64 scheme
      */
     public fun decode(src: ByteArray): ByteArray {
       var dst = ByteArray(outLength(src, 0, src.size))

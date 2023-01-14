@@ -1,0 +1,125 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+include "../../google/protobuf/timestamp.fbs";
+include "../crypto/crypto.fbs";
+include "../data/encoding.fbs";
+
+/*
+ * Specifies structures which define files and file metadata within virtualized file systems managed by Elide on behalf
+ * of an application or guest VM.
+ */
+namespace elide.vfs;
+
+// # VFS: Known MIME-Type
+//
+// Enumerates known mime-types to the VM implementation, which can be expressed symbolically rather than in string form.
+// These types are only created for files which are expected to be frequently used by the VM FS.
+enum KnownMimeType : int {
+  // Unknown or unspecified known-mime-type; regular code should never use this value, as it also represents the default
+  // value if a known-mime-type is not specified, or if the specified value is not recognized.
+  KNOWN_MIME_UNSPECIFIED = 0,
+}
+
+// # VFS: File
+//
+// Describes a single `File`-type entry within a given `TreeEntry`, within a virtual file system managed by Elide. File
+// entries describe file metadata only; raw file data is enclosed in a compressed blob stored alongside filesystem
+// metadata.
+//
+// See individual properties for more information. `File` objects can only be held by `TreeEntry` objects. `Directory`
+// objects refer to their child `TreeEntry` constituents.
+table File {
+  // Name of the file.
+  name: string;
+
+  // Uncompressed size of the file, in bytes.
+  size: ulong;
+
+  // Compressed size of the file, in bytes. If `size` and `compressed` are equal, the file is not compressed.
+  compressed: ulong;
+
+  // Offset at which the file begins within the compressed filesystem blob.
+  offset: ulong;
+
+  // Offset at which the file ends within the compressed filesystem blob.
+  tail: ulong;
+
+  // Describes the encoding of the file.
+  encoding: elide.data.Encoding;
+
+  // Describes the last time this file was modified. This value is only available in circumstances where the VFS is
+  // running with change tracking enabled (namely, during development). In production, this value will be set to a
+  // consistent timestamp for all assets.
+  modified: google.protobuf.Timestamp;
+
+  // Mime type assigned to this file, or resolved for this file, as applicable/if available at build time.
+  file_type: elide.vfs.File_.FileTypeSpec;
+
+  // Fingerprints of compressed and regular file representations, as applicable.
+  fingerprint: elide.vfs.File_.FileFingerprint;
+
+  // Extended attributes for this file.
+  attributes: [elide.vfs.File_.AttributesEntry];
+}
+
+namespace elide.vfs.File_;
+
+// Cryptographic fingerprint of file data.
+table Fingerprint {
+  // Specifies the held fingerprint data.
+  fingerprint: elide.vfs.File_.Fingerprint_.FileFingerprint;
+
+  // If this fingerprint carries a `hash` value, this describes the algorithm used.
+  algorithm: elide.crypto.HashAlgorithm;
+}
+
+namespace elide.vfs.File_.Fingerprint_;
+
+// Specifies the held fingerprint data.
+table FileFingerprint {
+  // CRC32 fingerprint data.
+  crc32: [ubyte];
+
+  // Hash algorithm fingerprint data (in which case `algorithm` is required).
+  hash: [ubyte];
+}
+
+namespace elide.vfs.File_;
+
+// Combines a compressed and uncompressed fingerprint of file data.
+table FileFingerprint {
+  // Describes the compressed representation's fingerprint.
+  compressed: elide.vfs.File_.Fingerprint;
+
+  // Describes the regular representation's fingerprint.
+  uncompressed: elide.vfs.File_.Fingerprint;
+}
+
+// Mime type assigned to this file, or resolved for this file, as applicable/if available at build time.
+table FileTypeSpec {
+  // Specifies a known MIME type for this file, from the [KnownMimeType] enumeration.
+  known: elide.vfs.KnownMimeType;
+
+  // Specifies a string for a mime-type. This is only used if the mime-type is not known to the VM implementation.
+  mime: string;
+}
+
+// Mapping table for arbitrary file attributes.
+table AttributesEntry {
+  // File attribute key.
+  key:string (key);
+
+  // File attribute value.
+  value:string;
+}

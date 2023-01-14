@@ -16,17 +16,15 @@
  * throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
  */
 syntax = "proto3";
-package crypto;
+package elide.crypto;
 
-option optimize_for = SPEED;
+option optimize_for = CODE_SIZE;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
-option php_namespace = "Elide\\Crypto";
 option php_class_prefix = "ELD";
 option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Crypto";
 option java_package = "tools.elide.crypto";
 option csharp_namespace = "Elide.Crypto";
 option go_package = "github.com/elide-tools/elide/crypto;crypto";
@@ -38,24 +36,24 @@ enum HashAlgorithm {
   // No hash algorithm was/is active.
   IDENTITY = 0;
 
-  // Use MD5 for chunk hashing.
+  // Algorithm: MD5.
   MD5 = 1;
 
-  // Use SHA1 for chunk hashing.
+  // Algorithm: SHA1.
   SHA1 = 2;
 
-  // Use SHA256 for chunk hashing.
+  // Algorithm: SHA-256.
   SHA256 = 3;
 
-  // Use SHA512 for chunk hashing.
+  // Algorithm: SHA-512.
   SHA512 = 4;
 
-  // Use SHA3-224 for chunk hashing.
+  // Algorithm: SHA3-224.
   SHA3_224 = 5;
 
-  // Use SHA3-256 for chunk hashing.
+  // Algorithm: SHA3-256.
   SHA3_256 = 6;
 
-  // Use SHA3-512 for chunk hashing.
+  // Algorithm: SHA3-512.
   SHA3_512 = 7;
 }

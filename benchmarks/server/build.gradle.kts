@@ -72,6 +72,7 @@ dependencies {
   implementation(libs.reactor.netty.http)
   runtimeOnly(libs.logback)
 
+  implementation(libs.elide.base)
   implementation(libs.elide.server)
 }
 
@@ -84,15 +85,20 @@ benchmark {
     named("main") {
       warmups = 3
       iterations = 3
-      include( if (project.hasProperty("elide.benchmark")) {
-        project.properties["elide.benchmark"] as String
+
+      if (!project.hasProperty("elide.benchmark")) {
+        listOf(
+          "core",
+          "server",
+        ).forEach { module ->
+          include("elide.benchmarks.$module.*")
+        }
+        exclude(
+          "elide.benchmarks.server.PageBenchmarkHttp"
+        )
       } else {
-        // "elide.benchmarks.*"
-        "elide.benchmarks.PageBenchmarkDirect"
-      })
-//      exclude(
-//        "elide.benchmarks.PageBenchmarkHttp"
-//      )
+        include(project.properties["elide.benchmark"] as String)
+      }
     }
   }
   targets {
@@ -112,8 +118,8 @@ tasks.withType(Copy::class).configureEach {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    apiVersion = "1.7"
-    languageVersion = "1.7"
+    apiVersion = "1.8"
+    languageVersion = "1.8"
     jvmTarget = javaLanguageVersion
     javaParameters = true
     incremental = true

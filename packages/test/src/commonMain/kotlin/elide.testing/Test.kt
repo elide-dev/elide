@@ -1,4 +1,4 @@
 package elide.testing
 
 /** Base class for tests. */
-expect abstract class Test
+public expect abstract class Test

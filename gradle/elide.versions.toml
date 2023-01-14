@@ -1,40 +1,44 @@
 [versions]
-elide = "1.0-v3-alpha1-rc38"
-elide_plugin = "1.0.0-beta12"
-kotlin_sdk = "1.7.21"
-kotlin_language = "1.7"
-ksp = "1.7.21-1.0.8"
+elide = "1.0-v3-alpha3-b4"
+elide_plugin = "1.0.0-beta13"
+kotlin_sdk = "1.8.0"
+kotlin_language = "1.8"
+jna = "5.8.0"
+ksp = "1.8.0-1.0.8"
 koin = "3.2.2"
 koin_ksp = "1.0.3"
 graalvm = "22.3.0"
 graalvm_sdk = "22.3.0"
-graalvm_metadata = "0.2.4"
-graalvm_plugin = "0.9.17"
-node = "18.0.1"
+graalvm_metadata = "0.2.5"
+graalvm_plugin = "0.9.19"
+node = "18.11.10"
 react = "18.2.0"
-protobuf = "3.21.2"
-grpc_java = "1.50.2"
+protobuf = "3.21.11"
+protobufJavalite = "3.0.0"
+grpc_java = "1.51.0"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
+arrow = "1.0.1"
 testcontainers = "1.17.5"
-netty = "4.1.85.Final"
-netty_tcnative = "2.0.54.Final"
+jline = "3.21.0"
+netty = "4.1.86.Final"
+netty_tcnative = "2.0.56.Final"
 dekorate = "3.1.1"
-micronaut_lib = "3.7.4"
+micronaut_lib = "3.8.1"
 micronaut_aot = "1.1.1"
 micronaut_aws = "3.9.3"
 micronaut_data = "3.8.1"
-micronaut_grpc = "3.4.0"
+micronaut_grpc = "3.5.0"
 micronaut_graphql = "3.2.0"
 micronaut_gcp = "4.6.0"
-micronaut_test = "3.7.0"
-micronaut_plugin = "3.6.4"
+micronaut_test = "3.8.0"
+micronaut_plugin = "3.7.0"
 micronaut_redis = "5.3.0"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
-micronaut_views = "3.7.2"
+micronaut_views = "3.8.0"
 micronaut_serde = "1.3.3"
-micronaut_security = "3.8.0"
+micronaut_security = "3.9.0"
 micronaut_sql = "4.7.2"
 micronaut_openapi = "4.6.0"
 micronaut_picocli = "4.3.0"
@@ -54,15 +58,16 @@ kotlinx_html = "0.8.0"
 kotlinx_serialization = "1.4.1"
 kotlinx_metadata_jvm = "0.5.0"
 atomicfu = "0.18.5"
-kotlinx_benchmark = "0.4.5"
+kotlinx_benchmark = "0.4.7"
 detekt = "1.22.0-RC3"
 dokka = "1.7.20"
+mermaidDokka = "0.4.1"
 ktlint = "0.47.1"
 lettuce = "6.2.0.RELEASE"
 ktlintGradle = "10.3.0"
 qodanaGradle = "0.1.13"
 pluginPublish = "0.21.0"
-pluginProtobuf = "0.9.1"
+pluginProtobuf = "0.9.2"
 versionCheck = "0.43.0"
 sonar = "3.5.0.2730"
 truth = "1.1.3"
@@ -79,9 +84,9 @@ jakarta_annotation_api = "2.1.1"
 javax_persistence = "2.2"
 javax_annotations = "1.3.2"
 jsoup = "1.15.3"
-junit_jupiter = "5.9.1"
+junit_jupiter = "5.9.2"
 logback = "1.2.11"
-docker_plugin = "7.4.0"
+docker_plugin = "9.1.0"
 node_plugin = "3.5.0"
 gauth_plugin = "2.2.0"
 kotest = "5.5.4"
@@ -89,34 +94,56 @@ kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.6.0"
 guava = "31.1-jre"
-gax = "2.19.5"
-kotlinxWrappers = "pre.422"
-kotlinx_wrappers_browser = "0.0.1-pre.422"
-kotlinx_wrappers_css = "1.0.0-pre.422"
-kotlinx_wrappers_node = "18.11.8-pre.422"
-kotlinx_wrappers_react = "18.2.0-pre.422"
-kotlinx_wrappers_react_router_dom = "6.3.0-pre.422"
-kotlinx_wrappers_emotion = "11.10.5-pre.422"
-kotlinx_wrappers_redux = "4.1.2-pre.422"
-kotlinx_wrappers_react_redux = "7.2.6-pre.422"
-kotlinx_wrappers_mui = "5.9.1-pre.422"
-kotlinx_wrappers_styled = "5.3.6-pre.422"
-kotlinx_wrappers_styled_next = "1.2.1-pre.422"
-kotlinx_wrappers_history = "5.3.0-pre.422"
-kotlinx_wrappers_typescript = "4.8.4-pre.422"
-kotlinx_wrappers_tanstack_query_core = "4.14.1-pre.422"
-kotlinx_wrappers_tanstack_react_query = "4.14.1-pre.422"
-kotlinx_wrappers_tanstack_react_table = "8.5.22-pre.422"
-kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.422"
-kotlinx_wrappers_tanstack_table_core = "8.5.22-pre.422"
-kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.422"
+gax = "2.20.1"
+flatbuffers = "2.0.3"
+flatbuffers_java = "22.12.06"
+flatbuffers_plugin = "1.0.7"
+kotlinxWrappers = "pre.457"
+kotlinx_wrappers_bom = "1.0.0-pre.457"
+kotlinx_wrappers_browser = "0.0.1-pre.457"
+kotlinx_wrappers_cesium = "1.100.0-pre.457"
+kotlinx_wrappers_css = "1.0.0-pre.457"
+kotlinx_wrappers_csstype = "3.1.1-pre.457"
+kotlinx_wrappers_node = "18.11.10-pre.457"
+kotlinx_wrappers_js = "1.0.0-pre.457"
+kotlinx_wrappers_react = "18.2.0-pre.457"
+kotlinx_wrappers_react_beautiful_dnd = "13.1.0-pre.457"
+kotlinx_wrappers_react_router_dom = "6.3.0-pre.457"
+kotlinx_wrappers_emotion = "11.10.5-pre.457"
+kotlinx_wrappers_redux = "4.1.2-pre.457"
+kotlinx_wrappers_react_redux = "7.2.6-pre.457"
+kotlinx_wrappers_react_popper = "2.3.0-pre.457"
+kotlinx_wrappers_react_select = "5.7.0-pre.457"
+kotlinx_wrappers_remix_run_router = "1.0.3-pre.457"
+kotlinx_wrappers_ringUi = "4.1.5-pre.457"
+kotlinx_wrappers_mui = "5.9.1-pre.457"
+kotlinx_wrappers_mui_icons = "5.10.9-pre.457"
+kotlinx_wrappers_styled = "5.3.6-pre.457"
+kotlinx_wrappers_styled_next = "1.2.1-pre.457"
+kotlinx_wrappers_popper = "2.11.6-pre.457"
+kotlinx_wrappers_history = "5.3.0-pre.457"
+kotlinx_wrappers_web = "1.0.0-pre.457"
+kotlinx_wrappers_typescript = "4.9.3-pre.457"
+kotlinx_wrappers_tanstack_query_core = "4.19.1-pre.457"
+kotlinx_wrappers_tanstack_react_query = "4.19.1-pre.457"
+kotlinx_wrappers_tanstack_react_table = "8.6.0-pre.457"
+kotlinx_wrappers_tanstack_react_virtual = "3.0.0-pre.457"
+kotlinx_wrappers_tanstack_table_core = "8.6.0-pre.457"
+kotlinx_wrappers_tanstack_virtual_core = "3.0.0-pre.457"
 kotlinx_abiValidator = "0.12.1"
-npm_esbuild = "0.15.15"
+npm_esbuild = "0.16.17"
+npm_google_protobuf = "3.21.2"
+npm_preact_core = "10.11.3"
+npm_preact_compat = "17.1.2"
+npm_preact_renderToString = "5.2.6"
 npm_prepack = "0.2.54"
 npm_buffer = "6.0.3"
 npm_stream = "4.2.0"
+npm_webstreams = "3.2.1"
 npm_types_protobuf = "3.15.6"
 npm_grpcweb = "1.4.2"
+npm_emotion_core = "11.10.5"
+npm_emotion_server = "11.10.0"
 npm_lit = "2.4.0"
 npm_litHtml = "2.4.0"
 npm_litElement = "3.2.2"
@@ -130,27 +157,33 @@ npm_lit_labs_ssr = "2.2.3"
 npm_lit_labs_ssrClient = "1.0.1"
 npm_lit_labs_virtualizer = "0.7.2"
 npm_lit_labs_task = "2.0.0"
-google_api_common = "2.2.2"
+sqlite = "3.40.0.0"
+snappy = "1.1.8.4"
+msgpack = "0.9.3"
+larray = "0.2.1"
+google_api_common = "2.3.1"
 google_html_types = "1.0.8"
 reactivestreams = "1.0.4"
 kotlin_dataframe = "0.9.0-dev-1059"
-kotlin_knit = "0.4.0"
+kotlin_knit = "0.3.0"
 lz4 = "1.3.0"
 shadow_plugin = "7.1.2"
 gcloud_sdk = "26.1.2"
 gcloud_native = "0.14.1"
 jib = "3.3.1"
+jimfs = "1.2"
 commons_compress = "1.22"
 commons_csv = "1.9.0"
-brotli4j = "1.8.0"
+commons_pool = "2.11.1"
+brotli4j = "1.9.0"
 projectreactor = "2022.0.0"
-projectreactor_core = "3.5.0"
-projectreactor_netty = "1.1.0"
+projectreactor_core = "3.5.2"
+projectreactor_netty = "1.1.2"
 bouncycastle = "1.70"
 tink = "1.7.0"
 conscrypt = "2.5.2"
 kover = "0.6.1"
-jmh_plugin = "0.6.6"
+jmh_plugin = "0.6.8"
 jmh = "1.36"
 doctor_plugin = "0.8.1"
 jansi = "1.18"
@@ -160,7 +193,7 @@ postgres = "42.5.0"
 swagger = "2.2.6"
 micronaut_liquibase = "5.4.1"
 sqlcommenter = "2.1.1-elide"
-jackson = "2.13.3"
+jackson = "2.14.1"
 jsr310 = "2.9.8"
 spotless = "6.11.0"
 micronaut_xml = "3.1.0"
@@ -171,6 +204,12 @@ auto_service = "1.0.1"
 auto_factory = "1.0.1"
 auto_value = "1.10.1"
 kotter = "1.0.0"
+pluginBuf = "0.8.2"
+lmaxDisruptor = "3.4.4"
+lmaxDisruptorProxy = "2.0.7"
+gr8 = "0.7"
+proguard = "7.1.0"
+openrewrite = "5.33.2"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -213,6 +252,10 @@ shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin"
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh_plugin" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig_plugin" }
+flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers_plugin" }
+buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
+gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
+openrewrite = { id = "org.openrewrite.openrewrite", version.ref = "openrewrite" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
@@ -224,6 +267,9 @@ junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+flatbuffers_parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
+flatbuffers_java_core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers_java" }
+flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
 kotter = { group = "com.varabyte.kotter", name = "kotter", version.ref = "kotter" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_compiler_testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin_compile_testing" }
@@ -280,6 +326,7 @@ closure_compiler = { group = "com.google.javascript", name = "closure-compiler",
 closure_stylesheets = { group = "com.google.closure-stylesheets", name = "closure-stylesheets", version.ref = "closure_stylesheets" }
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli_codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
+picocli_jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
 picocli_jansi_graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli_jansi_graalvm" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j_jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
@@ -294,7 +341,24 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
+graalvm_truffle_api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm_sdk" }
+graalvm_truffle_processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm_sdk" }
+graalvm_truffle_nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm_sdk" }
+graalvm_truffle_nfi_libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm_sdk" }
+graalvm_js_engine = { group = "org.graalvm.js", name = "js", version.ref = "graalvm_sdk" }
+graalvm_js_benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm_sdk" }
+graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm_sdk" }
+graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm_sdk" }
+graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm_sdk" }
+graalvm_launcher_common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm_sdk" }
+graalvm_launcher_js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm_sdk" }
+graalvm_tools_lsp_api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm_sdk" }
+graalvm_tools_lsp_impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm_sdk" }
 micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
+micronaut_aot_api = { group = "io.micronaut.aot", name = "micronaut-aot-api", version.ref = "micronaut_aot" }
+micronaut_aot_core = { group = "io.micronaut.aot", name = "micronaut-aot-core", version.ref = "micronaut_aot" }
+micronaut_aot_cli = { group = "io.micronaut.aot", name = "micronaut-aot-cli", version.ref = "micronaut_aot" }
+micronaut_aot_optimizers_standard = { group = "io.micronaut.aot", name = "micronaut-aot-std-optimizers", version.ref = "micronaut_aot" }
 micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
 micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
@@ -380,19 +444,38 @@ micronaut_tracing_opentelemetry_http = { group = "io.micronaut.tracing", name = 
 micronaut_tracing_opentelemetry_grpc = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-grpc", version.ref = "micronaut_tracing" }
 opentelemetry_exporter_logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
 opentelemetry_exporter_googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
+kotlinx_wrappers_bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinx_wrappers_bom" }
+kotlinx_wrappers_cesium = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-cesium", version.ref = "kotlinx_wrappers_cesium" }
 kotlinx_wrappers_css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx_wrappers_css" }
+kotlinx_wrappers_cssType = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-csstype", version.ref = "kotlinx_wrappers_css" }
 kotlinx_wrappers_browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx_wrappers_browser" }
 kotlinx_wrappers_node = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-node", version.ref = "kotlinx_wrappers_node" }
 kotlinx_wrappers_react = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react", version.ref = "kotlinx_wrappers_react" }
 kotlinx_wrappers_react_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-dom", version.ref = "kotlinx_wrappers_react" }
+kotlinx_wrappers_react_beautiful_dnd = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-beautiful-dnd", version.ref = "kotlinx_wrappers_react_beautiful_dnd" }
 kotlinx_wrappers_react_router_dom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-router-dom", version.ref = "kotlinx_wrappers_react_router_dom" }
 kotlinx_wrappers_emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx_wrappers_emotion" }
 kotlinx_wrappers_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-redux", version.ref = "kotlinx_wrappers_redux" }
+kotlinx_wrappers_react_popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-popper", version.ref = "kotlinx_wrappers_react_popper" }
+kotlinx_wrappers_react_select = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-select", version.ref = "kotlinx_wrappers_react_select" }
+kotlinx_wrappers_remix_run_router = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-remix-run-router", version.ref = "kotlinx_wrappers_remix_run_router" }
+kotlinx_wrappers_ringUi = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-ring-ui", version.ref = "kotlinx_wrappers_ringUi" }
 kotlinx_wrappers_react_redux = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-react-redux", version.ref = "kotlinx_wrappers_react_redux" }
 kotlinx_wrappers_mui = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui", version.ref = "kotlinx_wrappers_mui" }
+kotlinx_wrappers_mui_icons = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-mui-icons", version.ref = "kotlinx_wrappers_mui_icons" }
+kotlinx_wrappers_js = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-js", version.ref = "kotlinx_wrappers_js" }
 kotlinx_wrappers_styled = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled", version.ref = "kotlinx_wrappers_styled" }
+kotlinx_wrappers_styledNext = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-styled-next", version.ref = "kotlinx_wrappers_styled_next" }
+kotlinx_wrappers_popper = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-popper", version.ref = "kotlinx_wrappers_popper" }
 kotlinx_wrappers_history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx_wrappers_history" }
+kotlinx_wrappers_web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx_wrappers_web" }
 kotlinx_wrappers_typescript = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-typescript", version.ref = "kotlinx_wrappers_typescript" }
+kotlinx_wrappers_tanstack_query_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-query-core", version.ref = "kotlinx_wrappers_tanstack_query_core" }
+kotlinx_wrappers_tanstack_react_query = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-query", version.ref = "kotlinx_wrappers_tanstack_react_query" }
+kotlinx_wrappers_tanstack_react_table = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-table", version.ref = "kotlinx_wrappers_tanstack_react_table" }
+kotlinx_wrappers_tanstack_react_virtual = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-react-virtual", version.ref = "kotlinx_wrappers_tanstack_react_virtual" }
+kotlinx_wrappers_tanstack_table_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-table-core", version.ref = "kotlinx_wrappers_tanstack_table_core" }
+kotlinx_wrappers_tanstack_virtual_core = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-tanstack-virtual-core", version.ref = "kotlinx_wrappers_tanstack_virtual_core" }
 grpc_api = { group = "io.grpc", name = "grpc-api", version.ref = "grpc_java" }
 grpc_auth = { group = "io.grpc", name = "grpc-auth", version.ref = "grpc_java" }
 grpc_bom = { group = "io.grpc", name = "grpc-bom", version.ref = "grpc_java" }
@@ -435,6 +518,7 @@ brotli_native_windows = { group = "com.aayushatharva.brotli4j", name = "native-w
 brotli_native_windows_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-windows-x86_64", version.ref = "brotli4j" }
 commons_compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons_compress" }
 commons_csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons_csv" }
+commons_pool = { group = "org.apache.commons", name = "commons-pool2", version.ref = "commons_pool" }
 projectreactor_bom = { group = "io.projectreactor", name = "reactor-bom", version.ref = "projectreactor" }
 reactor_core = { group = "io.projectreactor", name = "reactor-core", version.ref = "projectreactor_core" }
 reactor_netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor_netty" }
@@ -469,10 +553,33 @@ testcontainers_gcloud = { group = "org.testcontainers", name = "gcloud", version
 koin_core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin_annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin_ksp" }
 koin_test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-koint_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
+koin_ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin_ksp" }
 koin_test_junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 koin_test_junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+arrow_bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
+arrow_core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
+arrow_optics_core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
+arrow_optics_ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
+arrow_fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
+lmax_disruptor_core = { group = "com.lmax", name = "disruptor", version.ref = "lmaxDisruptor" }
+lmax_disruptor_proxy = { group = "com.lmax", name = "disruptor-proxy", version.ref = "lmaxDisruptorProxy" }
+jline_all = { module = "org.jline:jline", version.ref = "jline" }
+jline_builtins = { module = "org.jline:jline-builtins", version.ref = "jline" }
+jline_graal = { module = "org.jline:jline-graal", version.ref = "jline" }
+jline_console = { module = "org.jline:jline-console", version.ref = "jline" }
+jline_terminal_core = { module = "org.jline:jline-terminal", version.ref = "jline" }
+jline_terminal_jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "jline" }
+jline_reader = { module = "org.jline:jline-reader", version.ref = "jline" }
+jline_style = { module = "org.jline:jline-style", version.ref = "jline" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
+larray_core = {  group = "org.xerial.larray", name = "larray", version.ref = "larray" }
+larray_buffer = {  group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
+larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref = "larray" }
+msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
+jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 ## Plugin Aliases
+plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
 plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }
 plugin_testLogger = { group = "com.adarshr", name = "gradle-test-logger-plugin", version.ref = "testLoggerPlugin" }
@@ -485,6 +592,8 @@ plugin_spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gra
 plugin_shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow_plugin" }
 plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }
 plugin_ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
+plugin_buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
+plugin_protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
 plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin_sdk" }
 plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin_sdk" }
 plugin_kotlin_samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin_sdk" }
@@ -492,10 +601,16 @@ plugin_kotlinx_atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gr
 plugin_kotlinx_serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin_sdk" }
 plugin_kotlinx_abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
 plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm_plugin" }
+plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
+plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
 ## Elide Internal
 elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
+elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
-elide_proto = { group = "dev.elide", name = "proto", version.ref = "elide" }
+elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
+elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
+elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }
+elide_proto_kotlinx = { group = "dev.elide", name = "proto-kotlinx", version.ref = "elide" }
 elide_platform = { group = "dev.elide.tools", name = "platform", version.ref = "elide" }
 elide_bom = { group = "dev.elide", name = "bom", version.ref = "elide" }
 elide_bom_catalog = { group = "dev.elide", name = "bom-catalog", version.ref = "elide" }
@@ -504,8 +619,7 @@ elide_graalvm = { group = "dev.elide", name = "graalvm", version.ref = "elide" }
 elide_graalvm_js = { group = "dev.elide", name = "graalvm-js", version.ref = "elide" }
 elide_graalvm_react = { group = "dev.elide", name = "graalvm-react", version.ref = "elide" }
 elide_model = { group = "dev.elide", name = "model", version.ref = "elide" }
-elide_rpc_js = { group = "dev.elide", name = "rpc-js", version.ref = "elide" }
-elide_rpc_jvm = { group = "dev.elide", name = "rpc-jvm", version.ref = "elide" }
+elide_rpc = { group = "dev.elide", name = "rpc", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
@@ -518,6 +632,11 @@ elide_kotlin_plugin_redakt = { group = "dev.elide.tools.kotlin.plugin", name = "
 elide_kotlin_plugin_sekret = { group = "dev.elide.tools.kotlin.plugin", name = "sekret-plugin", version.ref = "elide" }
 
 [bundles]
+arrow = [
+  "arrow_core",
+  "arrow_optics_core",
+  "arrow_fx"
+]
 kotlinx_coroutines_jvm = [
   "kotlinx_coroutines_core",
   "kotlinx_coroutines_jdk8",
@@ -535,4 +654,16 @@ kotlinx_atomicfu = [
   "kotlinx_atomicfu_linux_x64",
   "kotlinx_atomicfu_macos_x64"
 ]
-koin = ["koin_core", "koin_annotations"]
+kotlinx = [
+  "kotlinx_coroutines_core",
+  "kotlinx_serialization_json",
+  "kotlinx_serialization_protobuf",
+  "kotlinx_serialization_properties",
+  "kotlinx_atomicfu",
+  "kotlinx_collections_immutable",
+  "kotlinx_datetime",
+]
+koin = [
+  "koin_core",
+  "koin_annotations",
+]

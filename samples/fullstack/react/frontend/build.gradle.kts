@@ -21,7 +21,9 @@ kotlin {
     browser {
       commonWebpackConfig {
         sourceMaps = false
-        cssSupport.enabled = true
+        cssSupport {
+          enabled.set(true)
+        }
         mode = if (devMode) {
           org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
         } else {

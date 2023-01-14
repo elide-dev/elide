@@ -11,16 +11,16 @@ object Elide {
   const val majorVersion = "1.0"
 
   /** Major library version tag. */
-  const val versionTag = "alpha1"
+  const val versionTag = "alpha3"
 
   /** Revision value for the library. */
-  const val revision = 38
+  const val revision = 4
 
   /** Version string for the library. */
-  const val version = "$majorVersion-$track-$versionTag-rc$revision"
+  const val version = "$majorVersion-$track-$versionTag-b$revision"
 
   /** Latest plugin version. */
-  const val pluginVersion = "1.0.0-beta12"
+  const val pluginVersion = "1.0.0-beta13"
 
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"
@@ -36,6 +36,12 @@ object Elide {
     "-no-stdlib",
     "-Xjvm-default=all",
     "-Xjsr305=strict",
+  ))
+
+  /** Compiler args to include in Kotlin JVM targets (beta). */
+  val jvmCompilerArgsBeta = jvmCompilerArgs.plus(listOf(
+    "-Xallow-unstable-dependencies",
+    "-Xemit-jvm-type-annotations",
   ))
 
   /** Compiler args to include in Kotlin JS targets. */
@@ -56,10 +62,19 @@ object Elide {
   ))
 
   /** Kotlin SDK and platform version. */
-  const val kotlinSdk = "1.7.21"
+  const val kotlinSdk = "1.8.0"
 
   /** Kotlin language version. */
-  const val kotlinLanguage = "1.7"
+  const val kotlinLanguage = "1.8"
+
+  /** Kotlin language version (beta). */
+  const val kotlinLanguageBeta = kotlinLanguage
+
+  /** Maximum Java language target for Proguard. */
+  const val javaTargetProguard = "16"
+
+  /** Maximum Java language target. */
+  const val javaTargetMaximum = "19"
 
   /** Sample code modules. */
   val samplesList = listOf(
@@ -74,7 +89,10 @@ object Elide {
   /** Kotlin MPP modules. */
   val multiplatformModules = listOf(
     "base",
+    "core",
     "model",
+    "rpc",
+    "ssr",
     "test",
   )
 
@@ -82,7 +100,6 @@ object Elide {
   val serverModules = listOf(
     "graalvm",
     "server",
-    "rpc-jvm",
     "ssg",
   )
 
@@ -91,14 +108,12 @@ object Elide {
     "frontend",
     "graalvm-js",
     "graalvm-react",
-    "rpc-js",
   )
 
   /** Modules which should not be reported on for testing.. */
   val noTestModules = listOf(
     "bom",
     "platform",
-    "proto",
     "packages",
     "processor",
     "reports",
@@ -112,7 +127,6 @@ object Elide {
     "frontend",
     "graalvm-js",
     "graalvm-react",
-    "rpc-js",
     "test",
   )
 
@@ -121,17 +135,21 @@ object Elide {
     // Library Packages
     "base",
     "bom",
+    "core",
     "frontend",
     "graalvm",
     "graalvm-js",
     "graalvm-react",
     "model",
     "platform",
-    "proto",
-    "rpc-js",
-    "rpc-jvm",
+    "proto:proto-core",
+    "proto:proto-protobuf",
+    "proto:proto-flatbuffers",
+    "proto:proto-kotlinx",
+    "rpc",
     "server",
     "ssg",
+    "ssr",
     "test",
   ).map { ":packages:$it" }.plus(listOf(
     // Tools

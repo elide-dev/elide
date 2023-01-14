@@ -8,6 +8,7 @@ plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
   id("dev.elide.build.native.lib")
+//  id("dev.elide.build.jvm.multi-jvm-testing")
 }
 
 group = "dev.elide"
@@ -35,14 +36,21 @@ micronaut {
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
-  api(libs.graalvm.sdk)
 
   // Modules
   kapt(libs.micronaut.inject)
   kapt(libs.micronaut.inject.java)
   implementation(libs.slf4j)
-  implementation(project(":packages:base"))
-  implementation(project(":packages:proto"))
+  api(project(":packages:base"))
+  api(project(":packages:core"))
+  api(project(":packages:model"))
+  api(project(":packages:ssr"))
+  api(project(":packages:graalvm"))
+  api(libs.reactor.core)
+
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
 
   // Crypto
   implementation(libs.bouncycastle)
@@ -100,11 +108,14 @@ dependencies {
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.coroutines.guava)
+  implementation(libs.kotlinx.coroutines.reactor)
   implementation(libs.kotlinx.coroutines.reactive)
 
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
+  compileOnly(libs.graalvm.espresso.hotswap)
+  compileOnly(libs.graalvm.sdk)
 
   // Testing
   kaptTest(libs.micronaut.inject)

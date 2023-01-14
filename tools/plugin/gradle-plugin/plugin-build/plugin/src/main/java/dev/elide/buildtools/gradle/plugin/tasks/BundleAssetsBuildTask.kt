@@ -136,8 +136,15 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
             // prep a task which copies the SSR distribution into resources
             val ssrDistCopyTask = project.tasks.register("copySsrDist", Copy::class.java) {
                 it.from(ssrDist) { spec ->
-                    spec.include("**/*.js")
-                    spec.include("**/*.pb*")
+                    spec.include(
+                        "**/*.js",
+                        "**/*.mjs",
+                        "**/*.cjs",
+                        "**/*.ts",
+                        "**/*.css",
+                        "**/*.json",
+                        "**/*.pb",
+                    )
                 }
                 it.into(
                     "${project.buildDir}/resources/main/embedded"

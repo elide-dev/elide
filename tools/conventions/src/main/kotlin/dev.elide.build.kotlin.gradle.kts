@@ -11,7 +11,7 @@ plugins {
 }
 
 val defaultJavaVersion = "11"
-val defaultKotlinVersion = "1.7"
+val defaultKotlinVersion = "1.8"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
@@ -52,6 +52,20 @@ kotlin {
       optIn("kotlin.ExperimentalUnsignedTypes")
     }
   }
+}
+
+// Tool: All-Open
+// --------------
+// Designates annotations which mark classes that should be open by default.
+allOpen {
+  annotation("io.micronaut.aop.Around")
+}
+
+// Tool: No-Arg
+// ------------
+// Designates annotations which mark classes for synthesized no-argument constructors.
+noArg {
+  annotation("elide.annotations.Model")
 }
 
 // Tool: Kover

@@ -1,0 +1,30 @@
+// Generated from semantic.proto
+
+include "../page/media.fbs";
+
+namespace elide.page;
+
+enum Kind : int {
+  WEB_PAGE = 0,
+  MASTER = 1,
+  DETAIL = 2,
+}
+
+enum Format : int {
+  GENERIC = 0,
+  OPENGRAPH = 1,
+  JSON_LD = 2,
+}
+
+table SemanticMetadata {
+  kind:elide.page.Kind;
+  format:[elide.page.Format];
+  media:[elide.page.MediaAsset];
+  payload:elide.page.SemanticMetadata_.Anonymous2;
+}
+
+namespace elide.page.SemanticMetadata_;
+
+table Anonymous2 {
+  content:string;
+}

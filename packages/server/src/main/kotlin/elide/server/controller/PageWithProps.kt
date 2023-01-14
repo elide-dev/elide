@@ -101,12 +101,12 @@ public abstract class PageWithProps<State> protected constructor (
    *   of properties, for instance
    *
    * @see props for the synchronous version of this same method (the preferred extension point).
-   * @param request Computed request state for this request/response cycle.
+   * @param state Computed request state for this request/response cycle.
    * @return Deferred task which resolves to the state provided for this cycle, or `null`.
    */
-  public open suspend fun propsAsync(request: RequestState): Deferred<State?> = coroutineScope {
+  public open suspend fun propsAsync(state: RequestState): Deferred<State?> = coroutineScope {
     return@coroutineScope async {
-      props(request)
+      props(state)
     }
   }
 
@@ -128,11 +128,10 @@ public abstract class PageWithProps<State> protected constructor (
    *   of properties, for instance
    *
    * @see propsAsync for the asynchronous version of this same method (available, but not recommended).
-   * @param request Computed request state for this request/response cycle.
+   * @param state Computed request state for this request/response cycle.
    * @return State that should be active for this cycle, or `null` if no state is provided or available.
    */
-  @Suppress("UNCHECKED_CAST")
-  public open suspend fun props(request: RequestState): State? = null
+  public open suspend fun props(state: RequestState): State? = defaultState
 
   /**
    * "Finalize" the state for this controller, by (1) computing the state, if necessary, and (2) serializing it for

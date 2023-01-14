@@ -16,18 +16,16 @@
  * templates stored alongside them, and are used for various things throughout the codebase.
  */
 syntax = "proto3";
-package base;
+package elide.base;
 
-option optimize_for = SPEED;
+option optimize_for = CODE_SIZE;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_string_check_utf8 = true;
 option java_outer_classname = "BaseLanguage";
-option php_namespace = "Elide";
 option php_class_prefix = "ELD";
 option swift_prefix = "Elide";
 option objc_class_prefix = "ELD";
-option ruby_package = "Elide::Base";
 option java_package = "tools.elide.base";
 option csharp_namespace = "Elide.Base";
 option go_package = "github.com/elide-tools/elide/base";
@@ -40,7 +38,7 @@ enum Language {
   // Generic, unqualified reference to English.
   ENGLISH = 0;
 
-  // Traditional French.
+  // Generic, unqualified reference to French.
   FRENCH = 1;
 
   // Generic, unqualified reference to Spanish.
@@ -48,12 +46,6 @@ enum Language {
 
   // Generic, unqualified reference to Chinese.
   CHINESE = 3;
-
-  // Specific reference to Mandarin Chinese.
-  CHINESE_MANDARIN = 4;
-
-  // Specific reference to Cantonese.
-  CHINESE_CANTONESE = 5;
 }
 
 // Specifies a given language, along with a nationality for that language.

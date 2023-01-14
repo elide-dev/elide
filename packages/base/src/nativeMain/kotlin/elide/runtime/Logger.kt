@@ -34,7 +34,7 @@ public actual interface Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun trace(vararg message: Any) {
-    this.log(LogLevel.TRACE, message.toList())
+    this.log(LogLevel.TRACE, message.toList(), levelChecked = false)
   }
 
   /**
@@ -61,7 +61,7 @@ public actual interface Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun debug(vararg message: Any) {
-    this.log(LogLevel.DEBUG, message.toList())
+    this.log(LogLevel.DEBUG, message.toList(), levelChecked = false)
   }
 
   /**
@@ -88,7 +88,7 @@ public actual interface Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun info(vararg message: Any) {
-    this.log(LogLevel.INFO, listOf(message))
+    this.log(LogLevel.INFO, listOf(message), levelChecked = false)
   }
 
   /**
@@ -115,7 +115,7 @@ public actual interface Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun warn(vararg message: Any) {
-    this.log(LogLevel.WARN, listOf(message))
+    this.log(LogLevel.WARN, listOf(message), levelChecked = false)
   }
 
   /**
@@ -170,7 +170,7 @@ public actual interface Logger {
    * @param message Set of messages to log in this entry.
    */
   public actual fun error(vararg message: Any) {
-    this.log(LogLevel.ERROR, listOf(message))
+    this.log(LogLevel.ERROR, listOf(message), levelChecked = false)
   }
 
   /**

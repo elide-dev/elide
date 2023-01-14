@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
+
+@font-face {
+  font-family: "color-emoji";
+  src: local("Apple Color Emoji"), local("Twemoji Mozilla"),
+    local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji"),
+    local("EmojiOne Color"), local("Android Emoji");
+}
+
+html {
+  --elide-color-primary: #5a00ff;
+  --elide-color-secondary: #9b09ab;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif, color-emoji;
+}
+
+.gradient {
+  background-attachment: fixed;
+  background: transparent;
+  background-image: linear-gradient(
+    225deg,
+    var(--elide-color-primary) 0%,
+    var(--elide-color-secondary) 100%
+  ) !important;
+}
+
+pre, .mono {
+  font-family: "JetBrains Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono",
+    "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace",
+    "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+}
+
+.elide-site-page {
+  inset: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  background-attachment: fixed;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

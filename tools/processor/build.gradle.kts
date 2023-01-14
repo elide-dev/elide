@@ -29,13 +29,17 @@ kotlin {
 
 dependencies {
   // Core platform versions.
-  api(project(":packages:proto"))
   ksp(libs.autoService.ksp)
 
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)
   api(libs.graalvm.sdk)
+
+  // Protocol dependencies.
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
 
   // Modules
   implementation(project(":packages:base"))

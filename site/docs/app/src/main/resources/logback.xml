@@ -2,16 +2,16 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <encoder>
-            <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(sample) - %msg%n</pattern>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(elide) - %msg%n</pattern>
         </encoder>
     </appender>
 
     <!-- HTTP Access Log -->
-    <logger name="http:access" additivity="false" level="off">
-        <appender-ref ref="STDOUT" />
-    </logger>
+    <logger name="http:access" additivity="false" level="off" />
+    <logger name="gvm:js.console" level="trace" />
 
     <logger name="io.micronaut.context.env" level="off"/>
+    <logger name="elide.server.ssr.ServerSSRRenderer" level="off" />
 
     <!-- Root Logger -->
     <root level="info">

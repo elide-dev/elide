@@ -1,7 +1,6 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
@@ -33,7 +32,7 @@ elide {
 
     runtime {
       inject(true)
-      languageLevel(JsLanguageLevel.ES2020)
+      languageLevel(JsLanguageLevel.ES2022)
     }
   }
 }

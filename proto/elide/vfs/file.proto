@@ -1,0 +1,116 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies structures which define files and file metadata within virtualized file systems managed by Elide on behalf
+ * of an application or guest VM.
+ */
+syntax = "proto3";
+package elide.vfs;
+
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "EVFS";
+option swift_prefix = "ElideVFS";
+option objc_class_prefix = "EVS";
+option java_package = "tools.elide.vfs";
+option csharp_namespace = "Elide.VFS";
+
+import "google/protobuf/timestamp.proto";
+import "elide/crypto/crypto.proto";
+import "elide/data/encoding.proto";
+
+
+// # VFS: Known MIME-Type
+//
+// Enumerates known mime-types to the VM implementation, which can be expressed symbolically rather than in string form.
+// These types are only created for files which are expected to be frequently used by the VM FS.
+enum KnownMimeType {
+  // Unknown or unspecified known-mime-type; regular code should never use this value, as it also represents the default
+  // value if a known-mime-type is not specified, or if the specified value is not recognized.
+  KNOWN_MIME_UNSPECIFIED = 0;
+}
+
+// # VFS: File
+//
+// Describes a single `File`-type entry within a given `TreeEntry`, within a virtual file system managed by Elide. File
+// entries describe file metadata only; raw file data is enclosed in a compressed blob stored alongside filesystem
+// metadata.
+//
+// See individual properties for more information. `File` objects can only be held by `TreeEntry` objects. `Directory`
+// objects refer to their child `TreeEntry` constituents.
+message File {
+  // Cryptographic fingerprint of file data.
+  message Fingerprint {
+    // Specifies the held fingerprint data.
+    oneof fingerprint {
+      // CRC32 fingerprint data.
+      bytes crc32 = 1;
+
+      // Hash algorithm fingerprint data (in which case `algorithm` is required).
+      bytes hash = 2;
+    }
+
+    // If this fingerprint carries a `hash` value, this describes the algorithm used.
+    crypto.HashAlgorithm algorithm = 3;
+  }
+
+  // Combines a compressed and uncompressed fingerprint of file data.
+  message FileFingerprint {
+    // Describes the compressed representation's fingerprint.
+    Fingerprint compressed = 1;
+
+    // Describes the regular representation's fingerprint.
+    Fingerprint uncompressed = 2;
+  }
+
+  // Name of the file.
+  string name = 1;
+
+  // Uncompressed size of the file, in bytes.
+  uint64 size = 2;
+
+  // Compressed size of the file, in bytes. If `size` and `compressed` are equal, the file is not compressed.
+  uint64 compressed = 3;
+
+  // Offset at which the file begins within the compressed filesystem blob.
+  uint64 offset = 4;
+
+  // Offset at which the file ends within the compressed filesystem blob.
+  uint64 tail = 5;
+
+  // Describes the encoding of the file.
+  elide.data.Encoding encoding = 6;
+
+  // Describes the last time this file was modified. This value is only available in circumstances where the VFS is
+  // running with change tracking enabled (namely, during development). In production, this value will be set to a
+  // consistent timestamp for all assets.
+  google.protobuf.Timestamp modified = 7;
+
+  // Mime type assigned to this file, or resolved for this file, as applicable/if available at build time.
+  oneof file_type {
+    // Specifies a known MIME type for this file, from the [KnownMimeType] enumeration.
+    KnownMimeType known = 8;
+
+    // Specifies a string for a mime-type. This is only used if the mime-type is not known to the VM implementation.
+    string mime = 9;
+  }
+
+  // Fingerprints of compressed and regular file representations, as applicable.
+  FileFingerprint fingerprint = 10;
+
+  // Extended attributes for this file.
+  map<string, string> attributes = 11;
+}

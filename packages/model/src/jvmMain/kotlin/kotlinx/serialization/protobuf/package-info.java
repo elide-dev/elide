@@ -1,0 +1,1 @@
+package kotlinx.serialization.protobuf;

@@ -15,7 +15,7 @@ plugins {
 // Configure test logging.
 testlogger {
   theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
-  showExceptions = true
+  showExceptions = System.getenv("TEST_EXCEPTIONS") == "true"
   showFailed = true
   showPassed = true
   showSkipped = true

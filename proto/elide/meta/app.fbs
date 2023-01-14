@@ -1,0 +1,155 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+include "../../google/protobuf/timestamp.fbs";
+include "./guest.fbs";
+include "./syntax.fbs";
+
+/*
+ * Specifies Elide application configuration, which is embedded at build-time.
+ */
+namespace elide.meta;
+
+// Enumerates standard types of endpoints.
+enum EndpointType : int {
+  // Unspecified endpoint type.
+  ENDPOINT_TYPE_UNSPECIFIED = 0,
+
+  // Page endpoint type. Typically returns HTML and references assets.
+  PAGE = 1,
+
+  // Asset endpoint type. Typically used for CSS, JS, images.
+  ASSET = 2,
+
+  // API endpoint type. Typically returns JSON.
+  API = 3,
+}
+
+// Enumerates supported/known HTTP methods for app endpoints.
+enum EndpointMethods : int {
+  // HTTP GET.
+  GET = 0,
+
+ // HTTP POST.
+  POST = 1,
+
+  // HTTP PUT.
+  PUT = 2,
+
+ // HTTP PATCH.
+  PATCH = 3,
+
+  // HTTP DELETE.
+  DELETE = 5,
+}
+
+// Options which apply to a particular application endpoint.
+table EndpointOptions {
+  // Whether this endpoint requires stateful considerations.
+  stateful: bool;
+
+  // Whether this endpoint can be pre-compiled in an SSG context.
+  precompilable: bool;
+}
+
+// Specifies information about a single endpoint which is part of an application.
+table Endpoint {
+  // Tag generated for an endpoint.
+  tag: string;
+
+  // Name given to an endpoint, if applicable; this parameter considers the method name as well as the handler name.
+  name: string;
+
+  // Type of endpoint detected or configured for this payload.
+  type: elide.meta.EndpointType;
+
+  // URL base for this endpoint (controller).
+  base: string;
+
+  // URL tail for this endpoint (method).
+  tail: string;
+
+  // Types accepted by this method.
+  consumes: [string];
+
+  // Types produced by this method.
+  produces: [string];
+
+  // HTTP methods supported by this endpoint.
+  method: [elide.meta.EndpointMethods];
+
+  // Options which apply to this endpoint.
+  options: elide.meta.EndpointOptions;
+
+  // Fully qualified path to the implementation class.
+  impl: string;
+
+  // Member function bound to this route on `impl`.
+  member: string;
+
+  // Value of the `name` parameter for the parent handler, if known.
+  handler: string;
+}
+
+// Specifies build-time info which is enclosed in an application binary.
+table BuildInfo {
+  // Timestamp indicating when a build took place.
+  stamp: google.protobuf.Timestamp;
+}
+
+// Specifies guest VM requirements for a given Elide application.
+table GuestVM {
+  // Syntax set enabled for this application, if any.
+  language: [elide.meta.GuestLanguage];
+
+  // Settings for each enabled guest language.
+  config: elide.meta.GuestConfiguration;
+}
+
+// Info regarding an Elide application.
+table AppInfo {
+  // Version string of the application.
+  version: string;
+
+  // Name of the application, if known.
+  name: string;
+
+  // Map of endpoint tags to their info payloads for this application.
+  endpoints: [elide.meta.AppInfo_.EndpointsEntry];
+}
+
+namespace elide.meta.AppInfo_;
+
+// Describes a map entry which is part of the `AppInfo.endpoints` map.
+table EndpointsEntry {
+  // Map entry key.
+  key: string (key);
+
+  // Map entry value.
+  value: elide.meta.Endpoint;
+}
+
+namespace elide.meta;
+
+// Main application manifest for an app powered by Elide; carries info about the build that produced a given app binary,
+// and application configuration.
+table AppManifest {
+  // App info/configuration.
+  app: elide.meta.AppInfo;
+
+  // Build info/configuration.
+  build: elide.meta.BuildInfo;
+
+  // Guest VM settings.
+  guest:elide.meta.GuestVM;
+}

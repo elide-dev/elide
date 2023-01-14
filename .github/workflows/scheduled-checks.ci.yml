@@ -1,0 +1,101 @@
+name: Checks
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - stable
+      - v3
+      - feat/js-runtime-v3
+  schedule:
+    - cron: '0 0-20/2 * * *'
+
+jobs:
+  ##
+  ## Job: Check Repo Pull-ability
+  ##
+  check-repos:
+    name: "Repositories: Clone Test"
+    runs-on: "ubuntu-latest"
+    continue-on-error: true
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+    steps:
+      - name: "Setup: Test Area"
+        run: mkdir -p repos
+      - name: "Clone: Elide"
+        run: git clone https://github.com/elide-dev/v3.git ./repos/elide
+      - name: "Clone: Runtime"
+        continue-on-error: true
+        run: git clone https://github.com/elide-dev/runtime.git ./repos/runtime
+      - name: "Clone: Build Tools"
+        run: git clone https://github.com/elide-dev/buildtools.git ./repos/buildtools
+
+  ##
+  ## Job: Check Image Pull-ability
+  ##
+  check-images:
+    name: "Images: Pull Test"
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+    steps:
+      - name: "Setup: Docker"
+        uses: docker/setup-buildx-action@v2
+        id: buildx
+        with:
+          install: true
+
+      ## Image: CLI
+      - name: "Pull: CLI (DockerHub)"
+        run: docker pull elidetools/elide:latest
+      - name: "Pull: CLI (GitHub)"
+        run: docker pull ghcr.io/elide-dev/elide:latest
+
+      ## Image: Base
+      - name: "Pull: Base (DockerHub)"
+        run: docker pull elidetools/base:latest
+      - name: "Pull: Base (GitHub)"
+        run: docker pull ghcr.io/elide-dev/base:latest
+
+      ## Image: Base (Alpine)
+      - name: "Pull: Base - Alpine (DockerHub)"
+        run: docker pull elidetools/base-alpine:latest
+      - name: "Pull: Base - Alpine (GitHub)"
+        run: docker pull ghcr.io/elide-dev/base/alpine:latest
+
+      ## Image: Runtime (JVM11)
+      - name: "Pull: Runtime - JVM11 (DockerHub)"
+        run: docker pull elidetools/jvm11:latest
+      - name: "Pull: Runtime - JVM11 (GitHub)"
+        run: docker pull ghcr.io/elide-dev/runtime/jvm11:latest
+
+      ## Image: Runtime (JVM17)
+      - name: "Pull: Runtime - JVM17 (DockerHub)"
+        run: docker pull elidetools/jvm17:latest
+      - name: "Pull: Runtime - JVM17 (GitHub)"
+        run: docker pull ghcr.io/elide-dev/runtime/jvm17:latest
+
+      ## Image: Runtime (JVM19)
+      - name: "Pull: Runtime - JVM19 (DockerHub)"
+        run: docker pull elidetools/jvm19:latest
+      - name: "Pull: Runtime - JVM19 (GitHub)"
+        run: docker pull ghcr.io/elide-dev/runtime/jvm19:latest
+
+      ## Image: Runtime (Native)
+      - name: "Pull: Runtime - Native (DockerHub)"
+        run: docker pull elidetools/native:latest
+      - name: "Pull: Runtime - Native (GitHub)"
+        run: docker pull ghcr.io/elide-dev/runtime/native:latest
+
+      ## Image: Runtime (Native Alpine)
+      - name: "Pull: Runtime - Native Alpine (DockerHub)"
+        run: docker pull elidetools/native-alpine:latest
+      - name: "Pull: Runtime - Native Alpine (GitHub)"
+        run: docker pull ghcr.io/elide-dev/runtime/native/alpine:latest

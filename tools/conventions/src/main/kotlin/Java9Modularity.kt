@@ -15,12 +15,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.*
 
 object Java9Modularity {
-
   @JvmStatic
   @JvmOverloads
+  @Suppress("DEPRECATION")
   fun Project.configureJava9ModuleInfo(multiRelease: Boolean = true) {
     val kotlin = extensions.findByType<KotlinProjectExtension>() ?: return
-    val jvmTargets = kotlin.targets.filter { it is KotlinJvmTarget || it is KotlinWithJavaTarget<*> }
+    val jvmTargets = kotlin.targets.filter { it is KotlinJvmTarget || it is KotlinWithJavaTarget<*, *> }
     if (jvmTargets.isEmpty()) {
       logger.warn("No Kotlin JVM targets found, can't configure compilation of module-info!")
     }

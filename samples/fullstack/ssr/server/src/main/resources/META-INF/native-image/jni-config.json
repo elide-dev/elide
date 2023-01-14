@@ -1,0 +1,110 @@
+[
+{
+  "name":"[B"
+},
+{
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
+},
+{
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
+},
+{
+  "name":"[Ljava.lang.Object;"
+},
+{
+  "name":"[Ljava.lang.String;"
+},
+{
+  "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","boolean","int"] }]
+},
+{
+  "name":"com.sun.management.internal.DiagnosticCommandInfo",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","java.util.List"] }]
+},
+{
+  "name":"fullstack.ssr.App",
+  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
+},
+{
+  "name":"java.io.InputStream",
+  "methods":[{"name":"read","parameterTypes":["byte[]"] }]
+},
+{
+  "name":"java.io.OutputStream",
+  "methods":[
+    {"name":"flush","parameterTypes":[] }, 
+    {"name":"write","parameterTypes":["byte[]"] }
+  ]
+},
+{
+  "name":"java.lang.Boolean",
+  "methods":[{"name":"getBoolean","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Integer",
+  "methods":[{"name":"valueOf","parameterTypes":["int"] }]
+},
+{
+  "name":"java.lang.Object"
+},
+{
+  "name":"java.lang.String",
+  "methods":[
+    {"name":"lastIndexOf","parameterTypes":["int"] }, 
+    {"name":"substring","parameterTypes":["int"] }
+  ]
+},
+{
+  "name":"java.lang.System",
+  "methods":[
+    {"name":"getProperty","parameterTypes":["java.lang.String"] }, 
+    {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }
+  ]
+},
+{
+  "name":"java.nio.Buffer",
+  "methods":[
+    {"name":"limit","parameterTypes":[] }, 
+    {"name":"position","parameterTypes":[] }
+  ]
+},
+{
+  "name":"java.nio.ByteBuffer"
+},
+{
+  "name":"java.util.Arrays",
+  "methods":[{"name":"asList","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"java.util.Calendar",
+  "methods":[{"name":"set","parameterTypes":["int","int","int","int","int","int"] }]
+},
+{
+  "name":"org.conscrypt.CryptoUpcalls"
+},
+{
+  "name":"org.conscrypt.NativeCrypto"
+},
+{
+  "name":"org.conscrypt.NativeRef",
+  "fields":[{"name":"address"}]
+},
+{
+  "name":"org.conscrypt.OpenSSLBIOInputStream",
+  "methods":[{"name":"gets","parameterTypes":["byte[]"] }]
+},
+{
+  "name":"sun.management.VMManagementImpl",
+  "fields":[
+    {"name":"compTimeMonitoringSupport"}, 
+    {"name":"currentThreadCpuTimeSupport"}, 
+    {"name":"objectMonitorUsageSupport"}, 
+    {"name":"otherThreadCpuTimeSupport"}, 
+    {"name":"remoteDiagnosticCommandsSupport"}, 
+    {"name":"synchronizerUsageSupport"}, 
+    {"name":"threadAllocatedMemorySupport"}, 
+    {"name":"threadContentionMonitoringSupport"}
+  ]
+}
+]

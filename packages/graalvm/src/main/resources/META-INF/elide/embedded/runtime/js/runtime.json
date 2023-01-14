@@ -1,0 +1,11 @@
+{
+  "engine": "v3",
+  "language": "JAVASCRIPT",
+  "vfs": [
+    { "name": "js.modules.tar.gz" }
+  ],
+  "artifacts": [
+    { "name": "polyfills.js" },
+    { "name": "facade.js" }
+  ]
+}

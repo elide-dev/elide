@@ -22,9 +22,16 @@ dependencies {
   implementation(libs.kotlinx.wrappers.node)
   implementation(libs.kotlinx.wrappers.react)
   implementation(libs.kotlinx.wrappers.react.dom)
+  implementation(libs.kotlinx.wrappers.react.router.dom)
+  implementation(libs.kotlinx.wrappers.remix.run.router)
   implementation(libs.kotlinx.coroutines.core.js)
   implementation(libs.kotlinx.serialization.core.js)
   implementation(libs.kotlinx.serialization.json.js)
+  implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.kotlinx.wrappers.emotion)
+  implementation(libs.kotlinx.wrappers.browser)
+  implementation(libs.kotlinx.wrappers.history)
+  implementation(libs.kotlinx.wrappers.typescript)
 
   // Testing
   testImplementation(project(":packages:test"))

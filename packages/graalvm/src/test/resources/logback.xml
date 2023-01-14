@@ -1,0 +1,27 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %white([%logger:%thread]) %highlight(%-5level) %magenta(sample) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- HTTP Access Log -->
+    <logger name="http:access" additivity="false" level="off" />
+    <logger name="gvm:js.console" level="off" />
+
+    <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="off" />
+    <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="off" />
+    <logger name="elide.runtime.gvm.internals.vfs.HostVFSImpl" level="trace" />
+    <logger name="elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl" level="trace" />
+
+    <logger name="io.micronaut.context.env" level="off"/>
+    <logger name="elide.server.ssr.ServerSSRRenderer" level="off" />
+
+    <logger name="io.micronaut.context.condition" level="off" />
+
+    <!-- Root Logger -->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

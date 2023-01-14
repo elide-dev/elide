@@ -26,8 +26,9 @@ dependencies {
 //    ksp(libs.autoService.ksp)
 
     implementation(libs.elide.base)
-    implementation(libs.elide.proto)
     implementation(libs.elide.server)
+    implementation(libs.elide.proto.core)
+    implementation(libs.elide.proto.protobuf)
     implementation(libs.google.auto.service.annotations)
 
     implementation("io.micronaut:micronaut-context")
@@ -35,7 +36,7 @@ dependencies {
 }
 
 micronaut {
-    version.set("3.7.4")
+    version.set("3.8.1")
 }
 
 elide {

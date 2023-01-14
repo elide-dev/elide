@@ -1,0 +1,82 @@
+/*
+ * Copyright © 2022, The Elide Framework Authors. All rights reserved.
+ *
+ * The Gust/Elide framework and tools, and all associated source or object computer code, except where otherwise noted,
+ * are licensed under the Zero Prosperity license, which is enclosed in this repository, in the file LICENSE.txt. Use of
+ * this code in object or source form requires and implies consent and agreement to that license in principle and
+ * practice. Source or object code not listing this header, or unless specified otherwise, remain the property of
+ * Elide LLC and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to
+ * Elide LLC and its suppliers and may be covered by U.S. and Foreign Patents, or patents in process, and are protected
+ * by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
+ * is strictly forbidden except in adherence with assigned license requirements.
+ */
+
+/*
+ * Specifies structures and enumerations used by the Elide command-line tool.
+ */
+syntax = "proto3";
+package elide.cli;
+
+option optimize_for = CODE_SIZE;
+option cc_enable_arenas = true;
+option java_multiple_files = true;
+option java_string_check_utf8 = true;
+option php_class_prefix = "ELD";
+option swift_prefix = "Elide";
+option objc_class_prefix = "ELD";
+option java_package = "tools.elide.cli";
+option csharp_namespace = "Elide.CLI";
+option go_package = "github.com/elide-tools/elide/cli;elidetool";
+
+import "elide/data/secrets/token.proto";
+
+
+// Coming soon.
+//
+message LocalAuthToken {
+  // Auth token attached to this record.
+  oneof auth_token {
+    // Specifies an authorization token for a user.
+    elide.data.secrets.Token user_token = 1;
+  }
+}
+
+// Coming soon.
+//
+message CommandLineConfig {
+  // Coming soon.
+  ElideToolOptions defaults = 1;
+
+  // Coming soon.
+  ElideToolOptions settings = 2;
+}
+
+// Coming soon.
+//
+message ElideToolOptions {
+  // Coming soon.
+  //
+  message OutputOptions {
+    // Coming soon.
+    bool verbose = 1;
+
+    // Coming soon.
+    bool quiet = 2;
+
+    // Coming soon.
+    bool pretty = 3;
+  }
+
+  // Options that control tool output.
+  OutputOptions output = 1;
+}
+
+// Coming soon.
+//
+message ElideToolState {
+  // Coming soon.
+  LocalAuthToken auth = 1;
+
+  // Coming soon.
+  CommandLineConfig config = 2;
+}

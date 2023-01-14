@@ -1,0 +1,220 @@
+public abstract class elide/proto/impl/AbstractElideKotlinXProtocol : elide/proto/ElideProtocol {
+	public fun <init> ()V
+	public fun base ()Ljava/lang/Class;
+	public fun dialects ()Ljava/util/EnumSet;
+	public fun engine ()Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public fun getCompression ()Z
+	public fun getReflection ()Z
+	public fun strategy ()Lelide/proto/ElideProtocol$ModelAdapterStrategy;
+}
+
+public final class elide/proto/impl/AbstractElideKotlinXProtocol$KotlinXModelStrategy : elide/proto/ElideProtocol$ModelAdapterStrategy {
+	public fun <init> ()V
+	public fun model ()Lelide/proto/api/data/DataModelStrategy;
+}
+
+public final class elide/proto/impl/ElideKotlinXProtocol : elide/proto/impl/AbstractElideKotlinXProtocol {
+	public fun <init> ()V
+}
+
+public final class elide/proto/impl/data/KxDataContainer : elide/proto/api/data/DataContainer {
+	public static final field Factory Lelide/proto/impl/data/KxDataContainer$Factory;
+	public fun bytes ()[B
+	public fun encoding ()Lelide/proto/impl/data/KxEncoding;
+	public synthetic fun encoding ()Ljava/lang/Enum;
+	public synthetic fun factory ()Lelide/proto/api/Record$Factory;
+	public fun factory ()Lelide/proto/impl/data/KxDataContainer$Factory;
+	public fun fingerprint ()Lelide/proto/api/data/DataFingerprint;
+	public fun mutate (Lkotlin/jvm/functions/Function1;)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun mutate (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun toBuilder ()Lelide/proto/impl/data/KxDataContainer$Builder;
+	public synthetic fun toBuilder ()Ljava/lang/Object;
+}
+
+public final class elide/proto/impl/data/KxDataContainer$Builder : elide/proto/api/data/DataContainer$IBuilder {
+	public fun <init> ()V
+	public fun build ()Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun build ()Ljava/lang/Object;
+	public fun getData ()[B
+	public fun getEncoding ()Lelide/proto/impl/data/KxEncoding;
+	public synthetic fun getEncoding ()Ljava/lang/Enum;
+	public synthetic fun setBase64-GM02rw0 ([B)Lelide/proto/api/data/DataContainer$IBuilder;
+	public fun setBase64-GM02rw0 ([B)Lelide/proto/impl/data/KxDataContainer$Builder;
+	public synthetic fun setData (Ljava/lang/String;)Lelide/proto/api/data/DataContainer$IBuilder;
+	public fun setData (Ljava/lang/String;)Lelide/proto/impl/data/KxDataContainer$Builder;
+	public synthetic fun setData ([B)Lelide/proto/api/data/DataContainer$IBuilder;
+	public fun setData ([B)Lelide/proto/impl/data/KxDataContainer$Builder;
+	public fun setData ([B)V
+	public fun setEncoding (Lelide/proto/impl/data/KxEncoding;)V
+	public synthetic fun setEncoding (Ljava/lang/Enum;)V
+	public synthetic fun setHex-zVQz0Fs (Ljava/lang/String;)Lelide/proto/api/data/DataContainer$IBuilder;
+	public fun setHex-zVQz0Fs (Ljava/lang/String;)Lelide/proto/impl/data/KxDataContainer$Builder;
+}
+
+public final class elide/proto/impl/data/KxDataContainer$Factory : elide/proto/api/data/DataContainer$Factory {
+	public fun builder ()Lelide/proto/impl/data/KxDataContainer$Builder;
+	public synthetic fun builder ()Ljava/lang/Object;
+	public fun copy (Lelide/proto/impl/data/KxDataContainer;)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun create (Lelide/proto/impl/data/KxEncoding;[B)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create (Ljava/lang/Enum;[B)Ljava/lang/Object;
+	public fun create (Ljava/lang/String;)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
+	public fun create (Lkotlin/jvm/functions/Function1;)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun create ([B)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create ([B)Ljava/lang/Object;
+	public fun create-GM02rw0 ([B)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create-GM02rw0 ([B)Ljava/lang/Object;
+	public fun create-zVQz0Fs (Ljava/lang/String;)Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun create-zVQz0Fs (Ljava/lang/String;)Ljava/lang/Object;
+	public fun defaultInstance ()Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun defaultInstance ()Ljava/lang/Object;
+	public fun empty ()Lelide/proto/impl/data/KxDataContainer;
+	public synthetic fun empty ()Ljava/lang/Object;
+}
+
+public final class elide/proto/impl/data/KxDataFingerprint : elide/proto/api/data/DataFingerprint {
+	public static final field Factory Lelide/proto/impl/data/KxDataFingerprint$Factory;
+	public fun algorithm ()Lelide/proto/impl/data/KxHashAlgorithm;
+	public synthetic fun algorithm ()Ljava/lang/Enum;
+	public fun bytes ()[B
+	public fun encoding ()Lelide/proto/impl/data/KxEncoding;
+	public synthetic fun encoding ()Ljava/lang/Enum;
+	public synthetic fun factory ()Lelide/proto/api/Record$Factory;
+	public fun factory ()Lelide/proto/impl/data/KxDataFingerprint$Factory;
+	public fun toBuilder ()Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public synthetic fun toBuilder ()Ljava/lang/Object;
+}
+
+public final class elide/proto/impl/data/KxDataFingerprint$Builder : elide/proto/api/data/DataFingerprint$IBuilder {
+	public fun <init> ()V
+	public fun build ()Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun build ()Ljava/lang/Object;
+	public fun getAlgorithm ()Lelide/proto/impl/data/KxHashAlgorithm;
+	public synthetic fun getAlgorithm ()Ljava/lang/Enum;
+	public fun getEncoding ()Lelide/proto/impl/data/KxEncoding;
+	public synthetic fun getEncoding ()Ljava/lang/Enum;
+	public fun getFingerprint ()[B
+	public fun setAlgorithm (Lelide/proto/impl/data/KxHashAlgorithm;)Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public fun setAlgorithm (Lelide/proto/impl/data/KxHashAlgorithm;)V
+	public synthetic fun setAlgorithm (Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public synthetic fun setAlgorithm (Ljava/lang/Enum;)V
+	public fun setEncoding (Lelide/proto/impl/data/KxEncoding;)Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public fun setEncoding (Lelide/proto/impl/data/KxEncoding;)V
+	public synthetic fun setEncoding (Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public synthetic fun setEncoding (Ljava/lang/Enum;)V
+	public synthetic fun setFingerprint ([B)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public fun setFingerprint ([B)Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public fun setFingerprint ([B)V
+	public fun setFingerprint ([BLelide/proto/impl/data/KxHashAlgorithm;)Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public fun setFingerprint ([BLelide/proto/impl/data/KxHashAlgorithm;Lelide/proto/impl/data/KxEncoding;)Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public synthetic fun setFingerprint ([BLjava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public synthetic fun setFingerprint ([BLjava/lang/Enum;Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+}
+
+public final class elide/proto/impl/data/KxDataFingerprint$Factory : elide/proto/api/data/DataFingerprint$Factory {
+	public fun builder ()Lelide/proto/impl/data/KxDataFingerprint$Builder;
+	public synthetic fun builder ()Ljava/lang/Object;
+	public fun copy (Lelide/proto/impl/data/KxDataFingerprint;)Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun create (Lelide/proto/impl/data/KxHashAlgorithm;Ljava/lang/String;)Lelide/proto/impl/data/KxDataFingerprint;
+	public fun create (Lelide/proto/impl/data/KxHashAlgorithm;Ljava/lang/String;Lelide/proto/impl/data/KxEncoding;)Lelide/proto/impl/data/KxDataFingerprint;
+	public fun create (Lelide/proto/impl/data/KxHashAlgorithm;[B)Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun create (Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun create (Ljava/lang/Enum;Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Object;
+	public synthetic fun create (Ljava/lang/Enum;[B)Ljava/lang/Object;
+	public fun create (Lkotlin/jvm/functions/Function1;)Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun create-WCX95qM (Lelide/proto/impl/data/KxHashAlgorithm;Ljava/lang/String;)Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun create-WCX95qM (Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Object;
+	public fun create-uMk2JoI (Lelide/proto/impl/data/KxHashAlgorithm;[B)Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun create-uMk2JoI (Ljava/lang/Enum;[B)Ljava/lang/Object;
+	public fun defaultInstance ()Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun defaultInstance ()Ljava/lang/Object;
+	public fun empty ()Lelide/proto/impl/data/KxDataFingerprint;
+	public synthetic fun empty ()Ljava/lang/Object;
+}
+
+public final class elide/proto/impl/data/KxEncoding : java/lang/Enum, elide/proto/api/Symbolic {
+	public static final field BASE64 Lelide/proto/impl/data/KxEncoding;
+	public static final field Companion Lelide/proto/impl/data/KxEncoding$Companion;
+	public static final field HEX Lelide/proto/impl/data/KxEncoding;
+	public fun getSymbol ()Ljava/lang/Integer;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun resoleSymbol (I)Lelide/proto/impl/data/KxEncoding;
+	public static fun valueOf (Ljava/lang/String;)Lelide/proto/impl/data/KxEncoding;
+	public static fun values ()[Lelide/proto/impl/data/KxEncoding;
+}
+
+public final class elide/proto/impl/data/KxEncoding$Companion : elide/proto/api/Symbolic$Resolver {
+	public fun resoleSymbol (I)Lelide/proto/impl/data/KxEncoding;
+	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+}
+
+public final class elide/proto/impl/data/KxHashAlgorithm : java/lang/Enum, elide/proto/api/Symbolic {
+	public static final field Companion Lelide/proto/impl/data/KxHashAlgorithm$Companion;
+	public static final field IDENTITY Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field MD5 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA1 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA256 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA3_224 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA3_256 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA3_512 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static final field SHA512 Lelide/proto/impl/data/KxHashAlgorithm;
+	public fun getSymbol ()Ljava/lang/Integer;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun resoleSymbol (I)Lelide/proto/impl/data/KxHashAlgorithm;
+	public static fun valueOf (Ljava/lang/String;)Lelide/proto/impl/data/KxHashAlgorithm;
+	public static fun values ()[Lelide/proto/impl/data/KxHashAlgorithm;
+}
+
+public final class elide/proto/impl/data/KxHashAlgorithm$Companion : elide/proto/api/Symbolic$Resolver {
+	public fun resoleSymbol (I)Lelide/proto/impl/data/KxHashAlgorithm;
+	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+}
+
+public final class elide/proto/impl/wkt/KxTimestamp : elide/proto/api/wkt/Timestamp {
+	public static final field Factory Lelide/proto/impl/wkt/KxTimestamp$Factory;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public synthetic fun factory ()Lelide/proto/api/Record$Factory;
+	public fun factory ()Lelide/proto/impl/wkt/KxTimestamp$Factory;
+	public static fun factory-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp$Factory;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toBuilder ()Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
+	public synthetic fun toBuilder ()Ljava/lang/Object;
+	public static fun toBuilder-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
+	public fun toInstant ()Lkotlinx/datetime/Instant;
+	public static fun toInstant-impl (Lkotlin/Pair;)Lkotlinx/datetime/Instant;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/proto/impl/wkt/KxTimestamp$Factory : elide/proto/api/wkt/Timestamp$Factory {
+	public fun builder ()Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
+	public synthetic fun builder ()Ljava/lang/Object;
+	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun copy-LWzlT1A (Lkotlin/Pair;)Lkotlin/Pair;
+	public synthetic fun defaultInstance ()Ljava/lang/Object;
+	public fun defaultInstance-sGgy6_s ()Lkotlin/Pair;
+	public synthetic fun empty ()Ljava/lang/Object;
+	public fun empty-sGgy6_s ()Lkotlin/Pair;
+}
+
+public final class elide/proto/impl/wkt/KxTimestamp$TimestampBuilder : elide/proto/api/wkt/Timestamp$IBuilder {
+	public fun <init> (JI)V
+	public synthetic fun build ()Ljava/lang/Object;
+	public fun build-sGgy6_s ()Lkotlin/Pair;
+	public fun getNanos ()I
+	public fun getSeconds ()J
+	public static final fun newBuilder ()Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
+	public static final fun of (JI)Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
+	public fun setNanos (I)V
+	public fun setSeconds (J)V
+}
+

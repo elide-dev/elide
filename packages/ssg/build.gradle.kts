@@ -53,10 +53,14 @@ dependencies {
   implementation(libs.jackson.jsr310)
   implementation(libs.jackson.module.kotlin)
 
+  implementation(project(":packages:proto:proto-core"))
+  implementation(project(":packages:proto:proto-protobuf"))
+  implementation(project(":packages:proto:proto-kotlinx"))
+
+  implementation(libs.guava)
   implementation(libs.commons.compress)
   implementation(platform(project(":packages:platform")))
   implementation(project(":packages:base"))
-  implementation(project(":packages:proto"))
   implementation(project(":packages:server"))
   implementation(libs.jsoup)
   implementation(libs.picocli)

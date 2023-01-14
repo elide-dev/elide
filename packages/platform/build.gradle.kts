@@ -16,18 +16,15 @@ version = rootProject.version as String
 // Elide modules.
 val libraries = listOf(
   "base",
-  "base-js",
-  "base-jvm",
+  "core",
   "server",
   "ssg",
+  "ssr",
   "frontend",
   "proto",
   "test",
-  "rpc-js",
-  "rpc-jvm",
+  "rpc",
   "graalvm",
-  "graalvm-js",
-  "graalvm-react",
 )
 
 // Peer modules.
@@ -55,9 +52,6 @@ dependencies {
     api(kotlin("stdlib"))
 
     // Google: Protocol Buffers, Guava, GAX, gRPC.
-    api(libs.gax.java)
-    api(libs.gax.java.grpc)
-    api(libs.grpc.api)
     api(libs.guava)
     api(libs.protobuf.java)
     api(libs.protobuf.kotlin)
@@ -69,10 +63,6 @@ dependencies {
 
     // KotlinX: Datetime.
     api(libs.kotlinx.datetime)
-
-    // KotlinX: HTML.
-    api(libs.kotlinx.html)
-    api(libs.kotlinx.html.jvm)
 
     // KotlinX: Serialization.
     api(libs.kotlinx.serialization.core)

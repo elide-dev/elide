@@ -1,14 +1,14 @@
 elide:
   assets:
     enabled: true
-    prefix: /_/assets
 
 micronaut:
-  server:
-    ssl:
-      enabled: false
-#      port: 8443
-#      build-self-signed: false
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: "/**"
+        paths: classpath:static
 
 grpc:
   server:

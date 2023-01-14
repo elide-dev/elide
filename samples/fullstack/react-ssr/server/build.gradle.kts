@@ -154,10 +154,67 @@ tasks {
       tags = setOf("latest", "jib")
     }
     container {
-      jvmFlags = listOf("-Ddyme.runtime=JVM", "-Xms512m", "-Xdebug")
+      jvmFlags = listOf("-Delide.runtime=JVM", "-Xms512m", "-Xdebug")
       mainClass = mainEntry
       ports = listOf("8080", "50051")
       format = com.google.cloud.tools.jib.api.buildplan.ImageFormat.Docker
+    }
+  }
+}
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    defaultMode.set("standard")
+    builtinCallerFilter.set(true)
+    builtinHeuristicFilter.set(true)
+    enableExperimentalPredefinedClasses.set(false)
+    enableExperimentalUnsafeAllocationTracing.set(false)
+    trackReflectionMetadata.set(true)
+    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
+
+    modes {
+      standard {}
+    }
+    metadataCopy {
+      inputTaskNames.add("test")
+      outputDirectories.add("src/main/resources/META-INF/native-image")
+      mergeWithExisting.set(true)
+    }
+  }
+
+  binaries {
+    named("main") {
+      fallback.set(false)
+      quickBuild.set(false)
+      buildArgs.addAll(listOf(
+        "-g",
+        "--no-fallback",
+        "--language:js",
+        "--language:regex",
+        "--enable-http",
+        "--enable-https",
+//        "--gc=G1",
+//        "--static",
+//        "--libc=glibc",
+//        "--enable-all-security-services",
+//        "--install-exit-handlers",
+//        "--report-unsupported-elements-at-runtime",
+//        "-Duser.country=US",
+//        "-Duser.language=en",
+//        "-H:IncludeLocales=en",
+//        "-H:+InstallExitHandlers",
+//        "-H:+ReportExceptionStackTraces",
+//        "--pgo-instrument",
+//        "-dsa",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+      ))
     }
   }
 }

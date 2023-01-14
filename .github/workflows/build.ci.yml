@@ -11,7 +11,6 @@ on:
 env:
   GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
   GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
-  GRADLE_CACHE_REMOTE: "true"
 
 jobs:
   ##
@@ -19,7 +18,7 @@ jobs:
   ##
   preflight-checks:
     name: "Pre-flight Checks"
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-latest-8-cores"
     permissions:
       contents: "read"
       id-token: "write"
@@ -33,7 +32,8 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -70,9 +70,10 @@ jobs:
             --no-daemon
             --warning-mode=none
             -Pelide.ci=true
+            -PbuildDocs=false
             -PbuildSamples=false
             -PbuildDocsSite=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
 
   ##
   ## Job: Library Build
@@ -83,26 +84,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        experimental: [false]
-        gu-binary: [gu]
-        java: [17]
+        mode: ['strict']
+        machine: [ubuntu-latest-8-cores]
         include:
-          - os: ubuntu
-            experimental: false
-            gu-binary: gu
-            java: 11
           - os: macos
-            experimental: false
-            gu-binary: gu
-            java: 17
-          - os: macos
-            experimental: false
-            gu-binary: gu
-            java: 11
+            mode: strict
+            machine: macos-x86
 
     name: "Build"
-    runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.experimental }}
+    runs-on: ${{ matrix.machine }}
+    continue-on-error: ${{ matrix.mode == 'labs' }}
 
     permissions:
       contents: "read"
@@ -119,12 +110,13 @@ jobs:
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java 19)"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
           version: latest
-          java-version: ${{ matrix.java }}
+          java-version: 19
+          check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@v3
@@ -132,7 +124,7 @@ jobs:
           node-version: 18
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: yarn
+        run: npm install -g yarn@1.22.19 && yarn
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -144,10 +136,9 @@ jobs:
       - name: "🛠️ Build"
         uses: gradle/gradle-build-action@v2.3.3
         id: gradlebuild
-        continue-on-error: ${{ matrix.experimental }}
+        continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
           CI: true
-          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
@@ -166,20 +157,21 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-            -Pversions.java.language=${{ matrix.java }}
+            -Pversions.java.minimum=11
+            -Pversions.java.language=19
       - name: "Build reports"
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: build-reports-${{ matrix.os }}-latest-java${{ matrix.java }}-gvm-latest
+          name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
             build/reports/**/*.*
       - name: "Run: Detekt"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
-        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=${{ matrix.java }}
+        if: ${{ matrix.os == 'ubuntu' }}
+        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=19
         continue-on-error: true
       - name: "Fix: SARIF Paths"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        if: ${{ matrix.os == 'ubuntu' }}
         continue-on-error: true
         run: |
           echo "$(
@@ -189,7 +181,7 @@ jobs:
            ${{ github.workspace }}/build/reports/detekt/elide.sarif
           )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
       - name: "Report: SARIF"
-        if: ${{ matrix.os == 'ubuntu' && matrix.java == '17' }}
+        if: ${{ matrix.os == 'ubuntu' }}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
@@ -200,7 +192,7 @@ jobs:
   ##
   tests-jvm:
     name: "Tests: JVM"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     continue-on-error: true
     needs: [preflight-checks, gradle]
 
@@ -215,12 +207,31 @@ jobs:
         uses: actions/checkout@v3
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java 11)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 11
+          set-java-home: false
+          check-for-updates: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 17)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "js"
+          version: latest
+          java-version: 17
+          set-java-home: false
+          check-for-updates: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: GraalVM (Java 19)"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -233,16 +244,15 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: yarn
+        run: npm install -g yarn@1.22.19 && yarn
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@v2.3.3
         env:
           CI: true
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
@@ -268,7 +278,7 @@ jobs:
             -PbuildSamples=true
             -PbuildDocs=false
             -PbuildDocsSite=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-jvm
@@ -317,7 +327,7 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
     if: false
@@ -330,7 +340,8 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -346,16 +357,12 @@ jobs:
           node-version: 18
           cache: "yarn"
       - name: "Setup: Yarn"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
+        run: npm install -g yarn@1.22.19 && yarn
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@v2.3.3
         continue-on-error: true
         env:
           CI: true
-          GRADLE_CACHE_PUSH: true
         with:
           cache-read-only: false
           arguments: |
@@ -378,7 +385,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
       - uses: actions/upload-artifact@v3
         with:
           name: test-reports-native
@@ -394,7 +401,7 @@ jobs:
   ##
   docker-jvm:
     name: "Docker: JVM"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     needs: [gradle, preflight-checks]
     if: |
       (
@@ -424,7 +431,8 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
@@ -468,7 +476,7 @@ jobs:
             -Pelide.ci=true
             -PbuildSamples=true
             -PbuildDocs=false
-            -Pversions.java.language=17
+            -Pversions.java.language=19
             -Pelide.runtime=JVM
             -x nativeCompile
             -x test
@@ -481,7 +489,7 @@ jobs:
 
   docker-native:
     name: "Docker: Native"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     continue-on-error: true
     needs: [gradle, preflight-checks]
     if: |
@@ -516,7 +524,8 @@ jobs:
         with:
           components: "native-image,js"
           version: latest
-          java-version: 17
+          java-version: 19
+          check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
@@ -559,7 +568,7 @@ jobs:
           arguments: |
             --no-daemon
             --warning-mode=none
-            -Pversions.java.language=17
+            -Pversions.java.language=19
             -Pelide.ci=true
             -PbuildSamples=true
             -PbuildDocs=false

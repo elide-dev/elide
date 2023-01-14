@@ -1,0 +1,26 @@
+elide:
+  gvm:
+    enabled: true
+    languages: ["JS"]
+    defer: true
+    js:
+      enabled: true
+      wasm: false
+
+micronaut:
+  application:
+    name: elide
+    default-charset: utf-8
+
+  executors:
+    type: FIXED
+    default:
+      threads: 1
+    io:
+      threads: 2
+    scheduled:
+      threads: 1
+
+jackson:
+  serialization:
+    ORDER_MAP_ENTRIES_BY_KEYS: true

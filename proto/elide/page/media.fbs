@@ -1,0 +1,103 @@
+// Generated from media.proto
+
+namespace elide.page;
+
+enum VideoProvider : int {
+  PRIVATE = 0,
+  YOUTUBE = 1,
+  VIMEO = 2,
+}
+
+enum MediaType : int {
+  IMAGE = 0,
+  VIDEO = 1,
+  AUDIO = 2,
+  LINK = 3,
+  DOCUMENT = 4,
+}
+
+enum VideoResolution : int {
+  LOW = 0,
+  HD = 1,
+  UHD = 2,
+}
+
+namespace elide.page.MediaAsset_.Document_;
+
+enum DocumentType : int {
+  GENERIC_DOCUMENT = 0,
+  TEXT_PLAIN = 1,
+  TEXT_RICH = 2,
+  TEXT_MARKDOWN = 3,
+  TEXT_HTML = 4,
+  TEXT_CSV = 5,
+  PDF = 6,
+  WORD_DOC = 7,
+  WORD_DOCX = 8,
+}
+
+namespace elide.page;
+
+table MediaAsset {
+  kind:elide.page.MediaType;
+  media:elide.page.MediaAsset_.Anonymous1;
+}
+
+namespace elide.page.MediaAsset_;
+
+table Link {
+  uri:string;
+  alt:string;
+}
+
+table Image {
+  asset:[elide.page.MediaAsset_.Image_.ImageAsset];
+}
+
+namespace elide.page.MediaAsset_.Image_;
+
+table ImageAsset {
+  resolution:float;
+  mime:string;
+  width:ulong;
+  height:ulong;
+  content:elide.page.MediaAsset_.Image_.ImageAsset_.Anonymous0;
+}
+
+namespace elide.page.MediaAsset_.Image_.ImageAsset_;
+
+table Anonymous0 {
+  b64:string;
+  uri:string;
+}
+
+namespace elide.page.MediaAsset_;
+
+table Video {
+  provider:elide.page.VideoProvider;
+  title:string;
+  description:string;
+  run_time:ulong;
+  asset:[elide.page.MediaAsset_.Video_.VideoAsset];
+}
+
+namespace elide.page.MediaAsset_.Video_;
+
+table VideoAsset {
+  resolution:elide.page.VideoResolution;
+  thumb:elide.page.MediaAsset_.Image;
+  uri:string;
+}
+
+namespace elide.page.MediaAsset_;
+
+table Document {
+  type:elide.page.MediaAsset_.Document_.DocumentType;
+}
+
+table Anonymous1 {
+  link:elide.page.MediaAsset_.Link;
+  image:elide.page.MediaAsset_.Image;
+  video:elide.page.MediaAsset_.Video;
+}
+

@@ -5,7 +5,6 @@ import elide.server.annotations.Page
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
-import io.micronaut.runtime.Micronaut.build
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
 import kotlinx.css.fontFamily
@@ -14,7 +13,7 @@ import kotlinx.html.tagext.head
 import kotlinx.html.title
 
 /** Self-contained application example, which serves an HTML page, with CSS, that says "Hello, Elide!". */
-object App {
+object App : Application {
   /** GET `/`: Controller for index page. */
   @Page class Index : PageController() {
     // Serve the page itself.
@@ -24,7 +23,11 @@ object App {
         stylesheet("/styles/main.css")
       }
       body {
-        injectSSR(this@Index, request)
+        if (request.parameters["mode"] == "streaming") {
+          streamSSR(this@Index, request)
+        } else {
+          injectSSR(this@Index, request)
+        }
       }
     }
 
@@ -41,6 +44,6 @@ object App {
 
   /** Main entrypoint for the application. */
   @JvmStatic fun main(args: Array<String>) {
-    build().args(*args).start()
+    boot(args)
   }
 }

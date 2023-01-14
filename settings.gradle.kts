@@ -6,6 +6,8 @@ pluginManagement {
   repositories {
     gradlePluginPortal()
     mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
+    google()
   }
 }
 
@@ -18,6 +20,8 @@ System.setProperty("user.dir", rootProject.projectDir.toString())
 System.setProperty("elide.home", rootProject.projectDir.toString())
 
 val micronautVersion: String by settings
+val embeddedCompose: String by settings
+val embeddedR8: String by settings
 
 dependencyResolutionManagement {
   repositoriesMode.set(
@@ -25,9 +29,13 @@ dependencyResolutionManagement {
   )
   repositories {
     mavenCentral()
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     maven("https://plugins.gradle.org/m2/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+    maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
     google()
   }
   versionCatalogs {
@@ -62,27 +70,37 @@ includeBuild("tools/substrate") {
   }
 }
 
-// 3: Build modules.
+// 3: Third-party modules.
+if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
+if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
+
+// 4: Build modules.
 include(
   ":packages:base",
   ":packages:bom",
+  ":packages:core",
+  ":packages:cli",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
   ":packages:graalvm-react",
   ":packages:model",
   ":packages:platform",
-  ":packages:proto",
-  ":packages:rpc-js",
-  ":packages:rpc-jvm",
+  ":packages:proto:proto-core",
+  ":packages:proto:proto-flatbuffers",
+  ":packages:proto:proto-kotlinx",
+  ":packages:proto:proto-protobuf",
+  ":packages:rpc",
   ":packages:server",
   ":packages:ssg",
+  ":packages:ssr",
   ":packages:test",
   ":tools:bundler",
   ":tools:processor",
   ":tools:reports",
 )
 
+val buildDocs: String by settings
 val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
@@ -113,8 +131,16 @@ if (buildSamples == "true") {
   )
 }
 
+if (buildDocs == "true") {
+  include(
+    ":docs:architecture",
+    ":docs:guide",
+  )
+}
+
 if (buildDocsSite == "true") {
   include(
+    ":site:docs:content",
     ":site:docs:ui",
     ":site:docs:node",
     ":site:docs:app",

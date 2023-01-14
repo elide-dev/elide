@@ -6,8 +6,10 @@
 VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
+SITE ?= no
 
 SAMPLES ?= no
+SIGNING_KEY ?= F812016B
 
 # Flags that control this makefile, along with their defaults:
 #
@@ -21,6 +23,8 @@ SAMPLES ?= no
 # SCAN ?= no
 # IGNORE_ERRORS ?= no
 # RELOCK ?= no
+# SIGNING ?= no
+# SIGNING_KEY ?= "F812016B"
 
 GRADLE ?= ./gradlew
 YARN ?= $(shell which yarn)
@@ -30,12 +34,21 @@ MKDIR ?= $(shell which mkdir)
 CP ?= $(shell which cp)
 RSYNC ?= $(shell which rsync)
 UNZIP ?= $(shell which unzip)
+TAR ?= $(shell which tar)
+ZIP ?= $(shell which zip)
+XZ ?= $(shell which xz)
+ZSTD ?= $(shell which zstd)
+BZIP2 ?= $(shell which bzip2)
+GZIP ?= $(shell which gzip)
+GPG2 ?= $(shell which gpg)
 PWD ?= $(shell pwd)
 TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
-JVM ?= 11
+JVM ?= 19
+SYSTEM ?= $(shell uname -s)
+JQ ?= $(shell which jq)
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=
@@ -45,10 +58,23 @@ NATIVE_TASKS ?= nativeCompile
 DEP_HASH_ALGO ?= sha256,pgp
 ARGS ?=
 
+LOCAL_CLI_INSTALL_DIR ?= ~/bin
+
+HASHSUM_SIZE ?= 256
+HASHSUM_CLASS ?= sha
+HASHSUM_ALGORITHM ?= $(HASHSUM_CLASS)$(HASHSUM_SIZE)
+HASHSUM ?= shasum -a $(HASHSUM_SIZE)
+
 ifeq ($(SAMPLES),yes)
 BUILD_ARGS += -PbuildSamples=true
 else
 BUILD_ARGS += -PbuildSamples=false
+endif
+
+ifeq ($(SITE),yes)
+BUILD_ARGS += -PbuildDocsSite=true
+else
+BUILD_ARGS += -PbuildDocsSite=false
 endif
 
 ifeq ($(RELOCK),yes)
@@ -68,7 +94,18 @@ BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)
+SIGNING = yes
+BUILD_MODE ?= release
+NATIVE_TARGET_NAME ?= nativeOptimizedCompile
+CLI_DISTPATH ?= ./packages/cli/build/dist/release
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
+CLI_RELEASE_TARGETS ?= cli-local cli-release-artifacts
+else
+SIGNING ?= no
+BUILD_MODE ?= dev
+CLI_DISTPATH ?= ./packages/cli/build/dist/debug
+NATIVE_TARGET_NAME ?= nativeCompile
+CLI_RELEASE_TARGETS ?= cli-local
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x testNativeImage
@@ -107,9 +144,7 @@ _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 
 # ---- Targets ---- #
 
-
 all: build test docs
-
 
 build:  ## Build the main library, and code-samples if SAMPLES=yes.
 	$(info Building Elide v3...)
@@ -122,7 +157,31 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
-		publish \
+		:conventions:publish \
+		:substrate:compiler-util:publish \
+		:substrate:redakt:publish \
+		:substrate:injekt:publish \
+		:substrate:sekret:publish \
+		:substrate:interakt:publish \
+		:tools:processor:publish \
+		:packages:core:publish \
+		:packages:base:publish \
+		:packages:test:publish \
+		:packages:proto:proto-core:publish \
+		:packages:proto:proto-kotlinx:publish \
+		:packages:proto:proto-protobuf:publish \
+		:packages:proto:proto-flatbuffers:publish \
+		:packages:model:publish \
+		:packages:rpc:publish \
+		:packages:graalvm:publish \
+		:packages:graalvm-js:publish \
+		:packages:graalvm-react:publish \
+		:packages:ssr:publish \
+		:packages:server:publish \
+		:packages:ssg:publish \
+		:packages:platform:publish \
+		:packages:bom:publish \
+		:packages:cli:publish \
 		--no-daemon \
 		--warning-mode=none \
 		-Pversion=$(VERSION) \
@@ -136,10 +195,105 @@ publish:  ## Publish a new version of all Elide packages.
 		-x jvmTest \
 		-x jsTest;
 
+clean-cli:  ## Clean built CLI targets.
+	$(CMD)echo "Cleaning CLI targets..."
+	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) ./packages/cli/build/dist
+
+cli:  ## Build the Elide command-line tool (native target).
+	$(info Building Elide CLI tool...)
+	$(CMD)mkdir -p $(CLI_DISTPATH)
+	$(CMD)$(GRADLE) \
+		:packages:cli:$(NATIVE_TARGET_NAME) \
+		-Pversion=$(VERSION) \
+		-PbuildSamples=false \
+		-PbuildDocs=false \
+		-PbuildDocsSite=false \
+		-Pelide.buildMode=$(BUILD_MODE) \
+		-x test \
+		$(_ARGS);
+	$(CMD)$(MAKE) cli-distroot cli-sizereport
+
+cli-distroot:
+	@echo "Built Elide CLI binary. Creating distroot..."
+	@$(MKDIR) -p $(CLI_DISTPATH) \
+		&& $(CP) ./packages/cli/build/native/$(NATIVE_TARGET_NAME)/elide $(CLI_DISTPATH)/elide;
+	$(CMD)cd $(CLI_DISTPATH) && du -h elide;
+	@echo "Compressing...";
+	$(CMD)cd $(CLI_DISTPATH) \
+		&& $(GZIP) --best --keep --verbose elide \
+		&& $(BZIP2) --best --keep --verbose elide \
+		&& $(XZ) --best --keep --verbose elide \
+		&& $(ZSTD) --ultra -22 -k -v elide \
+		&& $(ZIP) -9 --verbose elide.zip elide;
+
+cli-sizereport:
+	@echo "\nSize report:" \
+		&& cd $(CLI_DISTPATH) && du -h elide* \
+		&& echo "\nChecksums:" \
+		&& $(HASHSUM) elide* \
+		&& echo "";
+
+cli-local: cli  ## Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+ifeq ($(RELEASE),yes)
+	$(CMD)$(MAKE) clean-cli
+endif
+	$(CMD)$(MAKE) cli-install-local
+
+cli-release-artifacts:
+	$(CMD)echo "Building release artifacts..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(HASHSUM) elide elide* > manifest.txt \
+		&& $(HASHSUM) elide | cut -d " " -f 1 > elide.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.bz2 | cut -d " " -f 1 > elide.bz2.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.gz | cut -d " " -f 1 > elide.gz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.xz | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.zst | cut -d " " -f 1 > elide.xz.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) elide.zip | cut -d " " -f 1 > elide.zip.$(HASHSUM_ALGORITHM) \
+		&& $(HASHSUM) manifest.txt | cut -d " " -f 1 > manifest.txt.$(HASHSUM_ALGORITHM) \
+		&& $(TAR) -cvf elide.tar elide elide.sha256 $(SIGNATURE_FILE) \
+		&& $(GZIP) --best --verbose elide.tar;
+ifeq ($(SIGNING),yes)
+	$(CMD)echo "Signing release artifacts..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(GPG2) --default-key "$(SIGNING_KEY)" --armor --detach-sign --output elide.asc elide;
+else
+	@echo "Skipping signatures: signing is disabled.";
+endif
+	$(CMD)echo "Building release descriptor..." \
+		&& $(HASHSUM) $(CLI_DISTPATH)/manifest.txt | cut -d " " -f 1 > $(CLI_DISTPATH)/manifest.txt.$(HASHSUM_ALGORITHM) \
+		&& MANIFEST_FINGERPRINT=$$(cat $(CLI_DISTPATH)/manifest.txt.$(HASHSUM_ALGORITHM)) \
+		&& RELEASE_SYSTEM=$$(echo "$(SYSTEM)" | tr A-Z a-z) \
+		&& RELEASE_ARCH=$$(uname -m | tr A-Z a-z) \
+		&& cat ./packages/cli/packaging/release.json | \
+			$(JQ) ".version = \"$(VERSION)\"" | \
+			$(JQ) ".platform = \"$${RELEASE_SYSTEM}\"" | \
+			$(JQ) ".fingerprint = \"$${MANIFEST_FINGERPRINT}\"" > $(CLI_DISTPATH)/release.json \
+		&& $(HASHSUM) $(CLI_DISTPATH)/release.json | cut -d " " -f 1 > $(CLI_DISTPATH)/release.json.$(HASHSUM_ALGORITHM) \
+		&& echo "Release manifest built for version '$(VERSION)'.";
+ifeq ($(SIGNING),yes)
+	$(CMD)echo "Signing release descriptor..." \
+		&& cd $(CLI_DISTPATH) \
+		&& cat release.json.sha256 manifest.txt.sha256 | $(GPG2) --default-key "$(SIGNING_KEY)" --armor --detach-sign --output release.asc;
+endif
+	$(CMD)echo "Building final release tarball..." \
+		&& cd $(CLI_DISTPATH) \
+		&& $(TAR) -cvf release.tar elide elide.* manifest.txt release.json;
+
+cli-release: cli  ## Build an Elide command-line release.
+	$(CMD)make $(CLI_RELEASE_TARGETS) RELEASE=yes
+
+cli-install-local:
+	@echo "Installing CLI locally (location: \"$(LOCAL_CLI_INSTALL_DIR))\"..."
+	$(CMD)$(CP) -f$(strip $(POSIX_FLAGS)) \
+		./packages/cli/build/native/$(NATIVE_TARGET_NAME)/elide \
+		$(LOCAL_CLI_INSTALL_DIR)/elide
+	@echo ""; echo "Done. Testing CLI tool..."
+	$(CMD)elide --version
+
 clean: clean-docs clean-site  ## Clean build outputs and caches.
 	@echo "Cleaning targets..."
 	$(CMD)$(RM) -fr$(strip $(POSIX_FLAGS)) $(TARGET)
-	$(CMD)$(GRADLE) clean $(_ARGS)
+	$(CMD)$(GRADLE) clean cleanTest $(_ARGS)
 	$(CMD)$(FIND) . -name .DS_Store -delete
 
 clean-docs:  ## Clean documentation targets.
@@ -168,10 +322,11 @@ $(SITE_BUILD)/docs/kotlin $(SITE_BUILD)/docs/javadoc: $(TARGET)/docs
 	$(CMD)cd packages/server/build/dokka \
 		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/server \
 		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/server/
-	$(CMD)cd packages/rpc-jvm/build/dokka \
-		&& $(MKDIR) $(SITE_BUILD)/docs/javadoc/rpc-jvm \
-		&& $(CP) -fr$(strip $(POSIX_FLAGS)) ./javadoc/* $(SITE_BUILD)/docs/javadoc/rpc-jvm/
 	@echo "Docs assemble complete."
+
+api-check:  ## Check API/ABI compatibility with current changes.
+	$(info Checking ABI compatibility...)
+	$(CMD)$(GRADLE) apiCheck -PbuildDocsSite=false -PbuildSamples=false -PbuildDocs=false
 
 reports: $(REPORTS)  ## Generate reports for tests, coverage, etc.
 	@$(RM) -f $(SITE_BUILD)/reports/project/properties.txt

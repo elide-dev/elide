@@ -2,6 +2,7 @@
 
 package elide.server
 
+import elide.server.ResponseRenderer
 import elide.server.assets.AssetType
 import elide.server.controller.ElideController
 import elide.server.controller.PageController
@@ -11,6 +12,7 @@ import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableR
 import kotlinx.css.CssBuilder
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import org.reactivestreams.Publisher
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
@@ -37,16 +39,16 @@ public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
  */
 public typealias StreamedAssetResponse = HttpResponse<StreamedAsset>
 
-/** Describes the expected interface for a response rendering object. */
-public interface ResponseRenderer<R> {
-  /** @return Rendered result. */
-  public fun render(): R
-}
-
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {
   /** @return Rendered result. */
   public suspend fun render(): R
+}
+
+/** Describes the expected interface for a streaming response rendered via co-routines. */
+public interface StreamingSuspensionRenderer<R> {
+  /** @return Rendered result. */
+  public suspend fun render(): Publisher<R>
 }
 
 /**

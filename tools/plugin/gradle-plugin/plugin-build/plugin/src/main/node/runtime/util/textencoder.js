@@ -1,4 +1,4 @@
-(function (_) {
+(function (self) {
     if (!("TextEncoder" in self && "TextDecoder" in self)) {
         // TextEncoder
         /** @define {boolean} */
@@ -611,13 +611,9 @@
                 };
             }
         })(
-            (module && module.exports) ||
-                (!!exports && exports) ||
-                typeof global == "" + void 0
-                ? typeof self == "" + void 0
-                    ? this
-                    : self
-                : global
+    (module && module.exports) ||
+            (!!exports && exports) ||
+            globalThis
         );
     } else {
         // already exists in the JS context (probably via kotlin). mount what we found forcibly as this module's exports.
@@ -631,9 +627,4 @@
             exports.TextDecoder = decoder;
         }
     }
-}.call(
-    ("object" === typeof window && window) ||
-        ("object" === typeof self && self) ||
-        ("object" === typeof global && global) ||
-        {}
-));
+}.call(globalThis));

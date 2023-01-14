@@ -1,0 +1,185 @@
+public abstract interface class elide/proto/ElideProtocol {
+	public abstract fun base ()Ljava/lang/Class;
+	public abstract fun dialects ()Ljava/util/EnumSet;
+	public abstract fun engine ()Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public fun getCompression ()Z
+	public fun getReflection ()Z
+	public abstract fun strategy ()Lelide/proto/ElideProtocol$ModelAdapterStrategy;
+}
+
+public final class elide/proto/ElideProtocol$Dialect : java/lang/Enum {
+	public static final field FLATBUFFERS Lelide/proto/ElideProtocol$Dialect;
+	public static final field JSON Lelide/proto/ElideProtocol$Dialect;
+	public static final field MSGPACK Lelide/proto/ElideProtocol$Dialect;
+	public static final field PROTO Lelide/proto/ElideProtocol$Dialect;
+	public static final field UNSPECIFIED Lelide/proto/ElideProtocol$Dialect;
+	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$Dialect;
+	public static fun values ()[Lelide/proto/ElideProtocol$Dialect;
+}
+
+public final class elide/proto/ElideProtocol$DialectType : java/lang/Enum {
+	public static final field BINARY Lelide/proto/ElideProtocol$DialectType;
+	public static final field INTERNAL Lelide/proto/ElideProtocol$DialectType;
+	public static final field TEXT Lelide/proto/ElideProtocol$DialectType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$DialectType;
+	public static fun values ()[Lelide/proto/ElideProtocol$DialectType;
+}
+
+public final class elide/proto/ElideProtocol$ImplementationLibrary : java/lang/Enum {
+	public static final field CUSTOM Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static final field FLATBUFFERS Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static final field KOTLINX Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static final field PROTOBUF Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static final field PROTOBUF_LITE Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static fun values ()[Lelide/proto/ElideProtocol$ImplementationLibrary;
+}
+
+public abstract interface class elide/proto/ElideProtocol$ModelAdapterStrategy {
+	public abstract fun model ()Lelide/proto/api/data/DataModelStrategy;
+}
+
+public abstract interface class elide/proto/ProtocolModel {
+}
+
+public abstract interface class elide/proto/api/Named {
+	public abstract fun getName ()Ljava/lang/String;
+}
+
+public final class elide/proto/api/Protocol : java/util/ServiceLoader$Provider {
+	public static final field INSTANCE Lelide/proto/api/Protocol;
+	public final fun acquire (Lelide/proto/ElideProtocol$ImplementationLibrary;)Lelide/proto/ElideProtocol;
+	public static synthetic fun acquire$default (Lelide/proto/api/Protocol;Lelide/proto/ElideProtocol$ImplementationLibrary;ILjava/lang/Object;)Lelide/proto/ElideProtocol;
+	public fun get ()Lelide/proto/ElideProtocol;
+	public synthetic fun get ()Ljava/lang/Object;
+	public fun type ()Ljava/lang/Class;
+}
+
+public abstract interface class elide/proto/api/Record : elide/proto/ProtocolModel {
+	public abstract fun factory ()Lelide/proto/api/Record$Factory;
+	public abstract fun toBuilder ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/Record$Factory {
+	public abstract fun builder ()Ljava/lang/Object;
+	public abstract fun copy (Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public abstract fun defaultInstance ()Ljava/lang/Object;
+	public abstract fun empty ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/Record$IBuilder {
+	public abstract fun build ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/Symbolic {
+	public abstract fun getSymbol ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/Symbolic$Resolver {
+	public abstract fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
+}
+
+public final class elide/proto/api/Symbolic$SymbolUnresolved : java/lang/IllegalStateException {
+}
+
+public abstract interface class elide/proto/api/data/DataContainer : elide/proto/api/Record {
+	public abstract fun bytes ()[B
+	public abstract fun encoding ()Ljava/lang/Enum;
+	public abstract fun fingerprint ()Lelide/proto/api/data/DataFingerprint;
+	public abstract fun mutate (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/data/DataContainer$Factory : elide/proto/api/Record$Factory {
+	public abstract fun create (Ljava/lang/Enum;[B)Ljava/lang/Object;
+	public abstract fun create (Ljava/lang/String;)Ljava/lang/Object;
+	public abstract fun create ([B)Ljava/lang/Object;
+	public abstract fun create-GM02rw0 ([B)Ljava/lang/Object;
+	public abstract fun create-zVQz0Fs (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/data/DataContainer$IBuilder : elide/proto/api/Record$IBuilder {
+	public abstract fun build ()Ljava/lang/Object;
+	public abstract fun getData ()[B
+	public abstract fun getEncoding ()Ljava/lang/Enum;
+	public abstract fun setBase64-GM02rw0 ([B)Lelide/proto/api/data/DataContainer$IBuilder;
+	public abstract fun setData (Ljava/lang/String;)Lelide/proto/api/data/DataContainer$IBuilder;
+	public abstract fun setData ([B)Lelide/proto/api/data/DataContainer$IBuilder;
+	public abstract fun setData ([B)V
+	public abstract fun setEncoding (Ljava/lang/Enum;)V
+	public abstract fun setHex-zVQz0Fs (Ljava/lang/String;)Lelide/proto/api/data/DataContainer$IBuilder;
+}
+
+public abstract interface class elide/proto/api/data/DataFingerprint : elide/proto/api/Record {
+	public abstract fun algorithm ()Ljava/lang/Enum;
+	public abstract fun bytes ()[B
+	public abstract fun encoding ()Ljava/lang/Enum;
+}
+
+public abstract interface class elide/proto/api/data/DataFingerprint$Factory : elide/proto/api/Record$Factory {
+	public abstract fun create (Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Object;
+	public abstract fun create (Ljava/lang/Enum;Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Object;
+	public abstract fun create (Ljava/lang/Enum;[B)Ljava/lang/Object;
+	public abstract fun create-WCX95qM (Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Object;
+	public abstract fun create-uMk2JoI (Ljava/lang/Enum;[B)Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/data/DataFingerprint$IBuilder : elide/proto/api/Record$IBuilder {
+	public abstract fun build ()Ljava/lang/Object;
+	public abstract fun getAlgorithm ()Ljava/lang/Enum;
+	public abstract fun getEncoding ()Ljava/lang/Enum;
+	public abstract fun getFingerprint ()[B
+	public abstract fun setAlgorithm (Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public abstract fun setAlgorithm (Ljava/lang/Enum;)V
+	public abstract fun setEncoding (Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public abstract fun setEncoding (Ljava/lang/Enum;)V
+	public abstract fun setFingerprint ([B)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public abstract fun setFingerprint ([B)V
+	public abstract fun setFingerprint ([BLjava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+	public abstract fun setFingerprint ([BLjava/lang/Enum;Ljava/lang/Enum;)Lelide/proto/api/data/DataFingerprint$IBuilder;
+}
+
+public abstract interface class elide/proto/api/data/DataModelStrategy {
+	public abstract fun containers ()Lelide/proto/api/data/DataContainer$Factory;
+	public abstract fun fingerprints ()Lelide/proto/api/data/DataFingerprint$Factory;
+	public abstract fun timestamps ()Lelide/proto/api/wkt/Timestamp$Factory;
+}
+
+public abstract interface class elide/proto/api/wkt/Timestamp : elide/proto/api/Record, java/lang/Comparable {
+	public fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun getMillis ()J
+	public fun getNanos ()I
+	public fun getSeconds ()J
+	public abstract fun toInstant ()Lkotlinx/datetime/Instant;
+	public fun toJavaInstant ()Ljava/time/Instant;
+}
+
+public abstract interface class elide/proto/api/wkt/Timestamp$Factory : elide/proto/api/Record$Factory {
+	public fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public fun atMilli (J)Ljava/lang/Object;
+	public fun atSecond (J)Ljava/lang/Object;
+	public fun atSecond (JI)Ljava/lang/Object;
+	public fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun from (Ljava/sql/Date;)Ljava/lang/Object;
+	public fun from (Ljava/time/Instant;)Ljava/lang/Object;
+	public fun from (Ljava/util/Date;)Ljava/lang/Object;
+	public fun fromNow-LRDsOJo (J)Ljava/lang/Object;
+	public fun millisFromNow (J)Ljava/lang/Object;
+	public fun now ()Ljava/lang/Object;
+	public fun secondsFromNow (J)Ljava/lang/Object;
+}
+
+public abstract interface class elide/proto/api/wkt/Timestamp$IBuilder {
+	public abstract fun build ()Ljava/lang/Object;
+	public abstract fun getNanos ()I
+	public abstract fun getSeconds ()J
+	public abstract fun setNanos (I)V
+	public abstract fun setSeconds (J)V
+}
+
+public abstract interface annotation class elide/proto/internal/annotations/Protocol : java/lang/annotation/Annotation {
+	public abstract fun value ()Lelide/proto/ElideProtocol$ImplementationLibrary;
+}
+

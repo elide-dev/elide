@@ -1,6 +1,8 @@
 public abstract interface class elide/runtime/feature/FrameworkFeature : org/graalvm/nativeimage/hosted/Feature {
 	public fun findClassesInJar (Ljava/net/JarURLConnection;Ljava/lang/String;)Ljava/util/List;
+	public abstract fun getDescription ()Ljava/lang/String;
 	public fun getMethodOrFail (Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+	public fun getURL ()Ljava/lang/String;
 	public fun logging ()Lelide/runtime/Logger;
 	public fun registerClassForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
 	public fun registerClassHierarchyForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
@@ -10,7 +12,7 @@ public abstract interface class elide/runtime/feature/FrameworkFeature : org/gra
 	public fun registerPackageForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
 }
 
-public final synthetic class elide/runtime/graalvm/$JsRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/$VMFacadeFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
@@ -18,98 +20,1063 @@ public final synthetic class elide/runtime/graalvm/$JsRuntime$Definition$Referen
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/graalvm/$JsRuntime$ExecutionInputs$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+public abstract interface class elide/runtime/gvm/ContextFactory {
+	public abstract fun acquire (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun acquire$default (Lelide/runtime/gvm/ContextFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun activate (Z)V
+	public static synthetic fun activate$default (Lelide/runtime/gvm/ContextFactory;ZILjava/lang/Object;)V
+	public abstract fun configureVM (Ljava/util/stream/Stream;)V
+	public abstract fun installContextFactory (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun installContextSpawn (Lkotlin/jvm/functions/Function1;)V
+	public fun invoke (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract class elide/runtime/gvm/DeveloperScript : elide/runtime/gvm/ExecutableScript {
+	public fun <init> ()V
+}
+
+public abstract interface class elide/runtime/gvm/ExecutableScript {
+	public abstract fun invocation ()Ljava/util/EnumSet;
+	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
+	public abstract fun map-IKyDTes ()Ljava/lang/String;
+	public abstract fun source-ulLWtvI ()Ljava/lang/String;
+	public abstract fun state ()Lelide/runtime/gvm/ExecutableScript$State;
+	public abstract fun type-MGZnejY ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$ScriptSource {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$ScriptSource;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public static final fun fromEmbedded-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun fromFile-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun fromResource-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun getLITERAL-ulLWtvI ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$ScriptType {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$ScriptType;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public static final fun fromMime-v8v4A0M (Ljava/lang/String;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$SourceMap {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$SourceMap;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/ExecutableScript$State : java/lang/Enum {
+	public static final field EVALUATED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field EXECUTED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field PARSED Lelide/runtime/gvm/ExecutableScript$State;
+	public static final field UNINITIALIZED Lelide/runtime/gvm/ExecutableScript$State;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$State;
+	public static fun values ()[Lelide/runtime/gvm/ExecutableScript$State;
+}
+
+public abstract interface class elide/runtime/gvm/ExecutionInputs {
+	public static final field Companion Lelide/runtime/gvm/ExecutionInputs$Companion;
+	public abstract fun allInputs ()[Ljava/lang/Object;
+	public fun buildArguments ()[Ljava/lang/Object;
+	public static fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+}
+
+public final class elide/runtime/gvm/ExecutionInputs$Companion {
+	public final fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+}
+
+public final class elide/runtime/gvm/ExecutionInputs$Empty : elide/runtime/gvm/ExecutionInputs {
+	public static final field INSTANCE Lelide/runtime/gvm/ExecutionInputs$Empty;
+	public fun allInputs ()[Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/gvm/GuestLanguage {
+	public static final field Companion Lelide/runtime/gvm/GuestLanguage$Companion;
+	public fun getInvocationModes ()Ljava/util/EnumSet;
+	public abstract fun getLabel ()Ljava/lang/String;
+	public fun getSupportsSSR ()Z
+	public fun getSupportsStreamingSSR ()Z
+	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/GuestLanguage$Companion {
+	public final fun getJAVASCRIPT ()Lelide/runtime/gvm/GuestLanguage;
+}
+
+public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
+	public static final field ASYNC Lelide/runtime/gvm/InvocationMode;
+	public static final field STREAMING Lelide/runtime/gvm/InvocationMode;
+	public static final field SYNC Lelide/runtime/gvm/InvocationMode;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/InvocationMode;
+	public static fun values ()[Lelide/runtime/gvm/InvocationMode;
+}
+
+public abstract interface class elide/runtime/gvm/MicronautRequestExecutionInputs : elide/runtime/gvm/RequestExecutionInputs {
+	public fun path ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/gvm/RequestExecutionInputs : elide/runtime/gvm/ExecutionInputs {
+	public fun allInputs ()[Ljava/lang/Object;
+	public fun path ()Ljava/lang/String;
+	public abstract fun request ()Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/RequestExecutionInputs$Defaults {
+	public static final field DEFAULT_PATH Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/gvm/RequestExecutionInputs$Defaults;
+}
+
+public abstract interface class elide/runtime/gvm/VMEngine : elide/runtime/gvm/VMFacade {
+}
+
+public abstract interface class elide/runtime/gvm/VMFacade {
+	public abstract fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeBlocking (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;)Ljava/lang/Object;
+	public abstract fun executeRender (Lelide/runtime/gvm/ExecutableScript;Lio/micronaut/http/HttpRequest;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun executeStreaming (Lelide/runtime/gvm/ExecutableScript;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun language ()Lelide/runtime/gvm/GuestLanguage;
+	public abstract fun prewarmScript (Lelide/runtime/gvm/ExecutableScript;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/gvm/VMFacadeFactory {
+	public final fun acquireVM ([Lelide/runtime/gvm/GuestLanguage;)Lelide/runtime/gvm/VMFacade;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$Companion;
+	public static final field DEFAULT_ENABLED Z
+	public static final field DEFAULT_ESM Z
+	public static final field DEFAULT_NPM Z
+	public static final field DEFAULT_NPM_MODULES Ljava/lang/String;
+	public static final field DEFAULT_SOURCEMAPS Z
+	public static final field DEFAULT_TYPESCRIPT Z
+	public static final field DEFAULT_V8_COMPAT Z
+	public static final field DEFAULT_WASM Z
+	public fun <init> ()V
+	public fun <init> (ZZZZLelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;ZLtools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;Ljava/util/Locale;Ljava/time/ZoneId;Ljava/nio/charset/Charset;)V
+	public synthetic fun <init> (ZZZZLelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;ZLtools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;Ljava/util/Locale;Ljava/time/ZoneId;Ljava/nio/charset/Charset;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCharset ()Ljava/nio/charset/Charset;
+	public final fun getDefaultLocale ()Ljava/util/Locale;
+	public final fun getEnabled ()Z
+	public final fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
+	public final fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public final fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
+	public final fun getSourceMaps ()Z
+	public final fun getTimezone ()Ljava/time/ZoneId;
+	public final fun getTypescript ()Z
+	public final fun getV8 ()Z
+	public final fun getWasm ()Z
+	public fun isEnabled ()Z
+	public final fun setCharset (Ljava/nio/charset/Charset;)V
+	public final fun setDefaultLocale (Ljava/util/Locale;)V
+	public final fun setEnabled (Z)V
+	public final fun setEsm (Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;)V
+	public final fun setLanguage (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;)V
+	public final fun setNpm (Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;)V
+	public final fun setSourceMaps (Z)V
+	public final fun setTimezone (Ljava/time/ZoneId;)V
+	public final fun setTypescript (Z)V
+	public final fun setV8 (Z)V
+	public final fun setWasm (Z)V
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig$Companion {
+	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
+	public final fun getDEFAULT_JS_LANGUAGE_LEVEL ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
+	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig : io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
+	public final fun getEnabled ()Z
+	public final fun setEnabled (Z)V
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig$Companion {
+	public final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig : io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLjava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
+	public final fun getEnabled ()Z
+	public final fun getModules ()Ljava/lang/String;
+	public final fun setEnabled (Z)V
+	public final fun setModules (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion {
+	public final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
+}
+
+public final synthetic class elide/runtime/gvm/internals/$GuestExecutorManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
+	public static final field JAVASCRIPT Lelide/runtime/gvm/internals/GraalVMGuest;
+	public fun getLabel ()Ljava/lang/String;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/GraalVMGuest;
+	public static fun values ()[Lelide/runtime/gvm/internals/GraalVMGuest;
+}
+
+public abstract interface class elide/runtime/gvm/internals/GuestVFS : java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/io/FileSystem {
+	public abstract fun allowsHostFileAccess ()Z
+	public abstract fun allowsHostSocketAccess ()Z
+}
+
+public abstract interface class elide/runtime/gvm/internals/VMProperty : java/lang/Comparable {
+	public fun active ()Z
+	public fun compareTo (Lelide/runtime/gvm/internals/VMProperty;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public abstract fun getSymbol ()Ljava/lang/String;
+	public abstract fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/VMRuntimeProperty : elide/runtime/gvm/internals/VMProperty {
+	public static final field Companion Lelide/runtime/gvm/internals/VMRuntimeProperty$Companion;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/VMRuntimeProperty;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSymbol ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static final fun ofBoolean (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public static final fun ofConfigurable (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/VMRuntimeProperty$Companion {
+	public final fun ofBoolean (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public static synthetic fun ofBoolean$default (Lelide/runtime/gvm/internals/VMRuntimeProperty$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public final fun ofConfigurable (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+	public static synthetic fun ofConfigurable$default (Lelide/runtime/gvm/internals/VMRuntimeProperty$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMRuntimeProperty;
+}
+
+public final class elide/runtime/gvm/internals/VMStaticProperty : elide/runtime/gvm/internals/VMProperty {
+	public static final field Companion Lelide/runtime/gvm/internals/VMStaticProperty$Companion;
+	public static final fun active (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/VMStaticProperty;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStaticValue ()Ljava/lang/String;
+	public fun getSymbol ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static final fun inactive (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/VMStaticProperty$Companion {
+	public final fun active (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun inactive (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+}
+
+public final synthetic class elide/runtime/gvm/internals/context/$NativeContextManagerImpl$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/$BuiltinIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/$ServiceIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/intrinsics/js/JsProxy;
+	public final fun wrap (Ljava/lang/Object;)Lelide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyProxy;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyProxy : org/graalvm/polyglot/proxy/ProxyObject {
+	public fun <init> ()V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final class elide/runtime/graalvm/JsRuntime {
-	public static final field Companion Lelide/runtime/graalvm/JsRuntime$Companion;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public static final fun acquire ()Lelide/runtime/graalvm/JsRuntime;
-	public final fun execute (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun executeAsync (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Lkotlinx/coroutines/Deferred;
-	public final fun executeBlocking (Lelide/runtime/graalvm/JsRuntime$ExecutableScript;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$Companion {
-	public final fun acquire ()Lelide/runtime/graalvm/JsRuntime;
-}
-
-public final class elide/runtime/graalvm/JsRuntime$EmbeddedScript : elide/runtime/graalvm/JsRuntime$ExecutableScript {
-	public static final field Companion Lelide/runtime/graalvm/JsRuntime$EmbeddedScript$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getPath ()Ljava/lang/String;
-}
-
-public final class elide/runtime/graalvm/JsRuntime$EmbeddedScript$Companion {
-}
-
-public abstract class elide/runtime/graalvm/JsRuntime$ExecutableScript {
-	public synthetic fun <init> (ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class elide/runtime/graalvm/JsRuntime$ExecutionInputs {
-	public static final field CONTEXT Ljava/lang/String;
-	public static final field Companion Lelide/runtime/graalvm/JsRuntime$ExecutionInputs$Companion;
-	public static final field STATE Ljava/lang/String;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/Map;)V
-	public synthetic fun <init> (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun context ()Lelide/server/type/RequestState;
-	public static final fun fromRequestState (Lelide/server/type/RequestState;Ljava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutionInputs;
-	public final fun getData ()Ljava/util/Map;
-	public final fun state ()Ljava/lang/Object;
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$ExecutionInputs$Companion {
-	public final fun fromRequestState (Lelide/server/type/RequestState;Ljava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutionInputs;
-	public final fun getEMPTY ()Lelide/runtime/graalvm/JsRuntime$ExecutionInputs;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$LiteralScript : elide/runtime/graalvm/JsRuntime$ExecutableScript {
-	public static final field Companion Lelide/runtime/graalvm/JsRuntime$LiteralScript$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$LiteralScript$Companion {
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/graalvm/JsRuntime$Script {
-	public static final field INSTANCE Lelide/runtime/graalvm/JsRuntime$Script;
-	public static final fun embedded (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
-	public static synthetic fun embedded$default (Ljava/lang/String;Ljava/nio/charset/Charset;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$EmbeddedScript;
-	public static final fun literal (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
-	public static synthetic fun literal$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/graalvm/JsRuntime$ExecutableScript;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final class elide/server/SSRExtensionsKt {
-	public static final field DEFAULT_SSR_DOM_ID Ljava/lang/String;
-	public static final field NODE_SSR_DEFAULT_PATH Ljava/lang/String;
-	public static final fun getDEFAULT_INVOCATION_BASE ()Ljava/lang/String;
-	public static final fun getDEFAULT_INVOCATION_TARGET ()Ljava/lang/String;
-	public static final fun injectSSR (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun injectSSR$default (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Ljava/util/Set;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun ssr (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun ssr$default (Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lio/micronaut/http/MutableHttpResponse;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public abstract interface class elide/server/ssr/ServerRenderer : elide/server/ResponseRenderer {
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
-public final class elide/server/ssr/ServerSSRRenderer : elide/server/SuspensionRenderer {
-	public static final field Companion Lelide/server/ssr/ServerSSRRenderer$Companion;
-	public static final field ssrId Ljava/lang/String;
-	public fun <init> (Lkotlinx/html/BODY;Lelide/server/controller/ElideController;Lio/micronaut/http/HttpRequest;Lelide/runtime/graalvm/JsRuntime$ExecutableScript;)V
-	public fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun renderResponse (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun renderSuspendAsync (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/server/ssr/ServerSSRRenderer$Companion {
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {
+	public static final field GUEST Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static final field HOST Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessDomain;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessRequest {
+	public fun <init> (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public final fun component4 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessRequest;Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDomain ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public final fun getPath ()Ljava/nio/file/Path;
+	public final fun getScope ()Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public final fun getType ()Ljava/util/Set;
+	public fun hashCode ()I
+	public final fun isRead ()Z
+	public final fun isWrite ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResponse {
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/AccessResult;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public static final fun allow (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public static final fun deny (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public final fun getErr ()Ljava/lang/Throwable;
+	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public final fun getReason ()Ljava/lang/String;
+	public static final fun unsupported (Ljava/lang/Throwable;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum {
+	public static final field ALLOW Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static final field DENY Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessResult;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum {
+	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static final field FILE Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static final field UNSPECIFIED Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessScope;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessType : java/lang/Enum {
+	public static final field DELETE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static final field READ Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static final field WRITE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessType;
+}
+
+public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
+	public fun <init> ()V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;ZZZLelide/runtime/gvm/internals/vfs/GuestVFSPolicy;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public static final fun empty (ZZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBundle ()Ljava/util/List;
+	public final fun getCaseSensitive ()Z
+	public static final fun getDEFAULTS$graalvm ()Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public final fun getReadOnly ()Z
+	public final fun getRoot ()Ljava/lang/String;
+	public final fun getSupportsSymbolicLinks ()Z
+	public final fun getWorkingDirectory ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final fun withPolicy (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;ZZLjava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;
+}
+
+public abstract class elide/runtime/gvm/internals/vfs/GuestIOException : java/io/IOException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion;
+	public static final field DEFAULT_READ_ONLY Z
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public final fun getReadOnly ()Z
+	public fun hashCode ()I
+	public final fun setReadOnly (Z)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
+	public final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+}
+
+public final class elide/runtime/gvm/js/JavaScript {
+	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript;
+	public static final fun embedded (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript;
+	public static final fun literal (Ljava/lang/CharSequence;)Lelide/runtime/gvm/ExecutableScript;
+}
+
+public final class elide/runtime/gvm/js/JavaScript$Inputs {
+	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript$Inputs;
+	public static final fun getEMPTY ()Lelide/runtime/gvm/ExecutionInputs;
+	public static final fun requestState (Lelide/server/type/RequestState;Ljava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
+	public static synthetic fun requestState$default (Lelide/server/type/RequestState;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/RequestExecutionInputs;
+}
+
+public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/EmbeddedGuestVFS;
+	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle ([Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundle ([Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+}
+
+public final class elide/runtime/gvm/vfs/HostVFS {
+	public static final field INSTANCE Lelide/runtime/gvm/vfs/HostVFS;
+	public final fun acquire ()Lelide/runtime/gvm/internals/GuestVFS;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/Blob {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchAPI {
+	public abstract fun fetch (Lelide/runtime/intrinsics/js/FetchRequest;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun fetch (Lelide/runtime/intrinsics/js/URL;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun fetch (Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchHeaders : elide/runtime/intrinsics/js/MultiMapLike {
+	public static final field DefaultFactory Lelide/runtime/intrinsics/js/FetchHeaders$DefaultFactory;
+	public abstract fun render (Z)Ljava/util/Map;
+	public static synthetic fun render$default (Lelide/runtime/intrinsics/js/FetchHeaders;ZILjava/lang/Object;)Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/js/FetchHeaders$DefaultFactory : elide/runtime/intrinsics/js/FetchHeaders$Factory {
+	public fun empty ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun from (Lelide/runtime/intrinsics/js/FetchHeaders;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun from ([Lkotlin/Pair;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun fromMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun fromMultiMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun fromPairs (Ljava/util/Collection;)Lelide/runtime/intrinsics/js/FetchHeaders;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchHeaders$Factory {
+	public abstract fun empty ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun from (Lelide/runtime/intrinsics/js/FetchHeaders;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun from ([Lkotlin/Pair;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun fromMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun fromMultiMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun fromPairs (Ljava/util/Collection;)Lelide/runtime/intrinsics/js/FetchHeaders;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchMutableHeaders : elide/runtime/intrinsics/js/FetchHeaders {
+	public abstract fun append (Ljava/lang/String;Ljava/lang/String;)V
+	public abstract fun delete (Ljava/lang/String;)V
+	public abstract fun set (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest : elide/runtime/intrinsics/js/FetchRequest {
+	public static final field DefaultFactory Lelide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory;
+	public static fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public static fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun getMethod ()Ljava/lang/String;
+	public abstract fun getUrl ()Ljava/lang/String;
+	public abstract fun setHeaders (Lelide/runtime/intrinsics/js/FetchHeaders;)V
+	public abstract fun setMethod (Ljava/lang/String;)V
+	public abstract fun setUrl (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory : elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public synthetic fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+	public fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public synthetic fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public abstract fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+	public abstract fun forRequest (Ljava/net/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchMutableResponse : elide/runtime/intrinsics/js/FetchResponse {
+	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun getStatus ()I
+	public abstract fun getStatusText ()Ljava/lang/String;
+	public abstract fun getUrl ()Ljava/lang/String;
+	public abstract fun setHeaders (Lelide/runtime/intrinsics/js/FetchHeaders;)V
+	public abstract fun setStatus (I)V
+	public abstract fun setStatusText (Ljava/lang/String;)V
+	public abstract fun setUrl (Ljava/lang/String;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchRequest {
+	public abstract fun getBody ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun getBodyUsed ()Z
+	public fun getCache ()Ljava/lang/String;
+	public fun getCredentials ()Ljava/lang/String;
+	public abstract fun getDestination ()Ljava/lang/String;
+	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun getIntegrity ()Ljava/lang/String;
+	public fun getMethod ()Ljava/lang/String;
+	public fun getMode ()Ljava/lang/String;
+	public fun getPriority ()Ljava/lang/String;
+	public fun getRedirect ()Ljava/lang/String;
+	public fun getReferrer ()Ljava/lang/String;
+	public fun getReferrerPolicy ()Ljava/lang/String;
+	public abstract fun getUrl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/FetchRequest$Defaults {
+	public static final field DEFAULT_CACHE Ljava/lang/String;
+	public static final field DEFAULT_CREDENTIALS Ljava/lang/String;
+	public static final field DEFAULT_METHOD Ljava/lang/String;
+	public static final field DEFAULT_MODE Ljava/lang/String;
+	public static final field DEFAULT_PRIORITY Ljava/lang/String;
+	public static final field DEFAULT_REDIRECT Ljava/lang/String;
+	public static final field DEFAULT_REFERRER Ljava/lang/String;
+	public static final field DEFAULT_REFERRER_POLICY Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/intrinsics/js/FetchRequest$Defaults;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchResponse {
+	public abstract fun getBody ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun getBodyUsed ()Z
+	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun getOk ()Z
+	public fun getRedirected ()Z
+	public fun getStatus ()I
+	public fun getStatusText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun getUrl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/FetchResponse$Defaults {
+	public static final field DEFAULT_REDIRECTED Z
+	public static final field DEFAULT_STATUS I
+	public static final field DEFAULT_STATUS_REDIRECT I
+	public static final field DEFAULT_STATUS_TEXT Ljava/lang/String;
+	public static final field DEFAULT_TYPE Ljava/lang/String;
+	public static final field DEFAULT_URL Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/intrinsics/js/FetchResponse$Defaults;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/FetchResponse$Factory {
+	public abstract fun error ()Lelide/runtime/intrinsics/js/FetchResponse;
+	public abstract fun redirect (Ljava/lang/String;I)Lelide/runtime/intrinsics/js/FetchResponse;
+	public static synthetic fun redirect$default (Lelide/runtime/intrinsics/js/FetchResponse$Factory;Ljava/lang/String;IILjava/lang/Object;)Lelide/runtime/intrinsics/js/FetchResponse;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/File {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JavaScriptBase64 {
+	public abstract fun decode (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun encode (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun encode (Ljava/lang/String;Z)Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JavaScriptConsole {
+	public abstract fun error ([Ljava/lang/Object;)V
+	public abstract fun info ([Ljava/lang/Object;)V
+	public abstract fun log ([Ljava/lang/Object;)V
+	public abstract fun warn ([Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JavaScriptStreams {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JsIterator : java/util/Iterator, kotlin/jvm/internal/markers/KMappedMarker, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyIterator {
+	public fun getIterator ()Ljava/lang/Object;
+	public fun getNext ()Ljava/lang/Object;
+	public abstract fun next ()Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public fun return (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public fun throw (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+}
+
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorFactory {
+	public static final field INSTANCE Lelide/runtime/intrinsics/js/JsIterator$JsIteratorFactory;
+	public static final fun forIterator (Ljava/util/Iterator;)Lelide/runtime/intrinsics/js/JsIterator;
+}
+
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorImpl : elide/runtime/intrinsics/js/JsIterator {
+	public fun <init> (Ljava/util/Iterator;)V
+	public fun getIterator ()Ljava/lang/Object;
+	public fun hasNext ()Z
+	public fun next ()Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public synthetic fun next ()Ljava/lang/Object;
+	public fun remove ()V
+}
+
+public final class elide/runtime/intrinsics/js/JsIterator$JsIteratorResult {
+	public synthetic fun <init> (Ljava/lang/Object;ZLjava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDone ()Z
+	public final fun getValue ()Ljava/lang/Object;
+	public static final fun of (Ljava/lang/Object;Z)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+	public static final fun ofErr (Lelide/runtime/intrinsics/js/err/Error;)Lelide/runtime/intrinsics/js/JsIterator$JsIteratorResult;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JsPromise {
+	public abstract fun catch (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun then (Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MapLike : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public abstract fun entries ()Lelide/runtime/intrinsics/js/JsIterator;
+	public abstract fun forEach (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun has (Ljava/lang/Object;)Z
+	public abstract fun keys ()Lelide/runtime/intrinsics/js/JsIterator;
+	public abstract fun toString ()Ljava/lang/String;
+	public abstract fun values ()Lelide/runtime/intrinsics/js/JsIterator;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MapLike$Entry {
+	public abstract fun getKey ()Ljava/lang/Object;
+	public abstract fun getValue ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MultiMapLike : elide/runtime/intrinsics/js/MapLike {
+	public abstract fun getAll (Ljava/lang/Object;)Ljava/util/List;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MutableMapLike : elide/runtime/intrinsics/js/MapLike, java/util/Map, kotlin/jvm/internal/markers/KMutableMap {
+	public abstract fun delete (Ljava/lang/Object;)V
+	public abstract fun set (Ljava/lang/Object;Ljava/lang/Object;)V
+	public abstract fun sort ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MutableMultiMapLike : elide/runtime/intrinsics/js/MultiMapLike, elide/runtime/intrinsics/js/MutableMapLike {
+	public abstract fun append (Ljava/lang/Object;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/runtime/intrinsics/js/URL {
+	public abstract fun getHash ()Ljava/lang/String;
+	public abstract fun getHost ()Ljava/lang/String;
+	public abstract fun getHostname ()Ljava/lang/String;
+	public abstract fun getHref ()Ljava/lang/String;
+	public abstract fun getPassword ()Ljava/lang/String;
+	public abstract fun getPathname ()Ljava/lang/String;
+	public abstract fun getPort ()I
+	public abstract fun getProtocol ()Ljava/lang/String;
+	public abstract fun getSearch ()Ljava/lang/String;
+	public abstract fun getUsername ()Ljava/lang/String;
+	public abstract fun setHash (Ljava/lang/String;)V
+	public abstract fun setHost (Ljava/lang/String;)V
+	public abstract fun setHostname (Ljava/lang/String;)V
+	public abstract fun setHref (Ljava/lang/String;)V
+	public abstract fun setPassword (Ljava/lang/String;)V
+	public abstract fun setPathname (Ljava/lang/String;)V
+	public abstract fun setPort (I)V
+	public abstract fun setProtocol (Ljava/lang/String;)V
+	public abstract fun setSearch (Ljava/lang/String;)V
+	public abstract fun setUsername (Ljava/lang/String;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/ReadableStream {
+	public static final field DefaultFactory Lelide/runtime/intrinsics/js/ReadableStream$DefaultFactory;
+}
+
+public final class elide/runtime/intrinsics/js/ReadableStream$DefaultFactory : elide/runtime/intrinsics/js/ReadableStream$Factory {
+	public fun empty ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public fun wrap (Ljava/io/Reader;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public fun wrap (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Factory {
+	public abstract fun empty ()Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun wrap (Ljava/io/InputStream;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun wrap (Ljava/io/Reader;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun wrap (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/ReadableStream;
+	public abstract fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/Symbol : elide/proto/api/Symbolic {
+	public abstract fun getSymbol ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serializable {
+	public abstract fun getHash ()Ljava/lang/String;
+	public abstract fun getHost ()Ljava/lang/String;
+	public abstract fun getHostname ()Ljava/lang/String;
+	public abstract fun getHref ()Ljava/lang/String;
+	public abstract fun getOrigin ()Ljava/lang/String;
+	public abstract fun getPassword ()Ljava/lang/String;
+	public abstract fun getPathname ()Ljava/lang/String;
+	public abstract fun getPort ()I
+	public abstract fun getProtocol ()Ljava/lang/String;
+	public abstract fun getSearch ()Ljava/lang/String;
+	public abstract fun getSearchParams ()Lelide/runtime/intrinsics/js/URLSearchParams;
+	public abstract fun getUsername ()Ljava/lang/String;
+	public abstract fun toJSON ()Ljava/lang/String;
+	public abstract fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/URL$URLConstructors {
+	public abstract fun create (Lelide/runtime/intrinsics/js/URL;)Lelide/runtime/intrinsics/js/URL;
+	public abstract fun create (Ljava/lang/String;)Lelide/runtime/intrinsics/js/URL;
+	public abstract fun create (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/URL;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/URL$URLStaticMethods {
+	public abstract fun createObjectURL (Lelide/runtime/intrinsics/js/Blob;)Lelide/runtime/intrinsics/js/URL;
+	public abstract fun createObjectURL (Lelide/runtime/intrinsics/js/File;)Lelide/runtime/intrinsics/js/URL;
+	public abstract fun revokeObjectURL (Lelide/runtime/intrinsics/js/URL;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/URLMutableSearchParams : elide/runtime/intrinsics/js/MutableMultiMapLike, elide/runtime/intrinsics/js/URLSearchParams {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/URLSearchParams : elide/runtime/intrinsics/js/MultiMapLike, java/io/Serializable {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/err/AbstractJSException {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
+	public abstract fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public abstract fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public static synthetic fun create$default (Lelide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+}
+
+public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeException, elide/runtime/intrinsics/js/err/AbstractJSException {
+	public fun <init> ()V
+	public fun getCause ()Lelide/runtime/intrinsics/js/err/Error;
+	public synthetic fun getCause ()Ljava/lang/Throwable;
+	public fun getColumnNumber ()Ljava/lang/Integer;
+	public fun getFileName ()Ljava/lang/String;
+	public fun getLineNumber ()Ljava/lang/Integer;
+	public abstract fun getMessage ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public final fun getStackTrace ()Lelide/runtime/intrinsics/js/err/Stacktrace;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
+}
+
+public abstract class elide/runtime/intrinsics/js/err/TypeError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJSException {
+	public static final field Factory Lelide/runtime/intrinsics/js/err/TypeError$Factory;
+	public fun <init> ()V
+	public fun getName ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/err/TypeError$Factory : elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
+	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/TypeError;
+}
+
+public abstract class elide/runtime/intrinsics/js/err/ValueError : elide/runtime/intrinsics/js/err/Error, elide/runtime/intrinsics/js/err/AbstractJSException {
+	public static final field Factory Lelide/runtime/intrinsics/js/err/ValueError$Factory;
+	public fun <init> ()V
+	public fun getName ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/runtime/intrinsics/js/err/AbstractJSException$ErrorFactory {
+	public synthetic fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
+	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 }
 

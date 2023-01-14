@@ -19,8 +19,20 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: 22.3.0
+          java-version: 19
+          check-for-updates: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
-        uses: JetBrains/qodana-action@v2022.2.3
+        uses: JetBrains/qodana-action@main
+        env:
+          GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false -Porg.gradle.java.home=/opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0 -Porg.gradle.java.installations.paths=/opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0
+          JAVA_HOME: /opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: "Report: SARIF Upload"
         uses: github/codeql-action/upload-sarif@v2
         with:

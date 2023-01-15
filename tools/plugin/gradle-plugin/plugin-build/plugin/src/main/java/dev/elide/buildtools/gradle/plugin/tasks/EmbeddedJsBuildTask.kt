@@ -579,7 +579,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         option = "prepack",
         description = "Whether to run the bundle through `prepack`. Only applies to server-side SSR bundles.",
     )
-    internal var prepack: Boolean = mode.prepack
+    internal var prepack: Boolean = false
 
     /** Whether to generate a single output bundle. */
     @get:Input

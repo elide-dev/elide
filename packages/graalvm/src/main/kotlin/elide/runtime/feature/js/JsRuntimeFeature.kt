@@ -60,6 +60,7 @@ internal class JsRuntimeFeature : FrameworkFeature {
   override fun getRequiredFeatures(): MutableList<Class<out Feature>> {
     return arrayListOf(
       elide.runtime.feature.ProtocolBuffers::class.java,
+      elide.runtime.feature.VirtualFilesystem::class.java,
     )
   }
 

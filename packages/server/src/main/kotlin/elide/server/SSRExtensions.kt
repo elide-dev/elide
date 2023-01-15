@@ -21,23 +21,11 @@ import java.nio.charset.StandardCharsets
 // Path within app JARs for embedded script assets.
 public const val EMBEDDED_ROOT: String = "embedded"
 
-// Production script name default.
-private const val NODE_PROD_DEFAULT: String = "elide-ssr.prod.mjs"
-
-// Development script name default.
-private const val NODE_DEV_DEFAULT: String = "elide-ssr.dev.mjs"
-
-// Default name if no mode is specified or resolvable.
-public const val NODE_SSR_DEFAULT_PATH: String = NODE_DEV_DEFAULT
+// SSR script name default.
+private const val SSR_SCRIPT_DEFAULT: String = "elide-ssr.mjs"
 
 // Default base member for SSR invocation.
 public val DEFAULT_INVOCATION_BASE: String? = null
-
-// Default target name for SSR invocation.
-public const val DEFAULT_INVOCATION_TARGET: String = "renderContent"
-
-// Default target name for SSR invocation.
-public const val DEFAULT_INVOCATION_STREAM_TARGET: String = "renderStream"
 
 // Default ID to use in the DOM.
 public const val DEFAULT_SSR_DOM_ID: String = "root"
@@ -70,7 +58,7 @@ public suspend fun BODY.injectSSR(
     this,
     handler,
     request,
-    JavaScript.embedded(path = "${embeddedRoot ?: EMBEDDED_ROOT}/${path ?: NODE_SSR_DEFAULT_PATH}"),
+    JavaScript.embedded(path = "${embeddedRoot ?: EMBEDDED_ROOT}/${path ?: SSR_SCRIPT_DEFAULT}"),
   ).renderSuspendAsync()
 
   MAIN(
@@ -116,7 +104,7 @@ public suspend fun BODY.streamSSR(
   domId: String = DEFAULT_SSR_DOM_ID,
   classes: Set<String> = emptySet(),
   attrs: List<Pair<String, String>> = emptyList(),
-  path: String = NODE_SSR_DEFAULT_PATH,
+  path: String = SSR_SCRIPT_DEFAULT,
   embeddedRoot: String = EMBEDDED_ROOT,
 ): Unit = injectSSR(
   handler = handler,
@@ -146,7 +134,7 @@ public suspend fun BODY.streamSSR(
 @Suppress("UNUSED_PARAMETER", "ReactiveStreamsUnusedPublisher")
 public suspend fun ssr(
   request: HttpRequest<*>,
-  path: String = NODE_SSR_DEFAULT_PATH,
+  path: String = SSR_SCRIPT_DEFAULT,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
   block: suspend HTML.() -> Unit
 ): Mono<HttpResponse<Publisher<ByteArrayOutputStream>>> {

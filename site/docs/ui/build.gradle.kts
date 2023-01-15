@@ -12,7 +12,7 @@ group = "dev.elide.site.docs"
 version = rootProject.version as String
 
 val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
-val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
+val devMode = true
 
 kotlin {
   js(IR) {

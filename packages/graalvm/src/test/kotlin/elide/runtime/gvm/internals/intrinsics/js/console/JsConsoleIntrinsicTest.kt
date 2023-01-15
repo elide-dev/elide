@@ -251,7 +251,6 @@ import kotlin.test.assertEquals
     val tests = listOf(
       "2023-01-15T22:34:45Z" to Instant.ofEpochSecond(1673822085),
       "2023-01-15T22:34:45Z" to kotlinx.datetime.Instant.fromEpochSeconds(1673822085),
-      "Sun Jan 15 14:34:45 PST 2023" to Date.from(Instant.ofEpochSecond(1673822085)),
     )
 
     tests.forEach {

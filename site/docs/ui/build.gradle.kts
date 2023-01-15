@@ -12,8 +12,7 @@ group = "dev.elide.site.docs"
 version = rootProject.version as String
 
 val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
-//val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
-val devMode = true
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 kotlin {
   js(IR) {
@@ -21,7 +20,7 @@ kotlin {
       binaries.executable()
 
       commonWebpackConfig {
-        sourceMaps = true
+        sourceMaps = devMode
         cssSupport {
           enabled.set(true)
         }

@@ -16,8 +16,7 @@ plugins {
 
 group = "dev.elide.site.docs"
 version = rootProject.version as String
-
-val devMode = (project.property("elide.buildMode") ?: "dev") != "prod"
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
 
 elide {
   mode = if (devMode) {
@@ -29,10 +28,12 @@ elide {
   js {
     tool(BundleTool.ESBUILD)
     target(BundleTarget.EMBEDDED)
+    prepack(false)
+    minify(true)
 
     runtime {
       inject(true)
-      languageLevel(JsLanguageLevel.ES2020)
+      languageLevel(JsLanguageLevel.ES2022)
     }
   }
 }

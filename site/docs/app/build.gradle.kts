@@ -27,16 +27,8 @@ version = rootProject.version as String
  */
 
 val commonNativeArgs = listOf(
-  "--language:js",
-  "--no-fallback",
-  "--enable-http",
-  "--enable-https",
-  "--enable-all-security-services",
-  "--install-exit-handlers",
-  "-R:StackSize=2000000",
   "-H:DashboardDump=elide-site",
   "-H:+DashboardAll",
-  "-H:-SpawnIsolates",
 )
 
 val debugFlags = listOf(
@@ -56,12 +48,7 @@ val hostedRuntimeOptions = mapOf(
   "IncludeLocales" to "en",
 )
 
-val initializeAtBuildTime = listOf(
-  "com.google.common.jimfs.SystemJimfsFileSystemProvider",
-  "org.slf4j.LoggerFactory",
-  "org.slf4j.simple.SimpleLogger",
-  "org.slf4j.impl.StaticLoggerBinder",
-)
+val initializeAtBuildTime: List<String> = emptyList()
 
 val initializeAtRuntime: List<String> = emptyList()
 

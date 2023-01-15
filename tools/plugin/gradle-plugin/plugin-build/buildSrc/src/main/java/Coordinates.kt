@@ -1,7 +1,7 @@
 object PluginCoordinates {
     const val ID = "dev.elide.buildtools.plugin"
     const val GROUP = "dev.elide.buildtools"
-    const val VERSION = "1.0.0-beta14"
+    const val VERSION = "1.0.0-beta15"
     const val IMPLEMENTATION_CLASS = "dev.elide.buildtools.gradle.plugin.ElidePlugin"
 }
 

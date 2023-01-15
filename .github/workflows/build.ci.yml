@@ -18,7 +18,7 @@ jobs:
   ##
   preflight-checks:
     name: "Pre-flight Checks"
-    runs-on: "ubuntu-latest-8-cores"
+    runs-on: "ubuntu-latest"
     permissions:
       contents: "read"
       id-token: "write"
@@ -85,7 +85,7 @@ jobs:
       matrix:
         os: [ubuntu]
         mode: ['strict']
-        machine: [ubuntu-latest-8-cores]
+        machine: [ubuntu-latest]
         include:
           - os: macos
             mode: strict
@@ -192,7 +192,7 @@ jobs:
   ##
   tests-jvm:
     name: "Tests: JVM"
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
     continue-on-error: true
     needs: [preflight-checks, gradle]
 

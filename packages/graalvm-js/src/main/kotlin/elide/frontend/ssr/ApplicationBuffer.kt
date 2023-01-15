@@ -5,6 +5,7 @@ import web.streams.ReadableStreamDefaultReadValueResult
 import web.streams.ReadableStreamDefaultReader
 import kotlin.js.Promise
 import js.core.jso
+import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
 
 /**
@@ -38,7 +39,7 @@ public typealias RenderCallback = (ResponseChunk) -> Unit
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>) {
+public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
@@ -90,9 +91,19 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>) {
    * TBD
    */
   private fun render(callback: (ResponseChunk) -> Unit): Promise<*> {
-    return renderSSRStreaming(app).then { stream ->
-      val reader = stream.getReader()
-      pump(reader, callback)
+    return if (stream) {
+      renderSSRStreaming(app).then { stream ->
+        val reader = stream.getReader()
+        pump(reader, callback)
+      }
+    } else {
+      Promise { accept, reject ->
+        try {
+          accept(renderSSRString(app))
+        } catch (err: Throwable) {
+          reject(err)
+        }
+      }
     }
   }
 

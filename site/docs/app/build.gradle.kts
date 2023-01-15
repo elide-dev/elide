@@ -35,7 +35,7 @@ val debugFlags = listOf(
   "-g",
 )
 
-val releaseFlags = listOf(
+val releaseFlags: List<String> = listOf(
   "-O2",
 )
 
@@ -88,7 +88,7 @@ fun nativeImageArgs(
   platform: String = "generic",
   target: String = "glibc",
   debug: Boolean = quickbuild,
-  release: Boolean = (!quickbuild && project.properties["elide.release"] != "true"),
+  release: Boolean = (!quickbuild && project.properties["elide.release"] == "true"),
   enterprise: Boolean = isEnterprise,
 ): List<String> =
   commonNativeArgs.asSequence().plus(

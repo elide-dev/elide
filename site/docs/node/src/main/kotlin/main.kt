@@ -18,7 +18,8 @@ import org.w3c.fetch.Request
 import react.ReactElement
 import web.url.URL
 
-const val chunkCss = false
+const val enableStreaming = true
+const val chunkCss = true
 
 // Setup cache.
 private fun setupCache(): EmotionCache {
@@ -54,25 +55,24 @@ val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache
   }
 }
 
+val emotionCache: EmotionCache = setupCache()
+val emotionServer = createEmotionServer(emotionCache)
+
 /** @return Streaming SSR entrypoint for React. */
 @JsExport fun render(request: Request, context: dynamic, responder: RenderCallback): dynamic {
   return SSRContext.typed<AppProps>(context, request).execute {
-    val emotionCache: EmotionCache = setupCache()
-    val emotionServer = createEmotionServer(emotionCache)
-
     try {
-      return@execute ApplicationBuffer(app.invoke(this, emotionCache)).execute {
+      return@execute ApplicationBuffer(app.invoke(this, emotionCache), stream = enableStreaming).execute {
         try {
-          var styles = ""
-          if (chunkCss && (it.status != null && it.status != -1)) {
+          if (enableStreaming && chunkCss && (it.status != null && it.status != -1)) {
             // in the final chunk, splice in CSS from Emotion.
             val emotionChunks = emotionServer.extractCriticalToChunks(it.content ?: "")
             val emotionCss = emotionServer.constructStyleTagsFromChunks(emotionChunks)
-            styles = emotionCss
+            responder(jso {
+              css = emotionCss
+            })
           }
-          responder(Object.assign(it, jso {
-            css = styles
-          }))
+          responder(it)
 
         } catch (err: Throwable) {
           console.error("Failed to dispatch callback: ", err)

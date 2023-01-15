@@ -14,6 +14,9 @@ public interface ServerResponse {
   public val content: String get() = ""
 
   /** */
+  public val css: String get() = ""
+
+  /** */
   public val hasContent: Boolean get() = content.isNotBlank()
 
   /** */

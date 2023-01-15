@@ -482,6 +482,14 @@ internal abstract class AbstractVMEngine<
         }
       )
 
+      override val css: String get() = (
+        if (hasMembers && value.hasMember("css")) {
+          value.getMember("css").asString()
+        } else {
+          ""
+        }
+      )
+
       override val hasContent: Boolean get() = (
         hasMembers && value.getMember("hasContent")?.asBoolean() ?: content.isNotBlank()
       )

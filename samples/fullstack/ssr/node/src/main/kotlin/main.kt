@@ -2,18 +2,18 @@
 
 import elide.runtime.gvm.entrypoint
 import js.core.jso
-import elide.runtime.ssr.RenderCallback
-import elide.runtime.ssr.ServerResponse
+import elide.frontend.ssr.RenderCallback
+import org.w3c.fetch.Request
 import kotlin.js.Promise
 
 /** @return String-rendered SSR content from Node. */
-@JsExport fun renderStream(callback: RenderCallback, context: dynamic = null): Promise<*> = entrypoint {
-  callback(jso<dynamic> {
+@JsExport fun render(request: Request, context: dynamic, callback: RenderCallback): Promise<*> = entrypoint {
+  callback(jso {
     content = "<strong>Hello, streaming SSR!</strong>"
     hasContent = true
     fin = true
     status = 200
-  }.unsafeCast<ServerResponse>())
+  })
 
   return@entrypoint Promise { accept, _ ->
     accept(Unit)

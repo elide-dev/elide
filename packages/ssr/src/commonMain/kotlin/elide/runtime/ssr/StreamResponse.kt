@@ -7,7 +7,7 @@ import elide.annotations.core.Polyglot
  */
 public sealed class StreamResponse @Polyglot constructor (
   override val status: Int = 200,
-  override val headers: HeaderMap = emptyMap(),
+  override val headers: Map<String, String> = emptyMap(),
   override val content: String = "",
   override val hasContent: Boolean = false,
   override val fin: Boolean = true,
@@ -19,7 +19,7 @@ public sealed class StreamResponse @Polyglot constructor (
     @Polyglot
     public fun success(
       content: String,
-      headers: HeaderMap = emptyMap(),
+      headers: Map<String, String> = emptyMap(),
       status: Int = 200,
       criticalCss: String = "",
       styleChunks: Array<CssChunk> = emptyArray(),
@@ -60,7 +60,7 @@ public sealed class StreamResponse @Polyglot constructor (
   public class Error(
     public val err: Any,
     status: Int = 500,
-    headers: HeaderMap = emptyMap(),
+    headers: Map<String, String> = emptyMap(),
   ) : StreamResponse(
     status = status,
     headers = headers,

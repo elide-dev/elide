@@ -1,6 +1,6 @@
 
+import elide.frontend.ssr.ResponseChunk
 import elide.frontend.ssr.SSRContext
-import elide.runtime.ssr.ServerResponse
 import fullstack.react.ui.SampleApp
 import org.w3c.fetch.Request
 import react.Fragment
@@ -17,7 +17,7 @@ external interface HelloProps : Props {
 
 /** @return String-rendered SSR content from React. */
 @OptIn(ExperimentalJsExport::class)
-@JsExport fun render(request: Request, context: dynamic, responder: dynamic): dynamic {
+@JsExport fun render(request: Request, context: dynamic, responder: dynamic): ResponseChunk {
   return SSRContext.typed<HelloProps>(context).execute {
     val rendered = rawRenderToString(Fragment.create {
       SampleApp {
@@ -27,9 +27,9 @@ external interface HelloProps : Props {
     responder(jso {
       content = rendered
     })
-    return@execute object: ServerResponse {
-      override val status: Int = 200
-      override val fin: Boolean = true
+    return@execute jso {
+      fin = true
+      status = 200
     }
   }
 }

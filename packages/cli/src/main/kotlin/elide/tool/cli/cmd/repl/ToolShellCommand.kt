@@ -382,7 +382,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     arity = "0..1",
     paramLabel = "FILE|CODE",
     description = [
-      "File or snippet to run. If `-c|--code` is passed, interpreted" +
+      "File or snippet to run. If `-c|--code` is passed, interpreted " +
       "as a snippet. If not specified, an interactive shell is started."
     ],
   )

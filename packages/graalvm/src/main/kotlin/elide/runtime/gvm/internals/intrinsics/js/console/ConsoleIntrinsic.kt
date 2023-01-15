@@ -9,6 +9,7 @@ import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.JavaScriptConsole
+import org.graalvm.polyglot.Value as GuestValue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -47,6 +48,107 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   }
 
   /**
+   * Format an object returned from a guest context which evaluates as a "meta-object;" this is referred to in JVM
+   * circumstances as "class" or "type."
+   *
+   * If no special formatting can be applied to the object, the value is returned verbatim.
+   *
+   * @param obj Object to format.
+   * @return Formatted value to emit, or the original object if no formatting was applied.
+   */
+  @Suppress("unused", "UNUSED_PARAMETER")
+  private fun formatMetaObject(obj: GuestValue): Any {
+    return obj
+  }
+
+  /**
+   * Format a guest exception received via a log message call; this involves checking to see if it declares a message,
+   * and using that if so, or otherwise delegating to the error's string representation method.
+   *
+   * If no special formatting can be applied to the [err], the value is returned verbatim.
+   *
+   * @param err Error to format and return.
+   * @return Formatted value to emit, or the original object if no formatting was applied.
+   */
+  @Suppress("UNUSED_PARAMETER") private fun formatGuestException(err: GuestValue): Any {
+    TODO("not yet implemented")
+  }
+
+  /**
+   * Format an object that originates from the host VM, and should therefore be some recognized Java type or class; if
+   * the object cannot be recognized, `toString` is called and returned.
+   *
+   * @param obj Host object to format and return.
+   * @return Formatted value to emit.
+   */
+  private fun formatHostObject(obj: GuestValue): Any = when (val value = obj.asHostObject<Any?>()) {
+    null -> "null"
+    else -> value.toString()
+  }
+
+  /**
+   * Format a log message component ([arg]) into a string which is suitable to be emitted to the console; if the object
+   * is an error or another special type, it will be formatted as such.
+   *
+   * If no special formatting can be applied to the [arg], the value is returned verbatim.
+   *
+   * @param arg Log argument which should be formatted.
+   * @return Formatted value to emit.
+   */
+  private fun formatLogComponent(arg: Any): Any = when (arg) {
+    // if it's already a `String`, it doesn't need to be formatted.
+    is String -> arg
+
+    // if the arg originates as a guest value, we can interrogate it to determine its type.
+    is GuestValue -> when {
+      // primitive / most likely log types
+      arg.isNull -> "null"
+      arg.isString -> arg.asString()
+      arg.isBoolean -> arg.asBoolean().toString()
+      arg.isException -> formatGuestException(arg)
+      arg.isNumber -> when {
+        arg.fitsInShort() -> arg.asShort().toString()
+        arg.fitsInInt() -> arg.asInt().toString()
+        arg.fitsInLong() -> arg.asLong().toString()
+        arg.fitsInFloat() -> arg.asFloat().toString()
+        arg.fitsInDouble() -> arg.asDouble().toString()
+        else -> "{unknown number value}"
+      }
+
+      // complex types
+      arg.isHostObject -> formatHostObject(arg)
+      arg.isNativePointer -> "NativePointer(${arg.asNativePointer()})"
+      arg.isIterator -> "Iterator(...)"
+      arg.isMetaObject -> {}
+      arg.isBufferWritable -> {}
+
+      // temporal types
+      arg.isDate -> arg.asDate().toString()
+      arg.isTime -> arg.asTime().toString()
+      arg.isDuration -> arg.asDuration().toString()
+      arg.isInstant -> arg.asInstant().toString()
+      arg.isTimeZone -> arg.asTimeZone().toString()
+
+      // can't identify the value further
+      else -> arg
+    }
+
+    // if the arg expresses as a map and has a `message` property, it is an error-like type.
+    is Map<*, *> -> when {
+      arg.containsKey("message") -> arg["message"] as? String ?: "unknown error"
+      else -> arg.toString()
+    }
+
+    // if the arg is already a `Throwable` value, then we can format it based on Java exception semantics.
+    is Throwable -> {
+
+    }
+
+    // no special formatting can be applied to this type, so return it directly.
+    else -> arg
+  }
+
+  /**
    * Emit a log message to the main logging system, sent to us by the JS `console` intrinsic; log message output is
    * controlled the same way as any other system logger, via the installed logging implementation.
    *
@@ -58,7 +160,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
     if (intercept.get()) {
       interceptor.get().log(level, serializedArgs)
     }
-    logging.log(level, serializedArgs)
+    logging.log(level, serializedArgs.map(this::formatLogComponent))
   }
 
   /** @inheritDoc */

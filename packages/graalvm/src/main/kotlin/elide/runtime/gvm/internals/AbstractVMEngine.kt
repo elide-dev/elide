@@ -12,7 +12,6 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.runtime.gvm.internals.js.JsInvocationBindings
-import elide.runtime.ssr.HeaderMap
 import elide.runtime.ssr.ServerResponse
 import elide.util.RuntimeFlag
 import io.micronaut.http.HttpRequest
@@ -21,7 +20,10 @@ import kotlinx.serialization.Serializable
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 import java.util.stream.Stream
 import org.graalvm.polyglot.Context as VMContext
@@ -457,7 +459,7 @@ internal abstract class AbstractVMEngine<
         }
       )
 
-      override val headers: HeaderMap? get() = (
+      override val headers: Map<String, String>? get() = (
         if (hasMembers && value.hasMember("headers")) {
           val headersData = value.getMember("headers")
           if (!headersData.isNull && headersData.hasMembers()) {
@@ -522,10 +524,63 @@ internal abstract class AbstractVMEngine<
 
         // otherwise, if the function returns a promise, we should wait on the output and re-dispatch.
         meta.metaSimpleName == "Promise" -> {
+          val latch = CountDownLatch(1)
+          val err: AtomicReference<Throwable?> = AtomicReference(null)
           val resultReceiver: Consumer<GuestValue> = Consumer {
             handleRenderOutput(it, receiver)
+            latch.countDown()
           }
-          out.invokeMember("then", resultReceiver)
+          val errReceiver: Consumer<GuestValue> = Consumer {
+            logging.error("Error: SSR render promise rejected")
+            val message = if (it.hasMember("message")) {
+              it.getMember("message").asString()
+            } else if (it.isString) {
+              it.asString()
+            } else {
+              "SSR render promise rejected (unknown reason)"
+            }
+            err.set(Exception(message))  // @TODO(sgammon): better exception handling here
+            latch.countDown()
+          }
+          out.invokeMember(
+            "then",
+            object: ProxyExecutable {
+              override fun execute(vararg arguments: GuestValue?): Any? {
+                val arg = arguments.firstOrNull()
+                if (arg != null) {
+                  resultReceiver.accept(arg)
+                } else error(
+                  "Failed to resolve `then` argument for `render` promise in guest script"
+                )
+                return null
+              }
+            },
+            object: ProxyExecutable {
+              override fun execute(vararg arguments: GuestValue?): Any? {
+                val arg = arguments.firstOrNull()
+                if (arg != null) {
+                  errReceiver.accept(arg)
+                } else error(
+                  "Failed to resolve `catch` argument for `render` promise in guest script"
+                )
+                return null
+              }
+            }
+          )
+          val success = latch.await(90, TimeUnit.SECONDS)
+          when {
+            // did the request time out?
+            !success && err.get() == null -> {
+              logging.error("Error: SSR render promise timed out")
+              err.set(Exception("SSR render promise timed out"))  // @TODO(sgammon): better exception handling here
+            }
+
+            // was there an error during guest execution?
+            err.get() != null -> {
+              logging.error("Error: SSR render promise rejected")
+              throw err.get()!!
+            }
+          }
         }
 
         // otherwise, consider it a `ServerResponse`.
@@ -558,8 +613,6 @@ internal abstract class AbstractVMEngine<
         contextManager {
           // "initialize" the script, which includes parsing, compiling, and resolving exports, etc.
           val initialized = initializeScript(this, script)
-
-          // resolve in vocation bindings adapters for this script
 
           // execute the script and obtain an output value
           when (val bindings = resolve(

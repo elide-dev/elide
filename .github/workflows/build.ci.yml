@@ -253,6 +253,7 @@ jobs:
         env:
           CI: true
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
         with:
           cache-read-only: false
           arguments: |

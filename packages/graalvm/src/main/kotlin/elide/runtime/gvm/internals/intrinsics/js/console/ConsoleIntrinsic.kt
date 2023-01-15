@@ -9,6 +9,8 @@ import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.JavaScriptConsole
+import java.time.Instant
+import java.util.Date
 import org.graalvm.polyglot.Value as GuestValue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -57,9 +59,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @return Formatted value to emit, or the original object if no formatting was applied.
    */
   @Suppress("unused", "UNUSED_PARAMETER")
-  private fun formatMetaObject(obj: GuestValue): Any {
-    return obj
-  }
+  internal fun formatMetaObject(obj: GuestValue): Any = obj
 
   /**
    * Format a guest exception received via a log message call; this involves checking to see if it declares a message,
@@ -70,7 +70,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param err Error to format and return.
    * @return Formatted value to emit, or the original object if no formatting was applied.
    */
-  @Suppress("UNUSED_PARAMETER") private fun formatGuestException(err: GuestValue): Any {
+  @Suppress("UNUSED_PARAMETER") internal fun formatGuestException(err: GuestValue): Any {
     TODO("not yet implemented")
   }
 
@@ -81,7 +81,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param obj Host object to format and return.
    * @return Formatted value to emit.
    */
-  private fun formatHostObject(obj: GuestValue): Any = when (val value = obj.asHostObject<Any?>()) {
+  internal fun formatHostObject(obj: GuestValue): Any = when (val value = obj.asHostObject<Any?>()) {
     null -> "null"
     else -> value.toString()
   }
@@ -95,9 +95,15 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param arg Log argument which should be formatted.
    * @return Formatted value to emit.
    */
-  private fun formatLogComponent(arg: Any): Any = when (arg) {
+  internal fun formatLogComponent(arg: Any?): Any = when (arg) {
+    // print `null` for null values
+    null -> "null"
+
     // if it's already a `String`, it doesn't need to be formatted.
     is String -> arg
+
+    // for primitives, just stringify
+    is Boolean, is Int, is Long, is Double, is Float -> arg.toString()
 
     // if the arg originates as a guest value, we can interrogate it to determine its type.
     is GuestValue -> when {
@@ -136,13 +142,11 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
     // if the arg expresses as a map and has a `message` property, it is an error-like type.
     is Map<*, *> -> when {
       arg.containsKey("message") -> arg["message"] as? String ?: "unknown error"
-      else -> arg.toString()
+      else -> arg
     }
 
-    // if the arg is already a `Throwable` value, then we can format it based on Java exception semantics.
-    is Throwable -> {
-
-    }
+    // format temporal types in standard terms
+    is Instant, is kotlinx.datetime.Instant, is Date -> arg.toString()
 
     // no special formatting can be applied to this type, so return it directly.
     else -> arg

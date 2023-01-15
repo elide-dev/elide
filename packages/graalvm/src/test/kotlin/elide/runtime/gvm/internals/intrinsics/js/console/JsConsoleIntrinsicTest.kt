@@ -1,4 +1,4 @@
-@file:Suppress("JSUnresolvedVariable")
+ @file:Suppress("JSUnresolvedVariable")
 
 package elide.runtime.gvm.internals.intrinsics.js.console
 
@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import java.time.Instant
+import java.util.Date
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertEquals
 
@@ -199,6 +201,75 @@ import kotlin.test.assertEquals
       }
     """
   }.thenAssert {
-//    checkGuestTestLogs(level)
+    checkGuestTestLogs(level)
   }
+
+  @Test fun testConsoleFormatValue() {
+    val target = this.console
+    val format: (Any?) -> Any? = target::formatLogComponent
+    val assertFormatted: (String, Any?, String) -> Unit = { expected, value, msg ->
+      assertEquals(expected, format(value), msg)
+    }
+    val assertGuestValue: (String, Any?, String) -> Unit = { expected, value, msg ->
+      withContext {
+        val guest = asValue(value)
+        assertEquals(expected, format(guest), msg)
+      }
+    }
+
+    val tests = listOf(
+      "null" to null,
+      "true" to true,
+      "false" to false,
+      "Hello" to "Hello",
+      "1" to 1,
+      "2" to 2L,
+    )
+
+    tests.forEach {
+      assertFormatted(it.first, it.second, "host-formatted value mismatch")
+      assertGuestValue(it.first, it.second, "guest-formatted value mistmatch")
+    }
+
+    assertFormatted("1.0", 1.0, "host-formatted double should be expected value")
+    assertGuestValue("1", 1.0, "guest-formatted double can trim the `.0`")
+  }
+
+  @Test fun testConsoleFormatTemporal() {
+    val target = this.console
+    val format: (Any?) -> Any? = target::formatLogComponent
+    val assertFormatted: (String, Any?, String) -> Unit = { expected, value, msg ->
+      assertEquals(expected, format(value), msg)
+    }
+    val assertGuestValue: (String, Any?, String) -> Unit = { expected, value, msg ->
+      withContext {
+        val guest = asValue(value)
+        assertEquals(expected, format(guest), msg)
+      }
+    }
+
+    val tests = listOf(
+      "2023-01-15T22:34:45Z" to Instant.ofEpochSecond(1673822085),
+      "2023-01-15T22:34:45Z" to kotlinx.datetime.Instant.fromEpochSeconds(1673822085),
+      "Sun Jan 15 14:34:45 PST 2023" to Date.from(Instant.ofEpochSecond(1673822085)),
+    )
+
+    tests.forEach {
+      assertFormatted(it.first, it.second, "host-formatted value mismatch")
+      assertGuestValue(it.first, it.second, "guest-formatted value mistmatch")
+    }
+  }
+
+  @Test fun testConsoleFormatGuestTypes() = executeGuest {
+    // language=javascript
+    """
+      console.log("null test", null);
+      console.log("bool test: `true`", true);
+      console.log("bool test: `false`", false);
+      console.log("string test", "Hello");
+      console.log("number test: integer", 1);
+      console.log("number test: long", 2);
+      console.log("date test", new Date());
+    """
+  }.doesNotFail()
 }

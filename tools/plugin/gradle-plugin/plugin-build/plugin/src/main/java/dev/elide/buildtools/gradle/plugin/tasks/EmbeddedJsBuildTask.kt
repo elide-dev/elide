@@ -304,18 +304,10 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 // setup properties
                 it.outputBundleName.set(buildString {
                     append("elide-ssr")
-                    when (mode) {
-                        BuildMode.PRODUCTION -> append(".prod")
-                        BuildMode.DEVELOPMENT -> append(".dev")
-                    }
                     append(".mjs")
                 })
                 it.outputOptimizedName.set(buildString {
-                    append("elide-ssr.pack")
-                    when (mode) {
-                        BuildMode.PRODUCTION -> append(".prod")
-                        BuildMode.DEVELOPMENT -> append(".dev")
-                    }
+                    append("elide-ssr")
                     append(".mjs")
                 })
                 it.outputBundleFolder.set(

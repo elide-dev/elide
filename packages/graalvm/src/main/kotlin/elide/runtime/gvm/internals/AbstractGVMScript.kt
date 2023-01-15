@@ -28,9 +28,6 @@ internal abstract class AbstractGVMScript protected constructor (
   internal companion object {
     /** Literal code source file name. */
     private const val LITERAL_SOURCE_NAME: String = "<literal>"
-
-    /** Embedded code source file name. */
-    private const val EMBEDDED_SOURCE_NAME: String = "<embedded>"
   }
 
   // Logging support.
@@ -102,7 +99,14 @@ internal abstract class AbstractGVMScript protected constructor (
   }
 
   /**
-   * TBD.
+   * Load the script source content, if needed.
+   *
+   * This is a one-time operation throughout the lifecycle of a given [AbstractGVMScript] object. Backing script content
+   * is loaded from disk, the application classpath, or from a string literal.
+   *
+   * If the backing script content has already been loaded, this method is a no-op.
+   *
+   * @return Self.
    */
   internal open fun load(): AbstractGVMScript {
     if (!initialized.get()) {
@@ -139,7 +143,13 @@ internal abstract class AbstractGVMScript protected constructor (
   }
 
   /**
-   * TBD.
+   * Evaluate the script content, if needed.
+   *
+   * Processes the script content backing this [AbstractGVMScript], holding on to a cached reference to the evaluated
+   * script result (which is visible from the current thread).
+   *
+   * @param context VM context to use to evaluate the script.
+   * @return Resulting value from evaluating the script.
    */
   internal open fun evaluate(context: VMContext): Value {
     return when (state()) {

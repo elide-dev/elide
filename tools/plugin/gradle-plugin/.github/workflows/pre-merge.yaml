@@ -40,7 +40,7 @@ jobs:
     steps:
       ## Setup: Repo
       - name: Checkout Repo
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
 
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
@@ -65,7 +65,7 @@ jobs:
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # tag=v3
+        uses: actions/cache@58c146cc91c5b9e778e71775dfe9bf1442ad9a12 # v3
         if: ${{ matrix.os == 'ubuntu' }}
         with:
           path: ~/.sonar/cache
@@ -123,7 +123,7 @@ jobs:
       ## CI: Build
       - name: "Failure reports"
         if: failure()
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # tag=v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
         with:
           name: failure-reports
           path: |

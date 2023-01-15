@@ -31,7 +31,7 @@ below for specific installation and use instructions.
 
 ```kotlin
 plugins {
-  id("dev.elide.buildtools.plugin") version "1.0.0-beta13"
+  id("dev.elide.buildtools.plugin") version "1.0.0-beta15"
 }
 ```
 
@@ -39,13 +39,13 @@ plugins {
 
 ```groovy
 plugins {
-    id "dev.elide.buildtools.plugin" version "1.0.0-beta13"
+    id "dev.elide.buildtools.plugin" version "1.0.0-beta15"
 }
 ```
 
 #### Plugin coordinates
 
--   **Version:** `1.0.0-beta13`
+-   **Version:** `1.0.0-beta15`
 -   **Plugin ID:** `dev.elide.buildtools.plugin`
 -   **Classpath Coordinate:** `dev.elide.buildtools:plugin`
 

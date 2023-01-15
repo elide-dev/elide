@@ -1,42 +1,70 @@
 package elide.frontend.ssr
 
-import elide.runtime.ssr.ServerResponse
 import react.ReactElement
 import web.streams.ReadableStreamDefaultReadValueResult
 import web.streams.ReadableStreamDefaultReader
 import kotlin.js.Promise
+import js.core.jso
+import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
+
+/**
+ * TBD
+ */
+public external interface ResponseChunk {
+  /** */
+  public var status: Int?
+
+  /** */
+  public var headers: Map<String, String>?
+
+  /** */
+  public var content: String?
+
+  /** */
+  public var css: String?
+
+  /** */
+  public var hasContent: Boolean
+
+  /** */
+  public var fin: Boolean
+}
+
+/**
+ * TBD
+ */
+public typealias RenderCallback = (ResponseChunk) -> Unit
 
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>) {
+public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
-  // Call the `emitter` with a well-formed `ServerResponse`.
-  private fun finishStream(status: Int, emitter: (ServerResponse) -> Unit) {
-    emitter.invoke(object: ServerResponse {
-      override val status: Int get() = status
-      override val fin: Boolean get() = true
+  // Call the `emitter` with a well-formed `ResponseChunk`.
+  private fun finishStream(statusCode: Int, emitter: (ResponseChunk) -> Unit) {
+    emitter.invoke(jso {
+      status = statusCode
+      fin = true
     })
   }
 
-  private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ServerResponse) -> Unit) {
+  private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
     reader.read().then { value ->
       val chunk = value.unsafeCast<ReadableStreamDefaultReadValueResult<ByteArray?>>()
 
-      val content = chunk.value
+      val rawContent = chunk.value
       var resolved = false
-      if (content != null && content.isNotEmpty()) {
+      if (rawContent != null && rawContent.isNotEmpty()) {
         resolved = true  // we're handling a content chunk
-        val decoded = content.decodeToString()
-        val emit = object: ServerResponse {
-          override val content: String get() = decoded
-          override val fin: Boolean get() = false
-          override val hasContent: Boolean get() = decoded.isNotBlank()
-        }
-        emitter.invoke(emit)
+        val decoded = rawContent.decodeToString()
+        emitter.invoke(jso {
+          content = decoded
+          fin = false
+          hasContent = decoded.isNotBlank()
+        })
       }
 
       if (chunk.done) {
@@ -62,10 +90,20 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>) {
   /**
    * TBD
    */
-  private fun render(callback: (ServerResponse) -> Unit): Promise<*> {
-    return renderSSRStreaming(app).then { stream ->
-      val reader = stream.getReader()
-      pump(reader, callback)
+  private fun render(callback: (ResponseChunk) -> Unit): Promise<*> {
+    return if (stream) {
+      renderSSRStreaming(app).then { stream ->
+        val reader = stream.getReader()
+        pump(reader, callback)
+      }
+    } else {
+      Promise { accept, reject ->
+        try {
+          accept(renderSSRString(app))
+        } catch (err: Throwable) {
+          reject(err)
+        }
+      }
     }
   }
 
@@ -75,7 +113,7 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>) {
   /**
    * TBD
    */
-  public fun execute(callback: (ServerResponse) -> Unit): Promise<*> {
+  public fun execute(callback: (ResponseChunk) -> Unit): Promise<*> {
     return render(callback)
   }
 }

@@ -25,6 +25,11 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
+      "matchPackagePatterns": ["^org\\.jetbrains\\.kotlin\\-wrappers"],
+      "matchPackageNames": ["kotlin-wrappers"],
+      "groupName": "KotlinX: Wrappers"
+    },
+    {
       "matchPackagePatterns": ["^@bazel/"],
       "matchPackageNames": ["build_bazel_rules_nodejs", "rules_nodejs"],
       "groupName": "Bazel Rules: Node"

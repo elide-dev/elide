@@ -17,7 +17,7 @@ import elide.annotations.core.Polyglot
 public data class RenderedStream @Polyglot constructor (
   public val status: Int,
   public val html: String,
-  public val headers: HeaderMap,
+  public val headers: Map<String, String>,
   public val criticalCss: String,
   public val styleChunks: Array<CssChunk>,
 ) {

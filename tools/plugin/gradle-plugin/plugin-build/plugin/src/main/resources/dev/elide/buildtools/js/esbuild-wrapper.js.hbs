@@ -19,19 +19,5 @@ const settings = {
 
 console.info("Bundling SSR library '{{LIBNAME}}'...");
 esbuild.build(settings).then(() => {
-    if ({{PREPACK}}) {
-        const Prepack = require('prepack');
-        console.info("Bundle step completed. Packing SSR bundle with Prepack...");
-        const prepacked = Prepack.prepackFileSync(['{{OUTFILE}}'], {
-            compatibility: 'browser',
-            inlineExpressions: true,
-            timeout: 300 * 60 * 1000,
-            sourceMaps: false,
-            filename: '{{OUTFILE}}'
-        });
-        fs.writeFileSync('{{PREPACK_OUTFILE}}', prepacked.code, { encoding: 'utf8' });
-        console.info("Pre-compile step complete: SSR bundle ready (mode: {{MODE}}).")
-    } else {
-        console.info("Bundle step completed: embedded SSR bundle ready (mode: {{MODE}}).");
-    }
+    console.info("Bundle step completed: embedded SSR bundle ready (mode: {{MODE}}).");
 }, () => process.exit(1));

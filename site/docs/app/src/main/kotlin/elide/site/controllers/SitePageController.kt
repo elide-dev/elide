@@ -8,11 +8,9 @@ import elide.site.Assets
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.MutableHttpResponse
 import jakarta.inject.Inject
 import kotlinx.html.BODY
 import kotlinx.html.HEAD
-import java.io.ByteArrayOutputStream
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.link
@@ -74,7 +72,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     request: HttpRequest<*>,
     head: suspend HEAD.(HttpRequest<*>) -> Unit,
     block: suspend BODY.(HttpRequest<*>) -> Unit,
-  ): MutableHttpResponse<ByteArrayOutputStream> = ssr(request) {
+  ) = ssr(request) {
     head {
       title { +renderTitle() }
       stylesheet(Assets.Styles.base)
@@ -92,7 +90,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   protected open suspend fun page(
     request: HttpRequest<*>,
     block: suspend BODY.(HttpRequest<*>) -> Unit = pageBody(),
-  ): MutableHttpResponse<ByteArrayOutputStream> = page(
+  ) = page(
     request,
     pageHead(),
     block,

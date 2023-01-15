@@ -10,18 +10,22 @@ import java.lang.reflect.Modifier
 import java.net.JarURLConnection
 
 /**
- * TBD.
+ * # Framework: Feature
+ *
+ * Registers a GraalVM "feature" implementation, which describes to the VM and compiler how to access reflective values
+ * needed for operation of apps built with Elide. Each framework implements a description for a different unit of
+ * functionality.
  */
 public interface FrameworkFeature : Feature {
   /**
-   * TBD.
+   * @return Logger to use for this feature.
    */
   public fun logging(): Logger {
     return Logging.of(FrameworkFeature::class)
   }
 
   /**
-   * TBD.
+   * @return Description for this feature to display in the console.
    */
   override fun getDescription(): String
 
@@ -161,7 +165,11 @@ public interface FrameworkFeature : Feature {
   }
 
   /**
-   * TBD.
+   * Find a list of classes for the provided [packageName] within the provided [urlConnection].
+   *
+   * @param urlConnection JAR connection to traverse.
+   * @param packageName Package name to search for.
+   * @return Matching set of classes.
    */
   @Throws(IOException::class)
   public fun findClassesInJar(urlConnection: JarURLConnection, packageName: String): List<String> {

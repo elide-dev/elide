@@ -1,8 +1,11 @@
 package elide.frontend.ssr
 
+import org.w3c.fetch.Request
+
 /** Context access utility for SSR-shared state. */
 public class SSRContext<State: Any> private constructor (
   private val data: State? = null,
+  private val req: Request? = null,
 ) {
   public companion object {
     /** Key where shared state is placed in the execution input data map. */
@@ -12,21 +15,21 @@ public class SSRContext<State: Any> private constructor (
     public const val CONTEXT: String = "_ctx_"
 
     /** @return SSR context, decoded from the provided input [ctx]. */
-    public fun of(ctx: dynamic = null): SSRContext<Any> {
+    public fun of(ctx: dynamic = null, request: Request? = null): SSRContext<Any> {
       return if (ctx != null) {
-        SSRContext(ctx)
+        SSRContext(ctx, request)
       } else {
-        SSRContext()
+        SSRContext(null, request)
       }
     }
 
     /** @return SSR context, decoded from the provided input [ctx], with the provided [ctx] object. */
-    public fun <State : Any> typed(ctx: dynamic = null): SSRContext<State> {
+    public fun <State : Any> typed(ctx: dynamic = null, request: Request? = null): SSRContext<State> {
       return if (ctx != null) {
         @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
-        SSRContext(ctx as State)
+        SSRContext(ctx as State, request)
       } else {
-        SSRContext()
+        SSRContext(null, request)
       }
     }
   }
@@ -44,6 +47,11 @@ public class SSRContext<State: Any> private constructor (
   /** Execute the provided [fn] within the context of this decoded SSR context. */
   public fun <R> execute(fn: SSRContext<State>.() -> R): R {
     return fn.invoke(this)
+  }
+
+  /** @return Active request, if any. */
+  public val request: Request? get() {
+    return req
   }
 
   /** @return State container managed by this context. */

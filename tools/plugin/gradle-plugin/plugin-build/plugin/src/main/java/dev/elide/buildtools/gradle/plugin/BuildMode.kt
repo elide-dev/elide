@@ -4,7 +4,7 @@ package dev.elide.buildtools.gradle.plugin
 @Suppress("unused")
 public enum class BuildMode(internal val minify: Boolean, internal val prepack: Boolean) {
     /** Built for production, with minification turned on. */
-    PRODUCTION(minify = true, prepack = true),
+    PRODUCTION(minify = true, prepack = false),
 
     /** Built for development, with minification turned off. */
     DEVELOPMENT(minify = false, prepack = false);

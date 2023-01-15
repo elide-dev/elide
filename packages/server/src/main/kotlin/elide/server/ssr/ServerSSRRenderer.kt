@@ -78,6 +78,9 @@ public class ServerSSRRenderer constructor(
 
   // Handle a chunk which is ready to serve back to the invoking agent.
   @Polyglot private fun chunkReady(chunk: ServerResponse) {
+    if (chunk.css.isNotBlank()) {
+      buffer.append(chunk.css)
+    }
     if (chunk.hasContent) {
       buffer.append(chunk.content)
     }

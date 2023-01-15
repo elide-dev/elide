@@ -22,6 +22,93 @@ plugins {
 group = "dev.elide.site.docs"
 version = rootProject.version as String
 
+/**
+ * Build: Site Native Image
+ */
+
+val commonNativeArgs = listOf(
+  "-H:DashboardDump=elide-site",
+  "-H:+DashboardAll",
+)
+
+val debugFlags = listOf(
+  "-g",
+)
+
+val releaseFlags: List<String> = listOf(
+  "-O2",
+)
+
+val jvmDefs = mapOf(
+  "user.country" to "US",
+  "user.language" to "en",
+)
+
+val hostedRuntimeOptions = mapOf(
+  "IncludeLocales" to "en",
+)
+
+val initializeAtBuildTime: List<String> = emptyList()
+
+val initializeAtRuntime: List<String> = emptyList()
+
+val defaultPlatformArgs = listOf(
+  "--libc=glibc",
+)
+
+val darwinOnlyArgs = defaultPlatformArgs
+
+val linuxOnlyArgs = listOf(
+  "--static",
+  "--libc=glibc",
+)
+
+val muslArgs = listOf(
+  "--libc=musl",
+)
+
+val testOnlyArgs: List<String> = emptyList()
+
+val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
+
+val enterpriseOnlyFlags: List<String> = listOf(
+  "--gc=G1",
+  "--enable-sbom",
+  "--pgo-instrument",
+  "-H:+AOTInliner",
+  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+)
+
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+
+fun nativeImageArgs(
+  platform: String = "generic",
+  target: String = "glibc",
+  debug: Boolean = quickbuild,
+  release: Boolean = (!quickbuild && project.properties["elide.release"] == "true"),
+  enterprise: Boolean = isEnterprise,
+): List<String> =
+  commonNativeArgs.asSequence().plus(
+    initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
+  ).plus(
+    initializeAtRuntime.map { "--initialize-at-run-time=$it" }
+  ).plus(when (platform) {
+    "darwin" -> darwinOnlyArgs
+    "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs
+    else -> defaultPlatformArgs
+  }).plus(
+    jvmDefs.map { "-D${it.key}=${it.value}" }
+  ).plus(
+    hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
+  ).plus(
+    if (debug) debugFlags else if (release) releaseFlags else emptyList()
+  ).plus(
+    if (enterprise) enterpriseOnlyFlags else emptyList()
+  ).toList()
+
 elide {
   mode = if (devMode) {
     BuildMode.DEVELOPMENT
@@ -104,7 +191,7 @@ application {
 }
 
 dependencies {
-  api(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
   api(project(":packages:base"))
@@ -243,7 +330,7 @@ graalvmNative {
     enableExperimentalPredefinedClasses.set(false)
     enableExperimentalUnsafeAllocationTracing.set(false)
     trackReflectionMetadata.set(true)
-    enabled.set(false)
+    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
 
     modes {
       standard {}
@@ -259,30 +346,7 @@ graalvmNative {
     named("main") {
       fallback.set(false)
       quickBuild.set(true)
-      buildArgs.addAll(listOf(
-        "--no-fallback",
-        "--language:js",
-//        "--language:regex",
-//        "--enable-http",
-//        "--enable-https",
-//        "--gc=G1",
-//        "--static",
-//        "--libc=glibc",
-//        "--enable-all-security-services",
-//        "--install-exit-handlers",
-//        "--report-unsupported-elements-at-runtime",
-//        "-Duser.country=US",
-//        "-Duser.language=en",
-//        "-H:IncludeLocales=en",
-//        "-H:+InstallExitHandlers",
-//        "-H:+ReportExceptionStackTraces",
-//        "--pgo-instrument",
-//        "-dsa",
-//        "--language:js",
-//        "--language:regex",
-        "--enable-all-security-services",
-//        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
-      ))
+      buildArgs.addAll(nativeImageArgs())
     }
   }
 }

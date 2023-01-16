@@ -89,7 +89,7 @@ jobs:
         include:
           - os: macos
             mode: strict
-            machine: macos-x86
+            machine: macos-latest
 
     name: "Build"
     runs-on: ${{ matrix.machine }}

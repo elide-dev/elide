@@ -1,0 +1,111 @@
+name: CLI
+
+on:
+  push:
+    branches:
+      - stable
+      - v3
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - stable
+      - v3
+      - cli/*
+
+jobs:
+  ##
+  ## Job: CLI Build
+  ##
+
+  cli:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [linux]
+        arch: [amd64]
+        machine: [ubuntu-latest-8-cores]
+        mode: [strict]
+        include:
+          - os: macos
+            arch: amd64
+            machine: macos-x86
+            mode: strict
+
+    name: "CLI"
+    runs-on: ${{ matrix.machine }}
+    continue-on-error: ${{ matrix.mode == 'labs' }}
+
+    permissions:
+      contents: "read"
+      actions: "read"
+      id-token: "write"
+      checks: "write"
+      pull-requests: "write"
+      security-events: "write"
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: GraalVM (Java 19)"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js"
+          version: latest
+          java-version: 19
+          check-for-updates: ${{ matrix.os == 'linux' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: yarn
+      - id: "auth"
+        name: "Setup: Authorize Service Account"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
+          create_credentials_file: true
+          export_environment_variables: true
+          cleanup_credentials: true
+      - name: "🛠️ Build CLI"
+        uses: gradle/gradle-build-action@v2.3.3
+        id: gradlebuild
+        continue-on-error: ${{ matrix.mode == 'labs' }}
+        env:
+          CI: true
+        with:
+          cache-read-only: false
+          arguments: |
+            :packages:cli:nativeOptimizedCompile
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.release=true
+            -Pelide.buildMode=release
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+            -Pversions.java.minimum=11
+            -Pversions.java.language=19
+      - name: "Build reports"
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-reports-${{ matrix.os }}-latest-gvm-latest
+          path: |
+            build/reports/**/*.*
+      - name: "Artifact: CLI Binary"
+        uses: actions/upload-artifact@v3
+        with:
+          name: cli-${{ matrix.os }}-${{ matrix.arch }}
+          path: |
+            packages/cli/build/native/nativeOptimizedCompile/elide
+            packages/cli/build/native/nativeOptimizedCompile/elide-tool.bgv

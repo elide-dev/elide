@@ -1,6 +1,6 @@
 package fullstack.react
 
-import browser.document
+import web.dom.document
 import react.Fragment
 import react.create
 import react.dom.client.createRoot

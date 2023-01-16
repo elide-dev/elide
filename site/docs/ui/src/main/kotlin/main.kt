@@ -13,7 +13,7 @@ external interface AppProps: Props {
 }
 
 fun main() = boot<AppProps> {
-  Fragment.create() {
+  Fragment.create {
     BrowserRouter {
       ThemeModuleWeb {
         ElideSite {

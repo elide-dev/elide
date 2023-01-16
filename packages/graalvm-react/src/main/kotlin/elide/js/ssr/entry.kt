@@ -1,6 +1,6 @@
 package elide.js.ssr
 
-import browser.document
+import web.dom.document
 import react.Props
 import react.ReactElement
 import react.dom.client.createRoot

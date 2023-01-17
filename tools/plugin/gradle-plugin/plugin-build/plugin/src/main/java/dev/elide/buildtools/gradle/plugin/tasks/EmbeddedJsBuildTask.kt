@@ -648,7 +648,17 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         lastModified = Timestamp.newBuilder().setSeconds(Instant.now().epochSecond).build()
         metadata = embeddedScriptMetadata {
             javascript = jsScriptMetadata {
-                level = EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
+                level = when (ecma) {
+                    "5" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES5
+                    "6" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES6
+                    "2017" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2017
+                    "2018" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2018
+                    "2019" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2019
+                    "2020" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
+                    "2021" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2021
+                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+                }
             }
         }
     }

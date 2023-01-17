@@ -12,9 +12,14 @@ const settings = {
     bundle: {{BUNDLE}},
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
-    resolveExtensions: ['.ts','.js'],
+    resolveExtensions: ['.ts','.js','.mjs'],
     sourcemap: !{{PREPACK}},
-    inject: [ '{{PROCESS}}' ]
+    inject: [ '{{PROCESS}}' ],
+    external: [
+      'buffer',
+      'fs',
+      'util'
+    ]
 };
 
 console.info("Bundling SSR library '{{LIBNAME}}'...");

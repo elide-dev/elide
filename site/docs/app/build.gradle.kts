@@ -254,11 +254,11 @@ tasks.named("apiCheck").configure {
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("dockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm19")
 }
 
 tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile") {
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm17")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/jvm19")
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
@@ -300,7 +300,7 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
 tasks {
   jib {
     from {
-      image = "us-docker.pkg.dev/elide-fw/tools/runtime/jvm17:latest"
+      image = "us-docker.pkg.dev/elide-fw/tools/runtime/jvm19:latest"
     }
     to {
       image = "us-docker.pkg.dev/elide-fw/samples/site/docs/jvm"

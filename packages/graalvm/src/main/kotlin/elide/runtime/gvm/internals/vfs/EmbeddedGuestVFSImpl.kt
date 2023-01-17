@@ -10,6 +10,7 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Requires
@@ -547,8 +548,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
             file.name to file.inputStream()
           }
 
-          "classpath" -> {
-            val filename = path.scheme.replace("classpath:", "")
+          "classpath", "jar" -> {
+            val filename = when (path.scheme) {
+              "classpath" -> path.toString().replace("classpath:", "")
+              "jar" -> path.toString().split("!").last()
+              else -> path.path
+            }
             val target = EmbeddedGuestVFSImpl::class.java.getResourceAsStream(filename) ?: error(
               "Failed to load bundle from path '$path': Not found"
             )
@@ -615,7 +620,10 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param ioConfig Guest I/O configuration to use for creating the VFS.
      * @return Embedded VFS implementation built according to the provided [config].
      */
-    @Bean @Singleton internal fun spawn(ioConfig: GuestIOConfiguration): EmbeddedGuestVFSImpl {
+    @Bean @Singleton internal fun spawn(
+      ioConfig: GuestIOConfiguration,
+      configurators: List<GuestVFS.VFSConfigurator>,
+    ): EmbeddedGuestVFSImpl {
       // generate an effective configuration
       val config = withConfig(ioConfig)
 
@@ -628,7 +636,13 @@ internal class EmbeddedGuestVFSImpl private constructor (
         root = config.root
         workingDirectory = config.workingDirectory
         if (config.bundle.isNotEmpty()) {
-          paths = config.bundle
+          paths = config.bundle.plus(configurators.flatMap {
+            it.bundles()
+          })
+        } else if (configurators.isNotEmpty()) {
+          paths = configurators.flatMap {
+            it.bundles()
+          }
         }
       }
 

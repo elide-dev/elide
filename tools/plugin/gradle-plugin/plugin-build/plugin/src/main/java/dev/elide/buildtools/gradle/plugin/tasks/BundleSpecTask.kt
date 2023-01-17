@@ -55,8 +55,7 @@ public abstract class BundleSpecTask<M : Message, Spec> : BundleBaseTask() {
     }
 
     // Assembled spec which should be written.
-    @get:Input
-    internal val assetSpec: AtomicReference<M?> = AtomicReference(null)
+    @get:Input internal val assetSpec: AtomicReference<M?> = AtomicReference(null)
 
     /** Name to give the asset catalog being affixed by this task. */
     @get:Input

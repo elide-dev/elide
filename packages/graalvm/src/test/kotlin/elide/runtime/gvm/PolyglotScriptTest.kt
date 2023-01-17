@@ -1,4 +1,4 @@
-package elide.runtime.graalvm
+package elide.runtime.gvm
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source

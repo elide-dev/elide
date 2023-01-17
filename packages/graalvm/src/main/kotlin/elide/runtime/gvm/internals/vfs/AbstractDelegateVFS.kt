@@ -100,7 +100,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   /** @inheritDoc */
   override fun toRealPath(path: Path, vararg linkOptions: LinkOption): Path {
-    TODO("Not yet implemented")
+    return path
   }
 
   /** @inheritDoc */
@@ -335,8 +335,16 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   /** @inheritDoc */
-  override fun getMimeType(path: Path?): String {
-    TODO("not yet implemented")
+  override fun getMimeType(path: Path): String? {
+    debugLog {
+      "Getting MIME type for file at path: '$path'"
+    }
+    enforce(
+      type = AccessType.READ,
+      domain = AccessDomain.GUEST,
+      path = path,
+    )
+    return Files.probeContentType(path)
   }
 
   /** @inheritDoc */

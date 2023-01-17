@@ -20,7 +20,7 @@ object Elide {
   const val version = "$majorVersion-$track-$versionTag-b$revision"
 
   /** Latest plugin version. */
-  const val pluginVersion = "1.0.0-beta16"
+  const val pluginVersion = "1.0.0-beta17"
 
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"

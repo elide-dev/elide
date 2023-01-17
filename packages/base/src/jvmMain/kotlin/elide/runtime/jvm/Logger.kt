@@ -7,8 +7,11 @@ public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger
   // Format a list of values for emission as part of a log message.
   private fun formatLogLine(message: List<Any>): String {
     val builder = StringBuilder()
-    message.forEach {
-      builder.append(it)
+    val portions = message.size
+    message.forEachIndexed { index, value ->
+      builder.append(value)
+      if (index < portions - 1)
+        builder.append(" ")
     }
     return builder.toString()
   }

@@ -2,11 +2,13 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
+import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.VMFacade
+import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.tool.cli.GuestLanguage
@@ -42,6 +44,8 @@ import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLeve
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -278,6 +282,9 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Active line reader.
   private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
 
+  // All VFS configurators.
+  @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
+
   /** Specifies the guest language to run. */
   @Option(
     names = ["--languages"],
@@ -426,8 +433,13 @@ import org.graalvm.polyglot.Engine as VMEngine
     val result = try {
       ctx.eval(source)
     } catch (exc: PolyglotException) {
-      logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
-      throw exc
+      when (val throwable = processUserCodeError(language, exc)) {
+        null -> {
+          logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
+          throw exc
+        }
+        else -> throw throwable
+      }
     }
     logging.trace("Code chunk evaluation complete")
     return result
@@ -615,8 +627,15 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // Given an error location (in interactive mode), fetch the source, plus `contextLines` on each side of the error.
   private fun errorContextLines(exc: PolyglotException, contextLines: Int = 1): Pair<Int, List<String>> {
-    val errorBase = minOf(0, exc.sourceLocation.startLine - contextLines)
-    val totalLines = exc.sourceLocation.endLine - exc.sourceLocation.startLine + (contextLines * 2)
+    val startLine = maxOf(0, (exc.sourceLocation?.startLine ?: 0) - contextLines)
+    val endLine = exc.sourceLocation?.endLine ?: 0
+    val errorBase = minOf(0, startLine)
+
+    // bail: no lines to show
+    if (startLine == 0 && endLine == 0) return errorBase to emptyList()
+
+    // otherwise, calculate lines
+    val totalLines = endLine - startLine + (contextLines * 2)
     val ctxLines = ArrayList<String>(totalLines)
     val baseOnHand = minOf(0, statementCounter.get())
     val errorTail = errorBase + (exc.sourceLocation.endLine - exc.sourceLocation.startLine)
@@ -640,8 +659,9 @@ import org.graalvm.polyglot.Engine as VMEngine
     message: String,
     advice: String? = null,
     internal: Boolean = false,
+    stacktrace: Boolean = false,
   ) {
-    val term = terminal.get() ?: return
+    val term = terminal.get()
     val reader = lineReader.get() ?: return
     if (exc !is PolyglotException) return
 
@@ -654,9 +674,11 @@ import org.graalvm.polyglot.Engine as VMEngine
     val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
 
     val (startingLineNumber, errorContext) = errorContextLines(exc)
-    val endingLineNumber = exc.sourceLocation.endLine
-    val lineDigits = endingLineNumber.toString().length
-    val errRange = exc.sourceLocation.startLine..exc.sourceLocation.endLine
+    val startLine = exc.sourceLocation?.startLine ?: 0
+    val endLine = exc.sourceLocation?.endLine ?: 0
+    val lineDigits = endLine.toString().length
+
+    val errRange = startLine..endLine
     val lineContextRendered = errorContext.mapIndexed { index, line ->
       val lineNumber = startingLineNumber + index
 
@@ -672,9 +694,40 @@ import org.graalvm.polyglot.Engine as VMEngine
         .replace("%lineText", line)
     }
 
+    // if requested, build a stacktrace for this error
+    val stacktraceContent = if (stacktrace) {
+      val stackString = StringWriter()
+      val stackPrinter = PrintWriter(stackString)
+      exc.printStackTrace(stackPrinter)
+      stackPrinter.flush()
+      stackString.toString()
+    } else {
+      ""
+    }
+    val stacktraceLines = if (stacktrace) {
+      stacktraceContent.lines()
+    } else {
+      emptyList()
+    }
+
     val pad = 2 * 2
-    val maxErrLineSize = lineContextRendered.maxOf { it.length } + pad
-    val width = minOf(maxOf(message.length + pad, maxErrLineSize, (advice?.length ?: 0) + pad), term.width)
+    val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
+
+    // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
+    val width = minOf(term?.width ?: 120, maxOf(
+      // message plus padding
+      message.length + pad,
+
+      // error context lines
+      maxErrLineSize,
+
+      // advice
+      (advice?.length ?: 0) + pad,
+
+      // stacktrace
+      stacktraceLines.maxOf { it.length + pad + 2 },
+    ))
+
     val textWidth = width - (pad / 2)
     val top = ("╔" + "═".repeat(textWidth) + "╗")
     val bottom = ("╚" + "═".repeat(textWidth) + "╝")
@@ -691,9 +744,36 @@ import org.graalvm.polyglot.Engine as VMEngine
         appendLine(it.padEnd(textWidth + 1, ' ') + "║")
       }
       // ╟──^───────────────────╢
-      appendLine(divider)
+      if (lineContextRendered.isNotEmpty()) appendLine(divider)
       // ║ SomeError: A message ║
       append(middlePrefix).append(message.padEnd(textWidth - 1, ' ')).append("║\n")
+
+      if (stacktrace || advice?.isNotBlank() == true) {
+        // ╟──────────────────────╢
+        if (lineContextRendered.isNotEmpty() || message.isNotBlank()) appendLine(divider)
+
+        // append advice next
+        if (advice?.isNotBlank() == true) {
+          // ║ Advice:              ║
+          append(middlePrefix).append("Advice:\n")
+          // ║ Example advice.      ║
+          append(middlePrefix).append(advice.padEnd(textWidth + 1, ' ') + "║\n")
+          // ╟──────────────────────╢
+          if (stacktrace) appendLine(divider)
+        }
+
+        // append stacktrace next
+        if (stacktrace) {
+          // ║ Stacktrace:          ║
+          append(middlePrefix).append("Stacktrace:\n")
+
+          // ║ ...                  ║
+          stacktraceLines.forEach {
+            append(middlePrefix).append(it.padEnd(textWidth + 1, ' ') + "║\n")
+          }
+        }
+      }
+
       appendLine(bottom)
       // ╚══════════════════════╝
       append("\n")
@@ -723,6 +803,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       exc.isHostException -> displayFormattedError(
         exc,
         exc.message ?: "An runtime error was thrown",
+        stacktrace = true,
       )
 
       exc.isGuestException -> displayFormattedError(
@@ -905,8 +986,10 @@ import org.graalvm.polyglot.Engine as VMEngine
       parsed.execute()
 
     } catch (exc: PolyglotException) {
-      logging.debug("User code exception caught", exc)
-      throw ShellError.USER_CODE_ERROR.asError()
+      when (val throwable = processUserCodeError(language, exc)) {
+        null -> {}
+        else -> throw throwable
+      }
     }
   }
 
@@ -954,18 +1037,24 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.debug("Initializing language context ('${lang.id}')")
 
     // resolve the file-system bundle to use
-    val bundleUris = filesystems.mapNotNull {
+    val userBundleUris = filesystems.mapNotNull {
       checkFsBundle(it)
     }
-    if (bundleUris.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
-      logging.debug("File-system bundle(s) specified: ${bundleUris.joinToString(",")}")
+    if (userBundleUris.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
+      logging.debug("File-system bundle(s) specified: ${userBundleUris.joinToString(",")}")
     } else {
       logging.debug("No file-system bundles specified")
     }
 
-    withVM(context, bundleUris, hostIO = (
-      bundleUris.isEmpty() && (accessControl.allowIo || accessControl.allowAll)
-    ), accessControl::apply) {
+    // inject FS configurators and use them. order matters; user bundles go last.
+    val bundleUris = vfsConfigurators.flatMap {
+      it.bundles()
+    }
+
+    // determine whether host I/O is enabled
+    val hostIo = (bundleUris.isEmpty() && (accessControl.allowIo || accessControl.allowAll))
+
+    withVM(context, userBundleUris, bundleUris, hostIO = hostIo, accessControl::apply) {
       // warn about experimental status, as applicable
       logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")
 

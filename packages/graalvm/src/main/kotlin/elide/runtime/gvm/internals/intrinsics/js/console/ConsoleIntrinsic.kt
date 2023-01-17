@@ -70,8 +70,25 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param err Error to format and return.
    * @return Formatted value to emit, or the original object if no formatting was applied.
    */
-  @Suppress("UNUSED_PARAMETER") internal fun formatGuestException(err: GuestValue): Any {
+  @Suppress("UNUSED_PARAMETER") private fun formatGuestException(err: GuestValue): Any {
     TODO("not yet implemented")
+  }
+
+  /**
+   * Format a guest exception received via a log message call; this involves checking to see if it declares a message,
+   * and using that if so, or otherwise delegating to the error's string representation method.
+   *
+   * If no special formatting can be applied to the [err], the value is returned verbatim.
+   *
+   * @param err Error to format and return.
+   * @return Formatted value to emit, or the original object if no formatting was applied.
+   */
+  private fun formatGuestError(err: Map<*, *>): Any {
+    return if (err.containsKey("message")) {
+      err["message"] as? String ?: "unknown error"
+    } else {
+      err
+    }
   }
 
   /**
@@ -81,7 +98,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param obj Host object to format and return.
    * @return Formatted value to emit.
    */
-  internal fun formatHostObject(obj: GuestValue): Any = when (val value = obj.asHostObject<Any?>()) {
+  private fun formatHostObject(obj: GuestValue): Any = when (val value = obj.asHostObject<Any?>()) {
     null -> "null"
     else -> value.toString()
   }
@@ -141,7 +158,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
 
     // if the arg expresses as a map and has a `message` property, it is an error-like type.
     is Map<*, *> -> when {
-      arg.containsKey("message") -> arg["message"] as? String ?: "unknown error"
+      arg.containsKey("message") -> formatGuestError(arg)
       else -> arg
     }
 

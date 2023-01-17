@@ -445,7 +445,8 @@ import kotlin.coroutines.CoroutineContext
   @Suppress("DEPRECATION")
   protected open fun withVM(
     context: ToolContext<State>,
-    fsBundleUris: List<URI>,
+    userBundles: List<URI>,
+    systemBundles: List<URI>,
     hostIO: Boolean,
     contextBuilder: (VMContext.Builder) -> Unit = {},
     op: VMCallable<State>,
@@ -456,8 +457,8 @@ import kotlin.coroutines.CoroutineContext
       contextBuilder.invoke(it)
 
       // if we have a virtualized FS, mount it
-      if (fsBundleUris.isNotEmpty() && !hostIO) {
-        val bundles = fsBundleUris.map { fsBundleUri ->
+      if (userBundles.isNotEmpty() && !hostIO) {
+        val bundles = userBundles.map { fsBundleUri ->
           // check the bundle URI
           if (fsBundleUri.scheme == "classpath:") {
             logging.debug("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
@@ -479,9 +480,18 @@ import kotlin.coroutines.CoroutineContext
           }
         }
 
-        it.fileSystem(EmbeddedGuestVFS.forBundle(
-          *bundles.toTypedArray(),
-        ))
+        it.fileSystem(
+          EmbeddedGuestVFS.forBundle(
+            *systemBundles.plus(bundles).toTypedArray(),
+          )
+        )
+      } else if (systemBundles.isNotEmpty() && !hostIO) {
+        logging.debug { "No user bundles, but ${systemBundles.size} system bundles present; mounting embedded" }
+        it.fileSystem(
+          EmbeddedGuestVFS.forBundle(
+            *systemBundles.toTypedArray(),
+          )
+        )
       } else if (hostIO) {
         // if we're doing host I/O, mount that instead
         logging.debug("Command-line flags indicate host I/O; mounting host filesystem")

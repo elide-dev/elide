@@ -40,6 +40,8 @@ import org.graalvm.polyglot.Value as GuestValue
  * guest language feels natural on the receiving end. Read on for an explanation of each type and what behavior is
  * introduced by this base.
  *
+ * &nbsp;
+ *
  * ## Configuration
  *
  * Implementations provide a concrete configuration type ([Config]) which describes basic configurations applicable to
@@ -51,17 +53,23 @@ import org.graalvm.polyglot.Value as GuestValue
  *   property sources.
  * - For the CLI, a configuration is built from **command-line flags**.
  *
+ * &nbsp;
+ *
  * ## Executable scripts
  *
  * Implementations provide a concrete executable script type, compliant with [ExecutableScript] ([Code]), which models
  * the script source API surface for this guest language. MIME types are declared here, as well as some other source
  * related nuances.
  *
+ * &nbsp;
+ *
  * ## Invocation bindings
  *
  * Finally, implementations provide a concrete invocation binding surface, which explains how [ExecutableScript] types
  * can be dispatched for this guest language. Depending on the different execution modes supported for a given script,
  * these bindings may provide different methods.
+ *
+ * &nbsp;
  *
  * @param Config Concrete configuration type associated with this VM implementation.
  * @param Code Concrete executable script type associated with this VM implementation.

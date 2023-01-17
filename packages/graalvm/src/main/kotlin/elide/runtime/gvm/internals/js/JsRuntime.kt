@@ -1,6 +1,8 @@
 package elide.runtime.gvm.internals.js
 
+import elide.annotations.Context
 import elide.annotations.Inject
+import elide.annotations.Singleton
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -9,15 +11,16 @@ import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.cfg.JsRuntimeConfig
 import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
+import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.context.ContextManager
 import io.micronaut.context.annotation.Requires
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -117,7 +120,7 @@ internal class JsRuntime @Inject constructor (
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "ElideDebug"
-    internal val WASM_SUPPORTED = wasmSupported()
+    val WASM_SUPPORTED = wasmSupported()
 
     // Determine if WASM should be enabled by default.
     @JvmStatic private fun wasmSupported(): Boolean = (
@@ -175,6 +178,12 @@ internal class JsRuntime @Inject constructor (
     // Whether runtime assets have loaded yet.
     private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
 
+    // Core modules which patch Node JS builtins.
+    private val coreModules: Map<String, String> = mapOf(
+      "buffer" to "/__runtime__/buffer/buffer.cjs",
+      "util" to "/__runtime__/util/util.cjs",
+    )
+
     init {
       check(!runtimeReady.get()) {
         "Runtime cannot be prepared more than once (JS runtime must operate as a singleton)"
@@ -217,6 +226,18 @@ internal class JsRuntime @Inject constructor (
         throw err
       }
     }
+
+    /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
+    @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFS.VFSConfigurator {
+      /** @inheritDoc */
+      override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
+        "Failed to resolve runtime info: cannot prepare VFS."
+      )).vfs.map {
+        JsRuntime::class.java.getResource("$embeddedRoot/${it.name}")?.toURI() ?: error(
+          "Failed to locate embedded JS runtime asset: $it"
+        )
+      }
+    }
   }
 
   // Resolve the expected configuration symbol for the given ECMA standard level.
@@ -237,7 +258,7 @@ internal class JsRuntime @Inject constructor (
   private val logger: Logger = Logging.of(JsRuntime::class)
 
   /** @inheritDoc */
-  override fun configure(engine: Engine, context: Context.Builder): Stream<VMProperty> = baseOptions.plus(listOf(
+  override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(listOf(
     // `vm.charset`: maps to `js.charset` and controls encoding of raw data exchanged with JS VM
     VMRuntimeProperty.ofConfigurable("vm.charset", "js.charset", DEFAULT_STREAM_ENCODING) {
       (config.charset ?: guestConfig.charset)?.name() ?: DEFAULT_STREAM_ENCODING
@@ -257,6 +278,15 @@ internal class JsRuntime @Inject constructor (
     VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
       config.npm.enabled
     },
+
+    // static: configure module replacements.
+    VMStaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.enabled) {
+      coreModules.entries.joinToString(",") {
+        "${it.key}:${it.value}"
+      }
+    } else {
+      ""  // disabled if NPM support is turned off
+    }),
 
     // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable ESM import support.
     VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
@@ -297,7 +327,7 @@ internal class JsRuntime @Inject constructor (
 
   /** @inheritDoc */
   override fun resolve(
-    context: Context,
+    context: VMContext,
     script: JsExecutableScript,
     mode: GVMInvocationBindings.DispatchStyle?,
   ): JsInvocationBindings = JsInvocationBindings.resolve(script, script.evaluate(context))
@@ -305,7 +335,7 @@ internal class JsRuntime @Inject constructor (
   /** @inheritDoc */
   @Suppress("UNREACHABLE_CODE")
   override fun <Inputs : ExecutionInputs> execute(
-    context: Context,
+    context: VMContext,
     script: JsExecutableScript,
     bindings: JsInvocationBindings,
     inputs: Inputs,

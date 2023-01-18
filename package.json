@@ -47,7 +47,7 @@
     "@lit-labs/context": "0.2.0",
     "@lit-labs/motion": "1.0.3",
     "@lit-labs/react": "1.1.1",
-    "@lit-labs/ssr": "3.0.0",
+    "@lit-labs/ssr": "3.0.1",
     "@lit-labs/ssr-client": "1.0.1",
     "@lit-labs/task": "2.0.0",
     "@lit-labs/virtualizer": "1.0.1",

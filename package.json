@@ -52,7 +52,7 @@
     "@lit-labs/task": "2.0.0",
     "@lit-labs/virtualizer": "1.0.1",
     "@lit/localize": "0.11.4",
-    "@lit/localize-tools": "0.6.6",
+    "@lit/localize-tools": "0.6.7",
     "@mdx-js/esbuild": "2.2.1",
     "@mdx-js/loader": "2.2.1",
     "@types/google-protobuf": "3.15.6",

@@ -14,6 +14,12 @@ version = rootProject.version as String
 val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
 val devMode = true
 
+sourceSets {
+  val mdx by creating {
+    // it holds MDX sources
+  }
+}
+
 kotlin {
   js(IR) {
     browser {
@@ -41,7 +47,7 @@ kotlin {
 
       webpackTask {
         outputFileName = "ui.js"
-        output.libraryTarget = "umd"
+        output.libraryTarget = "module"
       }
     }
   }
@@ -57,6 +63,11 @@ dependencies {
   implementation(devNpm("css-loader", "6.7.1"))
   implementation(devNpm("sass-loader", "13.2.0"))
   implementation(devNpm("sass", "1.56.1"))
+  implementation(devNpm("@mdx-js/esbuild", "2.2.1"))
+  implementation(devNpm("@mdx-js/loader", "2.2.1"))
+  implementation(npm("@mdx-js/react", "2.2.1"))
+  implementation(npm("@mdx-js/mdx", "2.2.1"))
+  implementation(npm("react-syntax-highlighter", "15.5.0"))
 
   implementation(kotlin("stdlib-js"))
   implementation(libs.kotlinx.coroutines.core)
@@ -93,11 +104,26 @@ artifacts {
   }
 }
 
+tasks.create("copyMdxSources", Copy::class.java) {
+  from("$projectDir/src/main/mdx") {
+    include("**/*.*")
+  }
+  into("${rootProject.buildDir}/js/packages/elide-ui/kotlin/")
+}
+
+tasks.named("browserDevelopmentRun").configure {
+  dependsOn("copyMdxSources")
+}
+
+tasks.named("browserDistribution").configure {
+  dependsOn("copyMdxSources")
+}
+
 tasks.create("copyStaticAssets", Copy::class.java) {
   from("$projectDir/src/main/assets/") {
     include("*.*")
   }
-  into("$buildDir/processedResources/js/main/assets/")
+  into("${buildDir}/processedResources/js/main/assets/")
 }
 
 tasks.named("processResources").configure {

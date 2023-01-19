@@ -33,6 +33,7 @@ import tools.elide.assets.*
 import tools.elide.assets.EmbeddedScriptMetadataKt.jsScriptMetadata
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 
@@ -329,6 +330,23 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 val defaultOptimize = mode == BuildMode.PRODUCTION
                 it.minify = jsExtension.minify.get() ?: defaultOptimize
                 it.prepack = jsExtension.prepack.get() ?: defaultOptimize
+
+                val esbuildTpl = jsExtension.esbuildConfig.get()
+                val esbuildConfigTemplate = if (esbuildTpl == null) {
+                    loadEmbedded(esbuildConfigTemplatePath)
+                } else {
+                    // if we are given a template, we must load it as a file
+                    try {
+                        esbuildTpl.readText(StandardCharsets.UTF_8)
+                    } catch (err: IOException) {
+                        throw IllegalArgumentException(
+                            "Failed to load esbuild config template from ${esbuildTpl.absolutePath}",
+                            err,
+                        )
+                    }
+                }
+
+                it.configTemplate.set(esbuildConfigTemplate)
             }
 
             val targetEmbeddedTask = "${modeName.lowercase()}EmbeddedExecutable"
@@ -549,14 +567,6 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
     )
     internal var platform: String = target.platform
 
-    /** Whether to enable React shims for the VM runtime. */
-    @get:Input
-    @get:Option(
-        option = "enableReact",
-        description = "Provide low-overhead runtime support for React SSR. Defaults to `true`.",
-    )
-    internal var enableReact: Boolean = true
-
     /** Whether to perform minification on the target bundle. */
     @get:Input
     @get:Option(
@@ -599,9 +609,12 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
     internal abstract val entryFile: RegularFileProperty
 
     /** Template content to use for the ESBuild wrapper. Please use with caution, this is not documented yet. */
-    @get:Input internal val configTemplate = loadEmbedded(
-        esbuildConfigTemplatePath
+    @get:Option(
+        option = "configTemplate",
+        description = "Configuration template to use for 'esbuild'.",
     )
+    @get:Input
+    internal abstract val configTemplate: Property<String>
 
     /** Template content to use for the `process` shim. Please use with caution, this is not documented yet. */
     @get:Input internal val processShimTemplate = loadEmbedded(
@@ -669,7 +682,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             renderTemplateVals(processShimTemplate)
         )
         outputConfig.get().writeText(
-            renderTemplateVals(configTemplate)
+            renderTemplateVals(configTemplate.get())
         )
         logger.lifecycle(
             "Config generated for `${tool.name.lowercase()}` (mode: ${mode.name}): " + outputConfig.get().path

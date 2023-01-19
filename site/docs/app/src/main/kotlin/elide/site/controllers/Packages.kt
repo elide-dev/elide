@@ -1,7 +1,7 @@
 package elide.site.controllers
 
 import elide.server.annotations.Page
-import elide.site.pages.Packages
+import elide.site.pages.library.Packages
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 

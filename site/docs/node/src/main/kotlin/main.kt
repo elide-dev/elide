@@ -3,6 +3,7 @@
 
 import elide.runtime.ssr.*
 import elide.frontend.ssr.*
+import elide.site.pages.Home
 import js.core.jso
 import elide.site.ui.ElideSite as App
 import elide.site.ui.components.ThemeModuleServer
@@ -29,10 +30,9 @@ private fun setupCache(): EmotionCache {
 }
 
 /** App entrypoint fragment. */
-val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache ->
+val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { req, emotionCache ->
   Fragment.create {
     StaticRouter {
-      val currentPage = state?.page ?: "home"
       val url: URL = when (val url = request?.url) {
         null -> URL("https://elide.dev")
         else -> when {
@@ -41,13 +41,19 @@ val app: SSRContext<AppProps>.(EmotionCache) -> ReactElement<*> = { emotionCache
         }
       }
 
+      val currentPageName = state?.page ?: "home"
+      val currentPage = elide.site.ElideSite.pages.find {
+        it.name == currentPageName || it.path == url.pathname
+      } ?: Home
+
       // route to requested page
       location = url.pathname.ifBlank { "/" }
 
       CacheProvider(emotionCache) {
         ThemeModuleServer {
           App {
-            page = currentPage
+            page = currentPage.name
+            full = currentPage.name == Home.name
           }
         }
       }
@@ -62,7 +68,7 @@ val emotionServer = createEmotionServer(emotionCache)
 @JsExport fun render(request: Request, context: dynamic, responder: RenderCallback): dynamic {
   return SSRContext.typed<AppProps>(context, request).execute {
     try {
-      return@execute ApplicationBuffer(app.invoke(this, emotionCache), stream = enableStreaming).execute {
+      return@execute ApplicationBuffer(app.invoke(this, request, emotionCache), stream = enableStreaming).execute {
         try {
           if (enableStreaming && chunkCss && (it.status != null && it.status != -1)) {
             // in the final chunk, splice in CSS from Emotion.

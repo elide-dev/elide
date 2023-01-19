@@ -26,10 +26,10 @@ elide {
   }
 
   js {
-    tool(BundleTool.ESBUILD)
-    target(BundleTarget.EMBEDDED)
     prepack(false)
     minify(true)
+    target(BundleTarget.EMBEDDED)
+    esbuild(file("${projectDir}/esbuild-site-ssr.js.hbs"))
 
     runtime {
       inject(true)

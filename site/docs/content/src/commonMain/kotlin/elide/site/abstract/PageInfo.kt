@@ -13,4 +13,13 @@ interface PageInfo {
 
   /** Title that should show for the page. */
   val title: String
+
+  /** Parent [PageInfo] for this page. */
+  val parent: PageInfo?
+
+  /** Child [PageInfo] records under this page. */
+  val children: List<PageInfo>
+
+  /** Describes a badge affixed to a page, with a color. */
+  val badge: Pair<String, String>?
 }

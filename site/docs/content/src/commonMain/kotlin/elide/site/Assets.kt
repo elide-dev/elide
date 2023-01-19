@@ -6,6 +6,12 @@ object Assets {
   object Images {
     /** Gray-only Elide logo (square vector). */
     const val logoGray = "/images/logo-gray.svg"
+
+    /** Color Elide logo (square raster). */
+    const val stampColor = "/images/favicon.png"
+
+    /** Color Elide logo (square vector). */
+    const val stampDynamic = "/images/favicon.svg"
   }
 
   /** Style assets. */

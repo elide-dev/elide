@@ -5,9 +5,12 @@ import elide.site.Assets
 import elide.site.ElideSite
 import elide.site.ExternalLinks
 import elide.site.SiteLinks
+import elide.site.pages.Home
 import elide.site.ui.theme.Area
 import elide.site.ui.theme.Themes
 import emotion.react.css
+import js.core.Object
+import js.core.jso
 import kotlinx.browser.window
 import mui.icons.material.Brightness4
 import mui.icons.material.Brightness7
@@ -47,22 +50,41 @@ val Header = FC<Props> {
           flexGrow = number(1.0)
         }
 
-        img {
-          src = Assets.Images.logoGray
-          alt = "${siteInfo.name} Logo"
-          width = 32.0
-          height = 32.0
+        Link {
+          title = "${siteInfo.title} Home"
+          href = Home.path
+          underline = LinkUnderline.none
 
-          css {
-            marginRight = 32.px
+          div {
+            css {
+              display = Display.flex
+              cursor = Cursor.pointer
+            }
+
+            img {
+              src = Assets.Images.logoGray
+              alt = "${siteInfo.name} Logo"
+              width = 32.0
+              height = 32.0
+
+              css {
+                marginRight = 22.px
+              }
+            }
+
+            Typography {
+              variant = h6
+              noWrap = true
+              component = div
+              className = ClassName("elide-titletext elide-noselect")
+
+              +siteInfo.heading
+
+              css {
+                color = Color("#EDEDED")
+              }
+            }
           }
-        }
-
-        Typography {
-          variant = h6
-          noWrap = true
-          component = div
-          +siteInfo.heading
         }
 
         if (siteInfo.prerelease) {
@@ -79,12 +101,21 @@ val Header = FC<Props> {
                 color = ChipColor.info
                 title = siteInfo.prelabel
                 label = ReactNode(siteInfo.prelabel)
+                className = ClassName("elide-noselect")
 
                 sx {
                   marginLeft = 15.px
                   borderRadius = 5.px
                   height = 25.px
-                  color = Color("#333")
+
+                  @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+                  val ctx = themeCtx as ThemePackage
+
+                  color = Themes.styled(ctx.mode, light = {
+                    Color("#EDEDED")
+                  }, dark = {
+                    Color("#333")
+                  })
                 }
               }
             }
@@ -104,7 +135,12 @@ val Header = FC<Props> {
             ariaLabel = "theme"
 
             onChange = { _, checked ->
-              themeCtx = if (checked) Themes.Dark else Themes.Light
+              val currentTheme = if (checked) Themes.Dark else Themes.Light
+              val paletteMode = if (checked) PaletteMode.dark else PaletteMode.light
+
+              themeCtx = Object.assign(currentTheme, jso<ThemePackage> {
+                mode = paletteMode
+              })
             }
           }
         }

@@ -5,6 +5,7 @@ import dev.elide.buildtools.gradle.plugin.js.BundleTool
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -33,9 +34,18 @@ public open class ElideJsHandler @Inject constructor(objects: ObjectFactory) {
     /** Whether to pre-pack built bundles. */
     internal val prepack: AtomicReference<Boolean> = AtomicReference(null)
 
+    /** Provide an `esbuild` config template. */
+    internal val esbuildConfig: AtomicReference<File> = AtomicReference(null)
+
     /** Set the [BundleTool] used to build embedded JS. */
     public fun tool(bundleTool: BundleTool) {
         this.bundleTool.set(bundleTool)
+    }
+
+    /** Set the configuration template used by `esbuild`. */
+    public fun esbuild(config: File) {
+        this.bundleTool.set(BundleTool.ESBUILD)
+        this.esbuildConfig.set(config)
     }
 
     /** Set the [platform] where this bundle target will run. */

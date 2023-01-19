@@ -1,9 +1,13 @@
 package elide.site.ui.components
 
+import csstype.Overflow
+import csstype.pct
 import csstype.px
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
+import elide.site.ui.ElideSiteProps
 import elide.site.ui.pages.*
+import elide.site.ui.pages.startup.GettingStarted
 import elide.site.ui.theme.Area
 import mui.material.Typography
 import mui.system.Box
@@ -13,11 +17,13 @@ import react.router.Outlet
 import react.router.Route
 import react.router.Routes
 
-private val DEFAULT_PADDING = 30.px
+private val defaultPadding = 30.px
 
-/** Resolve a page component for the provided [name]. */
+/** Resolve a page component for the provided `name`. */
 fun SitePage.component(): ElementType<*>? = when (this.name) {
-  "home" -> Home
+  "runtime" -> Runtime
+  "samples" -> Samples
+  "library" -> Library
   "architecture" -> Architecture
   "getting-started" -> GettingStarted
   "tooling" -> Tooling
@@ -25,27 +31,58 @@ fun SitePage.component(): ElementType<*>? = when (this.name) {
 }
 
 /** Main content zone/router/component host for the Elide site. */
-val Content = FC<Props> {
-  Routes {
-    ElideSite.pages.forEach { page ->
-      Route {
-        key = page.name
-        if (page.name == "home") index = true
-        path = page.path
-        element = Box.create {
-          component = page.component()
-          sx {
-            gridArea = Area.Content
-            padding = DEFAULT_PADDING
+val Content = FC<ElideSiteProps> {
+  Box {
+    sx {
+      gridArea = Area.Content
+      overflowX = Overflow.scroll
+      maxHeight = 100.pct
+    }
+    Routes {
+      ElideSite.pages.forEach { page ->
+        Route {
+          key = page.name
+          if (page.name == "home") index = true
+          path = if (page.children.isEmpty()) {
+            page.path
+          } else {
+            "${page.path}/*"
           }
-          Outlet()
+          element = when (page.name) {
+            "home" -> Fragment.create {
+              Home {
+                key = page.name
+                full = true
+              }
+            }
+
+            else -> Suspense.create {
+              fallback = Fragment.create {
+                Typography {
+                  sx {
+                    padding = defaultPadding
+                  }
+                  +"Loading..."
+                }
+              }
+
+              children = Box.create {
+                component = page.component()
+                sx {
+                  gridArea = Area.Content
+                  padding = defaultPadding
+                }
+                Outlet()
+              }
+            }
+          }
         }
       }
-    }
 
-    Route {
-      path = "*"
-      element = Typography.create { +"Not Found" }
+      Route {
+        path = "*"
+        element = Typography.create { +"Not Found" }
+      }
     }
   }
 }

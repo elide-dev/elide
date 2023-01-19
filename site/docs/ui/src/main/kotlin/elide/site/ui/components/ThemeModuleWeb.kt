@@ -1,6 +1,8 @@
 package elide.site.ui.components
 
 import elide.site.ui.theme.Themes
+import js.core.Object
+import js.core.jso
 import mui.material.CssBaseline
 import mui.material.styles.ThemeProvider
 import react.*
@@ -27,14 +29,20 @@ fun currentTheme(): Themes.Mode = if (dynamicTheme) {
 
 /** Theme context provider for browser environments. */
 val ThemeModuleWeb = FC<PropsWithChildren> { props ->
-  val current = currentTheme().theme
-  val state = useState(current)
+  val themeTarget = currentTheme()
+  val current = themeTarget.theme
+  val themePkg = Object.assign(current, jso<ThemePackage> {
+    mode = themeTarget.mode
+  })
+
+  val state = useState(themePkg)
   val (currentTheme, updater) = state
 
   useEffectOnce {
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", {
       val themeName = currentTheme().name.lowercase()
-      updater(currentTheme().theme)
+      updater(currentTheme)
+
       document.querySelector("link[sizes~='any']")?.setAttribute(
         "href",
         "/images/favicon.svg?theme=$themeName",

@@ -78,6 +78,14 @@ object Themes {
   /** */
   val monospaceFont = monospaceFonts.joinToString(",")
 
+  /** @return Color for the current theme. */
+  internal fun <R> styled(theme: PaletteMode, light: Theme.() -> R, dark: Theme.() -> R): R {
+    return when (theme) {
+      PaletteMode.light -> light.invoke(Dark)
+      PaletteMode.dark -> dark.invoke(Dark)
+    }
+  }
+
   val Light = createTheme(
     jso {
       palette = jso {

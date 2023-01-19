@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=block&text=.'EIabcdefghiklmnoprstuwxy");
 
 @font-face {
   font-family: "color-emoji";
@@ -9,41 +10,368 @@
 
 html {
   --elide-color-primary: #5a00ff;
+  --elide-color-primary-desaturated: rgba(245, 245, 245, 1);
   --elide-color-secondary: #9b09ab;
+  --elide-color-secondary-desaturated: rgba(240, 240, 240, 1);
+  --elide-color-primary-alt: #199fda;
+  --elide-color-secondary-alt: #73c167;
+  --elide-color-primary-alt-desaturated: #000;
+  --elide-color-secondary-alt-desaturated: #000;
+  --elide-gradient-angle: 225deg;
+  --elide-black: #111;
+  --elide-black-soft: #222;
+  --elide-white: #f5f5f5;
+  --elide-soft-white: #dedede;
+
+  --elide-grays: linear-gradient(
+    var(--elide-gradient-angle),
+    var(--elide-color-primary-desaturated) 0%,
+    var(--elide-color-secondary-desaturated) 100%
+  );
+  --elide-gradient: linear-gradient(
+    var(--elide-gradient-angle),
+    var(--elide-color-primary) 0%,
+    var(--elide-color-secondary) 100%
+  );
+  --elide-gradient-reverse: linear-gradient(
+    var(--elide-gradient-angle),
+    var(--elide-color-secondary) 0%,
+    var(--elide-color-primary) 100%
+  );
+  --elide-gradient-alt: linear-gradient(
+    var(--elide-gradient-angle),
+    var(--elide-color-primary-alt) 0%,
+    var(--elide-color-secondary-alt) 100%
+  );
+  --elide-gradient-alt-reverse: linear-gradient(
+    var(--elide-gradient-angle),
+    var(--elide-color-secondary-alt) 0%,
+    var(--elide-color-primary-alt) 100%
+  );
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif, color-emoji;
 }
 
+/**
+ * Commons
+ */
+
 .gradient {
   background-attachment: fixed;
   background: transparent;
-  background-image: linear-gradient(
-    225deg,
-    var(--elide-color-primary) 0%,
-    var(--elide-color-secondary) 100%
-  ) !important;
+  background-image: var(--elide-gradient) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .gradient-on-dark {
+    background-attachment: fixed;
+    background: transparent;
+    background-image: var(--elide-gradient) !important;
+  }
+
+  .gradient-reverse-on-dark {
+    background-attachment: fixed;
+    background: transparent;
+    background-image: var(--elide-gradient-reverse) !important;
+  }
+
+  .gradient-on-light {
+    /* Nothing. */
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .gradient-on-dark {
+    /* Nothing. */
+  }
+
+  .gradient-on-light {
+    background-attachment: fixed;
+    background: transparent;
+    background-image: var(--elide-gradient) !important;
+  }
+
+  .gradient-reverse-on-light {
+    background-attachment: fixed;
+    background: transparent;
+    background-image: var(--elide-gradient-reverse) !important;
+  }
 }
 
 pre, .mono {
   font-family: "JetBrains Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono",
     "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace",
-    "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+    "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace !important;
 }
 
-.elide-site-page {
-  inset: 0;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: fixed;
-  background-attachment: fixed;
+.masthead-text {
+  font-family: "Rubik", -apple-system, BlinkMacSystemFont, sans-serif, color-emoji !important;
 }
 
 .center {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.elide-noselect {
+  user-select: none;
+}
+
+.elide-titletext {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+.elide-logotext {
+  font-size: 2rem;
+}
+
+.elide-brand-text {
+  font-weight: 600;
+  box-sizing: border-box;
+  padding: 0;
+  background: var(--elide-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
+
+/**
+ * Navigation (Sidebar)
+ */
+
+.elide-nav__text, .elide-nav-subnav__text {
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+}
+
+.elide-nav-subnav__text::before {
+  content: '—';
+  text-decoration: none;
+  padding-right: 8px;
+  user-select: none;
+  cursor: pointer;
+}
+
+/**
+ * Site Structure
+ */
+
+main#root {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  inset: 0;
+  background-attachment: fixed;
+}
+
+.elide-site-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
+
+.elide-site-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.elide-site-page.fullbleed {
+  position: absolute;
+  inset: 0;
+}
+
+.elide-site-page.narrative {
+  padding: 3rem;
+  height: 100%;
+}
+
+.elide-site-page.narrative header {
+  user-select: none;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 2rem;
+}
+
+/**
+ * MDX
+ */
+
+.elide-mdx__wrapped-p {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+/**
+ * Blockquotes
+ */
+
+.elide-mdx__blockquote {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.elide-mdx__blockquote.elide-mdx__note p.elide-mdx__wrapped-p::before {
+  content: 'Note:';
+  margin-right: 3px;
+  font-weight: bold;
+}
+
+.elide-mdx__note {
+  margin: 10px 0;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+.elide-mdx__icon-note {
+  margin-right: 10px;
+}
+
+/**
+ * Home
+ */
+
+.elide-page__home-column {
+  flex: 1;
+  height: 90%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.elide-page__home-column.elide-page__home-column-right {
+  background: rgb(51, 51, 51);
+  max-width: 47%;
+  padding: 40px;
+  border-top-left-radius: 40px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.elide-page__home-column.elide-page__home-column-left {
+
+}
+
+.masthead-text__title, .masthead-text__subtitle, .elide-page__home-masthead-cta {
+  max-width: 86%;
+  box-sizing: border-box;
+  font-weight: 600;
+  padding-left: 5%;
+}
+
+.elide-page__home-masthead-cta button {
+  transition-property: opacity,box-shadow;
+  opacity: 0.95;
+  background: var(--elide-gradient);
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0 1px 3px 0,
+    rgba(0, 0, 0, 0.06) 0 1px 2px 0;
+}
+
+.elide-page__home-masthead-cta button:hover {
+  opacity: 1;
+  color: white;
+  box-shadow:
+    rgba(0, 0, 0, 0.07) 0 1px 2px,
+    rgba(0, 0, 0, 0.07) 0 2px 4px,
+    rgba(0, 0, 0, 0.07) 0 4px 8px,
+    rgba(0, 0, 0, 0.07) 0 8px 16px,
+    rgba(0, 0, 0, 0.07) 0 16px 32px,
+    rgba(0, 0, 0, 0.07) 0 32px 64px;
+}
+
+.masthead-text__title, .masthead-text__subtitle {
+  padding: 5%;
+}
+
+span.elide-brand-text.masthead-text {
+  padding: 0;
+}
+
+.elide-page__home-masthead-text.masthead-text__title {
+  font-size: 5rem;
+}
+
+.elide-page__home .masthead-text__subtitle span {
+  font-size: 2rem;
+}
+
+.elide-logotext {
+  font-size: 2rem !important;
+}
+
+.elide-page__home.elide-theme__light {
+  background: var(--elide-grays);
+}
+
+.elide-theme__light .elide-logotext {
+  color: #333;
+}
+
+.elide-theme__light .masthead-text span {
+  color: #333;
+}
+
+span.masthead-text__highlight {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-fill-color: transparent !important;
+}
+
+.elide-theme__light .masthead-text__title span.masthead-text__highlight {
+  background: var(--elide-gradient-reverse);
+}
+
+.elide-theme__light .masthead-text__subtitle span.masthead-text__highlight {
+  background: var(--elide-gradient-reverse);
+}
+
+.elide-theme__dark .elide-logotext {
+  color: #fefefe;
+}
+
+.elide-theme__dark .masthead-text span {
+  color: #333;
+}
+
+.elide-theme__dark .masthead-text span.masthead-text__highlight {
+  background: var(--elide-grays);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
+
+.elide-page__home-codesample {
+  background: transparent;
+  z-index: 1000;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 300;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+.elide-page__home-legal a {
+  margin-right: 10px;
+}
+
+.elide-page__home-legal:before {
+  content: '·';
+  margin: 0 10px;
 }

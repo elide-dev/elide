@@ -1,7 +1,7 @@
-const fs = require('fs');
-const esbuild = require('esbuild');
-const nodePath = process.env.NODE_PATH;
-if (!nodePath) { throw new Error("Failed to resolve NODE_PATH"); }
+import fs from "fs";
+import esbuild from "esbuild";
+const { default: mdx } = await import("@mdx-js/esbuild");
+
 const settings = {
     entryPoints: ['{{ENTRY}}'],
     outfile: '{{OUTFILE}}',
@@ -12,7 +12,7 @@ const settings = {
     bundle: {{BUNDLE}},
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
-    resolveExtensions: ['.ts','.js','.mjs'],
+    resolveExtensions: ['.mts', '.ts', '.mjs', '.cjs', '.js'],
     sourcemap: !{{PREPACK}},
     inject: [ '{{PROCESS}}' ],
     external: [

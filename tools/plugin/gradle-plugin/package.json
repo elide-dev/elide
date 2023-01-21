@@ -1,0 +1,9 @@
+{
+    "name": "@elide-dev/gradle-plugin",
+    "dependencies": {
+        "esbuild": "0.16.1"
+    },
+    "devDependencies": {
+        "@mdx-js/esbuild": "^2.2.1"
+    }
+}

@@ -15,6 +15,12 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19 && yarn
       - name: Cache Gradle Caches
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # tag=v2
       - name: "Setup: Signing Keys"

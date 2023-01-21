@@ -26,9 +26,11 @@ import react.dom.aria.ariaHasPopup
 import react.dom.aria.ariaLabel
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.img
+import react.router.useNavigate
 
 /** Renders the main Elide site header. */
 val Header = FC<Props> {
+  val navigator = useNavigate()
   val siteInfo = ElideSite.defaultInfo
   var themeCtx by useContext(ThemeContext)
 
@@ -43,33 +45,25 @@ val Header = FC<Props> {
 
     Toolbar {
       Box {
-        sx {
-          display = Display.flex
-          flexDirection = FlexDirection.row
-          justifyContent = JustifyContent.flexStart
-          flexGrow = number(1.0)
-        }
+        className = ClassName("elide-header__box")
 
         Link {
           title = "${siteInfo.title} Home"
           href = Home.path
           underline = LinkUnderline.none
+          onClick = {
+            it.preventDefault()
+            navigator(Home.path)
+          }
 
           div {
-            css {
-              display = Display.flex
-              cursor = Cursor.pointer
-            }
+            className = ClassName("elide-header__logo-box")
 
             img {
               src = Assets.Images.logoGray
               alt = "${siteInfo.name} Logo"
               width = 32.0
               height = 32.0
-
-              css {
-                marginRight = 22.px
-              }
             }
 
             Typography {
@@ -79,10 +73,6 @@ val Header = FC<Props> {
               className = ClassName("elide-titletext elide-noselect")
 
               +siteInfo.heading
-
-              css {
-                color = Color("#EDEDED")
-              }
             }
           }
         }
@@ -90,12 +80,7 @@ val Header = FC<Props> {
         if (siteInfo.prerelease) {
           NoSsr {
             div {
-              css {
-                display = Display.flex
-                alignItems = AlignItems.center
-                justifyContent = JustifyContent.center
-                height = 32.px
-              }
+              className = ClassName("elide-header__prerelease")
 
               Chip {
                 color = ChipColor.info

@@ -5,6 +5,7 @@ import csstype.pct
 import csstype.px
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
+import elide.site.ui.ElidePageProps
 import elide.site.ui.ElideSiteProps
 import elide.site.ui.pages.*
 import elide.site.ui.pages.startup.GettingStarted
@@ -31,7 +32,7 @@ fun SitePage.component(): ElementType<*>? = when (this.name) {
 }
 
 /** Main content zone/router/component host for the Elide site. */
-val Content = FC<ElideSiteProps> {
+val Content = FC<ElidePageProps> {
   Box {
     sx {
       gridArea = Area.Content

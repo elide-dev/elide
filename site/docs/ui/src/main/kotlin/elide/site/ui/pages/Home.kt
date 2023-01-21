@@ -8,12 +8,11 @@ import elide.site.abstract.SitePage
 import elide.site.pages.GettingStarted
 import elide.site.pages.Samples
 import elide.site.pages.Tooling
-import elide.site.ui.ElideSiteProps
+import elide.site.ui.ElidePageProps
 import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
 import elide.site.ui.components.ThemeContext
 import elide.site.ui.components.ThemePackage
-import emotion.react.css
 import js.core.jso
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrowNight
 import mui.icons.material.GitHub
@@ -44,10 +43,8 @@ import web.html.HTMLButtonElement
 import web.window.WindowTarget
 import web.window.window
 
-private val doInternalNavigate = false
-
 /** Combined home properties. */
-external interface HomeProps: ElideSiteProps {
+external interface HomeProps: ElidePageProps {
   // Nothing yet.
 }
 
@@ -176,14 +173,7 @@ val Home = FC<HomeProps> {
 
   // internal link navigation handler
   val doLinkNavigate: (SitePage) -> Unit = { page ->
-    if (doInternalNavigate) {
-      navigator(page.path)
-    } else {
-      window.open(
-        page.path,
-        WindowTarget._self,
-      )
-    }
+    navigator(page.path)
   }
 
   main {
@@ -192,24 +182,11 @@ val Home = FC<HomeProps> {
     header {
       className = ClassName("elide-page__home-header elide-noselect")
 
-      css {
-        padding = 20.px
-        boxSizing = BoxSizing.borderBox
-        display = Display.flex
-        flexDirection = FlexDirection.row
-        justifyContent = JustifyContent.flexStart
-        alignItems = AlignItems.center
-      }
-
       img {
         className = ClassName("elide-noselect")
         alt = "Elide Logo"
         height = 36.0
         src = if (isDarkMode) Assets.Images.logoGray else Assets.Images.stampColor
-
-        css {
-          marginRight = 22.px
-        }
       }
 
       Typography {
@@ -223,15 +200,6 @@ val Home = FC<HomeProps> {
       if (!it.mobile) {
         nav {
           className = ClassName("elide-page__home-nav")
-
-          css {
-            marginLeft = 10.rem
-            display = Display.flex
-            flexDirection = FlexDirection.row
-            justifyContent = JustifyContent.flexEnd
-            alignItems = AlignItems.center
-            width = 100.pct
-          }
 
           HomeNavLink {
             label = "Getting Started"
@@ -263,12 +231,7 @@ val Home = FC<HomeProps> {
           }
 
           div {
-            css {
-              display = Display.flex
-              flexDirection = FlexDirection.row
-              justifyContent = JustifyContent.flexEnd
-              alignItems = AlignItems.center
-            }
+            className = ClassName("elide-page__home-nav-right")
 
             HomeNavIcon {
               label = "API Docs"
@@ -291,13 +254,7 @@ val Home = FC<HomeProps> {
     }
 
     div {
-      css {
-        display = Display.flex
-        flexDirection = FlexDirection.row
-        justifyContent = JustifyContent.center
-        alignItems = AlignItems.flexEnd
-        height = 100.pct
-      }
+      className = ClassName("elide-page__home-content")
 
       section {
         className = ClassName("elide-page__home-column elide-page__home-column-left")
@@ -309,8 +266,10 @@ val Home = FC<HomeProps> {
             "elide-page__home-masthead-text elide-titletext masthead-text masthead-text__title"
           )
 
-          sx {
+          style = jso {
+            lineHeight = 1.2.unsafeCast<LineHeight>()
             fontWeight = 600.unsafeCast<FontWeight>()
+            letterSpacing = (-0.00833).em
           }
 
           span {
@@ -369,92 +328,71 @@ val Home = FC<HomeProps> {
       section {
         className = ClassName("elide-page__home-column elide-page__home-column-right mono")
 
-        Typography {
-          className = ClassName("elide-noselect")
-          component = span
-          variant = TypographyVariant.h5
+        NoSsr {
+          Typography {
+            className = ClassName("elide-noselect")
+            component = span
+            variant = TypographyVariant.h5
 
-          sx {
-            fontWeight = FontWeight.bold
-            fontSize = 1.rem
-            color = Color("white")
-            fontFamily = "\"JetBrains Mono\", ui-monospace, monospace".unsafeCast<FontFamily>()
-          }
-
-          +"Sample: Kotlin / JavaScript SSR"
-        }
-
-        div {
-          css {
-            display = Display.flex
-            flexDirection = FlexDirection.column
-            justifyContent = JustifyContent.flexStart
-            alignItems = AlignItems.center
-            height = 100.pct
-            marginTop = 10.px
-            color = Color("#dedede")
-          }
-
-          Box {
             sx {
-              borderBottom = 1.unsafeCast<BorderBottom>()
-              borderColor = "divider".unsafeCast<BorderColor>()
-              width = 100.pct
+              fontWeight = FontWeight.bold
+              fontSize = 1.rem
+              color = Color("white")
+              fontFamily = "\"JetBrains Mono\", ui-monospace, monospace".unsafeCast<FontFamily>()
             }
-            Tabs {
-              value = codeSampleTabState
-              textColor = TabsTextColor.inherit
-              indicatorColor = "inherit".unsafeCast<TabsIndicatorColor>()
-              onChange = { _, newValue ->
-                setCodeSampleTabState(newValue as String)
-              }
+
+            +"Sample: Kotlin / JavaScript SSR"
+          }
+
+          div {
+            className = ClassName("elide-page__home-codesample-container")
+
+            Box {
               sx {
+                borderBottom = 1.unsafeCast<BorderBottom>()
+                borderColor = "divider".unsafeCast<BorderColor>()
                 width = 100.pct
               }
-
-              Tab {
-                label = ReactNode("server.kt")
-                value = "server.kt"
-
+              Tabs {
+                value = codeSampleTabState
+                textColor = TabsTextColor.inherit
+                indicatorColor = "inherit".unsafeCast<TabsIndicatorColor>()
+                onChange = { _, newValue ->
+                  setCodeSampleTabState(newValue as String)
+                }
                 sx {
-                  color = Color("#fefefe")
-                  borderBottomColor = Color("#fefefe")
-                  textTransform = "none".unsafeCast<TextTransform>()
-                  fontFamily = "\"JetBrains Mono\", ui-monospace, monospace".unsafeCast<FontFamily>()
-                  cursor = Cursor.pointer
+                  width = 100.pct
                 }
 
-              }
-              Tab {
-                label = ReactNode("ssr.mjs")
-                value = "ssr.mjs"
+                Tab {
+                  className = ClassName("elide-page__home-codesample-tab mono")
+                  label = ReactNode("server.kt")
+                  value = "server.kt"
+                }
 
-                sx {
-                  color = Color("#fefefe")
-                  borderBottomColor = Color("#fefefe")
-                  textTransform = "none".unsafeCast<TextTransform>()
-                  fontFamily = "\"JetBrains Mono\", ui-monospace, monospace".unsafeCast<FontFamily>()
-                  cursor = Cursor.pointer
+                Tab {
+                  className = ClassName("elide-page__home-codesample-tab mono")
+                  label = ReactNode("ssr.mjs")
+                  value = "ssr.mjs"
                 }
               }
             }
-          }
 
-          CodeSample {
-            className = ClassName("elide-page__home-codesample")
-            style = SyntaxThemeTomorrowNight
-            customStyle = jso {
-              background = "transparent"
-              backgroundColor = "transparent"
-              width = "100%"
-            }
+            CodeSample {
+              className = ClassName("elide-page__home-codesample")
+              style = SyntaxThemeTomorrowNight
+              customStyle = jso {
+                background = "transparent"
+                backgroundColor = "transparent"
+                width = "100%"
+              }
 
-            when (codeSampleTabState) {
-              "server.kt" -> {
-                language = SyntaxLanguage.KOTLIN
+              when (codeSampleTabState) {
+                "server.kt" -> {
+                  language = SyntaxLanguage.KOTLIN
 
-                // language=kotlin
-                +"""
+                  // language=kotlin
+                  +"""
               /** Props structure (can originate from a shared code unit). */
               @Props data class HelloProps (
                 val name: String
@@ -480,12 +418,12 @@ val Home = FC<HomeProps> {
                 }
               }
             """.trimIndent()
-              }
-              "ssr.mjs" -> {
-                language = SyntaxLanguage.JAVASCRIPT
+                }
+                "ssr.mjs" -> {
+                  language = SyntaxLanguage.JAVASCRIPT
 
-                // language=javascript
-                +"""
+                  // language=javascript
+                  +"""
                   export default {
                     /**
                      * Entrypoint for an SSR render call. When `injectSSR` is called
@@ -513,22 +451,16 @@ val Home = FC<HomeProps> {
                     }
                   }
                 """.trimIndent()
-              }
+                }
 
-              else -> error("Unrecognized code sample name: $codeSampleTabState")
+                else -> error("Unrecognized code sample name: $codeSampleTabState")
+              }
             }
           }
         }
 
         div {
-          css {
-            position = Position.absolute
-            bottom = 0.px
-            right = (-90).px
-            left = 0.px
-            maxHeight = 36.pct
-            textAlign = TextAlign.right
-          }
+          className = ClassName("elide-page__home-codesample-container-bottom")
 
           picture {
             source {
@@ -555,21 +487,15 @@ val Home = FC<HomeProps> {
     }
 
     footer {
-      css {
-        position = Position.absolute
-        display = Display.flex
-        flexDirection = FlexDirection.row
-        justifyContent = JustifyContent.flexStart
-        alignItems = AlignItems.center
-        boxSizing = BoxSizing.borderBox
-        left = 20.px
-        bottom = 20.px
+      className = ClassName("elide-footer")
+
+      NoSsr {
+        div {
+          className = ClassName("elide-page__home-footer")
+          +"Made with ❤️ in California"
+        }
       }
 
-      div {
-        className = ClassName("elide-page__home-footer")
-        +"Made with ❤️ in California"
-      }
       div {
         className = ClassName("elide-page__home-legal")
 

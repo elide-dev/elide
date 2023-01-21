@@ -38,9 +38,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  /**
-   *
-   */
   protected open fun pageHead(): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     link {
       rel = "icon"
@@ -55,9 +52,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  /**
-   *
-   */
   protected open fun pageBody(): suspend BODY.(request: HttpRequest<*>) -> Unit = {
     if (enableSSR) {
       if (enableStreaming) streamSSR(this@SitePageController, it)
@@ -65,9 +59,32 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  /**
-   *
-   */
+  protected open fun fonts(): List<String> = listOf(
+    "https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap",
+  )
+
+  protected open fun preStyles(): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+    link {
+      rel = "preconnect"
+      href = "https://fonts.googleapis.com"
+    }
+    link {
+      rel = "preconnect"
+      href = "https://fonts.gstatic.com"
+      attributes["crossorigin"] = "true"
+    }
+  }
+
+  protected open fun pageStyles(): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+    preStyles().invoke(this, it)
+    fonts().forEach {
+      link {
+        href = it
+        rel = "stylesheet"
+      }
+    }
+  }
+
   protected open suspend fun page(
     request: HttpRequest<*>,
     head: suspend HEAD.(HttpRequest<*>) -> Unit,
@@ -75,7 +92,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   ) = ssr(request) {
     head {
       title { +renderTitle() }
+      preStyles().invoke(this@head, request)
+
       stylesheet(Assets.Styles.base)
+      link {
+        href = "/assets/home.min.css"
+        rel = "stylesheet"
+      }
+
+      pageStyles().invoke(this@head, request)
       script(Assets.Scripts.ui, defer = true)
       head.invoke(this@head, request)
     }
@@ -84,9 +109,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  /**
-   *
-   */
   protected open suspend fun page(
     request: HttpRequest<*>,
     block: suspend BODY.(HttpRequest<*>) -> Unit = pageBody(),

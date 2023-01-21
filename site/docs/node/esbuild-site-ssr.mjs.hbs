@@ -1,10 +1,7 @@
-const fs = require('fs');
-const esbuild = require('esbuild');
-const { default: mdx } = require("@mdx-js/esbuild");
-const { default: rehypeHighlight } = await import("rehype-highlight");
-const nodePath = process.env.NODE_PATH;
+import fs from "fs";
+import esbuild from "esbuild";
+const { default: mdx } = await import("@mdx-js/esbuild");
 
-if (!nodePath) { throw new Error("Failed to resolve NODE_PATH"); }
 const settings = {
     entryPoints: ['{{ENTRY}}'],
     outfile: '{{OUTFILE}}',
@@ -15,13 +12,11 @@ const settings = {
     bundle: {{BUNDLE}},
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
-    resolveExtensions: ['.ts','.js','.mjs'],
+    resolveExtensions: ['.mts', '.ts', '.mjs', '.cjs', '.js'],
     sourcemap: !{{PREPACK}},
     inject: [ '{{PROCESS}}' ],
     plugins: [
-      mdx({
-          rehypePlugins: [rehypeHighlight]
-      })
+      mdx({})
     ],
     external: [
         'buffer',

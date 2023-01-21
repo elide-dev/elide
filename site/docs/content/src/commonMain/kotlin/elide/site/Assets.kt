@@ -17,7 +17,7 @@ object Assets {
   /** Style assets. */
   object Styles {
     /** Base stylesheet shared by all Elide sites. */
-    const val base = "/assets/base.css"
+    const val base = "/assets/base.min.css"
   }
 
   /** Script assets. */

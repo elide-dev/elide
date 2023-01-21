@@ -12,6 +12,7 @@ import js.core.jso
 import mui.system.Box
 import mui.system.sx
 import react.*
+import react.router.useLocation
 
 // Whether to emit debug logs to the console.
 private var debugLogging = false
@@ -30,18 +31,30 @@ external interface SidebarState {
 external interface ElideSiteProps : Props {
   /** Active page path. */
   var page: String?
+}
 
-  /** Whether the site should render in mobile mode. */
-  var mobile: Boolean
+/** Page-level properties. */
+external interface ElidePageProps : Props {
+  /** Active page path. */
+  var page: String?
 
-  /** Whether the rendered page is full-bleed. */
+  /** Whether we are rendering in full-bleed mode. */
   var full: Boolean
+
+  /** Whether we are rendering in mobile mode. */
+  var mobile: Boolean
 }
 
 /** Site-wide props. */
 external interface SiteWideState : Props {
   /** Sidebar state. */
   var sidebar: SidebarState
+
+  /** Mobile render mode. */
+  var mobile: Boolean
+
+  /** Full-bleed render mode. */
+  var full: Boolean
 }
 
 /** Context component for site-wide info. */
@@ -71,6 +84,8 @@ private val enabledLanguages = listOf(
 
 /**
  * Called from the `main` function to perform early-init steps.
+ *
+ * @param enableDebug Whether debug logging is enabled.
  */
 fun initializeSite(enableDebug: Boolean) {
   debugLogging = enableDebug
@@ -84,47 +99,60 @@ fun initializeSite(enableDebug: Boolean) {
 }
 
 /**
+ * Determine whether to enable full-bleed mode.
+ *
+ * @param location Location to use.
+ * @return Whether full-bleed mode is active.
+ */
+private fun determineFullbleed(location: history.Location): Boolean {
+  return location.pathname == "/"
+}
+
+/**
+ * Determine whether to enable mobile rendering.
+ *
+ * @return Whether full-bleed mode is active.
+ */
+private fun determineMobile(): Boolean {
+  return false
+}
+
+/**
  * Elide site.
  *
  * Main site component which implements the Elide website. This includes the [Header], [Content], and [Sidebar], wired
  * together with proper state.
  */
 val ElideSite = FC<ElideSiteProps> {
-  val (isSidebarShowing, sidebarShowingUpdater) = useState(it.full || !it.mobile)
-  val (isHeaderShowing, _) = useState(!it.full)
+  val location = useLocation()
+  val (fullbleed, setFullbleed) = useState(determineFullbleed(location))
+  val (isMobile, _) = useState(determineMobile())
+
+  val (isSidebarShowing, sidebarShowingUpdater) = useState(fullbleed || isMobile)
+
+  useEffect(listOf(location)) {
+    setFullbleed(determineFullbleed(location))
+  }
 
   Box {
     className = ClassName("elide-site-container")
 
-    if (!it.full) {
-      sx {
-        display = Display.grid
-        gridTemplateRows = if (isHeaderShowing) array(
-          Sizes.Header.Height,
-          auto,
-        ) else array(
-          auto,
-        )
+    sx {
+      display = Display.grid
+      gridTemplateRows = array(
+        Sizes.Header.Height,
+        auto,
+      )
 
-        gridTemplateColumns = if (!isSidebarShowing) array(auto) else array(
-          Sizes.Sidebar.Width,
-          auto,
-        )
+      gridTemplateColumns = array(
+        Sizes.Sidebar.Width,
+        auto,
+      )
 
-        gridTemplateAreas = GridTemplateAreas(
-          arrayOf(Area.Header, Area.Header),
-          if (it.mobile)
-            arrayOf(Area.Content, Area.Content)
-          else if (!isSidebarShowing)
-            arrayOf(Area.Content)
-          else
-            arrayOf(Area.Sidebar, Area.Content),
-        )
-      }
-    } else {
-      sx {
-        display = Display.flex
-      }
+      gridTemplateAreas = GridTemplateAreas(
+        arrayOf(Area.Header, Area.Header),
+        if (isMobile) arrayOf(Area.Content, Area.Content) else arrayOf(Area.Sidebar, Area.Content),
+      )
     }
 
     val siteWideState = jso<SiteWideState> {
@@ -139,16 +167,16 @@ val ElideSite = FC<ElideSiteProps> {
     SiteWideContextComponent.Provider {
       value = siteWideState
 
-      if (!it.full) {
+      if (!fullbleed) {
         Header()
       }
-      if (!it.full) {
-        if (it.mobile) Menu() else Sidebar()
+      if (!fullbleed) {
+        if (isMobile) Menu() else Sidebar()
       }
       Content {
         page = it.page
-        full = it.full
-        mobile = it.mobile
+        full = fullbleed
+        mobile = isMobile
       }
     }
   }

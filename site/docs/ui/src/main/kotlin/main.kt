@@ -3,19 +3,35 @@
 import react.Fragment
 import react.create
 import elide.js.ssr.boot
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.site.abstract.SitePage
 import elide.site.pages.Home
 import elide.site.ui.ElideSite
 import elide.site.ui.components.ThemeModuleWeb
 import elide.site.ui.initializeSite
+import emotion.cache.EmotionCache
+import emotion.cache.createCache
+import emotion.react.CacheProvider
+import js.core.jso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import mui.material.CssBaseline
 import react.Props
 import react.router.dom.BrowserRouter
 import web.dom.document
 import web.events.EventType
 import web.location.location
 import kotlin.coroutines.CoroutineContext
+
+// Main application logger.
+private val mainLogger: Logger = Logging.named("elide:site")
+
+// Setup Emotion cache.
+private val emotionCache: EmotionCache = createCache(jso {
+  key = "css"
+  speedy = false
+})
 
 /** Application-level properties. */
 external interface AppProps: Props {
@@ -28,8 +44,7 @@ class ElideSiteApplication (
   private val currentPage: SitePage?,
 ) : CoroutineScope {
   private var job = Job()
-  override val coroutineContext: CoroutineContext
-    get() = job
+  override val coroutineContext: CoroutineContext get() = job
 
   // Start the application.
   internal fun start() {
@@ -41,12 +56,15 @@ class ElideSiteApplication (
   // Render the site.
   private fun render() = boot<AppProps> {
     Fragment.create {
-      BrowserRouter {
-        ThemeModuleWeb {
-          ElideSite {
-            mobile = false
-            page = currentPage?.name ?: "not-found"
-            full = currentPage?.name == Home.name
+      CacheProvider(emotionCache) {
+        // reset CSS to baseline
+        CssBaseline()
+
+        BrowserRouter {
+          ThemeModuleWeb {
+            ElideSite {
+              page = currentPage?.name ?: "not-found"
+            }
           }
         }
       }
@@ -60,6 +78,7 @@ fun main() {
   val currentPage = elide.site.ElideSite.pages.find {
     it.path == location.pathname || location.pathname != "/" && it.path.startsWith(location.pathname)
   }
+
 
   // add content-loaded listener, start application within co-routine context
   document.addEventListener(EventType("DOMContentLoaded"), {

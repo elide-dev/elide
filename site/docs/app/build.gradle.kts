@@ -136,9 +136,15 @@ elide {
 
       // stylesheet: `styles.base`
       stylesheet("styles.base") {
-        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/base.css")
+        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/base.min.css")
       }
 
+      // stylesheet: `styles.home`
+      stylesheet("styles.home") {
+        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/home.min.css")
+      }
+
+      // script: `scripts.ui`
       script("scripts.ui") {
         from(project(":site:docs:ui"))
       }

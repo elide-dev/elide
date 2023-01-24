@@ -58,22 +58,58 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   companion object {
     const val enableSSR = true
     const val enableStreaming = true
+    const val securityReportOnly = true
   }
 
   /**
    * Represents materialized render state for a single page-load.
    *
+   * @param nonce CSP nonce for this page-load cycle.
    * @param props Server-side render state (React props) to share with the JS VM.
    * @param page Page which is due for render to the client.
    * @param request HTTP request submitted by the client.
    * @param locale Resolved locale for this request.
    */
-  data class PageRenderState(
+  data class PageRenderState private constructor (
+    val nonce: String,
     val props: AppServerProps?,
     val page: SitePage,
     val request: HttpRequest<*>,
     val locale: Locale,
-  )
+  ) {
+    internal companion object {
+      /**
+       * Generate a nonce to be used with Content Security Policy.
+       *
+       * @return Nonce for a given render cycle.
+       */
+      @JvmStatic private fun generateNonce(): String {
+        TODO("tbd")
+      }
+
+      /**
+       * Create a page render state from the provided inputs.
+       *
+       * @param props Server-side render state (React props) to share with the JS VM.
+       * @param page Page which is due for render to the client.
+       * @param request HTTP request submitted by the client.
+       * @param locale Resolved locale for this request.
+       * @return Page render state from the provided inputs.
+       */
+      @JvmStatic fun from(
+        props: AppServerProps?,
+        page: SitePage,
+        request: HttpRequest<*>,
+        locale: Locale
+      ): PageRenderState = PageRenderState(
+        props = props,
+        page = page,
+        request = request,
+        locale = locale,
+        nonce = generateNonce(),
+      )
+    }
+  }
 
   /** Generate a cache key for an HTTP request. */
   internal class CachedResponseKeyGenerator : CacheKeyGenerator {
@@ -439,10 +475,31 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Generate a baseline response to fill with content.
   protected open fun baseResponse(): MutableHttpResponse<ByteArray> = HttpResponse.ok()
 
+  // Retrieve the CSP header name that should be used.
+  protected fun cspHeader(): String = if (securityReportOnly) {
+    "Content-Security-Policy"
+  } else {
+    "Content-Security-Policy-Report-Only"
+  }
+
+  // Retrieve the CORP header name that should be used.
+  protected fun corpHeader(): String = if (securityReportOnly) {
+    "Cross-Origin-Opener-Policy"
+  } else {
+    "Cross-Origin-Opener-Policy-Report-Only"
+  }
+
+  // Retrieve the COEP header name that should be used.
+  protected fun coepHeader(): String = if (securityReportOnly) {
+    "Cross-Origin-Embedder-Policy"
+  } else {
+    "Cross-Origin-Embedder-Policy-Report-Only"
+  }
+
   // Generate a baseline response to fill with content.
-  protected open fun csp(): List<Pair<String, String>> = listOf(
+  protected open fun csp(state: PageRenderState): List<Pair<String, String>> = listOf(
       "default-src" to "'self'",
-      "script-src" to "'self' https://www.googletagmanager.com",
+      "script-src" to "'self' 'nonce-${state.nonce}' 'strict-dynamic' https://www.googletagmanager.com",
       "style-src" to "'self' 'unsafe-inline'",
       "img-src" to "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
       "font-src" to "https://fonts.gstatic.com",
@@ -476,15 +533,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers[HttpHeaders.ACCEPT_CH] = "DPR"
-    response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
-    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    response.headers[coepHeader()] = "require-corp"
+    response.headers[corpHeader()] = "same-origin"
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
 
     response.headers["Permissions-Policy"] = listOf(
      "ch-dpr=(self)",
     ).joinToString(", ")
 
-    response.headers["Content-Security-Policy"] = csp().map {
+    response.headers[cspHeader()] = csp(state).map {
       "${it.first} ${it.second}"
     }.joinToString("; ")
 
@@ -611,6 +668,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         twitterInfo.linkedData(state.locale).invoke(builder)
 
         script {
+          nonce = state.nonce
           type = "application/json+ld"
 
           unsafe {
@@ -644,7 +702,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     val locale = request.locale.orElse(I18nPage.Defaults.locale)
 
     // calculate render state
-    val state = PageRenderState(
+    val state = PageRenderState.from(
       props = props(RequestState(
         request = request,
         principal = null,
@@ -683,8 +741,19 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         title { +renderTitle() }
 
         // UI and analytics scripts
-        script(Assets.Scripts.ui, defer = true)
-        script(Assets.Scripts.analytics, async = true)
+        script {
+          type = "text/javascript"
+          src = Assets.Scripts.ui
+          defer = true
+          nonce = state.nonce
+        }
+        script {
+          type = "text/javascript"
+          src = Assets.Scripts.analytics
+          defer = true
+          async = true
+          nonce = state.nonce
+        }
 
         // extra head content
         head.invoke(this@head, request)

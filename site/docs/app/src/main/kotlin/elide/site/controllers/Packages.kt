@@ -8,7 +8,7 @@ import io.micronaut.http.annotation.Get
 /** Library and packages page (top-level). */
 @Page(name = "packages") class Packages : SitePageController(page = Packages) {
   // Add FOSSA to `img-src` in CSP.
-  protected override fun csp(): List<Pair<String, String>> = super.csp().map { stanza ->
+  protected override fun csp(state: PageRenderState): List<Pair<String, String>> = super.csp(state).map { stanza ->
     val (directive, policy) = stanza
     if (directive == "img-src") {
       directive to "$policy https://app.fossa.com https://codecov.io https://img.shields.io"

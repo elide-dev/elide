@@ -346,10 +346,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       sizes = "any"
       type = "image/svg+xml"
     }
-    meta {
-      name = "viewport"
-      content = "width=device-width, initial-scale=1.0"
-    }
   }
 
   protected open fun headMetadata(locale: Locale): suspend HEAD.(request: HttpRequest<*>) -> Unit = {

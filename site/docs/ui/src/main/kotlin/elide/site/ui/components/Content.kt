@@ -14,7 +14,8 @@ import elide.site.ui.theme.Area
 import mui.material.Typography
 import mui.system.Box
 import mui.system.sx
-import react.*
+import react.ElementType
+import react.create
 import react.router.Outlet
 import react.router.Route
 import react.router.Routes
@@ -36,8 +37,8 @@ fun SitePage.component(): ElementType<*>? = when (this.name) {
 }
 
 /** Main content zone/router/component host for the Elide site. */
-val Content = FC<ElidePageProps> {
-  val loadingFragment = Fragment.create {
+val Content = react.FC<ElidePageProps> {
+  val loadingFragment = react.Fragment.create {
     Typography {
       sx {
         padding = defaultPadding
@@ -63,14 +64,14 @@ val Content = FC<ElidePageProps> {
             "${page.path}/*"
           }
           element = when (page.name) {
-            "home" -> Fragment.create {
+            "home" -> react.Fragment.create {
               Home {
                 key = page.name
                 full = true
               }
             }
 
-            else -> Suspense.create {
+            else -> react.Suspense.create {
               fallback = loadingFragment
               children = Box.create {
                 component = page.component()
@@ -87,9 +88,9 @@ val Content = FC<ElidePageProps> {
 
       Route {
         path = "/legal/privacy"
-        element = Suspense.create {
+        element = react.Suspense.create {
           fallback = loadingFragment
-          children = Fragment.create {
+          children = react.Fragment.create {
             Privacy {}
           }
         }
@@ -97,9 +98,9 @@ val Content = FC<ElidePageProps> {
 
       Route {
         path = "/legal/license"
-        element = Suspense.create {
+        element = react.Suspense.create {
           fallback = loadingFragment
-          children = Fragment.create {
+          children = react.Fragment.create {
             License {}
           }
         }
@@ -107,7 +108,7 @@ val Content = FC<ElidePageProps> {
 
       Route {
         path = "*"
-        element = Fragment.create {
+        element = react.Fragment.create {
           NotFound {
             key = "not-found"
           }

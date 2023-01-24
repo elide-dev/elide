@@ -7,19 +7,24 @@ import csstype.px
 import elide.site.ElideSite
 import elide.site.ui.theme.Sizes
 import emotion.react.css
-import mui.material.*
+import mui.material.List
+import mui.material.ListItemButton
+import mui.material.ListItemText
+import mui.material.SwipeableDrawer
+import mui.material.SpeedDial
+import mui.material.Toolbar
 import mui.material.DrawerAnchor.left
 import mui.system.Box
 import mui.system.sx
-import react.*
+import react.create
 import react.dom.html.ReactHTML.nav
 import react.router.dom.NavLink
 import react.router.useLocation
 import mui.icons.material.Menu as MenuIcon
 
 /** Render the main side-bar navigation menu for the Elide site. */
-val Menu = FC<Props> {
-  var isOpen by useState(false)
+val Menu = react.FC<react.Props> {
+  var isOpen by react.useState(false)
   val path = useLocation().pathname
   val lastPathname = path.substringAfterLast("/")
 
@@ -53,7 +58,7 @@ val Menu = FC<Props> {
                 selected = lastPathname == page.path || path == page.path
 
                 ListItemText {
-                  primary = ReactNode(page.label)
+                  primary = react.ReactNode(page.label)
                 }
               }
             }

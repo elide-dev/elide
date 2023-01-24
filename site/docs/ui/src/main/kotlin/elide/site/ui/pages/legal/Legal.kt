@@ -10,10 +10,9 @@ import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.main
 import react.dom.html.ReactHTML.header
 import react.dom.html.ReactHTML.section
-import react.*
 
 /** Renders the privacy page for the Elide website. */
-val Privacy = FC<Props> {
+val Privacy = react.FC<react.Props> {
   main {
     className = ClassName("elide-site-page narrative")
 
@@ -34,7 +33,7 @@ val Privacy = FC<Props> {
 }
 
 /** Renders the license page for the Elide website. */
-val License = FC<Props> {
+val License = react.FC<react.Props> {
   main {
     className = ClassName("elide-site-page narrative")
 

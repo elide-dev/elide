@@ -7,17 +7,17 @@ import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
 import js.core.jso
 import mui.icons.material.InfoOutlined
-import mui.icons.material.InfoRounded
 import mui.material.Box
 import mui.material.Link
 import mui.material.SvgIconColor
 import mui.material.Typography
 import mui.material.styles.TypographyVariant
 import react.dom.html.ReactHTML.code
-import react.dom.html.ReactHTML.blockquote
-import react.*
+import react.ChildrenBuilder
+import react.ElementType
+import react.ReactElement
+import react.create
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.span
 
 external interface MDXComponents {
   /** `a`: Link element. */
@@ -52,18 +52,18 @@ external interface MDXComponents {
 }
 
 /** Props supported by all rendered MDX components. */
-external interface MDXProps : Props {
+external interface MDXProps : react.Props {
   /** Component overrides. */
   var components: MDXComponents
 }
 
 /** Combination of props-with-children and props-with-class-name. */
-external interface WrappedComponentProps : PropsWithChildren, PropsWithClassName {
+external interface WrappedComponentProps : react.PropsWithChildren, react.PropsWithClassName {
   // Nothing at this time.
 }
 
 // Wrapped paragraph component.
-val wrappedP = FC<WrappedComponentProps> {
+val wrappedP = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.body1
     children = it.children
@@ -72,7 +72,7 @@ val wrappedP = FC<WrappedComponentProps> {
 }
 
 // Wrapped H1 component.
-val wrappedH1 = FC<WrappedComponentProps> {
+val wrappedH1 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h1
     children = it.children
@@ -80,7 +80,7 @@ val wrappedH1 = FC<WrappedComponentProps> {
 }
 
 // Wrapped H2 component.
-val wrappedH2 = FC<WrappedComponentProps> {
+val wrappedH2 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h2
     children = it.children
@@ -88,7 +88,7 @@ val wrappedH2 = FC<WrappedComponentProps> {
 }
 
 // Wrapped H3 component.
-val wrappedH3 = FC<WrappedComponentProps> {
+val wrappedH3 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h3
     children = it.children
@@ -96,7 +96,7 @@ val wrappedH3 = FC<WrappedComponentProps> {
 }
 
 // Wrapped H4 component.
-val wrappedH4 = FC<WrappedComponentProps> {
+val wrappedH4 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h4
     children = it.children
@@ -104,7 +104,7 @@ val wrappedH4 = FC<WrappedComponentProps> {
 }
 
 // Wrapped H5 component.
-val wrappedH5 = FC<WrappedComponentProps> {
+val wrappedH5 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h5
     children = it.children
@@ -112,7 +112,7 @@ val wrappedH5 = FC<WrappedComponentProps> {
 }
 
 // Wrapped H6 component.
-val wrappedH6 = FC<WrappedComponentProps> {
+val wrappedH6 = react.FC<WrappedComponentProps> {
   Typography {
     variant = TypographyVariant.h6
     children = it.children
@@ -126,7 +126,7 @@ external interface SyntaxHighlighterProps : WrappedComponentProps {
 }
 
 // Wrapped code block.
-private val wrappedCode = FC<SyntaxHighlighterProps> {
+private val wrappedCode = react.FC<SyntaxHighlighterProps> {
   val clsName = it.className?.unsafeCast<String>()?.split("-")?.last()
   val languageName = if (it.language.isNullOrBlank() && clsName.isNullOrBlank()) {
     null
@@ -163,7 +163,7 @@ private val wrappedCode = FC<SyntaxHighlighterProps> {
 }
 
 // Wraps a `blockquote` element.
-private val wrappedBlockquote = FC<PropsWithChildren> {
+private val wrappedBlockquote = react.FC<react.PropsWithChildren> {
   Box {
     component = div
     className = ClassName("elide-mdx__blockquote elide-mdx__note")
@@ -193,7 +193,7 @@ object MDX {
     E: ReactElement<P>,
     T: ElementType<P>
   > render(children: ChildrenBuilder, mui: Boolean, elementType: T, block: P.() -> Unit): Unit = if (mui) {
-    children.child(Fragment.create {
+    children.child(react.Fragment.create {
       elementType {
         components = jso {
           a = Link
@@ -212,7 +212,7 @@ object MDX {
       }
     })
   } else {
-    children.child(Fragment.create {
+    children.child(react.Fragment.create {
       elementType {
         block.invoke(this)
       }

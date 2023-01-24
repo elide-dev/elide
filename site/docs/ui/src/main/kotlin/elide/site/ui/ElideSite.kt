@@ -11,7 +11,6 @@ import elide.site.ui.theme.Sizes
 import js.core.jso
 import mui.system.Box
 import mui.system.sx
-import react.*
 import react.router.useLocation
 
 // Whether to emit debug logs to the console.
@@ -28,13 +27,13 @@ external interface SidebarState {
 
 /** Info provided by site-wide context. */
 
-external interface ElideSiteProps : Props {
+external interface ElideSiteProps : react.Props {
   /** Active page path. */
   var page: String?
 }
 
 /** Page-level properties. */
-external interface ElidePageProps : Props {
+external interface ElidePageProps : react.Props {
   /** Active page path. */
   var page: String?
 
@@ -46,7 +45,7 @@ external interface ElidePageProps : Props {
 }
 
 /** Site-wide props. */
-external interface SiteWideState : Props {
+external interface SiteWideState : react.Props {
   /** Sidebar state. */
   var sidebar: SidebarState
 
@@ -58,14 +57,14 @@ external interface SiteWideState : Props {
 }
 
 /** Context component for site-wide info. */
-val SiteWideContextComponent = createContext<SiteWideState>(jso())
+val SiteWideContextComponent = react.createContext<SiteWideState>(jso())
 
 /** Site-wide context component. */
 @Suppress("unused") val ElideSiteContext = SiteWideContextComponent.Consumer
 
 // Toggle function for the sidebar.
-private val sidebarToggler: (StateSetter<Boolean>, Boolean, Boolean?) -> Unit = { updater, isShowing, shouldShow ->
-  updater(shouldShow ?: !isShowing)
+private val sidebarToggler: (react.StateSetter<Boolean>, Boolean, Boolean?) -> Unit = { updater, showing, shouldShow ->
+  updater(shouldShow ?: !showing)
 }
 
 // Emit a debug log before we've acquired a logger.
@@ -124,14 +123,14 @@ private fun determineMobile(): Boolean {
  * Main site component which implements the Elide website. This includes the [Header], [Content], and [Sidebar], wired
  * together with proper state.
  */
-val ElideSite = FC<ElideSiteProps> {
+val ElideSite = react.FC<ElideSiteProps> {
   val location = useLocation()
-  val (fullbleed, setFullbleed) = useState(determineFullbleed(location))
-  val (isMobile, _) = useState(determineMobile())
+  val (fullbleed, setFullbleed) = react.useState(determineFullbleed(location))
+  val (isMobile, _) = react.useState(determineMobile())
 
-  val (isSidebarShowing, sidebarShowingUpdater) = useState(fullbleed || isMobile)
+  val (isSidebarShowing, sidebarShowingUpdater) = react.useState(fullbleed || isMobile)
 
-  useEffect(listOf(location)) {
+  react.useEffect(listOf(location)) {
     setFullbleed(determineFullbleed(location))
   }
 

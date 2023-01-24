@@ -9,7 +9,6 @@ import lib.reactSyntaxHighlighter.languages.kotlin.KotlinSyntax
 import lib.reactSyntaxHighlighter.languages.python.PythonSyntax
 import lib.reactSyntaxHighlighter.languages.xml.XmlSyntax
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrow as TomorrowTheme
-import react.*
 import kotlin.js.Promise
 
 /**
@@ -113,7 +112,7 @@ fun configureCodeSamples(languages: List<SyntaxLanguage>? = null, theme: dynamic
  *
  * Defines the structure of properties which can be used to configure the [CodeSample] React component.
  */
-external interface CodeSampleProps : PropsWithChildren, PropsWithClassName {
+external interface CodeSampleProps : react.PropsWithChildren, react.PropsWithClassName {
   /** Active language to render for; if not provided, defaults to [SyntaxLanguage.JAVASCRIPT]. */
   var language: SyntaxLanguage?
 
@@ -130,7 +129,7 @@ external interface CodeSampleProps : PropsWithChildren, PropsWithClassName {
  * Displays a sample of source-code material with features like syntax highlighting, file names, copy-to-clipboard, etc.
  * Powered by Highlight.js and React Syntax Highlighter, and typically driven from MDX.
  */
-val CodeSample = FC<CodeSampleProps> {
+val CodeSample = react.FC<CodeSampleProps> {
   SyntaxHighlighterLight {
     language = (it.language ?: defaultLanguage).symbol
     style = it.style ?: activeTheme

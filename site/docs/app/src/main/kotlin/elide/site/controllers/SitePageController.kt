@@ -359,7 +359,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       try {
         base.cookies.all
       } catch (thr: Throwable) {
-        logging.warn("Failed to copy cookies to response", thr)
         emptySet()
       }
     ).status(

@@ -5,7 +5,6 @@ import js.core.Object
 import js.core.jso
 import mui.material.CssBaseline
 import mui.material.styles.ThemeProvider
-import react.*
 import kotlinx.browser.window
 import kotlinx.browser.document
 
@@ -28,17 +27,17 @@ fun currentTheme(): Themes.Mode = if (dynamicTheme) {
 }
 
 /** Theme context provider for browser environments. */
-val ThemeModuleWeb = FC<PropsWithChildren> { props ->
+val ThemeModuleWeb = react.FC<react.PropsWithChildren> { props ->
   val themeTarget = currentTheme()
   val current = themeTarget.theme
   val themePkg = Object.assign(current, jso<ThemePackage> {
     mode = themeTarget.mode
   })
 
-  val state = useState(themePkg)
+  val state = react.useState(themePkg)
   val (currentTheme, updater) = state
 
-  useEffectOnce {
+  react.useEffectOnce {
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", {
       val themeName = currentTheme().name.lowercase()
       updater(currentTheme)

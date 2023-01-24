@@ -2,7 +2,17 @@
 
 package elide.site.ui.pages
 
-import csstype.*
+import csstype.BorderBottom
+import csstype.BorderColor
+import csstype.ClassName
+import csstype.Color
+import csstype.FontFamily
+import csstype.FontWeight
+import csstype.TextTransform
+import csstype.LineHeight
+import csstype.em
+import csstype.pct
+import csstype.rem
 import elide.site.abstract.SitePage
 import elide.site.pages.GettingStarted
 import elide.site.ui.ElidePageProps
@@ -13,9 +23,23 @@ import elide.site.ui.components.ThemePackage
 import js.core.jso
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrowNight
 import mui.icons.material.GitHub
-import mui.material.*
+import mui.material.Box
+import mui.material.Button
+import mui.material.ButtonColor
+import mui.material.ButtonVariant
+import mui.material.IconButton
+import mui.material.Link
+import mui.material.NoSsr
+import mui.material.PaletteMode
+import mui.material.Tab
+import mui.material.Tabs
+import mui.material.TabsIndicatorColor
+import mui.material.TabsTextColor
+import mui.material.Typography
 import mui.material.styles.TypographyVariant
 import mui.system.sx
+import react.ElementType
+import react.create
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.footer
 import react.dom.html.ReactHTML.h1
@@ -26,7 +50,6 @@ import react.dom.html.ReactHTML.main
 import react.dom.html.ReactHTML.nav
 import react.dom.html.ReactHTML.section
 import react.dom.html.ReactHTML.span
-import react.*
 import react.dom.aria.AriaHasPopup
 import react.dom.aria.ariaHasPopup
 import react.dom.aria.ariaLabel
@@ -45,7 +68,7 @@ external interface HomeProps: ElidePageProps {
 }
 
 /** Props for a nav link on the home page. */
-external interface BaseHomeNavLinkProps : PropsWithChildren {
+external interface BaseHomeNavLinkProps : react.PropsWithChildren {
   /** Label to show for this link. */
   var label: String
 
@@ -98,7 +121,7 @@ private fun doHomeNavigate(event: MouseEvent<HTMLButtonElement, *>, props: BaseH
 }
 
 /** Implements a home-page navigation link. */
-val HomeNavLink = FC<HomeNavLinkProps> {
+val HomeNavLink = react.FC<HomeNavLinkProps> {
   Button {
     title = it.title
     variant = ButtonVariant.text
@@ -116,7 +139,7 @@ val HomeNavLink = FC<HomeNavLinkProps> {
 
     if (it.startIcon != null) {
       val props = it
-      startIcon = Fragment.create {
+      startIcon = react.Fragment.create {
         props.startIcon!!()
       }
     }
@@ -131,7 +154,7 @@ val HomeNavLink = FC<HomeNavLinkProps> {
 }
 
 /** Implements an icon-based home navigation link. */
-val HomeNavIcon = FC<HomeNavLinkIconProps> {
+val HomeNavIcon = react.FC<HomeNavLinkIconProps> {
   IconButton {
     title = it.title
     className = ClassName("elide-page__home-nav-link nav-link-icon")
@@ -151,10 +174,10 @@ val HomeNavIcon = FC<HomeNavLinkIconProps> {
 }
 
 /** Homepage component for the Elide site. */
-val Home = FC<HomeProps> {
+val Home = react.FC<HomeProps> {
   val navigator = useNavigate()
-  val themeCtx by useContext(ThemeContext)
-  val (codeSampleTabState, setCodeSampleTabState) = useState("server.kt")
+  val themeCtx by react.useContext(ThemeContext)
+  val (codeSampleTabState, setCodeSampleTabState) = react.useState("server.kt")
   val isDarkMode = (themeCtx as ThemePackage).mode == PaletteMode.dark
 
   val themeClass = if (isDarkMode) {
@@ -338,13 +361,13 @@ val Home = FC<HomeProps> {
 
                 Tab {
                   className = ClassName("elide-page__home-codesample-tab mono")
-                  label = ReactNode("server.kt")
+                  label = react.ReactNode("server.kt")
                   value = "server.kt"
                 }
 
                 Tab {
                   className = ClassName("elide-page__home-codesample-tab mono")
-                  label = ReactNode("ssr.mjs")
+                  label = react.ReactNode("ssr.mjs")
                   value = "ssr.mjs"
                 }
               }

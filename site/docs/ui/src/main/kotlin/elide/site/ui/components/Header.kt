@@ -1,6 +1,9 @@
 package elide.site.ui.components
 
-import csstype.*
+import csstype.ClassName
+import csstype.Color
+import csstype.integer
+import csstype.px
 import elide.site.Assets
 import elide.site.ElideSite
 import elide.site.ExternalLinks
@@ -8,7 +11,6 @@ import elide.site.SiteLinks
 import elide.site.pages.Home
 import elide.site.ui.theme.Area
 import elide.site.ui.theme.Themes
-import emotion.react.css
 import js.core.Object
 import js.core.jso
 import kotlinx.browser.window
@@ -16,23 +18,36 @@ import mui.icons.material.Brightness4
 import mui.icons.material.Brightness7
 import mui.icons.material.GitHub
 import mui.icons.material.MenuBook
-import mui.material.*
+import mui.material.AppBar
+import mui.material.AppBarPosition
+import mui.material.Box
+import mui.material.Chip
+import mui.material.ChipColor
+import mui.material.IconButton
+import mui.material.IconButtonColor
+import mui.material.Link
+import mui.material.LinkUnderline
+import mui.material.NoSsr
+import mui.material.PaletteMode
 import mui.material.Size
+import mui.material.Switch
+import mui.material.SwitchColor
+import mui.material.Toolbar
+import mui.material.Tooltip
+import mui.material.Typography
 import mui.material.styles.TypographyVariant.h6
 import mui.system.sx
-import react.*
+import react.create
 import react.dom.aria.AriaHasPopup.`false`
 import react.dom.aria.ariaHasPopup
 import react.dom.aria.ariaLabel
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.img
-import react.router.useNavigate
 
 /** Renders the main Elide site header. */
-val Header = FC<Props> {
-  val navigator = useNavigate()
+val Header = react.FC<react.Props> {
   val siteInfo = ElideSite.defaultInfo
-  var themeCtx by useContext(ThemeContext)
+  var themeCtx by react.useContext(ThemeContext)
 
   AppBar {
     position = AppBarPosition.fixed
@@ -87,7 +102,7 @@ val Header = FC<Props> {
               Chip {
                 color = ChipColor.info
                 title = siteInfo.prelabel
-                label = ReactNode(siteInfo.prelabel)
+                label = react.ReactNode(siteInfo.prelabel)
                 className = ClassName("elide-noselect")
 
                 sx {
@@ -112,7 +127,7 @@ val Header = FC<Props> {
 
       NoSsr {
         Tooltip {
-          title = ReactNode("Theme")
+          title = react.ReactNode("Theme")
 
           Switch {
             icon = Brightness7.create()
@@ -133,7 +148,7 @@ val Header = FC<Props> {
         }
 
         Tooltip {
-          title = ReactNode("Reference Docs")
+          title = react.ReactNode("Reference Docs")
 
           IconButton {
             ariaLabel = "docs"
@@ -152,7 +167,7 @@ val Header = FC<Props> {
         }
 
         Tooltip {
-          title = ReactNode("Open Github")
+          title = react.ReactNode("Open Github")
 
           IconButton {
             ariaLabel = "source code"

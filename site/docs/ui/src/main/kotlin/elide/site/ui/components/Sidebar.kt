@@ -4,7 +4,6 @@ import csstype.ClassName
 import csstype.Color
 import csstype.Display
 import csstype.None.none
-import csstype.px
 import elide.site.ElideSite
 import elide.site.abstract.PageInfo
 import elide.site.pages.Home
@@ -12,18 +11,22 @@ import elide.site.ui.theme.Area
 import elide.site.ui.theme.Sizes
 import emotion.react.css
 import mui.icons.material.ExpandMore
-import mui.material.*
+import mui.material.Collapse
+import mui.material.Drawer
+import mui.material.List
+import mui.material.ListItemButton
+import mui.material.ListItemText
+import mui.material.Toolbar
 import mui.material.DrawerAnchor.left
 import mui.material.DrawerVariant.permanent
 import mui.system.Box
 import mui.system.sx
-import react.*
 import react.dom.html.ReactHTML.nav
 import react.router.dom.NavLink
 import react.router.useLocation
 
 /** Sidebar navigation entry properties. */
-external interface SidebarNavEntryProps : Props {
+external interface SidebarNavEntryProps : react.Props {
   /** Current location. */
   var path: String
 
@@ -41,7 +44,7 @@ external interface SidebarNavEntryProps : Props {
 }
 
 /** Render a single navigation entry, potentially with children. */
-val NavEntry = FC<SidebarNavEntryProps> {
+val NavEntry = react.FC<SidebarNavEntryProps> {
   ListItemButton {
     selected = it.path == it.page.path
 
@@ -52,7 +55,7 @@ val NavEntry = FC<SidebarNavEntryProps> {
     }
 
     ListItemText {
-      primary = ReactNode(it.page.label)
+      primary = react.ReactNode(it.page.label)
       className = if (it.isChild) {
         ClassName("elide-nav-subnav__text")
       } else {
@@ -67,7 +70,7 @@ val NavEntry = FC<SidebarNavEntryProps> {
 }
 
 /** Group of related sub-navigation entries. */
-private val SubnavGroup = FC<SidebarNavEntryProps> {
+private val SubnavGroup = react.FC<SidebarNavEntryProps> {
   NavLink {
     key = it.page.name
     to = it.page.path
@@ -116,7 +119,7 @@ private val SubnavGroup = FC<SidebarNavEntryProps> {
 }
 
 /** Render the navigation sidebar. */
-val Sidebar = FC<Props> {
+val Sidebar = react.FC<react.Props> {
   val path = useLocation().pathname
 
   Box {

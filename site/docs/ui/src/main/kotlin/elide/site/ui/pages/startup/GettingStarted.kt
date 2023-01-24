@@ -13,14 +13,12 @@ import react.dom.html.ReactHTML.main
 import react.dom.html.ReactHTML.aside
 import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.header
-import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
-import react.*
 import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.strong
 
 /** Renders the Getting Started page on the Elide site. */
-val GettingStarted = FC<Props> {
+val GettingStarted = react.FC<react.Props> {
   main {
     className = ClassName("elide-site-page narrative")
 

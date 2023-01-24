@@ -422,6 +422,16 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Generate a baseline response to fill with content.
   protected open fun baseResponse(): MutableHttpResponse<ByteArray> = HttpResponse.ok()
 
+  // Generate a baseline response to fill with content.
+  protected open fun csp(): List<Pair<String, String>> = listOf(
+      "default-src" to "'self'",
+      "script-src" to "'self' https://www.googletagmanager.com",
+      "style-src" to "'self' 'unsafe-inline'",
+      "img-src" to "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
+      "font-src" to "https://fonts.gstatic.com",
+      "connect-src" to "'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+  )
+
   /** Finalize an HTTP response. */
   protected open fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<ByteArray>) {
     // set `Content-Language` header
@@ -454,14 +464,9 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
      "ch-dpr=(self)",
     ).joinToString(", ")
 
-    response.headers["Content-Security-Policy"] = listOf(
-      "default-src 'self'",
-      "script-src 'self' https://www.googletagmanager.com",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
-      "font-src https://fonts.gstatic.com",
-      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
-    ).joinToString("; ")
+    response.headers["Content-Security-Policy"] = csp().map {
+      "${it.first} ${it.second}"
+    }.joinToString("; ")
 
     // apex caching
     if (response.status.code == 200) response.headers[HttpHeaders.CACHE_CONTROL] = listOf(

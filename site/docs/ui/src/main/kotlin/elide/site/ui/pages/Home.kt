@@ -5,8 +5,6 @@ package elide.site.ui.pages
 import csstype.*
 import elide.site.abstract.SitePage
 import elide.site.pages.GettingStarted
-import elide.site.pages.Samples
-import elide.site.pages.Tooling
 import elide.site.ui.ElidePageProps
 import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
@@ -15,7 +13,6 @@ import elide.site.ui.components.ThemePackage
 import js.core.jso
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrowNight
 import mui.icons.material.GitHub
-import mui.icons.material.MenuBook
 import mui.material.*
 import mui.material.styles.TypographyVariant
 import mui.system.sx
@@ -203,20 +200,6 @@ val Home = FC<HomeProps> {
             title = "Get started with Elide"
             doNavigate = doLinkNavigate
           }
-
-          // HomeNavLink {
-          //   label = "Samples"
-          //   page = Samples
-          //   title = "Code samples for different use cases"
-          //   doNavigate = doLinkNavigate
-          // }
-
-          // HomeNavLink {
-          //   label = "Tools"
-          //   page = Tooling
-          //   title = "Tooling and plugins"
-          //   doNavigate = doLinkNavigate
-          // }
 
           HomeNavLink {
             label = "API Docs"

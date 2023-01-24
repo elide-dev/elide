@@ -1,4 +1,4 @@
-@file:JsModule("./runtime/runtime.mdx")
+@file:JsModule("./runtime/runtime.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.runtime.mdx

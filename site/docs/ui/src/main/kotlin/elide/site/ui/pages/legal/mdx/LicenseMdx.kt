@@ -1,4 +1,4 @@
-@file:JsModule("./legal/license.mdx")
+@file:JsModule("./legal/license.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.legal.mdx

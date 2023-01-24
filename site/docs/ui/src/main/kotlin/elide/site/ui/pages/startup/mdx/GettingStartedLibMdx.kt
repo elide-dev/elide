@@ -1,4 +1,4 @@
-@file:JsModule("./getting-started/install-library.mdx")
+@file:JsModule("./getting-started/install-library.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.startup.mdx

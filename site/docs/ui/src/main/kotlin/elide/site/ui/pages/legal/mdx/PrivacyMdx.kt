@@ -1,4 +1,4 @@
-@file:JsModule("./legal/privacy.mdx")
+@file:JsModule("./legal/privacy.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.legal.mdx

@@ -1,4 +1,4 @@
-@file:JsModule("./tooling/tooling.mdx")
+@file:JsModule("./tooling/tooling.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.tooling.mdx

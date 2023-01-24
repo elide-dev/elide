@@ -1,4 +1,4 @@
-@file:JsModule("./tooling/gradle.mdx")
+@file:JsModule("./tooling/gradle.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.tooling.mdx

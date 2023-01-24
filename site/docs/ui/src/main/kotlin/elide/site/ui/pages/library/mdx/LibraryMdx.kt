@@ -1,4 +1,4 @@
-@file:JsModule("./library/library.mdx")
+@file:JsModule("./library/library.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.library.mdx

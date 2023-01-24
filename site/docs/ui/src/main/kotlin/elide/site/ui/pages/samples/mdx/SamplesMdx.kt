@@ -1,4 +1,4 @@
-@file:JsModule("./samples/samples.mdx")
+@file:JsModule("./samples/samples.md")
 @file:JsNonModule
 
 package elide.site.ui.pages.samples.mdx

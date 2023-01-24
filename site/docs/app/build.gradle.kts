@@ -385,5 +385,11 @@ graalvmNative {
       quickBuild.set(true)
       buildArgs.addAll(nativeImageArgs())
     }
+
+    named("optimized") {
+      fallback.set(false)
+      quickBuild.set(true)
+      buildArgs.addAll(nativeImageArgs(release = true))
+    }
   }
 }

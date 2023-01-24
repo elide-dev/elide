@@ -234,13 +234,6 @@ val Home = FC<HomeProps> {
             className = ClassName("elide-page__home-nav-right")
 
             HomeNavIcon {
-              label = "API Docs"
-              icon = MenuBook
-              external = true
-              href = "https://docs.elide.dev"
-            }
-
-            HomeNavIcon {
               label = "GitHub"
               icon = GitHub
               external = true

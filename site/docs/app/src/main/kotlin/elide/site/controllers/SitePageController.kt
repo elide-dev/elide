@@ -268,7 +268,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
      "ch-dpr=(self)",
     ).joinToString(", ")
 
-    response.headers["Content-Security-Policy-Report-Only"] = listOf(
+    response.headers["Content-Security-Policy"] = listOf(
       "default-src 'self'",
       "script-src 'self' https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",

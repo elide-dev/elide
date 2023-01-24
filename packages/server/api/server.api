@@ -32,7 +32,7 @@ public final class elide/server/AssetHandler : elide/server/BaseResponseHandler 
 
 public abstract class elide/server/BaseResponseHandler : elide/server/ResponseHandler {
 	public fun <init> ()V
-	public fun respond (Lio/micronaut/http/HttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun respond (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/server/HtmlRenderer : elide/server/SuspensionRenderer {
@@ -61,7 +61,7 @@ public final class elide/server/ResponseExtensionsKt {
 	public static final fun asset (Lelide/server/controller/PageController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lelide/server/assets/AssetType;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun asset$default (Lelide/server/controller/PageController;Lio/micronaut/http/HttpRequest;Lelide/server/assets/AssetType;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun asset$default (Lelide/server/controller/PageController;Lio/micronaut/http/HttpRequest;Ljava/lang/String;Lelide/server/assets/AssetType;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static final fun css (Lkotlin/jvm/functions/Function1;)Lio/micronaut/http/HttpResponse;
+	public static final fun css (Lkotlin/jvm/functions/Function1;)Lio/micronaut/http/MutableHttpResponse;
 	public static final fun html (Lelide/server/controller/PageController;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun htmlSuspend (Lkotlinx/html/TagConsumer;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun htmlSuspend$default (Lkotlinx/html/TagConsumer;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -74,7 +74,7 @@ public final class elide/server/ResponseExtensionsKt {
 }
 
 public abstract interface class elide/server/ResponseHandler {
-	public abstract fun respond (Lio/micronaut/http/HttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun respond (Lio/micronaut/http/MutableHttpResponse;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/server/SSRExtensionsKt {

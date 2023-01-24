@@ -145,10 +145,6 @@ val HomeNavIcon = FC<HomeNavLinkIconProps> {
       ariaHasPopup = AriaHasPopup.`false`
     }
 
-    sx {
-
-    }
-
     onClick = { event ->
       doHomeNavigate(event, it)
     }
@@ -208,19 +204,19 @@ val Home = FC<HomeProps> {
             doNavigate = doLinkNavigate
           }
 
-          HomeNavLink {
-            label = "Samples"
-            page = Samples
-            title = "Code samples for different use cases"
-            doNavigate = doLinkNavigate
-          }
+          // HomeNavLink {
+          //   label = "Samples"
+          //   page = Samples
+          //   title = "Code samples for different use cases"
+          //   doNavigate = doLinkNavigate
+          // }
 
-          HomeNavLink {
-            label = "Tools"
-            page = Tooling
-            title = "Tooling and plugins"
-            doNavigate = doLinkNavigate
-          }
+          // HomeNavLink {
+          //   label = "Tools"
+          //   page = Tooling
+          //   title = "Tooling and plugins"
+          //   doNavigate = doLinkNavigate
+          // }
 
           HomeNavLink {
             label = "API Docs"

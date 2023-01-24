@@ -68,6 +68,31 @@ graalvmNative {
       })
     }
 
+    named("optimized") {
+      fallback.set(false)
+      quickBuild.set(quickbuild)
+      buildArgs.addAll(listOf(
+        "--language:js",
+        "--language:regex",
+        "-O2",
+        "--enable-all-security-services",
+        "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+      ))
+
+      javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+        if (project.hasProperty("elide.graalvm.variant")) {
+          val variant = project.property("elide.graalvm.variant") as String
+          if (variant != "COMMUNITY") {
+            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+              "ENTERPRISE" -> "Oracle"
+              else -> "GraalVM Community"
+            }))
+          }
+        }
+      })
+    }
+
     named("test") {
       buildArgs.addAll(listOf(
         "--language:js",

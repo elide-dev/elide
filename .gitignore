@@ -19,3 +19,5 @@ server_log.txt
 server_pid.txt
 site.tar.gz
 tmp
+app-glibc
+app-musl

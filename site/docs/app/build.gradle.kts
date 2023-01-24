@@ -28,13 +28,12 @@ version = rootProject.version as String
  * Build: Site Native Image
  */
 
-val commonNativeArgs = listOf(
-  "-H:DashboardDump=elide-site",
-  "-H:+DashboardAll",
-)
+val commonNativeArgs = emptyList<String>()
 
 val debugFlags = listOf(
   "-g",
+  "-H:DashboardDump=elide-site",
+  "-H:+DashboardAll",
 )
 
 val releaseFlags: List<String> = listOf(
@@ -62,11 +61,9 @@ val darwinOnlyArgs = defaultPlatformArgs
 
 val linuxOnlyArgs = listOf(
   "--static",
-  "--libc=glibc",
-)
-
-val muslArgs = listOf(
   "--libc=musl",
+  "-J-Xmx22G",
+  "-H:+StaticExecutableWithDynamicLibC",
 )
 
 val testOnlyArgs: List<String> = emptyList()
@@ -76,8 +73,7 @@ val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 val enterpriseOnlyFlags: List<String> = listOf(
   "--gc=G1",
   "--enable-sbom",
-  "--pgo-instrument",
-  "-H:+AOTInliner",
+  "--pgo=${project.projectDir}/analysis/default.iprof",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
 )
 
@@ -99,8 +95,7 @@ fun nativeImageArgs(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" }
   ).plus(when (platform) {
     "darwin" -> darwinOnlyArgs
-    "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs
-    else -> defaultPlatformArgs
+    else -> linuxOnlyArgs
   }).plus(
     jvmDefs.map { "-D${it.key}=${it.value}" }
   ).plus(
@@ -300,13 +295,13 @@ tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
   graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native/alpine:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
   graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native/alpine:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 

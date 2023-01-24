@@ -263,6 +263,8 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers[HttpHeaders.ACCEPT_CH] = "DPR"
     response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
 
     response.headers["Permissions-Policy"] = listOf(
      "ch-dpr=(self)",
@@ -274,7 +276,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
       "font-src https://fonts.gstatic.com",
-      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com",
+      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
     ).joinToString("; ")
 
     // apex caching

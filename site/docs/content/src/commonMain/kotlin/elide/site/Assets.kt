@@ -26,6 +26,6 @@ object Assets {
     const val ui = "/ui.js"
 
     /** Analytics script. */
-    const val analytics = "/analytics.min.js"
+    const val analytics = "/scripts/analytics.min.js"
   }
 }

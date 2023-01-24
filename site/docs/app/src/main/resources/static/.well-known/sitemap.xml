@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://elide.dev/</loc>
+        <xhtml:link href="https://elide.dev/" hreflang="x-default" rel="alternate"/>
+    </url>
+    <url>
+        <loc>https://elide.dev/getting-started</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/samples</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/tools</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/tools/gradle</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/tools/gradle</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/library</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/library/packages</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/runtime</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/architecture</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/legal/privacy</loc>
+    </url>
+    <url>
+        <loc>https://elide.dev/legal/license</loc>
+    </url>
+</urlset>

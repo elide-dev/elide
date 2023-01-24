@@ -4,7 +4,9 @@ import lib.reactSyntaxHighlighter.SyntaxHighlighterLight
 import lib.reactSyntaxHighlighter.languages.bash.BashSyntax
 import lib.reactSyntaxHighlighter.languages.groovy.GroovySyntax
 import lib.reactSyntaxHighlighter.languages.js.JavaScriptSyntax
+import lib.reactSyntaxHighlighter.languages.json.JsonSyntax
 import lib.reactSyntaxHighlighter.languages.kotlin.KotlinSyntax
+import lib.reactSyntaxHighlighter.languages.python.PythonSyntax
 import lib.reactSyntaxHighlighter.languages.xml.XmlSyntax
 import lib.reactSyntaxHighlighter.SyntaxThemeTomorrow as TomorrowTheme
 import react.*
@@ -21,11 +23,17 @@ enum class SyntaxLanguage constructor (internal val symbol: String) {
   /** Syntax highlighting for JavaScript. */
   JAVASCRIPT("js"),
 
+  /** Syntax highlighting for JSON. */
+  JSON("json"),
+
   /** Syntax highlighting for TypeScript. */
   TYPESCRIPT("ts"),
 
   /** Syntax highlighting for Kotlin. */
   KOTLIN("kotlin"),
+
+  /** Syntax highlighting for Python. */
+  PYTHON("python"),
 
   /** Syntax highlighting for Groovy. */
   GROOVY("groovy"),
@@ -40,8 +48,10 @@ private val defaultLanguage = SyntaxLanguage.JAVASCRIPT
 // Default list of languages to load.
 private val defaultLanguages = listOf(
   defaultLanguage,
+  SyntaxLanguage.JSON,
   SyntaxLanguage.BASH,
   SyntaxLanguage.KOTLIN,
+  SyntaxLanguage.PYTHON,
   SyntaxLanguage.GROOVY,
   SyntaxLanguage.XML,
 )
@@ -59,7 +69,9 @@ private fun resolveLanguages(languages: List<SyntaxLanguage>): Array<Promise<Pai
       when (language) {
         SyntaxLanguage.BASH -> accept(language to BashSyntax)
         SyntaxLanguage.JAVASCRIPT -> accept(language to JavaScriptSyntax)
+        SyntaxLanguage.JSON -> accept(language to JsonSyntax)
         SyntaxLanguage.KOTLIN -> accept(language to KotlinSyntax)
+        SyntaxLanguage.PYTHON -> accept(language to PythonSyntax)
         SyntaxLanguage.GROOVY -> accept(language to GroovySyntax)
         SyntaxLanguage.XML -> accept(language to XmlSyntax)
         else -> reject(IllegalStateException("Language not available: '$language'"))

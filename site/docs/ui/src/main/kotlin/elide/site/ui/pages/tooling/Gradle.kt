@@ -1,17 +1,33 @@
 package elide.site.ui.pages.tooling
 
 import csstype.ClassName
-import react.dom.html.ReactHTML.div
+import elide.site.ui.MDX
+import elide.site.ui.pages.tooling.mdx.GradleMdx
+import mui.material.Typography
+import mui.material.styles.TypographyVariant
+import react.dom.html.ReactHTML.br
+import react.dom.html.ReactHTML.header
 import react.dom.html.ReactHTML.main
+import react.dom.html.ReactHTML.section
 import react.*
 
 /** Renders the Gradle tooling page on the Elide site. */
 val Gradle = FC<Props> {
   main {
-    className = ClassName("elide-site-page center")
+    className = ClassName("elide-site-page narrative")
 
-    div {
-      +"Gradle"
+    header {
+      className = ClassName("elide-site-page__header")
+
+      Typography {
+        variant = TypographyVariant.h2
+        +"Using Elide with Gradle"
+      }
+    }
+
+    section {
+      MDX.render(this, GradleMdx)
+      br()
     }
   }
 }

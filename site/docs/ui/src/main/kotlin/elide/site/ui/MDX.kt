@@ -137,10 +137,12 @@ private val wrappedCode = FC<SyntaxHighlighterProps> {
   }
   val syntax = when (languageName) {
     null -> null
-    "js" -> SyntaxLanguage.JAVASCRIPT
+    "js", "Javascript" -> SyntaxLanguage.JAVASCRIPT
+    "json" -> SyntaxLanguage.JSON
     "bash" -> SyntaxLanguage.BASH
     "kotlin" -> SyntaxLanguage.KOTLIN
     "groovy" -> SyntaxLanguage.GROOVY
+    "python", "starlark" -> SyntaxLanguage.PYTHON
     "xml" -> SyntaxLanguage.XML
     else -> {
       console.warn("[elide:site]", "Language not installed:", languageName)

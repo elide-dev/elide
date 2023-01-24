@@ -1,13 +1,20 @@
 package elide.site.ui.pages
 
 import csstype.ClassName
+import elide.site.ui.MDX
 import elide.site.ui.pages.tooling.Bazel
 import elide.site.ui.pages.tooling.Gradle
+import elide.site.ui.pages.tooling.mdx.ToolingMdx
 import elide.site.ui.theme.Area
+import mui.material.Typography
+import mui.material.styles.TypographyVariant
 import mui.system.Box
 import mui.system.sx
+import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.header
 import react.dom.html.ReactHTML.main
+import react.dom.html.ReactHTML.section
 import react.*
 import react.router.Outlet
 import react.router.Route
@@ -15,8 +22,22 @@ import react.router.Routes
 
 // Root page for the tooling section.
 private val ToolingRoot = FC<Props> {
-  div {
-    +"Tooling root"
+  main {
+    className = ClassName("elide-site-page narrative")
+
+    header {
+      className = ClassName("elide-site-page__header")
+
+      Typography {
+        variant = TypographyVariant.h2
+        +"Tooling Guides"
+      }
+    }
+
+    section {
+      MDX.render(this, ToolingMdx)
+      br()
+    }
   }
 }
 

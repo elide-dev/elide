@@ -79,6 +79,7 @@ private val enabledLanguages = listOf(
   SyntaxLanguage.BASH,
   SyntaxLanguage.KOTLIN,
   SyntaxLanguage.GROOVY,
+  SyntaxLanguage.PYTHON,
   SyntaxLanguage.XML,
 )
 

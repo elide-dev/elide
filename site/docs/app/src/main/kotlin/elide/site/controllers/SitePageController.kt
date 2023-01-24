@@ -292,6 +292,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
       pageStyles().invoke(this@head, request)
       script(Assets.Scripts.ui, defer = true)
+      script(Assets.Scripts.analytics, async = true)
       head.invoke(this@head, request)
     }
     body {

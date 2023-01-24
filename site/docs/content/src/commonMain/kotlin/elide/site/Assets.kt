@@ -24,5 +24,8 @@ object Assets {
   object Scripts {
     /** Main UI render script. */
     const val ui = "/ui.js"
+
+    /** Analytics script. */
+    const val analytics = "/analytics.min.js"
   }
 }

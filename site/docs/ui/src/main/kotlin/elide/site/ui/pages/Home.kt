@@ -225,7 +225,7 @@ val Home = FC<HomeProps> {
           HomeNavLink {
             label = "API Docs"
             external = true
-            href = "https://docs.elide.dev"
+            href = "https://docs.elide.dev/kotlin/html/"
             newTab = true
             title = "Elide API docs"
           }

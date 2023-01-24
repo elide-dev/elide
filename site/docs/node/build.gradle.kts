@@ -117,7 +117,7 @@ listOf(
   "browserProductionWebpack",
 ).forEach {
   tasks.named(it).configure {
-    dependsOn("copyMdxSources")
+    enabled = false
   }
 }
 

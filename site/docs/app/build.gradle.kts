@@ -8,6 +8,8 @@ import dev.elide.buildtools.gradle.plugin.BuildMode
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   id("com.github.johnrengelman.shadow")
   id("io.micronaut.application")
   id("io.micronaut.aot")
@@ -108,6 +110,31 @@ fun nativeImageArgs(
   ).plus(
     if (enterprise) enterpriseOnlyFlags else emptyList()
   ).toList()
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_19
+}
+
+kotlin {
+  target.compilations.all {
+    kotlinOptions {
+      jvmTarget = Elide.javaTargetMaximum
+      javaParameters = true
+      languageVersion = Elide.kotlinLanguage
+      apiVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = true
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta
+    }
+  }
+}
+
+allOpen {
+  annotations(listOf(
+    "io.micronaut.aop.Around",
+    "elide.server.annotations.Page",
+  ))
+}
 
 elide {
   mode = if (devMode) {
@@ -210,6 +237,8 @@ dependencies {
   implementation(libs.google.auto.service.annotations)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
+  implementation(libs.micronaut.cache.core)
+  implementation(libs.micronaut.cache.caffeine)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)

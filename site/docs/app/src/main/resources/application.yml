@@ -3,6 +3,10 @@ elide:
     enabled: true
 
 micronaut:
+  caches:
+    ssrContent:
+      charset: 'UTF-8'
+      expire-after-access: 24h
   router:
     static-resources:
       default:

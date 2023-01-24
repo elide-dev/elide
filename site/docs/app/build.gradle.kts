@@ -64,7 +64,6 @@ val linuxOnlyArgs = listOf(
   "--static",
   "--libc=musl",
   "-J-Xmx22G",
-  "-H:+StaticExecutableWithDynamicLibC",
 )
 
 val testOnlyArgs: List<String> = emptyList()
@@ -85,7 +84,7 @@ val quickbuild = (
 
 fun nativeImageArgs(
   platform: String = "generic",
-  target: String = "glibc",
+  target: String = "musl",
   debug: Boolean = quickbuild,
   release: Boolean = (!quickbuild && project.properties["elide.release"] == "true"),
   enterprise: Boolean = isEnterprise,

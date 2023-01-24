@@ -8,4 +8,5 @@ object Runtime : SitePage(
   label = "As a Runtime",
   path = "/runtime",
   title = "Elide as a Runtime",
+  hidden = true,
 )

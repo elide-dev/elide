@@ -14,6 +14,9 @@ interface PageInfo {
   /** Title that should show for the page. */
   val title: String
 
+  /** Whether to hide the page from nav. */
+  val hidden: Boolean
+
   /** Parent [PageInfo] for this page. */
   val parent: PageInfo?
 

@@ -72,7 +72,9 @@ public class ServerSSRRenderer constructor(
       }
       buf.toString()
     } else {
-      op.invoke(JavaScript.Inputs.EMPTY, null).toString()
+      StringBuilder("<!doctype html>").append(
+        op.invoke(JavaScript.Inputs.EMPTY, null)
+      ).toString()
     }
   }
 

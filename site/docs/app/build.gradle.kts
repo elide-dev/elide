@@ -247,6 +247,8 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
+  implementation(libs.kotlinx.coroutines.reactive)
+  implementation(libs.kotlinx.coroutines.reactor)
   implementation(libs.kotlinx.wrappers.css)
   implementation(libs.bouncycastle)
   implementation(libs.bouncycastle.pkix)

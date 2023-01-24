@@ -9,4 +9,5 @@ actual object Runtime : SitePage(
   label = Defaults.label,
   path = Defaults.path,
   title = Defaults.title,
+  hidden = Defaults.hidden,
 )

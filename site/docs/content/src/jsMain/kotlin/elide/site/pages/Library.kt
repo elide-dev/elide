@@ -10,6 +10,7 @@ actual object Library : SitePage(
   label = Defaults.label,
   path = Defaults.path,
   title = Defaults.title,
+  hidden = Defaults.hidden,
   children = listOf(
     Packages,
   ),

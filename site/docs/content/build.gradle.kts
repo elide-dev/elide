@@ -15,6 +15,7 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib-common"))
         implementation(libs.kotlinx.serialization.core)
+        implementation(libs.kotlinx.html)
       }
     }
     val commonTest by getting

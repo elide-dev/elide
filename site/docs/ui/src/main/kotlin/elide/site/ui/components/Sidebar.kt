@@ -135,7 +135,7 @@ val Sidebar = FC<Props> {
         Toolbar()
 
         List {
-          ElideSite.pages.filter { it.name != Home.name }.forEach { page ->
+          ElideSite.pages.filter { it.name != Home.name && !it.hidden }.forEach { page ->
             val hasChildren = page.children.isNotEmpty()
 
             if (hasChildren) {

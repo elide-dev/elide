@@ -1,6 +1,22 @@
+/* latin: https://fonts.googleapis.com/css2?family=JetBrains+Mono */
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(https://fonts.gstatic.com/l/font?kit=iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1U080V4fdkLdVHIPhLghxm6H4NTtG7lo4KH2dpQsfQ-dEPKg&skey=cee854e66788286d&v=v23) format('woff');
+  src: url(https://fonts.gstatic.com/l/font?kit=iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1VU80V4fdkLdVHIPhLghxm6H4NTtG7lo4KH2dpQsfQ-dEPKg&skey=cee854e66788286d&v=v23) format('woff2');
+}
+
 /**
  * Home
  */
+
+.elide-logobox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .elide-page__home-header {
   padding: 20px;

@@ -8,4 +8,5 @@ object Packages : SitePage(
   label = "Packages",
   path = "/library/packages",
   title = "Elide Packages",
+  hidden = true,
 )

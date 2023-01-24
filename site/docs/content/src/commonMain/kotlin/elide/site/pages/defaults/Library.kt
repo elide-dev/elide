@@ -8,4 +8,5 @@ object Library : SitePage(
   label = "As a Library",
   path = "/library",
   title = "Elide as a Library",
+  hidden = true,
 )

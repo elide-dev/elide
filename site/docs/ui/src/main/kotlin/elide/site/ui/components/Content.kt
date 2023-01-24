@@ -6,9 +6,10 @@ import csstype.px
 import elide.site.ElideSite
 import elide.site.abstract.SitePage
 import elide.site.ui.ElidePageProps
-import elide.site.ui.ElideSiteProps
 import elide.site.ui.pages.*
 import elide.site.ui.pages.startup.GettingStarted
+import elide.site.ui.pages.legal.Privacy
+import elide.site.ui.pages.legal.License
 import elide.site.ui.theme.Area
 import mui.material.Typography
 import mui.system.Box
@@ -28,11 +29,23 @@ fun SitePage.component(): ElementType<*>? = when (this.name) {
   "architecture" -> Architecture
   "getting-started" -> GettingStarted
   "tooling" -> Tooling
+  "privacy" -> Privacy
+  "license" -> License
+  "not-found" -> NotFound
   else -> null
 }
 
 /** Main content zone/router/component host for the Elide site. */
 val Content = FC<ElidePageProps> {
+  val loadingFragment = Fragment.create {
+    Typography {
+      sx {
+        padding = defaultPadding
+      }
+      +"Loading..."
+    }
+  }
+
   Box {
     sx {
       gridArea = Area.Content
@@ -40,7 +53,7 @@ val Content = FC<ElidePageProps> {
       maxHeight = 100.pct
     }
     Routes {
-      ElideSite.pages.forEach { page ->
+      ElideSite.pages.filter { !it.hidden }.forEach { page ->
         Route {
           key = page.name
           if (page.name == "home") index = true
@@ -58,15 +71,7 @@ val Content = FC<ElidePageProps> {
             }
 
             else -> Suspense.create {
-              fallback = Fragment.create {
-                Typography {
-                  sx {
-                    padding = defaultPadding
-                  }
-                  +"Loading..."
-                }
-              }
-
+              fallback = loadingFragment
               children = Box.create {
                 component = page.component()
                 sx {
@@ -81,8 +86,32 @@ val Content = FC<ElidePageProps> {
       }
 
       Route {
+        path = "/legal/privacy"
+        element = Suspense.create {
+          fallback = loadingFragment
+          children = Fragment.create {
+            Privacy {}
+          }
+        }
+      }
+
+      Route {
+        path = "/legal/license"
+        element = Suspense.create {
+          fallback = loadingFragment
+          children = Fragment.create {
+            License {}
+          }
+        }
+      }
+
+      Route {
         path = "*"
-        element = Typography.create { +"Not Found" }
+        element = Fragment.create {
+          NotFound {
+            key = "not-found"
+          }
+        }
       }
     }
   }

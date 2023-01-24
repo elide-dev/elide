@@ -53,7 +53,9 @@ val Header = FC<Props> {
           underline = LinkUnderline.none
           onClick = {
             it.preventDefault()
-            navigator(Home.path)
+            window.setTimeout(timeout = 0, handler = {
+              window.open(Home.path, "_self")
+            })
           }
 
           div {

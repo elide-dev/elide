@@ -2,6 +2,7 @@ package elide.site.pages
 
 import elide.site.I18nPage
 import elide.site.abstract.SitePage
+import java.net.URI
 import elide.site.pages.defaults.Home as Defaults
 import java.util.*
 
@@ -15,6 +16,7 @@ actual object GettingStarted : SitePage(
   // Internal: Internationalized page bundle.
   private val bundle = ResourceBundle.getBundle("ElideSite_Runtime")
 
-  /** @inheritDoc */
   override fun bundle(locale: Locale): ResourceBundle = bundle
+
+  override fun canonical(locale: Locale): URI = URI.create("https://elide.dev/getting-started")
 }

@@ -480,6 +480,8 @@ val Home = FC<HomeProps> {
               alt = "Artwork: An astronaut floating in an Elide-themed nebula"
               srcSet = "/images/artwork/astronaut-mast@2x.png 2x, /images/artwork/astronaut-mast@1x.png 1x"
               src = "/images/artwork/astronaut-mast@1x.png"
+              width = 400.0
+              height = 390.0
             }
           }
         }

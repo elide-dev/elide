@@ -97,7 +97,7 @@ import java.util.SortedSet
       "micronaut.server.ssl.protocol" to "TLS",
       "micronaut.server.default-charset" to "utf-8",
       "micronaut.server.max-request-size" to "10MB",
-      "micronaut.server.server-header" to System.getProperty("elide.server.name", "elide/v1"),
+      "micronaut.server.server-header" to System.getProperty("elide.server.name", "elide/v3"),
       "micronaut.server.thread-selection" to "AUTO",
       "micronaut.server.locale-resolution.session-attribute" to "locale",
       "micronaut.server.locale-resolution.header" to true,

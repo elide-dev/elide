@@ -17,7 +17,7 @@ import react.router.dom.NavLink
 import react.router.useLocation
 import mui.icons.material.Menu as MenuIcon
 
-/** */
+/** Render the main side-bar navigation menu for the Elide site. */
 val Menu = FC<Props> {
   var isOpen by useState(false)
   val path = useLocation().pathname

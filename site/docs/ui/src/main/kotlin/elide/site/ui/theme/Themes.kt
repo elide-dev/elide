@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package elide.site.ui.theme
 
 import csstype.Color
@@ -8,7 +10,8 @@ import mui.material.PaletteMode.dark as darkMode
 import mui.material.PaletteMode.light as lightMode
 import mui.material.styles.createTheme
 
-/** */
+/** Defines theming information and overrides for the Elide site. */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 object Themes {
   /** Enumerates theme modes. */
   enum class Mode {
@@ -39,19 +42,19 @@ object Themes {
     }
   }
 
-  /** */
+  /** Primary Elide brand color. */
   const val colorPrimary = "rgba(90, 0, 255, 1)" // #5a00f
 
-  /** */
+  /** Secondary Elide brand color. */
   const val colorSecondary = "rgba(155, 9, 171, 1)" // #9b09ab
 
-  /** */
+  /** White color to use. */
   const val commonWhite = "#fefefe"
 
-  /** */
+  /** Black color to use. */
   const val commonBlack = "#111"
 
-  /** */
+  /** Set of system fonts. */
   private val systemFonts = listOf(
     "-apple-system",
     "ui-sans-serif",
@@ -64,10 +67,10 @@ object Themes {
     "'Segoe UI Symbol'",
   )
 
-  /** */
+  /** System fonts joined-to-string. */
   val systemFont = systemFonts.joinToString(",")
 
-  /** */
+  /** Mono-space fonts. */
   private val monospaceFonts = listOf(
     "'Jetbrains Mono'",
     "'SF Mono'",
@@ -75,7 +78,7 @@ object Themes {
     "monospace",
   )
 
-  /** */
+  /** Monospace fonts joined-to-string. */
   val monospaceFont = monospaceFonts.joinToString(",")
 
   /** @return Color for the current theme. */

@@ -5,42 +5,47 @@ package emotion.server.worker
 import emotion.cache.EmotionCache
 
 /**
- * TBD.
+ * Describes a package of style info included with a [EmotionCriticalToChunks] payload.
  */
 external interface StyleInfo {
-  /** TBD. */
+  /** Unique key. */
   var key: String
 
-  /** TBD. */
+  /** CSS IDs held by this chunk. */
   var ids: List<String>
 
-  /** TBD. */
+  /** CSS code held by this chunk. */
   var css: String
 }
 
 /**
- * TBD.
+ * Holds rendered HTML and style info, with critical CSS broken out.
  */
 external interface EmotionCriticalToChunks {
-  /** TBD. */
+  /** HTML code. */
   var html: String
 
-  /** TBD. */
+  /** List of style info chunks. */
   var styles: List<StyleInfo>
 }
 
 /**
- * TBD.
+ * Represents an Emotion CSS server-side rendering worker.
  */
 external interface EmotionServer {
-  /** TBD. */
+  /** @return CSS style tags from provided [critical] chunks. */
   fun constructStyleTagsFromChunks(critical: EmotionCriticalToChunks): String
 
-  /** TBD. */
+  /** @return Critical chunks for provided [html] code. */
   fun extractCriticalToChunks(html: String): EmotionCriticalToChunks
 }
 
 /**
- * TBD.
+ * Create an emotion server which uses the provided [cache].
+ *
+ * The cache, ideally, should be statically held in a module variable to persist across page-loads.
+ *
+ * @param cache Emotion cache to use.
+ * @return Emotion server.
  */
 external fun createEmotionServer(cache: EmotionCache): EmotionServer

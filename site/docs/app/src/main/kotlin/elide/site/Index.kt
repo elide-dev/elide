@@ -16,9 +16,9 @@ import java.util.*
 /** GET `/`: Controller for index page. */
 @Page(name = "index") class Index : SitePageController(page = Home) {
   // Make sure to pre-load homepage styles.
-  override fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<String>) {
+  override fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<ByteArray>) {
     super.finalize(request, locale, response)
-    response.headers.apply {
+    if (response.status.code == 200) response.headers.apply {
       add(HttpHeaders.LINK, "</assets/home.min.css>; rel=preload; as=style")
       val ua = request.headers["sec-ch-ua"] ?: request.headers[HttpHeaders.USER_AGENT] ?: ""
       when {

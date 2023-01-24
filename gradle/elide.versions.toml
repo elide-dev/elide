@@ -210,6 +210,7 @@ lmaxDisruptorProxy = "2.0.7"
 gr8 = "0.7"
 proguard = "7.1.0"
 openrewrite = "5.33.2"
+parallelGzip = "1.0.5"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -507,6 +508,7 @@ google_auto_common = { group = "com.google.auto", name = "auto-common", version.
 reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
 google_cloud_bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud_sdk" }
 google_cloud_nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud_native" }
+parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }
 brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
 brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
 brotli_native_osx_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }

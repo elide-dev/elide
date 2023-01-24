@@ -1,5 +1,8 @@
 package elide.site.controllers
 
+import com.aayushatharva.brotli4j.Brotli4jLoader
+import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
+import com.aayushatharva.brotli4j.encoder.Encoder as BrotliEncoder
 import elide.core.encoding.hex.Hex
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -22,18 +25,28 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.reactor.mono
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toKotlinInstant
 import kotlinx.html.*
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import reactor.core.publisher.Mono
+import tools.elide.data.CompressionMode
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.time.Duration
-import java.util.LinkedList
 import java.util.Locale
+import java.util.SortedMap
 import java.util.concurrent.ConcurrentSkipListMap
+import java.util.zip.Deflater
+import java.util.zip.GZIPOutputStream
 
 /** Extend a [PageController] with access to a [SitePage] configuration. */
 @Suppress("unused")
@@ -57,6 +70,105 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
+  /** Compressed response body variant. */
+  internal class CompressedResponseBody (
+    private val data: ByteArray,
+    private val length: Int = data.size,
+  ) {
+    /** @return Copied bytes for this response. */
+    internal fun emit(): ByteArray {
+      val copy = ByteArray(length)
+      System.arraycopy(data, 0, copy, 0, length)
+      return copy
+    }
+  }
+
+  /** Cached response body. */
+  internal class CachedResponseBody private constructor (
+    private val raw: ByteArray,
+    private val length: Int,
+    private val compressed: SortedMap<CompressionMode, CompressedResponseBody>,
+  ) {
+    companion object {
+      // Enabled compression modes for caching.
+      private val enabledModes = if (Brotli4jLoader.isAvailable()) {
+        Brotli4jLoader.ensureAvailability()
+        listOf(
+          CompressionMode.BROTLI,
+          CompressionMode.GZIP,
+        )
+      } else listOf(
+        CompressionMode.GZIP
+      )
+
+      // Brotli configuration.
+      private val brotliParams = BrotliEncoder.Parameters()
+        .setMode(BrotliEncoder.Mode.TEXT)
+        .setQuality(8)
+        .setWindow(22)
+
+      /** Perform compression with the provided [mode] on the provided [body]. */
+      @JvmStatic private fun compress(mode: CompressionMode, data: ByteArray): CompressedResponseBody? {
+        val outbin = ByteArrayOutputStream()
+        when (mode) {
+          CompressionMode.GZIP -> BestGzip(outbin)
+          CompressionMode.BROTLI -> BrotliOutputStream(outbin, brotliParams)
+          else -> return null
+        }.use {
+          it.write(data)
+          it.flush()
+        }
+        return CompressedResponseBody(outbin.toByteArray())
+      }
+
+      /** Create a [CachedResponseBody] from the provided [raw] body content. */
+      @JvmStatic suspend fun from(raw: ByteArray?): CachedResponseBody? {
+        if (raw == null) return null
+        val length = raw.size
+        val cache = ConcurrentSkipListMap<CompressionMode, CompressedResponseBody>()
+
+        val jobs = enabledModes.map { mode ->
+          withContext(Dispatchers.IO) {
+            async {
+              compress(mode, raw).let {
+                if (it != null) cache[mode] = it
+              }
+            }
+          }
+        }
+        jobs.awaitAll()
+
+        return CachedResponseBody(
+          raw,
+          length,
+          cache,
+        )
+      }
+    }
+
+    /** @return Raw bytes to serve for this response if no clear encoding can be resolved. */
+    internal fun raw(): ByteArray {
+      val copy = ByteArray(length)
+      System.arraycopy(raw, 0, copy, 0, length)
+      return copy
+    }
+
+    /** @return Indication of whether a body is present for the provided [mode]. */
+    internal fun has(mode: CompressionMode): Boolean = compressed.contains(mode)
+
+    /** @return Compressed response body for [mode], or an error is thrown. */
+    internal fun serve(mode: CompressionMode): CompressedResponseBody = compressed[mode] ?: error(
+      "Failed to locate request body for compression mode '$mode'"
+    )
+  }
+
+  /** Gzip output stream which uses the [Deflater.BEST_COMPRESSION] ratio possible. */
+  private class BestGzip (outbin: OutputStream): GZIPOutputStream(outbin) {
+    init {
+      def.setLevel(Deflater.BEST_COMPRESSION)
+    }
+  }
+
   /** Cached HTTP response. */
   internal data class CachedResponse(
     val uri: String,
@@ -65,12 +177,13 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     val type: MediaType,
     val headers: Map<CharSequence, CharSequence>,
     val length: Long,
-    val body: String?,
+    val body: CachedResponseBody?,
     val fingerprint: String,
+    val materialized: Instant = Clock.System.now(),
   ) {
     companion object {
       /** Create a cached response from a raw origin response and [body]. */
-      @JvmStatic fun from(request: HttpRequest<*>, response: HttpResponse<String>): CachedResponse {
+      @JvmStatic suspend fun from(request: HttpRequest<*>, response: HttpResponse<ByteArray>): CachedResponse {
         return CachedResponse(
           request.uri.toString(),
           response.status,
@@ -78,7 +191,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           response.contentType.orElse(MediaType.TEXT_HTML_TYPE),
           response.headers.flatMap { it.value.map { value -> it.key to value } }.toMap(),
           response.contentLength,
-          response.body(),
+          CachedResponseBody.from(response.body()),
           fingerprint(request, response),
         )
       }
@@ -87,7 +200,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       @JvmStatic private fun hasher() = MessageDigest.getInstance("SHA-256")
 
       // Generate a fingerprint for the provided response.
-      @JvmStatic private fun fingerprint(req: HttpRequest<*>, res: HttpResponse<String>): String = hasher().apply {
+      @JvmStatic private fun fingerprint(req: HttpRequest<*>, res: HttpResponse<ByteArray>): String = hasher().apply {
         require(res.status == HttpStatus.OK) { "Cannot fingerprint non-OK response: $res" }
         update(req.uri.toString().toByteArray())
         update(res.status.code.toString().toByteArray())
@@ -96,15 +209,73 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         update(res.headers.flatMap { it.value.map { value -> it.key to value } }.toMap().toString().toByteArray())
         update(res.contentLength.toString().toByteArray())
         val body = res.body()
-        if (body != null) update(body.toByteArray())
+        if (body != null) update(body)
       }.let { digest ->
         // encode an E-tag for the provided primed digest
         Hex.encodeToString(digest.digest()).takeLast(8)
       }
     }
 
-    /** @return HTTP response to emit for this cached response. */
-    fun response(): MutableHttpResponse<String> = HttpResponse.status<String>(
+    // Decide whether a response can be short-circuited with statuses like 304; otherwise, check the cache and determine
+    // what compressed response to use (if data is found); if no options succeed, return `null` to synthesize from raw.
+    private fun negotiate(req: HttpRequest<*>): MutableHttpResponse<ByteArray>? {
+      // negotiation requires a body
+      val body = this.body ?: return null
+
+      // check for `If-None-Match` header
+      val ifNoneMatch = req.headers.findFirst(HttpHeaders.IF_NONE_MATCH)
+      if (ifNoneMatch.isPresent) {
+        val nominated = ifNoneMatch.get().replace("\"", "")
+        if (nominated.isNotBlank()) {
+          if (fingerprint == nominated) {
+            return HttpResponse.notModified<ByteArray>().apply {
+              header(HttpHeaders.ETAG, "\"$fingerprint\"")
+            }
+          }
+        }
+      }
+
+      // check for `If-Modified-Since` header
+      val date = req.headers.findDate(HttpHeaders.IF_MODIFIED_SINCE)
+      if (date.isPresent) {
+        val ref = date.get().toInstant().toKotlinInstant()
+        if (ref >= materialized) {
+          return HttpResponse.notModified<ByteArray>().apply {
+            header(HttpHeaders.ETAG, "\"$fingerprint\"")
+          }
+        }
+      }
+
+      // okay, we can't short-circuit, so we should begin negotiating which kind of body to send.
+      val acceptEncoding = req.headers.findFirst(HttpHeaders.ACCEPT_ENCODING).orElse(null)
+        ?.split(",")
+        ?.map { it.trim().lowercase() }
+
+      return when {
+        // if we do not have an `Accept-Encoding` header at all, we should fall back to default behavior.
+        acceptEncoding?.isEmpty() != false -> null
+
+        // if `Accept-Encoding` includes `br` and we have a Brotli payload on-hand, we can use a present Brotli variant.
+        body.has(CompressionMode.BROTLI) && acceptEncoding.contains("br") -> {
+          // use a brotli variant
+          synthesize("br" to body.serve(CompressionMode.BROTLI))
+        }
+
+        // if `Accept-Encoding` includes `gz` and we have a Gzip payload on-hand, we can use a present Gzip variant.
+        body.has(CompressionMode.GZIP) && acceptEncoding.contains("gzip") -> {
+          // use a gzip variant
+          synthesize("gzip" to body.serve(CompressionMode.GZIP))
+        }
+
+        // we do not have a special negotiated variant to serve, so we should just fall back to default behavior.
+        else -> null
+      }
+    }
+
+    // Synthesize a request for a response.
+    private fun synthesize(
+      compressedBody: Pair<String, CompressedResponseBody>? = null,
+    ): MutableHttpResponse<ByteArray> = HttpResponse.status<ByteArray>(
       status
     ).headers(
       headers
@@ -118,9 +289,22 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     ).contentType(
       type
     ).apply {
-      if (this@CachedResponse.body != null) {
-        body(this@CachedResponse.body)
+      if (status.code != 201 && status.code != 304) {
+        if (compressedBody != null) {
+          val (encoding, body) = compressedBody
+          header(HttpHeaders.CONTENT_ENCODING, encoding)
+          body(body.emit())
+        } else {
+          val body = this@CachedResponse.body?.raw()
+          if (body?.isNotEmpty() == true) body(body)
+        }
       }
+    }
+
+    /** @return HTTP response to emit for this cached response. */
+    fun response(req: HttpRequest<*>): MutableHttpResponse<ByteArray> = when (val early = negotiate(req)) {
+      null -> synthesize()
+      else -> early
     }
 
     override fun equals(other: Any?): Boolean {
@@ -163,7 +347,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   private fun <V, X> copyResponse(
     response: MutableHttpResponse<V>,
     base: HttpResponse<X>,
-    getter: (HttpResponse<X>) -> V,
+    getter: (HttpResponse<X>) -> V?,
   ): MutableHttpResponse<V> {
     return response.headers(
       base.headers.asMap().flatMap {
@@ -184,16 +368,17 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       base.contentLength
     ).contentType(
       base.contentType.orElse(MediaType.TEXT_HTML_TYPE)
-    ).body(
-      getter.invoke(base)
-    )
+    ).apply {
+      val body = getter(base)
+      if (body != null) body(body)
+    }
   }
 
   // Check the cache for `request`, and serve it from the cache if possible.
   @Cacheable("ssrContent", keyGenerator = CachedResponseKeyGenerator::class)
   internal open suspend fun ssrGenerateResponse(
     request: HttpRequest<*>,
-    response: MutableHttpResponse<String>,
+    response: MutableHttpResponse<ByteArray>,
     block: suspend HTML.() -> Unit
   ): CachedResponse {
     val subResponse = withContext(Dispatchers.IO) {
@@ -225,21 +410,21 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
     // consume data into a static buffer
     val body = data?.use {
-      String(it.toByteArray(), subResponse.characterEncoding)
+      it.toByteArray()
     }
     return CachedResponse.from(
       request,
       copyResponse(response, subResponse) {
-        body ?: ""
+        body
       }
     )
   }
 
   // Generate a baseline response to fill with content.
-  protected open fun baseResponse(): MutableHttpResponse<String> = HttpResponse.ok()
+  protected open fun baseResponse(): MutableHttpResponse<ByteArray> = HttpResponse.ok()
 
   /** Finalize an HTTP response. */
-  protected open fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<String>) {
+  protected open fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<ByteArray>) {
     // set `Content-Language` header
     response.header(
       HttpHeaders.CONTENT_LANGUAGE,
@@ -280,7 +465,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     ).joinToString("; ")
 
     // apex caching
-    response.headers[HttpHeaders.CACHE_CONTROL] = listOf(
+    if (response.status.code == 200) response.headers[HttpHeaders.CACHE_CONTROL] = listOf(
       "public",
       "max-age=60",
       "s-max-age=300",
@@ -289,7 +474,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     ).joinToString(", ")
 
     // add `Link` headers
-    response.headers.apply {
+    if (response.status.code == 200) response.headers.apply {
       add(HttpHeaders.LINK, "<https://fonts.gstatic.com>; rel=preconnect")
       add(HttpHeaders.LINK, "</assets/base.min.css>; rel=preload; as=style")
 
@@ -307,7 +492,13 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   /** Finalize an HTTP response. */
   protected open fun finalizeAsset(locale: Locale, response: StreamedAssetResponse) {
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
+    response.headers["Cache-Control"] = (
+      "public, max-age=900, s-max-age=3600, proxy-revalidate, stale-while-revalidate=7200"
+    )
   }
 
   // Consult the cache, returning any found result, otherwise populate the cache with an origin execution.
@@ -315,14 +506,14 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   private suspend fun ssrCached(
     locale: Locale,
     request: HttpRequest<*>,
-    response: MutableHttpResponse<String> = baseResponse(),
+    response: MutableHttpResponse<ByteArray> = baseResponse(),
     block: suspend HTML.() -> Unit
-  ): Mono<HttpResponse<String>> = mono {
+  ): Mono<HttpResponse<ByteArray>> = mono {
     ssrGenerateResponse(
       request,
       response,
       block,
-    ).response().apply {
+    ).response(request).apply {
       finalize(request, locale, this)
     }
   }
@@ -425,7 +616,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     request: HttpRequest<*>,
     head: suspend HEAD.(HttpRequest<*>) -> Unit,
     block: suspend BODY.(HttpRequest<*>) -> Unit,
-  ): Mono<HttpResponse<String>> {
+  ): Mono<HttpResponse<ByteArray>> {
     // locale selected
     val locale = request.locale.orElse(I18nPage.Defaults.locale)
     return ssrCached(locale, request) {

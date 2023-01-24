@@ -5,6 +5,7 @@
 )
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
+import org.jetbrains.kotlin.konan.target.HostManager
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
@@ -226,6 +227,7 @@ dependencies {
   api(project(":packages:ssr"))
   api(project(":packages:server"))
   api(project(":packages:graalvm"))
+  api(project(":packages:proto:proto-protobuf"))
   api(project(":site:docs:content"))
 
   implementation(libs.jsoup)
@@ -249,17 +251,24 @@ dependencies {
   implementation(libs.bouncycastle.pkix)
   implementation(libs.conscrypt)
   implementation(libs.tink)
-  implementation(libs.netty.resolver.dns.native.macos)
-  implementation(libs.netty.transport.native.unixCommon)
-  implementation(libs.netty.transport.native.epoll)
-  implementation(libs.netty.transport.native.kqueue)
   implementation(libs.netty.tcnative)
   implementation(libs.netty.tcnative.boringssl.static)
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  implementation(libs.brotli)
   runtimeOnly(libs.logback)
+  implementation(libs.netty.transport.native.unixCommon)
+
+  if (HostManager.hostIsMac) {
+    implementation(libs.netty.resolver.dns.native.macos)
+    implementation(libs.netty.transport.native.kqueue)
+    implementation(libs.brotli.native.osx)
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+  } else if (HostManager.hostIsLinux) {
+    implementation(libs.brotli.native.linux)
+    implementation(libs.netty.transport.native.epoll)
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  }
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))

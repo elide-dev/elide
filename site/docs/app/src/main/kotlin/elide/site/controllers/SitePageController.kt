@@ -9,6 +9,7 @@ import elide.runtime.Logging
 import elide.server.*
 import elide.server.controller.PageController
 import elide.server.controller.PageWithProps
+import elide.server.type.RequestState
 import elide.site.AppServerProps
 import elide.site.Assets
 import elide.site.ElideSite
@@ -58,6 +59,21 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     const val enableSSR = true
     const val enableStreaming = true
   }
+
+  /**
+   * Represents materialized render state for a single page-load.
+   *
+   * @param props Server-side render state (React props) to share with the JS VM.
+   * @param page Page which is due for render to the client.
+   * @param request HTTP request submitted by the client.
+   * @param locale Resolved locale for this request.
+   */
+  data class PageRenderState(
+    val props: AppServerProps?,
+    val page: SitePage,
+    val request: HttpRequest<*>,
+    val locale: Locale,
+  )
 
   /** Generate a cache key for an HTTP request. */
   internal class CachedResponseKeyGenerator : CacheKeyGenerator {
@@ -376,10 +392,11 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Check the cache for `request`, and serve it from the cache if possible.
   @Cacheable("ssrContent", keyGenerator = CachedResponseKeyGenerator::class)
   internal open suspend fun ssrGenerateResponse(
-    request: HttpRequest<*>,
+    state: PageRenderState,
     response: MutableHttpResponse<ByteArray>,
     block: suspend HTML.() -> Unit
   ): CachedResponse {
+    val request = state.request
     val subResponse = withContext(Dispatchers.IO) {
       val responsePublisher = ssr(
         request.mutate().apply {
@@ -433,7 +450,10 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   )
 
   /** Finalize an HTTP response. */
-  protected open fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<ByteArray>) {
+  protected open fun finalize(state: PageRenderState, response: MutableHttpResponse<ByteArray>) {
+    val request = state.request
+    val locale = state.locale
+
     // set `Content-Language` header
     response.header(
       HttpHeaders.CONTENT_LANGUAGE,
@@ -508,17 +528,16 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Consult the cache, returning any found result, otherwise populate the cache with an origin execution.
   @Suppress("ReactiveStreamsUnusedPublisher")
   private suspend fun ssrCached(
-    locale: Locale,
-    request: HttpRequest<*>,
+    state: PageRenderState,
     response: MutableHttpResponse<ByteArray> = baseResponse(),
     block: suspend HTML.() -> Unit
   ): Mono<HttpResponse<ByteArray>> = mono {
     ssrGenerateResponse(
-      request,
+      state,
       response,
       block,
-    ).response(request).apply {
-      finalize(request, locale, this)
+    ).response(state.request).apply {
+      finalize(state, this)
     }
   }
 
@@ -545,15 +564,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  protected open fun headMetadata(locale: Locale): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+  protected open fun headMetadata(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     when (page) {
       // if the page is an `I18nPage` subsidiary, it can be interrogated for SEO information to embed in the page.
       is I18nPage -> {
-        val canonical = page.canonical(locale)
-        val keywords = page.keywords(locale)
-        val description = page.description(locale)
-        val twitterInfo = page.twitterInfo(locale)
-        val ogInfo = page.openGraph(locale)
+        val canonical = page.canonical(state.locale)
+        val keywords = page.keywords(state.locale)
+        val description = page.description(state.locale)
+        val twitterInfo = page.twitterInfo(state.locale)
+        val ogInfo = page.openGraph(state.locale)
 
         link {
           rel = "canonical"
@@ -567,8 +586,8 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           name = "keywords"
           content = keywords.joinToString(",")
         }
-        ogInfo.head(locale).invoke(this)
-        twitterInfo.head(locale).invoke(this)
+        ogInfo.head(state.locale).invoke(this)
+        twitterInfo.head(state.locale).invoke(this)
       }
     }
   }
@@ -581,15 +600,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   }
 
   @Suppress("unused")
-  protected open fun tailMetadata(locale: Locale): suspend BODY.(request: HttpRequest<*>) -> Unit = {
+  protected open fun tailMetadata(state: PageRenderState): suspend BODY.(request: HttpRequest<*>) -> Unit = {
     when (page) {
       // if the page is an `I18nPage` subsidiary, it can be interrogated for SEO information to embed in the page.
       is I18nPage -> {
-        val twitterInfo = page.twitterInfo(locale)
-        val ogInfo = page.openGraph(locale)
+        val twitterInfo = page.twitterInfo(state.locale)
+        val ogInfo = page.openGraph(state.locale)
          val builder = I18nPage.LinkedDataBuilder.create()
-        ogInfo.linkedData(locale).invoke(builder)
-        twitterInfo.linkedData(locale).invoke(builder)
+        ogInfo.linkedData(state.locale).invoke(builder)
+        twitterInfo.linkedData(state.locale).invoke(builder)
 
         script {
           type = "application/json+ld"
@@ -604,7 +623,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   protected open fun fonts(): List<String> = emptyList()
 
-  protected open fun preStyles(locale: Locale): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+  protected open fun preStyles(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     link {
       rel = "preconnect dns-prefetch"
       href = "https://fonts.gstatic.com"
@@ -612,7 +631,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
-  protected open fun pageStyles(locale: Locale): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+  protected open fun pageStyles(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     stylesheet(Assets.Styles.base)
   }
 
@@ -623,7 +642,19 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   ): Mono<HttpResponse<ByteArray>> {
     // locale selected
     val locale = request.locale.orElse(I18nPage.Defaults.locale)
-    return ssrCached(locale, request) {
+
+    // calculate render state
+    val state = PageRenderState(
+      props = props(RequestState(
+        request = request,
+        principal = null,
+      )),
+      request = request,
+      locale = locale,
+      page = page,
+    )
+
+    return ssrCached(state) {
       // set HTML lang
       lang = if (!locale.country.isNullOrBlank()) {
         "${locale.language}-${locale.country}"
@@ -636,8 +667,11 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           charset = "utf-8"
         }
 
-        preStyles(locale).invoke(this@head, request)
-        pageStyles(locale).invoke(this@head, request)
+        // pre-styles, page styles
+        preStyles(state).invoke(this@head, request)
+        pageStyles(state).invoke(this@head, request)
+
+        // extra fonts, if any
         fonts().forEach {
           link {
             href = it
@@ -645,16 +679,26 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           }
         }
 
+        // page title
         title { +renderTitle() }
 
+        // UI and analytics scripts
         script(Assets.Scripts.ui, defer = true)
         script(Assets.Scripts.analytics, async = true)
+
+        // extra head content
         head.invoke(this@head, request)
-        headMetadata(locale).invoke(this@head, request)
+
+        // head SEO
+        headMetadata(state).invoke(this@head, request)
       }
+
       body {
+        // body content
         block.invoke(this@body, request)
-        tailMetadata(locale).invoke(this@body, request)
+
+        // body SEO
+        tailMetadata(state).invoke(this@body, request)
       }
     }
   }

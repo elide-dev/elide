@@ -16,11 +16,12 @@ import java.util.*
 /** GET `/`: Controller for index page. */
 @Page(name = "index") class Index : SitePageController(page = Home) {
   // Make sure to pre-load homepage styles.
-  override fun finalize(request: HttpRequest<*>, locale: Locale, response: MutableHttpResponse<ByteArray>) {
-    super.finalize(request, locale, response)
+  override protected fun finalize(state: PageRenderState, response: MutableHttpResponse<ByteArray>) {
+    super.finalize(state, response)
+
     if (response.status.code == 200) response.headers.apply {
       add(HttpHeaders.LINK, "</assets/home.min.css>; rel=preload; as=style")
-      val ua = request.headers["sec-ch-ua"] ?: request.headers[HttpHeaders.USER_AGENT] ?: ""
+      val ua = state.request.headers["sec-ch-ua"] ?: state.request.headers[HttpHeaders.USER_AGENT] ?: ""
       when {
         ua.contains("Google Chrome") || ua.contains("Chrome") || ua.contains("Chromium") -> {
           add(HttpHeaders.LINK, "<https://fonts.gstatic.com/l/font?kit=iJWZBXyIfDnIV5PNhY1KTN7Z-Yh-B4i1VU80V4fdkLdVHIPhLghxm6H4NTtG7lo4KH2dpQsfQ-dEPKg&skey=cee854e66788286d&v=v23>; rel=preload; as=font; crossorigin=anonymous; type=font/woff2")
@@ -33,9 +34,9 @@ import java.util.*
   }
 
   // Add homepage styles.
-  override fun pageStyles(locale: Locale): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
+  override fun pageStyles(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     // base styles first
-    super.pageStyles(locale).invoke(this, it)
+    super.pageStyles(state).invoke(this, it)
 
     // then home styles
     link {

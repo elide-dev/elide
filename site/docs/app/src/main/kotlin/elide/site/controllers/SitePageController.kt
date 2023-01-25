@@ -570,6 +570,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       "font-src" to "https://fonts.gstatic.com",
       "require-trusted-types-for" to "'script'",
       "connect-src" to "'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+      "report-uri" to "https://elidefw.report-uri.com/r/d/csp/enforce",
   )
 
   /** Finalize an HTTP response. */

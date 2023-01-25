@@ -8,6 +8,7 @@ import elide.server.controller.ElideController
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import kotlinx.css.CssBuilder
 import kotlinx.html.*
@@ -37,7 +38,7 @@ public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
 /**
  * Raw streamed file response, used internally for assets.
  */
-public typealias StreamedAssetResponse = HttpResponse<StreamedAsset>
+public typealias StreamedAssetResponse = MutableHttpResponse<StreamedAsset>
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {
@@ -62,16 +63,16 @@ public interface ResponseHandler<ResponseBody> {
    * @param response Response to provide.
    * @return Response, after registration with the object.
    */
-  public suspend fun respond(response: HttpResponse<ResponseBody>): HttpResponse<ResponseBody>
+  public suspend fun respond(response: MutableHttpResponse<ResponseBody>): MutableHttpResponse<ResponseBody>
 }
 
 // Shared logic for response handler contexts internal to Elide.
 public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<ResponseBody> {
   private val acquired: AtomicBoolean = AtomicBoolean(false)
-  private val response: AtomicReference<HttpResponse<ResponseBody>?> = AtomicReference(null)
+  private val response: AtomicReference<MutableHttpResponse<ResponseBody>?> = AtomicReference(null)
 
   /** @inheritDoc */
-  override suspend fun respond(response: HttpResponse<ResponseBody>): HttpResponse<ResponseBody> {
+  override suspend fun respond(response: MutableHttpResponse<ResponseBody>): MutableHttpResponse<ResponseBody> {
     this.acquired.compareAndSet(false, true)
     this.response.set(response)
     return response
@@ -248,7 +249,7 @@ public class AssetHandler(
   }
 
   /** @inheritDoc */
-  override suspend fun finalize(): HttpResponse<StreamedAsset> {
+  override suspend fun finalize(): MutableHttpResponse<StreamedAsset> {
     return respond(
       handler.assets().serveAsync(
         request,
@@ -284,6 +285,7 @@ public class HtmlRenderer(
   override suspend fun render(): ByteArrayOutputStream {
     val baos = ByteArrayOutputStream()
     baos.bufferedWriter(StandardCharsets.UTF_8).use {
+      it.write("<!doctype html>")
       it.appendHTML(
         prettyPrint = prettyhtml,
       ).htmlSuspend(

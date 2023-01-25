@@ -29,7 +29,7 @@ object ElideSite {
   /** Site info in English. */
   object English: SiteInfo {
     /** Tail end of all site page titles. */
-    override val postfix = "Rapid development framework for Kotlin"
+    override val postfix = "Polyglot app runtime and framework"
 
     /** Name of the framework. */
     override val name = "Elide"
@@ -41,7 +41,7 @@ object ElideSite {
     override val prerelease = true
 
     /** Label to show if [prerelease] is `true`. */
-    override val prelabel = "alpha"
+    override val prelabel = "αlpha"
 
     /** Main heading to use for the navigation bar. */
     override val heading = "$name Framework"
@@ -54,9 +54,10 @@ object ElideSite {
   val pages: List<SitePage> = listOf(
     Home,
     GettingStarted,
-    Packages,
-    Architecture,
-    Tooling,
     Samples,
+    Tooling,
+    Library,
+    Runtime,
+    Architecture,
   )
 }

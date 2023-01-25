@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /getting-started
+Allow: /tools
+Allow: /runtime
+Allow: /library
+Disallow: /legal
+
+Sitemap: https://elide.dev/sitemap.xml

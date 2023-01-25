@@ -12,7 +12,13 @@ group = "dev.elide.site.docs"
 version = rootProject.version as String
 
 val kotlinWrapperVersion = libs.versions.kotlinxWrappers.get()
-val devMode = true
+val devMode = (project.property("elide.buildMode") ?: "dev") == "dev"
+
+sourceSets {
+  val mdx by creating {
+    // it holds MDX sources
+  }
+}
 
 kotlin {
   js(IR) {
@@ -22,7 +28,7 @@ kotlin {
       commonWebpackConfig {
         sourceMaps = devMode
         cssSupport {
-          enabled.set(true)
+          enabled.set(false)  // we are handling this manually
         }
         mode = if (devMode) {
           org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
@@ -53,10 +59,19 @@ dependencies {
   api(project(":packages:frontend"))
   api(project(":packages:graalvm-react"))
 
+  implementation(devNpm("autoprefixer", "10.4.13"))
   implementation(devNpm("style-loader", "3.3.1"))
   implementation(devNpm("css-loader", "6.7.1"))
+  implementation(devNpm("cssnano", "5.1.14"))
   implementation(devNpm("sass-loader", "13.2.0"))
   implementation(devNpm("sass", "1.56.1"))
+  implementation(devNpm("postcss-loader", "7.0.2"))
+  implementation(devNpm("postcss-preset-env", "7.8.3"))
+  implementation(devNpm("postcss", "8.4.21"))
+  implementation(devNpm("@mdx-js/loader", "2.2.1"))
+  implementation(npm("@mdx-js/react", "2.2.1"))
+  implementation(npm("@mdx-js/mdx", "2.2.1"))
+  implementation(npm("react-syntax-highlighter", "15.5.0"))
 
   implementation(kotlin("stdlib-js"))
   implementation(libs.kotlinx.coroutines.core)
@@ -93,11 +108,33 @@ artifacts {
   }
 }
 
+tasks.create("copyStaticSources", Copy::class.java) {
+  from("$projectDir/src/main/assets") {
+    include("**/*.*")
+  }
+  into("${rootProject.buildDir}/js/packages/elide-ui/kotlin/")
+}
+
+tasks.create("copyMdxSources", Copy::class.java) {
+  from("$projectDir/src/main/mdx") {
+    include("**/*.*")
+  }
+  into("${rootProject.buildDir}/js/packages/elide-ui/kotlin/")
+}
+
+tasks.named("browserDevelopmentRun").configure {
+  dependsOn("copyMdxSources", "copyStaticSources")
+}
+
+tasks.named("browserDistribution").configure {
+  dependsOn("copyMdxSources", "copyStaticSources")
+}
+
 tasks.create("copyStaticAssets", Copy::class.java) {
   from("$projectDir/src/main/assets/") {
     include("*.*")
   }
-  into("$buildDir/processedResources/js/main/assets/")
+  into("${buildDir}/processedResources/js/main/assets/")
 }
 
 tasks.named("processResources").configure {

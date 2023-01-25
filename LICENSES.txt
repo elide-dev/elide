@@ -219,3 +219,16 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+--------------------
+
+Github Dark theme on Elide's Website
+
+Theme: GitHub Dark
+Description: Dark theme as seen on github.com
+Author: github.com
+Maintainer: @Hirse
+Updated: 2021-05-15
+
+Outdated base version: https://github.com/primer/github-syntax-dark
+Current colors taken from GitHub's CSS

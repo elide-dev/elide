@@ -5,9 +5,12 @@
 )
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
+import org.jetbrains.kotlin.konan.target.HostManager
 import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   id("com.github.johnrengelman.shadow")
   id("io.micronaut.application")
   id("io.micronaut.aot")
@@ -27,12 +30,13 @@ version = rootProject.version as String
  */
 
 val commonNativeArgs = listOf(
-  "-H:DashboardDump=elide-site",
-  "-H:+DashboardAll",
+  "--trace-object-instantiation=kotlin.reflect.jvm.internal.KTypeImpl",
 )
 
 val debugFlags = listOf(
   "-g",
+  "-H:DashboardDump=elide-site",
+  "-H:+DashboardAll",
 )
 
 val releaseFlags: List<String> = listOf(
@@ -60,11 +64,8 @@ val darwinOnlyArgs = defaultPlatformArgs
 
 val linuxOnlyArgs = listOf(
   "--static",
-  "--libc=glibc",
-)
-
-val muslArgs = listOf(
   "--libc=musl",
+  "-J-Xmx22G",
 )
 
 val testOnlyArgs: List<String> = emptyList()
@@ -74,8 +75,7 @@ val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 val enterpriseOnlyFlags: List<String> = listOf(
   "--gc=G1",
   "--enable-sbom",
-  "--pgo-instrument",
-  "-H:+AOTInliner",
+  "--pgo=${project.projectDir}/analysis/default.iprof",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
 )
 
@@ -86,7 +86,7 @@ val quickbuild = (
 
 fun nativeImageArgs(
   platform: String = "generic",
-  target: String = "glibc",
+  target: String = "musl",
   debug: Boolean = quickbuild,
   release: Boolean = (!quickbuild && project.properties["elide.release"] == "true"),
   enterprise: Boolean = isEnterprise,
@@ -97,8 +97,7 @@ fun nativeImageArgs(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" }
   ).plus(when (platform) {
     "darwin" -> darwinOnlyArgs
-    "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs
-    else -> defaultPlatformArgs
+    else -> linuxOnlyArgs
   }).plus(
     jvmDefs.map { "-D${it.key}=${it.value}" }
   ).plus(
@@ -108,6 +107,31 @@ fun nativeImageArgs(
   ).plus(
     if (enterprise) enterpriseOnlyFlags else emptyList()
   ).toList()
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_19
+}
+
+kotlin {
+  target.compilations.all {
+    kotlinOptions {
+      jvmTarget = Elide.javaTargetMaximum
+      javaParameters = true
+      languageVersion = Elide.kotlinLanguage
+      apiVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = true
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta
+    }
+  }
+}
+
+allOpen {
+  annotations(listOf(
+    "io.micronaut.aop.Around",
+    "elide.server.annotations.Page",
+  ))
+}
 
 elide {
   mode = if (devMode) {
@@ -136,9 +160,15 @@ elide {
 
       // stylesheet: `styles.base`
       stylesheet("styles.base") {
-        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/base.css")
+        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/base.min.css")
       }
 
+      // stylesheet: `styles.home`
+      stylesheet("styles.home") {
+        sourceFile("${project(":site:docs:ui").projectDir}/src/main/assets/home.min.css")
+      }
+
+      // script: `scripts.ui`
       script("scripts.ui") {
         from(project(":site:docs:ui"))
       }
@@ -191,6 +221,7 @@ application {
 }
 
 dependencies {
+  annotationProcessor(libs.micronaut.serde.processor)
   compileOnly(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
@@ -198,12 +229,21 @@ dependencies {
   api(project(":packages:ssr"))
   api(project(":packages:server"))
   api(project(":packages:graalvm"))
+  api(project(":packages:proto:proto-protobuf"))
   api(project(":site:docs:content"))
 
   implementation(libs.jsoup)
   implementation(libs.google.auto.service.annotations)
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.jsr310)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
+  implementation(libs.micronaut.cache.core)
+  implementation(libs.micronaut.cache.caffeine)
+  implementation(libs.micronaut.views.core)
+  implementation(libs.micronaut.serde.api)
+  implementation(libs.micronaut.jackson.databind)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -212,22 +252,31 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
+  implementation(libs.kotlinx.coroutines.reactive)
+  implementation(libs.kotlinx.coroutines.reactor)
   implementation(libs.kotlinx.wrappers.css)
   implementation(libs.bouncycastle)
   implementation(libs.bouncycastle.pkix)
   implementation(libs.conscrypt)
   implementation(libs.tink)
-  implementation(libs.netty.resolver.dns.native.macos)
-  implementation(libs.netty.transport.native.unixCommon)
-  implementation(libs.netty.transport.native.epoll)
-  implementation(libs.netty.transport.native.kqueue)
   implementation(libs.netty.tcnative)
   implementation(libs.netty.tcnative.boringssl.static)
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  implementation(libs.brotli)
   runtimeOnly(libs.logback)
+  implementation(libs.netty.transport.native.unixCommon)
+
+  if (HostManager.hostIsMac) {
+    implementation(libs.netty.resolver.dns.native.macos)
+    implementation(libs.netty.transport.native.kqueue)
+    implementation(libs.brotli.native.osx)
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-aarch_64") })
+  } else if (HostManager.hostIsLinux) {
+    implementation(libs.brotli.native.linux)
+    implementation(libs.netty.transport.native.epoll)
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+    implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  }
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -263,13 +312,13 @@ tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
   graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native/alpine:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
   graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
-  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
+  baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native/alpine:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 
@@ -348,5 +397,18 @@ graalvmNative {
       quickBuild.set(true)
       buildArgs.addAll(nativeImageArgs())
     }
+
+    named("optimized") {
+      fallback.set(false)
+      quickBuild.set(true)
+      buildArgs.addAll(nativeImageArgs(release = true))
+    }
   }
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("io.micronaut:micronaut-jackson-databind"))
+            .using(module("io.micronaut.serde:micronaut-serde-jackson:${libs.versions.micronaut.serde.get()}"))
+    }
 }

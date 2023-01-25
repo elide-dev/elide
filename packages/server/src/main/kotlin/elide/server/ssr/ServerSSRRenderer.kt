@@ -62,7 +62,9 @@ public class ServerSSRRenderer constructor(
       )
       if (props != null && serialized != null) {
         val subBuffer = StringBuilder()
-        subBuffer.appendHTML().script(type = "application/json") {
+        subBuffer.appendHTML().script(
+          type = "application/json"
+        ) {
           attributes["id"] = ssrId
           unsafe {
             +serialized
@@ -72,7 +74,9 @@ public class ServerSSRRenderer constructor(
       }
       buf.toString()
     } else {
-      op.invoke(JavaScript.Inputs.EMPTY, null).toString()
+      StringBuilder("<!doctype html>").append(
+        op.invoke(JavaScript.Inputs.EMPTY, null)
+      ).toString()
     }
   }
 

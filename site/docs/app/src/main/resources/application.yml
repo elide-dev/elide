@@ -3,6 +3,15 @@ elide:
     enabled: true
 
 micronaut:
+  application:
+    name: elide
+    default-charset: utf-8
+
+  caches:
+    ssrContent:
+      charset: 'UTF-8'
+      expire-after-access: 24h
+
   router:
     static-resources:
       default:
@@ -10,6 +19,37 @@ micronaut:
         mapping: "/**"
         paths: classpath:static
 
+  server:
+    server-header: "elide/v3"
+    default-charset: utf-8
+    thread-selection: AUTO
+    netty:
+      use-native-transport: true
+
+    locale-resolution:
+      header: true
+      default-locale: 'en-US'
+
+  validator:
+    enabled: true
+
+  views:
+    csp:
+      enabled: false
+
+  jcache:
+    enabled: false
+
 grpc:
   server:
     enabled: false
+
+jackson:
+  module-scan: false
+  bean-introspection-module: true
+  locale: 'en-US'
+
+netty:
+  default:
+    allocator:
+      max-order: 3

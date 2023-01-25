@@ -1,17 +1,12 @@
 package elide.site.ui.pages
 
-import csstype.ClassName
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.main
-import react.*
+import elide.site.ui.components.FullbleedPage
+import elide.site.ui.pages.samples.mdx.SamplesMdx
 
-/** */
-val Samples = FC<Props> {
-  main {
-    className = ClassName("elide-site-page center")
-
-    div {
-      +"Samples"
-    }
+/** Renders the Code Samples page for the Elide website. */
+val Samples = react.FC<react.Props> {
+  FullbleedPage {
+    heading = "Code Samples"
+    component = SamplesMdx
   }
 }

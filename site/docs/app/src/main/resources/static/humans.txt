@@ -1,0 +1,16 @@
+Elide is an open-source project, a library, and a runtime which anyone can use to run their software; it is made by
+volunteers on the open internet, via Github, at https://github.com/elide-dev. Take a look!
+
+Open contributions are encouraged, subject to Elide's contribution policy. See the Github repo for more information. For
+info about Elide's licensing, see /legal/license.
+
+---- Project authors and contributors include: ----
+
+Sam Gammon, github.com/sgammon. Sam is the project's founder and lead developer.
+Sebastian Schuberth. github.com/sschuberth.
+
+---- The project authors would like to thank: ----
+
+Damien O'Hara, github.com/mfwgenerics, for his help and advice regarding Elide's architecture.
+Neil Michel, Managing Director of Accenture Interactive, for his help and advice in explaining Elide.
+The Elide community, for their contributions, feedback, and support.

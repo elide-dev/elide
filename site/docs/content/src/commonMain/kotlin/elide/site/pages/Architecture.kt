@@ -8,4 +8,5 @@ object Architecture : SitePage(
   label = "Architecture",
   path = "/architecture",
   title = "Library Design and Architecture",
+  hidden = true,
 )

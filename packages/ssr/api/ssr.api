@@ -1,3 +1,10 @@
+public abstract interface annotation class elide/annotations/Props : java/lang/annotation/Annotation {
+}
+
+public final class elide/annotations/Props$Impl : elide/annotations/Props {
+	public fun <init> ()V
+}
+
 public final class elide/runtime/ssr/CssChunk {
 	public fun <init> ([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()[Ljava/lang/String;

@@ -548,9 +548,10 @@ internal class EmbeddedGuestVFSImpl private constructor (
             file.name to file.inputStream()
           }
 
-          "classpath", "jar" -> {
+          "classpath", "resource", "jar" -> {
             val filename = when (path.scheme) {
-              "classpath" -> path.toString().replace("classpath:", "")
+              "resource" -> path.toString().removePrefix("resource:")
+              "classpath" -> path.toString().removePrefix("classpath:")
               "jar" -> path.toString().split("!").last()
               else -> path.path
             }
@@ -559,7 +560,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
             )
             filename to target
           }
-          else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}'")
+          else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }
       return loadBundles(sources, fsConfig)

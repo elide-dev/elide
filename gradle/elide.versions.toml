@@ -1,6 +1,6 @@
 [versions]
 elide = "1.0-v3-alpha3-b4"
-elide_plugin = "1.0.0-beta17"
+elide_plugin = "1.0.0-beta19"
 kotlin_sdk = "1.8.0"
 kotlin_language = "1.8"
 jna = "5.8.0"
@@ -24,7 +24,7 @@ jline = "3.21.0"
 netty = "4.1.86.Final"
 netty_tcnative = "2.0.56.Final"
 dekorate = "3.1.1"
-micronaut_lib = "3.8.1"
+micronaut_lib = "3.8.2"
 micronaut_aot = "1.1.1"
 micronaut_aws = "3.9.3"
 micronaut_data = "3.8.1"
@@ -37,7 +37,7 @@ micronaut_redis = "5.3.2"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
 micronaut_views = "3.8.0"
-micronaut_serde = "1.3.3"
+micronaut_serde = "1.5.0"
 micronaut_security = "3.9.0"
 micronaut_sql = "4.7.2"
 micronaut_openapi = "4.6.0"
@@ -210,6 +210,7 @@ lmaxDisruptorProxy = "2.0.7"
 gr8 = "0.7"
 proguard = "7.1.0"
 openrewrite = "5.33.2"
+parallelGzip = "1.0.5"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -507,6 +508,7 @@ google_auto_common = { group = "com.google.auto", name = "auto-common", version.
 reactivestreams = { group = "org.reactivestreams", name = "reactive-streams", version.ref = "reactivestreams" }
 google_cloud_bom = { group = "com.google.cloud", name = "libraries-bom", version.ref = "gcloud_sdk" }
 google_cloud_nativeImageSupport = { group = "com.google.cloud", name = "native-image-support", version.ref = "gcloud_native" }
+parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }
 brotli = { group = "com.aayushatharva.brotli4j", name = "brotli4j", version.ref = "brotli4j" }
 brotli_native_osx = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
 brotli_native_osx_amd64 = { group = "com.aayushatharva.brotli4j", name = "native-osx-x86_64", version.ref = "brotli4j" }
@@ -544,6 +546,7 @@ dekorate_kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", 
 jackson_core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 jackson_databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson_jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
+jackson_module_blackbird = { group = "com.fasterxml.jackson.module", name = "jackson-module-blackbird", version.ref = "jackson" }
 jackson_module_kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 testcontainers_junit_jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers_core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }

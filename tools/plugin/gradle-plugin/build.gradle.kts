@@ -6,6 +6,11 @@
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
 
 plugins {
@@ -115,6 +120,19 @@ subprojects {
     detekt {
         config = rootProject.files("config/detekt/detekt.yml")
     }
+}
+
+rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
+    // 16+ required for Apple Silicon support
+    // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
+    rootProject.the<NodeJsRootExtension>().download = false
+    rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
+}
+
+rootProject.plugins.withType(YarnPlugin::class.java) {
+    rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
+    rootProject.the<YarnRootExtension>().reportNewYarnLock = false
+    rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
 }
 
 tasks.withType<Detekt>().configureEach {

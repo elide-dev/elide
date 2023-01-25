@@ -6,17 +6,29 @@ object Assets {
   object Images {
     /** Gray-only Elide logo (square vector). */
     const val logoGray = "/images/logo-gray.svg"
+
+    /** Color Elide logo (square raster). */
+    const val stampColor = "/images/favicon.png"
+
+    /** Color Elide logo (square vector). */
+    const val stampDynamic = "/images/favicon.svg"
   }
 
   /** Style assets. */
   object Styles {
     /** Base stylesheet shared by all Elide sites. */
-    const val base = "/assets/base.css"
+    const val base = "/assets/base.min.css"
+
+    /** Homepage stylesheet. */
+    const val home = "/assets/home.min.css"
   }
 
   /** Script assets. */
   object Scripts {
     /** Main UI render script. */
     const val ui = "/ui.js"
+
+    /** Analytics script. */
+    const val analytics = "/scripts/analytics.min.js"
   }
 }

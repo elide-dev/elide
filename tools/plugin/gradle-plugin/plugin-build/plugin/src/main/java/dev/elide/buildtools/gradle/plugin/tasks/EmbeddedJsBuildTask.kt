@@ -28,11 +28,11 @@ import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.targets.js.npm.NpmDependencyExtension
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask
 import tools.elide.assets.*
 import tools.elide.assets.EmbeddedScriptMetadataKt.jsScriptMetadata
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 
@@ -50,9 +50,9 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         private const val defaultEcmaVersion: String = "2022"
         private const val defaultLibraryName: String = "embedded"
         private const val defaultEntrypointName: String = "main.mjs"
-        private const val defaultOutputConfig: String = "embedded-js/compile.js"
+        private const val defaultOutputConfig: String = "embedded-js/compile.mjs"
         private const val defaultProcessShim: String = "embedded-js/shim.process.js"
-        internal const val esbuildConfigTemplatePath: String = "/dev/elide/buildtools/js/esbuild-wrapper.js.hbs"
+        private const val esbuildConfigTemplatePath: String = "/dev/elide/buildtools/js/esbuild-wrapper.mjs.hbs"
         internal const val processShimTemplatePath: String = "/dev/elide/buildtools/js/process-wrapper.js.hbs"
 
         // Determine whether the JS bundle task is eligible to run for the given project / extension pair.
@@ -279,11 +279,6 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             jsExtension: ElideJsHandler,
             inflateRuntime: InflateRuntimeTask,
         ) {
-            // resolve root-package-json task
-            val rootPackageJson = project.rootProject.tasks.withType(
-                RootPackageJsonTask::class.java
-            ).first()
-
             val modeName = mode.name.lowercase().capitalized()
             val targetBundleTask = "generate${modeName}EsBuildConfig"
             val buildTask = project.tasks.create(targetBundleTask, EmbeddedJsBuildTask::class.java) {
@@ -317,18 +312,34 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     File("${project.buildDir}/esbuild/process-shim.${modeName.lowercase()}.js")
                 )
                 it.outputConfig.set(
-                    File("${project.buildDir}/esbuild/esbuild.${modeName.lowercase()}.js")
+                    File("${project.buildDir}/esbuild/esbuild.${modeName.lowercase()}.mjs")
                 )
                 it.modulesFolders.set(listOf(
                     File(inflateRuntime.modulesPath.get().absolutePath),
-                    File("${project.buildDir}/js/node_modules"),
-                    File("${project.projectDir}/node_modules"),
                     File("${project.rootProject.buildDir}/js/node_modules"),
                     File("${project.rootProject.projectDir}/node_modules"),
                 ))
                 val defaultOptimize = mode == BuildMode.PRODUCTION
                 it.minify = jsExtension.minify.get() ?: defaultOptimize
                 it.prepack = jsExtension.prepack.get() ?: defaultOptimize
+
+                project.afterEvaluate { _ ->
+                    val esbuildTpl = jsExtension.esbuildConfig.get()
+                    val esbuildConfigTemplate = if (esbuildTpl == null) {
+                        loadEmbedded(esbuildConfigTemplatePath)
+                    } else {
+                        // if we are given a template, we must load it as a file
+                        try {
+                            esbuildTpl.readText(StandardCharsets.UTF_8)
+                        } catch (err: IOException) {
+                            throw IllegalArgumentException(
+                                "Failed to load esbuild config template from ${esbuildTpl.absolutePath}",
+                                err,
+                            )
+                        }
+                    }
+                    it.configTemplate.set(esbuildConfigTemplate)
+                }
             }
 
             val targetEmbeddedTask = "${modeName.lowercase()}EmbeddedExecutable"
@@ -343,13 +354,6 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                 it.dependsOn(inflateRuntime)
                 it.script.set(buildTask.outputConfig.get())
 
-                it.setNodeModulesPath(
-                    listOf(
-                        inflateRuntime.modulesPath.get().absolutePath,
-                        "${project.rootDir}/node_modules",
-                        "${rootPackageJson.rootPackageJson.parentFile / "node_modules"}"
-                    ).joinToString(":")
-                )
                 it.inputs.files(
                     buildTask.processShim,
                     buildTask.outputConfig,
@@ -549,14 +553,6 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
     )
     internal var platform: String = target.platform
 
-    /** Whether to enable React shims for the VM runtime. */
-    @get:Input
-    @get:Option(
-        option = "enableReact",
-        description = "Provide low-overhead runtime support for React SSR. Defaults to `true`.",
-    )
-    internal var enableReact: Boolean = true
-
     /** Whether to perform minification on the target bundle. */
     @get:Input
     @get:Option(
@@ -599,9 +595,12 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
     internal abstract val entryFile: RegularFileProperty
 
     /** Template content to use for the ESBuild wrapper. Please use with caution, this is not documented yet. */
-    @get:Input internal val configTemplate = loadEmbedded(
-        esbuildConfigTemplatePath
+    @get:Option(
+        option = "configTemplate",
+        description = "Configuration template to use for 'esbuild'.",
     )
+    @get:Input
+    internal abstract val configTemplate: Property<String>
 
     /** Template content to use for the `process` shim. Please use with caution, this is not documented yet. */
     @get:Input internal val processShimTemplate = loadEmbedded(
@@ -669,7 +668,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
             renderTemplateVals(processShimTemplate)
         )
         outputConfig.get().writeText(
-            renderTemplateVals(configTemplate)
+            renderTemplateVals(configTemplate.get())
         )
         logger.lifecycle(
             "Config generated for `${tool.name.lowercase()}` (mode: ${mode.name}): " + outputConfig.get().path

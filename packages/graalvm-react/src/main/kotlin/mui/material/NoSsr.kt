@@ -7,8 +7,5 @@ external interface NoSsrProps :
   override var children: react.ReactNode?
 }
 
-/**
- * TBD
- */
 @JsName("default")
 external val NoSsr: react.FC<NoSsrProps>

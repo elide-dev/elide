@@ -42,6 +42,16 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
 
+      ## Setup: Node
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      ## Setup: Yarn
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19 && yarn
+
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d01f5f519f35cf82b318133761fd8b674632a8fe # v1
@@ -133,8 +143,8 @@ jobs:
       - name: Verify plugin output (JS)
         if: success()
         run: |
-          file ./example/fullstack/node/build/distributions/*.js
-          grep -Fq "esbuild" ./example/fullstack/node/build/esbuild/esbuild.*.js
+          file ./example/fullstack/node/build/distributions/*.*js
+          grep -Fq "esbuild" ./example/fullstack/node/build/esbuild/esbuild.*.*js
 
       ## Job: Verify plugin output (JVM)
       - name: Verify plugin output (JVM)

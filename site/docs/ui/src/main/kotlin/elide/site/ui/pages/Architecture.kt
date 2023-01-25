@@ -1,17 +1,12 @@
 package elide.site.ui.pages
 
-import csstype.ClassName
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.main
-import react.*
+import elide.site.ui.components.FullbleedPage
+import elide.site.ui.pages.architecture.mdx.ArchitectureMdx
 
-/** */
-val Architecture = FC<Props> {
-  main {
-    className = ClassName("elide-site-page center")
-
-    div {
-      +"Architecture"
-    }
+/** Renders the top-level Architecture page on the Elide site. */
+val Architecture = react.FC<react.Props> {
+  FullbleedPage {
+    heading = "Architecture"
+    component = ArchitectureMdx
   }
 }

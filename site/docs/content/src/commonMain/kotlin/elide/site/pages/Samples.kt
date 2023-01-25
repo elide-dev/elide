@@ -8,4 +8,5 @@ object Samples : SitePage(
   label = "Samples",
   path = "/samples",
   title = "Code Samples",
+  hidden = true,
 )

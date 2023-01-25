@@ -1,0 +1,28 @@
+import fs from "fs";
+import esbuild from "esbuild";
+const { default: mdx } = await import("@mdx-js/esbuild");
+
+const settings = {
+    entryPoints: ['{{ENTRY}}'],
+    outfile: '{{OUTFILE}}',
+    format: '{{FORMAT}}',
+    minify: {{MINIFY}},
+    platform: '{{PLATFORM}}',
+    globalName: '{{LIBNAME}}',
+    bundle: {{BUNDLE}},
+    nodePaths: [{{NODEPATH}}],
+    mainFields: ['module', 'main'],
+    resolveExtensions: ['.mts', '.ts', '.mjs', '.cjs', '.js'],
+    sourcemap: !{{PREPACK}},
+    inject: [ '{{PROCESS}}' ],
+    external: [
+      'buffer',
+      'fs',
+      'util'
+    ]
+};
+
+console.info("Bundling SSR library '{{LIBNAME}}'...");
+esbuild.build(settings).then(() => {
+    console.info("Bundle step completed: embedded SSR bundle ready (mode: {{MODE}}).");
+}, () => process.exit(1));

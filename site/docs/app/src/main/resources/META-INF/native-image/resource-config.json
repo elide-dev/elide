@@ -5,6 +5,9 @@
       "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
     }, 
     {
+      "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
+    }, 
+    {
       "pattern":"\\QMETA-INF/elide/embedded/runtime/js/polyfills.js\\E"
     }, 
     {
@@ -17,10 +20,10 @@
       "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanConfiguration\\E"
+      "pattern":"\\QMETA-INF/native/libconscrypt_openjdk_jni-linux-x86_64.so\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
+      "pattern":"\\QMETA-INF/native/libnetty_transport_native_epoll_x86_64.so\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
@@ -32,16 +35,16 @@
       "pattern":"\\QMETA-INF/services/com.oracle.truffle.js.runtime.Evaluator\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/services/io.micronaut.context.env.PropertySourceLoader\\E"
+      "pattern":"\\QMETA-INF/services/io.micronaut.context.ApplicationContextConfigurer\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/io.micronaut.core.convert.TypeConverterRegistrar\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/services/io.micronaut.core.type.TypeInformationProvider\\E"
+      "pattern":"\\QMETA-INF/services/io.micronaut.core.optim.StaticOptimizations$Loader\\E"
     }, 
     {
-      "pattern":"\\QMETA-INF/services/io.micronaut.http.HttpResponseFactory\\E"
+      "pattern":"\\QMETA-INF/services/io.micronaut.core.type.TypeInformationProvider\\E"
     }, 
     {
       "pattern":"\\QMETA-INF/services/io.micronaut.http.server.netty.handler.accesslog.element.LogElementBuilder\\E"
@@ -50,13 +53,13 @@
       "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
     }, 
     {
-      "pattern":"\\Qapplication.yml\\E"
-    }, 
-    {
       "pattern":"\\Qassets/app.assets.pb\\E"
     }, 
     {
       "pattern":"\\Qbootstrap.properties\\E"
+    }, 
+    {
+      "pattern":"\\Qcom/oracle/truffle/heap/HeapLanguage.class\\E"
     }, 
     {
       "pattern":"\\Qcom/oracle/truffle/llvm/nfi/SulongNFI.class\\E"
@@ -65,7 +68,10 @@
       "pattern":"\\Qcom/oracle/truffle/nfi/backend/libffi/LibFFILanguage.class\\E"
     }, 
     {
-      "pattern":"\\Qembedded/elide-ssr.dev.mjs\\E"
+      "pattern":"\\Qembedded/elide-ssr.mjs\\E"
+    }, 
+    {
+      "pattern":"\\Qlib/linux-x86_64/libbrotli.so\\E"
     }, 
     {
       "pattern":"\\Qlogback.xml\\E"
@@ -80,6 +86,9 @@
       "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
     }, 
     {
+      "pattern":"\\Qstatic/images/artwork/astronaut-mast@2x.avif\\E"
+    }, 
+    {
       "pattern":"\\Qstatic/images/favicon.png\\E"
     }, 
     {
@@ -89,14 +98,21 @@
       "pattern":"\\Qstatic/images/logo-gray.svg\\E"
     }, 
     {
-      "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt70b/nfc.nrm\\E"
-    }, 
-    {
-      "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt70b/nfkc.nrm\\E"
-    }, 
-    {
-      "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
+      "pattern":"\\Qstatic/scripts/analytics.min.js\\E"
     }
   ]},
-  "bundles":[]
+  "bundles":[
+    {
+      "name":"ElideSite_Home",
+      "locales":["en-US"]
+    }, 
+    {
+      "name":"ElideSite_Library",
+      "locales":["en-US"]
+    }, 
+    {
+      "name":"ElideSite_Runtime",
+      "locales":["en-US"]
+    }
+  ]
 }

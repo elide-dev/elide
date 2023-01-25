@@ -146,14 +146,17 @@ public suspend fun ssr(
       response.body(publish {
         val outputStream = ByteArrayOutputStream()
         outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
-          appendHTML(prettyPrint = false,).htmlSuspend(
+          append("<!doctype html>")
+          appendHTML(prettyPrint = false).htmlSuspend(
             block = block
           )
           flush()
         }
 
         send(outputStream)
-      }).characterEncoding(StandardCharsets.UTF_8).contentType(
+      }).characterEncoding(
+        StandardCharsets.UTF_8
+      ).contentType(
         "text/html;charset=utf-8"
       )
     }

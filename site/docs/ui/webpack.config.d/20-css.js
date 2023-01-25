@@ -9,9 +9,24 @@ config.module.rules.push({
 });
 
 config.module.rules.push({
-  test: /\.css$/,
+  test: /\.css$/i,
   use: [
-    "style-loader",   // translates CSS into CommonJS
-    "css-loader",   // translates CSS into CommonJS
+    "style-loader",
+    "css-loader",
+    {
+      loader: "postcss-loader",
+      options: {
+        postcssOptions: {
+          plugins: [
+            [
+              "postcss-preset-env",
+              {
+                // Options
+              },
+            ],
+          ],
+        },
+      },
+    },
   ]
 });

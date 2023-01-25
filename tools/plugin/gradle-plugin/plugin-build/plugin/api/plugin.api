@@ -211,6 +211,7 @@ public class dev/elide/buildtools/gradle/plugin/cfg/ElideAssetsHandler$ServerAss
 
 public class dev/elide/buildtools/gradle/plugin/cfg/ElideJsHandler {
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
+	public final fun esbuild (Ljava/io/File;)V
 	public final fun libraryName (Ljava/lang/String;)V
 	public final fun minify (Z)V
 	public final fun prepack (Z)V

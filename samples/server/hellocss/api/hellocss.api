@@ -14,6 +14,6 @@ public final class hellocss/App {
 public final class hellocss/App$Index : elide/server/controller/PageController {
 	public fun <init> ()V
 	public final fun index (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun styles ()Lio/micronaut/http/HttpResponse;
+	public final fun styles ()Lio/micronaut/http/MutableHttpResponse;
 }
 

@@ -28,7 +28,6 @@ const val chunkCss = true
 private fun setupCache(context: dynamic): EmotionCache {
   val statejson = JSON.stringify(context, emptyArray(), 0)
   val cspNonce = context.getNonce()
-  console.info("Setting Emotion cache nonce: \"$cspNonce\"")
   return createCache(jso {
     key = "es"
     nonce = cspNonce

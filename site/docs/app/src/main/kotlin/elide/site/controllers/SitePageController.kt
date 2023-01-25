@@ -568,7 +568,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       "object-src" to "'none'",
       "img-src" to "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
       "font-src" to "https://fonts.gstatic.com",
-      "require-trusted-types-for" to "'script'",
       "connect-src" to "'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
       "report-uri" to "https://elidefw.report-uri.com/r/d/csp/enforce",
   )

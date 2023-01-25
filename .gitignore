@@ -21,3 +21,4 @@ site.tar.gz
 tmp
 app-glibc
 app-musl
+tmpdocs/

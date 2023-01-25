@@ -13,9 +13,10 @@ import react.router.dom.server.StaticRouter
 import emotion.react.CacheProvider
 import emotion.cache.EmotionCache
 import emotion.cache.createCache
+import emotion.server.worker.EmotionServer
 import emotion.server.worker.createEmotionServer
 import js.core.Object
-import mui.material.CssBaseline
+import js.json.JSON
 import org.w3c.fetch.Request
 import react.ReactElement
 import web.url.URL
@@ -24,9 +25,13 @@ const val enableStreaming = true
 const val chunkCss = true
 
 // Setup Emotion cache.
-private fun setupCache(): EmotionCache {
+private fun setupCache(context: dynamic): EmotionCache {
+  val statejson = JSON.stringify(context, emptyArray(), 0)
+  val cspNonce = context.getNonce()
+  console.info("Setting Emotion cache nonce: \"$cspNonce\"")
   return createCache(jso {
-    key = "css"
+    key = "es"
+    nonce = cspNonce
   })
 }
 
@@ -47,9 +52,6 @@ val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, 
 
   Fragment.create {
     CacheProvider(emotionCache) {
-      // reset CSS to baseline
-      CssBaseline()
-
       StaticRouter {
         // route to requested page
         location = url.pathname.ifBlank { "/" }
@@ -64,16 +66,31 @@ val app: SSRContext<AppProps>.(Request, EmotionCache) -> ReactElement<*> = { _, 
   }
 }
 
-val emotionCache: EmotionCache = setupCache()
-val emotionServer = createEmotionServer(emotionCache)
+var modEmotionCache: EmotionCache? = null
+var modEmotionServer: EmotionServer? = null
 
 /** @return Streaming SSR entrypoint for React. */
 @JsExport fun render(request: Request, context: dynamic, responder: RenderCallback): dynamic {
   var response = ""
 
+  // initialize emotion cache
+  val (emotionServer, emotionCache) = if (modEmotionCache == null) {
+    val cache = setupCache(context)
+    modEmotionCache = cache
+    val server = createEmotionServer(cache)
+    modEmotionServer = server
+    server to cache
+  } else {
+    modEmotionServer!! to modEmotionCache!!
+  }
+
   return SSRContext.typed<AppProps>(context, request).execute {
     try {
-      return@execute ApplicationBuffer(app.invoke(this, request, emotionCache), stream = enableStreaming).execute {
+      return@execute ApplicationBuffer(app.invoke(
+        this,
+        request,
+        emotionCache,
+      ), stream = enableStreaming).execute {
         try {
           if (it.hasContent) {
             response += it.content

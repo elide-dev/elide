@@ -19,17 +19,17 @@ are concerned about the legal implications using open source software in your pr
 ##### Summary of obligations
 
 **All good:**
-- ✅ Commercial use
-- ✅ Distribution
-- ✅ Modification
-- ✅ Private use
+- Commercial use
+- Distribution
+- Modification
+- Private use
 
 **Obligations or conditions:**
-- ℹ️ License and copyright notice
+- License and copyright notice
 
 **Limitiations:**
-- ⛔ Liability
-- ⛔ Warranty
+- Liability
+- Warranty
 
 <br />
 

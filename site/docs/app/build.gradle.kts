@@ -235,6 +235,7 @@ dependencies {
   implementation(libs.micronaut.runtime)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
+  implementation(libs.micronaut.views.core)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)

@@ -13,6 +13,8 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(project(":packages:base"))
+        implementation(project(":packages:ssr"))
         implementation(kotlin("stdlib-common"))
         implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.html)

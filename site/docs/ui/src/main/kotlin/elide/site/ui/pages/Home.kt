@@ -388,64 +388,64 @@ val Home = react.FC<HomeProps> {
 
                   // language=kotlin
                   +"""
-              /** Props structure -- shared with JavaScript. */
-              @Props data class HelloProps (
-                val name: String
-              )
+                    /** Props structure -- shared with JavaScript. */
+                    @Props data class HelloProps (
+                      val name: String
+                    )
 
-              /** Render a page using JavaScript SSR from Kotlin. */
-              @Page class Index : PageWithProps<HelloProps>() {
-                /** Calculate shared SSR props. */
-                override suspend fun props(state: RequestState) =
-                  HelloProps(name = "Elide")
+                    /** Render a page using JavaScript SSR from Kotlin. */
+                    @Page class Index : PageWithProps<HelloProps>() {
+                      /** Calculate shared SSR props. */
+                      override suspend fun props(state: RequestState) =
+                        HelloProps(name = "Elide")
 
-                /** Render the root page. */
-                @Get("/")
-                suspend fun index(request: HttpRequest<*>) = ssr(request) {
-                  head {
-                    // 👇 Elide will package & serve your client-side assets.
-                    script("/scripts/ui.js", defer = true)
-                  }
-                  body {
-                    // 👇 Elide can also dispatch your server-side JS.
-                    injectSSR(this@Index, request)
-                  }
-                }
-              }
-            """.trimIndent()
+                      /** Render the root page. */
+                      @Get("/")
+                      suspend fun index(request: HttpRequest<*>) = ssr(request) {
+                        head {
+                          // 👇 Elide will package & serve your client-side assets.
+                          script("/scripts/ui.js", defer = true)
+                        }
+                        body {
+                          // 👇 Elide can also dispatch your server-side JS.
+                          injectSSR(this@Index, request)
+                        }
+                      }
+                    }
+                  """.trimIndent()
                 }
                 "ssr.mjs" -> {
                   language = SyntaxLanguage.JAVASCRIPT
 
                   // language=javascript
                   +"""
-                  export default {
-                    /**
-                     * Entrypoint for an SSR render call. When `injectSSR` is called
-                     * in `server.kt`, this function is dispatched within the JS VM,
-                     * just like it would be in Node.
-                     *
-                     * The `context` parameter is the value provided by the `props`
-                     * method in `server.kt`.
-                     * 
-                     * @param request Fetch-compliant Request object.
-                     * @param context Context and props from the server.
-                     * @param responder Emit chunks of HTML to the client.
-                     * @return Promise to complete the response.
-                     */
-                    async render(request, context, responder) {
-                      responder({
-                        // `fin=true` indicates that we are done rendering.
-                        fin: true,
+                    export default {
+                      /**
+                      * Entrypoint for an SSR render call. When `injectSSR` is called
+                      * in `server.kt`, this function is dispatched within the JS VM,
+                      * just like it would be in Node.
+                      *
+                      * The `context` parameter is the value provided by the `props`
+                      * method in `server.kt`.
+                      * 
+                      * @param request Fetch-compliant Request object.
+                      * @param context Context and props from the server.
+                      * @param responder Emit chunks of HTML to the client.
+                      * @return Promise to complete the response.
+                      */
+                      async render(request, context, responder) {
+                        responder({
+                          // `fin=true` indicates that we are done rendering.
+                          fin: true,
 
-                        // emit a chunk of HTML to the render stream.
-                        content: ```
-                          <b>Hello, ${'$'}{context.name || "stranger"}!</b>
-                        ```
-                      });
+                          // emit a chunk of HTML to the render stream.
+                          content: ```
+                            <b>Hello, ${'$'}{context.name || "stranger"}!</b>
+                          ```
+                        });
+                      }
                     }
-                  }
-                """.trimIndent()
+                  """.trimIndent()
                 }
 
                 else -> error("Unrecognized code sample name: $codeSampleTabState")
@@ -486,11 +486,9 @@ val Home = react.FC<HomeProps> {
     footer {
       className = ClassName("elide-footer")
 
-      NoSsr {
-        div {
-          className = ClassName("elide-page__home-footer")
-          +"Made with ❤️ in California"
-        }
+      div {
+        className = ClassName("elide-page__home-footer")
+        +"Elide is open source"
       }
 
       div {

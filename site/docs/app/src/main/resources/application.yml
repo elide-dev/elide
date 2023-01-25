@@ -33,6 +33,10 @@ micronaut:
   validator:
     enabled: true
 
+  views:
+    csp:
+      enabled: false
+
   jcache:
     enabled: false
 

@@ -33,18 +33,6 @@ import java.util.*
     }
   }
 
-  // Add homepage styles.
-  override fun pageStyles(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
-    // base styles first
-    super.pageStyles(state).invoke(this, it)
-
-    // then home styles
-    link {
-      href = "/assets/home.min.css"
-      rel = "stylesheet"
-    }
-  }
-
   // Serve the root page.
   @Get("/") suspend fun indexPage(request: HttpRequest<*>) = page(request)
 

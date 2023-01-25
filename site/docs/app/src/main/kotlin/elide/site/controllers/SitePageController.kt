@@ -3,6 +3,7 @@ package elide.site.controllers
 import com.aayushatharva.brotli4j.Brotli4jLoader
 import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
 import com.aayushatharva.brotli4j.encoder.Encoder as BrotliEncoder
+import elide.core.encoding.base64.Base64
 import elide.core.encoding.hex.Hex
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -25,6 +26,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
 import jakarta.inject.Inject
+import kotlin.text.StringBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -41,6 +43,7 @@ import tools.elide.data.CompressionMode
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.time.Duration
 import java.util.Locale
@@ -48,17 +51,40 @@ import java.util.SortedMap
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.zip.Deflater
 import java.util.zip.GZIPOutputStream
+import java.util.concurrent.atomic.AtomicReference
 
 /** Extend a [PageController] with access to a [SitePage] configuration. */
 @Suppress("unused")
 abstract class SitePageController protected constructor(val page: SitePage) : PageWithProps<AppServerProps>(
   AppServerProps.serializer(),
-  AppServerProps(page = page.name),
+  AppServerProps(page = page.name, nonce = currentNonce),
 ) {
   companion object {
     const val enableSSR = true
     const val enableStreaming = true
     const val securityReportOnly = true
+
+    // Random data generator for generating nonces.
+    private val nonceRandom = java.security.SecureRandom()
+
+    // Length, in bytes, of the random nonce to append to each apex response.
+    private const val nonceLength: Int = 8 * 2;
+
+    // Current server-run nonce.
+    private val currentNonce = generateNonce()
+
+    /**
+      * Generate a nonce to be used with Content Security Policy.
+      *
+      * @return Nonce for a given render cycle.
+      */
+    @JvmStatic private fun generateNonce(): String {
+      val randomBytes = ByteArray(nonceLength)
+      nonceRandom.nextBytes(randomBytes)
+      return Base64.encode(randomBytes).string
+        .replace("=", "")
+        .replace("+", "")
+    }
   }
 
   /**
@@ -71,7 +97,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
    * @param locale Resolved locale for this request.
    */
   data class PageRenderState private constructor (
-    val nonce: String,
+    private val nonce: AtomicReference<String>,
     val props: AppServerProps?,
     val page: SitePage,
     val request: HttpRequest<*>,
@@ -79,35 +105,44 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   ) {
     internal companion object {
       /**
-       * Generate a nonce to be used with Content Security Policy.
-       *
-       * @return Nonce for a given render cycle.
-       */
-      @JvmStatic private fun generateNonce(): String {
-        TODO("tbd")
-      }
-
-      /**
        * Create a page render state from the provided inputs.
        *
        * @param props Server-side render state (React props) to share with the JS VM.
        * @param page Page which is due for render to the client.
        * @param request HTTP request submitted by the client.
        * @param locale Resolved locale for this request.
+       * @param nonce On-hand nonce to use. Optional.
        * @return Page render state from the provided inputs.
        */
       @JvmStatic fun from(
         props: AppServerProps?,
         page: SitePage,
         request: HttpRequest<*>,
-        locale: Locale
+        locale: Locale,
+        nonce: String? = null,
       ): PageRenderState = PageRenderState(
         props = props,
         page = page,
         request = request,
         locale = locale,
-        nonce = generateNonce(),
+        nonce = AtomicReference(nonce ?: currentNonce),
       )
+    }
+
+    // Resolve a nonce string; either generate one if we do not have one on hand, or return the value we have on-hand.
+    internal fun nonce(): String {
+      return nonce.get()
+    }
+
+    // Generate a cache key for this page render flow.
+    internal fun cacheKey(): String {
+      return StringBuilder().apply {
+        append(page.name)
+        append(locale.language ?: "en")
+        if (props != null) {
+          append(props.hashCode().toString())
+        }
+      }.toString()
     }
   }
 
@@ -116,9 +151,12 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     /** @inheritDoc */
     override fun generateKey(annotationMetadata: AnnotationMetadata, vararg params: Any): Any {
       val req = params.first() as? HttpRequest<*> ?: error(
-        "Cannot generate cache key for non-HTTP request: ${params.first()}"
+        "Cannot generate cache key for type (expected `HttpRequest`): ${params.first()}"
       )
-      return req.uri.toString()
+      return StringBuilder().apply {
+        append(req.uri.path)
+        append(req.locale.orElse(I18nPage.Defaults.locale).language ?: "en")
+      }.toString()
     }
   }
 
@@ -223,6 +261,8 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   /** Cached HTTP response. */
   internal data class CachedResponse(
+    val state: PageRenderState,
+    val nonce: String,
     val uri: String,
     val status: HttpStatus,
     val encoding: Charset,
@@ -235,16 +275,18 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   ) {
     companion object {
       /** Create a cached response from a raw origin response and [body]. */
-      @JvmStatic suspend fun from(request: HttpRequest<*>, response: HttpResponse<ByteArray>): CachedResponse {
+      @JvmStatic suspend fun from(state: PageRenderState, response: HttpResponse<ByteArray>): CachedResponse {
         return CachedResponse(
-          request.uri.toString(),
+          state,
+          state.nonce(),
+          state.request.uri.toString(),
           response.status,
           response.characterEncoding,
           response.contentType.orElse(MediaType.TEXT_HTML_TYPE),
           response.headers.flatMap { it.value.map { value -> it.key to value } }.toMap(),
           response.contentLength,
           CachedResponseBody.from(response.body()),
-          fingerprint(request, response),
+          fingerprint(state.request, response),
         )
       }
 
@@ -264,7 +306,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         if (body != null) update(body)
       }.let { digest ->
         // encode an E-tag for the provided primed digest
-        Hex.encodeToString(digest.digest()).takeLast(8)
+        Hex.encode(digest.digest()).string.takeLast(8)
       }
     }
 
@@ -359,6 +401,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       else -> early
     }
 
+    /** @return HTTP response to emit for this cached response. */
+    fun response(
+      finalizer: MutableHttpResponse<ByteArray>.(PageRenderState) -> Unit
+    ): MutableHttpResponse<ByteArray> {
+      return response(state.request).apply {
+        finalizer(this, state)
+      }
+    }
+
     override fun equals(other: Any?): Boolean {
       if (this === other) return true
       if (javaClass != other?.javaClass) return false
@@ -428,11 +479,22 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Check the cache for `request`, and serve it from the cache if possible.
   @Cacheable("ssrContent", keyGenerator = CachedResponseKeyGenerator::class)
   internal open suspend fun ssrGenerateResponse(
-    state: PageRenderState,
+    request: HttpRequest<*>,
+    locale: Locale,
     response: MutableHttpResponse<ByteArray>,
-    block: suspend HTML.() -> Unit
+    block: suspend HTML.(PageRenderState) -> Unit
   ): CachedResponse {
-    val request = state.request
+    // calculate render state
+    val state = PageRenderState.from(
+      props = props(RequestState(
+        request = request,
+        principal = null,
+      )),
+      request = request,
+      locale = locale,
+      page = page,
+    )
+
     val subResponse = withContext(Dispatchers.IO) {
       val responsePublisher = ssr(
         request.mutate().apply {
@@ -440,8 +502,9 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           headers.remove(HttpHeaders.IF_NONE_MATCH)
           headers.remove(HttpHeaders.IF_MODIFIED_SINCE)
         },
-        block = block,
-      )
+      ) {
+        block.invoke(this, state)
+      }
       responsePublisher.block(
         Duration.ofMinutes(3)
       ) ?: error(
@@ -465,7 +528,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       it.toByteArray()
     }
     return CachedResponse.from(
-      request,
+      state,
       copyResponse(response, subResponse) {
         body
       }
@@ -477,32 +540,35 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   // Retrieve the CSP header name that should be used.
   protected fun cspHeader(): String = if (securityReportOnly) {
-    "Content-Security-Policy"
-  } else {
     "Content-Security-Policy-Report-Only"
+  } else {
+    "Content-Security-Policy"
   }
 
   // Retrieve the CORP header name that should be used.
   protected fun corpHeader(): String = if (securityReportOnly) {
-    "Cross-Origin-Opener-Policy"
-  } else {
     "Cross-Origin-Opener-Policy-Report-Only"
+  } else {
+    "Cross-Origin-Opener-Policy"
   }
 
   // Retrieve the COEP header name that should be used.
   protected fun coepHeader(): String = if (securityReportOnly) {
-    "Cross-Origin-Embedder-Policy"
-  } else {
     "Cross-Origin-Embedder-Policy-Report-Only"
+  } else {
+    "Cross-Origin-Embedder-Policy"
   }
 
   // Generate a baseline response to fill with content.
   protected open fun csp(state: PageRenderState): List<Pair<String, String>> = listOf(
       "default-src" to "'self'",
-      "script-src" to "'self' 'nonce-${state.nonce}' 'strict-dynamic' https://www.googletagmanager.com",
+      "base-uri" to "'self'",
+      "script-src" to "'self' 'nonce-NONCE' 'strict-dynamic' https://www.googletagmanager.com 'unsafe-inline'",
       "style-src" to "'self' 'unsafe-inline'",
+      "object-src" to "'none'",
       "img-src" to "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
       "font-src" to "https://fonts.gstatic.com",
+      "require-trusted-types-for" to "'script'",
       "connect-src" to "'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
   )
 
@@ -539,11 +605,15 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
     response.headers["Permissions-Policy"] = listOf(
      "ch-dpr=(self)",
+     "sync-xhr=()",
     ).joinToString(", ")
 
     response.headers[cspHeader()] = csp(state).map {
       "${it.first} ${it.second}"
-    }.joinToString("; ")
+    }.joinToString("; ").replace(
+      "NONCE",
+      state.nonce(),
+    )
 
     // apex caching
     if (response.status.code == 200) response.headers[HttpHeaders.CACHE_CONTROL] = listOf(
@@ -585,15 +655,17 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   // Consult the cache, returning any found result, otherwise populate the cache with an origin execution.
   @Suppress("ReactiveStreamsUnusedPublisher")
   private suspend fun ssrCached(
-    state: PageRenderState,
+    request: HttpRequest<*>,
+    locale: Locale,
     response: MutableHttpResponse<ByteArray> = baseResponse(),
-    block: suspend HTML.() -> Unit
+    block: suspend HTML.(PageRenderState) -> Unit
   ): Mono<HttpResponse<ByteArray>> = mono {
     ssrGenerateResponse(
-      state,
+      request,
+      locale,
       response,
       block,
-    ).response(state.request).apply {
+    ).response { state: PageRenderState ->
       finalize(state, this)
     }
   }
@@ -668,7 +740,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         twitterInfo.linkedData(state.locale).invoke(builder)
 
         script {
-          nonce = state.nonce
+          nonce = state.nonce()
           type = "application/json+ld"
 
           unsafe {
@@ -691,6 +763,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   protected open fun pageStyles(state: PageRenderState): suspend HEAD.(request: HttpRequest<*>) -> Unit = {
     stylesheet(Assets.Styles.base)
+    stylesheet(Assets.Styles.home)
   }
 
   protected open suspend fun page(
@@ -700,19 +773,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   ): Mono<HttpResponse<ByteArray>> {
     // locale selected
     val locale = request.locale.orElse(I18nPage.Defaults.locale)
-
-    // calculate render state
-    val state = PageRenderState.from(
-      props = props(RequestState(
-        request = request,
-        principal = null,
-      )),
-      request = request,
-      locale = locale,
-      page = page,
-    )
-
-    return ssrCached(state) {
+    return ssrCached(request, locale) { state ->
       // set HTML lang
       lang = if (!locale.country.isNullOrBlank()) {
         "${locale.language}-${locale.country}"
@@ -745,14 +806,14 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
           type = "text/javascript"
           src = Assets.Scripts.ui
           defer = true
-          nonce = state.nonce
+          nonce = state.nonce()
         }
         script {
           type = "text/javascript"
           src = Assets.Scripts.analytics
           defer = true
           async = true
-          nonce = state.nonce
+          nonce = state.nonce()
         }
 
         // extra head content

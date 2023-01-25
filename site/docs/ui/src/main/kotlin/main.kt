@@ -16,7 +16,6 @@ import emotion.react.CacheProvider
 import js.core.jso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import mui.material.CssBaseline
 import react.Props
 import react.router.dom.BrowserRouter
 import web.dom.document
@@ -29,8 +28,7 @@ private val mainLogger: Logger = Logging.named("elide:site")
 
 // Setup Emotion cache.
 private val emotionCache: EmotionCache = createCache(jso {
-  key = "css"
-  speedy = false
+  key = "es"
 })
 
 /** Application-level properties. */
@@ -57,9 +55,6 @@ class ElideSiteApplication (
   private fun render() = boot<AppProps> {
     Fragment.create {
       CacheProvider(emotionCache) {
-        // reset CSS to baseline
-        CssBaseline()
-
         BrowserRouter {
           ThemeModuleWeb {
             ElideSite {

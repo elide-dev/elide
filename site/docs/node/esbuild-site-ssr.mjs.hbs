@@ -10,6 +10,7 @@ const settings = {
     platform: '{{PLATFORM}}',
     globalName: '{{LIBNAME}}',
     bundle: {{BUNDLE}},
+    legalComments: 'none',
     nodePaths: [{{NODEPATH}}],
     mainFields: ['module', 'main'],
     resolveExtensions: ['.mts', '.ts', '.mjs', '.cjs', '.js'],
@@ -25,7 +26,8 @@ const settings = {
     ]
 };
 
-console.info("Bundling SSR library '{{LIBNAME}}'...");
+console.info("Bundling Elide site for SSR...");
+
 esbuild.build(settings).then(() => {
     console.info("Bundle step completed: embedded SSR bundle ready (mode: {{MODE}}).");
 }, () => process.exit(1));

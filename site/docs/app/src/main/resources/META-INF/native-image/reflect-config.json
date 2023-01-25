@@ -24,6 +24,12 @@
   "name":"[Lsun.security.pkcs.SignerInfo;"
 },
 {
+  "name": "elide.site.AppServerProps",
+  "allDeclaredMethods":true,
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"getNonce","parameterTypes":[] }]
+},
+{
   "name":"ch.qos.logback.classic.encoder.PatternLayoutEncoder",
   "queryAllPublicMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]

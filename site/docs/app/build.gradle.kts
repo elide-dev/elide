@@ -219,6 +219,7 @@ application {
 }
 
 dependencies {
+  annotationProcessor(libs.micronaut.serde.processor)
   compileOnly(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
@@ -231,11 +232,17 @@ dependencies {
 
   implementation(libs.jsoup)
   implementation(libs.google.auto.service.annotations)
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.jsr310)
+  implementation(libs.jackson.module.kotlin)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
   implementation(libs.micronaut.views.core)
+  implementation(libs.micronaut.serde.api)
+  implementation(libs.micronaut.jackson.databind)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -396,4 +403,11 @@ graalvmNative {
       buildArgs.addAll(nativeImageArgs(release = true))
     }
   }
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute(module("io.micronaut:micronaut-jackson-databind"))
+            .using(module("io.micronaut.serde:micronaut-serde-jackson:${libs.versions.micronaut.serde.get()}"))
+    }
 }

@@ -1,5 +1,9 @@
 package elide.site
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import kotlinx.html.BODY
 import kotlinx.html.HEAD
 import kotlinx.html.*
@@ -15,9 +19,15 @@ import java.util.ResourceBundle
  */
 interface I18nPage {
   /** Page defaults. */
-  object Defaults {
+  object Defaults {  
     /** Default locale to use. */
     val locale: Locale = Locale.of("en", "US")
+
+    /** Dedicated JSON encoder. */
+    internal val mapper: ObjectMapper = jsonMapper {
+      addModule(JavaTimeModule())
+      addModule(kotlinModule())
+    }
   }
 
   /** Known localization keys. */
@@ -41,15 +51,55 @@ interface I18nPage {
       @JvmStatic fun create(): LinkedDataBuilder = LinkedDataBuilderImpl()
     }
 
+    /** Add a [map] stanza to the JSON-LD payload. */
+    fun stanza(map: Map<String, Any?>): LinkedDataBuilder
+
+    /** Add a map with the provided [props] and [type]. */
+    fun stanzaOf(type: String, props: List<Pair<String, Any?>>): LinkedDataBuilder
+
+    /** Add a map with the provided prop output of the provided [callable], with the provided [type]. */
+    fun stanzaOf(type: String, callable: MutableMap<String, Any?>.() -> Unit): LinkedDataBuilder
+
     /** @return JSON-serialized linked data. */
     fun serializeJson(): String
   }
 
   /** Default implementation for a linked data builder context. */
   class LinkedDataBuilderImpl : LinkedDataBuilder {
+    // Stanzas added to the linked-data payload.
+    private val stanzas = ArrayList<Map<String, Any?>>()
+
+    override fun stanza(map: Map<String, Any?>): LinkedDataBuilder {
+      stanzas.add(map)
+      return this
+    }
+
+    override fun stanzaOf(type: String, props: List<Pair<String, Any?>>): LinkedDataBuilder {
+      return stanza(listOf(
+        "@context" to "http://www.schema.org",
+        "@type" to type,
+      ).plus(props).toMap())
+    }
+
+    override fun stanzaOf(type: String, callable: MutableMap<String, Any?>.() -> Unit): LinkedDataBuilder {
+      return stanza(mutableMapOf<String, Any?>(
+        "@context" to "http://www.schema.org",
+        "@type" to type,
+      ).apply(callable))
+    }
+
     override fun serializeJson(): String {
       // @TODO(sgammon): implement
-      return "{}"
+      return when {
+        // if there is exactly one stanza, encode it as the outer object
+        stanzas.size == 1 -> Defaults.mapper.writeValueAsString(stanzas.first())
+
+        // if there is more than one stanza, encode as an array
+        stanzas.size > 1 -> Defaults.mapper.writeValueAsString(stanzas)
+
+        // if empty, encode as an empty JSON object
+        else -> "{}"
+      }
     }
   }
 

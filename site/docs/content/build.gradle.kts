@@ -24,6 +24,10 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(kotlin("stdlib"))
+        implementation(libs.jackson.core)
+        implementation(libs.jackson.databind)
+        implementation(libs.jackson.jsr310)
+        implementation(libs.jackson.module.kotlin)
       }
     }
     val jvmTest by getting

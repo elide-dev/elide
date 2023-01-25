@@ -37,7 +37,7 @@ micronaut_redis = "5.3.2"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
 micronaut_views = "3.8.0"
-micronaut_serde = "1.3.3"
+micronaut_serde = "1.5.0"
 micronaut_security = "3.9.0"
 micronaut_sql = "4.7.2"
 micronaut_openapi = "4.6.0"
@@ -546,6 +546,7 @@ dekorate_kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", 
 jackson_core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 jackson_databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson_jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
+jackson_module_blackbird = { group = "com.fasterxml.jackson.module", name = "jackson-module-blackbird", version.ref = "jackson" }
 jackson_module_kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 testcontainers_junit_jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers_core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }

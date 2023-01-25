@@ -722,6 +722,128 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     }
   }
 
+  protected fun linkedRef(ref: String): Map<String, String> {
+    return mapOf("@id" to ref)
+  }
+
+  protected open fun breadcrumb(state: PageRenderState): List<String> = listOf(
+    if (page.parent != null) {
+      page.parent.title
+    } else {
+      page.title
+    },
+    if (page.parent != null) {
+      page.title
+    } else {
+      null
+    },
+  ).filterNulls()
+
+  protected open fun pageLinkedData(
+    state: PageRenderState,
+    builder: I18nPage.LinkedDataBuilder
+  ) {
+    // add `Organization` stanza
+    builder.stanzaOf("Organization") {
+      put("name", "Elide")
+      put("identifier", "https://elide.dev")
+      put("url", "https://elide.dev")
+      put("logo", "https://elide.dev/images/favicon.png")
+      put("sameAs", listOf(
+        "https://github.com/elide-dev",
+        "https://github.com/elide-dev/elide",
+        "https://twitter.com/elide_dev",
+      ))
+
+      put("description", """
+        Elide is a polyglot app framework and runtime which makes it easy to develop apps in your favorite languages,
+        like JavaScript and Kotlin.
+      """.trimIndent().replace("\n", " "))
+    }
+
+    // add `SoftwareApplication` stanza for the Elide runtime
+    builder.stanzaOf("SoftwareApplication") {
+      put("name", "Elide Runtime")
+      put("identifier", "https://github.com/elide-dev/elide")
+      put("url", "https://github.com/elide-dev/elide")
+      put("license", "https://github.com/elide-dev/elide/blob/v3/LICENSE")
+      put("isAccessibleForFree", true)
+      put("headline", "It's like Node, but it does a lot more than JavaScript")
+      put("applicationCategory", "Developer Tools")
+      put("operatingSystem", "macOS, Linux")
+      put("processorRequirements", "amd64, arm64")
+      put("applicationSuite", "Elide")
+      put("releaseNotes", "https://github.com/elide-dev/cli/releases")
+      put("installUrl", "https://elide.dev/getting-started#install")
+    }
+
+    // add `SoftwareSourceCode` stanza for the Elide project (framework)
+    builder.stanzaOf("SoftwareSourceCode") {
+      put("name", "Elide Project")
+      put("identifier", "https://github.com/elide-dev/elide")
+      put("url", "https://github.com/elide-dev/elide")
+      put("license", "https://github.com/elide-dev/elide/blob/v3/LICENSE")
+      put("isAccessibleForFree", true)
+      put("headline", "App framework and runtime designed for a polyglot future")
+      put("discussionUrl", "https://github.com/orgs/elide-dev/discussions")
+      put("codeSampleType", "code snippet")
+      put("codeRepository", "https://github.com/elide-dev/elide")
+      put("runtimePlatform", "Elide")
+      put("programmingLanguage", listOf(
+        mapOf(
+          "@type" to "ComputerLanguage",
+          "name" to "Kotlin",
+          "url" to "https://kotlinlang.org",
+        ),
+        mapOf(
+          "@type" to "ComputerLanguage",
+          "name" to "JavaScript",
+        ),
+      ))
+    }
+
+    // add `WebSite` stanza for the whole site
+    builder.stanzaOf("WebSite") {
+      put("name", "Elide")
+      put("url", "https://elide.dev")
+    }
+
+    val i18npage = page as? I18nPage
+
+    // add `WebPage` stanza for the page itself
+    builder.stanzaOf("WebPage") {
+      put("name", "Elide")
+      if (i18npage != null) {
+        put("title", i18npage.headline(state.locale))
+        put("description", i18npage.description(state.locale))
+        put("url", i18npage.canonical(state.locale))
+      }
+    }
+
+    // add `BreadcrumbList` for page
+    builder.stanzaOf("BreadcrumbList") {
+      val portions = ArrayList<Map<String, Any>>(2)
+
+      if (page.parent != null) {
+        portions.add(mapOf(
+          "@type" to "ListItem",
+          "position" to 1,
+        ))
+        portions.add(mapOf(
+          "@type" to "ListItem",
+          "position" to 2,
+        ))
+      } else {
+        portions.add(mapOf(
+          "@type" to "ListItem",
+          "position" to 1,
+        ))
+      }
+
+      put("itemListElement", portions)
+    }
+  }
+
   protected open fun pageBody(): suspend BODY.(request: HttpRequest<*>) -> Unit = {
     if (enableSSR) {
       if (enableStreaming) streamSSR(this@SitePageController, it)
@@ -739,10 +861,11 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
          val builder = I18nPage.LinkedDataBuilder.create()
         ogInfo.linkedData(state.locale).invoke(builder)
         twitterInfo.linkedData(state.locale).invoke(builder)
+        pageLinkedData(state, builder)
 
         script {
           nonce = state.nonce()
-          type = "application/json+ld"
+          type = "application/ld+json"
 
           unsafe {
             +(builder.serializeJson())

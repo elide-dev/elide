@@ -566,7 +566,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
       "script-src" to "'self' 'nonce-NONCE' 'strict-dynamic' https://www.googletagmanager.com 'unsafe-inline'",
       "style-src" to "'self' 'unsafe-inline'",
       "object-src" to "'none'",
-      "img-src" to "'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
+      "img-src" to "'self' data: https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com",
       "font-src" to "https://fonts.gstatic.com",
       "connect-src" to "'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
       "report-uri" to "https://elidefw.report-uri.com/r/d/csp/enforce",

@@ -62,7 +62,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
   companion object {
     const val enableSSR = true
     const val enableStreaming = true
-    const val securityReportOnly = true
+    const val securityReportOnly = false
 
     // Random data generator for generating nonces.
     private val nonceRandom = java.security.SecureRandom()

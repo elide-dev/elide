@@ -29,7 +29,9 @@ version = rootProject.version as String
  * Build: Site Native Image
  */
 
-val commonNativeArgs = emptyList<String>()
+val commonNativeArgs = listOf(
+  "--trace-object-instantiation=kotlin.reflect.jvm.internal.KTypeImpl",
+)
 
 val debugFlags = listOf(
   "-g",
@@ -235,7 +237,6 @@ dependencies {
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.jsr310)
-  implementation(libs.jackson.module.kotlin)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.runtime)
   implementation(libs.micronaut.cache.core)

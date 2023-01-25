@@ -726,18 +726,14 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     return mapOf("@id" to ref)
   }
 
-  protected open fun breadcrumb(state: PageRenderState): List<String> = listOf(
-    if (page.parent != null) {
-      page.parent.title
-    } else {
-      page.title
-    },
-    if (page.parent != null) {
-      page.title
-    } else {
-      null
-    },
-  ).filterNulls()
+  protected open fun breadcrumb(state: PageRenderState): List<String> = if (page.parent != null) {
+    listOf(
+      page.parent!!.title,
+      page.title,
+    )
+  } else {
+    listOf(page.title)
+  }
 
   protected open fun pageLinkedData(
     state: PageRenderState,
@@ -814,7 +810,7 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
     builder.stanzaOf("WebPage") {
       put("name", "Elide")
       if (i18npage != null) {
-        put("title", i18npage.headline(state.locale))
+        put("title", i18npage.pageTitle(state.locale))
         put("description", i18npage.description(state.locale))
         put("url", i18npage.canonical(state.locale))
       }

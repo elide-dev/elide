@@ -3,7 +3,6 @@ package elide.site
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jsonMapper
-import com.fasterxml.jackson.module.kotlin.kotlinModule
 import kotlinx.html.BODY
 import kotlinx.html.HEAD
 import kotlinx.html.*
@@ -26,7 +25,6 @@ interface I18nPage {
     /** Dedicated JSON encoder. */
     internal val mapper: ObjectMapper = jsonMapper {
       addModule(JavaTimeModule())
-      addModule(kotlinModule())
     }
   }
 

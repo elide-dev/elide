@@ -90,9 +90,6 @@ public abstract interface class elide/server/ResponseRenderer {
 	public abstract fun render ()Ljava/lang/Object;
 }
 
-public abstract interface class elide/server/ssr/ServerProps {
-}
-
 public abstract interface class elide/server/ssr/ServerRenderer : elide/server/ResponseRenderer {
 }
 

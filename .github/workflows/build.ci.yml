@@ -435,13 +435,6 @@ jobs:
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Node"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
       - name: "Setup: Docker"
@@ -451,6 +444,12 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19 && yarn
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -535,13 +534,6 @@ jobs:
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Node"
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "yarn"
-      - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@v2
       - name: "Setup: Docker"
@@ -551,6 +543,12 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19 && yarn
       - id: "auth"
         name: "Authorize Service Account"
         uses: "google-github-actions/auth@v1"

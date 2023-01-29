@@ -21,12 +21,9 @@ import org.w3c.fetch.Request
 import react.ReactElement
 import web.url.URL
 
-const val enableStreaming = true
-const val chunkCss = true
 
 // Setup Emotion cache.
 private fun setupCache(context: dynamic): EmotionCache {
-  val statejson = JSON.stringify(context, emptyArray(), 0)
   val cspNonce = context.getNonce()
   return createCache(jso {
     key = "es"
@@ -89,13 +86,13 @@ var modEmotionServer: EmotionServer? = null
         this,
         request,
         emotionCache,
-      ), stream = enableStreaming).execute {
+      ), stream = true).execute {
         try {
           if (it.hasContent) {
             response += it.content
           }
 
-          if (enableStreaming && chunkCss && it.fin) {
+          if (it.fin) {
             // in the final chunk, splice in CSS from Emotion.
             val emotionChunks = emotionServer.extractCriticalToChunks(response)
             val emotionCss = emotionServer.constructStyleTagsFromChunks(emotionChunks)

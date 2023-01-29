@@ -12,6 +12,7 @@ import js.core.jso
 import mui.system.Box
 import mui.system.sx
 import react.router.useLocation
+import web.window.window
 
 // Whether to emit debug logs to the console.
 private var debugLogging = false
@@ -114,7 +115,11 @@ private fun determineFullbleed(location: history.Location): Boolean {
  * @return Whether full-bleed mode is active.
  */
 private fun determineMobile(): Boolean {
-  return false
+  return try {
+    window.innerWidth < 1024
+  } catch (thr: Throwable) {
+    false
+  }
 }
 
 /**
@@ -151,7 +156,7 @@ val ElideSite = react.FC<ElideSiteProps> {
 
       gridTemplateAreas = GridTemplateAreas(
         arrayOf(Area.Header, Area.Header),
-        if (isMobile) arrayOf(Area.Content, Area.Content) else arrayOf(Area.Sidebar, Area.Content),
+        arrayOf(Area.Sidebar, Area.Content),
       )
     }
 
@@ -171,7 +176,8 @@ val ElideSite = react.FC<ElideSiteProps> {
         Header()
       }
       if (!fullbleed) {
-        if (isMobile) Menu() else Sidebar()
+        Menu()
+        Sidebar()
       }
       Content {
         page = it.page

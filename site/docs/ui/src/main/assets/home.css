@@ -32,7 +32,6 @@
 }
 
 .elide-page__home-nav {
-  margin-left: 10rem;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -127,8 +126,8 @@ span.elide-brand-text.masthead-text {
   font-size: 2rem;
 }
 
-.elide-logotext {
-  font-size: 2rem !important;
+.elide-page__home .elide-logotext {
+  font-size: 2rem;
 }
 
 .elide-page__home.elide-theme__light {
@@ -217,4 +216,55 @@ span.masthead-text__highlight {
 .elide-page__home-legal:before {
   content: '·';
   margin: 0 10px;
+}
+
+/**
+ * ======= Styles: Mobile =======
+ */
+@media screen and (max-device-width: 960px) {
+  .elide-page__home .elide-site-page {
+    overflow-y: scroll;
+  }
+
+  /* content columns must stack vertically */
+  .elide-page__home-content {
+    flex-direction: column !important;
+    min-height: auto;
+    height: auto;
+    align-items: center;
+  }
+
+  /* reduce padding around masthead text */
+  .elide-page__home-masthead-text.masthead-text__title {
+    font-size: 3rem;
+  }
+  .elide-page__home .masthead-text__subtitle, .elide-page__home .masthead-text__subtitle span {
+    font-size: 1.3rem;
+  }
+
+  /* masthead text can take full-width */
+  .elide-page__home .masthead-text__title, .elide-page__home .masthead-text-subtitle, .elide-page__home-masthead-cta {
+    max-width: 95%;
+  }
+
+  /* columns should display as blocks */
+  .elide-page__home .elide-page__home-column {
+    display: block;
+  }
+
+  /* "right"-side column should also take full width */
+  .elide-page__home-column.elide-page__home-column-right {
+    display: none;
+  }
+
+  /* make footer text bigger */
+  .elide-page__home .elide-footer {
+    background: transparent;
+    user-select: none;
+  }
+
+  /* hide nav links */
+  .elide-page__home-nav button, .elide-page__home-nav a {
+    display: none;
+  }
 }

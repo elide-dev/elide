@@ -186,7 +186,7 @@ pre, .mono {
 }
 
 .elide-site-page__header, .elide-site-page__header h2 {
-  font-size: 2.5rem !important;
+  font-size: 2.5rem;
 }
 
 /**
@@ -240,7 +240,6 @@ main#root {
 
 .elide-site-page.narrative {
   padding: 3rem;
-  height: 100%;
 }
 
 .elide-site-page.narrative header {
@@ -299,4 +298,36 @@ main#root {
   box-sizing: border-box;
   left: 20px;
   bottom: 20px;
+}
+
+
+/**
+ * ======= Styles: Mobile =======
+ */
+@media screen and (max-device-width: 960px) {
+  .elide-site-container {
+    max-width: 100%;
+    overflow: hidden;
+    grid-template-columns: 0 auto !important;
+  }
+
+  .elide-site-page.narrative {
+    padding: 1.5rem;
+  }
+  .elide-site-page__header h2 {
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
+  .elide-sidebar {
+    display: none;
+  }
+}
+
+/**
+ * ======= Styles: Desktop =======
+ */
+@media screen and (min-device-width: 960px) {
+  .MuiSpeedDial-root {
+    display: none;
+  }
 }

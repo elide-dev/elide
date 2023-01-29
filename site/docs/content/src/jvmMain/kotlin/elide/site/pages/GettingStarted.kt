@@ -3,7 +3,7 @@ package elide.site.pages
 import elide.site.I18nPage
 import elide.site.abstract.SitePage
 import java.net.URI
-import elide.site.pages.defaults.Home as Defaults
+import elide.site.pages.defaults.GettingStarted as Defaults
 import java.util.*
 
 /** Describes the Elide Getting Started page. */

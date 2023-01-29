@@ -43,7 +43,6 @@ import tools.elide.data.CompressionMode
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.time.Duration
 import java.util.Locale
@@ -823,15 +822,24 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
         portions.add(mapOf(
           "@type" to "ListItem",
           "position" to 1,
+          "item" to mapOf(
+            "name" to page.parent!!.title,
+          ),
         ))
         portions.add(mapOf(
           "@type" to "ListItem",
           "position" to 2,
+          "item" to mapOf(
+            "name" to page.title,
+          ),
         ))
       } else {
         portions.add(mapOf(
           "@type" to "ListItem",
           "position" to 1,
+          "item" to mapOf(
+            "name" to page.title,
+          ),
         ))
       }
 
@@ -919,6 +927,10 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
         // page title
         title { +renderTitle() }
+        meta {
+          name = "viewport"
+          content = "width=device-width, initial-scale=1"
+        }
 
         // UI and analytics scripts
         script {

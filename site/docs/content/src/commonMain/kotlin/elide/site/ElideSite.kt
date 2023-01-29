@@ -44,7 +44,7 @@ object ElideSite {
     override val prelabel = "αlpha"
 
     /** Main heading to use for the navigation bar. */
-    override val heading = "$name Framework"
+    override val heading = name
   }
 
   /** Default site info. */

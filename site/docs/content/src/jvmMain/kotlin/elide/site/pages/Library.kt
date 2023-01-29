@@ -4,7 +4,7 @@ import elide.site.I18nPage
 import elide.site.abstract.SitePage
 import java.net.URI
 import java.util.*
-import elide.site.pages.defaults.Runtime as Defaults
+import elide.site.pages.defaults.Library as Defaults
 
 /** Describes the Elide library intro top-level page. */
 actual object Library : SitePage(

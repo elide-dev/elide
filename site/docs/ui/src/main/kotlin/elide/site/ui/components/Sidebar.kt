@@ -124,6 +124,8 @@ val Sidebar = react.FC<react.Props> {
 
   Box {
     component = nav
+    className = ClassName("elide-sidebar")
+
     sx {
       gridArea = Area.Sidebar
       width = Sizes.Sidebar.Width

@@ -124,7 +124,7 @@ val GettingStarted = react.FC<react.Props> {
 
         Link {
           component = a
-          href = "/tooling"
+          href = "/tools"
           +"tooling guides"
         }
 

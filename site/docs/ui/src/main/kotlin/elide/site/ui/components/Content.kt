@@ -1,5 +1,6 @@
 package elide.site.ui.components
 
+import csstype.ClassName
 import csstype.Overflow
 import csstype.pct
 import csstype.px
@@ -48,11 +49,15 @@ val Content = react.FC<ElidePageProps> {
   }
 
   Box {
+    className = ClassName("elide-site-content-container")
+
     sx {
       gridArea = Area.Content
-      overflowX = Overflow.scroll
       maxHeight = 100.pct
+      maxWidth = 100.pct
+      overflowY = Overflow.scroll
     }
+
     Routes {
       ElideSite.pages.filter { !it.hidden }.forEach { page ->
         Route {

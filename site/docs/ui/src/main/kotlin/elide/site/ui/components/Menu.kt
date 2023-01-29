@@ -44,7 +44,9 @@ val Menu = react.FC<react.Props> {
         List {
           sx { width = Sizes.Sidebar.Width }
 
-          ElideSite.pages.forEach { page ->
+          ElideSite.pages.filter {
+            it.name != "home" && !it.hidden
+          }.forEach { page ->
             NavLink {
               key = page.name
               to = page.path

@@ -14,13 +14,13 @@ object Elide {
   const val versionTag = "alpha3"
 
   /** Revision value for the library. */
-  const val revision = 4
+  const val revision = 5
 
   /** Version string for the library. */
   const val version = "$majorVersion-$track-$versionTag-b$revision"
 
   /** Latest plugin version. */
-  const val pluginVersion = "1.0.0-beta19"
+  const val pluginVersion = "1.0.0-beta20"
 
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"
@@ -62,7 +62,7 @@ object Elide {
   ))
 
   /** Kotlin SDK and platform version. */
-  const val kotlinSdk = "1.8.0"
+  const val kotlinSdk = "1.8.10"
 
   /** Kotlin language version. */
   const val kotlinLanguage = "1.8"

@@ -144,7 +144,6 @@ public interface Application {
     Initialization.initializeOnWarmup {
       // Warm up the JVM.
       Runtime.getRuntime().apply {
-        runFinalization()
         gc()
       }
     }

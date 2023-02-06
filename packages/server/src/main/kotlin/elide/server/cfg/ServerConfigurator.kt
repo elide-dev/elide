@@ -20,7 +20,7 @@ import java.util.SortedSet
  *
  * On behalf of the developer, the following application components are configured:
  * - **Netty**: Workers, native transports, threading, allocation, event loops
- * - **SSL**: Self-signed certs for development, modern suite of TLS ciphers and protocols
+ * - **SSL**: Modern suite of TLS ciphers and protocols
  * - **HTTP**: HTTP/2, compression thresholds and modes, HTTP->HTTPS redirect
  * - **Access Log**: Shows the HTTP access log via `stdout` during development
  * - **DI Container**: Eager initialization of [Logic] objects
@@ -92,11 +92,8 @@ import java.util.SortedSet
       "jackson.module-scan" to false,
       "jackson.bean-introspection-module" to true,
       "micronaut.application.default-charset" to "utf-8",
-//      "micronaut.server.ssl.ciphers" to cipherSuites.joinToString(","),
       "micronaut.server.ssl.protocols" to arrayOf("TLSv1.2"),
-      "micronaut.server.ssl.protocol" to "TLS",
       "micronaut.server.default-charset" to "utf-8",
-      "micronaut.server.max-request-size" to "10MB",
       "micronaut.server.server-header" to System.getProperty("elide.server.name", "elide/v3"),
       "micronaut.server.thread-selection" to "AUTO",
       "micronaut.server.locale-resolution.session-attribute" to "locale",
@@ -143,6 +140,7 @@ import java.util.SortedSet
     builder.eagerInitSingletons(true)
       .banner(false)
       .deduceEnvironment(true)
+      .enableDefaultPropertySources(true)
       .environmentPropertySource(true)
       .eagerInitConfiguration(true)
       .eagerInitAnnotated(Eager::class.java)

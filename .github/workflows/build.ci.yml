@@ -11,6 +11,7 @@ on:
 env:
   GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
   GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+  GRADLE_OPTS: -Porg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
 jobs:
   ##

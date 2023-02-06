@@ -162,7 +162,7 @@ val cacheUsername: String? by settings
 val cachePassword: String? by settings
 val cachePush: String? by settings
 val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: false
-val localCache = System.getenv("GRADLE_LOCAL_REMOTE")?.toBoolean() ?: true
+val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 
 buildCache {
   local {

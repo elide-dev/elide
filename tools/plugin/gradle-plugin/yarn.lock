@@ -112,7 +112,7 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.16.1.tgz#ca4024c5fa8bbf32cf586fd1e201d26720becc71"
   integrity sha512-vxkjnTk2nCxx3eIolisfjvIN0eZj8vp27iF/fh3vQ7GXkEdK/VzbolT8Nl5YsEddrXc5RRJbHulHM0pGuY+VgQ==
 
-"@mdx-js/esbuild@^2.2.1":
+"@mdx-js/esbuild@2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mdx-js/esbuild/-/esbuild-2.2.1.tgz#2c27e243392c6ea5d3ae8ae59ad9a2cde871cad2"
   integrity sha512-Jf6TJ0VwFO51+cULHtByv+Sz+hoGpsmkbwzgPyMbmK9OvnXCkljinHQdbF9Dt7MuDPFxPRVyf5JMeo+WAEZtMw==

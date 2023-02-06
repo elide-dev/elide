@@ -2,7 +2,7 @@
 
 ![beta](https://img.shields.io/badge/status-beta-blue.svg)
 [![CI](https://github.com/elide-dev/buildtools/actions/workflows/pre-merge.yaml/badge.svg)](https://github.com/elide-dev/buildtools/actions/workflows/pre-merge.yaml)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.8.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.8.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Gradle](https://img.shields.io/badge/gradle-7.x-blue.svg?logo=gradle)](http://gradle.org)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
@@ -31,7 +31,7 @@ below for specific installation and use instructions.
 
 ```kotlin
 plugins {
-  id("dev.elide.buildtools.plugin") version "1.0.0-beta19"
+  id("dev.elide.buildtools.plugin") version "1.0.0-beta20"
 }
 ```
 
@@ -39,13 +39,13 @@ plugins {
 
 ```groovy
 plugins {
-    id "dev.elide.buildtools.plugin" version "1.0.0-beta19"
+    id "dev.elide.buildtools.plugin" version "1.0.0-beta20"
 }
 ```
 
 #### Plugin coordinates
 
--   **Version:** `1.0.0-beta19`
+-   **Version:** `1.0.0-beta20`
 -   **Plugin ID:** `dev.elide.buildtools.plugin`
 -   **Classpath Coordinate:** `dev.elide.buildtools:plugin`
 

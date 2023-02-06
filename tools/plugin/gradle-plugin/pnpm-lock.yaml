@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@mdx-js/esbuild': ^2.2.1
+  '@mdx-js/esbuild': 2.2.1
   esbuild: 0.16.1
 
 dependencies:

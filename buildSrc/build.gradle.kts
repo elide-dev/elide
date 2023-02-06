@@ -2,7 +2,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-val kotlinVersion = "1.8.0"
+val kotlinVersion = "1.8.10"
 
 plugins {
   id("dev.elide.build")

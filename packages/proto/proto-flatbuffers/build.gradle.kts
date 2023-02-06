@@ -127,3 +127,9 @@ dependencies {
   implementation(libs.flatbuffers.java.core)
   testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
 }
+
+afterEvaluate {
+  tasks.named("runKtlintCheckOverMainSourceSet").configure {
+    enabled = false
+  }
+}

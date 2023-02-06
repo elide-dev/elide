@@ -14,5 +14,5 @@ package elide.annotations
  */
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS, AnnotationTarget.ANNOTATION_CLASS)
 public annotation class Logic

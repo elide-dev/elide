@@ -26,7 +26,7 @@
     "site/docs/content"
   ],
   "dependencies": {
-    "browserslist": "^4.21.4",
+    "browserslist": "^4.21.5",
     "cssnano": "^5.1.14",
     "google-protobuf": "3.21.2",
     "postcss": "^8.4.21",

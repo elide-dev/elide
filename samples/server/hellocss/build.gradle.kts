@@ -78,3 +78,15 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
     "${project.properties["elide.publish.repo.docker.samples"]}/server/hellocss/native:opt-latest"
   ))
 }
+
+afterEvaluate {
+  listOf(
+    "buildLayers",
+    "optimizedBuildLayers",
+  ).forEach {
+    tasks.named(it).configure {
+      doNotTrackState("too big for build cache")
+    }
+  }
+}
+

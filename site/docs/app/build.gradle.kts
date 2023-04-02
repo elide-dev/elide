@@ -412,3 +412,14 @@ configurations.all {
             .using(module("io.micronaut.serde:micronaut-serde-jackson:${libs.versions.micronaut.serde.get()}"))
     }
 }
+
+afterEvaluate {
+  listOf(
+    "buildLayers",
+    "optimizedBuildLayers",
+  ).forEach {
+    tasks.named(it).configure {
+      doNotTrackState("too big for build cache")
+    }
+  }
+}

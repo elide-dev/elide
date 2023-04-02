@@ -455,3 +455,17 @@ configurations.all {
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
   }
 }
+
+afterEvaluate {
+  listOf(
+    "buildLayers",
+    "optimizedBuildLayers",
+    "optimizedJitJarAll",
+    "shadowJar",
+  ).forEach {
+    tasks.named(it).configure {
+      doNotTrackState("too big for build cache")
+    }
+  }
+}
+

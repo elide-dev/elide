@@ -25,6 +25,9 @@ dependencies {
   api(npm("@emotion/css", libs.versions.npm.emotion.core.get()))
   api(npm("@emotion/server", libs.versions.npm.emotion.server.get()))
 
+  // fix for atomicfu-runtime error
+  implementation("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.wrappers.node)
   implementation(libs.kotlinx.wrappers.emotion)

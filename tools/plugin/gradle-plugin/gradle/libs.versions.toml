@@ -1,19 +1,19 @@
 [versions]
 elide = "1.0-v3-alpha3-b5"
-ksp = "1.8.10-1.0.9"
+ksp = "1.8.20-1.0.10"
 detekt = "1.22.0"
-kotlin = "1.8.10"
+kotlin = "1.8.20"
 kotlin_dsl = "4.0.2"
 ktlint = "0.47.1"
 ktlintGradle = "10.3.0"
-kotlinx_coroutines = "1.6.4"
+kotlinx_coroutines = "1.7.0-Beta"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
-kotlinx_serialization = "1.4.1"
+kotlinx_serialization = "1.5.0"
 kotlinx_abiValidator = "0.12.1"
 google_api_common = "2.5.0"
 google_html_types = "1.0.8"
-atomicfu = "0.19.0"
+atomicfu = "0.20.0"
 pluginPublish = "0.21.0"
 pluginProtobuf = "0.9.2"
 versionCheck = "0.44.0"
@@ -86,7 +86,6 @@ gradle_kotlin_dsl = { group = "org.gradle.kotlin", name = "gradle-kotlin-dsl-plu
 kotlin_samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin" }
 kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx_coroutines" }
-kotlinx_coroutines_jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_jdk9 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk9", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinx_coroutines" }
 kotlinx_collections_immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx_collections" }

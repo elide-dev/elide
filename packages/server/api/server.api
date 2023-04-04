@@ -244,7 +244,7 @@ public final class elide/server/assets/AssetReference : java/io/Serializable {
 	public final fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final fun write$Self (Lelide/server/assets/AssetReference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+	public static final synthetic fun write$Self (Lelide/server/assets/AssetReference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/server/assets/AssetReference$$serializer : kotlinx/serialization/internal/GeneratedSerializer {

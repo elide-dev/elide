@@ -73,7 +73,6 @@ kotlin {
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
       allWarningsAsErrors = true
-      useK2 = false
     }
   }
 
@@ -86,7 +85,6 @@ kotlin {
         javaParameters = true
         freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
         allWarningsAsErrors = true
-        useK2 = false
       }
     }
   }
@@ -107,7 +105,6 @@ dependencies {
   implementation(libs.picocli)
 
   implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
 
   implementation(libs.micronaut.context)

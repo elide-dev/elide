@@ -250,7 +250,6 @@ dependencies {
   implementation(libs.kotlinx.serialization.protobuf.jvm)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
-  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.reactive)
   implementation(libs.kotlinx.coroutines.reactor)

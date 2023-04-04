@@ -63,7 +63,7 @@ public final class elide/model/token/Token {
 	public final fun getValue ()Lelide/model/token/TokenValue;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final fun write$Self (Lelide/model/token/Token;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+	public static final synthetic fun write$Self (Lelide/model/token/Token;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/model/token/Token$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -107,7 +107,7 @@ public final class elide/model/token/TokenValue {
 	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final fun write$Self (Lelide/model/token/TokenValue;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+	public static final synthetic fun write$Self (Lelide/model/token/TokenValue;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/model/token/TokenValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -134,7 +134,7 @@ public final class elide/model/util/InstantFactory {
 public abstract interface annotation class kotlinx/serialization/protobuf/ProtoDeprecated : java/lang/annotation/Annotation {
 }
 
-public final class kotlinx/serialization/protobuf/ProtoDeprecated$Impl : kotlinx/serialization/protobuf/ProtoDeprecated {
+public synthetic class kotlinx/serialization/protobuf/ProtoDeprecated$Impl : kotlinx/serialization/protobuf/ProtoDeprecated {
 	public fun <init> ()V
 }
 
@@ -143,7 +143,7 @@ public abstract interface annotation class kotlinx/serialization/protobuf/ProtoE
 	public abstract fun unknownName ()Ljava/lang/String;
 }
 
-public final class kotlinx/serialization/protobuf/ProtoEnum$Impl : kotlinx/serialization/protobuf/ProtoEnum {
+public synthetic class kotlinx/serialization/protobuf/ProtoEnum$Impl : kotlinx/serialization/protobuf/ProtoEnum {
 	public fun <init> (Ljava/lang/String;Z)V
 	public final synthetic fun aliases ()Z
 	public final synthetic fun unknownName ()Ljava/lang/String;
@@ -153,7 +153,7 @@ public abstract interface annotation class kotlinx/serialization/protobuf/ProtoF
 	public abstract fun name ()Ljava/lang/String;
 }
 
-public final class kotlinx/serialization/protobuf/ProtoFieldName$Impl : kotlinx/serialization/protobuf/ProtoFieldName {
+public synthetic class kotlinx/serialization/protobuf/ProtoFieldName$Impl : kotlinx/serialization/protobuf/ProtoFieldName {
 	public fun <init> (Ljava/lang/String;)V
 	public final synthetic fun name ()Ljava/lang/String;
 }
@@ -162,7 +162,7 @@ public abstract interface annotation class kotlinx/serialization/protobuf/ProtoF
 	public abstract fun name ()Ljava/lang/String;
 }
 
-public final class kotlinx/serialization/protobuf/ProtoFieldsPreserve$Impl : kotlinx/serialization/protobuf/ProtoFieldsPreserve {
+public synthetic class kotlinx/serialization/protobuf/ProtoFieldsPreserve$Impl : kotlinx/serialization/protobuf/ProtoFieldsPreserve {
 	public fun <init> (Ljava/lang/String;)V
 	public final synthetic fun name ()Ljava/lang/String;
 }
@@ -170,7 +170,7 @@ public final class kotlinx/serialization/protobuf/ProtoFieldsPreserve$Impl : kot
 public abstract interface annotation class kotlinx/serialization/protobuf/ProtoUnknown : java/lang/annotation/Annotation {
 }
 
-public final class kotlinx/serialization/protobuf/ProtoUnknown$Impl : kotlinx/serialization/protobuf/ProtoUnknown {
+public synthetic class kotlinx/serialization/protobuf/ProtoUnknown$Impl : kotlinx/serialization/protobuf/ProtoUnknown {
 	public fun <init> ()V
 }
 

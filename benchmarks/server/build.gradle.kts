@@ -51,7 +51,6 @@ dependencies {
   implementation(libs.kotlinx.coroutines.test)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
-  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)

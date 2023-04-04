@@ -95,7 +95,6 @@ tasks.withType<KotlinCompileCommon>().configureEach {
     languageVersion = kotlinLanguageVersion
     freeCompilerArgs = Elide.mppCompilerArgs
     allWarningsAsErrors = strictMode
-    useK2 = enableK2
     incremental = true
   }
 }
@@ -108,7 +107,6 @@ tasks.withType<KotlinCompile>().configureEach {
     freeCompilerArgs = Elide.mppCompilerArgs
     javaParameters = true
     allWarningsAsErrors = strictMode
-    useK2 = enableK2
     incremental = true
   }
 }

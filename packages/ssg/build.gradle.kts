@@ -71,7 +71,6 @@ dependencies {
   implementation(libs.kotlinx.datetime)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.reactive)
   implementation(libs.kotlinx.serialization.core)

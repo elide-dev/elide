@@ -189,7 +189,7 @@ internal abstract class AbstractVMEngine<
   // Abstract VM options which must be evaluated at the time a context is created.
   private val conditionalOptions : List<VMProperty> = listOf(
     VMConditionalMultiProperty(main = VMConditionalProperty("vm.inspect", "inspect", {
-      RuntimeFlag.inspect || guestConfig.inspector?.enabled == true
+      RuntimeFlag.inspect || guestConfig.inspector?.isEnabled == true
     }), properties = listOf(
       // Inspection: Path.
       VMRuntimeProperty.ofConfigurable("vm.inspect.path", "inspect.Path") {
@@ -289,7 +289,7 @@ internal abstract class AbstractVMEngine<
 
   // Context builder factory. Provided to the context manager.
   internal fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
-    *guestConfig.languages.toTypedArray()
+    *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()
   ).engine(engine).apply {
     // configure baseline settings for the builder according to the implemented VM
     configureVM(this)

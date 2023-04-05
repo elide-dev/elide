@@ -12,55 +12,28 @@ import java.util.*
  * # JS VM Configuration
  *
  * Defines configuration structure for JavaScript VMs managed by Elide. Guest VMs are capable of executing user-provided
- * code in a sandboxed environment.
- *
- * @param enabled Whether JS VM support is enabled.
- * @param sourceMaps Whether to enable source-maps support, which enhances stack-traces, logs, and other system features
- *   with information about the original source code. Defaults to `true`.
- * @param v8 Run with V8 compatibility mode active. Defaults to `false`; users are not encouraged to activate this.
- * @param wasm Enable WASM support and related bindings. Defaults to `true`; only active where supported.
- * @param esm Settings which apply to ECMAScript Module (ESM) support.
- * @param npm Settings which apply to NPM/`node_modules` support.
- * @param typescript Enable experimental built-in runtime support for TypeScript. Defaults to `false`.
- * @param language ECMA Script language level to apply within the VM; defaults to [JsLanguageLevel.ES2022].
- * @param defaultLocale Default locale to apply to the JS VM. Defaults to the system default.
- * @param timezone Default timezone to apply to the JS VM. Defaults to the system default.
- * @param charset Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`. `UTF-8`
- *   and `UTF-32` are explicitly supported; other support may vary.
+ * code in a sandbox environment.
  */
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.js")
-public class JsRuntimeConfig(
-  public var enabled: Boolean = DEFAULT_ENABLED,
-  public var sourceMaps: Boolean = DEFAULT_SOURCEMAPS,
-  public var v8: Boolean = DEFAULT_V8_COMPAT,
-  public var wasm: Boolean = DEFAULT_WASM,
-  public var esm: JsEsmConfig = JsEsmConfig.DEFAULTS,
-  public var npm: JsNpmConfig = JsNpmConfig.DEFAULTS,
-  public var typescript: Boolean = DEFAULT_TYPESCRIPT,
-  public var language: JsLanguageLevel = DEFAULT_JS_LANGUAGE_LEVEL,
-  public var defaultLocale: Locale = DEFAULT_LOCALE,
-  public var timezone: ZoneId = DEFAULT_TIMEZONE,
-  public var charset: Charset? = null,
-) : Toggleable, GuestRuntimeConfiguration {
+public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
   /**
    * ## JS: NPM Configuration
    *
    * Defines configuration structure for NPM/Node module support within the JS VM. This includes enablement of NPM
    * support and the path to look for modules at.
-   *
-   * @param enabled Whether to enable NPM support (including `require(..)`). Defaults to `true`.
-   * @param modules Path to look for modules at. Defaults to `node_modules`.
    */
   @ConfigurationProperties("elide.gvm.js.npm")
-  public class JsNpmConfig (
-    public var enabled: Boolean = DEFAULT_NPM,
-    public var modules: String = DEFAULT_NPM_MODULES,
-  ) : Toggleable {
+  public interface JsNpmConfig : Toggleable {
     public companion object {
       /** Default JS NPM settings. */
-      @JvmStatic public val DEFAULTS: JsNpmConfig = JsNpmConfig()
+      @JvmStatic public val DEFAULTS: JsNpmConfig = object : JsNpmConfig {}
     }
+
+    /**
+     * @return Path to look for modules at. Defaults to `node_modules`.
+     */
+    public val modules: String? get() = DEFAULT_NPM_MODULES
   }
 
   /**
@@ -68,16 +41,12 @@ public class JsRuntimeConfig(
    *
    * Defines configuration structure for modern ECMAScript Module support within the JS VM. This includes enablement of
    * ESM support and the path to look for modules at.
-   *
-   * @param enabled Whether to enable ESM support (including `import`). Defaults to `true`.
    */
   @ConfigurationProperties("elide.gvm.js.esm")
-  public class JsEsmConfig (
-    public var enabled: Boolean = DEFAULT_ESM,
-  ) : Toggleable {
+  public interface JsEsmConfig : Toggleable {
     public companion object {
       /** Default JS ESM settings. */
-      @JvmStatic public val DEFAULTS: JsEsmConfig = JsEsmConfig()
+      @JvmStatic public val DEFAULTS: JsEsmConfig = object : JsEsmConfig {}
     }
   }
 
@@ -119,6 +88,56 @@ public class JsRuntimeConfig(
     public val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8
   }
 
-  /** @inheritDoc */
-  override fun isEnabled(): Boolean = enabled
+  override fun isEnabled(): Boolean = DEFAULT_ENABLED
+
+  /**
+   * @return Whether to enable source-maps support, which enhances stack-traces, logs, and other system features with
+   */
+  public val sourceMaps: Boolean? get() = DEFAULT_SOURCEMAPS
+
+  /**
+   * @return Whether to enable V8 compatibility mode. This is not recommended for most users.
+   */
+  public val v8: Boolean? get() = DEFAULT_V8_COMPAT
+
+  /**
+   * @return Enable WASM support and related bindings. Defaults to `true`; only active where supported.
+   */
+  public val wasm: Boolean? get() = DEFAULT_WASM
+
+  /**
+   * @return Settings which apply to ECMAScript Module (ESM) support.
+   */
+  public val esm: JsEsmConfig get() = JsEsmConfig.DEFAULTS
+
+  /**
+   * @return Settings which apply to NPM/`node_modules` support.
+   */
+  public val npm: JsNpmConfig get() = JsNpmConfig.DEFAULTS
+
+  /**
+   * @return Enable experimental built-in runtime support for TypeScript. Defaults to `false`.
+   */
+  public val typescript: Boolean? get() = DEFAULT_TYPESCRIPT
+
+  /**
+   * @return ECMA Script language level to apply within the VM; defaults to [JsLanguageLevel.ES2022].
+   */
+  public val language: JsLanguageLevel? get() = DEFAULT_JS_LANGUAGE_LEVEL
+
+  /**
+   * @return Default locale to apply to the JS VM. Defaults to the system default.
+   */
+  public val defaultLocale: Locale? get() = DEFAULT_LOCALE
+
+  /**
+   * @return Default timezone to apply to the JS VM. Defaults to the system default.
+   */
+  public val timezone: ZoneId? get() = DEFAULT_TIMEZONE
+
+  /**
+   * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`. `UTF-8` and
+   *   `UTF-32` are explicitly supported; other support may vary.
+   */
+  public val charset: Charset? get() = null
 }

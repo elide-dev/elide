@@ -1,38 +1,18 @@
 package elide.runtime.gvm.cfg
 
-import elide.runtime.gvm.cfg.GuestIOConfiguration.Mode
 import elide.runtime.gvm.internals.vfs.AbstractBaseVFS
 import elide.runtime.gvm.internals.vfs.GuestVFSPolicy
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.core.util.Toggleable
 
 /**
- * Micronaut configuration for the guest VM virtual file-system (VFS).
- *
- * @param enabled Whether to enable I/O support for guest VMs at all.
- * @param bundle Path to the VFS bundle to use for guest VMs, as applicable.
- * @param policy Security policies to apply to guest I/O operations. If none is provided, sensible defaults are used.
- * @param mode Base operating mode for I/O - options are [Mode.GUEST] (virtualized), [Mode.CLASSPATH] (guest + access to
- *   host app classpath), or [Mode.HOST] (full access to host machine I/O).
- * @param caseSensitive Whether to treat the file-system as case sensitive. Defaults to `true`.
- * @param symlinks Whether to enable (or expect) symbolic link support. Defaults to `true`.
- * @param root Root path for the file-system. Defaults to `/`.
- * @param workingDirectory Working directory to initialize the VFS with, as applicable. Defaults to `/`.
+ * Configuration for the guest VM virtual file-system (VFS).
  */
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.vfs")
-internal class GuestIOConfiguration(
-  var enabled: Boolean = DEFAULT_ENABLED,
-  var bundle: String? = null,
-  var policy: GuestVFSPolicy = DEFAULT_POLICY,
-  var mode: Mode? = DEFAULT_MODE,
-  var caseSensitive: Boolean = DEFAULT_CASE_SENSITIVE,
-  var symlinks: Boolean = DEFAULT_SYMLINKS,
-  var root: String = DEFAULT_ROOT,
-  var workingDirectory: String = DEFAULT_WORKING_DIRECTORY,
-) : Toggleable {
+internal interface GuestIOConfiguration : Toggleable {
   /** Enumerates supported operating modes for VM guest I/O. */
-  @Suppress("unused") public enum class Mode {
+  @Suppress("unused") enum class Mode {
     /** Virtualized I/O operations via a guest file-system. */
     GUEST,
 
@@ -43,10 +23,7 @@ internal class GuestIOConfiguration(
     HOST,
   }
 
-  internal companion object {
-    /** Default enablement status. */
-    const val DEFAULT_ENABLED: Boolean = true
-
+  companion object {
     /** Default case-sensitivity status. */
     const val DEFAULT_CASE_SENSITIVE: Boolean = true
 
@@ -65,4 +42,40 @@ internal class GuestIOConfiguration(
     /** Default operating mode. */
     val DEFAULT_MODE: Mode = Mode.GUEST
   }
+
+  /**
+   * @return Path to the VFS bundle to use for guest VMs, as applicable.
+   */
+  val bundle: String? get() = null
+
+  /**
+   * @return Security policies to apply to guest I/O operations. If none is provided, sensible defaults are used.
+   */
+  val policy: GuestVFSPolicy get() = DEFAULT_POLICY
+
+  /**
+   * @return Base operating mode for I/O - options are [Mode.GUEST] (virtualized), [Mode.CLASSPATH] (guest + access to
+   *   host app classpath), or [Mode.HOST] (full access to host machine I/O).
+   */
+  val mode: Mode get() = DEFAULT_MODE
+
+  /**
+   * @return Whether to treat the file-system as case-sensitive. Defaults to `true`.
+   */
+  val caseSensitive: Boolean? get() = DEFAULT_CASE_SENSITIVE
+
+  /**
+   * @return Whether to enable (or expect) symbolic link support. Defaults to `true`.
+   */
+  val symlinks: Boolean? get() = DEFAULT_SYMLINKS
+
+  /**
+   * @return Root path for the file-system. Defaults to `/`.
+   */
+  val root: String? get() = DEFAULT_ROOT
+
+  /**
+   * @return Working directory to initialize the VFS with, as applicable. Defaults to `/`.
+   */
+  val workingDirectory: String? get() = DEFAULT_WORKING_DIRECTORY
 }

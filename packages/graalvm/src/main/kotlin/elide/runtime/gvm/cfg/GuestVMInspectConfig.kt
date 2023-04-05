@@ -1,6 +1,7 @@
 package elide.runtime.gvm.cfg
 
 import io.micronaut.context.annotation.ConfigurationProperties
+import io.micronaut.core.util.Toggleable
 
 /**
  * # Guest VM: Chrome Inspector
@@ -31,26 +32,11 @@ import io.micronaut.context.annotation.ConfigurationProperties
  *
  * - **Debugger statements.** Literal debug triggers in guest languages will also suspend the VM; for example, the
  *   `debugger` statement in JavaScript, or `import pdb; pdb.set_trace()` in Python.
- *
- * @param enabled Whether to enable the Chrome Inspector for the guest VM. Defaults to `false`.
- * @param suspend Whether to suspend the guest VM at initial invocation. Defaults to `false`.
- * @param wait Whether the VM should wait until the debugger attaches before beginning execution. Defaults to `false`.
- * @param secure Whether to configure TLS for the inspector socket. Defaults to `false`, requires configuration.
- * @param path From GraalVM: Path to the Chrome Inspector to bind to. This path should be unpredictable. Do note that
- *  any website opened in your browser that has knowledge of the URL can connect to the debugger. A predictable path can
- *  thus be abused by a malicious website to execute arbitrary code on your computer, even if you are behind a firewall.
- *  (default: randomly generated).
  */
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.inspect")
-internal class GuestVMInspectConfig(
-  var enabled: Boolean = DEFAULT_ENABLED,
-  var suspend: Boolean = DEFAULT_SUSPEND,
-  var wait: Boolean = DEFAULT_WAIT,
-  var secure: Boolean = DEFAULT_SECURE,
-  var path: String? = DEFAULT_PATH,
-) {
-  internal companion object {
+internal interface GuestVMInspectConfig : Toggleable {
+  companion object {
     /** Default controlling whether the inspector is enabled by default (`false`). */
     private const val DEFAULT_ENABLED: Boolean = false
 
@@ -66,4 +52,29 @@ internal class GuestVMInspectConfig(
     /** Default path value to pass (`null`, i.e. generate randomly). */
     private val DEFAULT_PATH: String? = null
   }
+
+  override fun isEnabled(): Boolean = DEFAULT_ENABLED
+
+  /**
+   * @return Whether to suspend the guest VM at initial invocation. Defaults to `false`.
+   */
+  val suspend: Boolean get() = DEFAULT_SUSPEND
+
+  /**
+   * @return Whether the VM should wait until the debugger attaches before beginning execution. Defaults to `false`.
+   */
+  val wait: Boolean get() = DEFAULT_WAIT
+
+  /**
+   * @return Whether to configure TLS for the inspector socket. Defaults to `false`, requires configuration.
+   */
+  val secure: Boolean get() = DEFAULT_SECURE
+
+  /**
+   * @return From GraalVM: Path to the Chrome Inspector to bind to. This path should be unpredictable. Do note that any
+   *  website opened in your browser that has knowledge of the URL can connect to the debugger. A predictable path can
+   *  thus be abused by a malicious website to execute arbitrary code on your computer, even if you are behind a
+   *  firewall (default: randomly generated).
+   */
+  val path: String? get() = DEFAULT_PATH
 }

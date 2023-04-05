@@ -44,10 +44,10 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     @JvmStatic internal fun withConfig(ioConfig: GuestIOConfiguration): EffectiveGuestVFSConfig {
       return EffectiveGuestVFSConfig.withPolicy(
         policy = ioConfig.policy,
-        caseSensitive = ioConfig.caseSensitive,
-        supportsSymbolicLinks = ioConfig.symlinks,
-        root = ioConfig.root,
-        workingDirectory = ioConfig.workingDirectory,
+        caseSensitive = ioConfig.caseSensitive ?: GuestIOConfiguration.DEFAULT_CASE_SENSITIVE,
+        supportsSymbolicLinks = ioConfig.symlinks ?: GuestIOConfiguration.DEFAULT_SYMLINKS,
+        root = ioConfig.root ?: GuestIOConfiguration.DEFAULT_ROOT,
+        workingDirectory = ioConfig.workingDirectory ?: GuestIOConfiguration.DEFAULT_WORKING_DIRECTORY,
       )
     }
   }

@@ -287,7 +287,7 @@ import org.graalvm.polyglot.Context as VMContext
   init {
     // Acquire a global engine singleton.
     engine.set(
-      Engine.newBuilder(*config.languages.toTypedArray()).apply {
+      Engine.newBuilder(*(config.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()).apply {
         // stub streams
         if (System.getProperty("elide.js.vm.enableStreams", "false") != "true") {
           `in`(StubbedInputStream.SINGLETON)

@@ -31,7 +31,7 @@ import java.util.concurrent.CountDownLatch
  * Services are resolved via [RpcRuntime], which is notified of service registration at the time the gRPC server starts
  * up (managed by Micronaut).
  */
-@Requires(property = "elide.grpc.web.enabled", value = "true")
+@Requires(property = "elide.grpc.web.isEnabled", value = "true")
 @Controller("\${elide.grpc.web.endpoint:/_/rpc}") public class GrpcWebController: StatusEnabledController {
   /**
    * Describes an error encountered early during this controller's processing cycle, before the request has been
@@ -259,7 +259,7 @@ import java.util.concurrent.CountDownLatch
     principal: Principal?
   ): HttpResponse<RawRpcPayload> {
     // make sure gRPC-web integration is enabled
-    return if (!settings.enabled) {
+    return if (!settings.isEnabled) {
       return HttpResponse.notFound()
     } else try {
       // `servicePath` and `methodName` must be non-empty/non-blank

@@ -36,7 +36,7 @@ import kotlin.test.assertTrue
     protected val logging: Logger = Logging.root()
   }
 
-  protected fun controller(settings: GrpcWebConfig = GrpcWebConfig(enabled = true)): GrpcWebController {
+  protected fun controller(settings: GrpcWebConfig = object : GrpcWebConfig {}): GrpcWebController {
     val ctr = GrpcWebController()
     ctr.runtime = runtime
     ctr.relayService = relayService

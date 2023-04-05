@@ -21,12 +21,16 @@ import kotlin.test.assertTrue
 /** Error cases from remote gRPC servers, through the gRPC-Web integration layer. */
 @MicronautTest
 class GrpcWebFailureTest: GrpcWebBaseTest() {
+  private val enabledConfig = object : GrpcWebConfig {
+    override fun isEnabled(): Boolean = true
+  }
+
   @Inject lateinit var sampleService: TestSampleServiceV1
 
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testErrorRelayFromServerNotFound(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
       // intentionally craft a message that will pass all the sniff tests on the frontend of the gRPC web relay, but
       // then fail subsequently from the backing gRPC service implementation. in this case, since we're giving it a
@@ -56,7 +60,7 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testErrorMethodNotFound(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
@@ -78,7 +82,7 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testErrorMalformedPayload(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
@@ -102,7 +106,7 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testErrorMalformedProto(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
     val badProtoData = "UHDFdiugsLIUHiyfgqyghduihvuiqhiugbfiuvhsiufhafhiaufivhdiuv".toByteArray(StandardCharsets.UTF_8)
     val response = assertDoesNotThrow {
       submitRequest(
@@ -143,10 +147,10 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
       "should be able to inject our sample service for testing"
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = GrpcWebConfig(
-      enabled = true,
-      timeout = Duration.ofSeconds(2),
-    ))
+    val controller = controller(settings = object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+      override val timeout: Duration get() = Duration.ofSeconds(2)
+    })
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
@@ -176,10 +180,10 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
       "should be able to inject our sample service for testing"
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = GrpcWebConfig(
-      enabled = true,
-      timeout = Duration.ofSeconds(2),
-    ))
+    val controller = controller(settings = object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+      override val timeout: Duration get() = Duration.ofSeconds(2)
+    })
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
@@ -218,10 +222,10 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
       "should be able to inject our sample service for testing"
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = GrpcWebConfig(
-      enabled = true,
-      timeout = Duration.ofSeconds(2),
-    ))
+    val controller = controller(settings = object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+      override val timeout: Duration get() = Duration.ofSeconds(2)
+    })
     val response = assertDoesNotThrow {
       submitRequest(
         controller,

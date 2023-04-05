@@ -17,6 +17,10 @@ import kotlin.test.assertNotNull
 /** Tests for well-formed requests to the [HealthGrpc] service via the gRPC-Web gateway layer. */
 @MicronautTest
 class GrpcWebUnaryTest: GrpcWebBaseTest() {
+  private val enabledConfig = object : GrpcWebConfig {
+    override fun isEnabled(): Boolean = true
+  }
+
   @Test fun testAcquireController() {
     assertNotNull(
       controller(),
@@ -27,7 +31,7 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testBasicHealthMethod(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
 
     // submit the request, which should not throw
     val response = assertDoesNotThrow {
@@ -70,7 +74,7 @@ class GrpcWebUnaryTest: GrpcWebBaseTest() {
   @CsvSource("BINARY", "TEXT")
   @ParameterizedTest fun testDispatchNoExplicitJavaPackage(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller()
+    val controller = controller(enabledConfig)
 
     // submit the request, which should not throw
     val response = assertDoesNotThrow {

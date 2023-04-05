@@ -53,7 +53,7 @@ class ServerAssetIndexTest {
   ): Pair<AssetBundle, ServerAssetIndex> {
     val sample = assetBundle ?: assertNotNull(loadSampleManifest())
     return sample to ServerAssetIndex(
-      config ?: AssetConfig(),
+      config ?: object : AssetConfig {},
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle {
           return sample
@@ -261,11 +261,11 @@ class ServerAssetIndexTest {
   @Test fun testGenerateEtagsStrong() {
     // standard config
     val (sample, indexer) = createIndexer(
-      config = AssetConfig(
-        enabled = true,
-        etags = true,
-        preferWeakEtags = false,
-      )
+      config = object : AssetConfig {
+        override fun isEnabled(): Boolean = true
+        override val etags: Boolean get() = true
+        override val preferWeakEtags: Boolean get() = false
+      }
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -281,11 +281,13 @@ class ServerAssetIndexTest {
   @Test fun testGenerateEtagsWeak() {
     // standard config
     val (sample, indexer) = createIndexer(
-      config = AssetConfig(
-        enabled = true,
-        etags = true,
-        preferWeakEtags = true,
-      )
+      config = object : AssetConfig {
+        override fun isEnabled(): Boolean = true
+        override val etags: Boolean get() = true
+        override val preferWeakEtags: Boolean get() {
+          return true
+        }
+      }
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -300,11 +302,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalStrongETagMatch() {
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = false,
-    )
+    val cfg = object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = false
+    }
     val (sample, indexer) = createIndexer(config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -363,11 +365,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalStrongETagMismatch() {
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = false,
-    )
+    val cfg =object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = false
+    }
     val (sample, indexer) = createIndexer(config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -426,11 +428,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalWeakETagMatch() {
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = true,
-    )
+    val cfg = object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = true
+    }
     val (sample, indexer) = createIndexer(config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -489,11 +491,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalWeakETagMismatch() {
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = true,
-    )
+    val cfg = object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = true
+    }
     val (sample, indexer) = createIndexer(config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -552,11 +554,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalWeakETagBadFormat() {
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = true,
-    )
+    val cfg = object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = true
+    }
     val (sample, indexer) = createIndexer(config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -615,11 +617,11 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalWeakETagMatchInStrongMode() {
     val (sample, indexerWithWeakEtags) = createIndexer(
-      config = AssetConfig(
-        enabled = true,
-        etags = true,
-        preferWeakEtags = true,
-      )
+      config = object : AssetConfig {
+        override fun isEnabled(): Boolean = true
+        override val etags: Boolean get() = true
+        override val preferWeakEtags: Boolean get() = true
+      }
     )
     assertDoesNotThrow {
       indexerWithWeakEtags.initialize()
@@ -632,11 +634,11 @@ class ServerAssetIndexTest {
     assertTrue(injectedEtag.endsWith("\""), "weak etag should end with a double-quote")
 
     // standard config
-    val cfg = AssetConfig(
-      enabled = true,
-      etags = true,
-      preferWeakEtags = false, // important
-    )
+    val cfg = object : AssetConfig {
+      override fun isEnabled(): Boolean = true
+      override val etags: Boolean get() = true
+      override val preferWeakEtags: Boolean get() = false  // important
+    }
     val (_, indexer) = createIndexer(sample, config = cfg)
     assertDoesNotThrow {
       indexer.initialize()
@@ -766,7 +768,7 @@ class ServerAssetIndexTest {
   @Test fun testAssetIndexerDoesNotInitializeMoreThanOnce() {
     val firstCall = AtomicBoolean(true)
     val indexer = ServerAssetIndex(
-      AssetConfig(),
+      object : AssetConfig {},
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           if (firstCall.get()) {
@@ -796,7 +798,7 @@ class ServerAssetIndexTest {
 
   @Test fun testAssetIndexBootNoManifest() {
     val indexer = ServerAssetIndex(
-      AssetConfig(),
+      object : AssetConfig {},
       object : AssetManifestLoader {
         override fun findLoadManifest(candidates: List<Pair<ManifestFormat, String>>): AssetBundle? {
           return null

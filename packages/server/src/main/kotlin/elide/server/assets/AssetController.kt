@@ -19,7 +19,7 @@ import jakarta.inject.Inject
  *
  * @param assetManager Main asset manager which should be used to resolve and serve assets.
  */
-@Requires(property = "elide.assets.enabled", notEquals = "false")
+@Requires(property = "elide.assets.isEnabled", notEquals = "false")
 @Controller("\${elide.assets.prefix:/_/assets}")
 public class AssetController @Inject constructor(private val assetManager: AssetManager) : StatusEnabledController {
   // Logger pipe.

@@ -3,28 +3,28 @@ package elide.server.cfg
 import kotlin.test.*
 
 /** Tests for asset-specific server configuration. */
-@Suppress("KotlinConstantConditions")
 class AssetConfigTest {
   @Test fun testAssetConfig() {
-    val cfg = AssetConfig()
+    val cfg = object : AssetConfig {}
     assertNotNull(cfg)
-    assertNotNull(cfg.enabled)
+    assertNotNull(cfg.isEnabled)
     assertNotNull(cfg.prefix)
-    assertTrue(cfg.enabled)
-    assertTrue(cfg.etags)
-    assertFalse(cfg.preferWeakEtags)
+    assertTrue(cfg.isEnabled)
+    assertTrue(cfg.etags ?: AssetConfig.DEFAULT_ENABLE_ETAGS)
+    assertFalse(cfg.preferWeakEtags ?: AssetConfig.DEFAULT_PREFER_WEAK_ETAGS)
 
-    // asset config should be mutable
-    cfg.enabled = false
-    assertFalse(cfg.enabled)
-    cfg.prefix = "/_/somethingelse"
+    val disabled = object : AssetConfig {
+      override fun isEnabled(): Boolean = false
+      override val prefix: String get() = "/_/somethingelse"
+      override val etags: Boolean get() = false
+      override val preferWeakEtags: Boolean get() = true
+    }
+    assertFalse(disabled.isEnabled)
     assertEquals(
-      cfg.prefix,
+      disabled.prefix,
       "/_/somethingelse"
     )
-    cfg.etags = false
-    assertFalse(cfg.etags)
-    cfg.preferWeakEtags = true
-    assertTrue(cfg.preferWeakEtags)
+    assertFalse(disabled.etags)
+    assertTrue(disabled.preferWeakEtags)
   }
 }

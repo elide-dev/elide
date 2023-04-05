@@ -135,3 +135,16 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
     }
   }
 }
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    enabled.set(false)
+  }
+}

@@ -28,12 +28,6 @@ kotlin {
         browser {}
     }
 
-    wasm {
-        binaries.executable()
-        browser {
-        }
-    }
-
     macosArm64()
     iosArm64()
     iosX64()
@@ -54,7 +48,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test"))
-//                implementation(project(":packages:test"))
                 configurations["kapt"].dependencies.add(
                     libs.micronaut.inject.java.asProvider().get()
                 )
@@ -103,12 +96,6 @@ kotlin {
         val watchosX64Main by getting { dependsOn(nativeMain) }
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }
-        val wasmMain by getting {
-            dependsOn(nativeMain)
-            dependencies {
-                implementation(kotlin("stdlib-wasm"))
-            }
-        }
     }
 
 //    val hostOs = System.getProperty("os.name")

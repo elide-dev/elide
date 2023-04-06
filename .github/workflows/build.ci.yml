@@ -62,7 +62,7 @@ jobs:
       - name: "Patch: Restore Yarn Lock"
         run: mv kotlin-js-store/yarn.inert kotlin-js-store/yarn.lock
       - name: "Check: Library ABI"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         id: abicheck
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:ignore-abicheck') }}
         env:
@@ -139,7 +139,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "🛠️ Build"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
@@ -254,7 +254,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn
       - name: "Run Tests (JVM)"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         env:
           CI: true
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -365,7 +365,7 @@ jobs:
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn
       - name: "Run Tests (Native)"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         continue-on-error: true
         env:
           CI: true
@@ -480,7 +480,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         with:
           arguments: |
             --no-daemon
@@ -580,7 +580,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (Native)"
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         continue-on-error: true
         with:
           arguments: |

@@ -1,10 +1,13 @@
 name: CI
 
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - main
+      - gh-readonly-queue/main/*
   pull_request:
+    types: [opened, reopened, synchronize]
     branches:
       - "*"
 
@@ -54,7 +57,7 @@ jobs:
 
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@d01f5f519f35cf82b318133761fd8b674632a8fe # v1
+        uses: graalvm/setup-graalvm@b53bc17dd7dc3052d7c6751f6a5c34abdbf928b3 # v1
         with:
           components: "native-image,js"
           version: latest
@@ -75,7 +78,7 @@ jobs:
 
       ## Setup: Checkout Code
       - name: Cache SonarCloud packages
-        uses: actions/cache@58c146cc91c5b9e778e71775dfe9bf1442ad9a12 # v3
+        uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920 # v3
         if: ${{ matrix.os == 'ubuntu' }}
         with:
           path: ~/.sonar/cache

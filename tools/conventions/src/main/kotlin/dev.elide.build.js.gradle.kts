@@ -17,6 +17,7 @@ val strictMode = project.properties["strictMode"] as? String == "true"
 // ----------------
 // Settings for compiling Kotlin to JavaScript.
 kotlin {
+  org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
   js(IR) {
     browser()
   }

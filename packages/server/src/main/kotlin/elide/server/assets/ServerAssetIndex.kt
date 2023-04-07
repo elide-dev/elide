@@ -92,20 +92,25 @@ internal class ServerAssetIndex @Inject constructor(
 
   // Build an ETag value for the provided `entry`.
   @VisibleForTesting internal fun buildETagForAsset(entry: AssetContent, bundle: AssetBundle): String {
-    val identityVariant = entry.getVariant(0)
-    val integrityValue = identityVariant.data.getIntegrity(0)
-    return if (!assetConfig.preferWeakEtags) {
-      val tailCount = bundle.settings.digestSettings.tail
-      val encoded = String(
-        Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
-        StandardCharsets.UTF_8
-      )
-      "\"$encoded\""
+    return if (entry.variantCount > 0 && entry.getVariant(0).data.integrityCount > 0) {
+      val identityVariant = entry.getVariant(0)
+      val integrityValue = identityVariant.data.getIntegrity(0)
+      if (!(assetConfig.preferWeakEtags ?: AssetConfig.DEFAULT_PREFER_WEAK_ETAGS)) {
+        // we have an integrity tag and we prefer strong etags
+        val tailCount = bundle.settings.digestSettings.tail
+        val encoded = String(
+          Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
+          StandardCharsets.UTF_8
+        )
+        "\"$encoded\""
+      } else {
+        // we have an integrity tag and we prefer weak etags
+        "W/\"${bundle.generated.seconds}\""
+      }
     } else {
       // since we don't have an integrity fingerprint for this asset, we can substitute and use a "weak" ETag via the
       // generated-timestamp in the asset bundle.
-      val generatedTime = bundle.generated.seconds
-      "W/\"$generatedTime\""
+      "W/\"${bundle.generated.seconds}\""
     }
   }
 

@@ -244,7 +244,7 @@ public final class elide/server/assets/AssetReference : java/io/Serializable {
 	public final fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final fun write$Self (Lelide/server/assets/AssetReference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+	public static final synthetic fun write$Self (Lelide/server/assets/AssetReference;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/server/assets/AssetReference$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -320,11 +320,12 @@ public final class elide/server/assets/ServerAssetReader : elide/server/assets/A
 	public fun resolve (Ljava/lang/String;)Lelide/server/assets/ServerAsset;
 }
 
-public final synthetic class elide/server/cfg/$AssetConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/server/cfg/$AssetConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -336,33 +337,24 @@ public final synthetic class elide/server/cfg/$ServerConfig$Definition$Reference
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/server/cfg/AssetConfig {
-	public fun <init> ()V
-	public fun <init> (ZLjava/lang/String;ZZZZ)V
-	public synthetic fun <init> (ZLjava/lang/String;ZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Z
-	public final fun component4 ()Z
-	public final fun component5 ()Z
-	public final fun component6 ()Z
-	public final fun copy (ZLjava/lang/String;ZZZZ)Lelide/server/cfg/AssetConfig;
-	public static synthetic fun copy$default (Lelide/server/cfg/AssetConfig;ZLjava/lang/String;ZZZZILjava/lang/Object;)Lelide/server/cfg/AssetConfig;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getEnabled ()Z
-	public final fun getEtags ()Z
-	public final fun getHashLinks ()Z
-	public final fun getPreferWeakEtags ()Z
-	public final fun getPrefix ()Ljava/lang/String;
-	public final fun getRewriting ()Z
-	public fun hashCode ()I
-	public final fun setEnabled (Z)V
-	public final fun setEtags (Z)V
-	public final fun setHashLinks (Z)V
-	public final fun setPreferWeakEtags (Z)V
-	public final fun setPrefix (Ljava/lang/String;)V
-	public final fun setRewriting (Z)V
-	public fun toString ()Ljava/lang/String;
+public abstract interface class elide/server/cfg/AssetConfig : io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/server/cfg/AssetConfig$Companion;
+	public static final field DEFAULT_ASSET_PREFIX Ljava/lang/String;
+	public static final field DEFAULT_ENABLE_ETAGS Z
+	public static final field DEFAULT_PREFER_WEAK_ETAGS Z
+	public static final field DEFAULT_REWRITING_ENABLED Z
+	public fun getEtags ()Ljava/lang/Boolean;
+	public fun getHashLinks ()Ljava/lang/Boolean;
+	public fun getPreferWeakEtags ()Ljava/lang/Boolean;
+	public fun getPrefix ()Ljava/lang/String;
+	public fun getRewriting ()Ljava/lang/Boolean;
+}
+
+public final class elide/server/cfg/AssetConfig$Companion {
+	public static final field DEFAULT_ASSET_PREFIX Ljava/lang/String;
+	public static final field DEFAULT_ENABLE_ETAGS Z
+	public static final field DEFAULT_PREFER_WEAK_ETAGS Z
+	public static final field DEFAULT_REWRITING_ENABLED Z
 }
 
 public final class elide/server/cfg/ServerConfig {

@@ -164,74 +164,82 @@ public final class elide/runtime/gvm/VMFacadeFactory {
 	public final fun acquireVM ([Lelide/runtime/gvm/GuestLanguage;)Lelide/runtime/gvm/VMFacade;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
 }
 
-public final class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
+public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$Companion;
 	public static final field DEFAULT_ENABLED Z
 	public static final field DEFAULT_ESM Z
@@ -241,65 +249,47 @@ public final class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/runtime/gvm/cfg
 	public static final field DEFAULT_TYPESCRIPT Z
 	public static final field DEFAULT_V8_COMPAT Z
 	public static final field DEFAULT_WASM Z
-	public fun <init> ()V
-	public fun <init> (ZZZZLelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;ZLtools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;Ljava/util/Locale;Ljava/time/ZoneId;Ljava/nio/charset/Charset;)V
-	public synthetic fun <init> (ZZZZLelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;ZLtools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;Ljava/util/Locale;Ljava/time/ZoneId;Ljava/nio/charset/Charset;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getCharset ()Ljava/nio/charset/Charset;
-	public final fun getDefaultLocale ()Ljava/util/Locale;
-	public final fun getEnabled ()Z
-	public final fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
-	public final fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
-	public final fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
-	public final fun getSourceMaps ()Z
-	public final fun getTimezone ()Ljava/time/ZoneId;
-	public final fun getTypescript ()Z
-	public final fun getV8 ()Z
-	public final fun getWasm ()Z
+	public fun getCharset ()Ljava/nio/charset/Charset;
+	public fun getDefaultLocale ()Ljava/util/Locale;
+	public fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
+	public fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
+	public fun getSourceMaps ()Ljava/lang/Boolean;
+	public fun getTimezone ()Ljava/time/ZoneId;
+	public fun getTypescript ()Ljava/lang/Boolean;
+	public fun getV8 ()Ljava/lang/Boolean;
+	public fun getWasm ()Ljava/lang/Boolean;
 	public fun isEnabled ()Z
-	public final fun setCharset (Ljava/nio/charset/Charset;)V
-	public final fun setDefaultLocale (Ljava/util/Locale;)V
-	public final fun setEnabled (Z)V
-	public final fun setEsm (Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;)V
-	public final fun setLanguage (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;)V
-	public final fun setNpm (Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;)V
-	public final fun setSourceMaps (Z)V
-	public final fun setTimezone (Ljava/time/ZoneId;)V
-	public final fun setTypescript (Z)V
-	public final fun setV8 (Z)V
-	public final fun setWasm (Z)V
 }
 
 public final class elide/runtime/gvm/cfg/JsRuntimeConfig$Companion {
+	public static final field DEFAULT_ENABLED Z
+	public static final field DEFAULT_ESM Z
+	public static final field DEFAULT_NPM Z
+	public static final field DEFAULT_NPM_MODULES Ljava/lang/String;
+	public static final field DEFAULT_SOURCEMAPS Z
+	public static final field DEFAULT_TYPESCRIPT Z
+	public static final field DEFAULT_V8_COMPAT Z
+	public static final field DEFAULT_WASM Z
 	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
 	public final fun getDEFAULT_JS_LANGUAGE_LEVEL ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
 	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
 
-public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig : io/micronaut/core/util/Toggleable {
+public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig : io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig$Companion;
-	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
-	public final fun getEnabled ()Z
-	public final fun setEnabled (Z)V
+	public static fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
 }
 
 public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
 }
 
-public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig : io/micronaut/core/util/Toggleable {
+public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig : io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion;
-	public fun <init> ()V
-	public fun <init> (ZLjava/lang/String;)V
-	public synthetic fun <init> (ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
-	public final fun getEnabled ()Z
-	public final fun getModules ()Ljava/lang/String;
-	public final fun setEnabled (Z)V
-	public final fun setModules (Ljava/lang/String;)V
+	public static fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
+	public fun getModules ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion {
@@ -582,11 +572,12 @@ public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSIm
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -697,24 +688,16 @@ public abstract class elide/runtime/gvm/internals/vfs/GuestIOException : java/io
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
-public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy {
+public abstract interface class elide/runtime/gvm/internals/vfs/GuestVFSPolicy {
 	public static final field Companion Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion;
 	public static final field DEFAULT_READ_ONLY Z
-	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public fun equals (Ljava/lang/Object;)Z
-	public static final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
-	public final fun getReadOnly ()Z
-	public fun hashCode ()I
-	public final fun setReadOnly (Z)V
-	public fun toString ()Ljava/lang/String;
+	public fun evaluateForPath (Lelide/runtime/gvm/internals/vfs/AccessRequest;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public static fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+	public fun getReadOnly ()Ljava/lang/Boolean;
 }
 
 public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
+	public static final field DEFAULT_READ_ONLY Z
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
 }
 

@@ -43,7 +43,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
     )
     req.headers.set("content-type", "application/grpc-web+proto")
     req.headers.set("grpc-web", "1")
-    val ctr = controller(GrpcWebConfig(enabled = false))
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = false
+    })
     val response = runBlocking {
       ctr.handleRequest(
         "some.cool.service",
@@ -68,7 +70,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
       "/_/rpc/some.cool.service/Method",
       ByteArray(0)
     )
-    val ctr = controller()
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     val response = runBlocking {
       ctr.handleRequest(
@@ -97,7 +101,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
     req.contentType(
       MediaType.TEXT_PLAIN
     )
-    val ctr = controller()
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     val response = runBlocking {
       ctr.handleRequest(
@@ -126,7 +132,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
     req.contentType(
       GrpcWebContentType.BINARY.mediaType()
     )
-    val ctr = controller()
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     val response = runBlocking {
       ctr.handleRequest(
@@ -153,7 +161,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
       ByteArray(0)
     )
     req.headers.set("content-type", "application/grpc-web+proto")
-    val ctr = controller()
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     val response = runBlocking {
       ctr.handleRequest(
@@ -198,7 +208,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
       ByteArray(0)
     )
     req.headers.set("content-type", "application/grpc-web+proto")
-    val ctr = controller()
+    val ctr = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     val response = runBlocking {
       ctr.handleRequest(
@@ -239,7 +251,9 @@ class GrpcWebControllerTest: GrpcWebBaseTest() {
 
   @Test fun testInvokeMissingService() {
     val format = GrpcWebContentType.BINARY
-    val controller = controller()
+    val controller = controller(object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+    })
 
     // submit the request, which should not throw
     val response = assertDoesNotThrow {

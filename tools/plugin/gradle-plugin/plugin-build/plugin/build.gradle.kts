@@ -187,7 +187,6 @@ dependencies {
     // KotlinX
     api(libs.kotlinx.coroutines.core)
     api(libs.kotlinx.coroutines.core.jvm)
-    api(libs.kotlinx.coroutines.jdk8)
     api(libs.kotlinx.coroutines.jdk9)
     api(libs.kotlinx.coroutines.guava)
     api(libs.kotlinx.collections.immutable)

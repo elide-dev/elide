@@ -94,18 +94,22 @@ BUILD_ARGS += --scan
 endif
 
 ifeq ($(RELEASE),yes)
-SIGNING = yes
 BUILD_MODE ?= release
 NATIVE_TARGET_NAME ?= nativeOptimizedCompile
 CLI_DISTPATH ?= ./packages/cli/build/dist/release
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
 CLI_RELEASE_TARGETS ?= cli-local cli-release-artifacts
 else
-SIGNING ?= no
 BUILD_MODE ?= dev
 CLI_DISTPATH ?= ./packages/cli/build/dist/debug
 NATIVE_TARGET_NAME ?= nativeCompile
 CLI_RELEASE_TARGETS ?= cli-local
+endif
+
+ifeq ($(SIGNING),yes)
+SIGNING_ON = true
+else
+SIGNING_ON = false
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x testNativeImage
@@ -188,7 +192,7 @@ publish:  ## Publish a new version of all Elide packages.
 		-PbuildSamples=false \
 		-PbuildDocs=true \
 		-PbuildDocsSite=false \
-		-PenableSigning=true \
+		-PenableSigning=$(SIGNING_ON) \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
 		-x test \

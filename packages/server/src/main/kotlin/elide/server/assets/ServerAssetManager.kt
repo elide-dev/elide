@@ -75,7 +75,7 @@ public class ServerAssetManager @Inject internal constructor(
     require(pointer != null) {
       "Failed to generate link for asset: asset module '$module' not found"
     }
-    val prefix = assetConfig.prefix.removeSuffix("/")
+    val prefix = (assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX).removeSuffix("/")
     val tag = pointer.tag
     val extension = when (overrideType ?: pointer.type) {
       AssetType.STYLESHEET -> ".css"
@@ -88,7 +88,6 @@ public class ServerAssetManager @Inject internal constructor(
 
   /** @inheritDoc */
   @Suppress("NestedBlockDepth", "ReturnCount")
-  @OptIn(ExperimentalCoroutinesApi::class)
   override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
     logging.debug(
       "Serving asset with module ID '${asset.module}'"
@@ -96,7 +95,7 @@ public class ServerAssetManager @Inject internal constructor(
 
     // before serving the asset, check if the request is conditional. if it has an ETag specified that matches, or a
     // last-modified time that matches, we can skip serving it and serve a 304.
-    if (assetConfig.etags && requestIsConditional(request)) {
+    if ((assetConfig.etags ?: AssetConfig.DEFAULT_ENABLE_ETAGS) && requestIsConditional(request)) {
       val etag = request.headers[HttpHeaders.IF_NONE_MATCH]
       if (etag != null && etag.isNotEmpty()) {
         // fast path: the current server assigned the ETag.

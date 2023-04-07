@@ -98,6 +98,7 @@ afterEvaluate {
   listOf(
     "buildLayers",
     "optimizedBuildLayers",
+    "optimizedJitJarAll",
   ).forEach {
     tasks.named(it).configure {
       doNotTrackState("too big for build cache")

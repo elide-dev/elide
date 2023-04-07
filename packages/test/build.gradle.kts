@@ -15,19 +15,16 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
-  wasm32()
   js(IR) {
     nodejs {}
     browser {}
   }
 
   macosArm64()
-  iosArm32()
   iosArm64()
   iosX64()
   watchosArm32()
   watchosArm64()
-  watchosX86()
   watchosX64()
   tvosArm64()
   tvosX64()
@@ -83,7 +80,6 @@ kotlin {
         api(kotlin("test-junit5"))
         api(libs.jakarta.inject)
         api(libs.kotlinx.coroutines.test)
-        api(libs.kotlinx.coroutines.jdk8)
         api(libs.kotlinx.coroutines.jdk9)
         api(libs.micronaut.context)
         api(libs.micronaut.runtime)
@@ -133,15 +129,12 @@ kotlin {
       }
     }
 
-    val wasm32Main by getting { dependsOn(nativeMain) }
     val mingwX64Main by getting { dependsOn(nativeMain) }
     val macosArm64Main by getting { dependsOn(nativeMain) }
-    val iosArm32Main by getting { dependsOn(nativeMain) }
     val iosArm64Main by getting { dependsOn(nativeMain) }
     val iosX64Main by getting { dependsOn(nativeMain) }
     val watchosArm32Main by getting { dependsOn(nativeMain) }
     val watchosArm64Main by getting { dependsOn(nativeMain) }
-    val watchosX86Main by getting { dependsOn(nativeMain) }
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }

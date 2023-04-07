@@ -266,21 +266,21 @@ internal class JsRuntime @Inject constructor (
 
     // `vm.ecma-version`: maps to `js.ecmascript-version` and controls the JS language level
     VMRuntimeProperty.ofConfigurable("vm.js.ecma", "js.ecmascript-version") {
-      config.language.symbol
+      config.language?.symbol ?: JsRuntimeConfig.DEFAULT_JS_LANGUAGE_LEVEL.symbol
     },
 
     // `vm.js.esm`: maps to `js.esm-eval-*` to enable/disable ESM import support.
     VMRuntimeProperty.ofBoolean("vm.js.esm", "js.esm-eval-returns-exports") {
-      config.esm.enabled
+      config.esm.isEnabled
     },
 
     // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable ESM import support.
     VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
-      config.npm.enabled
+      config.npm.isEnabled
     },
 
     // static: configure module replacements.
-    VMStaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.enabled) {
+    VMStaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.isEnabled) {
       coreModules.entries.joinToString(",") {
         "${it.key}:${it.value}"
       }
@@ -288,15 +288,15 @@ internal class JsRuntime @Inject constructor (
       ""  // disabled if NPM support is turned off
     }),
 
-    // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable ESM import support.
+    // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable NPM require support.
     VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
-      config.npm.modules
+      config.npm.modules ?: JsRuntimeConfig.DEFAULT_NPM_MODULES
     },
 
-    // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM32.
+    // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM.
     VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
       if (WASM_SUPPORTED) {
-        config.wasm
+        config.wasm ?: false
       } else {
         false
       }
@@ -304,7 +304,7 @@ internal class JsRuntime @Inject constructor (
 
     // `vm.js.v8-compat`: maps to `js.v8-compat` and controls compatibility shims for V8
     VMRuntimeProperty.ofBoolean("vm.js.v8-compat", "js.v8-compat") {
-      config.v8
+      config.v8 ?: false
     },
   )).stream()
 

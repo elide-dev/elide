@@ -14,6 +14,9 @@ import io.micronaut.context.annotation.ConfigurationProperties
  */
 @Suppress("MemberVisibilityCanBePrivate")
 @ConfigurationProperties("elide.gvm.enterprise")
-internal class GuestVMEEConfig(
-  var sandbox: GuestVMEESandboxConfig? = null,
-)
+internal interface GuestVMEEConfig {
+  /**
+   * @return Configuration for VM sandbox and resource limits.
+   */
+  val sandbox: GuestVMEESandboxConfig? get() = null
+}

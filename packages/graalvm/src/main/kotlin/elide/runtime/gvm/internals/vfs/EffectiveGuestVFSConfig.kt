@@ -63,7 +63,7 @@ public data class EffectiveGuestVFSConfig internal constructor (
       caseSensitive = caseSensitive,
       supportsSymbolicLinks = supportsSymbolicLinks,
       policy = policy,
-      readOnly = policy.readOnly,
+      readOnly = policy.readOnly ?: GuestVFSPolicy.DEFAULT_READ_ONLY,
       root = root,
       workingDirectory = workingDirectory,
     )

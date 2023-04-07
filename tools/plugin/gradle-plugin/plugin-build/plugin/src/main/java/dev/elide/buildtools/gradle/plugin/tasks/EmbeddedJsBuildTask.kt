@@ -138,6 +138,7 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     it.from(compileProdKotlinJs.outputs.files.files) { copySpec ->
                         copySpec.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     }
+                    @Suppress("deprecation")
                     it.from(compileProdKotlinJs.outputFileProperty) { copySpec ->
                         copySpec.rename { "ssr.js" }
                     }

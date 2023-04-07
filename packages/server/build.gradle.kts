@@ -104,7 +104,6 @@ dependencies {
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
-  implementation(libs.kotlinx.coroutines.jdk8)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.coroutines.guava)
@@ -134,5 +133,18 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
       includes.from("module.md")
 //      samples.from("samples/basic.kt")
     }
+  }
+}
+
+graalvmNative {
+  testSupport.set(false)
+
+  metadataRepository {
+    enabled.set(true)
+    version.set(GraalVMVersions.graalvmMetadata)
+  }
+
+  agent {
+    enabled.set(false)
   }
 }

@@ -28,12 +28,10 @@ kotlin {
     }
 
     macosArm64()
-    iosArm32()
     iosArm64()
     iosX64()
     watchosArm32()
     watchosArm64()
-    watchosX86()
     watchosX64()
     tvosArm64()
     tvosX64()
@@ -65,7 +63,6 @@ kotlin {
                 api(libs.micronaut.inject.java)
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.coroutines.core.jvm)
-                implementation(libs.kotlinx.coroutines.jdk8)
                 implementation(libs.kotlinx.coroutines.jdk9)
                 implementation(libs.kotlinx.coroutines.slf4j)
             }
@@ -81,6 +78,9 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
+                // KT-57235: fix for atomicfu-runtime error
+                api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+
                 implementation(kotlin("stdlib-js"))
                 implementation(libs.kotlinx.coroutines.core.js)
                 implementation(libs.kotlinx.serialization.json.js)
@@ -106,12 +106,10 @@ kotlin {
 
         val mingwX64Main by getting { dependsOn(nativeMain) }
         val macosArm64Main by getting { dependsOn(nativeMain) }
-        val iosArm32Main by getting { dependsOn(nativeMain) }
         val iosArm64Main by getting { dependsOn(nativeMain) }
         val iosX64Main by getting { dependsOn(nativeMain) }
         val watchosArm32Main by getting { dependsOn(nativeMain) }
         val watchosArm64Main by getting { dependsOn(nativeMain) }
-        val watchosX86Main by getting { dependsOn(nativeMain) }
         val watchosX64Main by getting { dependsOn(nativeMain) }
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }

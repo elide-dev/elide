@@ -1,23 +1,49 @@
 package elide.server.cfg
 
 import io.micronaut.context.annotation.ConfigurationProperties
+import io.micronaut.core.util.Toggleable
 
 /**
  * Configuration loaded at runtime which governs Elide's built-in asset serving tools.
- *
- * @param enabled Whether the asset system is enabled.
- * @param prefix URI prefix where static assets are served.
- * @param etags Whether to generate, and respond to, ETag headers for assets.
- * @param preferWeakEtags Whether to prefer weak ETags. Defaults to `false`.
- * @param rewriting Whether to enable or disable rewriting (globally -- all rewriting features).
- * @param hashLinks Whether to rewrite asset links based on their content hashes.
  */
 @ConfigurationProperties("elide.server.assets")
-public data class AssetConfig(
-  public var enabled: Boolean = true,
-  public var prefix: String = "/_/assets",
-  public var etags: Boolean = true,
-  public var preferWeakEtags: Boolean = false,
-  public var rewriting: Boolean = true,
-  public var hashLinks: Boolean = true,
-)
+public interface AssetConfig : Toggleable {
+  public companion object {
+    /** Default asset endpoint prefix. */
+    public const val DEFAULT_ASSET_PREFIX: String = "/_/assets"
+
+    /** Default enablement status for ETags support. */
+    public const val DEFAULT_ENABLE_ETAGS: Boolean = true
+
+    /** Whether to prefer weak ETag values when generating. */
+    public const val DEFAULT_PREFER_WEAK_ETAGS: Boolean = false
+
+    /** Whether to enable asset rewriting and optimization by default. */
+    public const val DEFAULT_REWRITING_ENABLED: Boolean = true
+  }
+
+  /**
+   * @return URI prefix where static assets are served.
+   */
+  public val prefix: String? get() = DEFAULT_ASSET_PREFIX
+
+  /**
+   * @return Whether to generate, and respond to, ETag headers for assets.
+   */
+  public val etags: Boolean? get() = DEFAULT_ENABLE_ETAGS
+
+  /**
+   * @return Whether to prefer weak ETags. Defaults to `false`.
+   */
+  public val preferWeakEtags: Boolean? get() = DEFAULT_PREFER_WEAK_ETAGS
+
+  /**
+   * @return Whether to enable or disable rewriting (globally -- all rewriting features).
+   */
+  public val rewriting: Boolean? get() = DEFAULT_REWRITING_ENABLED
+
+  /**
+   * @return Whether to rewrite asset links based on their content hashes.
+   */
+  public val hashLinks: Boolean? get() = DEFAULT_REWRITING_ENABLED
+}

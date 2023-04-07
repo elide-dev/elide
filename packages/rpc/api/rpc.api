@@ -35,11 +35,12 @@ public final class elide/rpc/server/ServiceHealthManager {
 	public final fun terminalShutdown ()V
 }
 
-public final synthetic class elide/rpc/server/web/$GrpcWebConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/rpc/server/web/$GrpcWebConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
 	public fun getBeanType ()Ljava/lang/Class;
+	public fun getInterceptedType ()Ljava/lang/Class;
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
@@ -124,30 +125,27 @@ public final class elide/rpc/server/web/GrpcWebCallResponse$UnaryResponse : elid
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/rpc/server/web/GrpcWebConfig {
+public abstract interface class elide/rpc/server/web/GrpcWebConfig : io/micronaut/core/util/Toggleable {
 	public static final field Companion Lelide/rpc/server/web/GrpcWebConfig$Companion;
+	public static final field DEFAULT_ENABLED Z
+	public static final field DEFAULT_TIMEOUT_SECONDS J
 	public static final field defaultEndpoint Ljava/lang/String;
-	public fun <init> ()V
-	public fun <init> (ZLjava/lang/String;Ljava/time/Duration;)V
-	public synthetic fun <init> (ZLjava/lang/String;Ljava/time/Duration;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/time/Duration;
-	public final fun copy (ZLjava/lang/String;Ljava/time/Duration;)Lelide/rpc/server/web/GrpcWebConfig;
-	public static synthetic fun copy$default (Lelide/rpc/server/web/GrpcWebConfig;ZLjava/lang/String;Ljava/time/Duration;ILjava/lang/Object;)Lelide/rpc/server/web/GrpcWebConfig;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getEnabled ()Z
-	public final fun getEndpoint ()Ljava/lang/String;
-	public final fun getTimeout ()Ljava/time/Duration;
-	public fun hashCode ()I
-	public final fun setEnabled (Z)V
-	public final fun setEndpoint (Ljava/lang/String;)V
-	public final fun setTimeout (Ljava/time/Duration;)V
-	public fun toString ()Ljava/lang/String;
+	public abstract fun getEndpoint ()Ljava/lang/String;
+	public abstract fun getTimeout ()Ljava/time/Duration;
+	public abstract fun isEnabled ()Z
 }
 
 public final class elide/rpc/server/web/GrpcWebConfig$Companion {
+	public static final field DEFAULT_ENABLED Z
+	public static final field DEFAULT_TIMEOUT_SECONDS J
+	public static final field defaultEndpoint Ljava/lang/String;
 	public final fun getDEFAULTS ()Lelide/rpc/server/web/GrpcWebConfig;
+}
+
+public final class elide/rpc/server/web/GrpcWebConfig$DefaultImpls {
+	public static fun getEndpoint (Lelide/rpc/server/web/GrpcWebConfig;)Ljava/lang/String;
+	public static fun getTimeout (Lelide/rpc/server/web/GrpcWebConfig;)Ljava/time/Duration;
+	public static fun isEnabled (Lelide/rpc/server/web/GrpcWebConfig;)Z
 }
 
 public final class elide/rpc/server/web/GrpcWebContentType : java/lang/Enum {

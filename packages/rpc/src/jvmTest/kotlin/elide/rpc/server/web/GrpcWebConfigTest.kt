@@ -8,7 +8,7 @@ class GrpcWebConfigTest {
   @Test fun testGrpcWebConfigDefaults() {
     val default = GrpcWebConfig.DEFAULTS
     assertFalse(
-      default.enabled,
+      default.isEnabled,
       "gRPC-web integration should not be enabled unless explicitly enabled"
     )
     assertEquals(
@@ -33,7 +33,7 @@ class GrpcWebConfigTest {
   @Test fun testGrpcWebConfigMutability() {
     val default = GrpcWebConfig.DEFAULTS
     assertFalse(
-      default.enabled,
+      default.isEnabled,
       "gRPC-web integration should not be enabled unless explicitly enabled"
     )
     assertEquals(
@@ -41,22 +41,24 @@ class GrpcWebConfigTest {
       "/_/rpc",
       "default endpoint should be expected value"
     )
-    default.enabled = true
-    default.endpoint = "/_/some-other-endpoint"
-    default.timeout = Duration.ofSeconds(1)
-    @Suppress("KotlinConstantConditions")
+    val enabled = object : GrpcWebConfig {
+      override fun isEnabled(): Boolean = true
+      override val endpoint: String get() = "/_/some-other-endpoint"
+      override val timeout: Duration get() = Duration.ofSeconds(1)
+    }
+
     assertTrue(
-      default.enabled,
+      enabled.isEnabled,
       "gRPC-web integration enablement should be mutable"
     )
     assertEquals(
-      default.endpoint,
+      enabled.endpoint,
       "/_/some-other-endpoint",
       "default RPC endpoint should be mutable"
     )
     assertEquals(
       1,
-      default.timeout.seconds,
+      enabled.timeout.seconds,
       "should be able to override default request timeout"
     )
   }

@@ -5,8 +5,7 @@ import elide.core.encoding.Encoding
 import kotlin.jvm.JvmInline
 
 /** Carrier value-class for hex-encoded data. */
-@JvmInline
-public value class HexData constructor (private val encoded: String) : EncodedData {
+@JvmInline public value class HexData constructor (private val encoded: String) : EncodedData {
   /** @inheritDoc */
   override val encoding: Encoding get() = Encoding.HEX
 

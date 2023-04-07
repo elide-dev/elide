@@ -44,7 +44,7 @@ public class ServerAssetReader @Inject internal constructor(
     }
 
     // if we have a digest for this asset, we should affix it as the `ETag` for the response.
-    if (assetConfig.etags) {
+    if (assetConfig.etags ?: AssetConfig.DEFAULT_ENABLE_ETAGS) {
       headerMap[HttpHeaders.ETAG] = assetIndex.buildETagForAsset(entry)
     }
     return headerMap
@@ -147,7 +147,7 @@ public class ServerAssetReader @Inject internal constructor(
       unextensioned = unextensioned.dropLast(unextensioned.length - unextensioned.lastIndexOf("."))
     }
     return assetIndex.resolveByTag(
-      unextensioned.removePrefix(assetConfig.prefix).removePrefix("/")
+      unextensioned.removePrefix((assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX)).removePrefix("/")
     )
   }
 }

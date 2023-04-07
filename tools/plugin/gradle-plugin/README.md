@@ -8,10 +8,6 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_buildtools&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=elide-dev_buildtools)
 
-_**Elide is under construction.**_
-
-<hr />
-
 This plugin for Gradle enables [Elide](https://github.com/elide-dev)-based apps with additional build tooling and tasks.
 In particular, this plugin is responsible for configuring and running [`esbuild`](https://esbuild.github.io) and
 [`webpack`](https://webpack.js.org) on behalf of the developer.

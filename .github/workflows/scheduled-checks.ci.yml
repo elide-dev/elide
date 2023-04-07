@@ -8,7 +8,7 @@ on:
       - v3
       - feat/js-runtime-v3
   schedule:
-    - cron: '0 0-20/2 * * *'
+    - cron: '0 0-23/2 * * *'
 
 env:
   GRADLE_CACHE_LOCAL: false

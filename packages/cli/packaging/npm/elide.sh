@@ -1,6 +1,6 @@
 #!/bin/bash
 
-latest_known_version="1.0-v3-alpha3-b5";
+latest_known_version="1.0-v3-alpha3-b6";
 
 # detect elide command, if it is not here, echo a message
 # and exit with a non-zero exit code

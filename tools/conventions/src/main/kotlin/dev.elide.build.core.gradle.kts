@@ -50,12 +50,12 @@ publishing {
     pom {
       name.set("Elide")
       description.set("Polyglot application framework")
-      url.set("https://github.com/elide-dev/v3")
+      url.set("https://github.com/elide-dev/elide")
 
       licenses {
         license {
           name.set("MIT License")
-          url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
         }
       }
       developers {

@@ -607,8 +607,9 @@ plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
 plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
 ## Elide Internal
-elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
-elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }
+elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
+elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
+elide_test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
 elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }

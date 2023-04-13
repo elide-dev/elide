@@ -39,11 +39,13 @@ java {
 }
 
 val props = Properties()
-val overlay = file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
-    "gradle-ci.properties"
-} else {
-    "local.properties"
-})
+val overlay = file(
+    if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
+        "gradle-ci.properties"
+    } else {
+        "local.properties"
+    }
+)
 
 if (overlay.exists()) props.load(overlay.inputStream())
 val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
@@ -162,8 +164,11 @@ tasks.register("preMerge") {
 
     dependsOn("build", "test", "check")
     dependsOn("koverReport", "koverVerify", "koverMergedXmlReport")
-    dependsOn(":example:fullstack:node:check")
-    dependsOn(":example:fullstack:server:check")
+
+    if ((properties["buildExamples"] as? String) == "true") {
+        dependsOn(":example:fullstack:node:check")
+        dependsOn(":example:fullstack:server:check")
+    }
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:check"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:validatePlugins"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverReport"))

@@ -136,7 +136,7 @@ publishing {
 
         pom {
             name.set("Elide Base")
-            url.set("https://github.com/elide-dev/elide")
+            url.set("https://elide.dev")
             description.set(
                 "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms."
             )
@@ -155,7 +155,7 @@ publishing {
                 }
             }
             scm {
-                url.set("https://github.com/elide-dev/v3")
+                url.set("https://github.com/elide-dev/elide")
             }
         }
     }

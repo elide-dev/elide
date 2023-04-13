@@ -20,6 +20,10 @@ version = rootProject.version as String
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as String
 
+java {
+  withSourcesJar()
+}
+
 sourceSets {
   /**
    * Variant: Protocol Buffers
@@ -108,6 +112,23 @@ publishing {
       pom {
         name.set("Elide Protocol: Protobuf")
         description.set("Elide protocol implementation for Protocol Buffers")
+        url.set("https://elide.dev")
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/elide")
+        }
       }
     }
   }

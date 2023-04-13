@@ -29,6 +29,10 @@ sourceSets {
 // Configurations: Testing
 val testBase: Configuration by configurations.creating {}
 
+java {
+  withSourcesJar()
+}
+
 tasks.withType<JavaCompile>().configureEach {
   sourceCompatibility = javaLanguageTarget
   targetCompatibility = javaLanguageTarget
@@ -67,6 +71,23 @@ publishing {
       pom {
         name.set("Elide Protocol: API")
         description.set("API headers and services for the Elide Protocol")
+        url.set("https://elide.dev")
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/elide")
+        }
       }
     }
   }

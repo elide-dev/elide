@@ -139,7 +139,7 @@ publishing {
 
         pom {
             name.set("Elide Core")
-            url.set("https://github.com/elide-dev/elide")
+            url.set("https://elide.dev")
             description.set(
                 "Pure Kotlin utilities provided across all supported platforms for the Elide Framework."
             )
@@ -158,7 +158,7 @@ publishing {
                 }
             }
             scm {
-                url.set("https://github.com/elide-dev/v3")
+                url.set("https://github.com/elide-dev/elide")
             }
         }
     }

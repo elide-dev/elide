@@ -5,7 +5,6 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import org.jetbrains.kotlin.konan.target.HostManager
 import Java9Modularity.configureJava9ModuleInfo
 
 plugins {

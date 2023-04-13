@@ -35,38 +35,14 @@ publishing {
       name = "elide"
       url = URI.create(project.properties["elide.publish.repo.maven"] as String)
 
-      if (project.hasProperty("elide.publish.repo.maven.auth")) {
+      if (project.hasProperty("elide.publish.repo.maven.auth") &&
+          project.properties["elide.publish.repo.maven.auth"] == "true") {
         credentials {
           username = (project.properties["elide.publish.repo.maven.username"] as? String
             ?: System.getenv("PUBLISH_USER"))?.ifBlank { null }
           password = (project.properties["elide.publish.repo.maven.password"] as? String
             ?: System.getenv("PUBLISH_TOKEN"))?.ifBlank { null }
         }
-      }
-    }
-  }
-
-  publications.withType<MavenPublication> {
-    pom {
-      name.set("Elide")
-      description.set("Polyglot application framework")
-      url.set("https://github.com/elide-dev/elide")
-
-      licenses {
-        license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
-        }
-      }
-      developers {
-        developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
-        }
-      }
-      scm {
-        url.set("https://github.com/elide-dev/v3")
       }
     }
   }

@@ -7,6 +7,7 @@ VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
 SITE ?= no
+REPOSITORY ?= gcs://elide-snapshots/repository/v3
 
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
@@ -52,7 +53,7 @@ JQ ?= $(shell which jq)
 
 POSIX_FLAGS ?=
 GRADLE_OPTS ?=
-GRADLE_ARGS ?= -Pversions.java.language=$(JVM)
+GRADLE_ARGS ?= -Pversions.java.language=$(JVM) -Pelide.publish.repo.maven=$(REPOSITORY)
 BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
 DEP_HASH_ALGO ?= sha256,pgp

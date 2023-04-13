@@ -93,7 +93,7 @@ apply(plugin = "kotlinx-knit")
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
   // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
-  rootProject.the<NodeJsRootExtension>().download = false
+  rootProject.the<NodeJsRootExtension>().download = true
   rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {

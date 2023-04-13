@@ -39,6 +39,17 @@ kotlin {
     tvosArm64()
     tvosX64()
     mingwX64()
+    wasm {
+        browser {
+            testTask {
+                useKarma {
+                    this.webpackConfig.experiments.add("topLevelAwait")
+                    useChromeHeadless()
+                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
+                }
+            }
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -98,6 +109,12 @@ kotlin {
         val watchosX64Main by getting { dependsOn(nativeMain) }
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }
+        val wasmMain by getting {
+            dependsOn(nativeMain)
+            dependencies {
+                implementation(kotlin("stdlib-wasm"))
+            }
+        }
     }
 }
 

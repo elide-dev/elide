@@ -102,7 +102,7 @@ publishing {
   publications {
     /** Publication: Protocol Buffers */
     create<MavenPublication>("maven") {
-      artifactId = "proto-protobuf"
+      artifactId = artifactId.replace("proto-protobuf", "elide-proto-protobuf")
       from(components["kotlin"])
 
       pom {

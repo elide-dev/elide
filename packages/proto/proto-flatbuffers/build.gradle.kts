@@ -98,7 +98,7 @@ publishing {
   publications {
     /** Publication: Flatbuffers */
     create<MavenPublication>("maven") {
-      artifactId = "proto-flatbuffers"
+      artifactId = artifactId.replace("proto-flatbuffers", "elide-proto-flatbuffers")
       from(components["kotlin"])
 
       pom {

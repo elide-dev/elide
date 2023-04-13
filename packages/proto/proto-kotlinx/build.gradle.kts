@@ -80,7 +80,7 @@ publishing {
   publications {
     /** Publication: KotlinX */
     create<MavenPublication>("maven") {
-      artifactId = "proto-kotlinx"
+      artifactId = artifactId.replace("proto-kotlinx", "elide-proto-kotlinx")
       from(components["kotlin"])
 
       pom {

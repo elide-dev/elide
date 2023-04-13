@@ -62,6 +62,7 @@ publishing {
     /** Publication: Core */
     create<MavenPublication>("maven") {
       from(components["kotlin"])
+      artifactId = artifactId.replace("proto-core", "elide-proto-core")
 
       pom {
         name.set("Elide Protocol: API")

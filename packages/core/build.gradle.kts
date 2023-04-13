@@ -3,6 +3,7 @@
     "unused",
     "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
+    "OPT_IN_USAGE",
 )
 
 import Java9Modularity.configureJava9ModuleInfo
@@ -10,6 +11,7 @@ import Java9Modularity.configureJava9ModuleInfo
 plugins {
     kotlin("kapt")
     id("dev.elide.build")
+    id("dev.elide.build.publishable")
     id("dev.elide.build.multiplatform")
 }
 
@@ -97,17 +99,48 @@ kotlin {
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }
     }
-
-//    val hostOs = System.getProperty("os.name")
-//    val isMingwX64 = hostOs.startsWith("Windows")
-//    val nativeTarget = when {
-//        hostOs == "Mac OS X" -> macosArm64("native")
-//        hostOs == "Linux" -> linuxX64("native")
-//        isMingwX64 -> mingwX64("native")
-//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-//    }
 }
 
 configureJava9ModuleInfo(
     multiRelease = true,
 )
+
+val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+}
+
+publishing {
+    publications.withType<MavenPublication> {
+        artifact(javadocJar)
+        artifactId = artifactId.replace("core", "elide-core")
+
+        pom {
+            name.set("Elide Core")
+            url.set("https://github.com/elide-dev/elide")
+            description.set(
+                "Pure Kotlin utilities provided across all supported platforms for the Elide Framework."
+            )
+
+            licenses {
+                license {
+                    name.set("MIT License")
+                    url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+                }
+            }
+            developers {
+                developer {
+                    id.set("sgammon")
+                    name.set("Sam Gammon")
+                    email.set("samuel.gammon@gmail.com")
+                }
+            }
+            scm {
+                url.set("https://github.com/elide-dev/v3")
+            }
+        }
+    }
+}

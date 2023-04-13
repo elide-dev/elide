@@ -144,7 +144,9 @@ jobs:
         if: success()
         with:
           arguments: |
-            example:build
+            example:mixed:build
+            example:fullstack:server:build
+            example:static:server:build
             -PbuildExamples=true
             -Pelide.ci=true
             --scan

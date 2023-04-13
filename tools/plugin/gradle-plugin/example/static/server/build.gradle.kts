@@ -5,6 +5,7 @@
 )
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
+import io.gitlab.arturbosch.detekt.Detekt
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
 
@@ -25,7 +26,6 @@ dependencies {
 //    ksp(libs.elide.tools.processor)
 //    ksp(libs.autoService.ksp)
 
-    implementation(libs.elide.base)
     implementation(libs.elide.server)
     implementation(libs.elide.proto.core)
     implementation(libs.elide.proto.protobuf)
@@ -36,7 +36,7 @@ dependencies {
 }
 
 micronaut {
-    version.set("3.8.1")
+    version.set("3.8.8")
 }
 
 elide {
@@ -76,4 +76,33 @@ elide {
 
 tasks.named("nativeCompile").configure {
     onlyIf { false }
+}
+
+tasks.named("buildLayers").configure {
+    onlyIf { false }
+}
+
+tasks.named("optimizedBuildLayers").configure {
+    onlyIf { false }
+}
+
+tasks.named<org.gradle.api.tasks.bundling.Tar>("distTar").configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<org.gradle.api.tasks.bundling.Tar>("optimizedDistTar").configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<org.gradle.api.tasks.bundling.Zip>("distZip").configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<org.gradle.api.tasks.bundling.Zip>("optimizedDistZip").configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType<Detekt>().configureEach {
+    // Target version of the generated JVM bytecode. It is used for type resolution.
+    jvmTarget = "11"
 }

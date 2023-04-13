@@ -145,6 +145,7 @@ jobs:
         with:
           arguments: |
             example:build
+            -PbuildExamples=true
             -Pelide.ci=true
             --scan
             --continue

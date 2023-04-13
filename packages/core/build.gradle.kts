@@ -122,17 +122,19 @@ configureJava9ModuleInfo(
     multiRelease = true,
 )
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+if (project.properties["buildDocs"] == "true") {
+    val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 
-val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
+    val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+        dependsOn(dokkaHtml)
+        archiveClassifier.set("javadoc")
+        from(dokkaHtml.outputDirectory)
+    }
 }
 
 publishing {
     publications.withType<MavenPublication> {
-        artifact(javadocJar)
+        artifact("javadocJar")
         artifactId = artifactId.replace("core", "elide-core")
 
         pom {

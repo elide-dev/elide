@@ -8,6 +8,7 @@ pluginManagement {
 
 plugins {
     id("com.gradle.enterprise") version("3.11.4")
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
 }
 
 dependencyResolutionManagement {

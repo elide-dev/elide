@@ -135,10 +135,19 @@ val baseJavaMin: Int = (
     }
 ).toInt()
 
+val skipVersions = sortedSetOf(
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+)
+
 val javaMin: Int = (
     if (System.getProperty("os.arch") == "aarch64") {
         // artificially start at java 17 for aarch64, which is the first version that supports this architecture.
-        17
+        baseJavaMin
     } else {
         baseJavaMin
     }
@@ -377,7 +386,7 @@ tasks.named("check").configure {
 }
 
 // Normal test task runs on compile JDK.
-(javaMin..javaMax).forEach { major ->
+(javaMin..javaMax).filter { !skipVersions.contains(it) }.forEach { major ->
     val jdkTest = tasks.register("testJdk$major", Test::class.java) {
         description = "Runs the test suite on JDK $major"
         group = LifecycleBasePlugin.VERIFICATION_GROUP

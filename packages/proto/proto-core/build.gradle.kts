@@ -31,6 +31,7 @@ val testBase: Configuration by configurations.creating {}
 
 java {
   withSourcesJar()
+  withJavadocJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {

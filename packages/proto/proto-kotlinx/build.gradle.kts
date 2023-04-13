@@ -21,6 +21,7 @@ val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 java {
   withSourcesJar()
+  withJavadocJar()
 }
 
 sourceSets {

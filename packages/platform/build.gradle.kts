@@ -13,19 +13,6 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-// Elide modules.
-val libraries = listOf(
-  "base",
-  "core",
-  "server",
-  "ssg",
-  "ssr",
-  "frontend",
-  "proto",
-  "test",
-  "rpc",
-  "graalvm",
-)
 
 // Peer modules.
 val peers = mapOf(
@@ -79,7 +66,7 @@ publishing {
     create<MavenPublication>("maven") {
       from(components["javaPlatform"])
       groupId = "dev.elide"
-      artifactId = "platform"
+      artifactId = "elide-platform"
       version = project.version as String
     }
   }

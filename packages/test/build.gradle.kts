@@ -166,7 +166,8 @@ configureJava9ModuleInfo(
   multiRelease = true,
 )
 
-if (project.properties["buildDocs"] == "true") {
+val buildDocs = project.properties["buildDocs"] == "true"
+val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
   val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 
   val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
@@ -174,11 +175,14 @@ if (project.properties["buildDocs"] == "true") {
     archiveClassifier.set("javadoc")
     from(dokkaHtml.outputDirectory)
   }
-}
+  javadocJar
+} else null
 
 publishing {
   publications.withType<MavenPublication> {
-    artifact("javadocJar")
+    if (buildDocs) {
+      artifact(javadocJar)
+    }
     artifactId = artifactId.replace("test", "elide-test")
 
     pom {

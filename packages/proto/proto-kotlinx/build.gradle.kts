@@ -19,11 +19,6 @@ version = rootProject.version as String
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as String
 
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
-
 sourceSets {
   /**
    * Variant: KotlinX
@@ -79,7 +74,25 @@ tasks {
     archives(jar)
     add("modelInternal", jar)
   }
+
+  val sourcesJar by registering(Jar::class) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+  }
 }
+
+val buildDocs = project.properties["buildDocs"] == "true"
+val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
+  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+  }
+  javadocJar
+} else null
 
 publishing {
   publications {
@@ -87,6 +100,10 @@ publishing {
     create<MavenPublication>("maven") {
       artifactId = artifactId.replace("proto-kotlinx", "elide-proto-kotlinx")
       from(components["kotlin"])
+      artifact(tasks["sourcesJar"])
+      if (buildDocs) {
+        artifact(javadocJar)
+      }
 
       pom {
         name.set("Elide Protocol: KotlinX")

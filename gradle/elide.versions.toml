@@ -20,6 +20,7 @@ grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 arrow = "1.1.3"
 testcontainers = "1.17.6"
+errorprone = "2.11.0"
 jline = "3.21.0"
 netty = "4.1.86.Final"
 netty_tcnative = "2.0.56.Final"
@@ -268,6 +269,7 @@ junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+errorprone_annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
 flatbuffers_parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
 flatbuffers_java_core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers_java" }
 flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }

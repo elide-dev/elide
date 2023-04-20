@@ -75,3 +75,35 @@ publishing {
 sonarqube {
   isSkipProject = true
 }
+
+val buildDocs = project.properties["buildDocs"] == "true"
+publishing {
+  publications.withType<MavenPublication> {
+    artifactId = "elide-platform"
+
+    pom {
+      name.set("Elide Platform")
+      url.set("https://elide.dev")
+      description.set(
+        "Elide Platform and catalog for Gradle."
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/elide")
+      }
+    }
+  }
+}

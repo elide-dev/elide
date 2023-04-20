@@ -5,7 +5,6 @@
 pluginManagement {
   repositories {
     gradlePluginPortal()
-    mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     google()
   }
@@ -29,9 +28,8 @@ dependencyResolutionManagement {
     RepositoriesMode.PREFER_PROJECT
   )
   repositories {
-    mavenCentral()
+    maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-    maven("https://plugins.gradle.org/m2/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")

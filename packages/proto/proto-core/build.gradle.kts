@@ -55,17 +55,58 @@ tasks {
     archives(jar)
     add("testBase", testJar)
   }
+
+  val sourcesJar by registering(Jar::class) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+  }
 }
+
+val buildDocs = project.properties["buildDocs"] == "true"
+val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
+  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+  }
+  javadocJar
+} else null
 
 publishing {
   publications {
     /** Publication: Core */
     create<MavenPublication>("maven") {
       from(components["kotlin"])
+      artifact(tasks["sourcesJar"])
+      if (buildDocs) {
+        artifact(javadocJar)
+      }
+
+      artifactId = artifactId.replace("proto-core", "elide-proto-core")
 
       pom {
         name.set("Elide Protocol: API")
         description.set("API headers and services for the Elide Protocol")
+        url.set("https://elide.dev")
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/elide")
+        }
       }
     }
   }

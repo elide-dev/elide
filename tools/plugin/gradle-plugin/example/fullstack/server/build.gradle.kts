@@ -6,6 +6,7 @@
 )
 
 import dev.elide.buildtools.gradle.plugin.BuildMode
+import io.gitlab.arturbosch.detekt.Detekt
 import tools.elide.assets.EmbeddedScriptLanguage
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
@@ -63,4 +64,9 @@ elide {
             }
         }
     }
+}
+
+tasks.withType<Detekt>().configureEach {
+    // Target version of the generated JVM bytecode. It is used for type resolution.
+    jvmTarget = "11"
 }

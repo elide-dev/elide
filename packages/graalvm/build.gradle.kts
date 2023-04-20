@@ -5,6 +5,7 @@
   "UNUSED_VARIABLE",
 )
 
+import Java9Modularity.configureJava9ModuleInfo
 import kotlinx.benchmark.gradle.*
 
 plugins {
@@ -145,4 +146,40 @@ dependencies {
   testImplementation(libs.micronaut.test.junit5)
   testCompileOnly(libs.graalvm.sdk)
   testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+configureJava9ModuleInfo(
+  multiRelease = true,
+)
+
+val buildDocs = project.properties["buildDocs"] == "true"
+publishing {
+  publications.withType<MavenPublication> {
+    artifactId = artifactId.replace("graalvm", "elide-graalvm")
+
+    pom {
+      name.set("Elide for GraalVM")
+      url.set("https://elide.dev")
+      description.set(
+        "Integration package with GraalVM and GraalJS."
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/elide")
+      }
+    }
+  }
 }

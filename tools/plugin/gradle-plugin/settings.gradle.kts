@@ -8,6 +8,7 @@ pluginManagement {
 
 plugins {
     id("com.gradle.enterprise") version("3.11.4")
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
 }
 
 dependencyResolutionManagement {
@@ -20,14 +21,17 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide-gradle-plugin"
 
-include(
-    ":example:fullstack:browser",
-    ":example:fullstack:node",
-    ":example:fullstack:server",
-    ":example:static:frontend",
-    ":example:static:server",
-    ":example:mixed",
-)
+val buildExamples: String? by settings
+if (buildExamples == "true") {
+    include(
+        ":example:fullstack:browser",
+        ":example:fullstack:node",
+        ":example:fullstack:server",
+        ":example:static:frontend",
+        ":example:static:server",
+        ":example:mixed",
+    )
+}
 includeBuild("plugin-build")
 
 gradleEnterprise {

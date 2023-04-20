@@ -7,6 +7,8 @@ VERSION ?= $(shell cat .version)
 STRICT ?= yes
 RELOCK ?= no
 SITE ?= no
+DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
+REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
@@ -57,6 +59,12 @@ BUILD_ARGS ?=
 NATIVE_TASKS ?= nativeCompile
 DEP_HASH_ALGO ?= sha256,pgp
 ARGS ?=
+
+ifneq ($(REPOSITORY),$(DEFAULT_REPOSITORY))
+PUBLISH_PROPS ?= -Pelide.publish.repo.maven.auth=true -Pelide.publish.repo.maven=$(REPOSITORY)
+else
+PUBLISH_PROPS ?=
+endif
 
 LOCAL_CLI_INSTALL_DIR ?= ~/bin
 
@@ -195,6 +203,7 @@ publish:  ## Publish a new version of all Elide packages.
 		-PenableSigning=$(SIGNING_ON) \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
+		$(PUBLISH_PROPS) \
 		-x test \
 		-x jvmTest \
 		-x jsTest;

@@ -5,7 +5,6 @@
 pluginManagement {
   repositories {
     gradlePluginPortal()
-    mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     google()
   }
@@ -13,6 +12,7 @@ pluginManagement {
 
 plugins {
   id("com.gradle.enterprise") version("3.11.4")
+  id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -28,9 +28,8 @@ dependencyResolutionManagement {
     RepositoriesMode.PREFER_PROJECT
   )
   repositories {
-    mavenCentral()
+    maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
-    maven("https://plugins.gradle.org/m2/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
     maven("https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
@@ -161,7 +160,7 @@ gradleEnterprise {
 val cacheUsername: String? by settings
 val cachePassword: String? by settings
 val cachePush: String? by settings
-val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: false
+val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: true
 val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 
 buildCache {
@@ -176,7 +175,7 @@ buildCache {
       isUseExpectContinue = true
       url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://global.less.build/cache/generic/")
       credentials {
-        username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: error("Failed to resolve cache username")
+        username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: "apikey"
         password = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD") ?: error("Failed to resolve cache password")
       }
     }

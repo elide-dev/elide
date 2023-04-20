@@ -105,7 +105,7 @@ jobs:
             --dependency-verification=lenient
 
       ## Job: Reports
-      - name: Build reports
+      - name: Pre-merge checks
         uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
         if: ${{ matrix.os == 'ubuntu' }}
         env:
@@ -118,9 +118,23 @@ jobs:
             preMerge
             :plugin-build:plugin:test
             :plugin-build:plugin:check
-            :plugin-build:plugin:sonar
             -Pelide.ci=true
             --scan
+            --continue
+            --dependency-verification=lenient
+
+      ## Job: Sonar Scan
+      - name: Sonar
+        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
+        if: ${{ matrix.os == 'ubuntu' }}
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: |
+            :plugin-build:plugin:sonar
+            -Pelide.ci=true
             --continue
             --dependency-verification=lenient
 
@@ -130,7 +144,10 @@ jobs:
         if: success()
         with:
           arguments: |
-            example:build
+            example:mixed:build
+            example:fullstack:server:build
+            example:static:server:build
+            -PbuildExamples=true
             -Pelide.ci=true
             --scan
             --continue

@@ -21,9 +21,7 @@ val kotlinVersion by project.properties
 val enableAtomicfu = project.properties["elide.atomicFu"] == "true"
 
 repositories {
-  maven("https://maven-central.storage-download.googleapis.com/maven2/")
-  mavenCentral()
-  google()
+  maven("https://maven.pkg.st/")
   gradlePluginPortal()
 }
 

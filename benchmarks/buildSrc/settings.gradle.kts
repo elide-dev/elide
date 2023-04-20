@@ -1,7 +1,7 @@
 dependencyResolutionManagement {
   repositories {
-    mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    maven("https://maven.pkg.st/")
+    gradlePluginPortal()
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   versionCatalogs {

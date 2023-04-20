@@ -1,5 +1,5 @@
 [versions]
-elide = "1.0-v3-alpha3-b6"
+elide = "1.0-v3-alpha3-b7"
 elide_plugin = "1.0.0-beta21"
 kotlin_sdk = "1.8.20"
 kotlin_language = "1.8"
@@ -20,11 +20,12 @@ grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 arrow = "1.1.3"
 testcontainers = "1.17.6"
+errorprone = "2.11.0"
 jline = "3.21.0"
 netty = "4.1.86.Final"
 netty_tcnative = "2.0.56.Final"
 dekorate = "3.1.1"
-micronaut_lib = "3.8.2"
+micronaut_lib = "3.8.8"
 micronaut_aot = "1.1.1"
 micronaut_aws = "3.9.3"
 micronaut_data = "3.8.1"
@@ -32,7 +33,7 @@ micronaut_grpc = "3.5.0"
 micronaut_graphql = "3.2.0"
 micronaut_gcp = "4.6.0"
 micronaut_test = "3.8.0"
-micronaut_plugin = "3.7.0"
+micronaut_plugin = "3.7.8"
 micronaut_redis = "5.3.2"
 micronaut_email = "1.4.0"
 micronaut_cache = "3.5.0"
@@ -62,14 +63,14 @@ kotlinx_benchmark = "0.4.7"
 detekt = "1.22.0-RC3"
 dokka = "1.8.10"
 mermaidDokka = "0.4.3"
-ktlint = "0.47.1"
+ktlint = "0.48.2"
 lettuce = "6.2.2.RELEASE"
-ktlintGradle = "10.3.0"
+ktlintGradle = "11.3.1"
 qodanaGradle = "0.1.13"
 pluginPublish = "0.21.0"
 pluginProtobuf = "0.9.2"
-versionCheck = "0.44.0"
-sonar = "3.5.0.2730"
+versionCheck = "0.46.0"
+sonar = "4.0.0.2929"
 truth = "1.1.3"
 soy = "2022-03-07" # next: "2022-07-20"
 closure = "v20221004"
@@ -268,6 +269,7 @@ junit_jupiter_params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 protobuf_java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf_util = { group = "com.google.protobuf", name = "protobuf-java-util", version.ref = "protobuf" }
 protobuf_kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+errorprone_annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
 flatbuffers_parent = { group = "com.google.flatbuffers", name = "flatbuffers-parent", version.ref = "flatbuffers" }
 flatbuffers_java_core = { group = "com.google.flatbuffers", name = "flatbuffers-java", version.ref = "flatbuffers_java" }
 flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-java-grpc", version.ref = "flatbuffers" }
@@ -607,8 +609,9 @@ plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
 plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
 ## Elide Internal
-elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
-elide_core = { group = "dev.elide", name = "core", version.ref = "elide" }
+elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
+elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
+elide_test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
 elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }

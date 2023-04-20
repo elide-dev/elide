@@ -16,16 +16,22 @@ version = rootProject.version as String
 
 // Elide modules.
 val libraries = listOf(
-  "base",
-  "core",
-  "server",
-  "ssg",
-  "ssr",
-  "frontend",
-  "proto",
-  "test",
-  "rpc",
-  "graalvm",
+  "elide-base",
+  "elide-core",
+  "elide-test",
+  "elide-proto-core",
+  "elide-proto-flatbuffers",
+  "elide-proto-protobuf",
+  "elide-proto-kotlinx",
+  "elide-ssr",
+  "elide-graalvm",
+  "elide-graalvm-js",
+  "elide-graalvm-react",
+  "elide-model",
+  "elide-server",
+  "elide-frontend",
+  "elide-rpc",
+  "elide-ssg",
 )
 
 // Peer modules.

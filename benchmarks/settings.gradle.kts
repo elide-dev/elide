@@ -5,7 +5,7 @@
 pluginManagement {
   repositories {
     gradlePluginPortal()
-    mavenCentral()
+    maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
 }
@@ -19,8 +19,7 @@ dependencyResolutionManagement {
     RepositoriesMode.PREFER_PROJECT
   )
   repositories {
-    mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
   }

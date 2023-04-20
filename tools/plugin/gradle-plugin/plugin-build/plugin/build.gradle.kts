@@ -4,6 +4,7 @@
     "UNUSED_VARIABLE",
 )
 
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -26,7 +27,7 @@ val defaultKotlinVersion = "1.8"
 
 val defaultElideGroup = "dev.elide"
 val elideToolsGroup = "dev.elide.tools"
-val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
+val javaLanguageVersion = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 
 gradlePlugin {
@@ -106,12 +107,14 @@ pluginBundle {
     description = PluginBundle.DESCRIPTION
     tags = PluginBundle.TAGS
 
+    @Suppress("DEPRECATION")
     plugins {
         getByName(PluginCoordinates.ID) {
             displayName = PluginBundle.DISPLAY_NAME
         }
     }
 
+    @Suppress("DEPRECATION")
     mavenCoordinates {
         groupId = PluginCoordinates.GROUP
         artifactId = PluginCoordinates.ID.removePrefix("$groupId.")
@@ -119,29 +122,44 @@ pluginBundle {
     }
 }
 
-val minimumMicronaut = "3.7.0"
-val preferredMicronaut = "3.7.0"
+val minimumMicronaut = "3.7.8"
+val preferredMicronaut = "3.7.8"
 val defaultJavaMin = "11"
 val defaultJavaMax = "19"
 
-val baseJavaMin: Int = (if (project.hasProperty("versions.java.minimum")) {
-    project.properties["versions.java.minimum"] as? String ?: defaultJavaMin
-} else {
-    defaultJavaMin
-}).toInt()
+val baseJavaMin: Int = (
+    if (project.hasProperty("versions.java.minimum")) {
+        project.properties["versions.java.minimum"] as? String ?: defaultJavaMin
+    } else {
+        defaultJavaMin
+    }
+).toInt()
 
-val javaMin: Int = if (System.getProperty("os.arch") == "aarch64") {
-    // artificially start at java 17 for aarch64, which is the first version that supports this architecture.
-    17
-} else {
-    baseJavaMin
-}
+val skipVersions = sortedSetOf(
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+)
 
-val javaMax: Int = (if (project.hasProperty("versions.java.maximum")) {
-    project.properties["versions.java.maximum"] as? String ?: defaultJavaMax
-} else {
-    defaultJavaMax
-}).toInt()
+val javaMin: Int = (
+    if (System.getProperty("os.arch") == "aarch64") {
+        // artificially start at java 17 for aarch64, which is the first version that supports this architecture.
+        baseJavaMin
+    } else {
+        baseJavaMin
+    }
+)
+
+val javaMax: Int = (
+    if (project.hasProperty("versions.java.maximum")) {
+        project.properties["versions.java.maximum"] as? String ?: defaultJavaMax
+    } else {
+        defaultJavaMax
+    }
+).toInt()
 
 sourceSets {
     val main by getting {
@@ -253,7 +271,7 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         apiVersion = Elide.kotlinLanguage
         languageVersion = Elide.kotlinLanguage
-        jvmTarget = "11"
+        jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
         allWarningsAsErrors = true
@@ -368,13 +386,15 @@ tasks.named("check").configure {
 }
 
 // Normal test task runs on compile JDK.
-(javaMin..javaMax).forEach { major ->
+(javaMin..javaMax).filter { !skipVersions.contains(it) }.forEach { major ->
     val jdkTest = tasks.register("testJdk$major", Test::class.java) {
         description = "Runs the test suite on JDK $major"
         group = LifecycleBasePlugin.VERIFICATION_GROUP
-        javaLauncher.set(javaToolchains.launcherFor {
-            languageVersion.set(JavaLanguageVersion.of(major))
-        })
+        javaLauncher.set(
+            javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(major))
+            }
+        )
         val testTask = tasks.named("test", Test::class.java).get()
         classpath = testTask.classpath
         testClassesDirs = testTask.testClassesDirs
@@ -383,4 +403,9 @@ tasks.named("check").configure {
     checkTask.configure {
         dependsOn(jdkTest)
     }
+}
+
+tasks.withType<Detekt>().configureEach {
+    // Target version of the generated JVM bytecode. It is used for type resolution.
+    jvmTarget = javaMin.toString()
 }

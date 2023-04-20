@@ -66,10 +66,8 @@ val buildDocs by properties
 
 buildscript {
   repositories {
-    maven("https://maven-central.storage-download.googleapis.com/maven2/")
-    google()
-    mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
+    maven("https://maven.pkg.st/")
+    gradlePluginPortal()
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
@@ -93,7 +91,7 @@ apply(plugin = "kotlinx-knit")
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
   // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
-  rootProject.the<NodeJsRootExtension>().download = false
+  rootProject.the<NodeJsRootExtension>().download = true
   rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {

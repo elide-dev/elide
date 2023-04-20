@@ -26,14 +26,54 @@
 [![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
-_**Elide is currently in alpha.**_
-
-Latest version: `1.0-v3-alpha3-b6`
+Latest version: `1.0-v3-alpha3-b7`
 
 <hr />
 
 Elide is a **Kotlin/Multiplatform meta-framework** for **rapid, cross-platform application development**. Write once in
 Kotlin and deploy everywhere: your server, the browser, and native app targets.
+
+## Using Elide as a runtime
+
+First and foremost, Elide is a runtime. The runtime is **still in alpha**. You can try it like with:
+```
+curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
+```
+
+Or you can try it via NPM:
+```
+npx @elide-dev/elide@alpha --help
+```
+
+
+## Using Elide as a library
+
+Elide is available on [Maven Central](https://search.maven.org/artifact/dev.elide). To use it, pick the package you want
+to use (typically `server`) and add it via Gradle or Maven:
+
+### Gradle
+
+```groovy
+dependencies {
+    implementation 'dev.elide:elide-server:1.0-v3-alpha3-b7'
+}
+```
+
+```kotlin
+dependencies {
+    implementation("dev.elide:elide-server:1.0-v3-alpha3-b7")
+}
+```
+
+### Maven
+
+```xml
+<dependency>
+    <groupId>dev.elide</groupId>
+    <artifactId>elide-server</artifactId>
+    <version>1.0-v3-alpha3-b7</version>
+</dependency>
+```
 
 ## Distinguishing features
 

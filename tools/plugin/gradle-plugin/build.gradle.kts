@@ -39,11 +39,13 @@ java {
 }
 
 val props = Properties()
-val overlay = file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
-    "gradle-ci.properties"
-} else {
-    "local.properties"
-})
+val overlay = file(
+    if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
+        "gradle-ci.properties"
+    } else {
+        "local.properties"
+    }
+)
 
 if (overlay.exists()) props.load(overlay.inputStream())
 val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
@@ -125,7 +127,7 @@ subprojects {
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
     // 16+ required for Apple Silicon support
     // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
-    rootProject.the<NodeJsRootExtension>().download = false
+    rootProject.the<NodeJsRootExtension>().download = true
     rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
 }
 
@@ -162,8 +164,11 @@ tasks.register("preMerge") {
 
     dependsOn("build", "test", "check")
     dependsOn("koverReport", "koverVerify", "koverMergedXmlReport")
-    dependsOn(":example:fullstack:node:check")
-    dependsOn(":example:fullstack:server:check")
+
+    if ((properties["buildExamples"] as? String) == "true") {
+        dependsOn(":example:fullstack:node:check")
+        dependsOn(":example:fullstack:server:check")
+    }
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:check"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:validatePlugins"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverReport"))

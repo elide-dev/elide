@@ -148,3 +148,35 @@ graalvmNative {
     enabled.set(false)
   }
 }
+
+val buildDocs = project.properties["buildDocs"] == "true"
+publishing {
+  publications.withType<MavenPublication> {
+    artifactId = artifactId.replace("server", "elide-server")
+
+    pom {
+      name.set("Elide for Servers")
+      url.set("https://elide.dev")
+      description.set(
+        "Server-side tools, framework, and runtime, based on GraalVM and Micronaut"
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/elide")
+      }
+    }
+  }
+}

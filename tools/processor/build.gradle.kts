@@ -60,6 +60,7 @@ dependencies {
   implementation(libs.protobuf.java)
   implementation(libs.protobuf.util)
   implementation(libs.protobuf.kotlin)
+  implementation(libs.errorprone.annotations)
 
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)

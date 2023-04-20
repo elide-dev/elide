@@ -3,7 +3,10 @@
   "unused",
   "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
+  "OPT_IN_USAGE",
 )
+
+import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
   id("dev.elide.build.multiplatform")
@@ -34,6 +37,18 @@ kotlin {
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()
+    }
+  }
+
+  wasm {
+    browser {
+      testTask {
+        useKarma {
+          this.webpackConfig.experiments.add("topLevelAwait")
+          useChromeHeadless()
+          useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
+        }
+      }
     }
   }
 
@@ -138,5 +153,61 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
+    val wasmMain by getting {
+      dependsOn(nativeMain)
+      dependencies {
+        implementation(kotlin("stdlib-wasm"))
+      }
+    }
+  }
+}
+
+configureJava9ModuleInfo(
+  multiRelease = true,
+)
+
+val buildDocs = project.properties["buildDocs"] == "true"
+val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
+  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+  }
+  javadocJar
+} else null
+
+publishing {
+  publications.withType<MavenPublication> {
+    if (buildDocs) {
+      artifact(javadocJar)
+    }
+    artifactId = artifactId.replace("test", "elide-test")
+
+    pom {
+      name.set("Elide Test")
+      url.set("https://github.com/elide-dev/elide")
+      description.set(
+        "Universal testing utilities in every language supported by Kotlin and Elide."
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/v3")
+      }
+    }
   }
 }

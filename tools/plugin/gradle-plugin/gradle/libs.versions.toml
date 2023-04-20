@@ -1,11 +1,11 @@
 [versions]
-elide = "1.0-v3-alpha3-b6"
+elide = "1.0-v3-alpha3-b7"
 ksp = "1.8.20-1.0.10"
 detekt = "1.22.0"
 kotlin = "1.8.20"
 kotlin_dsl = "4.0.7"
-ktlint = "0.47.1"
-ktlintGradle = "10.3.0"
+ktlint = "0.48.2"
+ktlintGradle = "11.3.1"
 kotlinx_coroutines = "1.7.0-Beta"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
@@ -16,7 +16,7 @@ google_html_types = "1.0.8"
 atomicfu = "0.20.0"
 pluginPublish = "0.21.0"
 pluginProtobuf = "0.9.2"
-versionCheck = "0.45.0"
+versionCheck = "0.46.0"
 nodePlugin = "3.5.1"
 sonar = "3.5.0.2730"
 protobuf = "3.21.11"
@@ -39,8 +39,8 @@ auto_service = "1.0.1"
 kover = "0.6.1"
 testLoggerPlugin = "3.2.0"
 
-micronaut = "3.8.1"
-micronaut_plugin = "3.7.0"
+micronaut = "3.8.8"
+micronaut_plugin = "3.7.8"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -120,14 +120,15 @@ autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", versi
 google_auto_service = { group = "com.google.auto.service", name = "auto-service", version.ref = "auto_service" }
 google_auto_service_annotations = { group = "com.google.auto.service", name = "auto-service-annotations", version.ref = "auto_service" }
 
-elide_base = { group = "dev.elide", name = "base", version.ref = "elide" }
+elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
+elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
-elide_proto_core = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
+elide_proto_core = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
 elide_proto_legacy = { group = "dev.elide", name = "proto", version = "1.0-v3-alpha1-rc38" }
-elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
-elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }
-elide_proto_kotlinx = { group = "dev.elide", name = "proto-kotlinx", version.ref = "elide" }
+elide_proto_protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
+elide_proto_flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
+elide_proto_kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }

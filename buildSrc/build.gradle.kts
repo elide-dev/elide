@@ -5,8 +5,6 @@
 val kotlinVersion = "1.8.20"
 
 plugins {
-  id("dev.elide.build")
-
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
   `embedded-kotlin`

@@ -3,9 +3,10 @@
   "unused",
   "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
+  "OPT_IN_USAGE",
 )
 
-import org.jetbrains.kotlin.konan.target.HostManager
+import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
   kotlin("plugin.noarg")
@@ -124,5 +125,55 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
+  }
+}
+
+configureJava9ModuleInfo(
+  multiRelease = true,
+)
+
+val buildDocs = project.properties["buildDocs"] == "true"
+val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
+  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+
+  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+  }
+  javadocJar
+} else null
+
+publishing {
+  publications.withType<MavenPublication> {
+    if (buildDocs) {
+      artifact(javadocJar)
+    }
+    artifactId = artifactId.replace("model", "elide-model")
+
+    pom {
+      name.set("Elide Model")
+      url.set("https://elide.dev")
+      description.set(
+        "Data and structure modeling runtime package for use with the Elide Framework."
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/elide")
+      }
+    }
   }
 }

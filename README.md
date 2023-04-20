@@ -36,12 +36,12 @@ Kotlin and deploy everywhere: your server, the browser, and native app targets.
 ## Using Elide as a runtime
 
 First and foremost, Elide is a runtime. The runtime is **still in alpha**. You can try it like with:
-```
+```bash
 curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
 ```
 
 Or you can try it via NPM:
-```
+```bash
 npx @elide-dev/elide@alpha --help
 ```
 

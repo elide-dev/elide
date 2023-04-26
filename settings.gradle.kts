@@ -173,7 +173,7 @@ buildCache {
       isEnabled = true
       isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
       isUseExpectContinue = true
-      url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://gradle.less.build/cache/generic/")
+      url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://global.less.build/cache/generic/")
       credentials {
         username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: "apikey"
         password = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD") ?: error("Failed to resolve cache password")

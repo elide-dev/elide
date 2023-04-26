@@ -36,7 +36,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -119,7 +119,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -217,7 +217,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "js"
-          version: latest
+          version: 22.3.1
           java-version: 11
           set-java-home: false
           check-for-updates: false
@@ -226,7 +226,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "js"
-          version: latest
+          version: 22.3.1
           java-version: 17
           set-java-home: false
           check-for-updates: false
@@ -235,7 +235,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -346,7 +346,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -437,7 +437,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -536,7 +536,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
+          version: 22.3.1
           java-version: 19
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}

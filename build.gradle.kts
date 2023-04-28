@@ -50,11 +50,15 @@ version = if (project.hasProperty("elide.stamp") && project.properties["elide.st
 }
 
 val props = Properties()
-props.load(file(if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
-  "gradle-ci.properties"
-} else {
-  "local.properties"
-}).inputStream())
+props.load(
+  file(
+    if (project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true") {
+      "gradle-ci.properties"
+    } else {
+      "local.properties"
+    }
+  ).inputStream()
+)
 
 val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
 
@@ -137,9 +141,11 @@ apiValidation {
 
 tasks.register("relock") {
   dependsOn(
-    *(subprojects.map {
-      it.tasks.named("dependencies")
-    }.toTypedArray())
+    *(
+      subprojects.map {
+          it.tasks.named("dependencies")
+      }.toTypedArray()
+    )
   )
 }
 
@@ -190,12 +196,15 @@ subprojects {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
             property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
-            property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-              "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-              "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-              "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
-              "$buildDir/reports/kover/xml/report.xml",
-            ))
+            property(
+              "sonar.coverage.jacoco.xmlReportPaths",
+              listOf(
+                "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+                "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+                "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
+                "$buildDir/reports/kover/xml/report.xml",
+              )
+            )
           }
 
           // KotlinJS coverage via Kover
@@ -210,9 +219,12 @@ subprojects {
             property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
             property("sonar.java.binaries", "$buildDir/classes/kotlin/jvm/main")
-            property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-              "$buildDir/reports/kover/xml/report.xml",
-            ))
+            property(
+              "sonar.coverage.jacoco.xmlReportPaths",
+              listOf(
+                "$buildDir/reports/kover/xml/report.xml",
+              )
+            )
           }
         }
       }
@@ -257,15 +269,19 @@ subprojects {
   afterEvaluate {
     if (tasks.findByName("check") != null) {
       tasks.getByName("check") {
-        setDependsOn(dependsOn.filterNot {
-          it is TaskProvider<*> && it.name == "detekt"
-        })
+        setDependsOn(
+          dependsOn.filterNot {
+            it is TaskProvider<*> && it.name == "detekt"
+          }
+        )
       }
 
       tasks.getByName("build") {
-        setDependsOn(dependsOn.filterNot {
-          it is TaskProvider<*> && it.name == "check"
-        })
+        setDependsOn(
+          dependsOn.filterNot {
+            it is TaskProvider<*> && it.name == "check"
+          }
+        )
       }
     }
   }
@@ -443,12 +459,14 @@ idea {
 
 tasks.create("docs") {
   if (buildDocs == "true") {
-    dependsOn(listOf(
-      "dokkaHtml",
-      "dokkaHtmlMultiModule",
-      "dokkaJavadoc",
-      "htmlDependencyReport",
-      ":packages:server:dokkaJavadoc",
-    ))
+    dependsOn(
+      listOf(
+        "dokkaHtml",
+        "dokkaHtmlMultiModule",
+        "dokkaJavadoc",
+        "htmlDependencyReport",
+        ":packages:server:dokkaJavadoc",
+      )
+    )
   }
 }

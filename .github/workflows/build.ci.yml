@@ -273,7 +273,6 @@ jobs:
             :substrate:redakt:test
             :substrate:koverMergedXmlReport
             :tools:reports:reports
-            sonar
             --scan
             --no-daemon
             --warning-mode=none

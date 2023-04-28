@@ -1,4 +1,4 @@
-import ElideSubstrate
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -40,4 +40,9 @@ tasks.withType<KotlinCompile>().configureEach {
 detekt {
   parallel = true
   ignoreFailures = true
+}
+
+tasks.withType<Detekt>().configureEach {
+  // Target version of the generated JVM bytecode. It is used for type resolution.
+  jvmTarget = "11"
 }

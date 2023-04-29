@@ -4,8 +4,6 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import ElideSubstrate.elideTarget
-
 plugins {
   `maven-publish`
   `java-library`
@@ -94,23 +92,4 @@ subprojects {
       ))
     }
   }
-}
-
-dependencies {
-  api(libs.elide.tools.compilerUtil)
-  api(libs.elide.kotlin.plugin.injekt)
-  api(libs.elide.kotlin.plugin.interakt)
-  api(libs.elide.kotlin.plugin.redakt)
-  api(libs.elide.kotlin.plugin.sekret)
-}
-
-publishing {
-  elideTarget(
-    project,
-    label = "Elide Tools: Substrate",
-    group = project.group as String,
-    artifact = "elide-substrate",
-    summary = "BOM for Kotlin compiler plugins and other core project infrastructure.",
-    parent = true,
-  )
 }

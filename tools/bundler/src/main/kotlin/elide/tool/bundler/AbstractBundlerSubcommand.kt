@@ -18,39 +18,39 @@ import java.io.File
  */
 public abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoCloseable {
   /** Context in which sub-commands run. */
-  interface CommandContext {
+  public interface CommandContext {
     /** Indicate whether debug mode is active. */
-    val debug: Boolean
+    public val debug: Boolean
 
     /** Indicate whether verbose-mode is active. */
-    val verbose: Boolean
+    public val verbose: Boolean
 
     /** Indicate whether quiet-mode is active. */
-    val quiet: Boolean
+    public val quiet: Boolean
 
     /** File to work with (a bundle). */
-    val file: File?
+    public val file: File?
 
     /** Whether we should wait/consume from `stdin`. */
-    val stdin: Boolean
+    public val stdin: Boolean
 
     /** Indicate whether pretty-mode is active. */
-    val pretty: Boolean
+    public val pretty: Boolean
   }
 
   /** Interface which bundler parent commands are expected to provide. */
-  interface BundlerParentCommand {
+  public interface BundlerParentCommand {
     /** Indicate whether debug mode is active. */
-    val debug: Boolean
+    public val debug: Boolean
 
     /** Indicate whether verbose-mode is active. */
-    val verbose: Boolean
+    public val verbose: Boolean
 
     /** Indicate whether quiet-mode is active. */
-    val quiet: Boolean
+    public val quiet: Boolean
 
     /** Indicate whether pretty-mode is active. */
-    val pretty: Boolean
+    public val pretty: Boolean
   }
 
   // Logger for all sub-commands.
@@ -70,7 +70,7 @@ public abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoClose
   }
 
   /** Runnable entrypoint for the sub-command. */
-  override fun run() = prepareAndInvoke(invoke(), object: CommandContext {
+  override fun run(): Unit = prepareAndInvoke(invoke(), object: CommandContext {
     override val debug: Boolean get() = top.debug
     override val verbose: Boolean get() = top.verbose
     override val quiet: Boolean get() = top.quiet

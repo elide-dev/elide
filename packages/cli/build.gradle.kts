@@ -2,7 +2,6 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import proguard.gradle.ProGuardTask
 import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
@@ -24,12 +23,13 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+val javaVersion = Elide.javaTargetMaximum
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 ktlint {
@@ -46,10 +46,11 @@ ktlint {
 
 kotlin {
   explicitApi()
+  jvmToolchain(javaVersion)
 
   target.compilations.all {
     kotlinOptions {
-      jvmTarget = Elide.javaTargetMaximum
+      jvmTarget = Elide.javaTargetMaximum.toString()
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
@@ -410,11 +411,15 @@ tasks {
   }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+  targetCompatibility = javaVersion.toString()
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.javaTargetProguard
+    jvmTarget = javaVersion.toString()
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = true

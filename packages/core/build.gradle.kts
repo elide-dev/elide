@@ -23,6 +23,7 @@ kotlin {
 
     jvm {
         withJava()
+        jvmToolchain(Elide.javaTargetMinimum)
     }
 
     js(IR) {

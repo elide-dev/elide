@@ -116,7 +116,7 @@ java {
 kotlin {
   target.compilations.all {
     kotlinOptions {
-      jvmTarget = Elide.javaTargetMaximum
+      jvmTarget = Elide.javaTargetMaximum.toString()
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage

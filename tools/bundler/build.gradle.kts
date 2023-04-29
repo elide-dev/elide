@@ -25,11 +25,11 @@ group = "dev.elide.tools"
 version = rootProject.version as String
 
 val entrypoint = "elide.tool.bundler.Bundler"
-val javaVersion = "17"
+val javaVersion = Elide.javaTargetMaximum
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 buildConfig {
@@ -64,28 +64,16 @@ val extraArgs: List<String> = emptyList()
 
 kotlin {
   explicitApi()
+  jvmToolchain(javaVersion)
 
   target.compilations.all {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
-      jvmTarget = javaVersion
+      jvmTarget = javaVersion.toString()
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
       allWarningsAsErrors = true
-    }
-  }
-
-  afterEvaluate {
-    target.compilations.all {
-      kotlinOptions {
-        jvmTarget = Elide.javaTargetMaximum
-        languageVersion = Elide.kotlinLanguage
-        apiVersion = Elide.kotlinLanguage
-        javaParameters = true
-        freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
-        allWarningsAsErrors = true
-      }
     }
   }
 }
@@ -407,11 +395,15 @@ tasks {
   }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+  targetCompatibility = javaVersion.toString()
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.javaTargetProguard
+    jvmTarget = javaVersion.toString()
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = true

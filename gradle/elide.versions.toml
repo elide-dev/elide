@@ -18,6 +18,7 @@ protobufJavalite = "3.0.0"
 grpc_java = "1.51.0"
 grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
+testretry = "1.5.2"
 arrow = "1.1.3"
 testcontainers = "1.17.6"
 errorprone = "2.11.0"
@@ -221,6 +222,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 graalvm = { id = "org.graalvm.buildtools.native", version.ref = "graalvm_plugin" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
+gradle_testRetry = { id = "org.gradle.test-retry", version.ref = "testretry" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin_sdk" }
 kotlin_js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin_sdk" }
 kotlin_multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_sdk" }
@@ -583,6 +585,7 @@ larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref 
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 ## Plugin Aliases
+plugin_gradle_testRetry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "testretry" }
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
 plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }

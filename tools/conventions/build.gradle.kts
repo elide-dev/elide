@@ -38,6 +38,7 @@ dependencies {
   implementation(libs.plugin.spotless)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
+  implementation(libs.plugin.gradle.testRetry)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.serialization)

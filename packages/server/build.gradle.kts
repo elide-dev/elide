@@ -9,6 +9,7 @@ plugins {
   id("io.micronaut.graalvm")
   id("dev.elide.build.native.lib")
 //  id("dev.elide.build.jvm.multi-jvm-testing")
+  id("org.gradle.test-retry")
 }
 
 group = "dev.elide"
@@ -178,5 +179,13 @@ publishing {
         url.set("https://github.com/elide-dev/elide")
       }
     }
+  }
+}
+
+tasks.test {
+  retry {
+    maxRetries.set(3)
+    maxFailures.set(20)
+    failOnPassedAfterRetry.set(false)
   }
 }

@@ -1,10 +1,10 @@
 [versions]
 elide = "1.0-v3-alpha3-b7"
 elide_plugin = "1.0.0-beta21"
-kotlin_sdk = "1.8.20"
+kotlin_sdk = "1.8.21"
 kotlin_language = "1.8"
 jna = "5.8.0"
-ksp = "1.8.20-1.0.10"
+ksp = "1.8.21-1.0.11"
 koin = "3.2.2"
 koin_ksp = "1.0.3"
 graalvm = "22.3.0"

@@ -27,6 +27,13 @@ kotlin {
     }
 
     js(IR) {
+        compilations.all {
+            kotlinOptions {
+                sourceMap = true
+                moduleKind = "umd"
+                metaInfo = true
+            }
+        }
         nodejs {}
         browser {}
     }

@@ -4,8 +4,12 @@
     "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
 )
+@file:OptIn(
+    ExperimentalWasmDsl::class,
+)
 
 import Java9Modularity.configureJava9ModuleInfo
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     id("dev.elide.build")
@@ -23,7 +27,27 @@ kotlin {
     }
 
     js(IR) {
-        binaries.executable()
+        compilations.all {
+            kotlinOptions {
+                sourceMap = true
+                moduleKind = "umd"
+                metaInfo = true
+            }
+        }
+        browser()
+        nodejs()
+    }
+
+    wasm {
+        browser {
+            testTask {
+                useKarma {
+                    this.webpackConfig.experiments.add("topLevelAwait")
+                    useChromeHeadless()
+                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
+                }
+            }
+        }
     }
 
     macosArm64()
@@ -112,6 +136,12 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test"))
             }
+        }
+        val wasmMain by getting {
+            //
+        }
+        val wasmTest by getting {
+            //
         }
 
         val mingwX64Main by getting { dependsOn(nativeMain) }

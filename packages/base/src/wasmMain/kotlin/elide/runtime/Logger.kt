@@ -2,7 +2,7 @@
 
 package elide.runtime
 
-/** Describes the interface for loggers shared across platforms (JS-specialized). */
+/** Describes the interface for loggers shared across platforms (WASM-specialized). */
 public actual interface Logger {
   /**
    * Indicate whether the provided [level] is enabled for the current logger.

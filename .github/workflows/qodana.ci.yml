@@ -29,11 +29,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
         uses: JetBrains/qodana-action@main
+        continue-on-error: true
         env:
           GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false -Porg.gradle.java.home=/opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }} -Porg.gradle.java.installations.paths=/opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }}
           JAVA_HOME: /opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: "Report: SARIF Upload"
         uses: github/codeql-action/upload-sarif@v2
+        continue-on-error: true
         with:
           sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json

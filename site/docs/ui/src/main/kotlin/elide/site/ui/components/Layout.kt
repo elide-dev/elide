@@ -1,6 +1,6 @@
 package elide.site.ui.components
 
-import csstype.ClassName
+import web.cssom.ClassName
 import elide.site.ui.MDX
 import elide.site.ui.MDXProps
 import mui.material.Typography

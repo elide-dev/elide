@@ -2,7 +2,7 @@
 
 package elide.site.ui
 
-import csstype.ClassName
+import web.cssom.ClassName
 import elide.site.ui.components.CodeSample
 import elide.site.ui.components.SyntaxLanguage
 import js.core.jso

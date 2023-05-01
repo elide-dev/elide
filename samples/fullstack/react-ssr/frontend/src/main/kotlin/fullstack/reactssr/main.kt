@@ -5,7 +5,7 @@ package fullstack.reactssr
 import react.Fragment
 import react.create
 import elide.js.ssr.boot
-import fullstack.react.ui.SampleApp
+import fullstack.reactssr.ui.SampleApp
 import react.Props
 
 external interface AppProps: Props {

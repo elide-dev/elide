@@ -1,6 +1,6 @@
 package elide.site.ui.components
 
-import csstype.ClassName
+import web.cssom.ClassName
 import csstype.Overflow
 import csstype.pct
 import csstype.px

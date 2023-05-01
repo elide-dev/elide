@@ -4,7 +4,7 @@ package elide.site.ui.pages
 
 import csstype.BorderBottom
 import csstype.BorderColor
-import csstype.ClassName
+import web.cssom.ClassName
 import csstype.Color
 import csstype.FontFamily
 import csstype.FontWeight

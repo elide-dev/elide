@@ -1,7 +1,6 @@
 package elide.site.ui
 
 import csstype.Auto.auto
-import csstype.ClassName
 import csstype.Display
 import csstype.GridTemplateAreas
 import csstype.array
@@ -12,6 +11,7 @@ import js.core.jso
 import mui.system.Box
 import mui.system.sx
 import react.router.useLocation
+import web.cssom.ClassName
 import web.window.window
 
 // Whether to emit debug logs to the console.

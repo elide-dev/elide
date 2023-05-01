@@ -179,4 +179,4 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.minimum=17
-            -Pversions.java.language=19
+            -Pversions.java.language=${{ vars.JVM_VERSION }}

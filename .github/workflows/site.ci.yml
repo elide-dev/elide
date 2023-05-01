@@ -80,7 +80,7 @@ jobs:
         env:
           CI: true
         run: |
-          make docs reports CI=yes JVM=19
+          make docs reports CI=yes JVM=${{ vars.JVM_VERSION }}
       - name: "Build: Site"
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629 # v2.4.2
         env:
@@ -100,7 +100,7 @@ jobs:
             -PbuildSamples=false
             -PbuildDocs=true
             -PbuildDocsSite=true
-            -Pversions.java.language=19
+            -Pversions.java.language=${{ vars.JVM_VERSION }}
             -x test
             -x check
             -x apiCheck
@@ -227,10 +227,10 @@ jobs:
             -PbuildSamples=false \
             -PbuildDocs=true \
             -PbuildDocsSite=true \
-            -Pversions.java.language=19 \
+            -Pversions.java.language=${{ vars.JVM_VERSION }} \
             --args="--http --ignore-cert-errors --verbose --no-crawl $PWD/artifacts/app.manifest.pb http://localhost:8080 $PWD/site/docs/app/build/ssg-site.zip"
       - name: "Build: Assemble Site"
-        run: make site CI=yes JVM=19;
+        run: make site CI=yes JVM=${{ vars.JVM_VERSION }};
       - name: "Build: Compress Site"
         run: |
           rm -fv site.tar.gz;

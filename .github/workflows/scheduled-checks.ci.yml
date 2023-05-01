@@ -178,5 +178,5 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-            -Pversions.java.minimum=11
+            -Pversions.java.minimum=17
             -Pversions.java.language=19

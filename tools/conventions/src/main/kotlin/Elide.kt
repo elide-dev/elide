@@ -25,6 +25,21 @@ object Elide {
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"
 
+  /** Kotlin SDK and platform version. */
+  const val kotlinSdk = "1.8.21"
+
+  /** Kotlin language version. */
+  const val kotlinLanguage = "1.8"
+
+  /** Kotlin language version (beta). */
+  const val kotlinLanguageBeta = kotlinLanguage
+
+  /** Maximum Java language target. */
+  const val javaTargetMinimum: Int = 17
+
+  /** Maximum Java language target. */
+  const val javaTargetMaximum: Int = 19
+
   /** Compiler args to include in all Kotlin targets. */
   val compilerArgs = listOf(
     "-progressive",
@@ -60,21 +75,6 @@ object Elide {
     "-Xjvm-default=all",
     "-Xjsr305=strict",
   ))
-
-  /** Kotlin SDK and platform version. */
-  const val kotlinSdk = "1.8.20"
-
-  /** Kotlin language version. */
-  const val kotlinLanguage = "1.8"
-
-  /** Kotlin language version (beta). */
-  const val kotlinLanguageBeta = kotlinLanguage
-
-  /** Maximum Java language target. */
-  const val javaTargetMinimum: Int = 11
-
-  /** Maximum Java language target. */
-  const val javaTargetMaximum: Int = 19
 
   /** Sample code modules. */
   val samplesList = listOf(

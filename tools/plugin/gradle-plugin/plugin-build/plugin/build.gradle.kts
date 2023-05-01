@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val defaultJavaVersion = "11"
+val defaultJavaVersion = "17"
 val defaultKotlinVersion = "1.8"
 
 val defaultElideGroup = "dev.elide"
@@ -122,9 +122,9 @@ pluginBundle {
     }
 }
 
-val minimumMicronaut = "3.7.8"
-val preferredMicronaut = "3.7.8"
-val defaultJavaMin = "11"
+val minimumMicronaut = "3.8.8"
+val preferredMicronaut = "3.9.1"
+val defaultJavaMin = "17"
 val defaultJavaMax = "19"
 
 val baseJavaMin: Int = (
@@ -251,8 +251,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {

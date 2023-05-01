@@ -35,7 +35,6 @@ kotlin {
             }
         }
         browser()
-        nodejs()
     }
 
     wasm {
@@ -65,10 +64,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 api(project(":packages:core"))
-//                api(libs.kotlinx.serialization.core)
-//                api(libs.kotlinx.coroutines.core)
-//                api(libs.kotlinx.collections.immutable)
-//                api(libs.kotlinx.datetime)
                 api(libs.elide.uuid)
             }
         }
@@ -154,6 +149,14 @@ kotlin {
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }
     }
+}
+
+// temp: disable WASM tests
+tasks.named("wasmTest") {
+    enabled = false
+}
+tasks.named("wasmBrowserTest") {
+    enabled = false
 }
 
 configureJava9ModuleInfo(

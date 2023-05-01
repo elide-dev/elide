@@ -76,7 +76,7 @@ buildscript {
     maven("https://elide.pkg.st/")
   }
   dependencies {
-    //classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
+    // classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
     classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
     classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
@@ -91,7 +91,7 @@ buildscript {
   }
 }
 
-//apply(plugin = "kotlinx-knit")
+// apply(plugin = "kotlinx-knit")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
@@ -429,24 +429,24 @@ tasks {
   }
 }
 
-//the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
-//the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
-//the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
-//  include("README.md")
-//  include("docs/guide/**/*.md")
-//  include("docs/guide/**/*.kt")
-//  include("samples/**/*.md")
-//  include("samples/**/*.kt")
-//  include("samples/**/*.kts")
-//  exclude("**/build/**")
-//  exclude("**/.gradle/**")
-//  exclude("**/node_modules/**")
-//}
+// the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
+// the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
+// the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
+//   include("README.md")
+//   include("docs/guide/**/*.md")
+//   include("docs/guide/**/*.kt")
+//   include("samples/**/*.md")
+//   include("samples/**/*.kt")
+//   include("samples/**/*.kts")
+//   exclude("**/build/**")
+//   exclude("**/.gradle/**")
+//   exclude("**/node_modules/**")
+// }
 
 // Build API docs via Dokka before running Knit.
-//tasks.named("knitPrepare").configure {
-//  dependsOn("docs")
-//}
+// tasks.named("knitPrepare").configure {
+//   dependsOn("docs")
+// }
 
 val jvmName = project.properties["elide.jvm"] as? String
 

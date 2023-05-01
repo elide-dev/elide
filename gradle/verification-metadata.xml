@@ -3,6 +3,11 @@
    <configuration>
       <verify-metadata>true</verify-metadata>
       <verify-signatures>true</verify-signatures>
+      <trusted-artifacts>
+         <trust file=".*-javadoc[.]jar" regex="true"/>
+         <trust file=".*-sources[.]jar" regex="true"/>
+         <trust file="elide-uuid.*" regex="true"/>
+      </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="e270b36858db4eae" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="4b1e11d5a4b91e89" reason="Key couldn't be downloaded from any key server"/>

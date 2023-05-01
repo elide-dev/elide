@@ -14,9 +14,12 @@ plugins {
 group = "dev.tools.compiler.plugin"
 version = rootProject.version as String
 
+val javaToolchain: Int = (project.properties["versions.java.language"] as? String)?.toIntOrNull() ?: 17
+val javaTarget: Int = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 17
+
 kotlin {
   explicitApi()
-  jvmToolchain(17)
+  jvmToolchain(javaToolchain)
 }
 
 // Compiler: Kotlin
@@ -26,7 +29,7 @@ tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = ElideSubstrate.apiVersion
     languageVersion = ElideSubstrate.kotlinVerison
-    jvmTarget = "17"
+    jvmTarget = javaTarget.toString()
     javaParameters = true
     allWarningsAsErrors = true
     incremental = true
@@ -40,5 +43,5 @@ detekt {
 
 tasks.withType<Detekt>().configureEach {
   // Target version of the generated JVM bytecode. It is used for type resolution.
-  jvmTarget = "17"
+  jvmTarget = javaTarget.coerceAtMost(18).toString()
 }

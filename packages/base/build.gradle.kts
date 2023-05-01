@@ -41,11 +41,11 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 api(project(":packages:core"))
-                api(libs.kotlinx.serialization.core)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.collections.immutable)
-                api(libs.kotlinx.datetime)
-                implementation(libs.uuid)
+//                api(libs.kotlinx.serialization.core)
+//                api(libs.kotlinx.coroutines.core)
+//                api(libs.kotlinx.collections.immutable)
+//                api(libs.kotlinx.datetime)
+                api(libs.elide.uuid)
             }
         }
         val commonTest by getting {
@@ -60,10 +60,13 @@ kotlin {
                 api(libs.slf4j)
                 api(libs.jakarta.inject)
                 api(libs.micronaut.inject.java)
-                implementation(libs.kotlinx.serialization.core)
-                implementation(libs.kotlinx.coroutines.core.jvm)
-                implementation(libs.kotlinx.coroutines.jdk9)
-                implementation(libs.kotlinx.coroutines.slf4j)
+                api(libs.elide.uuid)
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.serialization.core)
+                api(libs.kotlinx.coroutines.core.jvm)
+                api(libs.kotlinx.coroutines.jdk9)
+                api(libs.kotlinx.coroutines.slf4j)
             }
         }
         val jvmTest by getting {
@@ -80,9 +83,12 @@ kotlin {
                 // KT-57235: fix for atomicfu-runtime error
                 api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
 
-                implementation(kotlin("stdlib-js"))
-                implementation(libs.kotlinx.coroutines.core.js)
-                implementation(libs.kotlinx.serialization.json.js)
+                api(kotlin("stdlib-js"))
+                api(libs.kotlinx.coroutines.core.js)
+                api(libs.kotlinx.serialization.json.js)
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.elide.uuid)
             }
         }
         val jsTest by getting {
@@ -93,7 +99,12 @@ kotlin {
         }
         val nativeMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
+                api(kotlin("stdlib"))
+                api(libs.elide.uuid)
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.serialization.core)
+                api(libs.kotlinx.coroutines.core)
             }
         }
         val nativeTest by getting {

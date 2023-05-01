@@ -66,7 +66,8 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 
-val buildDocs by properties
+val nodeVersion: String by properties
+val buildDocs: String by properties
 
 buildscript {
   repositories {
@@ -96,7 +97,7 @@ rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
   // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
   rootProject.the<NodeJsRootExtension>().download = true
-  rootProject.the<NodeJsRootExtension>().nodeVersion = "18.11.0"
+  rootProject.the<NodeJsRootExtension>().nodeVersion = nodeVersion
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING

@@ -23,15 +23,15 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: 22.3.0
-          java-version: 19
+          version: ${{ vars.GVM_VERSION }}
+          java-version: ${{ vars.JVM_VERSION }}
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
         uses: JetBrains/qodana-action@main
         env:
-          GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false -Porg.gradle.java.home=/opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0 -Porg.gradle.java.installations.paths=/opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0
-          JAVA_HOME: /opt/hostedtoolcache/graalvm-ce-java19-linux/22.3.0/x64/graalvm-ce-java19-22.3.0
+          GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false -Porg.gradle.java.home=/opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }} -Porg.gradle.java.installations.paths=/opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }}
+          JAVA_HOME: /opt/hostedtoolcache/graalvm-ce-java${{ vars.JVM_VERSION }}-linux/${{ vars.GVM_VERSION }}/x64/graalvm-ce-java${{ vars.JVM_VERSION }}-${{ vars.GVM_VERSION }}
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
       - name: "Report: SARIF Upload"
         uses: github/codeql-action/upload-sarif@v2

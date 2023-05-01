@@ -131,18 +131,18 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM (Java 19)"
+      - name: "Setup: GraalVM (Java ${{ vars.JVM_VERSION }})"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          version: ${{ vars.GVM_VERSION }}
+          java-version: ${{ vars.JVM_VERSION }}
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "yarn"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn

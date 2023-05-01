@@ -21,12 +21,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        java: [19]
+        java: ["${{ vars.JVM_VERSION }}"]
         engine: [graalvm]
         experimental: [false]
         include:
           - os: macos
-            java: 19
+            java: ${{ vars.JVM_VERSION }}
             engine: graalvm
             experimental: false
 
@@ -73,7 +73,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "yarn"
       - name: "Setup: Yarn"
         run: yarn

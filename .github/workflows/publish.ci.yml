@@ -157,12 +157,12 @@ jobs:
         with:
           version: 389.0.0
           project_id: elide-fw
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java ${{ vars.JVM_VERSION }})"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
-          java-version: 19
+          version: ${{ vars.GVM_VERSION }}
+          java-version: ${{ vars.JVM_VERSION }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Signing Keys"
         run: |

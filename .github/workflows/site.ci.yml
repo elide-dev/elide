@@ -40,12 +40,12 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@v2
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java ${{ vars.JVM_VERSION }})"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
-          version: latest
-          java-version: 19
+          version: ${{ vars.GVM_VERSION }}
+          java-version: ${{ vars.JVM_VERSION }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -72,7 +72,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "yarn"
       - name: "Setup: Yarn"
         run: yarn
@@ -157,12 +157,12 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@v2
-      - name: "Setup: GraalVM"
+      - name: "Setup: GraalVM (Java ${{ vars.JVM_VERSION }})"
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js"
           version: latest
-          java-version: 19
+          java-version: ${{ vars.JVM_VERSION }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -189,7 +189,7 @@ jobs:
       - name: "Setup: Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "yarn"
       - name: "Setup: Yarn"
         run: yarn

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e;set +x;TOOL_REVISION="1.0-v3-alpha3-b6";INSTALLER_VERSION="v0.7";TOOL="cli";VERSION="v1";RELEASE="snapshot";
+set -e;set +x;TOOL_REVISION="1.0-v3-alpha3-b7";INSTALLER_VERSION="v0.7";TOOL="cli";VERSION="v1";RELEASE="snapshot";
 COMPRESSION="gz";BINARY="elide";DOWNLOAD_BASE="https://dl.elide.dev";DEFAULT_INSTALL_DIR="$HOME/bin";
 ENABLE_DEBUG="false";ENABLE_COLOR="true";INSTALL_INTO_PATH="true";
 if [[ "$@" == *"no-color"* ]]; then MAGENTA="";CYAN="";RED="";YELLOW="";GRAY="";BOLD="";NC="";else MAGENTA="\033[0;35m";

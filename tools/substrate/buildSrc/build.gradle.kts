@@ -24,7 +24,6 @@ dependencies {
   implementation(libs.plugin.kover)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.kover)
-  implementation(libs.plugin.gradle.testRetry)
   implementation(libs.plugin.ksp)
   implementation(libs.plugin.kotlin.allopen)
   implementation(libs.plugin.kotlin.noarg)

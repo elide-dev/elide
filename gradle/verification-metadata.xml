@@ -7,6 +7,7 @@
          <trust file=".*-javadoc[.]jar" regex="true"/>
          <trust file=".*-sources[.]jar" regex="true"/>
          <trust file="elide-uuid.*" regex="true"/>
+         <trust file="kotlin-native-prebuilt.*" regex="true"/>
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="e270b36858db4eae" reason="Key couldn't be downloaded from any key server"/>

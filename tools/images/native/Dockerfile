@@ -1,4 +1,7 @@
-FROM debian:bullseye@sha256:027b617a00fa483967b045f55459aa12da6f751e6ffbe82ffe9aa007d977027a
+ARG BASE_VERSION=":latest"
+ARG BASE_HASH="@sha256:e350485a408c626aba6e143a18bf912bb490fcc2711b5f5df0cd2cc6f12ad4b4"
+
+FROM us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native)"

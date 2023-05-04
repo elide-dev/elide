@@ -1,13 +1,13 @@
 ARG BASE_IMAGE=gvm17
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:f9d94fb3e5202dcf92512c9e9d2d7fc7b51b4f14383c1863af1b4a7efaef59eb"
+ARG BASE_HASH="@sha256:90f12ce02cac21f3c90850966d4829ed53f4757d8dd20c799e73401dce06dc21"
 
 FROM us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
 
 ARG JDK_VERSION="17"
 ARG NODE_VERSION="18"
 ARG YARN_VERSION="berry"
-ARG GRADLE_VERSION=7.6
+ARG GRADLE_VERSION=8.1.1
 ARG KOTLIN_VERSION=1.8.21
 ARG BAZELISK_VERSION=v1.15.0
 ARG GRADLE_DIST=bin
@@ -43,7 +43,6 @@ RUN echo "Building Elide builder image..." \
     libtool \
     make \
     pkg-config \
-    qt5-default \
     software-properties-common \
     tar \
     time \

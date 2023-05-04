@@ -11,14 +11,12 @@ plugins {
   id("dev.elide.build.jvm")
   id("dev.elide.build.kotlin")
   id("dev.elide.build.substrate")
+  id("dev.elide.build.kotlin.compilerPlugin")
 }
 
 group = "dev.elide.tools"
 version = rootProject.version as String
-
-kotlin {
-  explicitApi()
-}
+val javaVersion = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 17
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
@@ -26,7 +24,7 @@ java {
 }
 
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
-val test by configurations.creating
+val test: Configuration by configurations.creating
 
 dependencies {
   api(libs.google.auto.service.annotations)

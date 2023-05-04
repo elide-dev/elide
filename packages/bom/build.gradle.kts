@@ -60,12 +60,9 @@ catalog {
     // define Elide build plugin
     plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elidePlugin")
 
-    // define the BOM (this module)
-    library("elide-bom", Elide.group, "bom").versionRef("elide")
-
     // define Elide library aliases
     libraries.forEach { libName ->
-      library("elide-$libName", Elide.group, libName).versionRef("elide")
+      library(libName, Elide.group, libName).versionRef("elide")
     }
 
     // define peer library aliases
@@ -81,9 +78,34 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       groupId = "dev.elide"
-      artifactId = "bom"
+      artifactId = "elide-bom"
       version = project.version as String
       from(components["versionCatalog"])
+
+      pom {
+        name.set("Elide BOM")
+        url.set("https://elide.dev")
+        description.set(
+          "Gradle catalog for Elide applications."
+        )
+
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/elide")
+        }
+      }
     }
   }
 }

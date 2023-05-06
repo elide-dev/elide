@@ -33,6 +33,13 @@ tasks.withType<KotlinCompile>().configureEach {
     javaParameters = true
     allWarningsAsErrors = true
     incremental = true
+    freeCompilerArgs = listOf(
+      "-progressive",
+      "-Xcontext-receivers",
+      "-Xskip-prerelease-check",
+      "-Xallow-unstable-dependencies",
+      "-Xemit-jvm-type-annotations",
+    )
   }
 }
 

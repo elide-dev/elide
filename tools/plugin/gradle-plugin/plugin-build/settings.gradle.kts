@@ -49,7 +49,7 @@ buildCache {
         remote<HttpBuildCache> {
             isEnabled = true
             isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
-            url = uri("https://global.less.build/cache/generic/")
+            url = uri("https://gradle.less.build/cache/generic/")
             when (val pswd = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD")) {
                 null -> {}
                 else -> credentials {

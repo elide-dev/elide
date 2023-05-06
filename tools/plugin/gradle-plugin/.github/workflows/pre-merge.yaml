@@ -16,7 +16,7 @@ env:
   GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
   GRADLE_CACHE_REMOTE: "true"
   GRADLE_CACHE_LOCAL: false
-  CACHE_ENDPOINT: "https://global.less.build/cache/generic/"
+  CACHE_ENDPOINT: "https://gradle.less.build/cache/generic/"
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
 jobs:
@@ -63,8 +63,8 @@ jobs:
         uses: graalvm/setup-graalvm@b53bc17dd7dc3052d7c6751f6a5c34abdbf928b3 # v1
         with:
           components: "native-image,js"
-          version: latest
-          java-version: 19
+          version: ${{ vars.GVM_VERSION }}
+          java-version: ${{ vars.JVM_VERSION }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Gradle Caches

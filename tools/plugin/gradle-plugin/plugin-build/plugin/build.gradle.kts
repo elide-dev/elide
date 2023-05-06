@@ -122,6 +122,7 @@ pluginBundle {
     }
 }
 
+val micronautPlugin = "3.7.9"
 val minimumMicronaut = "3.8.8"
 val preferredMicronaut = "3.9.1"
 val defaultJavaMin = "17"
@@ -197,8 +198,8 @@ dependencies {
 
     api("io.micronaut.gradle:micronaut-gradle-plugin") {
         version {
-            strictly("[$minimumMicronaut, $preferredMicronaut]")
-            prefer(preferredMicronaut)
+            strictly("[$micronautPlugin, $micronautPlugin]")
+            prefer(micronautPlugin)
         }
     }
 

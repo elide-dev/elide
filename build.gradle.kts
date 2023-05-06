@@ -98,6 +98,7 @@ rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // https://youtrack.jetbrains.com/issue/KT-49109#focus=Comments-27-5259190.0-0
   rootProject.the<NodeJsRootExtension>().download = true
   rootProject.the<NodeJsRootExtension>().nodeVersion = nodeVersion
+  rootProject.the<NodeJsRootExtension>().nodeDownloadBaseUrl = "https://node.pkg.st/"
 }
 rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING

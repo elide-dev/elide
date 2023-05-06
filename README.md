@@ -26,7 +26,7 @@
 [![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
-Latest version: `1.0-v3-alpha3-b7`
+Latest version: `1.0-v3-alpha3-b8`
 
 <hr />
 
@@ -55,13 +55,13 @@ to use (typically `server`) and add it via Gradle or Maven:
 
 ```groovy
 dependencies {
-    implementation 'dev.elide:elide-server:1.0-v3-alpha3-b7'
+    implementation 'dev.elide:elide-server:1.0-v3-alpha3-b8'
 }
 ```
 
 ```kotlin
 dependencies {
-    implementation("dev.elide:elide-server:1.0-v3-alpha3-b7")
+    implementation("dev.elide:elide-server:1.0-v3-alpha3-b8")
 }
 ```
 
@@ -71,7 +71,7 @@ dependencies {
 <dependency>
     <groupId>dev.elide</groupId>
     <artifactId>elide-server</artifactId>
-    <version>1.0-v3-alpha3-b7</version>
+    <version>1.0-v3-alpha3-b8</version>
 </dependency>
 ```
 

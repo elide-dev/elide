@@ -1,6 +1,6 @@
 'use strict';
 
-const version = '1.0-v3-alpha3-b7';
+const version = '1.0-v3-alpha3-b8';
 
 const os = require('os');
 const fs = require('fs');

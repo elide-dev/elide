@@ -33,7 +33,7 @@ tasks.withType<Test>().configureEach {
 
 // Tasks: Tar
 // ----------
-// Configure tasks which produce tarballs (improves caching/hermeticity).
+// Configure tasks which produce tarballs.
 tasks.withType<Jar>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false
@@ -41,7 +41,7 @@ tasks.withType<Jar>().configureEach {
 
 // Tasks: Zip
 // ----------
-// Configure tasks which produce zip archives (improves caching/hermeticity).
+// Configure tasks which produce zip archives.
 tasks.withType<Zip>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false

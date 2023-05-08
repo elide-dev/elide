@@ -10,11 +10,14 @@ SITE ?= no
 DEFAULT_REPOSITORY ?= gcs://elide-snapshots/repository/v3
 REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
+PLUGINS ?= no
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
 
 # Flags that control this makefile, along with their defaults:
 #
+# SAMPLES ?= no
+# PLUGINS ?= no
 # DEBUG ?= no
 # STRICT ?= yes
 # RELEASE ?= no
@@ -99,6 +102,10 @@ endif
 
 ifeq ($(SCAN),yes)
 BUILD_ARGS += --scan
+endif
+
+ifeq ($(PLUGINS),yes)
+BUILD_ARGS += -PbuildPlugins=true
 endif
 
 ifeq ($(RELEASE),yes)

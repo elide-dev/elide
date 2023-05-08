@@ -212,8 +212,12 @@ afterEvaluate {
         "publishWatchosArm64PublicationToElideRepository",
         "publishWatchosX64PublicationToElideRepository",
     ).forEach {
-        tasks.named(it).configure {
-            dependsOn(*signingTasks)
+        try {
+            tasks.named(it).configure {
+                dependsOn(*signingTasks)
+            }
+        } catch (err: Throwable) {
+            // ignore
         }
     }
 }

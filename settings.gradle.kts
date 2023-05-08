@@ -170,7 +170,7 @@ buildCache {
       isEnabled = true
       isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
       isUseExpectContinue = true
-      url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://global.less.build/cache/generic/")
+      url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://gradle.less.build/cache/generic/")
       when (val pswd = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD")) {
         null -> {}
         else -> credentials {

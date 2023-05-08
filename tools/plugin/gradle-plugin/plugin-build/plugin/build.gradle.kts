@@ -51,6 +51,13 @@ testlogger {
     slowThreshold = 30000L
 }
 
+repositories {
+    maven("https://maven.pkg.st/")
+    maven("https://elide.pkg.st/")
+    maven("https://gradle.pkg.st/")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+}
+
 sonarqube {
     properties {
         property("sonar.projectKey", "elide-dev_buildtools")
@@ -183,7 +190,7 @@ dependencies {
     api(kotlin("gradle-plugin"))
     api(libs.elide.tools.processor)
     implementation(libs.elide.base)
-    implementation(libs.elide.ssg)
+//    implementation(libs.elide.ssg)
     implementation(libs.elide.proto.core)
     implementation(libs.elide.proto.protobuf)
 
@@ -219,7 +226,7 @@ dependencies {
 
     // Elide: Embedded Libs
     embedded(libs.elide.base)
-    embedded(libs.elide.ssg)
+//    embedded(libs.elide.ssg)
 
     // Elide: Embedded Tools
     embedded(libs.closure.templates)

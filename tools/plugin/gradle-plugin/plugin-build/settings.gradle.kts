@@ -14,12 +14,13 @@ plugins {
 
 dependencyResolutionManagement {
     repositoriesMode.set(
-        RepositoriesMode.FAIL_ON_PROJECT_REPOS
+        RepositoriesMode.PREFER_PROJECT
     )
     repositories {
         maven("https://maven.pkg.st/")
         maven("https://gradle.pkg.st/")
         maven("https://elide.pkg.st/")
+        maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
     }
     versionCatalogs {
         create("libs") {

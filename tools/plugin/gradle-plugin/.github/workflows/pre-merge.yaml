@@ -33,6 +33,7 @@ jobs:
 
   gradle:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu]
         include:

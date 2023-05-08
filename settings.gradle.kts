@@ -49,20 +49,20 @@ rootProject.name = "elide"
 // 1: Gradle convention plugins.
 includeBuild("tools/conventions") {
   dependencySubstitution {
-    substitute(module("dev.elide.tools:elide-convention-plugins")).using(project(":"))
+    substitute(module("dev.elide:elide-convention-plugins")).using(project(":"))
   }
 }
 
 // 2: Kotlin Compiler substrate.
 includeBuild("tools/substrate") {
   dependencySubstitution {
-    substitute(module("dev.elide.tools:elide-substrate")).using(project(":"))
-    substitute(module("dev.elide.tools:elide-substrate-bom")).using(project(":bom"))
-    substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
-    substitute(module("dev.elide.tools.kotlin.plugin:injekt-plugin")).using(project(":injekt"))
-    substitute(module("dev.elide.tools.kotlin.plugin:interakt-plugin")).using(project(":interakt"))
-    substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
-    substitute(module("dev.elide.tools.kotlin.plugin:sekret-plugin")).using(project(":sekret"))
+    substitute(module("dev.elide:elide-substrate")).using(project(":"))
+    substitute(module("dev.elide:elide-substrate-bom")).using(project(":elide-substrate-bom"))
+    substitute(module("dev.elide:kotlin-compiler-util")).using(project(":kotlin-compiler-util"))
+    substitute(module("dev.elide:kotlin-injekt-plugin")).using(project(":kotlin-injekt-plugin"))
+    substitute(module("dev.elide:kotlin-interakt-plugin")).using(project(":kotlin-interakt-plugin"))
+    substitute(module("dev.elide:kotlin-redakt-plugin")).using(project(":kotlin-redakt-plugin"))
+    substitute(module("dev.elide:kotlin-sekret-plugin")).using(project(":kotlin-sekret-plugin"))
   }
 }
 

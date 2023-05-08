@@ -38,7 +38,7 @@ ignore:
   - "tools/substrate/injekt"
   - "tools/substrate/sekret"
   - "tools/substrate/interakt"
-  - "tools/substrate/compiler-util"
+  - "tools/substrate/kotlin-compiler-util"
   - "tools/plugin/gradle-plugin"
   - "packages/proto/proto-flatbuffers"
   - "packages/graalvm/src/main/kotlin/elide/runtime/feature"

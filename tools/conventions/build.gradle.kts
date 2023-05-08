@@ -14,7 +14,7 @@ plugins {
   `kotlin-dsl-precompiled-script-plugins`
 }
 
-group = "dev.elide.tools"
+group = "dev.elide"
 version = rootProject.version as String
 
 val kotlinVersion by project.properties
@@ -142,12 +142,13 @@ publishing {
     pom {
       name.set("Elide Tools: Conventions")
       description.set("Gradle convention plugins for use with Elide.")
-      url.set("https://github.com/elide-dev/v3")
+      url.set("https://github.com/elide-dev/elide")
+      artifactId = "elide-convention-plugins"
 
       licenses {
         license {
           name.set("MIT License")
-          url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
         }
       }
       developers {

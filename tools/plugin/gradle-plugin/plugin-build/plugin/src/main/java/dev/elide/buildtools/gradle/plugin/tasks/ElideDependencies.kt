@@ -33,7 +33,7 @@ internal object ElideDependencies {
     private const val libraryGroup = "dev.elide"
 
     /** Default Group ID for tooling dependencies. */
-    private const val toolsGroup = "dev.elide.tools"
+    private const val toolsGroup = "dev.elide"
 
     /** Enumerates supported dependency targets (Gradle configurations) for Elide dependency injection. */
     internal enum class DependencyTarget constructor (

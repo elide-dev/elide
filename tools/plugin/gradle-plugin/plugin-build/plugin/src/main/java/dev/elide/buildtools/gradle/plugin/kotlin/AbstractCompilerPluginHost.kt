@@ -22,12 +22,12 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 internal abstract class AbstractCompilerPluginHost<O : ElideKotlinPluginsHandler.PluginHandler> protected constructor (
     private val pluginId: String,
     private val groupId: String = defaultPluginGroup,
-    private val artifactId: String = "$pluginId-plugin",
+    private val artifactId: String = "kotlin-$pluginId-plugin",
     private val version: String = ELIDE_LIB_VERSION,
 ) : KotlinCompilerPluginSupportPlugin {
     internal companion object {
         // Default plugin group.
-        internal const val defaultPluginGroup: String = "dev.elide.tools.kotlin.plugin"
+        internal const val defaultPluginGroup: String = "dev.elide"
     }
 
     /** Plugin configuration, delivered via Gradle. */

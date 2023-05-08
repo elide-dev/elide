@@ -11,7 +11,7 @@ plugins {
   id("dev.elide.build.core")
 }
 
-group = "dev.elide.tools"
+group = "dev.elide"
 version = rootProject.version as String
 
 dependencies {

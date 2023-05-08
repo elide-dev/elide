@@ -9,22 +9,12 @@ plugins {
   id("com.google.devtools.ksp")
 }
 
-group = "dev.elide.tools"
+group = "dev.elide"
 version = rootProject.version as String
 
 
 kotlin {
   explicitApi()
-
-  publishing {
-    publications {
-      create<MavenPublication>("maven") {
-        artifactId = "processor"
-        groupId = "dev.elide.tools"
-        version = rootProject.version as String
-      }
-    }
-  }
 }
 
 dependencies {
@@ -73,4 +63,40 @@ dependencies {
   // Testing
   testImplementation(kotlin("test"))
   testImplementation(project(":packages:test"))
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      group = "dev.elide"
+      artifactId = "elide-ksp-processor"
+      version = rootProject.version as String
+      from(components["kotlin"])
+
+      pom {
+        name.set("Elide Annotation Processor for KSP")
+        url.set("https://github.com/elide-dev/elide")
+        description.set(
+          "Generates code from annotations using Kotlin Symbol Processing (KSP)."
+        )
+
+        licenses {
+          license {
+            name.set("MIT License")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          }
+        }
+        developers {
+          developer {
+            id.set("sgammon")
+            name.set("Sam Gammon")
+            email.set("samuel.gammon@gmail.com")
+          }
+        }
+        scm {
+          url.set("https://github.com/elide-dev/elide")
+        }
+      }
+    }
+  }
 }

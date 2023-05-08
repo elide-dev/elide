@@ -12,7 +12,7 @@ plugins {
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
-group = "dev.elide.tools.kotlin.plugin"
+group = "dev.elide"
 version = rootProject.version as String
 
 projectConstants(
@@ -26,15 +26,15 @@ publishing {
   elideTarget(
     project,
     label = "Elide Substrate: Sekret Plugin",
-    group = "dev.elide.tools.kotlin.plugin",
-    artifact = "sekret-plugin",
+    group = "dev.elide",
+    artifact = "kotlin-sekret-plugin",
     summary = "Kotlin compiler plugin for handling of sensitive secret data/configuration.",
   )
 }
 
 dependencies {
   ksp(libs.autoService.ksp)
-  api(project(":compiler-util"))
+  api(project(":kotlin-compiler-util"))
   compileOnly(libs.kotlin.compiler.embedded)
   implementation(libs.google.auto.service)
 
@@ -44,5 +44,5 @@ dependencies {
   testImplementation(libs.junit.jupiter.engine)
   testImplementation(libs.kotlin.compiler.testing)
   testImplementation(libs.kotlin.compiler.embedded)
-  testImplementation(project(":compiler-util", "test"))
+  testImplementation(project(":kotlin-compiler-util", "test"))
 }

@@ -158,12 +158,12 @@ object Elide {
 
   /** All subproject modules which are published. */
   val publishedSubprojects = listOf(
-    "bom",
-    "compiler-util",
-    "injekt",
-    "interakt",
-    "redakt",
-    "sekret",
+    "elide-substrate-bom",
+    "kotlin-compiler-util",
+    "kotlin-injekt-plugin",
+    "kotlin-interakt-plugin",
+    "kotlin-redakt-plugin",
+    "kotlin-sekret-plugin",
   ).map { ":substrate:$it" }.plus(listOf(
     ":substrate",
     ":conventions",

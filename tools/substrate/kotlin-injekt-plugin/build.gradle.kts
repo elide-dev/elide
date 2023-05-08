@@ -1,4 +1,3 @@
-import Elide
 import GradleProject.projectConstants
 import ElideSubstrate.elideTarget
 
@@ -13,41 +12,37 @@ plugins {
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
-group = "dev.elide.tools.kotlin.plugin"
+group = "dev.elide"
 version = rootProject.version as String
 
 projectConstants(
-  packageName = "elide.tools.kotlin.plugin.redakt",
+  packageName = "elide.tools.kotlin.plugin.injekt",
   extraProperties = mapOf(
-    "PLUGIN_ID" to Constant.string("redakt"),
-    "PLUGIN_VERSION" to Constant.string(Elide.version),
+    "PLUGIN_ID" to Constant.string("injekt"),
   )
 )
 
 publishing {
   elideTarget(
     project,
-    label = "Elide Substrate: Redakt Plugin",
-    group = "dev.elide.tools.kotlin.plugin",
-    artifact = "redakt-plugin",
-    summary = "Kotlin compiler plugin for redacting sensitive data from logs and toString.",
+    label = "Elide Substrate: Injekt Plugin",
+    group = "dev.elide",
+    artifact = "kotlin-injekt-plugin",
+    summary = "Kotlin compiler plugin for light dependency injection, with support for multi-platform projects.",
   )
 }
 
 dependencies {
   ksp(libs.autoService.ksp)
-  api(project(":compiler-util"))
+  api(project(":kotlin-compiler-util"))
   compileOnly(libs.kotlin.compiler.embedded)
   implementation(libs.google.auto.service)
 
   testImplementation(kotlin("test"))
-  testImplementation(libs.truth)
-  testImplementation(libs.truth.proto)
-  testImplementation(libs.truth.java8)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter)
   testImplementation(libs.junit.jupiter.engine)
   testImplementation(libs.kotlin.compiler.testing)
   testImplementation(libs.kotlin.compiler.embedded)
-  testImplementation(project(":compiler-util", "test"))
+  testImplementation(project(":kotlin-compiler-util", "test"))
 }

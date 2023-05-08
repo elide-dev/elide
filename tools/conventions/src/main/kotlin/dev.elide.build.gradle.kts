@@ -66,6 +66,9 @@ configurations.all {
     // fail eagerly on version conflict (includes transitive dependencies)
     failOnVersionConflict()
 
+    // fail if non-reproducible
+    failOnNonReproducibleResolution()
+
     // prefer modules that are part of this build
     preferProjectModules()
 

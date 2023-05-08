@@ -14,11 +14,11 @@ abstract class AbstractInternalPluginHost<O: ElideInternalPluginsExtension.Plugi
   private val pluginId: String,
   private val version: String,
   private val groupId: String = defaultPluginGroup,
-  private val artifactId: String = "$pluginId-plugin",
+  private val artifactId: String = "kotlin-$pluginId-plugin",
 ) : KotlinCompilerPluginSupportPlugin {
   internal companion object {
     // Default plugin group.
-    internal const val defaultPluginGroup: String = "dev.elide.tools.kotlin.plugin"
+    internal const val defaultPluginGroup: String = "dev.elide"
   }
 
   /** Plugin configuration, delivered via Gradle. */

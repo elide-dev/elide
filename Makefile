@@ -170,11 +170,11 @@ publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
 		:conventions:publish \
-		:substrate:compiler-util:publish \
-		:substrate:redakt:publish \
-		:substrate:injekt:publish \
-		:substrate:sekret:publish \
-		:substrate:interakt:publish \
+		:substrate:kotlin-compiler-util:publish \
+		:substrate:kotlin-redakt-plugin:publish \
+		:substrate:kotlin-injekt-plugin:publish \
+		:substrate:kotlin-sekret-plugin:publish \
+		:substrate:kotlin-interakt-plugin:publish \
 		:tools:processor:publish \
 		:packages:core:publish \
 		:packages:base:publish \

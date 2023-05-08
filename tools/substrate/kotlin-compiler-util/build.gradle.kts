@@ -14,7 +14,7 @@ plugins {
   id("dev.elide.build.kotlin.compilerPlugin")
 }
 
-group = "dev.elide.tools"
+group = "dev.elide"
 version = rootProject.version as String
 val javaVersion = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 17
 
@@ -54,15 +54,15 @@ artifacts {
 publishing {
   publications {
     create<MavenPublication>("maven") {
-      group = "dev.elide.tools"
-      artifactId = "compiler-util"
+      group = "dev.elide"
+      artifactId = "kotlin-compiler-util"
       version = rootProject.version as String
       from(components["kotlin"])
       artifact(tasks["testArchive"])
 
       pom {
         name.set("Elide Substrate: Compiler Utilities")
-        url.set("https://github.com/elide-dev/v3")
+        url.set("https://github.com/elide-dev/elide")
         description.set(
           "Provides utilities for Elide Kotlin Compiler plugins."
         )
@@ -70,7 +70,7 @@ publishing {
         licenses {
           license {
             name.set("MIT License")
-            url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
           }
         }
         developers {
@@ -81,7 +81,7 @@ publishing {
           }
         }
         scm {
-          url.set("https://github.com/elide-dev/v3")
+          url.set("https://github.com/elide-dev/elide")
         }
       }
     }

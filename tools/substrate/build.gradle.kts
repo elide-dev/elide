@@ -27,7 +27,7 @@ val allPlugins = listOf(
   "sekret",
 )
 
-group = "dev.elide.tools"
+group = "dev.elide"
 version = if (project.hasProperty("version")) {
   project.properties["version"] as String
 } else {

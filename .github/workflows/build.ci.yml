@@ -260,7 +260,7 @@ jobs:
             koverMergedHtmlReport
             koverMergedXmlReport
             koverMergedReport
-            :substrate:redakt:test
+            :substrate:kotlin-redakt-plugin:test
             :substrate:koverMergedXmlReport
             :tools:reports:reports
             -x check

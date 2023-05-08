@@ -14,8 +14,8 @@ plugins {
 group = "dev.tools.compiler.plugin"
 version = rootProject.version as String
 
-val javaToolchain: Int = (project.properties["versions.java.language"] as? String)?.toIntOrNull() ?: 17
-val javaTarget: Int = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 17
+val javaToolchain: Int = (project.properties["versions.java.language"] as? String)?.toIntOrNull() ?: 11
+val javaTarget: Int = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 11
 
 kotlin {
   explicitApi()

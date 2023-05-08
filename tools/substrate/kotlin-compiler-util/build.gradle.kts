@@ -16,11 +16,11 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
-val javaVersion = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 17
+val javaVersion = (project.properties["versions.java.target"] as? String)?.toIntOrNull() ?: 11
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"

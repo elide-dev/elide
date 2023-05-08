@@ -12,9 +12,9 @@ LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime: GraalVM (JVM 19)"
 LABEL org.opencontainers.image.description="JVM 19 optimized runtime for Elide."
 LABEL org.opencontainers.image.version=v3-alpha1
-LABEL org.opencontainers.image.url=https://github.com/elide-dev/v3
+LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=us-docker.pkg.dev/elide-fw/tools/base
-LABEL org.opencontainers.image.source=https://github.com/elide-dev/v3/blob/v3/tools/images/runtime-jvm19/Dockerfile
+LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/v3/tools/images/runtime-jvm19/Dockerfile
 
 RUN apt-get update \
   && apt-get -y upgrade \

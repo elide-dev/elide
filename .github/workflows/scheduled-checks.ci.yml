@@ -36,7 +36,7 @@ jobs:
       - name: "Setup: Test Area"
         run: mkdir -p repos
       - name: "Clone: Elide"
-        run: git clone https://github.com/elide-dev/v3.git ./repos/elide
+        run: git clone https://github.com/elide-dev/elide.git ./repos/elide
       - name: "Clone: Runtime"
         continue-on-error: true
         run: git clone https://github.com/elide-dev/runtime.git ./repos/runtime

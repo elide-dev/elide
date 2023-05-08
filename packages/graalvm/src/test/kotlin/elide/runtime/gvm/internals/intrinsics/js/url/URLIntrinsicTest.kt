@@ -192,7 +192,7 @@ import java.net.URI
   @CsvSource(value = [
     // Basic Cases: Normal
     "equal,https://google.com,https://google.com,true,URLs should be equal",
-    "equal,https://github.com/elide-dev/v3,https://github.com/elide-dev/v3,true,URLs should be equal",
+    "equal,https://github.com/elide-dev/elide,https://github.com/elide-dev/elide,true,URLs should be equal",
     "equal,https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
     "equal,https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi,true,URLs should be equal",
     "equal,http://www.google.com/#hello,http://www.google.com/#hello,true,URLs should be equal",
@@ -214,7 +214,7 @@ import java.net.URI
     "not-equal,http://google.com,https://google.com,false,two URLs which differ in protocol should not be equal",
     "not-equal,https://google.com,https://google.co.uk,false,two URLs which differ in host should not be equal",
     "not-equal,https://google.com,https://google.com:444,false,two URLs which differ in port should not be equal",
-    "not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal",
+    "not-equal,https://github.com,https://github.com/elide-dev/elide,false,two URLs which differ in path should not be equal",
     "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
     "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
   ])
@@ -274,7 +274,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,https://google.com",
-    "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
+    "https://github.com/elide-dev/elide,https://github.com/elide-dev/elide",
     "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
     "http://www.google.com/#hello,http://www.google.com/#hello",
@@ -305,7 +305,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,",
-    "https://github.com/elide-dev/v3,",
+    "https://github.com/elide-dev/elide,",
     "https://dl.elide.dev/test?abc=123&def=456,",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,#hi",
     "http://www.google.com/#hello,#hello",
@@ -386,7 +386,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,google.com",
-    "https://github.com/elide-dev/v3,github.com",
+    "https://github.com/elide-dev/elide,github.com",
     "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev:123",
     "http://www.google.com/#hello,www.google.com",
@@ -469,7 +469,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,https:",
-    "https://github.com/elide-dev/v3,https:",
+    "https://github.com/elide-dev/elide,https:",
     "https://dl.elide.dev/test?abc=123&def=456,https:",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,https:",
     "http://www.google.com/#hello,http:",
@@ -533,7 +533,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,443",
-    "https://github.com/elide-dev/v3,443",
+    "https://github.com/elide-dev/elide,443",
     "https://dl.elide.dev/test?abc=123&def=456,443",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,123",
     "http://www.google.com/#hello,80",
@@ -591,7 +591,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,google.com",
-    "https://github.com/elide-dev/v3,github.com",
+    "https://github.com/elide-dev/elide,github.com",
     "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,dl.elide.dev",
     "http://www.google.com/#hello,www.google.com",
@@ -671,7 +671,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,https://google.com",
-    "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
+    "https://github.com/elide-dev/elide,https://github.com/elide-dev/elide",
     "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,https://dl.elide.dev:123/test?abc=123&def=456#hi",
     "http://www.google.com/#hello,http://www.google.com/#hello",
@@ -726,7 +726,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,",
-    "https://github.com/elide-dev/v3,",
+    "https://github.com/elide-dev/elide,",
     "https://dl.elide.dev/test?abc=123&def=456,",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
     "http://www.google.com/#hello,",
@@ -757,7 +757,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,",
-    "https://github.com/elide-dev/v3,",
+    "https://github.com/elide-dev/elide,",
     "https://dl.elide.dev/test?abc=123&def=456,",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,",
     "http://www.google.com/#hello,",
@@ -888,7 +888,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,/",
-    "https://github.com/elide-dev/v3,/elide-dev/v3",
+    "https://github.com/elide-dev/elide,/elide-dev/v3",
     "https://dl.elide.dev/test?abc=123&def=456,/test",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,/test",
     "http://www.google.com/#hello,/",
@@ -945,7 +945,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,",
-    "https://github.com/elide-dev/v3,",
+    "https://github.com/elide-dev/elide,",
     "https://dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,?abc=123&def=456",
     "http://www.google.com/#hello,",

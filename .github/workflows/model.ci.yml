@@ -54,7 +54,7 @@ jobs:
         uses: bufbuild/buf-breaking-action@v1
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
         with:
-          against: https://github.com/elide-dev/v3.git#branch=v3
+          against: https://github.com/elide-dev/elide.git#branch=v3
           input: proto
 
   ##

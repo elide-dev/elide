@@ -95,7 +95,7 @@ Library dependencies are declared in the [`elide` version catalog](../gradle/eli
 consumed from Kotlin accessors generated from that catalog. Dependencies are monitored by GitHub's
 [`dep-review` bot](https://github.com/actions/dependency-review-action), by [Dependabot](https://github.com/dependabot),
 and by [Renovate](https://github.com/renovatebot/renovate) (see
-[_Dependency Dashboard_](https://github.com/elide-dev/v3/issues/8) for more information).
+[_Dependency Dashboard_](https://github.com/elide-dev/elide/issues/8) for more information).
 
 License checks are handled by [Licensebat](https://licensebat.com/). Additional OWASP security checks are performed by Snyk and OWASP's own tools.
 

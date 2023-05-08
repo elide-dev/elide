@@ -159,7 +159,7 @@ publishing {
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/v3")
+        url.set("https://github.com/elide-dev/elide")
       }
     }
   }

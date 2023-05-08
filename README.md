@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/elide-dev/v3">
+  <a href="https://github.com/elide-dev/elide">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./creative/logo/logo-wide-1200-w-r2.png">
       <img src="./creative/logo/logo-wide-1200-w-r2.png" height="300">
@@ -13,7 +13,7 @@
 
 <hr />
 
-[![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml)
+[![Build](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/elide/actions/workflows/build.ci.yml)
 [![codecov](https://codecov.io/gh/elide-dev/v3/branch/v3/graph/badge.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)

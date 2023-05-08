@@ -27,7 +27,7 @@ function getNativeBinary() {
     console.error(`FATAL: Your platform/architecture combination ${
       os.platform()} - ${os.arch()} is not yet supported.
     You may need to compile Elide yourself, or use the JVM version.
-    See instructions at https://github.com/elide-dev/v3.`);
+    See instructions at https://github.com/elide-dev/elide.`);
     return Promise.resolve(1);
   }
 

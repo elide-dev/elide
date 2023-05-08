@@ -34,16 +34,16 @@ object ElideSubstrate {
         artifactId = artifact
         groupId = group
 
-        url.set("https://github.com/elide-dev/v3")
+        url.set("https://github.com/elide-dev/elide")
         description.set(summary)
-        if (!parent && !bom) from(project.components.get("kotlin"))
-        else if (bom) from(project.components.get("javaPlatform"))
-        else if (parent) from(project.components.get("kotlin"))
+        if (!parent && !bom) from(project.components["kotlin"])
+        else if (bom) from(project.components["javaPlatform"])
+        else if (parent) from(project.components["kotlin"])
 
         licenses {
           license {
             name.set("MIT License")
-            url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
           }
         }
         developers {
@@ -54,7 +54,7 @@ object ElideSubstrate {
           }
         }
         scm {
-          url.set("https://github.com/elide-dev/v3")
+          url.set("https://github.com/elide-dev/elide")
         }
       }
     }

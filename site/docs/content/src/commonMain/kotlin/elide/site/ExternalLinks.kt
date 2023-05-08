@@ -6,5 +6,5 @@ object ExternalLinks {
   const val site = "https://beta.elide.dev"
 
   /** GitHub link for Elide. */
-  const val github = "https://github.com/elide-dev/v3"
+  const val github = "https://github.com/elide-dev/elide"
 }

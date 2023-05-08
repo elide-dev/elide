@@ -6,7 +6,7 @@ protocolRepo = "git@github.com:elide-dev/protocol.git"
 protocolBranch = "live"
 protocolHttp = "https://github.com/elide-dev/protocol"
 
-frameworkRepo = "https://github.com/elide-dev/v3"
+frameworkRepo = "https://github.com/elide-dev/elide"
 frameworkBranch = "v3"
 
 def github_source_status(workflow_name, ctx_url = None):
@@ -62,9 +62,9 @@ core.workflow(
         title = "🤖 ${GITHUB_PR_TITLE} (PR ${GITHUB_PR_NUMBER})",
         update_description = True,
         body = (
-            """Update `protocol` sources with the latest code from the [framework repository](https://github.com/elide-dev/v3).
+            """Update `protocol` sources with the latest code from the [framework repository](https://github.com/elide-dev/elide).
 
-Notes from each changed enclosed on the commit. The [original PR](https://github.com/elide-dev/v3/pulls/${GITHUB_PR_NUMBER}) body is enclosed below.
+Notes from each changed enclosed on the commit. The [original PR](https://github.com/elide-dev/elide/pulls/${GITHUB_PR_NUMBER}) body is enclosed below.
 
 ### Changeset info
 
@@ -143,7 +143,7 @@ core.workflow(
         title = "🤖 ${GITHUB_PR_TITLE} (PR ${GITHUB_PR_NUMBER})",
         update_description = True,
         body = (
-            """Update `buildtools` sources with the latest code from the [framework repository](https://github.com/elide-dev/v3).
+            """Update `buildtools` sources with the latest code from the [framework repository](https://github.com/elide-dev/elide).
 
 ### Changeset info
 

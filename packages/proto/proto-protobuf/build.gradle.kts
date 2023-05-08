@@ -17,8 +17,8 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val javaLanguageTarget = project.properties["versions.java.target"] as String
+val javaLanguageVersion = project.properties["versions.java.proto.language"] as String
+val javaLanguageTarget = project.properties["versions.java.proto.target"] as String
 
 sourceSets {
   /**

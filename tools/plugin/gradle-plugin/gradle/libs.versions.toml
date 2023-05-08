@@ -124,6 +124,7 @@ elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide_ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
 elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
+elide_proto_legacy = { group = "dev.elide", name = "proto", version = "1.0-v3-alpha1-rc38" }
 elide_proto_core = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
 elide_proto_protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
 elide_proto_flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }

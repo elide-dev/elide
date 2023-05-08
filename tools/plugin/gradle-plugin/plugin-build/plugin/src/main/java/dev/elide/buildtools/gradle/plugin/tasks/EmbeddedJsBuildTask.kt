@@ -654,10 +654,13 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
                     "2017" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2017
                     "2018" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2018
                     "2019" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2019
-                    "2020" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
-                    "2021" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2021
-                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
-                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+                    "2020",
+                    "2021",
+                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
+                    // @TODO(sgammon): fix JVM base for proto so this can be re-enabled
+//                    "2021" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2021
+//                    "2022" -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2022
+                    else -> EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel.ES2020
                 }
             }
         }

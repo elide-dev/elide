@@ -256,6 +256,9 @@ public final class dev/elide/buildtools/gradle/plugin/cfg/ElidePluginConfig {
 	public static final field DEPENDENCY_PLATFORM Ljava/lang/String;
 	public static final field DEPENDENCY_PROCESSOR Ljava/lang/String;
 	public static final field DEPENDENCY_PROTO Ljava/lang/String;
+	public static final field DEPENDENCY_PROTO_FLATBUFFERS Ljava/lang/String;
+	public static final field DEPENDENCY_PROTO_KOTLINX Ljava/lang/String;
+	public static final field DEPENDENCY_PROTO_PROTOBUF Ljava/lang/String;
 	public static final field DEPENDENCY_SERVER Ljava/lang/String;
 	public static final field DEPENDENCY_SSG Ljava/lang/String;
 	public static final field DEPENDENCY_SUBSTRATE Ljava/lang/String;

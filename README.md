@@ -305,9 +305,8 @@ not need some of these components:
 | Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
 | --------------------------------------------------------------- |-------------|------------| ----------- |---------------| --------- |--------------------|
 | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19`   | `1.8.21`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.51.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.1`/`1.51.0`  |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --         | --          | --            | --        | --                 |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.21`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.51.0` |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-16` | --         | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 

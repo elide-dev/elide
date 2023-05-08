@@ -271,3 +271,46 @@ afterEvaluate {
     }
   }
 }
+
+val buildDocs = project.properties["buildDocs"] == "true"
+publishing {
+  publications.withType<MavenPublication> {
+    artifactId = artifactId.replace("ssg", "elide-ssg")
+
+    pom {
+      name.set("Elide SSG Tools")
+      url.set("https://elide.dev")
+      description.set(
+        "Static Site Generator tools for use with Elide apps."
+      )
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+        }
+      }
+      developers {
+        developer {
+          id.set("sgammon")
+          name.set("Sam Gammon")
+          email.set("samuel.gammon@gmail.com")
+        }
+      }
+      scm {
+        url.set("https://github.com/elide-dev/elide")
+      }
+    }
+  }
+}
+
+afterEvaluate {
+  if (buildDocs) {
+    tasks.named("dokkaHtml").configure {
+      dependsOn("kaptKotlin")
+    }
+    tasks.named("dokkaJavadoc").configure {
+      dependsOn("kaptKotlin")
+    }
+  }
+}

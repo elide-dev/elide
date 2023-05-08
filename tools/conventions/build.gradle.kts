@@ -114,7 +114,6 @@ configurations.all {
 // If so directed, make sure to sign outgoing artifacts.
 signing {
   if (project.hasProperty("enableSigning") && project.properties["enableSigning"] == "true") {
-    sign(configurations.archives.get())
     sign(publishing.publications)
   }
 }

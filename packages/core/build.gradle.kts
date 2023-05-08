@@ -132,7 +132,9 @@ configureJava9ModuleInfo(
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-    val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+    val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class) {
+        dependsOn("kaptKotlinJvm")
+    }
 
     val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
         dependsOn(dokkaHtml)
@@ -172,6 +174,46 @@ publishing {
             scm {
                 url.set("https://github.com/elide-dev/elide")
             }
+        }
+    }
+}
+
+afterEvaluate {
+    val signingTasks = listOf(
+        "signJvmPublication",
+        "signJsPublication",
+        "signKotlinMultiplatformPublication",
+        "signNativePublication",
+        "signIosArm64Publication",
+        "signIosX64Publication",
+        "signMacosArm64Publication",
+        "signWasmPublication",
+        "signMingwX64Publication",
+        "signTvosArm64Publication",
+        "signTvosX64Publication",
+        "signWatchosX64Publication",
+        "signWatchosArm32Publication",
+        "signWatchosArm64Publication",
+    ).toTypedArray()
+
+    listOf(
+        "publishJsPublicationToElideRepository",
+        "publishJvmPublicationToElideRepository",
+        "publishKotlinMultiplatformPublicationToElideRepository",
+        "publishNativePublicationToElideRepository",
+        "publishIosArm64PublicationToElideRepository",
+        "publishIosX64PublicationToElideRepository",
+        "publishMacosArm64PublicationToElideRepository",
+        "publishWasmPublicationToElideRepository",
+        "publishMingwX64PublicationToElideRepository",
+        "publishTvosArm64PublicationToElideRepository",
+        "publishTvosX64PublicationToElideRepository",
+        "publishWatchosArm32PublicationToElideRepository",
+        "publishWatchosArm64PublicationToElideRepository",
+        "publishWatchosX64PublicationToElideRepository",
+    ).forEach {
+        tasks.named(it).configure {
+            dependsOn(*signingTasks)
         }
     }
 }

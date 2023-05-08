@@ -227,3 +227,28 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  if (buildDocs) {
+    tasks.named("dokkaHtml").configure {
+      dependsOn("kaptKotlinJvm")
+    }
+  }
+  val signingTasks = listOf(
+    "signJvmPublication",
+    "signJsPublication",
+    "signKotlinMultiplatformPublication",
+    "signNativePublication",
+  ).toTypedArray()
+
+  listOf(
+    "publishJsPublicationToElideRepository",
+    "publishJvmPublicationToElideRepository",
+    "publishKotlinMultiplatformPublicationToElideRepository",
+    "publishNativePublicationToElideRepository",
+  ).forEach {
+    tasks.named(it).configure {
+      dependsOn(*signingTasks)
+    }
+  }
+}

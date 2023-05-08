@@ -25,21 +25,23 @@ kotlin {
 // Compiler: Kotlin
 // ----------------
 // Configure Kotlin compile runs for MPP, JS, and JVM.
-tasks.withType<KotlinCompile>().configureEach {
-  kotlinOptions {
-    apiVersion = ElideSubstrate.apiVersion
-    languageVersion = ElideSubstrate.kotlinVerison
-    jvmTarget = javaTarget.toString()
-    javaParameters = true
-    allWarningsAsErrors = true
-    incremental = true
-    freeCompilerArgs = listOf(
-      "-progressive",
-      "-Xcontext-receivers",
-      "-Xskip-prerelease-check",
-      "-Xallow-unstable-dependencies",
-      "-Xemit-jvm-type-annotations",
-    )
+afterEvaluate {
+  tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+      apiVersion = ElideSubstrate.apiVersion
+      languageVersion = ElideSubstrate.kotlinVerison
+      jvmTarget = javaTarget.toString()
+      javaParameters = true
+      allWarningsAsErrors = true
+      incremental = true
+      freeCompilerArgs = listOf(
+        "-progressive",
+        "-Xcontext-receivers",
+        "-Xskip-prerelease-check",
+        "-Xallow-unstable-dependencies",
+        "-Xemit-jvm-type-annotations",
+      )
+    }
   }
 }
 

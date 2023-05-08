@@ -183,3 +183,11 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  if (buildDocs) {
+    tasks.named("dokkaJavadoc") {
+      dependsOn("kaptKotlin")
+    }
+  }
+}

@@ -195,6 +195,7 @@ publish:  ## Publish a new version of all Elide packages.
 		:packages:bom:publish \
 		:packages:cli:publish \
 		--no-daemon \
+		--continue \
 		--warning-mode=none \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \

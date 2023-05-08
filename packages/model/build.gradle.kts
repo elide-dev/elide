@@ -177,3 +177,41 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  val signingTasks = listOf(
+    "signJvmPublication",
+    "signJsPublication",
+    "signKotlinMultiplatformPublication",
+    "signNativePublication",
+    "signIosArm64Publication",
+    "signIosX64Publication",
+    "signMacosArm64Publication",
+    "signMingwX64Publication",
+    "signTvosArm64Publication",
+    "signTvosX64Publication",
+    "signWatchosX64Publication",
+    "signWatchosArm32Publication",
+    "signWatchosArm64Publication",
+  ).toTypedArray()
+
+  listOf(
+    "publishJsPublicationToElideRepository",
+    "publishJvmPublicationToElideRepository",
+    "publishKotlinMultiplatformPublicationToElideRepository",
+    "publishNativePublicationToElideRepository",
+    "publishIosArm64PublicationToElideRepository",
+    "publishIosX64PublicationToElideRepository",
+    "publishMacosArm64PublicationToElideRepository",
+    "publishMingwX64PublicationToElideRepository",
+    "publishTvosArm64PublicationToElideRepository",
+    "publishTvosX64PublicationToElideRepository",
+    "publishWatchosArm32PublicationToElideRepository",
+    "publishWatchosArm64PublicationToElideRepository",
+    "publishWatchosX64PublicationToElideRepository",
+  ).forEach {
+    tasks.named(it).configure {
+      dependsOn(*signingTasks)
+    }
+  }
+}

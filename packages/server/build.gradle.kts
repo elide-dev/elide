@@ -180,3 +180,11 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  if (buildDocs) {
+    tasks.named("dokkaJavadoc").configure {
+      dependsOn("kaptKotlin")
+    }
+  }
+}

@@ -117,3 +117,23 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  val signingTasks = listOf(
+    "signJvmPublication",
+    "signJsPublication",
+    "signKotlinMultiplatformPublication",
+    "signNativePublication",
+  ).toTypedArray()
+
+  listOf(
+    "publishJsPublicationToElideRepository",
+    "publishJvmPublicationToElideRepository",
+    "publishKotlinMultiplatformPublicationToElideRepository",
+    "publishNativePublicationToElideRepository",
+  ).forEach {
+    tasks.named(it).configure {
+      dependsOn(*signingTasks)
+    }
+  }
+}

@@ -1,7 +1,7 @@
 pluginManagement {
     repositories {
-        maven("https://maven.pkg.st/")
-        maven("https://gradle.pkg.st/")
+        mavenCentral()
+        gradlePluginPortal()
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
         google()
     }
@@ -9,8 +9,8 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven("https://maven.pkg.st/")
-        maven("https://gradle.pkg.st/")
+        mavenCentral()
+        gradlePluginPortal()
         maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
         google()
     }

@@ -6,13 +6,14 @@
     "OPT_IN_USAGE",
 )
 
+import ElideTargetSuite.configureMultiReleaseJar
 import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
     kotlin("kapt")
     id("dev.elide.build")
     id("dev.elide.build.publishable")
-    id("dev.elide.build.multiplatform")
+    id("dev.elide.build.multiplatform.core")
 }
 
 group = "dev.elide"
@@ -126,9 +127,9 @@ kotlin {
     }
 }
 
-configureJava9ModuleInfo(
-    multiRelease = true,
-)
+// release at each target level
+configureJava9ModuleInfo(multiRelease = true)
+configureMultiReleaseJar()
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
@@ -179,6 +180,55 @@ publishing {
 }
 
 afterEvaluate {
+    val jvmCompileTasks = listOf(
+        "compileKotlinJvmJava11",
+        "compileKotlinJvmJava17",
+        "compileKotlinJvmJava19",
+    ).mapNotNull {
+        try {
+            tasks.named(it)
+        } catch (err: Throwable) {
+            null
+        }
+    }
+
+    val jvmTestTasks = listOf(
+        "compileTestKotlinJvmJava11",
+        "compileTestKotlinJvmJava17",
+        "compileTestKotlinJvmJava19",
+    ).mapNotNull {
+        try {
+            tasks.named(it)
+        } catch (err: Throwable) {
+            null
+        }
+    }
+
+    listOf(
+        "jvmTest",
+        "jvmApiBuild",
+    ).forEach {
+        try {
+            tasks.named(it).configure {
+                dependsOn(jvmCompileTasks)
+            }
+        } catch (err: Throwable) {
+            // ignore
+        }
+    }
+
+    listOf(
+        "jvmTest",
+    ).forEach {
+        try {
+            tasks.named(it).configure {
+                dependsOn(jvmTestTasks)
+            }
+        } catch (err: Throwable) {
+            // ignore
+        }
+    }
+
     val signingTasks = listOf(
         "signJvmPublication",
         "signJsPublication",
@@ -194,7 +244,13 @@ afterEvaluate {
         "signWatchosX64Publication",
         "signWatchosArm32Publication",
         "signWatchosArm64Publication",
-    ).toTypedArray()
+    ).mapNotNull {
+        try {
+            tasks.named(it)
+        } catch (err: Throwable) {
+            null
+        }
+    }
 
     listOf(
         "publishJsPublicationToElideRepository",
@@ -214,7 +270,7 @@ afterEvaluate {
     ).forEach {
         try {
             tasks.named(it).configure {
-                dependsOn(*signingTasks)
+                dependsOn(signingTasks)
             }
         } catch (err: Throwable) {
             // ignore

@@ -15,9 +15,9 @@ plugins {
 
 val antJUnit: Configuration by configurations.creating
 
-kover {
-  isDisabled.set(true)
-}
+//kover {
+//  isDisabled.set(true)
+//}
 
 reporting {
   reports {

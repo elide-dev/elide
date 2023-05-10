@@ -5,11 +5,16 @@
   "UNUSED_VARIABLE",
 )
 
+import Java9Modularity.configureJava9ModuleInfo
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
+  kotlin("jvm")
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   `maven-publish`
   distribution
   signing
-  id("dev.elide.build.kotlin")
 }
 
 group = "dev.elide"
@@ -35,6 +40,47 @@ tasks.withType<JavaCompile>().configureEach {
   options.isFork = true
   options.isIncremental = true
   options.isWarnings = false
+}
+
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      progressiveMode = true
+      optIn("kotlin.ExperimentalUnsignedTypes")
+    }
+  }
+
+  target.compilations.all {
+    kotlinOptions {
+      jvmTarget = javaLanguageTarget
+      javaParameters = true
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = false
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+        // do not warn for generated code
+        "-nowarn"
+      ))
+    }
+  }
+
+  // force -Werror to be off
+  afterEvaluate {
+    tasks.withType<KotlinCompile>().configureEach {
+      kotlinOptions.allWarningsAsErrors = false
+    }
+  }
 }
 
 tasks {
@@ -112,6 +158,8 @@ publishing {
   }
 }
 
+configureJava9ModuleInfo(multiRelease = true)
+
 dependencies {
   // Common
   api(libs.kotlinx.datetime)
@@ -122,4 +170,21 @@ dependencies {
   testImplementation(project(":packages:test"))
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
+}
+
+afterEvaluate {
+  val compileTasks = listOf(
+    "compileKotlinJava11",
+  )
+  listOf(
+    "apiBuild"
+  ).forEach {
+    try {
+      tasks.named(it).configure {
+        dependsOn(compileTasks)
+      }
+    } catch (e: Exception) {
+      // ignore
+    }
+  }
 }

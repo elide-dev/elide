@@ -184,7 +184,7 @@ projectreactor_netty = "1.1.2"
 bouncycastle = "1.70"
 tink = "1.7.0"
 conscrypt = "2.5.2"
-kover = "0.6.1"
+kover = "0.7.0-Beta"
 jmh_plugin = "0.6.8"
 jmh = "1.36"
 doctor_plugin = "0.8.1"
@@ -594,7 +594,7 @@ plugin_detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-p
 plugin_dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 plugin_docker = { group = "io.micronaut.gradle", name = "micronaut-docker-plugin", version.ref = "micronaut_plugin" }
 plugin_micronaut = { group = "io.micronaut.gradle", name = "micronaut-gradle-plugin", version.ref = "micronaut_plugin" }
-plugin_kover = { group = "org.jetbrains.kotlinx", name = "kover", version.ref = "kover" }
+plugin_kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 plugin_spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 plugin_shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow_plugin" }
 plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonar" }

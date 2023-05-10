@@ -4,13 +4,17 @@
   "DSL_SCOPE_VIOLATION", "UNUSED_VARIABLE",
 )
 
+import ElideTargetSuite.configureMultiReleaseJar
 import com.google.protobuf.gradle.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  kotlin("jvm")
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   `maven-publish`
   distribution
   signing
-  id("dev.elide.build.kotlin")
   alias(libs.plugins.protobuf)
 }
 
@@ -43,7 +47,25 @@ configurations {
   }
 }
 
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
 kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      progressiveMode = true
+      optIn("kotlin.ExperimentalUnsignedTypes")
+    }
+  }
+
   target.compilations.all {
     kotlinOptions {
       jvmTarget = javaLanguageTarget
@@ -60,7 +82,7 @@ kotlin {
 
   // force -Werror to be off
   afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    tasks.withType<KotlinCompile>().configureEach {
       kotlinOptions.allWarningsAsErrors = false
     }
   }
@@ -152,6 +174,8 @@ publishing {
   }
 }
 
+configureMultiReleaseJar()
+
 dependencies {
   // API
   api(libs.kotlinx.datetime)
@@ -178,4 +202,16 @@ dependencies {
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
   testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+  kotlinOptions {
+    apiVersion = Elide.kotlinLanguage
+    languageVersion = Elide.kotlinLanguage
+    jvmTarget = "11"
+    javaParameters = true
+    freeCompilerArgs = Elide.kaptCompilerArgs
+    allWarningsAsErrors = true
+    incremental = true
+  }
 }

@@ -2,6 +2,8 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import Java9Modularity.configureJava9ModuleInfo
+
 plugins {
   `java-library`
   publishing
@@ -18,8 +20,16 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+// note: java 11 is forced here for Gradle compatibility
+
 kotlin {
   explicitApi()
+  jvmToolchain(11)
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 buildConfig {
@@ -195,6 +205,10 @@ afterEvaluate {
     enabled = false
   }
 }
+
+configureJava9ModuleInfo(
+  multiRelease = true,
+)
 
 graalvmNative {
   testSupport.set(false)  // disabled for now due to micronaut test bugs in native

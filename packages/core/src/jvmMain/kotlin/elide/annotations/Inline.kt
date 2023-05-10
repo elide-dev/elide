@@ -1,3 +1,5 @@
+@file:JvmName("Inline")
+
 package elide.annotations
 
 /**

@@ -59,16 +59,14 @@ kotlin {
   explicitApi()
 }
 
-koverMerged {
-  enable()
-
-  xmlReport {
-    onCheck.set(isCI)
-  }
-
-  htmlReport {
-    onCheck.set(isCI)
-  }
+koverReport {
+//  xml {
+//    onCheck = isCI
+//  }
+//
+//  html {
+//    onCheck = isCI
+//  }
 }
 
 sonarqube {

@@ -1,3 +1,5 @@
+@file:JvmName("Static")
+
 package elide.annotations
 
 /**

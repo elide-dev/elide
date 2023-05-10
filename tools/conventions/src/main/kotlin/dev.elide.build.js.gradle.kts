@@ -38,11 +38,11 @@ kotlin {
 // Tool: Kover
 // -----------
 // Settings for Kotlin coverage.
-kover {
-  xmlReport {
-    onCheck.set(true)
-  }
-}
+//kover {
+//  xmlReport {
+//    onCheck.set(true)
+//  }
+//}
 
 // Sources: Kotlin
 // ---------------

@@ -22,13 +22,13 @@ val ecmaVersion = project.properties["versions.ecma.language"] as String
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 
-kover {
-  xmlReport {
-    onCheck.set(
-      project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
-    )
-  }
-}
+//kover {
+//  xmlReport {
+//    onCheck.set(
+//      project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
+//    )
+//  }
+//}
 
 kotlin {
   jvm {

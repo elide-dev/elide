@@ -23,9 +23,9 @@ val peers = mapOf(
   "micronaut" to ("io.micronaut:micronaut-bom" to Versions.micronaut),
 )
 
-kover {
-  isDisabled.set(true)
-}
+//kover {
+//  isDisabled.set(true)
+//}
 
 dependencies {
   constraints {

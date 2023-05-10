@@ -5,12 +5,17 @@
   "UNUSED_VARIABLE",
 )
 
+import Java9Modularity.configureJava9ModuleInfo
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
+  kotlin("jvm")
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   `maven-publish`
   distribution
   signing
   kotlin("plugin.serialization")
-  id("dev.elide.build.kotlin")
 }
 
 group = "dev.elide"
@@ -38,7 +43,25 @@ configurations {
   }
 }
 
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
 kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      progressiveMode = true
+      optIn("kotlin.ExperimentalUnsignedTypes")
+    }
+  }
+
   target.compilations.all {
     kotlinOptions {
       jvmTarget = javaLanguageTarget
@@ -46,12 +69,16 @@ kotlin {
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+        // do not warn for generated code
+        "-nowarn"
+      ))
     }
   }
 
   // force -Werror to be off
   afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    tasks.withType<KotlinCompile>().configureEach {
       kotlinOptions.allWarningsAsErrors = false
     }
   }
@@ -130,6 +157,8 @@ publishing {
   }
 }
 
+configureJava9ModuleInfo(multiRelease = true)
+
 dependencies {
   // API
   api(libs.kotlinx.datetime)
@@ -150,4 +179,21 @@ dependencies {
   testImplementation(libs.truth.java8)
   testImplementation(project(":packages:test"))
   testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+}
+
+afterEvaluate {
+  val compileTasks = listOf(
+    "compileKotlinJava11",
+  )
+  listOf(
+    "apiBuild"
+  ).forEach {
+    try {
+      tasks.named(it).configure {
+        dependsOn(compileTasks)
+      }
+    } catch (e: Exception) {
+      // ignore
+    }
+  }
 }

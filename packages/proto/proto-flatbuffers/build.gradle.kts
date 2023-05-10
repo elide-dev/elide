@@ -5,13 +5,17 @@
   "UNUSED_VARIABLE",
 )
 
+import Java9Modularity.configureJava9ModuleInfo
 import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  kotlin("jvm")
+  kotlin("plugin.allopen")
+  kotlin("plugin.noarg")
   `maven-publish`
   distribution
   signing
-  id("dev.elide.build.kotlin")
   alias(libs.plugins.flatbuffers)
 }
 
@@ -39,7 +43,29 @@ configurations {
   }
 }
 
+flatbuffers {
+  language = "kotlin"
+}
+
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
 kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+  }
+
+  sourceSets.all {
+    languageSettings.apply {
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      progressiveMode = true
+      optIn("kotlin.ExperimentalUnsignedTypes")
+    }
+  }
+
   target.compilations.all {
     kotlinOptions {
       jvmTarget = javaLanguageTarget
@@ -56,14 +82,10 @@ kotlin {
 
   // force -Werror to be off
   afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    tasks.withType<KotlinCompile>().configureEach {
       kotlinOptions.allWarningsAsErrors = false
     }
   }
-}
-
-flatbuffers {
-  language = "kotlin"
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -148,6 +170,8 @@ publishing {
   }
 }
 
+configureJava9ModuleInfo(multiRelease = true)
+
 dependencies {
   // Common
   api(libs.kotlinx.datetime)
@@ -170,5 +194,22 @@ dependencies {
 afterEvaluate {
   tasks.named("runKtlintCheckOverMainSourceSet").configure {
     enabled = false
+  }
+}
+
+afterEvaluate {
+  val compileTasks = listOf(
+    "compileKotlinJava11",
+  )
+  listOf(
+    "apiBuild"
+  ).forEach {
+    try {
+      tasks.named(it).configure {
+        dependsOn(compileTasks)
+      }
+    } catch (e: Exception) {
+      // ignore
+    }
   }
 }

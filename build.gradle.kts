@@ -333,17 +333,17 @@ if (tasks.findByName("resolveAllDependencies") == null) {
   }
 }
 
-koverMerged {
-  enable()
-
-  xmlReport {
-    onCheck.set(isCI)
-  }
-
-  htmlReport {
-    onCheck.set(isCI)
-  }
-}
+//koverMerged {
+//  enable()
+//
+//  xmlReport {
+//    onCheck.set(isCI)
+//  }
+//
+//  htmlReport {
+//    onCheck.set(isCI)
+//  }
+//}
 
 tasks.register("samples") {
   description = "Build and test all built-in code samples, in the `samples` path and with Knit."
@@ -399,17 +399,17 @@ tasks.register("preMerge") {
   )
 }
 
-afterEvaluate {
-  tasks.named("koverMergedReport") {
-    Elide.multiplatformModules.plus(
-      Elide.serverModules
-    ).plus(
-      Elide.frontendModules
-    ).forEach {
-      dependsOn(":packages:$it:koverXmlReport")
-    }
-  }
-}
+//afterEvaluate {
+//  tasks.named("koverReport") {
+//    Elide.multiplatformModules.plus(
+//      Elide.serverModules
+//    ).plus(
+//      Elide.frontendModules
+//    ).forEach {
+//      dependsOn(":packages:$it:koverXmlReport")
+//    }
+//  }
+//}
 
 if (buildDocs == "true") {
   tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {

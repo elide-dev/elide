@@ -42,9 +42,9 @@ val peers = mapOf(
   "micronaut" to ("io.micronaut:micronaut-bom" to libs.versions.micronaut.lib.get()),
 )
 
-kover {
-  isDisabled.set(true)
-}
+//kover {
+//  isDisabled.set(true)
+//}
 
 catalog {
   versionCatalog {

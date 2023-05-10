@@ -184,6 +184,8 @@ dependencies {
 afterEvaluate {
   val compileTasks = listOf(
     "compileKotlinJava11",
+    "compileKotlinJava17",
+    "compileKotlinJava19",
   )
   listOf(
     "apiBuild"

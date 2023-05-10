@@ -215,3 +215,22 @@ tasks.withType<KotlinCompile>().configureEach {
     incremental = true
   }
 }
+
+afterEvaluate {
+  val compileTasks = listOf(
+    "compileKotlinJava11",
+    "compileKotlinJava17",
+    "compileKotlinJava19",
+  )
+  listOf(
+    "apiBuild"
+  ).forEach {
+    try {
+      tasks.named(it).configure {
+        dependsOn(compileTasks)
+      }
+    } catch (e: Exception) {
+      // ignore
+    }
+  }
+}

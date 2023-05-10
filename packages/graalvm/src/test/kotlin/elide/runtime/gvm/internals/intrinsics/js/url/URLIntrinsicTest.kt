@@ -888,7 +888,7 @@ import java.net.URI
 
   @CsvSource(value = [
     "https://google.com,/",
-    "https://github.com/elide-dev/elide,/elide-dev/v3",
+    "https://github.com/elide-dev/elide,/elide-dev/elide",
     "https://dl.elide.dev/test?abc=123&def=456,/test",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,/test",
     "http://www.google.com/#hello,/",

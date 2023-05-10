@@ -207,6 +207,7 @@ afterEvaluate {
     listOf(
         "jvmTest",
         "jvmApiBuild",
+        "koverGenerateArtifact",
     ).forEach {
         try {
             tasks.named(it).configure {

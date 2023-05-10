@@ -239,6 +239,7 @@ afterEvaluate {
         "jvmTest",
         "jvmApiBuild",
         "compileJava",
+        "koverGenerateArtifact",
     ).forEach {
         try {
             tasks.named(it).configure {

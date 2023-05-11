@@ -202,7 +202,14 @@ afterEvaluate {
     "compileKotlinJava11",
     "compileKotlinJava17",
     "compileKotlinJava19",
-  )
+  ).mapNotNull {
+    try {
+      tasks.named(it)
+    } catch (err: Throwable) {
+      // ignore
+      null
+    }
+  }
   listOf(
     "apiBuild"
   ).forEach {

@@ -6,9 +6,6 @@
     "OPT_IN_USAGE",
 )
 
-import ElideTargetSuite.configureMultiReleaseJar
-import Java9Modularity.configureJava9ModuleInfo
-
 plugins {
     kotlin("kapt")
     id("dev.elide.build")
@@ -126,10 +123,6 @@ kotlin {
         }
     }
 }
-
-// release at each target level
-configureJava9ModuleInfo(multiRelease = true)
-configureMultiReleaseJar()
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

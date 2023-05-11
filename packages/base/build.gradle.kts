@@ -8,8 +8,6 @@
     ExperimentalWasmDsl::class,
 )
 
-import ElideTargetSuite.configureMultiReleaseJar
-import Java9Modularity.configureJava9ModuleInfo
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
@@ -160,10 +158,6 @@ tasks.named("wasmTest") {
 tasks.named("wasmBrowserTest") {
     enabled = false
 }
-
-// release at each target level
-configureJava9ModuleInfo(multiRelease = true)
-configureMultiReleaseJar()
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

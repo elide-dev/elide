@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     id("dev.elide.build")
-    id("dev.elide.build.multiplatform")
+    id("dev.elide.build.multiplatform.core")
 }
 
 group = "dev.elide"

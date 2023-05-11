@@ -22,6 +22,7 @@ version = rootProject.version as String
 
 kotlin {
     explicitApi()
+    jvmToolchain(Elide.javaTargetMinimum)
 
     jvm {
         withJava()

@@ -9,7 +9,7 @@ import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
   id("dev.elide.build")
-  id("dev.elide.build.multiplatform")
+  id("dev.elide.build.multiplatform.core")
 }
 
 group = "dev.elide"

@@ -19,13 +19,15 @@ val defaultJavaVersion = "11"
 val defaultKotlinVersion = "1.8"
 
 val javaLanguageVersion = project.properties["versions.java.minimum"] as String
-val javaLanguageTarget = project.properties["versions.java.minimum"] as? String ?: defaultJavaVersion
+val javaLanguageTarget = defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 
 kotlin {
+    jvmToolchain(javaLanguageTarget.toInt())
+
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()

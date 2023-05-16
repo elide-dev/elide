@@ -30,7 +30,7 @@
     "cssnano": "^5.1.14",
     "google-protobuf": "3.21.2",
     "postcss": "^8.4.21",
-    "preact": "10.11.3",
+    "preact": "10.14.1",
     "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {

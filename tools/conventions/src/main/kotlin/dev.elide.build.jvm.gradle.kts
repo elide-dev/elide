@@ -16,7 +16,7 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-val defaultJavaVersion = "17"
+val defaultJavaVersion = "11"
 val defaultKotlinVersion = "1.8"
 
 val strictMode = project.properties["strictMode"] as? String == "true"

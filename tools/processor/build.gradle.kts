@@ -15,7 +15,6 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
-  jvmToolchain(11)  // force because of gradle min
 }
 
 dependencies {

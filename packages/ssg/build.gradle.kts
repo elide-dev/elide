@@ -24,7 +24,6 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
-  jvmToolchain(11)
 }
 
 java {

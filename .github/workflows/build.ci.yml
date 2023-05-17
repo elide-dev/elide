@@ -254,8 +254,6 @@ jobs:
           arguments: |
             test
             jacocoTestReport
-            koverMergedHtmlReport
-            koverMergedXmlReport
             koverMergedReport
             :substrate:kotlin-redakt-plugin:test
             :substrate:koverMergedXmlReport
@@ -364,9 +362,6 @@ jobs:
             test
             check
             jacocoTestReport
-            koverMergedHtmlReport
-            koverMergedXmlReport
-            koverMergedReport
             :tools:reports:reports
             -x :packages:ssg:testNativeImage
             -x :packages:ssg:test

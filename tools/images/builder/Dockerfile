@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1-labs
 ARG BASE_IMAGE=gvm17
 ARG BASE_VERSION=":latest"
 ARG BASE_HASH="@sha256:90f12ce02cac21f3c90850966d4829ed53f4757d8dd20c799e73401dce06dc21"

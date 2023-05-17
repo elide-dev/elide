@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1-labs
 ARG BASE_IMAGE=base/alpine
 ARG BASE_VERSION=""
 ARG BASE_HASH="@sha256:19d5f4a076c739143aa1c4dd95081e1aeaa2403cbfee8bbbb2679bbdb48a28c5"

@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1-labs
 FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04
 
 ARG DEV_USER=dev

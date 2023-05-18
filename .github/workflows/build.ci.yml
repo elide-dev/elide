@@ -254,9 +254,7 @@ jobs:
           arguments: |
             test
             jacocoTestReport
-            koverMergedReport
             :substrate:kotlin-redakt-plugin:test
-            :substrate:koverMergedXmlReport
             :tools:reports:reports
             -x check
             --scan

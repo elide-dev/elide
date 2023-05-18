@@ -137,7 +137,6 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.direct-byte-buffer"),
       StaticProperty.active("js.disable-eval"),
       StaticProperty.active("js.esm-eval-returns-exports"),
-      StaticProperty.active("js.foreign-hash-properties"),
       StaticProperty.active("js.foreign-object-prototype"),
       StaticProperty.active("js.intl-402"),
       StaticProperty.active("js.json-modules"),

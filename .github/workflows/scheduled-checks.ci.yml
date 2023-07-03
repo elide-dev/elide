@@ -155,7 +155,7 @@ jobs:
           export_environment_variables: true
           cleanup_credentials: true
       - name: "🛠️ Build"
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629 # v2.4.2
+        uses: gradle/gradle-build-action@40b6781dcdec2762ad36556682ac74e31030cfe2 # v2.5.1
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:

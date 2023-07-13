@@ -2,6 +2,8 @@
   "UnstableApiUsage",
 )
 
+import build.less.plugin.settings.buildless
+
 pluginManagement {
   repositories {
     gradlePluginPortal()
@@ -11,8 +13,9 @@ pluginManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version("3.11.4")
-  id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+  id("build.less") version("1.0.0-beta1")
+  id("com.gradle.enterprise") version("3.13.4")
+  id("org.gradle.toolchains.foojay-resolver-convention") version("0.6.0")
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -163,23 +166,8 @@ val cachePush: String? by settings
 val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: true
 val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 
-buildCache {
-  local {
-    isEnabled = localCache
-  }
-
-  if (remoteCache) {
-    remote<HttpBuildCache> {
-      isEnabled = true
-      isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
-      isUseExpectContinue = true
-      url = uri(System.getenv("CACHE_ENDPOINT") ?: "https://global.less.build/cache/generic/")
-      credentials {
-        username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: "apikey"
-        password = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD") ?: error("Failed to resolve cache password")
-      }
-    }
-  }
+buildless {
+  // nothing to configure at this time
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

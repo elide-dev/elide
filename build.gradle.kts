@@ -110,9 +110,9 @@ apiValidation {
   )
 
   ignoredProjects += listOf(
-    "bundler",
+    //"bundler",
     "bom",
-    "cli",
+    //"cli",
     "proto",
     "processor",
     "reports",

@@ -16,13 +16,16 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-val defaultJavaVersion = "11"
 val defaultKotlinVersion = "1.8"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
-val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
-val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
+val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: error(
+  "Specify Java version at `versions.java.language`"
+)
+val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: error(
+  "Specify Java target at `versions.java.target`"
+)
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
 

@@ -2,6 +2,7 @@ package dev.elide.build.jvm.toolchain
 
 import org.gradle.api.initialization.Settings
 import org.gradle.api.provider.Property
+import java.net.URI
 import java.net.URL
 
 /** Settings-time extension for GraalVM toolchain settings. */
@@ -199,10 +200,10 @@ abstract class GraalVMToolchainExtension {
     val spec = buildSpec()
     val base = if (spec.edition == GraalVMEdition.COMMUNITY) communityBase else TODO()
     val components = if (spec.edition == GraalVMEdition.COMMUNITY) communityUrl else TODO()
-    return URL(
+    return URI.create(
       base +
       components.joinToString(separator = "") { it(spec) }
-    )
+    ).toURL()
   }
 
   /** GraalVM edition to use. */

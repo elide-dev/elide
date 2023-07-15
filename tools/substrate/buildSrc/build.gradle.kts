@@ -10,6 +10,8 @@ plugins {
 
 val buildDocs by properties
 val enableAtomicfu = project.properties["elide.atomicFu"] == "true"
+val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 repositories {
   maven("https://maven.pkg.st/")
@@ -32,6 +34,29 @@ dependencies {
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   if (enableAtomicfu) {
     implementation(libs.plugin.kotlinx.atomicfu)
+  }
+}
+
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageVersion)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
+afterEvaluate {
+  tasks {
+    compileKotlin.configure {
+      kotlinOptions {
+        jvmTarget = javaLanguageTarget
+        javaParameters = true
+      }
+    }
+
+    compileTestKotlin.configure {
+      kotlinOptions {
+        jvmTarget = javaLanguageTarget
+        javaParameters = true
+      }
+    }
   }
 }
 

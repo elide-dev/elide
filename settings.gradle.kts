@@ -81,7 +81,7 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:core",
-  ":packages:cli",
+//  ":packages:cli",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
@@ -97,7 +97,7 @@ include(
   ":packages:ssg",
   ":packages:ssr",
   ":packages:test",
-  ":tools:bundler",
+//  ":tools:bundler",
   ":tools:processor",
   ":tools:reports",
 )

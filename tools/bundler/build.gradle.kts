@@ -28,8 +28,8 @@ val entrypoint = "elide.tool.bundler.Bundler"
 val javaVersion = "17"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_19
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 buildConfig {
@@ -174,6 +174,19 @@ micronaut {
     precomputeOperations.set(true)
     cacheEnvironment.set(true)
     optimizeClassLoading.set(true)
+  }
+}
+
+tasks {
+  compileKotlin {
+    kotlinOptions {
+      apiVersion = Elide.kotlinLanguage
+      languageVersion = Elide.kotlinLanguage
+      jvmTarget = javaVersion
+      javaParameters = true
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
+      allWarningsAsErrors = true
+    }
   }
 }
 

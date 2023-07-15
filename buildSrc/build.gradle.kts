@@ -11,6 +11,8 @@ plugins {
 }
 
 val buildDocs by properties
+val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 dependencies {
   implementation(gradleApi())
@@ -35,6 +37,29 @@ dependencies {
   implementation(libs.plugin.kotlinx.abiValidator)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   api("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+}
+
+java {
+  sourceCompatibility = JavaVersion.toVersion(javaLanguageVersion)
+  targetCompatibility = JavaVersion.toVersion(javaLanguageTarget)
+}
+
+afterEvaluate {
+  tasks {
+    compileKotlin.configure {
+      kotlinOptions {
+        jvmTarget = javaLanguageTarget
+        javaParameters = true
+      }
+    }
+
+    compileTestKotlin.configure {
+      kotlinOptions {
+        jvmTarget = javaLanguageTarget
+        javaParameters = true
+      }
+    }
+  }
 }
 
 apply(from = "../gradle/loadProps.gradle.kts")

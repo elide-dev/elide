@@ -126,15 +126,7 @@ val minimumMicronaut = "3.7.8"
 val preferredMicronaut = "3.7.8"
 val defaultJavaMin = "11"
 val defaultJavaMax = "19"
-
-val baseJavaMin: Int = (
-    if (project.hasProperty("versions.java.minimum")) {
-        project.properties["versions.java.minimum"] as? String ?: defaultJavaMin
-    } else {
-        defaultJavaMin
-    }
-).toInt()
-
+val baseJavaMin: Int = (defaultJavaMin).toInt()
 val skipVersions = sortedSetOf(
     12,
     13,
@@ -264,6 +256,30 @@ kotlin {
             languageVersion = kotlinLanguageVersion
             progressiveMode = true
         }
+    }
+}
+
+tasks.compileKotlin.configure {
+    kotlinOptions {
+        apiVersion = Elide.kotlinLanguage
+        languageVersion = Elide.kotlinLanguage
+        jvmTarget = baseJavaMin.toString()
+        javaParameters = true
+        freeCompilerArgs = Elide.kaptCompilerArgs
+        allWarningsAsErrors = true
+        incremental = true
+    }
+}
+
+tasks.compileTestKotlin.configure {
+    kotlinOptions {
+        apiVersion = Elide.kotlinLanguage
+        languageVersion = Elide.kotlinLanguage
+        jvmTarget = baseJavaMin.toString()
+        javaParameters = true
+        freeCompilerArgs = Elide.kaptCompilerArgs
+        allWarningsAsErrors = true
+        incremental = true
     }
 }
 

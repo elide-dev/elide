@@ -27,6 +27,10 @@ import %workspace%/.dev/aspect/bazelrc/cache.bazelrc
 # Platforms & Languages
 #
 
+import %workspace%/.dev/aspect/bazelrc/linux.bazelrc
+import %workspace%/.dev/aspect/bazelrc/darwin.bazelrc
+import %workspace%/.dev/aspect/bazelrc/windows.bazelrc
+
 import %workspace%/.dev/aspect/bazelrc/java.bazelrc
 import %workspace%/.dev/aspect/bazelrc/rust.bazelrc
 

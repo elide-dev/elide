@@ -1,7 +1,5 @@
 # Required on windows
 common --enable_platform_specific_config
-startup --windows_enable_symlinks
-build:windows --enable_runfiles
 
 # Enable rustfmt
 build:strict --aspects=@rules_rust//rust:defs.bzl%rustfmt_aspect
@@ -10,4 +8,3 @@ build:strict --output_groups=+rustfmt_checks
 # Enable clippy
 build:strict --aspects=@rules_rust//rust:defs.bzl%rust_clippy_aspect
 build:strict --output_groups=+clippy_checks
-

@@ -241,7 +241,7 @@ jobs:
           name: site-tarball-phase2
           path: ./site.tar.gz
       - name: "Upload: Site Artifact"
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: build/site
 

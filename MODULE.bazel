@@ -52,9 +52,9 @@ bazel_dep(name = "zstd-jni", version = "1.5.2-3")
 bazel_dep(name = "stardoc", version = "0.5.6", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "6.1.2", dev_dependency = True)
 
-#
-# `rules_jvm_external`
-#
+################################################################################
+# rules_jvm_external
+################################################################################
 
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 
@@ -68,9 +68,12 @@ maven.install(
     repositories = [
         "https://maven.pkg.st",
         "https://gradle.pkg.st",
+        "https://repo.gradle.org/gradle/libs-releases",
     ],
     artifacts = [
         "dev.elide:elide-core:1.0-v3-alpha3-b7",
+        "org.gradle:gradle-tooling-api:8.2.1",
+        "org.slf4j:slf4j-simple:1.7.10",
     ],
     lock_file = "//:maven_install.json",
 )
@@ -109,3 +112,13 @@ rules_ts_ext.deps()
 
 use_repo(rules_ts_ext, "npm_typescript")
 
+################################################################################
+# rules_go
+################################################################################
+
+go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+
+# Download an SDK for the host OS & architecture.
+go_sdk.download(
+    version = "1.20.6",
+)

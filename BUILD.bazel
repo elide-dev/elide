@@ -1,4 +1,19 @@
-#load("@npm//:defs.bzl", "npm_link_all_packages")
+package(
+    default_visibility = ["//visibility:public"],
+)
 
-#npm_link_all_packages(name = "node_modules")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@gazelle//:def.bzl", "gazelle")
 
+# gazelle:prefix github.com/elide-dev/elide
+
+npm_link_all_packages(name = "node_modules")
+
+gazelle(name = "gazelle")
+
+exports_files([
+    ".cargo/config.toml",
+    "Cargo.toml",
+    "Cargo.lock",
+    "Cargo.Bazel.lock",
+])

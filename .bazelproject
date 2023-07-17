@@ -1,0 +1,30 @@
+directories:
+  .
+  .dev
+  .github
+  elide
+  tools
+
+workspace_type: java
+java_language_level: jdk_17_preview
+derive_targets_from_directories: false
+
+#build_flags:
+#targets:
+#test_flags:
+test_sources:
+  tests/*
+  */test/*
+  javatests/*
+
+ts_config_rules:
+  //:tsconfig
+
+additional_languages:
+  java
+  javascript
+  python
+  kotlin
+  typescript
+  go
+

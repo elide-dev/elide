@@ -1,0 +1,6 @@
+build:android --experimental_enable_android_migration_apis
+build:android --experimental_google_legacy_api
+build:android --incompatible_java_common_parameters
+build:android --android_databinding_use_v3_4_args
+build:android --experimental_android_databinding_v2
+

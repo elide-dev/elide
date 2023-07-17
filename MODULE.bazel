@@ -1,7 +1,26 @@
 module(name = "elide", version = "1.0.0")
 
+##
+## Module Dependencies
+##
+
+bazel_dep(name = "platforms", version = "0.0.6")
+
+## Dependencies: Core
+bazel_dep(name = "rules_apple", version = "2.4.1")
+bazel_dep(name = "rules_cc", version = "0.0.6")
+bazel_dep(name = "rules_foreign_cc", version = "0.9.0")
+bazel_dep(name = "rules_go", version = "0.41.0")
+bazel_dep(name = "rules_java", version = "6.2.2")
+bazel_dep(name = "rules_jni", version = "0.7.0")
 bazel_dep(name = "rules_jvm_external", version = "5.3")
 
+## Dependencies: Aspect
+bazel_dep(name = "aspect_bazel_lib",  version = "1.32.1")
+bazel_dep(name = "aspect_rules_js",  version = "1.30.0")
+bazel_dep(name = "aspect_rules_esbuild", version = "0.15.0")
+bazel_dep(name = "aspect_rules_jest", version = "0.19.5")
+bazel_dep(name = "aspect_rules_ts",  version = "1.4.5")
 
 #
 # `rules_jvm_external`
@@ -16,8 +35,12 @@ maven.artifact(
 )
 
 maven.install(
+    repositories = [
+        "https://maven.pkg.st",
+        "https://gradle.pkg.st",
+    ],
     artifacts = [
-        "org.seleniumhq.selenium:selenium-java:4.4.0",
+        "dev.elide:elide-core:1.0-v3-alpha3-b7",
     ],
     lock_file = "//:maven_install.json",
 )
@@ -27,4 +50,32 @@ use_repo(
     "maven",
     "unpinned_maven",
 )
+
+################################################################################
+# rules_js
+################################################################################
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+
+npm.npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    npmrc = "//:.npmrc",
+)
+
+use_repo(npm, "npm")
+
+################################################################################
+# rules_ts
+################################################################################
+
+rules_ts_ext = use_extension(
+    "@aspect_rules_ts//ts:extensions.bzl",
+    "ext",
+    dev_dependency = True,
+)
+
+rules_ts_ext.deps()
+
+use_repo(rules_ts_ext, "npm_typescript")
 

@@ -1,16 +1,55 @@
+#
+# Imports
+#
 
-build --java_runtime_version=remotejdk_11
-build --tool_java_runtime_version=remotejdk_11
+# Import Aspect recommended Bazel convenience settings for all projects
+import %workspace%/.dev/aspect/bazelrc/convenience.bazelrc
 
+# Import Aspect recommended Bazel correctness settings for all projects
+import %workspace%/.dev/aspect/bazelrc/correctness.bazelrc
+
+# Import Aspect recommended Bazel performance settings for all projects
+import %workspace%/.dev/aspect/bazelrc/performance.bazelrc
+
+# Import Aspect recommended Bazel debug settings for all projects
+import %workspace%/.dev/aspect/bazelrc/debug.bazelrc
+
+# Import Aspect recommended Bazel javascript settings for all projects
+import %workspace%/.dev/aspect/bazelrc/javascript.bazelrc
+
+# Import Aspect recommended Bazel 6 settings for all projects
+import %workspace%/.dev/aspect/bazelrc/bazel6.bazelrc
+
+# Setup remote and local cache settings
+import %workspace%/.dev/aspect/bazelrc/cache.bazelrc
+
+#
+# Platforms & Languages
+#
+
+import %workspace%/.dev/aspect/bazelrc/java.bazelrc
+import %workspace%/.dev/aspect/bazelrc/rust.bazelrc
+
+#
+# Configuration
+#
+
+# Turn on the bzlmod feature in Bazel, before 6.0 final it's experimental
 common --enable_bzlmod
-build --java_language_version=11
-build --tool_java_language_version=11
+common --enable_platform_specific_config
 
-build --experimental_strict_java_deps=strict
-build --explicit_java_test_deps
+# Compatibility
+build --incompatible_disallow_empty_glob=true
+build --incompatible_use_platforms_repo_for_constraints
+build --nolegacy_external_runfiles
 
-test --verbose_failures
-test --test_output=errors
+# Testing & Coverage
+coverage --combined_report=lcov
+coverage --experimental_fetch_all_coverage_outputs
 
-build --sandbox_tmpfs_path=/tmp
+# Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
+# This file should appear in `.gitignore` so that settings are not shared with team members. This
+# should be last statement in this config so the user configuration is able to overwrite flags from
+# this file. See https://bazel.build/configure/best-practices#bazelrc-file.
+try-import %workspace%/user.bazelrc
 

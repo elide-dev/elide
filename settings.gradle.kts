@@ -85,6 +85,7 @@ include(
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
+  ":packages:graalvm-py",
   ":packages:graalvm-react",
   ":packages:model",
   ":packages:platform",

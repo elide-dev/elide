@@ -2,15 +2,21 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import proguard.gradle.ProGuardTask
 import Java9Modularity.configureJava9ModuleInfo
+import org.jetbrains.kotlin.gradle.internal.KaptTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
+  java
   `java-library`
   distribution
   publishing
   jacoco
+  `jvm-test-suite`
+  `maven-publish`
 
+  kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.serialization")
   id("com.github.gmazzo.buildconfig")
   id("io.micronaut.application")
@@ -18,8 +24,6 @@ plugins {
   id("io.micronaut.aot")
   id("com.github.johnrengelman.shadow")
   id("dev.elide.build.docker")
-  id("dev.elide.build.jvm.kapt")
-  id("dev.elide.build.native.app")
 }
 
 group = "dev.elide"
@@ -29,7 +33,7 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_19
 }
 
 ktlint {
@@ -46,6 +50,7 @@ ktlint {
 
 kotlin {
   explicitApi()
+  jvmToolchain(19)
 
   target.compilations.all {
     kotlinOptions {
@@ -57,6 +62,13 @@ kotlin {
       freeCompilerArgs = Elide.jvmCompilerArgsBeta
     }
   }
+}
+
+kapt {
+  useBuildCache = true
+  includeCompileClasspath = false
+  strictMode = true
+  correctErrorTypes = true
 }
 
 buildConfig {
@@ -179,13 +191,6 @@ tasks.named<JavaExec>("run") {
   )
   standardInput = System.`in`
   standardOutput = System.out
-}
-
-afterEvaluate {
-  tasks.named<JavaExec>("optimizedRun") {
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("picocli.ansi", "tty")
-  }
 }
 
 val quickbuild = (
@@ -456,6 +461,26 @@ configurations.all {
 }
 
 afterEvaluate {
+  tasks.named<JavaExec>("optimizedRun") {
+    systemProperty("micronaut.environments", "dev")
+    systemProperty("picocli.ansi", "tty")
+  }
+
+  tasks.withType(KaptTask::class.java).configureEach {
+
+  }
+
+  tasks.withType(KotlinJvmCompile::class.java).configureEach {
+    kotlinOptions {
+      apiVersion = Elide.kotlinLanguageBeta
+      languageVersion = Elide.kotlinLanguageBeta
+      jvmTarget = Elide.javaTargetProguard
+      javaParameters = true
+      freeCompilerArgs = Elide.jvmCompilerArgs
+      allWarningsAsErrors = true
+    }
+  }
+
   listOf(
     "buildLayers",
     "optimizedBuildLayers",

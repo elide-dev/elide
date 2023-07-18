@@ -214,15 +214,26 @@ afterEvaluate {
 
 val commonNativeArgs = listOf(
   "--language:js",
+  "--language:java",
+  "--language:python",
+  "--language:wasm",
+  "--language:icu4j",
+  "--language:nfi",
+  "--language:regex",
+  "--tool:chromeinspector",
+  "--tool:coverage",
+  "--tool:lsp",
+  "--tool:sandbox",
   "--gc=serial",
   "--no-fallback",
+  "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--enable-all-security-services",
   "--install-exit-handlers",
   "-H:DashboardDump=elide-tool",
   "-H:+DashboardAll",
-  "-H:-SpawnIsolates",
+  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
 )
 
 val debugFlags = listOf(
@@ -230,7 +241,7 @@ val debugFlags = listOf(
 )
 
 val releaseFlags = listOf(
-  "-O1",
+  "-O2",
 )
 
 val jvmDefs = mapOf(

@@ -93,6 +93,9 @@ dependencies {
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
+  implementation(libs.kotlin.scripting.common)
+  implementation(libs.kotlin.scripting.jvm)
+  implementation(libs.kotlin.scripting.jvm.host)
 
   implementation(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)

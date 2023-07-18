@@ -296,7 +296,7 @@ internal class JsRuntime @Inject constructor (
     // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM.
     VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
       if (WASM_SUPPORTED) {
-        config.wasm ?: false
+        config.wasm ?: true
       } else {
         false
       }

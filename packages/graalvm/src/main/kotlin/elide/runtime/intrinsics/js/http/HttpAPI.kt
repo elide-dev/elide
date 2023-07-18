@@ -1,6 +1,7 @@
 package elide.runtime.intrinsics.js.http
 
 import elide.annotations.core.Polyglot
+import org.graalvm.polyglot.Value
 
 public interface HttpAPI {
   /**
@@ -10,6 +11,6 @@ public interface HttpAPI {
    */
   @Polyglot public fun createServer(
     options: Any? = null,
-    requestListener: ((IncomingMessage, OutgoingMessage) -> Unit)? = null
+    requestListener: Value? = null,
   ): Server
 }

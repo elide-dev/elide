@@ -127,6 +127,9 @@ dependencies {
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
 
+  // Netty
+  implementation(libs.reactor.netty)
+
   // SQLite
   implementation(libs.sqlite)
 

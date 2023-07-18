@@ -177,7 +177,8 @@ internal class JsRuntime @Inject constructor (
     private val coreModules: Map<String, String> = mapOf(
       "buffer" to "/__runtime__/buffer/buffer.cjs",
       "util" to "/__runtime__/util/util.cjs",
-      "fs" to "/__runtime__/util/fs.mjs",
+      "fs" to "/__runtime__/fs/fs.mjs",
+      "http" to "/__runtime__/http/http.cjs",
     )
 
     init {

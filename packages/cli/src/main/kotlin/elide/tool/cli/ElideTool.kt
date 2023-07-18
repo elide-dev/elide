@@ -48,8 +48,7 @@ import kotlin.system.exitProcess
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Singleton public class ElideTool internal constructor () :
-  AbstractToolCommand(),
-  AbstractBundlerSubcommand.BundlerParentCommand {
+  AbstractToolCommand(), AbstractBundlerSubcommand.BundlerParentCommand {
   public companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")

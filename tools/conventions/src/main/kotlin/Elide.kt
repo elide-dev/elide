@@ -70,11 +70,14 @@ object Elide {
   /** Kotlin language version (beta). */
   const val kotlinLanguageBeta = kotlinLanguage
 
-  /** Maximum Java language target for Proguard. */
-  const val javaTargetProguard = "16"
+  /** Minimum Java language target. */
+  const val javaTargetMinimum = "11"
 
   /** Maximum Java language target. */
   const val javaTargetMaximum = "19"
+
+  /** Maximum Java language target for Proguard. */
+  const val javaTargetProguard = "19"
 
   /** Sample code modules. */
   val samplesList = listOf(

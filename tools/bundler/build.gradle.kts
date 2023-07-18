@@ -25,11 +25,11 @@ group = "dev.elide.tools"
 version = rootProject.version as String
 
 val entrypoint = "elide.tool.bundler.Bundler"
-val javaVersion = "17"
+val javaVersion = "11"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_19
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 buildConfig {
@@ -79,7 +79,7 @@ kotlin {
   afterEvaluate {
     target.compilations.all {
       kotlinOptions {
-        jvmTarget = Elide.javaTargetMaximum
+        jvmTarget = Elide.javaTargetMinimum
         languageVersion = Elide.kotlinLanguage
         apiVersion = Elide.kotlinLanguage
         javaParameters = true
@@ -424,7 +424,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.javaTargetProguard
+    jvmTarget = Elide.javaTargetMinimum
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = true

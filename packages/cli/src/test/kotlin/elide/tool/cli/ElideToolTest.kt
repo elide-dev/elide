@@ -4,7 +4,6 @@ import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import kotlin.test.assertNotNull
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 
 /** Tests for the main CLI tool entrypoint. */
 @TestCase class ElideToolTest {

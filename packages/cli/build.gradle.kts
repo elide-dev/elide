@@ -31,9 +31,20 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
+val enableEspresso = false
+val enableWasm = false
+val enablePython = false
+
 java {
   sourceCompatibility = JavaVersion.VERSION_19
   targetCompatibility = JavaVersion.VERSION_19
+
+  java {
+    toolchain {
+      languageVersion.set(JavaLanguageVersion.of(19))
+      vendor.set(JvmVendorSpec.GRAAL_VM)
+    }
+  }
 }
 
 ktlint {
@@ -50,11 +61,10 @@ ktlint {
 
 kotlin {
   explicitApi()
-  jvmToolchain(19)
 
   target.compilations.all {
     kotlinOptions {
-      jvmTarget = Elide.javaTargetMaximum
+      jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
@@ -214,9 +224,6 @@ afterEvaluate {
 
 val commonNativeArgs = listOf(
   "--language:js",
-  "--language:java",
-  "--language:python",
-  "--language:wasm",
   "--language:icu4j",
   "--language:nfi",
   "--language:regex",
@@ -234,7 +241,11 @@ val commonNativeArgs = listOf(
   "-H:DashboardDump=elide-tool",
   "-H:+DashboardAll",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
-)
+).plus(listOfNotNull(
+  if (enableEspresso) "--language:java" else null,
+  if (enableWasm) "--language:wasm" else null,
+  if (enablePython) "--language:python" else null,
+))
 
 val debugFlags = listOf(
   "-g",
@@ -433,7 +444,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.javaTargetProguard
+    jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = true
@@ -488,7 +499,7 @@ afterEvaluate {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguageBeta
       languageVersion = Elide.kotlinLanguageBeta
-      jvmTarget = Elide.javaTargetProguard
+      jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgs
       allWarningsAsErrors = true

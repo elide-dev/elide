@@ -1,0 +1,71 @@
+public abstract class elide/tool/bundler/AbstractBundlerSubcommand : java/io/Closeable, java/lang/AutoCloseable, java/lang/Runnable {
+	protected field bundle Lelide/tool/bundler/CommonBundleOptions;
+	protected field top Lelide/tool/bundler/AbstractBundlerSubcommand$BundlerParentCommand;
+	public fun <init> ()V
+	public fun close ()V
+	protected final fun getBundle ()Lelide/tool/bundler/CommonBundleOptions;
+	protected final fun getLogging ()Lelide/runtime/Logger;
+	protected final fun getTop ()Lelide/tool/bundler/AbstractBundlerSubcommand$BundlerParentCommand;
+	protected final fun operation (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;
+	public fun run ()V
+	protected final fun setBundle (Lelide/tool/bundler/CommonBundleOptions;)V
+	protected final fun setTop (Lelide/tool/bundler/AbstractBundlerSubcommand$BundlerParentCommand;)V
+}
+
+public abstract interface class elide/tool/bundler/AbstractBundlerSubcommand$BundlerParentCommand {
+	public abstract fun getDebug ()Z
+	public abstract fun getPretty ()Z
+	public abstract fun getQuiet ()Z
+	public abstract fun getVerbose ()Z
+}
+
+public abstract interface class elide/tool/bundler/AbstractBundlerSubcommand$CommandContext {
+	public abstract fun getDebug ()Z
+	public abstract fun getFile ()Ljava/io/File;
+	public abstract fun getPretty ()Z
+	public abstract fun getQuiet ()Z
+	public abstract fun getStdin ()Z
+	public abstract fun getVerbose ()Z
+}
+
+public final class elide/tool/bundler/Bundler : elide/tool/bundler/AbstractBundlerSubcommand$BundlerParentCommand, java/lang/Runnable {
+	public static final field Companion Lelide/tool/bundler/Bundler$Companion;
+	public fun <init> ()V
+	public static final fun exec$bundler ([Ljava/lang/String;)I
+	public fun getDebug ()Z
+	public fun getPretty ()Z
+	public fun getQuiet ()Z
+	public fun getVerbose ()Z
+	public static final fun main ([Ljava/lang/String;)V
+	public fun run ()V
+	public fun setDebug (Z)V
+	public fun setPretty (Z)V
+	public fun setQuiet (Z)V
+	public fun setVerbose (Z)V
+}
+
+public final class elide/tool/bundler/Bundler$Companion {
+	public final fun main ([Ljava/lang/String;)V
+}
+
+public final class elide/tool/bundler/CommonBundleOptions {
+	public fun <init> ()V
+}
+
+public final class elide/tool/bundler/cfg/ElideBundlerTool {
+	public static final field ELIDE_TOOL_VERSION Ljava/lang/String;
+	public static final field INSTANCE Lelide/tool/bundler/cfg/ElideBundlerTool;
+}
+
+public final class elide/tool/bundler/cmd/inspect/BundleInspectCommand : elide/tool/bundler/AbstractBundlerSubcommand {
+	public fun <init> ()V
+}
+
+public final class elide/tool/bundler/cmd/pack/BundlePackCommand : elide/tool/bundler/AbstractBundlerSubcommand {
+	public fun <init> ()V
+}
+
+public final class elide/tool/bundler/cmd/unpack/BundleUnpackCommand : elide/tool/bundler/AbstractBundlerSubcommand {
+	public fun <init> ()V
+}
+

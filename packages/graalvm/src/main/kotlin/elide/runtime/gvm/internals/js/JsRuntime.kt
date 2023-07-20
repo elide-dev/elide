@@ -119,7 +119,7 @@ internal class JsRuntime @Inject constructor (
     const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
-    private const val DEBUG_GLOBAL: String = "ElideDebug"
+    private const val DEBUG_GLOBAL: String = "__ElideDebug__"
 
     // Hard-coded JS VM options.
     val baseOptions : List<VMProperty> = listOf(
@@ -153,7 +153,6 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.inactive("js.regex-static-result"),
       StaticProperty.inactive("js.scripting"),
       StaticProperty.inactive("js.syntax-extensions"),
-      StaticProperty.of("js.debug-property-name", "__ElideDebug__"),
       StaticProperty.of("js.unhandled-rejections", UNHANDLED_REJECTIONS),
       StaticProperty.of("js.debug-property-name", DEBUG_GLOBAL),
       StaticProperty.of("js.function-constructor-cache-size", FUNCTION_CONSTRUCTOR_CACHE_SIZE),

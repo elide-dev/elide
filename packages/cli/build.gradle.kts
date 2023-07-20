@@ -219,7 +219,6 @@ afterEvaluate {
 val commonNativeArgs = listOf(
   "--language:js",
   "--language:icu4j",
-  "--language:nfi",
   "--language:regex",
   "--tool:chromeinspector",
   "--tool:coverage",
@@ -234,6 +233,7 @@ val commonNativeArgs = listOf(
   "--install-exit-handlers",
   "-H:DashboardDump=elide-tool",
   "-H:+DashboardAll",
+  "-H:+AuxiliaryEngineCache",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,

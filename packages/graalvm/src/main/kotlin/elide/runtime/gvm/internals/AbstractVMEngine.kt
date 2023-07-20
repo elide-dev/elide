@@ -345,6 +345,7 @@ internal abstract class AbstractVMEngine<
       .allowValueSharing(true)
       .fileSystem(filesystem)
       .allowIO(true)
+      .engine(contextManager.engine())
       .allowHostAccess(HostAccess.newBuilder(HostAccess.SCOPED)
         .allowImplementations(Proxy::class.java)
         .allowAccessAnnotatedBy(HostAccess.Export::class.java)

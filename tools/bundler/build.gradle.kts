@@ -231,7 +231,6 @@ val commonNativeArgs = listOf(
   "--install-exit-handlers",
   "-H:DashboardDump=elide-bundler",
   "-H:+DashboardAll",
-  "-H:-SpawnIsolates",
 )
 
 val debugFlags = listOf(

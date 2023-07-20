@@ -14,9 +14,7 @@ env:
   GRADLE_CACHE_LOCAL: false
   GRADLE_CACHE_REMOTE: true
   GRADLE_CACHE_PUSH: true
-  CACHE_ENDPOINT: "https://global.less.build/cache/generic/"
-  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
-  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
   GRADLE_OPTS: "-Xmx6g -XX:MaxMetaspaceSize=1024m -XX:+UseParallelGC"
 
 jobs:

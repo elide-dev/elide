@@ -196,11 +196,6 @@ internal abstract class AbstractVMEngine<
         RuntimeFlag.inspectPath ?: guestConfig.inspector?.path
       },
 
-      // Inspection: Suspend.
-      VMRuntimeProperty.ofBoolean("vm.inspect.suspend", "inspect.Suspend") {
-        RuntimeFlag.inspectSuspend || guestConfig.inspector?.suspend == true
-      },
-
       // Inspection: Secure.
       VMRuntimeProperty.ofBoolean("vm.inspect.secure", "inspect.Secure") {
         RuntimeFlag.inspectSecure || guestConfig.inspector?.secure == true
@@ -356,10 +351,6 @@ internal abstract class AbstractVMEngine<
         .allowListAccess(true)
         .allowMapAccess(true)
         .build())
-      .apply {
-        // we can only use shared engines in non-debug modes
-        if (!RuntimeFlag.inspect) engine(contextManager.engine())
-    }
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {

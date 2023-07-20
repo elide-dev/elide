@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference
 /** Static server flags, which may be set via Java system properties or environment variables. */
 @Suppress("unused", "MemberVisibilityCanBePrivate", "RedundantVisibilityModifier") public object RuntimeFlag {
   /** Default port to listen on for the VM inspector. */
-  public const val DEFAULT_INSPECT_PORT: Int = 4242
+  public const val DEFAULT_INSPECT_PORT: Int = 4200
 
   // Server arguments provided by the boot entrypoint.
   private val args: AtomicReference<Array<String>> = AtomicReference(emptyArray())
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference
   }
 
   /** Port where inspection should mount. */
-  public val inspectPort: Int get() = resolve("elide.vm.inspect.port", "4242") {
+  public val inspectPort: Int get() = resolve("elide.vm.inspect.port", "4200") {
     it.trim().toIntOrNull() ?: DEFAULT_INSPECT_PORT
   }
 

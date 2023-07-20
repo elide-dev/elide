@@ -60,13 +60,13 @@ import org.graalvm.polyglot.Context as VMContext
       if (!RuntimeFlag.inspectInternal) null else StaticProperty.active("inspect.Internal"),
 
       when {
-        RuntimeFlag.inspectHost.isNotBlank() && RuntimeFlag.inspectPort > 0 ->
+        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() && RuntimeFlag.inspectPort > 0 ->
           StaticProperty.of("inspect", "${RuntimeFlag.inspectHost}:${RuntimeFlag.inspectPort}")
 
-        RuntimeFlag.inspectHost.isNotBlank() ->
+        RuntimeFlag.inspect && RuntimeFlag.inspectHost.isNotBlank() ->
           StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}:4200")
 
-        RuntimeFlag.inspectPort > 0 ->
+        RuntimeFlag.inspect && RuntimeFlag.inspectPort > 0 ->
           StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}")
 
         else -> if (!RuntimeFlag.inspect) null else StaticProperty.active("inspect")

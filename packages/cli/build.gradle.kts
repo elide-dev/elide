@@ -37,6 +37,7 @@ val enableWasm = true
 val enableLlvm = false
 val enablePython = false
 val enablePgo = true
+val enablePgoInstrumentation = false
 val enableSbom = false
 
 java {
@@ -251,7 +252,7 @@ val commonNativeArgs = listOf(
 val debugFlags = listOfNotNull(
   "-g",
   "-march=compatibility",
-  if (enablePgo) "--pgo-instrument" else null,
+  if (enablePgoInstrumentation) "--pgo-instrument" else null,
 )
 
 val releaseFlags = listOf(

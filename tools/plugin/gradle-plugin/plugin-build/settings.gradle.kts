@@ -49,10 +49,10 @@ buildCache {
         remote<HttpBuildCache> {
             isEnabled = true
             isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
-            url = uri("https://buildcache.dyme.cloud/gradle/cache/")
+            url = uri("https://gradle.less.build/cache/generic/")
             credentials {
-                username = cacheUsername ?: System.getenv("GRADLE_CACHE_USERNAME") ?: error("Failed to resolve cache username")
-                password = cachePassword ?: System.getenv("GRADLE_CACHE_PASSWORD") ?: error("Failed to resolve cache password")
+                username = "apikey"
+                password = cachePassword ?: System.getenv("BUILDLESS_APIKEY") ?: error("Failed to resolve cache password")
             }
         }
     }

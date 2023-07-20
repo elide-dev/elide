@@ -11,6 +11,9 @@ import elide.runtime.Logging
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
+import elide.util.RuntimeFlag
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
@@ -30,21 +33,44 @@ import org.graalvm.polyglot.Context as VMContext
 @Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
   ContextManager<VMContext, VMContext.Builder> {
   private companion object {
+    // Flipped if we're building or running a native image.
+    private val isNativeImage = ImageInfo.inImageCode()
+
     // Static options which are supplied to the engine.
-    private val staticEngineOptions = listOf(
+    private val staticEngineOptions = listOfNotNull(
       StaticProperty.active("engine.BackgroundCompilation"),
       StaticProperty.active("engine.UsePreInitializedContext"),
       StaticProperty.active("engine.Compilation"),
       StaticProperty.active("engine.Inlining"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
-      StaticProperty.active("engine.CachePreinitializeContext"),
-      StaticProperty.of("engine.CacheCompile", "hot"),
       StaticProperty.of("engine.Mode", "throughput"),
       StaticProperty.of("engine.PreinitializeContexts", "js"),
-      StaticProperty.of("engine.Cache",
+
+      // if we're running in a native image, enabled the code compile cache
+      if (!isNativeImage) null else StaticProperty.active("engine.CachePreinitializeContext"),
+      if (!isNativeImage) null else StaticProperty.of("engine.CacheCompile", "hot"),
+      if (!isNativeImage) null else StaticProperty.of("engine.Cache",
         Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
       ),
+
+      // enable debug features if so instructed
+      if (!RuntimeFlag.inspectSuspend) null else StaticProperty.active("inspect.Suspend"),
+      if (!RuntimeFlag.inspectWait) null else StaticProperty.active("inspect.WaitAttached"),
+      if (!RuntimeFlag.inspectInternal) null else StaticProperty.active("inspect.Internal"),
+
+      when {
+        RuntimeFlag.inspectHost.isNotBlank() && RuntimeFlag.inspectPort > 0 ->
+          StaticProperty.of("inspect", "${RuntimeFlag.inspectHost}:${RuntimeFlag.inspectPort}")
+
+        RuntimeFlag.inspectHost.isNotBlank() ->
+          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}:4200")
+
+        RuntimeFlag.inspectPort > 0 ->
+          StaticProperty.of("inspect", "localhost:${RuntimeFlag.inspectPort}")
+
+        else -> if (!RuntimeFlag.inspect) null else StaticProperty.active("inspect")
+      },
     )
 
     // Size of the disruptor ring buffer for each VM executor.

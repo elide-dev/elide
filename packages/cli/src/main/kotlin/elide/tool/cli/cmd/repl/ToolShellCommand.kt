@@ -136,6 +136,23 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
     internal var suspend: Boolean = false
 
+    /** Specifies whether the debugger should suspend for internal (facade) sources. */
+    @Option(
+      names = ["--debug:internal"],
+      description = ["Specifies whether the debugger should suspend for internal (facade) sources"],
+      defaultValue = "false",
+      hidden = false,
+    )
+    internal var `internal`: Boolean = false
+
+    /** Specifies whether the debugger should suspend for internal (facade) sources. */
+    @Option(
+      names = ["--debug:wait"],
+      description = ["Whether to wait for the debugger to attach before executing any code at all."],
+      defaultValue = "false",
+    )
+    internal var wait: Boolean = false
+
     /** Specifies the port the debugger should bind to. */
     @Option(
       names = ["--debug:port"],
@@ -170,18 +187,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     /** Apply configuration to the VM based on the provided arguments. */
     internal fun apply(debug: Boolean): Stream<VMProperty> {
       return (if (!debug) emptyList<VMProperty>() else listOfNotNull(
-        // inspector activation and path
-        if (host.isNotBlank() && port > 0) {
-          VMStaticProperty.of("inspect", "$host:$port")
-        } else if (port > 0) {
-          VMStaticProperty.of("inspect", "localhost:$port")
-        } else {
-          VMStaticProperty.active("inspect")
-        },
-
-        // whether inspector should suspend
-        VMStaticProperty.of("inspect.Suspend", suspend.toString()),
-
         // if specified, add custom `path`
         when (val p = path) {
           null -> null
@@ -362,18 +367,19 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Host access settings. */
   @ArgGroup(
     validate = false,
+    exclusive = false,
     heading = "%nAccess Control:%n",
   ) internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
 
   /** Debugger settings. */
   @ArgGroup(
-    exclusive = true,
+    exclusive = false,
     heading = "%nDebugging:%n",
   ) internal var debugging: DebugConfig = DebugConfig()
 
   /** Language selector. */
   @ArgGroup(
-    exclusive = true,
+    exclusive = false,
     heading = "%nLanguage Selection:%n",
   ) internal var language: LanguageSelector = LanguageSelector()
 

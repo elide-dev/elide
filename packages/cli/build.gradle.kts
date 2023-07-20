@@ -18,6 +18,7 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
+  id("org.jetbrains.kotlinx.kover")
   id("com.github.gmazzo.buildconfig")
   id("io.micronaut.application")
   id("io.micronaut.graalvm")

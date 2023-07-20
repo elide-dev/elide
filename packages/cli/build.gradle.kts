@@ -34,7 +34,10 @@ val entrypoint = "elide.tool.cli.ElideTool"
 
 val enableEspresso = false
 val enableWasm = true
+val enableLlvm = false
 val enablePython = false
+val enablePgo = true
+val enableSbom = false
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
@@ -224,12 +227,15 @@ val commonNativeArgs = listOf(
   "--tool:coverage",
   "--tool:lsp",
   "--tool:sandbox",
+  "--tool:dap",
+  "--tool:insight",
+  "--tool:insightheap",
+  "--tool:profiler",
   "--gc=serial",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
   "--enable-https",
-  "--enable-all-security-services",
   "--install-exit-handlers",
   "-H:DashboardDump=elide-tool",
   "-H:+DashboardAll",
@@ -238,15 +244,23 @@ val commonNativeArgs = listOf(
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
   if (enableWasm) "--language:wasm" else null,
+  if (enableLlvm) "--language:llvm" else null,
   if (enablePython) "--language:python" else null,
 ))
 
-val debugFlags = listOf(
+val debugFlags = listOfNotNull(
   "-g",
+  "-march=compatibility",
+  if (enablePgo) "--pgo-instrument" else null,
 )
 
 val releaseFlags = listOf(
   "-O2",
+  "-march=native",
+  "-H:+AOTInliner",
+  if (enablePgo) "--pgo=cli.iprof" else null,
+).plus(
+  if (enableSbom) listOf("--enable-sbom") else emptyList()
 )
 
 val jvmDefs = mapOf(
@@ -285,10 +299,6 @@ val muslArgs = listOf(
 val testOnlyArgs: List<String> = emptyList()
 
 val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
-val enterpriseOnlyFlags: List<String> = listOf(
-  "--enable-sbom",
-  "-H:+AOTInliner",
-)
 
 fun nativeCliImageArgs(
   platform: String = "generic",
@@ -311,9 +321,7 @@ fun nativeCliImageArgs(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
   ).plus(
     if (debug) debugFlags else if (release) releaseFlags else emptyList()
-  ).plus(
-    if (enterprise) enterpriseOnlyFlags else emptyList()
-  ).toList()
+  ).filterNotNull().toList()
 
 graalvmNative {
   toolchainDetection.set(false)
@@ -347,7 +355,7 @@ graalvmNative {
     named("main") {
       imageName.set("elide")
       fallback.set(false)
-      buildArgs.addAll(nativeCliImageArgs())
+      buildArgs.addAll(nativeCliImageArgs(debug = true, release = false))
       quickBuild.set(quickbuild)
       sharedLibrary.set(false)
       systemProperty("picocli.ansi", "tty")
@@ -356,7 +364,7 @@ graalvmNative {
     named("optimized") {
       imageName.set("elide")
       fallback.set(false)
-      buildArgs.addAll(nativeCliImageArgs())
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true))
       quickBuild.set(quickbuild)
       sharedLibrary.set(false)
       systemProperty("picocli.ansi", "tty")

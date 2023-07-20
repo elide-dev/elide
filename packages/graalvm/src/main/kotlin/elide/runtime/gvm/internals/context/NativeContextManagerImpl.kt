@@ -37,7 +37,7 @@ import org.graalvm.polyglot.Context as VMContext
       StaticProperty.active("engine.Inlining"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
-      StaticProperty.of("engine.Mode", "latency"),
+      StaticProperty.of("engine.Mode", "throughput"),
       StaticProperty.of("engine.PreinitializeContexts", "js"),
     )
 

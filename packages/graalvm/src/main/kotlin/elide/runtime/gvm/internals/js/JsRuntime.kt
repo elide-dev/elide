@@ -124,10 +124,8 @@ internal class JsRuntime @Inject constructor (
 
     // Determine if WASM should be enabled by default.
     @JvmStatic private fun wasmSupported(): Boolean = (
-      System.getProperty("elide.wasm", "false") == "true" || (
-      System.getProperty("os.arch", "not-x86") == "x86_64" &&
       Engine.create().languages.containsKey("wasm")
-    ))
+    )
 
     // Hard-coded JS VM options.
     val baseOptions : List<VMProperty> = listOf(
@@ -296,7 +294,7 @@ internal class JsRuntime @Inject constructor (
     // `vm.js.wasm`: maps to `js.webassembly` and controls the JS bridge to WASM.
     VMRuntimeProperty.ofBoolean("vm.js.wasm", "js.webassembly") {
       if (WASM_SUPPORTED) {
-        config.wasm ?: true
+        config.wasm ?: false
       } else {
         false
       }

@@ -61,7 +61,7 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
     public const val DEFAULT_V8_COMPAT: Boolean = false
 
     /** Default enablement of WASM support, where available. */
-    public const val DEFAULT_WASM: Boolean = false  // temporary default
+    public const val DEFAULT_WASM: Boolean = true
 
     /** Default enablement of ESM features. */
     public const val DEFAULT_ESM: Boolean = true

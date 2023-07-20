@@ -20,11 +20,20 @@ internal interface GuestVMConfiguration : Toggleable {
     /** Default enablement status. */
     const val DEFAULT_ENABLED: Boolean = true
 
-    /** Default enablement status. */
+    /** JavaScript language tag. */
     const val LANGUAGE_JS: String = "js"
 
+    /** WASM language tag. */
+    const val LANGUAGE_WASM: String = "wasm"
+
+    /** Java language tag. */
+    const val LANGUAGE_JAVA: String = "java"
+
     /** Default guest languages. */
-    val DEFAULT_LANGUAGES: List<String> = listOf(LANGUAGE_JS)
+    val DEFAULT_LANGUAGES: List<String> = listOf(
+      LANGUAGE_JS,
+      LANGUAGE_WASM,
+    )
 
     /** Default character set to use with raw data exchanged with the JS VM. */
     val DEFAULT_CHARSET: Charset = StandardCharsets.UTF_8

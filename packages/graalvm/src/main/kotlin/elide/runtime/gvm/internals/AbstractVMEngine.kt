@@ -334,7 +334,7 @@ internal abstract class AbstractVMEngine<
     // set strong secure baseline for context guest access
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
-      .allowPolyglotAccess(PolyglotAccess.NONE)
+      .allowPolyglotAccess(PolyglotAccess.ALL)
       .allowInnerContextOptions(false)
       .allowCreateThread(false)
       .allowCreateProcess(false)

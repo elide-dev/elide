@@ -167,8 +167,24 @@ val cachePush: String? by settings
 val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: true
 val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 
-buildless {
+//buildless {
   // nothing to configure at this time
+//}
+
+buildCache {
+  local {
+    isEnabled = false
+  }
+  remote<HttpBuildCache> {
+    url = uri("https://gradle.less.build/cache/generic")
+    isEnabled = true
+    isPush = true
+    isUseExpectContinue = true
+    credentials {
+      username = "apikey"
+      password = System.getenv("BUILDLESS_APIKEY")
+    }
+  }
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

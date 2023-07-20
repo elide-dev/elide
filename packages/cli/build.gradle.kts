@@ -32,19 +32,12 @@ version = rootProject.version as String
 val entrypoint = "elide.tool.cli.ElideTool"
 
 val enableEspresso = false
-val enableWasm = false
+val enableWasm = true
 val enablePython = false
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
   targetCompatibility = JavaVersion.VERSION_19
-
-  java {
-    toolchain {
-      languageVersion.set(JavaLanguageVersion.of(19))
-      vendor.set(JvmVendorSpec.GRAAL_VM)
-    }
-  }
 }
 
 ktlint {
@@ -357,19 +350,6 @@ graalvmNative {
       quickBuild.set(quickbuild)
       sharedLibrary.set(false)
       systemProperty("picocli.ansi", "tty")
-
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            }))
-          }
-        }
-      })
     }
 
     named("optimized") {
@@ -379,19 +359,6 @@ graalvmNative {
       quickBuild.set(quickbuild)
       sharedLibrary.set(false)
       systemProperty("picocli.ansi", "tty")
-
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            }))
-          }
-        }
-      })
     }
 
     named("test") {
@@ -399,19 +366,6 @@ graalvmNative {
       fallback.set(false)
       buildArgs.addAll(nativeCliImageArgs().plus(testOnlyArgs))
       quickBuild.set(quickbuild)
-
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            }))
-          }
-        }
-      })
     }
   }
 }

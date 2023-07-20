@@ -68,19 +68,19 @@ java {
   withSourcesJar()
   withJavadocJar()
 
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
-    vendor.set(JvmVendorSpec.GRAAL_VM)
-    if (project.hasProperty("elide.graalvm.variant")) {
-      val variant = project.property("elide.graalvm.variant") as String
-      if (variant != "COMMUNITY") {
-        vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
-          "ENTERPRISE" -> "Oracle"
-          else -> "GraalVM Community"
-        }))
-      }
-    }
-  }
+//  toolchain {
+//    languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+//    vendor.set(JvmVendorSpec.GRAAL_VM)
+//    if (project.hasProperty("elide.graalvm.variant")) {
+//      val variant = project.property("elide.graalvm.variant") as String
+//      if (variant != "COMMUNITY") {
+//        vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+//          "ENTERPRISE" -> "Oracle"
+//          else -> "GraalVM Community"
+//        }))
+//      }
+//    }
+//  }
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -40,9 +40,9 @@ java {
 }
 
 kotlin {
-  jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
-  }
+//  jvmToolchain {
+//    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+//  }
 
   sourceSets.all {
     languageSettings.apply {

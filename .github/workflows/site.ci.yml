@@ -15,8 +15,7 @@ on:
       - release/*
 
 env:
-  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
-  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 jobs:
   ##

@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
+import kotlin.io.path.Path
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Context as VMContext
 
@@ -37,8 +38,13 @@ import org.graalvm.polyglot.Context as VMContext
       StaticProperty.active("engine.Inlining"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
+      StaticProperty.active("engine.CachePreinitializeContext"),
+      StaticProperty.of("engine.CacheCompile", "hot"),
       StaticProperty.of("engine.Mode", "throughput"),
       StaticProperty.of("engine.PreinitializeContexts", "js"),
+      StaticProperty.of("engine.Cache",
+        Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
+      ),
     )
 
     // Size of the disruptor ring buffer for each VM executor.

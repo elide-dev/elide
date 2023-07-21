@@ -340,7 +340,7 @@ internal abstract class AbstractVMEngine<
       .allowValueSharing(true)
       .fileSystem(filesystem)
       .allowIO(true)
-      .allowHostAccess(HostAccess.newBuilder(HostAccess.SCOPED)
+      .allowHostAccess(HostAccess.newBuilder(HostAccess.ALL)
         .allowImplementations(Proxy::class.java)
         .allowAccessAnnotatedBy(HostAccess.Export::class.java)
         .allowArrayAccess(true)

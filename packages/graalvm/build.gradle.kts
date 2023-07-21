@@ -152,6 +152,13 @@ configureJava9ModuleInfo(
   multiRelease = true,
 )
 
+tasks {
+  test {
+    maxHeapSize = "2G"
+    maxParallelForks = 4
+  }
+}
+
 val buildDocs = project.properties["buildDocs"] == "true"
 publishing {
   publications.withType<MavenPublication> {

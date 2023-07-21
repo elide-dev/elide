@@ -43,7 +43,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
@@ -160,7 +160,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"

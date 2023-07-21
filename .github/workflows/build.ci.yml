@@ -35,7 +35,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -118,7 +118,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -217,7 +217,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -327,7 +327,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -418,7 +418,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -517,7 +517,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}

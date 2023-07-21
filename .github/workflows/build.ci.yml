@@ -34,9 +34,9 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
@@ -114,12 +114,12 @@ jobs:
     steps:
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM (Java 19)"
+      - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
@@ -213,30 +213,12 @@ jobs:
         uses: actions/checkout@v3
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
-      - name: "Setup: GraalVM (Java 11)"
+      - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "js"
-          version: 22.3.1
-          java-version: 11
-          set-java-home: false
-          check-for-updates: false
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: GraalVM (Java 17)"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "js"
-          version: 22.3.1
-          java-version: 17
-          set-java-home: false
-          check-for-updates: false
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: GraalVM (Java 19)"
-        uses: graalvm/setup-graalvm@v1
-        with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
@@ -281,7 +263,7 @@ jobs:
             -x testNativeImage
             -x nativeCompile
             -Pelide.ci=true
-            -PbuildSamples=true
+            -PbuildSamples=false
             -PbuildDocs=false
             -PbuildDocsSite=false
             -Pversions.java.language=19
@@ -344,10 +326,10 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
-          check-for-updates: false
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
+          check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
@@ -435,9 +417,9 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
@@ -534,9 +516,9 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"

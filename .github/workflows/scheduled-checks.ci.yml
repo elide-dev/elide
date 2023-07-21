@@ -129,12 +129,12 @@ jobs:
           install: true
       - name: "Setup: Checkout"
         uses: actions/checkout@v3
-      - name: "Setup: GraalVM (Java 19)"
+      - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js"
-          version: 22.3.1
-          java-version: 19
+          components: "native-image,js,wasm"
+          version: latest
+          java-version: 20
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"

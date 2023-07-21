@@ -60,7 +60,7 @@ jobs:
         if: ${{ matrix.engine == 'graalvm' }}
         with:
           components: "native-image,js,wasm"
-          version: latest
+          distribution: 'graalvm'
           java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Zulu"

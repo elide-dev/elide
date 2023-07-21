@@ -96,7 +96,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
   }
 
   // Logger.
-  private val logging: Logger = Logging.of(EmbeddedGuestVFSImpl::class)
+  private val logging: Logger by lazy {
+    Logging.of(EmbeddedGuestVFSImpl::class)
+  }
 
   /**
    * Private constructor.

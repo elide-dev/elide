@@ -126,13 +126,17 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("js.async-stack-traces"),
       StaticProperty.active("js.atomics"),
       StaticProperty.active("js.bind-member-functions"),
+      StaticProperty.active("js.class-fields"),
       StaticProperty.active("js.direct-byte-buffer"),
       StaticProperty.active("js.disable-eval"),
+      StaticProperty.active("js.error-cause"),
       StaticProperty.active("js.esm-eval-returns-exports"),
       StaticProperty.active("js.foreign-hash-properties"),
       StaticProperty.active("js.foreign-object-prototype"),
+      StaticProperty.active("js.import-assertions"),
       StaticProperty.active("js.intl-402"),
       StaticProperty.active("js.json-modules"),
+      StaticProperty.inactive("js.operator-overloading"),
       StaticProperty.active("js.performance"),
       StaticProperty.active("js.shared-array-buffer"),
       StaticProperty.active("js.strict"),
@@ -146,7 +150,6 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.inactive("js.interop-complete-promises"),
       StaticProperty.inactive("js.java-package-globals"),
       StaticProperty.inactive("js.load"),
-      StaticProperty.inactive("js.operator-overloading"),
       StaticProperty.inactive("js.print"),
       StaticProperty.inactive("js.polyglot-builtin"),
       StaticProperty.inactive("js.polyglot-evalfile"),
@@ -174,6 +177,7 @@ internal class JsRuntime @Inject constructor (
     private val coreModules: Map<String, String> = mapOf(
       "buffer" to "/__runtime__/buffer/buffer.cjs",
       "util" to "/__runtime__/util/util.cjs",
+      "fs" to "/__runtime__/util/fs.mjs",
     )
 
     init {
@@ -261,12 +265,22 @@ internal class JsRuntime @Inject constructor (
       config.language?.symbol ?: JsRuntimeConfig.DEFAULT_JS_LANGUAGE_LEVEL.symbol
     },
 
+    // Shell: Enable JS shell features if running interactively.
+    VMRuntimeProperty.ofConfigurable("vm.interactive", "js.shell") {
+      (System.getProperty("vm.interactive")?.toBoolean() ?: false).toString()
+    },
+
     // `vm.js.esm`: maps to `js.esm-eval-*` to enable/disable ESM import support.
     VMRuntimeProperty.ofBoolean("vm.js.esm", "js.esm-eval-returns-exports") {
       config.esm.isEnabled
     },
 
-    // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable ESM import support.
+    // `vm.js.esm.bare-specifiers`: enables bare-specifier ESM imports.
+    VMRuntimeProperty.ofBoolean("vm.js.esm.bare-specifiers", "js.esm-bare-specifier-relative-lookup") {
+      config.esm.isEnabled
+    },
+
+    // `vm.js.npm`: maps to `js.commonjs-require` to enable/disable commonjs require support.
     VMRuntimeProperty.ofBoolean("vm.js.npm", "js.commonjs-require") {
       config.npm.isEnabled
     },

@@ -5,7 +5,8 @@ elide:
     defer: true
     js:
       enabled: true
-      wasm: false
+      wasm: true
+      interactive: false
 
 micronaut:
   application:

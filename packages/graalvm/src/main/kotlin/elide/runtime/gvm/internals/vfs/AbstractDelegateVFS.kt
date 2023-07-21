@@ -83,20 +83,28 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   override fun getPathSeparator(): String = backing.separator
 
   /** @inheritDoc */
-  override fun parsePath(uri: URI): Path = backing.getPath(uri.toString())
-
-  /** @inheritDoc */
-  override fun parsePath(path: String): Path = backing.getPath(path)
-
-  /** @inheritDoc */
-  override fun getPath(vararg segments: String): Path = if (segments.size == 1) {
-    backing.getPath(segments[0])
-  } else {
-    backing.getPath(segments[0], *segments.drop(1).toTypedArray())
+  override fun parsePath(uri: URI): Path {
+    return backing.getPath(uri.path.toString())
   }
 
   /** @inheritDoc */
-  override fun toAbsolutePath(path: Path): Path = path.toAbsolutePath()
+  override fun parsePath(path: String): Path {
+    return backing.getPath(path)
+  }
+
+  /** @inheritDoc */
+  override fun getPath(vararg segments: String): Path {
+    return if (segments.size == 1) {
+      backing.getPath(segments[0])
+    } else {
+      backing.getPath(segments[0], *segments.drop(1).toTypedArray())
+    }
+  }
+
+  /** @inheritDoc */
+  override fun toAbsolutePath(path: Path): Path {
+    return path.toAbsolutePath()
+  }
 
   /** @inheritDoc */
   override fun toRealPath(path: Path, vararg linkOptions: LinkOption): Path {

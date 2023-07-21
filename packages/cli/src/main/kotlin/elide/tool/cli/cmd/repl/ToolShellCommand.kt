@@ -1060,6 +1060,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     // determine whether host I/O is enabled
     val hostIo = (bundleUris.isEmpty() && (accessControl.allowIo || accessControl.allowAll))
 
+    if (!executeLiteral && !useStdin && runnable == null) {
+      // if no script inputs are specified, we are entering an interactive session. in this case, we should notify the
+      // JS engine, so that it can apply relevant options.
+      System.setProperty("vm.interactive", "true")
+    }
+
     withVM(context, userBundleUris, bundleUris, hostIO = hostIo, accessControl::apply) {
       // warn about experimental status, as applicable
       logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")

@@ -65,6 +65,7 @@ val isCI = project.hasProperty("elide.ci") && project.properties["elide.ci"] == 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
+val enableKnit: String? by properties
 
 val buildDocs by properties
 
@@ -90,7 +91,7 @@ buildscript {
   }
 }
 
-apply(plugin = "kotlinx-knit")
+if (enableKnit == "true") apply(plugin = "kotlinx-knit")
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
   // 16+ required for Apple Silicon support
@@ -428,23 +429,25 @@ tasks {
   }
 }
 
-the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
-the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
-the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
-  include("README.md")
-  include("docs/guide/**/*.md")
-  include("docs/guide/**/*.kt")
-  include("samples/**/*.md")
-  include("samples/**/*.kt")
-  include("samples/**/*.kts")
-  exclude("**/build/**")
-  exclude("**/.gradle/**")
-  exclude("**/node_modules/**")
-}
+if (enableKnit == "true") {
+  the<kotlinx.knit.KnitPluginExtension>().siteRoot = "https://beta.elide.dev/docs/kotlin"
+  the<kotlinx.knit.KnitPluginExtension>().moduleDocs = "build/dokka/htmlMultiModule"
+  the<kotlinx.knit.KnitPluginExtension>().files = fileTree(project.rootDir) {
+    include("README.md")
+    include("docs/guide/**/*.md")
+    include("docs/guide/**/*.kt")
+    include("samples/**/*.md")
+    include("samples/**/*.kt")
+    include("samples/**/*.kts")
+    exclude("**/build/**")
+    exclude("**/.gradle/**")
+    exclude("**/node_modules/**")
+  }
 
-// Build API docs via Dokka before running Knit.
-tasks.named("knitPrepare").configure {
-  dependsOn("docs")
+  // Build API docs via Dokka before running Knit.
+  tasks.named("knitPrepare").configure {
+    dependsOn("docs")
+  }
 }
 
 val jvmName = project.properties["elide.jvm"] as? String

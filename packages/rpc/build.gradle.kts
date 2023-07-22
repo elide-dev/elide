@@ -194,6 +194,10 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
   javadocJar
 } else null
 
+tasks.named("runKtlintCheckOverJvmTestSourceSet") {
+  dependsOn(tasks.generateProto, tasks.generateTestProto)
+}
+
 publishing {
   publications.withType<MavenPublication> {
     if (buildDocs) {

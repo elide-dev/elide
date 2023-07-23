@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@mdx-js/esbuild': 2.2.1
   '@types/google-protobuf': 3.15.6
-  '@types/prettier': 2.7.2
+  '@types/prettier': 2.7.3
   browserslist: ^4.21.4
   cssnano: ^5.1.14
   esbuild: 0.16.17
@@ -13,7 +13,7 @@ specifiers:
   postcss: ^8.4.21
   postcss-cli: ^10.1.0
   preact: 10.11.3
-  prettier: 2.8.2
+  prettier: 2.8.8
   prettier-plugin-java: 2.2.0
   prettier-plugin-properties: 0.2.0
   prettier-plugin-sh: 0.12.8
@@ -32,15 +32,15 @@ dependencies:
 devDependencies:
   '@mdx-js/esbuild': 2.2.1_esbuild@0.16.17
   '@types/google-protobuf': 3.15.6
-  '@types/prettier': 2.7.2
+  '@types/prettier': 2.7.3
   esbuild: 0.16.17
   husky: 8.0.3
   lint-staged: 13.1.0
   postcss-cli: 10.1.0_postcss@8.4.21
-  prettier: 2.8.2
+  prettier: 2.8.8
   prettier-plugin-java: 2.2.0
   prettier-plugin-properties: 0.2.0
-  prettier-plugin-sh: 0.12.8_prettier@2.8.2
+  prettier-plugin-sh: 0.12.8_prettier@2.8.8
   prettier-plugin-toml: 0.3.1
   readable-stream: 4.3.0
 
@@ -382,8 +382,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/prettier/2.7.2:
-    resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
+  /@types/prettier/2.7.3:
+    resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
     dev: true
 
   /@types/unist/2.0.6:
@@ -2225,14 +2225,14 @@ packages:
       dot-properties: 1.0.1
     dev: true
 
-  /prettier-plugin-sh/0.12.8_prettier@2.8.2:
+  /prettier-plugin-sh/0.12.8_prettier@2.8.8:
     resolution: {integrity: sha512-VOq8h2Gn5UzrCIKm4p/nAScXJbN09HdyFDknAcxt6Qu/tv/juu9bahxSrcnM9XWYA+Spz1F1ANJ4LhfwB7+Q1Q==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
     peerDependencies:
       prettier: ^2.0.0
     dependencies:
       mvdan-sh: 0.10.1
-      prettier: 2.8.2
+      prettier: 2.8.8
       sh-syntax: 0.3.7
       synckit: 0.8.4
     dev: true
@@ -2250,8 +2250,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier/2.8.2:
-    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
+  /prettier/2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true

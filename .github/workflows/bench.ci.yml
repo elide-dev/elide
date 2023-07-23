@@ -100,7 +100,7 @@ jobs:
         run: |
           echo "BENCHMARK_REPORT=$(find benchmarks/server/build/reports/benchmarks/main -name "*.json" | head -n 1)" >> $GITHUB_OUTPUT
       - name: "Restore Previous Benchmark"
-        uses: actions/cache@58c146cc91c5b9e778e71775dfe9bf1442ad9a12 # v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3
         with:
           path: ./benchmark_reports
           key: ${{ runner.os }}-${{ matrix.engine }}-${{ matrix.java }}-benchmark

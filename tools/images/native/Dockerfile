@@ -1,4 +1,4 @@
-FROM debian:bullseye@sha256:027b617a00fa483967b045f55459aa12da6f751e6ffbe82ffe9aa007d977027a
+FROM debian:bullseye@sha256:3b6053ca925336c804e2d3f080af177efcdc9f51198a627569bfc7c7e730ef7e
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native)"

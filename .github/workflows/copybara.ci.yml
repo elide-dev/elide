@@ -20,7 +20,7 @@ jobs:
       (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'migrate:protocol'))
     steps:
       - name: "Setup: Checkout"
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: "Migrate: Protocol"
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:
@@ -48,7 +48,7 @@ jobs:
     steps:
       # Pull code.
       - name: "Setup: Checkout"
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
       - name: "Migrate: Cluster"
         uses: sgammon/copybara-action@5669453d54072738035b0985cfe322d0ee5de0db
         with:

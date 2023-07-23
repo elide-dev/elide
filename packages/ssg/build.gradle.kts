@@ -102,10 +102,10 @@ dependencies {
   implementation(libs.lz4)
 
   implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.81.Final:osx-aarch_64"
+    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-aarch_64"
   )
   implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.81.Final:osx-x86_64"
+    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-x86_64"
   )
 
   runtimeOnly(libs.micronaut.runtime)

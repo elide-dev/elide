@@ -172,7 +172,7 @@ jobs:
           echo "APP_VERSION=$(cat .version)" >> $GITHUB_ENV;
           echo "Releasing version $APP_VERSION"
       - name: "Publish: Conventions"
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         if: ${{ inputs.conventions }}
         with:
           arguments: |
@@ -190,7 +190,7 @@ jobs:
             -x test
             :conventions:publish
       - name: "Publish: Substrate"
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         if: ${{ inputs.substrate }}
         with:
           arguments: |
@@ -208,7 +208,7 @@ jobs:
             -x test
             :substrate:publish
       - name: "Publish: Processor"
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         if: ${{ inputs.processor }}
         with:
           arguments: |
@@ -226,7 +226,7 @@ jobs:
             -x test
             :tools:processor:publish
       - name: "Publish: Packages"
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         if: ${{ inputs.packages }}
         with:
           arguments: |

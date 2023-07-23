@@ -88,7 +88,7 @@ __metadata:
   dependencies:
     "@mdx-js/esbuild": 2.2.1
     "@types/google-protobuf": 3.15.6
-    "@types/prettier": 2.7.2
+    "@types/prettier": 2.7.3
     browserslist: ^4.21.4
     cssnano: ^5.1.14
     esbuild: 0.16.17
@@ -98,7 +98,7 @@ __metadata:
     postcss: ^8.4.21
     postcss-cli: ^10.1.0
     preact: 10.11.3
-    prettier: 2.8.2
+    prettier: 2.8.8
     prettier-plugin-java: 2.2.0
     prettier-plugin-properties: 0.2.0
     prettier-plugin-sh: 0.12.8
@@ -512,10 +512,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:2.7.2":
-  version: 2.7.2
-  resolution: "@types/prettier@npm:2.7.2"
-  checksum: b47d76a5252265f8d25dd2fe2a5a61dc43ba0e6a96ffdd00c594cb4fd74c1982c2e346497e3472805d97915407a09423804cc2110a0b8e1b22cffcab246479b7
+"@types/prettier@npm:2.7.3":
+  version: 2.7.3
+  resolution: "@types/prettier@npm:2.7.3"
+  checksum: 705384209cea6d1433ff6c187c80dcc0b95d99d5c5ce21a46a9a58060c527973506822e428789d842761e0280d25e3359300f017fbe77b9755bc772ab3dc2f83
   languageName: node
   linkType: hard
 
@@ -3592,12 +3592,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.2":
-  version: 2.8.2
-  resolution: "prettier@npm:2.8.2"
+"prettier@npm:2.8.8":
+  version: 2.8.8
+  resolution: "prettier@npm:2.8.8"
   bin:
     prettier: bin-prettier.js
-  checksum: 740c56c2128d587d656ea1dde9bc9c3503dfc94db4f3ac387259215eeb2e216680bdad9d18a0c9feecc6b42cfa188d6fa777df4c36c1d00cedd4199074fbfbd2
+  checksum: b49e409431bf129dd89238d64299ba80717b57ff5a6d1c1a8b1a28b590d998a34e083fa13573bc732bb8d2305becb4c9a4407f8486c81fa7d55100eb08263cf8
   languageName: node
   linkType: hard
 

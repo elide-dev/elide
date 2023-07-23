@@ -209,7 +209,7 @@ pluginBuf = "0.8.2"
 lmaxDisruptor = "3.4.4"
 lmaxDisruptorProxy = "2.0.7"
 gr8 = "0.7"
-proguard = "7.1.0"
+proguard = "7.3.2"
 openrewrite = "6.1.19"
 parallelGzip = "1.0.5"
 

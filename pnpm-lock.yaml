@@ -14,7 +14,7 @@ specifiers:
   postcss-cli: ^10.1.0
   preact: 10.11.3
   prettier: 2.8.2
-  prettier-plugin-java: 2.0.0
+  prettier-plugin-java: 2.2.0
   prettier-plugin-properties: 0.2.0
   prettier-plugin-sh: 0.12.8
   prettier-plugin-toml: 0.3.1
@@ -38,7 +38,7 @@ devDependencies:
   lint-staged: 13.1.0
   postcss-cli: 10.1.0_postcss@8.4.21
   prettier: 2.8.2
-  prettier-plugin-java: 2.0.0
+  prettier-plugin-java: 2.2.0
   prettier-plugin-properties: 0.2.0
   prettier-plugin-sh: 0.12.8_prettier@2.8.2
   prettier-plugin-toml: 0.3.1
@@ -1205,8 +1205,8 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /java-parser/2.0.3:
-    resolution: {integrity: sha512-z+ZsqcY3LCN0NPK1KnC7AXFHQxtzlsADJ2OVQmenKS/4gHBQ6SkEQYIMVV/2WrxRBMWXMXW7KeOVmXPLHCMRAQ==}
+  /java-parser/2.0.4:
+    resolution: {integrity: sha512-8dzy+3lJdSakeXgYArzqJCTy2PuH4iW1WjbhPsDaiYDXPeeroksy0s1/TWoc9Zw8zWzS3x8soanHh0AThwwqrQ==}
     dependencies:
       chevrotain: 6.5.0
       lodash: 4.17.21
@@ -2211,12 +2211,12 @@ packages:
     resolution: {integrity: sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==}
     dev: false
 
-  /prettier-plugin-java/2.0.0:
-    resolution: {integrity: sha512-ct7Zgog2XUpZ+olF3Ed4gPBNU7aWBu0cnpgDX7eqs0IZVH+9ZAduRkaJ0HlreoOm7SdUOc7UoKK1vk3T/coEoQ==}
+  /prettier-plugin-java/2.2.0:
+    resolution: {integrity: sha512-AMSWVU6Fmo6H0jbSyE50zVEeZgKcUrIscd/gpTBzUnCHDO/vCk0KUVi/arAenwMEfzMkTp36qCsylJcpjM+dWw==}
     dependencies:
-      java-parser: 2.0.3
+      java-parser: 2.0.4
       lodash: 4.17.21
-      prettier: 2.8.0
+      prettier: 3.0.0
     dev: true
 
   /prettier-plugin-properties/0.2.0:
@@ -2250,15 +2250,15 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier/2.8.0:
-    resolution: {integrity: sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==}
+  /prettier/2.8.2:
+    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
 
-  /prettier/2.8.2:
-    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
-    engines: {node: '>=10.13.0'}
+  /prettier/3.0.0:
+    resolution: {integrity: sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 

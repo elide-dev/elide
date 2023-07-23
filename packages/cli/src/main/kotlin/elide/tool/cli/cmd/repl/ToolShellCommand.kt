@@ -26,7 +26,7 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.management.ExecutionEvent
 import org.graalvm.polyglot.management.ExecutionListener
 import org.jline.builtins.ConfigurationPath
-import org.jline.builtins.Nano.SyntaxHighlighter
+import org.jline.builtins.SyntaxHighlighter
 import org.jline.console.impl.Builtins
 import org.jline.console.impl.SystemHighlighter
 import org.jline.console.impl.SystemRegistryImpl

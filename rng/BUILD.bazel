@@ -1,13 +1,28 @@
-load("@crates//:defs.bzl", "crate_deps")
-load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_shared_library")
+load("@rules_rust//wasm_bindgen:wasm_bindgen.bzl", "rust_wasm_bindgen")
 
 package(default_visibility = ["//visibility:public"])
 
-rust_library(
-    name = "rng",
-    srcs = ["src/lib.rs"],
+rust_binary(
+    name = "hello_world_bin_wasm",
+    srcs = ["src/main.rs"],
     edition = "2021",
-    deps = crate_deps([
-        "rand",
-    ]),
+    #    deps = [
+    #        "@rules_rust//wasm_bindgen/3rdparty:wasm_bindgen",
+    #    ],
 )
+
+#rust_shared_library(
+#    name = "hello_world_lib_wasm",
+#    srcs = ["src/main.rs"],
+#    edition = "2021",
+#    deps = [
+#        "@rules_rust//wasm_bindgen/3rdparty:wasm_bindgen",
+#    ],
+#)
+
+#rust_wasm_bindgen(
+#    name = "hello_world_deno_wasm_bindgen",
+#    target = "web",
+#    wasm_file = ":hello_world_lib_wasm",
+#)

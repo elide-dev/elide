@@ -1,6 +1,26 @@
 workspace(name = "elide")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+    "http_file",
+)
+load(
+    "@bazel_tools//tools/build_defs/repo:git.bzl",
+    "git_repository",
+)
+load(
+    "@bazel_tools//tools/build_defs/repo:java.bzl",
+    "java_import_external",
+)
+load(
+    "@bazel_tools//tools/build_defs/repo:jvm.bzl",
+    "jvm_maven_import_external",
+)
+load(
+    "@bazel_tools//tools/build_defs/repo:utils.bzl",
+    "maybe",
+)
 
 http_archive(
     name = "rules_rust",
@@ -8,7 +28,148 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.25.1/rules_rust-v0.25.1.tar.gz"],
 )
 
+http_archive(
+    name = "rules_graal",
+    sha256 = "14e6d480fb2c0f03f2331efef316d2b8e07c32d34b1ea8a0eef83ea6a15d22df",
+    strip_prefix = "rules_graal-9fd38761df4ac293f952d10379c0c3520dd9ceed",
+    urls = [
+        "https://github.com/andyscott/rules_graal/archive/9fd38761df4ac293f952d10379c0c3520dd9ceed.zip",
+    ],
+)
+
+http_archive(
+    name = "com_github_google_flatbuffers",
+    sha256 = "99e8c754f9b11dc4ce476d1d6d53a0cacd3286140bacab3403b13ba0caac606e",
+    strip_prefix = "flatbuffers-6e214c3a498fe7f9c7923aecdae4c789e224ad18",
+    urls = ["https://github.com/google/flatbuffers/archive/6e214c3a498fe7f9c7923aecdae4c789e224ad18.tar.gz"],
+)
+
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    repo_mapping = {
+        "@bazel_gazelle": "@gazelle",
+        "@io_bazel_rules_go": "@rules_go",
+    },
+    sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
+    urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
+)
+
+http_archive(
+    name = "io_bazel_rules_closure",
+    repo_mapping = {
+        "@bazel_gazelle": "@gazelle",
+        "@io_bazel_rules_go": "@rules_go",
+    },
+    sha256 = "af9c9f1434453aba4544262bbf173a12edf72b284ef357835fa34dcd6e2f3502",
+    strip_prefix = "rules_closure-5abddd3891ad9433267b25f40d938b8f66f08a48",
+    url = "https://github.com/bazelbuild/rules_closure/archive/5abddd3891ad9433267b25f40d938b8f66f08a48.tar.gz",
+)
+
+http_archive(
+    name = "com_google_j2cl",
+    sha256 = "e6e16c82b1fba14f57144a589115d94ca5712d25e5a5c3ef79f75a0506340deb",
+    strip_prefix = "j2cl-6699ca5439e31ba6aa37c47fd4a05f4be20be423",
+    url = "https://github.com/elide-tools/j2cl/archive/6699ca5439e31ba6aa37c47fd4a05f4be20be423.tar.gz",
+)
+
+http_archive(
+    name = "com_google_elemental2",
+    sha256 = "d589c5a7500e2ab803c27b2616d00c3e65231b9cfb90246723d46d050dbebd82",
+    strip_prefix = "elemental2-4b1abeb85d13a0fbdaa0830b854501b5debecfe5",
+    url = "https://github.com/google/elemental2/archive/4b1abeb85d13a0fbdaa0830b854501b5debecfe5.tar.gz",
+)
+
+http_archive(
+    name = "com_google_jsinterop_generator",
+    sha256 = "960be856374c7f9b43331db7112cfc4f6d33f59f80b1cd2a7176f8c273d55ce3",
+    strip_prefix = "jsinterop-generator-8d2b733547a89cdb631a6c0e8861969c0fadd5b2",
+    url = "https://github.com/google/jsinterop-generator/archive/8d2b733547a89cdb631a6c0e8861969c0fadd5b2.zip",
+)
+
+java_import_external(
+    name = "com_google_jsinterop_annotations",
+    jar_sha256 = "b2cc45519d62a1144f8cd932fa0c2c30a944c3ae9f060934587a337d81b391c8",
+    jar_urls = [
+        "https://maven.pkg.st/com/google/jsinterop/jsinterop-annotations/1.0.1/jsinterop-annotations-1.0.1.jar",
+    ],
+    licenses = ["notice"],  # GWT Terms
+)
+
+http_archive(
+    name = "remote_java_tools",
+    sha256 = "942b3d88ebd785a5face38049077a1f8dab5a3500f5ebd0c0df090244acc4e16",
+    urls = [
+        "https://mirror.bazel.build/bazel_java_tools/releases/java/v12.5/java_tools-v12.5.zip",
+        "https://github.com/bazelbuild/java_tools/releases/download/java_v12.5/java_tools-v12.5.zip",
+    ],
+)
+
+http_archive(
+    name = "remote_java_tools_linux",
+    sha256 = "45dda5441b46385e8ec95d3bc4a04b9337a6ff837bb41bdaa6247d8d36edceae",
+    urls = [
+        "https://mirror.bazel.build/bazel_java_tools/releases/java/v12.5/java_tools_linux-v12.5.zip",
+        "https://github.com/bazelbuild/java_tools/releases/download/java_v12.5/java_tools_linux-v12.5.zip",
+    ],
+)
+
+http_archive(
+    name = "remote_java_tools_windows",
+    sha256 = "0b319cf762e256133f8d0f5f99fd7d35ca4cf00f35e7c0e8aea1b9fcd9cf4fb0",
+    urls = [
+        "https://mirror.bazel.build/bazel_java_tools/releases/java/v12.5/java_tools_windows-v12.5.zip",
+        "https://github.com/bazelbuild/java_tools/releases/download/java_v12.5/java_tools_windows-v12.5.zip",
+    ],
+)
+
+http_archive(
+    name = "remote_java_tools_darwin_x86_64",
+    sha256 = "7e96d0310222e9c27e4c87987978c0c59a0acb97cebdbd838ff652a13abbed77",
+    urls = [
+        "https://mirror.bazel.build/bazel_java_tools/releases/java/v12.5/java_tools_darwin_x86_64-v12.5.zip",
+        "https://github.com/bazelbuild/java_tools/releases/download/java_v12.5/java_tools_darwin_x86_64-v12.5.zip",
+    ],
+)
+
+http_archive(
+    name = "remote_java_tools_darwin_arm64",
+    sha256 = "5fb927b24043dd79010b54be31ec5f18b38ee9dbd9fd03d8353232431a7e2392",
+    urls = [
+        "https://mirror.bazel.build/bazel_java_tools/releases/java/v12.5/java_tools_darwin_arm64-v12.5.zip",
+        "https://github.com/bazelbuild/java_tools/releases/download/java_v12.5/java_tools_darwin_arm64-v12.5.zip",
+    ],
+)
+
+BAZEL_ZIG_CC_VERSION = "v0.9.2"
+
+http_archive(
+    name = "bazel-zig-cc",
+    sha256 = "73afa7e1af49e3dbfa1bae9362438cdc51cb177c359a6041a7a403011179d0b5",
+    strip_prefix = "bazel-zig-cc-{}".format(BAZEL_ZIG_CC_VERSION),
+    urls = ["https://git.sr.ht/~motiejus/bazel-zig-cc/archive/{}.tar.gz".format(BAZEL_ZIG_CC_VERSION)],
+)
+
+rules_kotlin_version = "1.8"
+
+rules_kotlin_sha = "01293740a16e474669aba5b5a1fe3d368de5832442f164e4fbfc566815a8bc3a"
+
+http_archive(
+    name = "io_bazel_rules_kotlin",
+    sha256 = rules_kotlin_sha,
+    urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+)
+
 ## --------------------------------------------------------------------------------------------------------
+
+## Setup: GraalVM
+
+load("@rules_graal//graal:graal_bindist.bzl", "graal_bindist_repository")
+
+graal_bindist_repository(
+    name = "graal",
+    java_version = "17",
+    version = "22.1.0",
+)
 
 ## Setup: Rust
 
@@ -19,6 +180,10 @@ rules_rust_dependencies()
 rust_register_toolchains(
     edition = "2021",
 )
+
+load("@rules_rust//wasm_bindgen:repositories.bzl", "rust_wasm_bindgen_repositories")
+
+rust_wasm_bindgen_repositories()
 
 ## Setup: Crates
 
@@ -41,3 +206,70 @@ crates_repository(
 load("@crates//:defs.bzl", "crate_repositories")
 
 crate_repositories()
+
+## Setup: Go
+
+load("//:godeps.bzl", "go_dependencies")
+
+# gazelle:repository_macro godeps.bzl%go_dependencies
+go_dependencies()
+
+## Setup: Zig
+
+load("@bazel-zig-cc//toolchain:defs.bzl", zig_toolchains = "toolchains")
+
+zig_toolchains()
+
+register_toolchains(
+    "@zig_sdk//toolchain:linux_amd64_gnu.2.28",
+    "@zig_sdk//toolchain:linux_arm64_gnu.2.28",
+    "@zig_sdk//toolchain:darwin_amd64",
+    "@zig_sdk//toolchain:darwin_arm64",
+    "@zig_sdk//toolchain:windows_amd64",
+    "@zig_sdk//toolchain:windows_arm64",
+)
+
+# rules_webtesting
+
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+
+web_test_repositories()
+
+load("@io_bazel_rules_webtesting//web/versioned:browsers-0.3.3.bzl", "browser_repositories")
+
+browser_repositories(
+    chromium = True,
+    firefox = True,
+)
+
+## Setup: Kotlin
+
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
+
+kotlin_repositories(
+    compiler_release = kotlinc_version(
+        release = "1.7.22",
+        sha256 = "9db4b467743c1aea8a21c08e1c286bc2aeb93f14c7ba2037dbd8f48adc357d83"
+    )
+)
+
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
+
+kt_register_toolchains()  # to use the default toolchain, otherwise see toolchains below
+
+## Setup: Closure
+
+load("//tools/defs/closure:compiler.bzl", "setup_closure_compiler")
+
+setup_closure_compiler()
+
+## Setup: J2CL
+
+#load("@com_google_j2cl//build_defs:repository.bzl", "load_j2cl_repo_deps")
+#load_j2cl_repo_deps()
+
+load("@com_google_j2cl//build_defs:rules.bzl", "setup_j2cl_workspace")
+
+setup_j2cl_workspace(
+    omit_kotlin = True,
+)

@@ -1,0 +1,9 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+## -- Configs -- ##
+
+exports_files([
+    "esbuild.config.js",
+])

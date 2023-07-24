@@ -1,0 +1,56 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools/defs/esbuild:exports.bzl",
+    "esbuild",
+    "esbuild_config",
+)
+load(
+    "//elide/runtime/js:config.bzl",
+    "JS_TARGET",
+)
+
+## -- Polyfills -- ##
+
+POLYFILLS = {
+    "abort-controller": ["abort-controller.js"],
+    "buffer": ["base64.js", "buffer.js", "ieee754.js"],
+    "event": ["event-target.js"],
+    "once": ["once.js"],
+    "readable-stream": ["readable-stream.mjs"],
+    "text-encoder": ["textencoder.js"],
+}
+
+[filegroup(name = n[0], srcs = n[1]) for n in POLYFILLS.items()]
+
+## -- Exports -- ##
+
+filegroup(
+    name = "polyfills-srcs",
+    srcs = [":%s" % n for n in POLYFILLS.keys()],
+)
+
+esbuild_config(
+    name = "polyfills-esbuild",
+    config_file = "esbuild.config.js",
+    visibility = ["//visibility:private"],
+)
+
+esbuild(
+    name = "polyfills-bundle",
+    srcs = [":polyfills-srcs"],
+    entry_point = "polyfills.js",
+    config = ":polyfills-esbuild",
+    format = "iife",
+    output = "polyfills.min.js",
+    target = JS_TARGET,
+    sourcemap = "external",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "polyfills",
+    actual = "polyfills.min.js",
+)

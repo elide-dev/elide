@@ -1,0 +1,48 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools:defs.bzl",
+    "ts_config",
+    "ts_library",
+)
+
+MODULE_NAME = "@elide/runtime/js/intrinsics"
+
+## -- Abstracts -- ##
+
+ts_library(
+    name = "primordials",
+    srcs = [
+        "primordials.ts",
+    ],
+    include_tools = False,
+    module = MODULE_NAME,
+)
+
+ts_library(
+    name = "base",
+    srcs = ["base.ts"],
+    include_tools = False,
+    module = MODULE_NAME,
+    tsconfig = "//:tsconfig.json",
+)
+
+## -- Top-level Intrinsics -- ##
+
+ts_library(
+    name = "base64",
+    srcs = [
+        "base64.ts",
+    ],
+    module = MODULE_NAME,
+)
+
+ts_library(
+    name = "console",
+    srcs = [
+        "console.ts",
+    ],
+    module = MODULE_NAME,
+)

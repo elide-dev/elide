@@ -1,0 +1,15 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+load(
+    "//tools/defs:elide.bzl",
+    "js_module",
+)
+
+js_module(
+    name = "fs",
+    srcs = [
+        "fs.ts",
+        "index.ts",
+    ],
+)

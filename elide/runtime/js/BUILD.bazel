@@ -1,0 +1,84 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools:defs.bzl",
+    "js_library",
+    "ts_config",
+)
+load(
+    "//tools/defs:elide.bzl",
+    "js_runtime",
+    "runtime_dist",
+)
+load(
+    "//elide/runtime/js:config.bzl",
+    "BASE_JS_EXTERNS",
+    "TS_MODULES",
+)
+
+MODULE_NAME = "elide.runtime.js"
+
+## -- Externs & Types -- ##
+
+js_library(
+    name = "runtime_externs",
+    srcs = ["intrinsics.externs.js"],
+    deps = [
+        "//third_party/standards/whatwg",
+    ],
+)
+
+## -- Configuration -- ##
+
+filegroup(
+    name = "runtime_tsconfig_json",
+    srcs = ["tsconfig.runtime.json"],
+)
+
+ts_config(
+    name = "tsconfig",
+    src = ":runtime_tsconfig_json",
+    deps = ["//:tsconfig"],
+)
+
+## -- Entrypoints -- ##
+
+EXTERNS = BASE_JS_EXTERNS + [
+    # Any additional externs here.
+]
+
+js_library(
+    name = "entrypoint-js",
+    srcs = ["entrypoint.js"],
+    ts_deps = TS_MODULES,
+)
+
+js_runtime(
+    name = "runtime",
+    entrypoint = "elide.runtime.js.entry",
+    main = ":entrypoint-js",
+    ts_deps = TS_MODULES,
+    deps = EXTERNS + [
+        ":runtime_externs",
+    ],
+    extra_sources = [
+        "//elide/runtime/js/polyfills",
+    ],
+)
+
+## -- Distribution -- ##
+
+runtime_dist(
+    name = "dist",
+    language = "js",
+    manifest = "MANIFEST.MF",
+    target = ":runtime",
+    modules = [
+        "//elide/runtime/js/modules/%s" % m for m in [
+            "buffer",
+            "fs",
+        ]
+    ],
+)

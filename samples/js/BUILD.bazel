@@ -1,0 +1,117 @@
+load("@rules_java//java:defs.bzl", "java_library")
+load(
+    "@io_bazel_rules_closure//closure:defs.bzl",
+    "closure_js_library",
+)
+load(
+    "@com_google_j2cl//build_defs:rules.bzl",
+    "j2cl_application",
+    "j2cl_library",
+    "j2wasm_application",
+    "j2wasm_library",
+)
+
+package(
+    default_visibility = ["//visibility:public"],
+    licenses = ["notice"],
+)
+
+#
+# Sample: HelloGuava
+#
+
+filegroup(
+    name = "HelloGuavaJavaSrc",
+    srcs = ["HelloGuava.java"],
+)
+
+filegroup(
+    name = "HelloGuavaJsSrc",
+    srcs = ["app.js"],
+)
+
+filegroup(
+    name = "HelloGuavaSrc",
+    srcs = [
+        ":HelloGuavaJavaSrc",
+        ":HelloGuavaJsSrc",
+    ],
+)
+
+java_library(
+    name = "HelloGuavaJava",
+    srcs = [":HelloGuavaJavaSrc"],
+    deps = [
+        "@com_google_guava",
+        "@com_google_j2cl//:jsinterop-annotations",
+    ],
+)
+
+j2cl_library(
+    name = "helloguavalib",
+    srcs = [
+        ":HelloGuavaSrc",
+    ],
+    deps = [
+        "@com_google_guava-j2cl",
+        "@com_google_j2cl//:jsinterop-annotations-j2cl",
+    ],
+)
+
+j2cl_application(
+    name = "guava",
+    entry_points = ["j2cl.samples.app"],
+    deps = [":helloguavalib"],
+)
+
+#
+# Sample: HelloGuava
+#
+
+filegroup(
+    name = "HelloWorldJavaSrc",
+    srcs = ["HelloWorld.java"],
+)
+
+filegroup(
+    name = "HelloWorldJsSrc",
+    srcs = ["app.js"],
+)
+
+filegroup(
+    name = "HelloWorldSrc",
+    srcs = [
+        ":HelloWorldJavaSrc",
+        ":HelloWorldJsSrc",
+    ],
+)
+
+java_library(
+    name = "HelloWorldJava",
+    srcs = [":HelloWorldJavaSrc"],
+    deps = [
+        "@com_google_j2cl//:jsinterop-annotations",
+        "@lombok",
+    ],
+)
+
+j2cl_library(
+    name = "helloworldlib",
+    srcs = [
+        ":HelloWorldSrc",
+    ],
+    deps = [
+        "@com_google_j2cl//:jsinterop-annotations-j2cl",
+        "@org_projectlombok_lombok-j2cl",
+    ],
+)
+
+java_library(
+    name = "js",
+    srcs = [
+        "HelloGuava.java",
+        "HelloWorld.java",
+    ],
+    visibility = ["//:__subpackages__"],
+    deps = ["@maven//:com_google_guava_guava"],
+)

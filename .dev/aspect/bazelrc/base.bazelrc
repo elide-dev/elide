@@ -1,0 +1,28 @@
+
+#
+# Bazel: Baseline Settings
+#
+
+startup --host_jvm_args=-Dbazel.DigestFunction=SHA256
+
+build --worker_sandboxing
+build --strategy=J2cl=worker
+build --strategy=Closure=worker
+build --strategy=JdepsMerger=worker
+build --strategy=KotlinCompile=worker
+build --strategy=Javac=worker
+build --strategy=JavaIjar=worker
+build --strategy=JavaDeployJar=worker
+build --strategy=JavaSourceJar=worker
+build --strategy=Turbine=worker
+build --strategy=TypeScriptCompile=sandboxed,local
+build --ui_event_filters=-debug,-stderr
+
+test --verbose_failures
+test --test_output=errors
+
+build --sandbox_tmpfs_path=/tmp
+
+build --experimental_worker_multiplex
+build --experimental_strict_action_env
+build --experimental_use_validation_aspect

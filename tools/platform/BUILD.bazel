@@ -1,0 +1,40 @@
+platform(
+    name = "darwin_aarch64",
+    constraint_values = [
+        "@platforms//os:mac",
+        "@platforms//cpu:aarch64",
+    ],
+)
+
+platform(
+    name = "darwin_amd64",
+    constraint_values = [
+        "@platforms//os:mac",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+platform(
+    name = "linux_amd64",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+
+platform(
+    name = "wasm32",
+    constraint_values = [
+        "@platforms//cpu:wasm32",
+    ],
+)
+
+alias(
+    name = "wasm",
+    actual = "@rules_rust//rust/platform:wasm",
+)
+
+alias(
+    name = "wasi",
+    actual = "@rules_rust//rust/platform:wasi",
+)

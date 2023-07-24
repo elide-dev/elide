@@ -1,0 +1,28 @@
+"""Macros and configurations for integrating TypeScript with Closure."""
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "@build_bazel_rules_nodejs//:index.bzl",
+    "nodejs_binary",
+)
+
+nodejs_binary(
+    name = "tsc_wrapped",
+    data = [
+        "@npm//@bazel/typescript",
+        "@npm//protobufjs",
+        "@npm//source-map-support",
+        "@npm//tsickle",
+        "@npm//tslib",
+        "@npm//tsutils",
+        "@npm//typescript",
+    ],
+    entry_point = "@npm//:node_modules/@bazel/typescript/internal/tsc_wrapped/tsc_wrapped.js",
+    templated_args = [
+        "--node_options=--expose-gc",
+        "--node_options=--max-old-space-size=2048",
+    ],
+)

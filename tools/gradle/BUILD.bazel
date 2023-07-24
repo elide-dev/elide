@@ -1,0 +1,43 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load("@rules_graal//graal:graal.bzl", "graal_binary")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_binary(
+    name = "GradleToolRunner",
+    main_class = "tools.gradle.GradleToolRunner",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        ":gradle",
+    ],
+)
+
+graal_binary(
+    name = "GradleToolRunner.native",
+    main_class = "tools.gradle.GradleToolRunner",
+    deps = [":java"],
+)
+
+java_library(
+    name = "gradle",
+    srcs = ["GradleToolRunner.java"],
+    data = [
+        "//gradle/wrapper",
+    ],
+    visibility = ["//:__subpackages__"],
+    runtime_deps = [
+        "@maven//:org_slf4j_slf4j_simple",  # keep
+    ],
+    deps = [
+        "@maven//:dev_elide_elide_core",  # keep
+        "@maven//:org_gradle_gradle_tooling_api",  # keep
+        "@maven//:org_slf4j_slf4j_api",  # keep
+    ],
+)
+
+alias(
+    name = "runner",
+    actual = "GradleToolRunner",
+)

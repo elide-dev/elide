@@ -1,0 +1,23 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools:defs.bzl",
+    "ts_library",
+)
+
+ts_library(
+    name = "url",
+    srcs = [
+        "index.ts",
+        "IURL.ts",
+        "IURLSearchParams.ts",
+        "URL.ts",
+        "URLSearchParams.ts",
+    ],
+    module = "@elide/runtime/js/intrinsics/url",
+    deps = [
+        "//elide/runtime/js/intrinsics/blob",
+    ],
+)

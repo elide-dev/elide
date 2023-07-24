@@ -1,0 +1,21 @@
+load("@rules_graal//graal:graal.bzl", "graal_binary")
+load("@rules_java//java:defs.bzl", "java_binary", "java_library")
+
+java_library(
+    name = "java",
+    srcs = ["HelloWorld.java"],
+    visibility = ["//:__subpackages__"],
+)
+
+java_binary(
+    name = "HelloWorld",
+    main_class = "elide.java.HelloWorld",
+    visibility = ["//visibility:public"],
+    runtime_deps = [":java"],
+)
+
+graal_binary(
+    name = "HelloWorld.native",
+    main_class = "elide.java.HelloWorld",
+    deps = [":java"],
+)

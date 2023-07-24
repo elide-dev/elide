@@ -1,12 +1,17 @@
-build --java_language_version=19
-build --java_runtime_version=remotejdk_19
-build --tool_java_language_version=19
-build --tool_java_runtime_version=remotejdk_19
+build --java_runtime_version=11
+build --java_language_version=11
+build --tool_java_runtime_version=11
+build --tool_java_language_version=11
 
-build --experimental_strict_java_deps=strict
+build --use_ijars
+build --java_header_compilation
+
 build --explicit_java_test_deps
 
-test --verbose_failures
-test --test_output=errors
-
-build --sandbox_tmpfs_path=/tmp
+build --define=experimental_use_abi_jars=1
+build --experimental_strict_java_deps=strict
+build --experimental_persistent_javac
+build --experimental_allow_tags_propagation
+build --experimental_split_xml_generation
+build --experimental_inmemory_jdeps_files
+build --experimental_java_classpath=bazel

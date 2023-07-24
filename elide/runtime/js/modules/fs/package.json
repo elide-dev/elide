@@ -1,0 +1,6 @@
+{
+  "name": "fs",
+  "type": "module",
+  "module": "fs",
+  "main": "fs.mjs"
+}

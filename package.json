@@ -1,4 +1,7 @@
 {
   "name": "elide",
-  "version": "1.0.0-v4rc1"
+  "version": "1.0.0-v4rc1",
+  "devDependencies": {
+    "typescript": "5.1.6"
+  }
 }

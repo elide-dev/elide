@@ -64,18 +64,24 @@ maven.artifact(
     version = "31.1-jre",
 )
 
+maven.artifact(
+    artifact = "gradle-tooling-api",
+    group = "org.gradle",
+    version = "8.2.1",
+)
+
 maven.install(
-    repositories = [
-        "https://maven.pkg.st",
-        "https://gradle.pkg.st",
-        "https://repo.gradle.org/gradle/libs-releases",
-    ],
     artifacts = [
         "dev.elide:elide-core:1.0-v3-alpha3-b7",
         "org.gradle:gradle-tooling-api:8.2.1",
         "org.slf4j:slf4j-simple:1.7.10",
     ],
     lock_file = "//:maven_install.json",
+    repositories = [
+        "https://maven.pkg.st",
+        "https://gradle.pkg.st",
+        "https://repo.gradle.org/gradle/libs-releases",
+    ],
 )
 
 use_repo(

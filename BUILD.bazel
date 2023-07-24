@@ -3,13 +3,17 @@ package(
 )
 
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("@gazelle//:def.bzl", "gazelle")
-
-# gazelle:prefix github.com/elide-dev/elide
+load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 
 npm_link_all_packages(name = "node_modules")
 
-gazelle(name = "gazelle")
+# gazelle:prefix github.com/elide-dev/runtime
+# gazelle:java_maven_install_file maven_install.json
+
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_bin",
+)
 
 exports_files([
     ".cargo/config.toml",
@@ -17,3 +21,10 @@ exports_files([
     "Cargo.lock",
     "Cargo.Bazel.lock",
 ])
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = DEFAULT_LANGUAGES + [
+        "@contrib_rules_jvm//java/gazelle",
+    ],
+)

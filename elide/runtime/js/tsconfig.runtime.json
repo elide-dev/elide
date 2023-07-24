@@ -1,0 +1,59 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    // Add the Google Closure Library types as a dependency here, carefully scoped so that it does not collide with the
+    // internal module declarations present in `tools`.
+    "types": [
+      "google-closure-library-types"
+    ],
+    "paths": {
+      "@elide/runtime/*": [
+        "../*",
+        "./bazel-out/host/bin/elide/runtime/*",
+        "./bazel-out/k8-fastbuild/bin/elide/runtime/*",
+        "./bazel-out/k8-opt/bin/elide/runtime/*",
+        "./bazel-out/k8-dbg/bin/elide/runtime/*",
+        "./bazel-out/k8_amd64-fastbuild/bin/elide/runtime/*",
+        "./bazel-out/k8_amd64-opt/bin/elide/runtime/*",
+        "./bazel-out/k8_amd64-dbg/bin/elide/runtime/*",
+        "./bazel-out/darwin_amd64-opt/bin/elide/runtime/*",
+        "./bazel-out/darwin_amd64-dbg/bin/elide/runtime/*",
+        "./bazel-out/darwin_amd64-fastbuild/bin/elide/runtime/*",
+        "./bazel-out/darwin_arm64-opt/bin/elide/runtime/*",
+        "./bazel-out/darwin_arm64-dbg/bin/elide/runtime/*",
+        "./bazel-out/darwin_arm64-fastbuild/bin/elide/runtime/*"
+      ],
+      "//*": [
+        "../../*",
+        "./bazel-out/host/bin/*",
+        "./bazel-out/k8-fastbuild/bin/*",
+        "./bazel-out/k8-opt/bin/*",
+        "./bazel-out/k8-dbg/bin/*",
+        "./bazel-out/k8_amd64-fastbuild/bin/*",
+        "./bazel-out/k8_amd64-opt/bin/*",
+        "./bazel-out/k8_amd64-dbg/bin/*",
+        "./bazel-out/darwin_amd64-opt/bin/*",
+        "./bazel-out/darwin_amd64-dbg/bin/*",
+        "./bazel-out/darwin_amd64-fastbuild/bin/*",
+        "./bazel-out/darwin_arm64-opt/bin/*",
+        "./bazel-out/darwin_arm64-dbg/bin/*",
+        "./bazel-out/darwin_arm64-fastbuild/bin/*"
+      ]
+    },
+    // Library Environment
+    "lib": [
+      "es5",
+      "es6",
+      "es2015",
+      "es2016",
+      "es2017",
+      "es2018",
+      "es2019",
+      "es2020",
+      "es2021",
+      "ES2021.Promise",
+      "es2021.intl",
+      "esnext"
+    ]
+  }
+}

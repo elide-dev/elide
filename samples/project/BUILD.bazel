@@ -1,0 +1,21 @@
+load(
+    "//tools/gradle:defs.bzl",
+    "gradle_task",
+)
+
+# gazelle:exclude src/*
+
+filegroup(
+    name = "files",
+    srcs = [
+        "build.gradle.kts",
+        "settings.gradle.kts",
+        "src/main/java/HelloWorld.java",
+    ],
+)
+
+gradle_task(
+    name = "project",
+    output = "build/libs/sample.jar",
+    project = ":files",
+)

@@ -1,0 +1,27 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools:defs.bzl",
+    "js_library",
+    "ts_library",
+)
+
+MODULE_NAME = "@elide/runtime/js/bridge"
+
+ts_library(
+    name = "js-error",
+    srcs = [
+        "jserror.ts",
+    ],
+    module = MODULE_NAME,
+    deps = [
+        "//elide/runtime/js/intrinsics/err",
+    ],
+)
+
+alias(
+    name = "bridge",
+    actual = "js-error",
+)

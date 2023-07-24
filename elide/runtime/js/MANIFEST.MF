@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Created-By: Elide (https://elide.dev)
+Specification-Title: Elide Runtime
+Specification-Version: 1.0
+Specification-Vendor: Elide Ventures, Inc.
+Sealed: true
+Elide-Runtime-ID: JS
+Elide-Runtime-Version: 3.0
+Name: elide/runtime/js/
+Specification-Title: Elide Runtime for JavaScript
+Specification-Version: 1.0
+Specification-Vendor: Elide Ventures, Inc.
+Name: elide/runtime/js/runtime.gz
+Content-Type: application/javascript;encoding=gzip;elide-runtime

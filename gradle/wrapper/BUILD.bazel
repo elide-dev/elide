@@ -1,0 +1,16 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+exports_files([
+    "gradle-wrapper.jar",
+    "gradle-wrapper.properties",
+])
+
+filegroup(
+    name = "wrapper",
+    srcs = [
+        ":gradle-wrapper.jar",
+        ":gradle-wrapper.properties",
+    ],
+)

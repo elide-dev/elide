@@ -2,6 +2,9 @@
 # Imports
 #
 
+import %workspace%/.dev/aspect/bazelrc/base.bazelrc
+import %workspace%/.dev/aspect/bazelrc/native.bazelrc
+
 # Import Aspect recommended Bazel convenience settings for all projects
 import %workspace%/.dev/aspect/bazelrc/convenience.bazelrc
 
@@ -41,19 +44,21 @@ import %workspace%/.dev/aspect/bazelrc/rust.bazelrc
 # Turn on the bzlmod feature in Bazel, before 6.0 final it's experimental
 common --enable_bzlmod
 common --enable_platform_specific_config
+common --ui_event_filters=-debug
 
 # Compatibility
-build --incompatible_disallow_empty_glob=true
+build --incompatible_disallow_empty_glob=false
 build --incompatible_use_platforms_repo_for_constraints
 build --nolegacy_external_runfiles
 
 # Testing & Coverage
 coverage --combined_report=lcov
-coverage --experimental_fetch_all_coverage_outputs
+coverage --collect_code_coverage
+coverage --instrumentation_filter="^//elide"
+coverage --instrument_test_targets
 
 # Load any settings & overrides specific to the current user from `.aspect/bazelrc/user.bazelrc`.
 # This file should appear in `.gitignore` so that settings are not shared with team members. This
 # should be last statement in this config so the user configuration is able to overwrite flags from
 # this file. See https://bazel.build/configure/best-practices#bazelrc-file.
 try-import %workspace%/user.bazelrc
-

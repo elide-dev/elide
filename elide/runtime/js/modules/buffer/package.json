@@ -1,0 +1,6 @@
+{
+  "name": "buffer",
+  "type": "module",
+  "module": "buffer",
+  "main": "buffer.mjs"
+}

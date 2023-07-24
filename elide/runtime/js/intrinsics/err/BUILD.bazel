@@ -1,0 +1,20 @@
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+    "//tools:defs.bzl",
+    "js_library",
+    "ts_library",
+)
+
+MODULE_NAME = "@elide/runtime/js/intrinsics/err"
+
+ts_library(
+    name = "err",
+    srcs = [
+        "ValueError.ts",
+        "index.ts",
+    ],
+    module = MODULE_NAME,
+)

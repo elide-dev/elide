@@ -6,12 +6,22 @@ directories:
   tools
 
 workspace_type: java
-java_language_level: jdk_17_preview
+java_language_level: 17
 derive_targets_from_directories: false
 
 #build_flags:
-#targets:
 #test_flags:
+
+targets:
+  //elide/java/...
+  -//elide/java:HelloWorld.native
+  //elide/runtime/...
+  //tools/...
+  -//tools/gradle:GradleToolRunner.native
+  //rng/...
+
+gazelle_target: //:gazelle
+
 test_sources:
   tests/*
   */test/*
@@ -27,4 +37,3 @@ additional_languages:
   kotlin
   typescript
   go
-

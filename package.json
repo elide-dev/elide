@@ -44,7 +44,7 @@
     "prettier": "2.8.8",
     "prettier-plugin-java": "2.2.0",
     "prettier-plugin-properties": "0.2.0",
-    "prettier-plugin-sh": "0.12.8",
+    "prettier-plugin-sh": "0.13.1",
     "prettier-plugin-toml": "0.3.1",
     "readable-stream": "4.3.0"
   },

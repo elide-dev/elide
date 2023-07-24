@@ -2,7 +2,7 @@
 elide = "1.0-v3-alpha3-b7"
 ksp = "1.8.20-1.0.10"
 detekt = "1.22.0"
-kotlin = "1.8.20"
+kotlin = "1.9.20-station-823"
 kotlin_dsl = "4.0.7"
 ktlint = "0.49.0"
 ktlintGradle = "11.3.1"

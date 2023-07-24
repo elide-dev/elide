@@ -69,7 +69,7 @@ __metadata:
   resolution: "@elide-dev/site-content@workspace:site/docs/content"
   dependencies:
     "@mdx-js/esbuild": 2.2.1
-    "@mdx-js/loader": 2.2.1
+    "@mdx-js/loader": 2.3.0
     "@mdx-js/mdx": 2.2.1
     "@mdx-js/preact": 2.3.0
     "@mdx-js/react": 2.2.1
@@ -289,15 +289,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/loader@npm:2.2.1":
-  version: 2.2.1
-  resolution: "@mdx-js/loader@npm:2.2.1"
+"@mdx-js/loader@npm:2.3.0":
+  version: 2.3.0
+  resolution: "@mdx-js/loader@npm:2.3.0"
   dependencies:
     "@mdx-js/mdx": ^2.0.0
     source-map: ^0.7.0
   peerDependencies:
     webpack: ">=4"
-  checksum: b2659c5095af072ee341264b127407bbebbba8fd51885f610fe9aeefc15450a6bbcaee3eec34adcfa92e4fe208c7ac2a0ff2fa6aff75485aa9903b4adf521590
+  checksum: 1217f811b7ee37e4f63ca828642cd47120b7b2994975409b38cdd8550434166520c94f116efa975cb2b14760a5cc7a424848649519ce05d47f96d21b8c2c1066
   languageName: node
   linkType: hard
 

@@ -74,7 +74,7 @@ import java.net.URI as NativeURL
    * @param port Standard port for this protocol, or `-1` if ports are not relevant. Defaults to `-1`.
    * @param hasHost Set to `true` if hosts are relevant to this protocol. Defaults to `true` if `port` is not `-1`.
    */
-  internal enum class KnownProtocol constructor (
+  internal enum class KnownProtocol (
     val scheme: String = "",
     val port: Int = -1,
     val hasHost: Boolean = port != -1,
@@ -99,7 +99,7 @@ import java.net.URI as NativeURL
   }
 
   /** Wrapper class which enables lazy processing of parsed URL values. */
-  internal class CachedURLValue<T: Serializable> constructor (
+  internal class CachedURLValue<T: Serializable> (
     initialValue: T?,
     private val processor: (() -> T)? = null,
   ) {
@@ -149,7 +149,7 @@ import java.net.URI as NativeURL
     val absolute: String,
     val knownProtocol: KnownProtocol? = knownProtocol(uri),
     val protocol: String = computeProtocol(uri, knownProtocol),
-    val port: Int = computePort(uri, knownProtocol),
+    val port: Int? = computePort(uri),
     val host: String = computeHost(uri, port, knownProtocol),
     val hostname: CachedURLValue<String> = computeHostname(uri, knownProtocol),
     val pathname: CachedURLValue<String> = computePathname(uri, knownProtocol),
@@ -167,8 +167,23 @@ import java.net.URI as NativeURL
     )
   ) {
     companion object {
+      // Check input before parsing a URL.
+      private fun checkParseInput(input: String): String = input.apply {
+        require(!contains("％００") && !contains("%ef%bc%85%ef%bc%90%ef%bc%90")) {
+          "Cannot create URL with null escape sequence"
+        }
+      }
+
+      // Sanitize a URL string, removing any invalid characters, before parsing.
+      private fun sanitize(url: String): String = checkParseInput(url).replace(
+        Regex("[\t\n\r]"),
+        ""
+      )
+
       // Parse the provided URL, translating any errors into the expected error types.
-      private fun parseUrl(url: String): NativeURL = jsErrors { NativeURL.create(url) }
+      private fun parseUrl(url: String): NativeURL = jsErrors {
+        NativeURL.create(sanitize(url))
+      }
 
       // Find the host name for a protocol-relative URL.
       @JvmStatic private fun hostForProtocolRelative(uri: NativeURL) = uri.toString()
@@ -194,30 +209,27 @@ import java.net.URI as NativeURL
       }
 
       // Calculate a spec-compliant value for the `port` property.
-      @JvmStatic private fun computePort(uri: NativeURL, proto: KnownProtocol?): Int {
+      @JvmStatic private fun computePort(uri: NativeURL): Int? {
         val uriPort = uri.port
         return (if (uriPort == -1) {
           // ports are not applicable to this type of URL
-          proto?.port
-        } else uriPort) ?: -1
+          null
+        } else uriPort)
       }
 
       // Calculate a spec-compliant value for the `host` property.
-      @JvmStatic private fun computeHost(uri: NativeURL, port: Int, proto: KnownProtocol?): String = when {
+      @JvmStatic private fun computeHost(uri: NativeURL, port: Int?, proto: KnownProtocol?): String = when {
         // protocol-relative URLs need special consideration, `URI` mis-parses them
         proto == KnownProtocol.RELATIVE -> hostForProtocolRelative(uri)
 
         // if the protocol is known and expected to have a host, make sure we return something reasonable no matter what
-        proto?.hasHost == true -> {
-          if (proto.port != -1 && proto.port == port) {
-            // the host is using a standard port, so we should omit the standard port.
-            uri.host
-          } else if (proto.port != -1) {
-            // there is a standard port, and the host is not using it, so we should include it.
+        proto == null || proto.hasHost -> {
+          if (port != null) {
+            // there is a port declared, and the host is not using it, so we should include it.
             "${uri.host}:$port"
           } else {
             // we require a host, but we can't safely figure out the port, so return it directly.
-            uri.host
+            uri.host ?: ""
           }
         }
 
@@ -243,9 +255,9 @@ import java.net.URI as NativeURL
 
       // Calculate a spec-compliant value for the `pathname` property.
       @JvmStatic private fun computePathname(uri: NativeURL, proto: KnownProtocol?) = cachedParse {
-        if (proto?.hasHost == true) {
+        if (proto?.hasHost != false) {
           val path = uri.path
-          if (path.isNullOrBlank()) {
+          if (path == null || path.isEmpty() || path.isBlank()) {
             "/"
           } else {
             path
@@ -395,7 +407,7 @@ import java.net.URI as NativeURL
         uri: NativeURL,
         knownProtocol: KnownProtocol?,
         protocol: String,
-        port: Int,
+        port: Int?,
         host: String,
       ): Int {
         val path = uri.path
@@ -405,7 +417,7 @@ import java.net.URI as NativeURL
         var result = knownProtocol.hashCode()
         result = 31 * result + protocol.hashCode()
         result = 31 * result + host.hashCode()
-        result = 31 * result + port
+        result = 31 * result + (port ?: -1)
         result = 31 * result + normalizedPath(path).hashCode()
         result = 31 * result + normalizedFragment(frag).hashCode()
         result = 31 * result + normalizedQuery(query).hashCode()
@@ -454,7 +466,7 @@ import java.net.URI as NativeURL
             }
             val reparsed = parseUrl(spliced)
             val knownProto = knownProtocol(reparsed)
-            val splicedPort = computePort(reparsed, knownProto)
+            val splicedPort = computePort(reparsed)
 
             ParsedURL(
               uri = reparsed,
@@ -489,32 +501,18 @@ import java.net.URI as NativeURL
         this  // special case: port matches, change is a no-op
       } else {
         val knownProto = knownProtocol(port)
-        val reassembled = if (port == knownProto?.port) {
-          // special case: if the user is assigning the port to the default-port for a matching known protocol, we can
-          // just omit the port and set the scheme.
-          NativeURL(
-            knownProto.scheme,
-            uri.userInfo,
-            uri.host,
-            -1,
-            uri.path,
-            uri.query,
-            uri.fragment,
-          )
-        } else {
-          NativeURL(
-            uri.scheme,
-            uri.userInfo,
-            uri.host,
-            port,
-            uri.path,
-            uri.query,
-            uri.fragment,
-          )
-        }
+        val reassembled = NativeURL(
+          uri.scheme,
+          uri.userInfo,
+          uri.host,
+          port,
+          uri.path,
+          uri.query,
+          uri.fragment,
+        )
 
         // recompute the rest of the parsed URL
-        val splicedPort = computePort(reassembled, knownProto)
+        val splicedPort = computePort(reassembled)
         ParsedURL(
           uri = reassembled,
           absolute = reassembled.toString(),
@@ -582,7 +580,7 @@ import java.net.URI as NativeURL
 
         // recompute the rest of the parsed URL
         val knownProto = knownProtocol(reassembled)
-        val splicedPort = computePort(reassembled, knownProto)
+        val splicedPort = computePort(reassembled)
         ParsedURL(
           uri = reassembled,
           absolute = reassembled.toString(),
@@ -1172,7 +1170,7 @@ import java.net.URI as NativeURL
       set(value) = mutateURL { copySplice(pathname = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var port: Int
+    @get:Polyglot @set:Polyglot override var port: Int?
       get() = target.get().port
       set(value) = mutateURL { copySplice(port = value) }
 

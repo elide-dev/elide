@@ -411,8 +411,12 @@ jobs:
       fail-fast: false
       matrix:
         project: ["server:hellocss"]
+        labs: [false]
         include:
+          - project: "server:hellocss"
+            labs: false
           - project: "fullstack:react-ssr:server"
+            labs: true
 
     steps:
       - name: "Setup: GraalVM"
@@ -463,6 +467,7 @@ jobs:
 
       ## -- Samples -- ##
       - name: "Build/Push: '${{ matrix.project }}' (JVM)"
+        continue-on-error: ${{ fromJson(matrix.labs) }}
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         with:
           arguments: |

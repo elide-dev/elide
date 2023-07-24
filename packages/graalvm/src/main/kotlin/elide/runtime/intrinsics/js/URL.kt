@@ -355,7 +355,7 @@ public interface URL : java.io.Serializable {
    * ← 123
    * ```
    */
-  @get:Polyglot public val port: Int
+  @get:Polyglot public val port: Int?
 
   /**
    * ### URL: `protocol`

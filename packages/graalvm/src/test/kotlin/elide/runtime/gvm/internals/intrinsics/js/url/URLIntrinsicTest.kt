@@ -31,9 +31,9 @@ import java.net.URI
     assertNotNull(sampleUrl, "should be able to convert a Java `URL` to a wrapped intrinsic `URL`")
     assertEquals("https://google.com", sampleUrl.toString())
 
-    val url = URLValue(java.net.URL("https://google.com"))
+    val url = URLValue(URI.create("https://google.com").toURL())
     assertNotNull(url, "should be able to construct a `URLValue` from a `java.net.URL`")
-    val uri = URLValue(java.net.URI.create("https://google.com"))
+    val uri = URLValue(URI.create("https://google.com"))
     assertNotNull(uri, "should be able to construct a `URLValue` from a `java.net.URI`")
   }
 
@@ -204,13 +204,13 @@ import java.net.URI
     "equal,https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456,true,URLs should be equal",
 
     // Smart Cases: Positive
-    "equal-smart,https://google.com,https://google.com:443,true,two URLs with the same effective port should be equal",
     "equal-smart,https://google.com/,https://google.com,true,two URLs with the same effective path should be equal",
-    "equal-smart,https://google.com/,https://google.com:443,true,two URLs with the same effective path/port should be equal",
     "equal-smart,https://google.com#,https://google.com,true,two URLs with the same effective fragment should be equal",
     "equal-smart,https://google.com?,https://google.com,true,two URLs with the same effective query should be equal",
 
     // Basic Cases: Negative
+    "not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal",
+    "not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal",
     "not-equal,http://google.com,https://google.com,false,two URLs which differ in protocol should not be equal",
     "not-equal,https://google.com,https://google.co.uk,false,two URLs which differ in host should not be equal",
     "not-equal,https://google.com,https://google.com:444,false,two URLs which differ in port should not be equal",
@@ -428,8 +428,8 @@ import java.net.URI
     assertEquals("google.com:123", url.host)
     assertEquals("https://google.com:123", url.toString())
     url.port = 443
-    assertEquals("google.com", url.host)
-    assertEquals("https://google.com", url.toString())
+    assertEquals("google.com:443", url.host)
+    assertEquals("https://google.com:443", url.toString())
     assertFailsWith<ValueError> {
       url.host = "google.com:"
     }
@@ -532,20 +532,20 @@ import java.net.URI
   }
 
   @CsvSource(value = [
-    "https://google.com,443",
-    "https://github.com/elide-dev/v3,443",
-    "https://dl.elide.dev/test?abc=123&def=456,443",
+    "https://google.com,",
+    "https://github.com/elide-dev/v3,",
+    "https://dl.elide.dev/test?abc=123&def=456,",
     "https://dl.elide.dev:123/test?abc=123&def=456#hi,123",
-    "http://www.google.com/#hello,80",
+    "http://www.google.com/#hello,",
     "//dl.elide.dev/test?abc=123&def=456,",
-    "ftp://hello.local.dev/hello/test,21",
+    "ftp://hello.local.dev/hello/test,",
     "file://here/is/a/file/path,",
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,",
-    "https://user:pass@dl.elide.dev/test?abc=123&def=456,443",
+    "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
   ])
   @ParameterizedTest(name = "[{index}:dual]") fun testURLPort(testString: String, expectedPort: String?) = dual {
-    val expected = expectedPort?.toIntOrNull() ?: -1
+    val expected = expectedPort?.toIntOrNull()
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected, url.port, "port value mismatch")
@@ -553,13 +553,13 @@ import java.net.URI
     // language=javascript
     """
       test(new URL("$testString")).isNotNull("should be able to parse URL");
-      test(new URL("$testString").port).isEqualTo(${expectedPort ?: "-1"});
+      test(new URL("$testString").port).${if (expectedPort == null) "isNull()" else "isEqualTo($expectedPort)"};
     """
   }
 
   @Test fun testURLPortMutability() = dual {
     val url = URLValue.fromString("https://google.com")
-    assertEquals(443, url.port, "expected port mismatch")
+    assertNull(url.port, "expected port mismatch")
     val captured = url.parsedURL()
     url.port = 123
     assertNotSame(captured, url.parsedURL())
@@ -574,18 +574,18 @@ import java.net.URI
       url.port = 65536
     }
     url.port = 443
-    assertEquals("https://google.com", url.toString(), "expected port mismatch")
+    assertEquals("https://google.com:443", url.toString(), "expected port mismatch")
   }.guest {
     // language=javascript
     """
       const url = new URL("https://google.com");
-      test(url.port).isEqualTo(443);
+      test(url.port).isEqualTo(null);
       url.port = 123;
       test(url.toString()).isEqualTo("https://google.com:123");
       test(() => url.port = -5).fails("should reject ports which are too small");
       test(() => url.port = 65536).fails("should reject ports which are too large");
       url.port = 443;
-      test(url.toString()).isEqualTo("https://google.com");
+      test(url.toString()).isEqualTo("https://google.com:443");
     """
   }
 
@@ -636,7 +636,7 @@ import java.net.URI
       "hostname change should preserve port and scheme",
     )
     url.port = 443
-    assertEquals("https://testing.com", url.toString())
+    assertEquals("https://testing.com:443", url.toString())
     assertFailsWith<ValueError> {
       url.hostname = ""
     }
@@ -661,7 +661,7 @@ import java.net.URI
       url.hostname = "testing.com";
       test(url.toString()).isEqualTo("https://testing.com:123");
       url.port = 443;
-      test(url.toString()).isEqualTo("https://testing.com");
+      test(url.toString()).isEqualTo("https://testing.com:443");
       test(() => url.hostname = "").fails("should reject blank hostnames");
       test(() => url.hostname = " ").fails("should reject blank hostnames");
       test(() => url.hostname = "some invalid hostname lol ").fails("should reject invalid hostnames");

@@ -1,12 +1,40 @@
 package elide.runtime.gvm.internals
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Value
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicReference
 import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
 internal abstract class AbstractDualTest {
+  companion object {
+    @JvmStatic fun loadResource(path: String): String {
+      return requireNotNull(AbstractDualTest::class.java.getResource(path)) {
+        "failed to locate resource at $path"
+      }.readText(
+        StandardCharsets.UTF_8
+      )
+    }
+
+    @JvmStatic inline fun <reified T> loadJSON(path: String): T {
+      return requireNotNull(ObjectMapper().readValue(loadResource(path), T::class.java)) {
+        "failed to parse JSON at $path"
+      }
+    }
+
+    @JvmStatic inline fun <reified T, R> withJSON(path: String, noinline op: suspend (T) -> R): R {
+      val data = loadJSON<T>(path)
+      val result: AtomicReference<R> = AtomicReference(null)
+      runTest {
+        result.set(op.invoke(data))
+      }
+      return result.get()
+    }
+  }
+
   /** @return Initialized and exclusively-owned context for use with this test. */
   protected abstract fun buildContext(engine: Engine, conf: (VMContext.Builder.() -> Unit)?): VMContext.Builder
 

@@ -203,7 +203,7 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var port: Int
+  @get:Polyglot @set:Polyglot public override var port: Int?
 
   /**
    * ### URL: `protocol`

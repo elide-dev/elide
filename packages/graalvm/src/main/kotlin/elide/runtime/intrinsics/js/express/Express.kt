@@ -12,7 +12,4 @@ public interface Express {
    * internal method and should only be used by the JVM entry point.
    */
   public fun initialize(contextHandle: Any, phaserHandle: Any)
-  
-  /** Returns a new [ExpressApp] instance. This is the default export for the express module. */
-  @Polyglot public operator fun invoke(): ExpressApp
 }

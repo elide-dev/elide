@@ -36,9 +36,10 @@ val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false
+val enableRuby = false
 val enablePgo = true
 val enablePgoInstrumentation = false
-val enableSbom = false
+val enableSbom = true
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
@@ -247,6 +248,7 @@ val commonNativeArgs = listOf(
   if (enableWasm) "--language:wasm" else null,
   if (enableLlvm) "--language:llvm" else null,
   if (enablePython) "--language:python" else null,
+  if (enableRuby) "--language:ruby" else null,
 ))
 
 val debugFlags = listOfNotNull(

@@ -101,6 +101,18 @@ dependencies {
   implementation(libs.netty.transport.native.epoll)
   implementation(libs.netty.transport.native.kqueue)
 
+  // Linux
+  implementation(libs.netty.transport.native.epoll)
+  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+
+  // macOS/BSD
+  implementation(libs.netty.transport.native.kqueue)
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
+
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)

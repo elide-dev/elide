@@ -11,6 +11,11 @@ public interface ExpressApp {
    */
   @Polyglot public fun get(path: String, handler: Value)
   
+  /** Bind the server to a given [port]. */
+  @Polyglot public fun listen(port: Int) {
+    listen(port, null)
+  }
+
   /** Bind the server to a given [port], optionally invoking a [callback] when the socket is ready. */
   @Polyglot public fun listen(port: Int, callback: Value? = null)
 }

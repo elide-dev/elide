@@ -1,19 +1,17 @@
 package elide.tool.cli.cmd.express
 
+import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.Logging
+import elide.runtime.intrinsics.js.express.Express
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.AbstractSubcommand
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.graalvm.polyglot.Source
 import picocli.CommandLine.Command
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.Phaser
 
 /** Express.js entrypoint for Elide on the command-line. */
@@ -34,6 +32,8 @@ import java.util.concurrent.Phaser
 @Singleton internal class ToolExpressCommand : AbstractSubcommand<ToolState>() {
   private val logging by lazy { Logging.of(ToolExpressCommand::class) }
   
+  @Inject private lateinit var express: Express
+
   /** File to run within the VM. */
   @Parameters(
     index = "0",
@@ -89,6 +89,9 @@ import java.util.concurrent.Phaser
     ) { vm ->
       logging.debug("Entered VM execution context")
       
+      // initialize the Express intrinsic
+      express.initialize(vm, phaser)
+
       // parse the source
       val parsed = runCatching {
         logging.debug("Parsing entrypoint source")

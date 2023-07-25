@@ -1,5 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
+import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import org.graalvm.polyglot.Value
 import reactor.netty.http.server.HttpServer
@@ -11,30 +12,40 @@ import reactor.netty.http.server.HttpServer
  * server to be built and bound to the specified port.
  */
 internal class ExpressAppIntrinsic(private val context: ExpressContext) : ExpressApp {
-  /** Internal builder used to configure the server before binding. */
-  private val serverBuilder = HttpServer.create()
+  /** Represents a route handler registered by a guest script. */
+  private data class RouteHandler(
+    val path: String,
+    val handler: Value,
+  )
+
+  private val logging by lazy { Logging.of(ExpressAppIntrinsic::class) }
+
+  /** Internal collection of route handlers requested by guest scripts. */
+  private val routeRegistry = mutableSetOf<RouteHandler>()
 
   override fun get(path: String, handler: Value) {
-    // register the route with the builder
-    serverBuilder.route { routes ->
-      routes.get(mapExpressToReactorRoute(path)) { req, res ->
+    // register the route for later use
+    routeRegistry.add(RouteHandler(path, handler))
+  }
+
+  override fun listen(port: Int, callback: Value?) {
+    // configure all the route handlers, set the port and bind the socket
+    HttpServer.create().route { routes ->
+      for(route in routeRegistry) routes.get(mapExpressToReactorRoute(route.path)) { req, res ->
         // construct the wrappers
         val request = ExpressRequestIntrinsic(req)
         val response = ExpressResponseIntrinsic(res)
 
         // invoke the JS handler
-        useCallback(handler) { executeVoid(request, response) }
+        logging.info("Calling guest handler")
+        useCallback(route.handler) { executeVoid(request, response) }
+        logging.info("Exited guest handler")
 
-        // return a publisher waiting for the request to be sent
-        res.then()
+        // return the internal publisher handled by the wrapper
+        response.end()
       }
-    }
-  }
+    }.port(port).bindNow()
 
-  override fun listen(port: Int, callback: Value?) {
-    // set the port and bind the socket
-    serverBuilder.port(port).bindNow()
-    
     // prevent the JVM from exiting while the server is running
     context.pin()
 
@@ -51,12 +62,12 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
     context.useGuest { callback.block() }
   }
 
-  private companion object {
-    private val ExpressRouteParamRegex = Regex(":(<param>\\w)")
+  companion object {
+    private val ExpressRouteParamRegex = Regex(":(?<param>\\w+)")
 
     /** Map an Express route path specified to the format used by Reactor Netty. */
-    private fun mapExpressToReactorRoute(expressRoute: String): String = expressRoute.replace(ExpressRouteParamRegex) {
-      "{${it.groups["param"]}}"
+    fun mapExpressToReactorRoute(expressRoute: String): String = expressRoute.replace(ExpressRouteParamRegex) {
+      "{${it.groups["param"]!!.value}}"
     }
   }
 }

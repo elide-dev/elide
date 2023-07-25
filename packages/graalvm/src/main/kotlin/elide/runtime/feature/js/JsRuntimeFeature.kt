@@ -34,6 +34,12 @@ internal class JsRuntimeFeature : FrameworkFeature {
       "url.URLSearchParamsIntrinsic",
       "url.URLSearchParamsIntrinsic${'$'}URLSearchParams",
       "url.URLSearchParamsIntrinsic${'$'}MutableURLSearchParams",
+
+      // Express API
+      "express.ExpressIntrinsic",
+      "express.ExpressAppIntrinsic",
+      "express.ExpressRequestIntrinsic",
+      "express.ExpressResponseIntrinsic",
     )
   }
 

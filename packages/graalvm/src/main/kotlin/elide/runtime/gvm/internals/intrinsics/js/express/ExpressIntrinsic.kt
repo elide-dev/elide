@@ -7,6 +7,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.js.express.Express
 import elide.runtime.intrinsics.js.express.ExpressApp
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.Phaser
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -23,7 +24,7 @@ internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic()
   private val contextLock: Lock = ReentrantLock()
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    bindings[EXPRESS_SYMBOL] = this
+    bindings[EXPRESS_SYMBOL] = ProxyExecutable { create() }
   }
   
   override fun initialize(contextHandle: Any, phaserHandle: Any) {
@@ -34,7 +35,7 @@ internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic()
     phaser = phaserHandle
   }
 
-  override fun invoke(): ExpressApp {
+  private fun create(): ExpressApp {
     return ExpressAppIntrinsic(this)
   }
 

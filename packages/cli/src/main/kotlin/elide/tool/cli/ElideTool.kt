@@ -7,6 +7,7 @@ import elide.annotations.Singleton
 import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.bundle.ToolBundleCommand
+import elide.tool.cli.cmd.express.ToolExpressCommand
 import elide.tool.cli.err.ToolError
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
@@ -36,6 +37,7 @@ import kotlin.system.exitProcess
     ToolInfoCommand::class,
     ToolShellCommand::class,
     ToolBundleCommand::class,
+    ToolExpressCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +

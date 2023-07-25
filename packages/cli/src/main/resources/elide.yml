@@ -25,3 +25,11 @@ micronaut:
 jackson:
   serialization:
     ORDER_MAP_ENTRIES_BY_KEYS: true
+
+## Performance
+netty.default.allocator.max-order: 3
+netty.resource-leak-detector-level: DISABLED
+micronaut.server.netty.use-native-transport: true
+micronaut.server.netty.parent.prefer-native-transport: true
+micronaut.server.netty.worker.prefer-native-transport: true
+micronaut.netty.event-loops.default.prefer-native-transport: true

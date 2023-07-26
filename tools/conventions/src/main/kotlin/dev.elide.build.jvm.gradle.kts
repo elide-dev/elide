@@ -16,7 +16,7 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-val defaultKotlinVersion = "1.8"
+val defaultKotlinVersion = "1.9"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"

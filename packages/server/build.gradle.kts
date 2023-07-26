@@ -34,19 +34,24 @@ micronaut {
 }
 
 dependencies {
+  // BOMs
+  api(platform(libs.netty.bom))
+
   // API Deps
   api(libs.jakarta.inject)
+  api(libs.slf4j)
 
   // Modules
-  kapt(libs.micronaut.inject)
-  kapt(libs.micronaut.inject.java)
-  implementation(libs.slf4j)
   api(project(":packages:base"))
   api(project(":packages:core"))
   api(project(":packages:model"))
   api(project(":packages:ssr"))
   api(project(":packages:graalvm"))
   api(libs.reactor.core)
+
+  // KSP
+  kapt(libs.micronaut.inject)
+  kapt(libs.micronaut.inject.java)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
@@ -92,7 +97,6 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.protobuf)
   implementation(libs.micronaut.management)
-  implementation(libs.micronaut.views.core)
 
   // Netty: Native
   implementation(libs.netty.tcnative)
@@ -105,6 +109,8 @@ dependencies {
   implementation(libs.netty.transport.native.epoll)
   implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
   implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
+  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
   implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
   implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
 
@@ -125,7 +131,6 @@ dependencies {
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
-  compileOnly(libs.graalvm.espresso.hotswap)
   compileOnly(libs.graalvm.sdk)
 
   // Testing

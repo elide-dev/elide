@@ -13,6 +13,7 @@ public final class elide/proto/ElideProtocol$Dialect : java/lang/Enum {
 	public static final field MSGPACK Lelide/proto/ElideProtocol$Dialect;
 	public static final field PROTO Lelide/proto/ElideProtocol$Dialect;
 	public static final field UNSPECIFIED Lelide/proto/ElideProtocol$Dialect;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$Dialect;
 	public static fun values ()[Lelide/proto/ElideProtocol$Dialect;
 }
@@ -21,6 +22,7 @@ public final class elide/proto/ElideProtocol$DialectType : java/lang/Enum {
 	public static final field BINARY Lelide/proto/ElideProtocol$DialectType;
 	public static final field INTERNAL Lelide/proto/ElideProtocol$DialectType;
 	public static final field TEXT Lelide/proto/ElideProtocol$DialectType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$DialectType;
 	public static fun values ()[Lelide/proto/ElideProtocol$DialectType;
 }
@@ -31,6 +33,7 @@ public final class elide/proto/ElideProtocol$ImplementationLibrary : java/lang/E
 	public static final field KOTLINX Lelide/proto/ElideProtocol$ImplementationLibrary;
 	public static final field PROTOBUF Lelide/proto/ElideProtocol$ImplementationLibrary;
 	public static final field PROTOBUF_LITE Lelide/proto/ElideProtocol$ImplementationLibrary;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/proto/ElideProtocol$ImplementationLibrary;
 	public static fun values ()[Lelide/proto/ElideProtocol$ImplementationLibrary;
 }

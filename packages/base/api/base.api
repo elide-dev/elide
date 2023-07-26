@@ -1,6 +1,7 @@
 public final class elide/AppEnvironment : java/lang/Enum {
 	public static final field LIVE Lelide/AppEnvironment;
 	public static final field SANDBOX Lelide/AppEnvironment;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/AppEnvironment;
 	public static fun values ()[Lelide/AppEnvironment;
 }
@@ -35,6 +36,7 @@ public final class elide/runtime/LogLevel : java/lang/Enum {
 	public static final field INFO Lelide/runtime/LogLevel;
 	public static final field TRACE Lelide/runtime/LogLevel;
 	public static final field WARN Lelide/runtime/LogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/LogLevel;
 	public static fun values ()[Lelide/runtime/LogLevel;
 }
@@ -183,6 +185,7 @@ public final class elide/util/EncoderExtensionsKt {
 public final class elide/util/Encoding : java/lang/Enum {
 	public static final field BASE64 Lelide/util/Encoding;
 	public static final field HEX Lelide/util/Encoding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/util/Encoding;
 	public static fun values ()[Lelide/util/Encoding;
 }

@@ -115,13 +115,10 @@ if (buildPlugins == "true") {
   )
 }
 
-include(
-  ":samples:server:hellocss",
-)
-
 if (buildSamples == "true") {
   include(
     ":samples:server:helloworld",
+    ":samples:server:hellocss",
     ":samples:fullstack:basic:frontend",
     ":samples:fullstack:basic:server",
     ":samples:fullstack:react:frontend",

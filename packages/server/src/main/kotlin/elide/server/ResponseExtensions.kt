@@ -8,8 +8,8 @@ import elide.server.controller.ElideController
 import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import kotlinx.css.CssBuilder
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
@@ -33,12 +33,18 @@ public typealias RawResponse = HttpResponse<RawPayload>
 /**
  * Raw streamed file alias, used internally for assets.
  */
-public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
+public typealias StreamedAsset = StreamedFileResponseType
 
 /**
  * Raw streamed file response, used internally for assets.
  */
 public typealias StreamedAssetResponse = MutableHttpResponse<StreamedAsset>
+
+/** Streamed file response type. */
+public class StreamedFileResponseType (
+  public val stream: ByteArrayInputStream,
+  public val contentType: MediaType
+)
 
 /** Describes the expected interface for a response rendering object which leverages co-routines. */
 public interface SuspensionRenderer<R> {
@@ -320,7 +326,7 @@ internal class CssContent(
     val contentBytes = CssBuilder().apply(builder).toString().toByteArray(
       StandardCharsets.UTF_8
     )
-    return NettyStreamedFileCustomizableResponseType(
+    return StreamedFileResponseType(
       ByteArrayInputStream(contentBytes),
       AssetType.STYLESHEET.mediaType,
     )

@@ -33,8 +33,17 @@ import org.graalvm.polyglot.Context as VMContext
 @Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
   ContextManager<VMContext, VMContext.Builder> {
   private companion object {
+    // Whether to enable Isolates.
+    const val enableIsolates = false
+
+    // Whether to enable the auxiliary cache.
+    const val enableAuxiliaryCache = true
+
     // Flipped if we're building or running a native image.
     private val isNativeImage = ImageInfo.inImageCode()
+
+    // Whether the auxiliary cache is effectively enabled.
+    private val auxCache = enableAuxiliaryCache && isNativeImage
 
     // Static options which are supplied to the engine.
     private val staticEngineOptions = listOfNotNull(
@@ -47,10 +56,15 @@ import org.graalvm.polyglot.Context as VMContext
       StaticProperty.of("engine.Mode", "throughput"),
       StaticProperty.of("engine.PreinitializeContexts", "js"),
 
+      // isolate options
+      if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),
+      if (!enableIsolates) null else StaticProperty.of("engine.UntrustedCodeMitigation", "none"),
+      if (!enableIsolates) null else StaticProperty.of("engine.MaxIsolateMemory", "2GB"),
+
       // if we're running in a native image, enabled the code compile cache
-      if (!isNativeImage) null else StaticProperty.active("engine.CachePreinitializeContext"),
-      if (!isNativeImage) null else StaticProperty.of("engine.CacheCompile", "hot"),
-      if (!isNativeImage) null else StaticProperty.of("engine.Cache",
+      if (!auxCache) null else StaticProperty.active("engine.CachePreinitializeContext"),
+      if (!auxCache) null else StaticProperty.of("engine.CacheCompile", "hot"),
+      if (!auxCache) null else StaticProperty.of("engine.Cache",
         Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
       ),
 

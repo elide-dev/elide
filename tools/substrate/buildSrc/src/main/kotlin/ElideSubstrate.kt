@@ -8,10 +8,10 @@ import java.net.URI
 /** Build tools for the build tools. */
 object ElideSubstrate {
   // Substrate Kotlin API version.
-  const val apiVersion = "1.8"
+  const val apiVersion = "1.9"
 
   // Substrate Kotlin language version.
-  const val kotlinVerison = "1.8"
+  const val kotlinVerison = "1.9"
 
   // Publishing: Repositories
   // ------------------------

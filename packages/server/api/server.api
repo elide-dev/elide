@@ -93,6 +93,12 @@ public abstract interface class elide/server/ServerInitializer {
 	public fun initialize ()V
 }
 
+public final class elide/server/StreamedFileResponseType {
+	public fun <init> (Ljava/io/ByteArrayInputStream;Lio/micronaut/http/MediaType;)V
+	public final fun getContentType ()Lio/micronaut/http/MediaType;
+	public final fun getStream ()Ljava/io/ByteArrayInputStream;
+}
+
 public abstract interface class elide/server/StreamingSuspensionRenderer {
 	public abstract fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }

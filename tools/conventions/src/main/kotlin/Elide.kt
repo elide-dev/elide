@@ -62,10 +62,10 @@ object Elide {
   ))
 
   /** Kotlin SDK and platform version. */
-  const val kotlinSdk = "1.8.20"
+  const val kotlinSdk = "1.9.0"
 
   /** Kotlin language version. */
-  const val kotlinLanguage = "1.8"
+  const val kotlinLanguage = "1.9"
 
   /** Kotlin language version (beta). */
   const val kotlinLanguageBeta = kotlinLanguage

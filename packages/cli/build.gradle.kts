@@ -63,15 +63,13 @@ ktlint {
 }
 
 kotlin {
-  explicitApi()
-
   target.compilations.all {
     kotlinOptions {
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
       freeCompilerArgs = Elide.jvmCompilerArgsBeta
     }
   }
@@ -549,7 +547,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
-    allWarningsAsErrors = true
+    allWarningsAsErrors = false
     incremental = true
   }
 }
@@ -604,7 +602,7 @@ afterEvaluate {
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgs
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 

@@ -270,6 +270,7 @@ afterEvaluate {
 
 val commonNativeArgs = listOf(
   "--language:js",
+  "--language:nfi",
   "--language:icu4j",
   "--language:regex",
   "--tool:chromeinspector",

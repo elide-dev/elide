@@ -186,16 +186,22 @@ micronaut {
   }
 
   aot {
+    version(libs.versions.micronaut.aot.get())
     configFile = file("$projectDir/aot-native.properties")
 
-    optimizeServiceLoading = true
-    convertYamlToJava = false
+    convertYamlToJava = true
     precomputeOperations = true
     cacheEnvironment = true
+    deduceEnvironment = false
+    replaceLogbackXml = true
+
+    optimizeServiceLoading = true
     optimizeClassLoading = true
+    optimizeNetty = true
+    possibleEnvironments = listOf("cli")
 
     netty {
-      enabled = false
+      enabled = true
       machineId = "elide"
     }
   }
@@ -244,7 +250,6 @@ val commonNativeArgs = listOf(
   "--tool:insight",
   "--tool:insightheap",
   "--tool:profiler",
-  "--gc=serial",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -302,13 +307,14 @@ val defaultPlatformArgs = listOf(
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
+  "--gc=serial",
 ))
 
-val linuxOnlyArgs = listOf(
+val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
-  "--libc=glibc",
+  "--gc=G1",
   "-march=compatibility",
-)
+))
 
 val muslArgs = listOf(
   "--libc=musl",

@@ -259,7 +259,6 @@ val debugFlags = listOfNotNull(
 
 val releaseFlags = listOf(
   "-O2",
-  "-march=native",
   "-H:+AOTInliner",
   if (enablePgo) "--pgo=cli.iprof" else null,
 ).plus(
@@ -288,11 +287,14 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
-val darwinOnlyArgs = defaultPlatformArgs
+val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
+  "-march=native",
+))
 
 val linuxOnlyArgs = listOf(
   "--static",
   "--libc=glibc",
+  "-march=compatibility",
 )
 
 val muslArgs = listOf(

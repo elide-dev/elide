@@ -1,18 +1,18 @@
 <configuration>
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>20</discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <discardingThreshold>20</discardingThreshold>
         <appender-ref ref="CONSOLE" />
-        <queueSize>1024</queueSize> <!-- default 256 -->
-        <includeCallerData>false</includeCallerData> <!-- default false -->
-        <neverBlock>false</neverBlock> <!-- default false, set to true to cause the Appender not block the application and just drop the messages -->
+        <queueSize>1024</queueSize>
+        <includeCallerData>false</includeCallerData>
+        <neverBlock>true</neverBlock>
     </appender>
 
     <logger name="io.micronaut.context.env" level="off"/>
@@ -29,7 +29,7 @@
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
     <!-- Root Logger -->
-    <root level="warn">
-        <appender-ref ref="STDOUT" />
+    <root level="${elide.logging.root.level:warn}">
+        <appender-ref ref="${elide.logging.appender:ASYNC_CONSOLE}" />
     </root>
 </configuration>

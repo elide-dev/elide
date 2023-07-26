@@ -2,10 +2,17 @@
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
         <encoder>
             <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
+    </appender>
+
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>20</discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <appender-ref ref="CONSOLE" />
+        <queueSize>1024</queueSize> <!-- default 256 -->
+        <includeCallerData>false</includeCallerData> <!-- default false -->
+        <neverBlock>false</neverBlock> <!-- default false, set to true to cause the Appender not block the application and just drop the messages -->
     </appender>
 
     <logger name="io.micronaut.context.env" level="off"/>

@@ -384,14 +384,27 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
+  "kotlin.DeprecationLevel",
+  "kotlin.annotation.AnnotationRetention",
+  "kotlin.annotation.AnnotationTarget",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "ch.qos.logback",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",
+  "org.codehaus.stax2.typed.Base64Variants",
+  "org.bouncycastle.util.Properties",
+  "org.bouncycastle.util.Strings",
+  "org.bouncycastle.crypto.macs.HMac",
+  "org.bouncycastle.crypto.prng.drbg.Utils",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
 )
 
 val initializeAtRuntime: List<String> = listOf(
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+  "io.micronaut.core.util.KotlinUtils",
+  "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
 )
 
 val rerunAtRuntime: List<String> = emptyList()

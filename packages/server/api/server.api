@@ -269,6 +269,7 @@ public final class elide/server/assets/AssetType : java/lang/Enum {
 	public static final field SCRIPT Lelide/server/assets/AssetType;
 	public static final field STYLESHEET Lelide/server/assets/AssetType;
 	public static final field TEXT Lelide/server/assets/AssetType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/server/assets/AssetType;
 	public static fun values ()[Lelide/server/assets/AssetType;
 }

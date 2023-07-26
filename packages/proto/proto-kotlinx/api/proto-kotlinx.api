@@ -140,6 +140,7 @@ public final class elide/proto/impl/data/KxEncoding : java/lang/Enum, elide/prot
 	public static final field BASE64 Lelide/proto/impl/data/KxEncoding;
 	public static final field Companion Lelide/proto/impl/data/KxEncoding$Companion;
 	public static final field HEX Lelide/proto/impl/data/KxEncoding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getSymbol ()Ljava/lang/Integer;
 	public synthetic fun getSymbol ()Ljava/lang/Object;
 	public static fun resoleSymbol (I)Lelide/proto/impl/data/KxEncoding;
@@ -162,6 +163,7 @@ public final class elide/proto/impl/data/KxHashAlgorithm : java/lang/Enum, elide
 	public static final field SHA3_256 Lelide/proto/impl/data/KxHashAlgorithm;
 	public static final field SHA3_512 Lelide/proto/impl/data/KxHashAlgorithm;
 	public static final field SHA512 Lelide/proto/impl/data/KxHashAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getSymbol ()Ljava/lang/Integer;
 	public synthetic fun getSymbol ()Ljava/lang/Object;
 	public static fun resoleSymbol (I)Lelide/proto/impl/data/KxHashAlgorithm;

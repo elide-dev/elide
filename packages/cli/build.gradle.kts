@@ -26,7 +26,6 @@ plugins {
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
   id("io.micronaut.aot")
-  id("com.github.johnrengelman.shadow")
   id("dev.elide.build.docker")
   id("dev.elide.build")
 }
@@ -96,7 +95,7 @@ dependencies {
   api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
-  kapt(libs.micronaut.validation)
+  kapt(mn.micronaut.validation)
   kapt(libs.picocli.codegen)
 
   implementation(project(":packages:core"))
@@ -206,7 +205,7 @@ val jvmModuleArgs = listOf(
  */
 
 micronaut {
-  version = libs.versions.micronaut.lib.get()
+  version(libs.versions.micronaut.lib.get())
   runtime = MicronautRuntime.NETTY
 
   processing {
@@ -217,7 +216,7 @@ micronaut {
   }
 
   aot {
-    version(libs.versions.micronaut.aot.get())
+    version = libs.versions.micronaut.aot.get()
     configFile = file("$projectDir/aot-native.properties")
 
     convertYamlToJava = true
@@ -529,13 +528,6 @@ graalvmNative {
  */
 
 tasks {
-  shadowJar {
-    exclude(
-      "java-header-style.xml",
-      "license.header",
-    )
-  }
-
   dockerfileNative {
     graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
@@ -616,8 +608,6 @@ afterEvaluate {
   listOf(
     "buildLayers",
     "optimizedBuildLayers",
-    "optimizedJitJarAll",
-    "shadowJar",
   ).forEach {
     tasks.named(it).configure {
       doNotTrackState("too big for build cache")

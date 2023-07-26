@@ -41,11 +41,10 @@ val embeddedJars by configurations.creating {
 dependencies {
   api(libs.jakarta.inject)
   api(platform(libs.netty.bom))
-  api(platform("io.micronaut:micronaut-bom:${libs.versions.micronaut.lib.get()}"))
   api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
-  kapt(libs.micronaut.validation)
+//  kapt(libs.micronaut.validation)
   kapt(libs.picocli.codegen)
   kapt(libs.micronaut.serde.processor)
 
@@ -80,7 +79,7 @@ dependencies {
 
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.context)
-  implementation(libs.micronaut.validation)
+//  implementation(libs.micronaut.validation)
   implementation(libs.micronaut.picocli)
   implementation(libs.micronaut.http.client)
   implementation(libs.micronaut.graal)

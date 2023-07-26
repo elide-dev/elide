@@ -20,30 +20,30 @@ grpc_kotlin = "1.3.0"
 grpc_web = "1.3.1"
 arrow = "1.2.0"
 testcontainers = "1.17.6"
-errorprone = "2.11.0"
+errorprone = "2.20.0"
 jline = "3.23.0"
 netty = "4.1.95.Final"
 netty_iouring = "0.0.21.Final"
 netty_tcnative = "2.0.61.Final"
 dekorate = "3.1.1"
-micronaut_lib = "3.9.4"
-micronaut_aot = "1.1.2"
+micronaut_lib = "4.0.1"
+micronaut_aot = "2.0.1"
 micronaut_aws = "3.9.3"
 micronaut_data = "3.8.1"
-micronaut_grpc = "3.5.0"
+micronaut_grpc = "4.0.1"
 micronaut_graphql = "3.2.0"
 micronaut_gcp = "4.6.0"
-micronaut_test = "3.8.0"
-micronaut_plugin = "3.7.10"
+micronaut_test = "4.0.1"
+micronaut_plugin = "4.0.1"
 micronaut_redis = "5.3.2"
 micronaut_email = "1.4.0"
-micronaut_cache = "3.5.0"
+micronaut_cache = "4.0.1"
 micronaut_views = "3.8.2"
-micronaut_serde = "1.5.0"
+micronaut_serde = "2.1.0"
 micronaut_security = "3.9.0"
 micronaut_sql = "4.7.2"
 micronaut_openapi = "4.6.0"
-micronaut_picocli = "4.3.0"
+micronaut_picocli = "5.0.1"
 micronaut_objectstorage = "1.1.0"
 micronaut_multitenancy = "4.2.0"
 micronaut_tracing = "4.4.0"
@@ -52,8 +52,8 @@ micronaut_k8s = "3.4.1"
 micronaut_rss = "3.2.0"
 micronaut_kafka = "4.4.0"
 micronaut_beanvalidation = "3.2.0"
-micronaut_kotlin = "3.2.2"
-kotlinx_coroutines = "1.7.2"
+micronaut_kotlin = "4.0.1"
+kotlinx_coroutines = "1.7.3"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
 kotlinx_html = "0.8.0"
@@ -317,7 +317,7 @@ kotlinx_serialization_properties = { group = "org.jetbrains.kotlinx", name = "ko
 kotlinx_serialization_properties_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx_serialization" }
 ksp_api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
-autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.0.0" }
+autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
 hibernate_core = { group = "org.hibernate", name = "hibernate-core", version.ref = "hibernate" }
 hibernate_hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hibernate_graalvm = { group = "org.hibernate", name = "hibernate-graalvm", version.ref = "hibernate" }
@@ -366,7 +366,6 @@ micronaut_aot_api = { group = "io.micronaut.aot", name = "micronaut-aot-api", ve
 micronaut_aot_core = { group = "io.micronaut.aot", name = "micronaut-aot-core", version.ref = "micronaut_aot" }
 micronaut_aot_cli = { group = "io.micronaut.aot", name = "micronaut-aot-cli", version.ref = "micronaut_aot" }
 micronaut_aot_optimizers_standard = { group = "io.micronaut.aot", name = "micronaut-aot-std-optimizers", version.ref = "micronaut_aot" }
-micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
 micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }
 micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
 micronaut_graal = { group = "io.micronaut", name = "micronaut-graal", version.ref = "micronaut_lib" }
@@ -412,7 +411,7 @@ micronaut_cache_caffeine = { group = "io.micronaut.cache", name = "micronaut-cac
 micronaut_redis = { group = "io.micronaut.redis", name = "micronaut-redis-lettuce", version.ref = "micronaut_redis" }
 micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
 micronaut_router = { group = "io.micronaut", name = "micronaut-router", version.ref = "micronaut_lib" }
-micronaut_validation = { group = "io.micronaut", name = "micronaut-validation", version.ref = "micronaut_lib" }
+#micronaut_validation = { group = "io.micronaut", name = "micronaut-validation", version.ref = "micronaut_lib" }
 micronaut_http_validation = { group = "io.micronaut", name = "micronaut-http-validation", version.ref = "micronaut_lib" }
 micronaut_views_core = { group = "io.micronaut.views", name = "micronaut-views-core", version.ref = "micronaut_views" }
 micronaut_views_soy = { group = "io.micronaut.views", name = "micronaut-views-soy", version.ref = "micronaut_views" }

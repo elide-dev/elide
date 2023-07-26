@@ -1,8 +1,11 @@
 @file:Suppress(
   "DSL_SCOPE_VIOLATION",
+  "UnstableApiUsage",
 )
 
 import Java9Modularity.configureJava9ModuleInfo
+import io.micronaut.gradle.MicronautRuntime
+import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -47,12 +50,13 @@ java {
 }
 
 ktlint {
-  debug.set(false)
-  verbose.set(false)
-  android.set(false)
-  outputToConsole.set(false)
-  ignoreFailures.set(true)
-  enableExperimentalRules.set(true)
+  debug = false
+  verbose = false
+  android = false
+  outputToConsole = false
+  ignoreFailures = true
+  enableExperimentalRules = true
+
   filter {
     exclude("elide/tool/cli/ToolTypealiases.kt")
   }
@@ -150,7 +154,7 @@ dependencies {
 }
 
 application {
-  mainClass.set(entrypoint)
+  mainClass = entrypoint
 }
 
 publishing {
@@ -171,23 +175,29 @@ sonarqube {
  */
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NONE)
+  version = libs.versions.micronaut.lib.get()
+  runtime = MicronautRuntime.NETTY
+
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "elide.tool.cli.*",
     ))
   }
 
   aot {
-    configFile.set(file("$projectDir/aot-native.properties"))
+    configFile = file("$projectDir/aot-native.properties")
 
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    optimizeClassLoading.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = false
+    precomputeOperations = true
+    cacheEnvironment = true
+    optimizeClassLoading = true
+
+    netty {
+      enabled = false
+      machineId = "elide"
+    }
   }
 }
 
@@ -334,22 +344,22 @@ fun nativeCliImageArgs(
   ).filterNotNull().toList()
 
 graalvmNative {
-  toolchainDetection.set(false)
-  testSupport.set(false)
+  toolchainDetection = false
+  testSupport = false
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = System.getenv("GRAALVM_AGENT") == "true"
 
     modes {
       standard {}
@@ -357,34 +367,38 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
+    all {
+      resources.autodetect()
+    }
+
     named("main") {
-      imageName.set("elide")
-      fallback.set(false)
-      buildArgs.addAll(nativeCliImageArgs(debug = true, release = false))
-      quickBuild.set(quickbuild)
-      sharedLibrary.set(false)
+      imageName = "elide"
+      fallback = false
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild))
+      quickBuild = quickbuild
+      sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
     }
 
     named("optimized") {
-      imageName.set("elide")
-      fallback.set(false)
+      imageName = "elide"
+      fallback = false
       buildArgs.addAll(nativeCliImageArgs(debug = false, release = true))
-      quickBuild.set(quickbuild)
-      sharedLibrary.set(false)
+      quickBuild = quickbuild
+      sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
     }
 
     named("test") {
-      imageName.set("elide-test")
-      fallback.set(false)
+      imageName = "elide-test"
+      fallback = false
+      quickBuild = quickbuild
       buildArgs.addAll(nativeCliImageArgs().plus(testOnlyArgs))
-      quickBuild.set(quickbuild)
     }
   }
 }
@@ -403,13 +417,13 @@ tasks {
   }
 
   dockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
-    buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest"
+    buildStrategy = DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
-    buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest"
+    buildStrategy = DockerBuildStrategy.DEFAULT
   }
 }
 
@@ -426,15 +440,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
-  images.set(listOf(
+  images = listOf(
     "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:latest"
-  ))
+  )
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
-  images.set(listOf(
+  images = listOf(
     "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:opt-latest"
-  ))
+  )
 }
 
 // CLI tool is native-only.

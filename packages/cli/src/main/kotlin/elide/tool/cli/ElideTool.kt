@@ -22,6 +22,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
+import picocli.jansi.graalvm.Workaround
 import java.util.ResourceBundle
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
@@ -51,19 +52,21 @@ import kotlin.system.exitProcess
 @Suppress("MemberVisibilityCanBePrivate")
 @Singleton public class ElideTool internal constructor () :
   AbstractToolCommand(), AbstractBundlerSubcommand.BundlerParentCommand {
-  public companion object {
+  companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
     }
 
     /** Name of the tool. */
-    public const val TOOL_NAME: String = "elide"
+    const val TOOL_NAME: String = "elide"
 
     // Maps exceptions to process exit codes.
     private val exceptionMapper = ExceptionMapper()
 
     // Tool-wide main logger.
-    private val logging = Statics.logging
+    private val logging by lazy {
+      Statics.logging
+    }
 
     // Maybe install terminal support for Windows if it is needed.
     private fun installWindowsTerminalSupport(op: () -> Int): Int {
@@ -78,6 +81,7 @@ import kotlin.system.exitProcess
 
     // Install static classes/perform static initialization.
     private fun installStatics(op: () -> Int) {
+      Workaround.enableLibraryLoad()
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
       exitProcess(installWindowsTerminalSupport {
@@ -86,12 +90,12 @@ import kotlin.system.exitProcess
     }
 
     /** CLI entrypoint and [args]. */
-    @JvmStatic public fun main(args: Array<String>): Unit = installStatics {
+    @JvmStatic fun main(args: Array<String>): Unit = installStatics {
       exec(args)
     }
 
     /** @return Tool version. */
-    @JvmStatic public fun version(): String = ELIDE_TOOL_VERSION
+    @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
 
     // Private execution entrypoint for customizing core Picocli settings.
     @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {

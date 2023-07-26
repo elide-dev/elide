@@ -88,9 +88,11 @@ import org.graalvm.polyglot.Engine as VMEngine
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
   internal companion object {
-    private val logging: Logger = Logging.of(ToolShellCommand::class)
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
+    private val logging: Logger by lazy {
+      Logging.of(ToolShellCommand::class)
+    }
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */

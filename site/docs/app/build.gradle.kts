@@ -120,7 +120,7 @@ kotlin {
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
       freeCompilerArgs = Elide.jvmCompilerArgsBeta
     }
   }

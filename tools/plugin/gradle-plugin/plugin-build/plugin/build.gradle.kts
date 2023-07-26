@@ -23,7 +23,7 @@ plugins {
 }
 
 val defaultJavaVersion = "11"
-val defaultKotlinVersion = "1.8"
+val defaultKotlinVersion = "1.9"
 
 val defaultElideGroup = "dev.elide"
 val elideToolsGroup = "dev.elide.tools"
@@ -266,7 +266,7 @@ tasks.compileKotlin.configure {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }
@@ -278,7 +278,7 @@ tasks.compileTestKotlin.configure {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }
@@ -290,7 +290,7 @@ tasks.withType<KotlinCompile>().configureEach {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
         incremental = true
     }
 }

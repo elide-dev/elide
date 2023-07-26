@@ -140,4 +140,9 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
    *   `UTF-32` are explicitly supported; other support may vary.
    */
   public val charset: Charset? get() = null
+
+  /**
+   * @return Locale to use for embedded JS VMs.
+   */
+  public val locale: Locale? get() = null
 }

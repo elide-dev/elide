@@ -37,6 +37,7 @@ tasks.withType<Test>().configureEach {
 tasks.withType<Jar>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false
+  isZip64 = true
 }
 
 // Tasks: Zip
@@ -45,6 +46,7 @@ tasks.withType<Jar>().configureEach {
 tasks.withType<Zip>().configureEach {
   isReproducibleFileOrder = true
   isPreserveFileTimestamps = false
+  isZip64 = true
 }
 
 

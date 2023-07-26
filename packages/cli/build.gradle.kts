@@ -199,6 +199,7 @@ sonarqube {
 
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
 )
 
 /**
@@ -287,6 +288,7 @@ val commonNativeArgs = listOf(
   "--enable-https",
   "--install-exit-handlers",
   "-H:+AuxiliaryEngineCache",
+  "-H:+ReportExceptionStackTraces",
   "-R:MaxDirectMemorySize=256M",
   "-R:MaximumHeapSizePercent=80",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
@@ -334,7 +336,7 @@ val hostedRuntimeOptions = mapOf(
 
 val initializeAtBuildTime = listOf(
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
-  "org.slf4j.LoggerFactory",
+  "ch.qos.logback",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",
 )

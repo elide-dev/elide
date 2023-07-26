@@ -1,4 +1,6 @@
 <configuration>
+    <property name="APPENDER" value="${log.file.root:-CONSOLE}" />
+    <property name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -29,7 +31,7 @@
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
     <!-- Root Logger -->
-    <root level="warn">
-        <appender-ref ref="ASYNC_CONSOLE" />
+    <root level="${ROOT_LOGLEVEL}">
+        <appender-ref ref="${APPENDER}" />
     </root>
 </configuration>

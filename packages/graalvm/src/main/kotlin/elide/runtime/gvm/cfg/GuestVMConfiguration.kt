@@ -6,6 +6,7 @@ import jakarta.annotation.Nullable
 import tools.elide.assets.EmbeddedScriptLanguage
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.util.Locale
 
 /**
  * # Guest VM Configuration
@@ -57,6 +58,11 @@ internal interface GuestVMConfiguration : Toggleable {
    * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`.
    */
   val charset: Charset? get() = DEFAULT_CHARSET
+
+  /**
+   * @return Guest VM locale. Defaults to `en_US`.
+   */
+  val locale: Locale? get() = Locale.US
 
   /**
    * @return Virtual file system (VFS) configuration for the guest VM.

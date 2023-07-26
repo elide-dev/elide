@@ -349,6 +349,7 @@ public final class elide/tool/ssg/SiteCompilerParams$Output$File : elide/tool/ss
 public final class elide/tool/ssg/SiteCompilerParams$OutputFormat : java/lang/Enum {
 	public static final field TAR Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
 	public static final field ZIP Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
 	public static fun values ()[Lelide/tool/ssg/SiteCompilerParams$OutputFormat;
 }
@@ -356,6 +357,7 @@ public final class elide/tool/ssg/SiteCompilerParams$OutputFormat : java/lang/En
 public final class elide/tool/ssg/SiteCompilerParams$OutputMode : java/lang/Enum {
 	public static final field DIRECTORY Lelide/tool/ssg/SiteCompilerParams$OutputMode;
 	public static final field FILE Lelide/tool/ssg/SiteCompilerParams$OutputMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/SiteCompilerParams$OutputMode;
 	public static fun values ()[Lelide/tool/ssg/SiteCompilerParams$OutputMode;
 }
@@ -371,6 +373,7 @@ public final class elide/tool/ssg/StaticContentReader$ArtifactType : java/lang/E
 	public static final field SCRIPT Lelide/tool/ssg/StaticContentReader$ArtifactType;
 	public static final field STYLE Lelide/tool/ssg/StaticContentReader$ArtifactType;
 	public static final field TEXT Lelide/tool/ssg/StaticContentReader$ArtifactType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tool/ssg/StaticContentReader$ArtifactType;
 	public static fun values ()[Lelide/tool/ssg/StaticContentReader$ArtifactType;
 }

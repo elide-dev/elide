@@ -155,6 +155,7 @@ public final class elide/rpc/server/web/GrpcWebContentType : java/lang/Enum {
 	public final fun contentType (Z)Ljava/lang/String;
 	public static synthetic fun contentType$default (Lelide/rpc/server/web/GrpcWebContentType;ZILjava/lang/Object;)Ljava/lang/String;
 	public static final fun getAllValidContentTypes$rpc ()[Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun mediaType (Z)Lio/micronaut/http/MediaType;
 	public static synthetic fun mediaType$default (Lelide/rpc/server/web/GrpcWebContentType;ZILjava/lang/Object;)Lio/micronaut/http/MediaType;
 	public static final fun resolve$rpc (Lio/micronaut/http/MediaType;)Lelide/rpc/server/web/GrpcWebContentType;
@@ -189,6 +190,7 @@ public final class elide/rpc/server/web/MetadataUtil {
 public final class elide/rpc/server/web/RpcSymbol : java/lang/Enum {
 	public static final field DATA Lelide/rpc/server/web/RpcSymbol;
 	public static final field TRAILER Lelide/rpc/server/web/RpcSymbol;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getValue ()B
 	public static fun valueOf (Ljava/lang/String;)Lelide/rpc/server/web/RpcSymbol;
 	public static fun values ()[Lelide/rpc/server/web/RpcSymbol;

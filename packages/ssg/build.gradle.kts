@@ -114,6 +114,7 @@ dependencies {
   runtimeOnly(libs.brotli.native.osx.amd64)
   runtimeOnly(libs.brotli.native.osx.arm64)
   runtimeOnly(libs.brotli.native.linux.amd64)
+  runtimeOnly("org.yaml:snakeyaml")
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))

@@ -111,6 +111,12 @@ dependencies {
   implementation(libs.flatbuffers.java.core)
   implementation(libs.lmax.disruptor.core)
   implementation(libs.lmax.disruptor.proxy)
+  implementation(mn.micronaut.jackson.databind)
+  implementation(mn.jackson.annotations)
+  implementation(mn.jackson.core)
+  implementation(mn.jackson.databind)
+  implementation(mn.jackson.module.kotlin)
+  implementation(mn.jackson.module.parameterNames)
 
   // Compression
   implementation(libs.lz4)

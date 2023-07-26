@@ -168,6 +168,7 @@ dependencies {
   compileOnly(libs.graalvm.truffle.nfi.libffi)
 
   runtimeOnly(libs.micronaut.runtime)
+  runtimeOnly("org.yaml:snakeyaml")
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))

@@ -132,6 +132,7 @@ dependencies {
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
   compileOnly(libs.graalvm.sdk)
+  runtimeOnly("org.yaml:snakeyaml")
 
   // Testing
   kaptTest(libs.micronaut.inject)

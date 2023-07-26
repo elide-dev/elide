@@ -50,13 +50,13 @@ import kotlin.coroutines.CoroutineContext
     private val _stdin = System.`in`
     private val _inbuf = _stdin.bufferedReader()
     private val _engine = VMEngine.create()
-    private val logging: Logger = Statics.logging
     private val threadFactory: ToolThreadFactory = ToolThreadFactory()
     private val threadedExecutor: ExecutorService = Executors.newCachedThreadPool(threadFactory)
     private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
+      val logging = Statics.logging
       logging.trace("Retrieving supported guest languages")
       return _engine.languages.values.mapNotNull {
         val supported = GuestLanguage.resolveFromId(it.id)
@@ -72,6 +72,10 @@ import kotlin.coroutines.CoroutineContext
         }
       }
     }
+  }
+
+  private val logging: Logger by lazy {
+    Statics.logging
   }
 
   /** Implements a thread factory for tool execution operations. */

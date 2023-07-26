@@ -121,6 +121,7 @@ internal class JsRuntime @Inject constructor (
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
+    private const val WASI_STD: String = "wasi_snapshot_preview1"
 
     // Hard-coded JS VM options.
     val baseOptions : List<VMProperty> = listOf(
@@ -160,6 +161,15 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.of("js.unhandled-rejections", UNHANDLED_REJECTIONS),
       StaticProperty.of("js.debug-property-name", DEBUG_GLOBAL),
       StaticProperty.of("js.function-constructor-cache-size", FUNCTION_CONSTRUCTOR_CACHE_SIZE),
+    )
+
+    // Hard-coded WASM VM options.
+    val wasmOptions : List<VMProperty> = listOf(
+      StaticProperty.active("wasm.Memory64"),
+      StaticProperty.active("wasm.MultiValue"),
+      StaticProperty.active("wasm.UseUnsafeMemory"),
+      StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
+      StaticProperty.of("wasm.Builtins", WASI_STD),
     )
 
     // Root where we can find runtime-related files.
@@ -314,7 +324,13 @@ internal class JsRuntime @Inject constructor (
     VMRuntimeProperty.ofBoolean("vm.js.v8-compat", "js.v8-compat") {
       config.v8 ?: false
     },
-  )).stream()
+  )).plus(
+    if (config.wasm == true) {
+      wasmOptions
+    } else {
+      emptyList()
+    }
+  ).stream()
 
   /** @inheritDoc */
   override fun prepare(context: VMContext, globals: GuestValue) {

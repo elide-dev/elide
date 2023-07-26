@@ -89,6 +89,7 @@ buildConfig {
 }
 
 dependencies {
+  implementation(platform(libs.netty.bom))
   api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
@@ -283,6 +284,8 @@ val initializeAtBuildTime = listOf(
 
 val initializeAtRuntime: List<String> = emptyList()
 
+val rerunAtRuntime: List<String> = emptyList()
+
 val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
@@ -316,6 +319,8 @@ fun nativeCliImageArgs(
     initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
   ).plus(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" }
+  ).plus(
+    rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" }
   ).plus(when (platform) {
     "darwin" -> darwinOnlyArgs
     "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs

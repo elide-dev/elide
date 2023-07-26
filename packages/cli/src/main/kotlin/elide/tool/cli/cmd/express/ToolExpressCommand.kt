@@ -71,16 +71,16 @@ import java.util.concurrent.Phaser
     vmFactory.acquireVM(GuestLanguage.JS)
     return true
   }
-  
+
   override fun invoke(context: ToolContext<ToolState>) {
     logging.debug("Express command invoked")
-    
+
     logging.debug("Reading entrypoint source")
     val source = readEntrypoint() 
-    
+
     // synchronization helper
     val phaser = Phaser(1)
-    
+
     withVM(
       context,
       userBundles = emptyList(),
@@ -88,7 +88,7 @@ import java.util.concurrent.Phaser
       hostIO = false,
     ) { vm ->
       logging.debug("Entered VM execution context")
-      
+
       // initialize the Express intrinsic
       express.initialize(vm, phaser)
 
@@ -100,13 +100,13 @@ import java.util.concurrent.Phaser
         logging.error("Failed to parse entrypoint source", cause)
         throw cause
       }
-      
+
       // sanity check
       if(!parsed.canExecute()) {
         logging.error("Parsed entrypoint is not executable, aborting")
         return@withVM
       }
-      
+
       // execute the script
       logging.debug("Executing parsed source")
       parsed.executeVoid()
@@ -118,7 +118,7 @@ import java.util.concurrent.Phaser
     phaser.arriveAndAwaitAdvance()
     logging.debug("Exiting")
   }
-  
+
   private companion object {
     const val ENTRY_POINT_EXTENSION = "js"
     const val ENTRY_POINT_LANGUAGE = "js"

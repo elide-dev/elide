@@ -7,8 +7,7 @@ plugins {
 
 repositories {
   maven("https://maven.pkg.st/")
-  gradlePluginPortal()
-  maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+  maven("https://gradle.pkg.st/")
 }
 
 val kotlinVersion = "1.8.20"

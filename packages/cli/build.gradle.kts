@@ -423,12 +423,12 @@ tasks {
   }
 
   dockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest"
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
 }

@@ -117,6 +117,7 @@ internal class JsRuntime @Inject constructor (
   private companion object {
     const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
     const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"
+    const val DEFAULT_JS_LOCALE: String = "en-US"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
@@ -255,6 +256,11 @@ internal class JsRuntime @Inject constructor (
 
   /** @inheritDoc */
   override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(listOf(
+    // `vm.locale`: maps to `js.locale` and controls various locale settings in the JS VM
+    VMRuntimeProperty.ofConfigurable("vm.locale", "js.locale", DEFAULT_JS_LOCALE) {
+      (config.locale ?: guestConfig.locale)?.toString() ?: DEFAULT_JS_LOCALE
+    },
+
     // `vm.charset`: maps to `js.charset` and controls encoding of raw data exchanged with JS VM
     VMRuntimeProperty.ofConfigurable("vm.charset", "js.charset", DEFAULT_STREAM_ENCODING) {
       (config.charset ?: guestConfig.charset)?.name() ?: DEFAULT_STREAM_ENCODING

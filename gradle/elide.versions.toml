@@ -1,13 +1,13 @@
 [versions]
 elide = "1.0-v3-alpha3-b7"
-elide_plugin = "1.0.0-beta21"
+elide_plugin = "1.0.0-beta22"
 kotlin_sdk = "1.9.0"
 kotlin_language = "1.9"
 jna = "5.8.0"
 ksp = "1.9.0-1.0.12"
 koin = "3.4.2"
 koin_ksp = "1.2.2"
-graalvm = "23.0.0"
+graalvm = "23.0.1"
 graalvm_sdk = "23.0.1"
 graalvm_metadata = "0.2.5"
 graalvm_plugin = "0.9.23"
@@ -617,7 +617,7 @@ plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref =
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
-elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
+#elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
 elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
 elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
 elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }

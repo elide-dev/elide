@@ -174,7 +174,7 @@ dependencies {
     api(kotlin("gradle-plugin"))
     api(libs.elide.tools.processor)
     implementation(libs.elide.base)
-    implementation(libs.elide.ssg)
+//    implementation(libs.elide.ssg)
     implementation(libs.elide.proto.core)
     implementation(libs.elide.proto.protobuf)
 
@@ -210,7 +210,7 @@ dependencies {
 
     // Elide: Embedded Libs
     embedded(libs.elide.base)
-    embedded(libs.elide.ssg)
+//    embedded(libs.elide.ssg)
 
     // Elide: Embedded Tools
     embedded(libs.closure.templates)

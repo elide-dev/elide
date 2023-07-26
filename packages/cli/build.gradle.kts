@@ -257,13 +257,6 @@ val quickbuild = (
   project.properties["elide.buildMode"] == "dev"
 )
 
-afterEvaluate {
-  tasks.named("testNativeImage") {
-    enabled = false
-  }
-}
-
-
 /**
  * Build: CLI Native Image
  */

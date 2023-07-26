@@ -28,7 +28,9 @@ jackson:
 
 ## Performance
 netty.default.allocator.max-order: 3
+netty.default.allocator.use-cache-for-all-threads: true
 netty.resource-leak-detector-level: DISABLED
+micronaut.server.netty.server-type: STREAMED
 micronaut.server.netty.use-native-transport: true
 micronaut.server.netty.parent.prefer-native-transport: true
 micronaut.server.netty.worker.prefer-native-transport: true

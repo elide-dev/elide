@@ -86,7 +86,7 @@ javax_persistence = "2.2"
 javax_annotations = "1.3.2"
 jsoup = "1.16.1"
 junit_jupiter = "5.10.0-M1"
-logback = "1.2.11"
+logback = "1.4.8"
 docker_plugin = "9.1.0"
 node_plugin = "5.0.0"
 gauth_plugin = "2.2.0"
@@ -342,7 +342,6 @@ jakarta_annotation_api = { group = "jakarta.annotation", name = "jakarta.annotat
 jakarta_inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 jakarta_persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta_persistence" }
 uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
-logback_base = { group = "ch.qos.logback", name = "logback", version.ref = "logback" }
 logback_core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }

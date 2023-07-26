@@ -13,7 +13,7 @@ plugins {
   java
 }
 
-val defaultJavaMin = "11"
+val defaultJavaMin = "17"
 val defaultJavaMax = "19"
 
 val os: OperatingSystem = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform

@@ -16,7 +16,7 @@ plugins {
   id("dev.elide.build.kotlin")
 }
 
-val defaultJavaVersion = "11"
+val defaultJavaVersion = "17"
 val defaultKotlinVersion = "1.9"
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String

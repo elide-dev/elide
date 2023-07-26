@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val defaultJavaVersion = "11"
+val defaultJavaVersion = "17"
 val defaultKotlinVersion = "1.9"
 
 val defaultElideGroup = "dev.elide"
@@ -243,8 +243,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {

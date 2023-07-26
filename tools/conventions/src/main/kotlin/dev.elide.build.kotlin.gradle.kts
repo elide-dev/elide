@@ -10,7 +10,7 @@ plugins {
   id("dev.elide.build.core")
 }
 
-val defaultJavaVersion = "11"
+val defaultJavaVersion = "17"
 val defaultKotlinVersion = "1.9"
 
 val strictMode = project.properties["strictMode"] as? String == "true"

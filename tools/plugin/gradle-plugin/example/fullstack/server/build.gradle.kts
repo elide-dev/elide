@@ -68,5 +68,5 @@ elide {
 
 tasks.withType<Detekt>().configureEach {
     // Target version of the generated JVM bytecode. It is used for type resolution.
-    jvmTarget = "11"
+    jvmTarget = "17"
 }

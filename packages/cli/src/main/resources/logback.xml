@@ -1,20 +1,38 @@
 <configuration>
-    <property name="APPENDER" value="${log.file.root:-CONSOLE}" />
+    <property name="APPENDER" value="${log.file.root:-ASYNC_LAZY}" />
     <property name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
         <encoder>
             <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
-        <discardingThreshold>20</discardingThreshold>
-        <appender-ref ref="CONSOLE" />
-        <queueSize>256</queueSize>
-        <includeCallerData>false</includeCallerData>
-        <neverBlock>true</neverBlock>
+    <appender name="RICH_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <target>System.err</target>
+        <immediateFlush>false</immediateFlush>
+        <encoder>
+            <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_LAZY" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>codesource</key>
+            <defaultValue>user</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="RICH_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+                <discardingThreshold>20</discardingThreshold>
+                <appender-ref ref="CONSOLE" />
+                <queueSize>256</queueSize>
+                <includeCallerData>false</includeCallerData>
+                <neverBlock>true</neverBlock>
+            </appender>
+        </sift>
     </appender>
 
     <logger name="io.micronaut.context.env" level="off"/>
@@ -30,8 +48,16 @@
     <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="warn" />
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
+    <!-- Server/Tool Logger -->
+    <logger name="tool">
+        <appender-ref ref="${APPENDER}" />
+    </logger>
+    <logger name="tool:server">
+        <appender-ref ref="${APPENDER}" />
+    </logger>
+
     <!-- Root Logger -->
     <root level="${ROOT_LOGLEVEL}">
-        <appender-ref ref="${APPENDER}" />
+        <appender-ref ref="CONSOLE" />
     </root>
 </configuration>

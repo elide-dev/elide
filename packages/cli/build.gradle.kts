@@ -35,14 +35,14 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = false
+val enableEspresso = true
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false
 val enableRuby = false
+val enableSbom = true
 val enablePgo = true
 val enablePgoInstrumentation = false
-val enableSbom = true
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
@@ -103,6 +103,7 @@ dependencies {
   implementation(project(":packages:core"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm"))
+  implementation(project(":packages:server"))
   implementation(project(":tools:bundler"))
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
@@ -110,11 +111,11 @@ dependencies {
   implementation(libs.kotlin.scripting.common)
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
+  implementation(libs.logback)
 
   implementation(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
   implementation(libs.picocli.jline3)
-  implementation(libs.kotter)
   implementation(libs.slf4j.jul)
   implementation(libs.jline.all)
   implementation(libs.jline.builtins)
@@ -138,8 +139,35 @@ dependencies {
   implementation(project(":packages:proto:proto-protobuf"))
   implementation(project(":packages:proto:proto-kotlinx"))
 
+  // Netty: Native
+  implementation(libs.netty.tcnative)
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(libs.netty.transport.native.unixCommon)
+  implementation(libs.netty.transport.native.epoll)
+  implementation(libs.netty.transport.native.kqueue)
+
+  // Linux
+  implementation(libs.netty.transport.native.epoll)
+  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
+  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+
+  // macOS/BSD
+  implementation(libs.netty.transport.native.kqueue)
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-x86_64") })
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
+  implementation(libs.netty.resolver.dns.native.macos)
+
   compileOnly(libs.graalvm.sdk)
-  implementation(libs.logback)
+  compileOnly(libs.graalvm.espresso.polyglot)
+  compileOnly(libs.graalvm.espresso.hotswap)
+  compileOnly(libs.graalvm.tools.lsp.api)
+  compileOnly(libs.graalvm.truffle.api)
+  compileOnly(libs.graalvm.truffle.nfi)
+  compileOnly(libs.graalvm.truffle.nfi.libffi)
 
   runtimeOnly(libs.micronaut.runtime)
 
@@ -169,6 +197,9 @@ sonarqube {
   isSkipProject = true
 }
 
+val jvmModuleArgs = listOf(
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+)
 
 /**
  * Framework: Micronaut
@@ -192,7 +223,7 @@ micronaut {
     convertYamlToJava = true
     precomputeOperations = true
     cacheEnvironment = true
-    deduceEnvironment = false
+    deduceEnvironment = true
     replaceLogbackXml = true
 
     optimizeServiceLoading = true
@@ -202,7 +233,8 @@ micronaut {
 
     netty {
       enabled = true
-      machineId = "elide"
+      machineId = "13-37-7C-D1-6F-F5"
+      pid = "1337"
     }
   }
 }
@@ -215,9 +247,7 @@ tasks.test {
 tasks.named<JavaExec>("run") {
   systemProperty("micronaut.environments", "dev")
   systemProperty("picocli.ansi", "tty")
-  jvmArgs(
-    "--add-opens=java.base/java.io=ALL-UNNAMED",
-  )
+  jvmArgs(jvmModuleArgs)
   standardInput = System.`in`
   standardOutput = System.out
 }
@@ -255,27 +285,38 @@ val commonNativeArgs = listOf(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "-H:DashboardDump=elide-tool",
-  "-H:+DashboardAll",
   "-H:+AuxiliaryEngineCache",
+  "-R:MaxDirectMemorySize=256M",
+  "-R:MaximumHeapSizePercent=80",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+  if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
   if (enableWasm) "--language:wasm" else null,
   if (enableLlvm) "--language:llvm" else null,
   if (enablePython) "--language:python" else null,
   if (enableRuby) "--language:ruby" else null,
-))
+)).plus(
+  jvmModuleArgs
+)
+
+val dashboardFlags = listOf(
+  "-H:DashboardDump=elide-tool",
+  "-H:+DashboardAll",
+)
 
 val debugFlags = listOfNotNull(
   "-g",
   "-march=compatibility",
-  if (enablePgoInstrumentation) "--pgo-instrument" else null,
-)
+).plus(dashboardFlags)
 
 val releaseFlags = listOf(
   "-O2",
+  "-dsa",
   "-H:+AOTInliner",
+  "-H:+UseCompressedReferences",
+  "--native-compiler-options=-O3",
+  "--native-compiler-options=-flto",
   if (enablePgo) "--pgo=cli.iprof" else null,
 ).plus(
   if (enableSbom) listOf("--enable-sbom") else emptyList()
@@ -297,7 +338,9 @@ val initializeAtBuildTime = listOf(
   "org.slf4j.impl.StaticLoggerBinder",
 )
 
-val initializeAtRuntime: List<String> = emptyList()
+val initializeAtRuntime: List<String> = listOf(
+  "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+)
 
 val rerunAtRuntime: List<String> = emptyList()
 
@@ -308,12 +351,19 @@ val defaultPlatformArgs = listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
+  "-XX:-CollectYoungGenerationSeparately",
 ))
+
+val darwinReleaseArgs = darwinOnlyArgs.plus(emptyList())
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
   "--gc=G1",
   "-march=compatibility",
+))
+
+val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
+  "-R:+WriteableCodeCache",
 ))
 
 val muslArgs = listOf(
@@ -329,7 +379,6 @@ fun nativeCliImageArgs(
   target: String = "glibc",
   debug: Boolean = quickbuild,
   release: Boolean = (!quickbuild && project.properties["elide.release"] != "true"),
-  enterprise: Boolean = isEnterprise,
 ): List<String> =
   commonNativeArgs.asSequence().plus(
     initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
@@ -338,15 +387,15 @@ fun nativeCliImageArgs(
   ).plus(
     rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" }
   ).plus(when (platform) {
-    "darwin" -> darwinOnlyArgs
-    "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs
+    "darwin" -> if (release) darwinReleaseArgs else darwinOnlyArgs
+    "linux" -> if (target == "musl") muslArgs else (if (release) linuxReleaseArgs else linuxOnlyArgs)
     else -> defaultPlatformArgs
   }).plus(
     jvmDefs.map { "-D${it.key}=${it.value}" }
   ).plus(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
   ).plus(
-    if (debug) debugFlags else if (release) releaseFlags else emptyList()
+    if (debug && !release) debugFlags else if (release) releaseFlags else emptyList()
   ).filterNotNull().toList()
 
 graalvmNative {

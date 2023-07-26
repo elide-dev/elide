@@ -91,6 +91,7 @@ public final class elide/runtime/gvm/ExecutableScript$State : java/lang/Enum {
 	public static final field EXECUTED Lelide/runtime/gvm/ExecutableScript$State;
 	public static final field PARSED Lelide/runtime/gvm/ExecutableScript$State;
 	public static final field UNINITIALIZED Lelide/runtime/gvm/ExecutableScript$State;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$State;
 	public static fun values ()[Lelide/runtime/gvm/ExecutableScript$State;
 }
@@ -128,6 +129,7 @@ public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
 	public static final field ASYNC Lelide/runtime/gvm/InvocationMode;
 	public static final field STREAMING Lelide/runtime/gvm/InvocationMode;
 	public static final field SYNC Lelide/runtime/gvm/InvocationMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/InvocationMode;
 	public static fun values ()[Lelide/runtime/gvm/InvocationMode;
 }
@@ -253,6 +255,7 @@ public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/ru
 	public fun getDefaultLocale ()Ljava/util/Locale;
 	public fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
 	public fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public fun getLocale ()Ljava/util/Locale;
 	public fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
 	public fun getSourceMaps ()Ljava/lang/Boolean;
 	public fun getTimezone ()Ljava/time/ZoneId;
@@ -314,6 +317,7 @@ public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Defi
 
 public final class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
 	public static final field JAVASCRIPT Lelide/runtime/gvm/internals/GraalVMGuest;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/GraalVMGuest;
@@ -447,6 +451,23 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$
 }
 
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
@@ -600,6 +621,7 @@ public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVF
 public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {
 	public static final field GUEST Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static final field HOST Lelide/runtime/gvm/internals/vfs/AccessDomain;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessDomain;
 }
@@ -636,6 +658,7 @@ public final class elide/runtime/gvm/internals/vfs/AccessResponse {
 public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum {
 	public static final field ALLOW Lelide/runtime/gvm/internals/vfs/AccessResult;
 	public static final field DENY Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResult;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessResult;
 }
@@ -644,6 +667,7 @@ public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum 
 	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field FILE Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field UNSPECIFIED Lelide/runtime/gvm/internals/vfs/AccessScope;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessScope;
 }
@@ -652,6 +676,7 @@ public final class elide/runtime/gvm/internals/vfs/AccessType : java/lang/Enum {
 	public static final field DELETE Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field READ Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field WRITE Lelide/runtime/gvm/internals/vfs/AccessType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessType;
 }
@@ -1073,5 +1098,24 @@ public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/ru
 	public fun create (Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 	public synthetic fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/AbstractJSException;
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/express/Express {
+	public abstract fun initialize (Ljava/lang/Object;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/express/ExpressApp {
+	public abstract fun get (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun listen (I)V
+	public abstract fun listen (ILorg/graalvm/polyglot/Value;)V
+	public static synthetic fun listen$default (Lelide/runtime/intrinsics/js/express/ExpressApp;ILorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/express/ExpressRequest {
+	public abstract fun getParams ()Lorg/graalvm/polyglot/Value;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/express/ExpressResponse {
+	public abstract fun send (Lorg/graalvm/polyglot/Value;)V
 }
 

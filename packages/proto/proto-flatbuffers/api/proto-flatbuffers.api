@@ -3005,6 +3005,7 @@ public final class elide/proto/impl/data/FlatEncoding : java/lang/Enum, elide/pr
 	public static final field UTF16 Lelide/proto/impl/data/FlatEncoding;
 	public static final field UTF32 Lelide/proto/impl/data/FlatEncoding;
 	public static final field UTF8 Lelide/proto/impl/data/FlatEncoding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getSymbol ()Ljava/lang/Integer;
 	public synthetic fun getSymbol ()Ljava/lang/Object;
 	public static fun valueOf (Ljava/lang/String;)Lelide/proto/impl/data/FlatEncoding;
@@ -3026,6 +3027,7 @@ public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, eli
 	public static final field SHA3_256 Lelide/proto/impl/data/FlatHashAlgorithm;
 	public static final field SHA3_512 Lelide/proto/impl/data/FlatHashAlgorithm;
 	public static final field SHA512 Lelide/proto/impl/data/FlatHashAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getSymbol ()Ljava/lang/Integer;
 	public synthetic fun getSymbol ()Ljava/lang/Object;
 	public static fun valueOf (Ljava/lang/String;)Lelide/proto/impl/data/FlatHashAlgorithm;

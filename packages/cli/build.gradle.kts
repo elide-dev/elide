@@ -28,6 +28,7 @@ plugins {
   id("io.micronaut.aot")
   id("com.github.johnrengelman.shadow")
   id("dev.elide.build.docker")
+  id("dev.elide.build")
 }
 
 group = "dev.elide"

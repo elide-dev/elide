@@ -194,8 +194,16 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
   javadocJar
 } else null
 
-tasks.named("runKtlintCheckOverJvmTestSourceSet") {
-  dependsOn(tasks.generateProto, tasks.generateTestProto)
+afterEvaluate {
+  listOf(
+    "kaptGenerateStubsKotlinJvm",
+    "kaptGenerateStubsTestKotlinJvm",
+    "runKtlintCheckOverJvmTestSourceSet",
+  ).forEach {
+    tasks.named(it) {
+      dependsOn(tasks.generateProto, tasks.generateTestProto)
+    }
+  }
 }
 
 publishing {

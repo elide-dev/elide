@@ -287,7 +287,11 @@ val commonNativeArgs = listOf(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
+  "-H:CStandard=C11",
+  "-H:DefaultLocale=en-US",
+  "-H:DefaultCharset=UTF-8",
   "-H:+AuxiliaryEngineCache",
+  "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
   "-R:MaxDirectMemorySize=256M",
   "-R:MaximumHeapSizePercent=80",
@@ -313,14 +317,51 @@ val debugFlags = listOfNotNull(
   "-march=compatibility",
 ).plus(dashboardFlags)
 
+val experimentalFlags = listOf(
+  "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
+  "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
+
+  // Not enabled for regular builds yet
+  "-H:±AggressiveColdCodeOptimizations",
+  "-H:±UseExperimentalReachabilityAnalysis",
+  "-H:±UseNewExperimentalClassInitialization",
+  "-H:±UseDedicatedVMOperationThread",
+  "-H:±SupportCompileInIsolates",
+  "-H:±RemoveUnusedSymbols",
+  "-H:±VectorPolynomialIntrinsics",
+  "-H:±VectorizeSIMD",
+  "-H:±BouncyCastleIntrinsics",
+  "-R:±AlwaysInlineIntrinsics",
+  "-R:±AlwaysInlineVTableStubs",
+  "-R:±BouncyCastleIntrinsics",
+  "-H:+AOTAggregateProfiles",
+  "-H:+LSRAOptimization",
+  "-H:+UseThinLocking",
+  "-H:+ProtectionKeys",
+  "-H:+RunMainInNewThread",
+)
+
+val releaseCFlags = listOf(
+  "-O3",
+  "-flto",
+)
+
 val releaseFlags = listOf(
   "-O2",
   "-dsa",
   "-H:+AOTInliner",
+  "-H:+MLProfileInference",
   "-H:+UseCompressedReferences",
-  "--native-compiler-options=-O3",
-  "--native-compiler-options=-flto",
-  if (enablePgo) "--pgo=cli.iprof" else null,
+  "-H:+LocalizationOptimizedMode",
+).plus(releaseCFlags.flatMap {
+  listOf(
+    "-H:NativeLinkerOption=$it",
+    "-H:CCompilerOption=$it",
+  )
+}).plus(if (enablePgo) listOf(
+  "--pgo=cli.iprof",
+  "-H:CodeSectionLayoutOptimization=ClusterByEdges",
+) else emptyList(),
 ).plus(
   if (enableSbom) listOf("--enable-sbom") else emptyList()
 )
@@ -354,19 +395,26 @@ val defaultPlatformArgs = listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
+  "-H:InitialCollectionPolicy=Adaptive",
   "-XX:-CollectYoungGenerationSeparately",
 ))
 
-val darwinReleaseArgs = darwinOnlyArgs.plus(emptyList())
+val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
+  "-H:+NativeArchitecture",
+))
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
   "--gc=G1",
-  "-march=compatibility",
+  "-march=native",
+  "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
+  "-H:+StaticExecutableWithDynamicLibC",
 ))
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
   "-R:+WriteableCodeCache",
+  "-H:+StripDebugInfo",
+  "-H:+ObjectInlining",
 ))
 
 val muslArgs = listOf(

@@ -288,7 +288,6 @@ val commonNativeArgs = listOf(
   "--enable-https",
   "--install-exit-handlers",
   "-H:CStandard=C11",
-  "-H:DefaultLocale=en-US",
   "-H:DefaultCharset=UTF-8",
   "-H:+AuxiliaryEngineCache",
   "-H:+UseContainerSupport",
@@ -322,23 +321,24 @@ val experimentalFlags = listOf(
   "-H:+UseStringInlining",  // String inlining optimization is not supported when just-in-time compilation is used
 
   // Not enabled for regular builds yet
-  "-H:±AggressiveColdCodeOptimizations",
   "-H:±UseExperimentalReachabilityAnalysis",
   "-H:±UseNewExperimentalClassInitialization",
   "-H:±UseDedicatedVMOperationThread",
   "-H:±SupportCompileInIsolates",
-  "-H:±RemoveUnusedSymbols",
-  "-H:±VectorPolynomialIntrinsics",
-  "-H:±VectorizeSIMD",
-  "-H:±BouncyCastleIntrinsics",
+
   "-R:±AlwaysInlineIntrinsics",
   "-R:±AlwaysInlineVTableStubs",
-  "-R:±BouncyCastleIntrinsics",
-  "-H:+AOTAggregateProfiles",
-  "-H:+LSRAOptimization",
-  "-H:+UseThinLocking",
+
+  // Profiling
+  "-R:±ProfileMonitors",
+  "-R:±ProfileOptBulkAllocation",
+  "-R:±ProfileCompiledMethods",
+  "-R:±ProfileConstantObjects",
+  "-R:±ProfileLockElimination",
+
+  // Crashes
   "-H:+ProtectionKeys",
-  "-H:+RunMainInNewThread",
+  "-H:+UseThinLocking",
 )
 
 val releaseCFlags = listOf(
@@ -353,6 +353,15 @@ val releaseFlags = listOf(
   "-H:+MLProfileInference",
   "-H:+UseCompressedReferences",
   "-H:+LocalizationOptimizedMode",
+  "-H:+RunMainInNewThread",
+  "-H:+BouncyCastleIntrinsics",
+  "-H:+VectorPolynomialIntrinsics",
+  "-H:+VectorizeSIMD",
+  "-H:+AOTAggregateProfiles",
+  "-H:+AggressiveColdCodeOptimizations",
+  "-H:+LSRAOptimization",
+  "-H:+RemoveUnusedSymbols",
+  "-R:+BouncyCastleIntrinsics",
 ).plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",

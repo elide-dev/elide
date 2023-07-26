@@ -263,7 +263,6 @@ val quickbuild = (
 
 val commonNativeArgs = listOf(
   "--language:js",
-  "--language:nfi",
   "--language:icu4j",
   "--language:regex",
   "--tool:chromeinspector",
@@ -289,6 +288,7 @@ val commonNativeArgs = listOf(
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
+  if (enableNfi) "--language:nfi" else null,
   if (enableEspresso) "--language:java" else null,
   if (enableWasm) "--language:wasm" else null,
   if (enableLlvm) "--language:llvm" else null,

@@ -261,7 +261,6 @@ jobs:
             --dependency-verification=lenient
             -x apiCheck
             -x nativeTest
-            -x testNativeImage
             -x nativeCompile
             -Pelide.ci=true
             -PbuildSamples=false

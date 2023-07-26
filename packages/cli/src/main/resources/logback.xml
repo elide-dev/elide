@@ -29,7 +29,7 @@
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
     <!-- Root Logger -->
-    <root level="${elide.logging.root.level:warn}">
-        <appender-ref ref="${elide.logging.appender:ASYNC_CONSOLE}" />
+    <root level="warn">
+        <appender-ref ref="ASYNC_CONSOLE" />
     </root>
 </configuration>

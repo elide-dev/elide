@@ -35,7 +35,8 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = true
+val enableNfi = false
+val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false

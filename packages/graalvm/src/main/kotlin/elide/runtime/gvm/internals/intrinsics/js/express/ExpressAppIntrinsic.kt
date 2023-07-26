@@ -1,5 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
+import elide.annotations.core.Polyglot
 import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import org.graalvm.polyglot.Value
@@ -23,12 +24,12 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   /** Internal collection of route handlers requested by guest scripts. */
   private val routeRegistry = mutableSetOf<RouteHandler>()
 
-  override fun get(path: String, handler: Value) {
+  @Polyglot override fun get(path: String, handler: Value) {
     // register the route for later use
     routeRegistry.add(RouteHandler(path, handler))
   }
 
-  override fun listen(port: Int, callback: Value?) {
+  @Polyglot override fun listen(port: Int, callback: Value?) {
     // configure all the route handlers, set the port and bind the socket
     HttpServer.create().route { routes ->
       for(route in routeRegistry) routes.get(mapExpressToReactorRoute(route.path)) { req, res ->

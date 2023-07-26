@@ -30,6 +30,7 @@ buildConfig {
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"${libs.versions.elide.asProvider().get()}\"")
 }
 
+val buildSamples: String by properties
 val testProject = ":samples:server:hellocss"
 
 val embeddedJars by configurations.creating {
@@ -123,11 +124,14 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
   testImplementation(libs.micronaut.test.junit5)
 
-  testImplementation(project(testProject))
-  embeddedJars(project(
-    testProject,
-    configuration = "shadowAppJar",
-  ))
+  if (buildSamples == "true") {
+    testImplementation(project(testProject))
+
+    embeddedJars(project(
+      testProject,
+      configuration = "shadowAppJar",
+    ))
+  }
 }
 
 application {
@@ -171,12 +175,22 @@ micronaut {
 }
 
 tasks.test {
+  if (buildSamples != "true") {
+    enabled = false
+  }
+
   useJUnitPlatform()
   systemProperty("elide.test", "true")
   systemProperty("tests.buildDir", "${project.buildDir}/ssgTests/")
   systemProperty("tests.exampleManifest", project.buildDir.resolve("resources/test/app.manifest.pb"))
   systemProperty("tests.textManifest", project.buildDir.resolve("resources/test/example-manifest.txt.pb"))
   systemProperty("tests.invalidManifest", project.buildDir.resolve("resources/test/example-invalid.txt.pb"))
+}
+
+tasks.compileTestKotlin {
+  if (buildSamples != "true") {
+    enabled = false
+  }
 }
 
 tasks {

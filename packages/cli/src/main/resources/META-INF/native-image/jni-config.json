@@ -24,6 +24,18 @@
   "name":"io.netty.channel.epoll.NativeStaticallyReferencedJniMethods"
 },
 {
+  "name":"io.netty.channel.kqueue.BsdSocket"
+},
+{
+  "name":"io.netty.channel.kqueue.KQueueEventArray"
+},
+{
+  "name":"io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods"
+},
+{
+  "name":"io.netty.channel.kqueue.Native"
+},
+{
   "name":"io.netty.channel.unix.Buffer"
 },
 {

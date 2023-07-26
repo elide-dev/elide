@@ -45,8 +45,8 @@ val enablePgoInstrumentation = false
 val enableSbom = true
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_19
-  targetCompatibility = JavaVersion.VERSION_19
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
 }
 
 ktlint {

@@ -37,6 +37,7 @@ internal class JsRuntimeFeature : FrameworkFeature {
 
       // Express API
       "express.ExpressIntrinsic",
+      "express.ExpressAppIntrinsic",
       "express.ExpressRequestIntrinsic",
       "express.ExpressResponseIntrinsic",
     )

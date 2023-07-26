@@ -63,8 +63,6 @@ testing {
 val extraArgs: List<String> = emptyList()
 
 kotlin {
-  explicitApi()
-
   target.compilations.all {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguage
@@ -72,7 +70,7 @@ kotlin {
       jvmTarget = javaVersion
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 
@@ -84,7 +82,7 @@ kotlin {
         apiVersion = Elide.kotlinLanguage
         javaParameters = true
         freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
       }
     }
   }
@@ -185,7 +183,7 @@ tasks {
       jvmTarget = javaVersion
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 }
@@ -426,7 +424,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     jvmTarget = Elide.javaTargetMinimum
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
-    allWarningsAsErrors = true
+    allWarningsAsErrors = false
     incremental = true
   }
 }

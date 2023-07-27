@@ -72,7 +72,7 @@ __metadata:
     "@mdx-js/loader": 2.3.0
     "@mdx-js/mdx": 2.2.1
     "@mdx-js/preact": 2.3.0
-    "@mdx-js/react": 2.2.1
+    "@mdx-js/react": 2.3.0
   languageName: unknown
   linkType: soft
 
@@ -337,15 +337,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:2.2.1":
-  version: 2.2.1
-  resolution: "@mdx-js/react@npm:2.2.1"
+"@mdx-js/react@npm:2.3.0":
+  version: 2.3.0
+  resolution: "@mdx-js/react@npm:2.3.0"
   dependencies:
     "@types/mdx": ^2.0.0
     "@types/react": ">=16"
   peerDependencies:
     react: ">=16"
-  checksum: 4462dad1d7d658bda1c2eabc3960fb843fdbcb5788ce5f863b674752e4db1b7048b5587aa85661283b5196e4641385e6b594205c2482202446ecb5f5433c975b
+  checksum: f45fe779556e6cd9a787f711274480e0638b63c460f192ebdcd77cc07ffa61e23c98cb46dd46e577093e1cb4997a232a848d1fb0ba850ae204422cf603add524
   languageName: node
   linkType: hard
 

@@ -1097,10 +1097,15 @@ public abstract interface class elide/runtime/intrinsics/js/express/Express {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/ExpressApp {
+	public abstract fun delete (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun get (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun head (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun listen (I)V
 	public abstract fun listen (ILorg/graalvm/polyglot/Value;)V
 	public static synthetic fun listen$default (Lelide/runtime/intrinsics/js/express/ExpressApp;ILorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun options (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun post (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun put (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/ExpressRequest {

@@ -425,7 +425,9 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
   "-H:InitialCollectionPolicy=Adaptive",
   "-XX:-CollectYoungGenerationSeparately",
-))
+).plus(if (project.properties["elide.ci"] == "true") listOf(
+  "-J-Xmx6g",
+) else emptyList()))
 
 val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
   "-H:+NativeArchitecture",

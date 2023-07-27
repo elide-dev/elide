@@ -96,7 +96,6 @@ dependencies {
   api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
-  kapt(libs.micronaut.validation)
   kapt(libs.picocli.codegen)
 
   implementation(project(":packages:core"))
@@ -107,9 +106,9 @@ dependencies {
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
-  implementation(libs.kotlin.scripting.common)
-  implementation(libs.kotlin.scripting.jvm)
-  implementation(libs.kotlin.scripting.jvm.host)
+//  implementation(libs.kotlin.scripting.common)
+//  implementation(libs.kotlin.scripting.jvm)
+//  implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.logback)
 
   implementation(libs.picocli)
@@ -161,12 +160,12 @@ dependencies {
   implementation(libs.netty.resolver.dns.native.macos)
 
   compileOnly(libs.graalvm.sdk)
-  compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
-  compileOnly(libs.graalvm.tools.lsp.api)
-  compileOnly(libs.graalvm.truffle.api)
-  compileOnly(libs.graalvm.truffle.nfi)
-  compileOnly(libs.graalvm.truffle.nfi.libffi)
+//  compileOnly(libs.graalvm.espresso.polyglot)
+//  compileOnly(libs.graalvm.espresso.hotswap)
+//  compileOnly(libs.graalvm.tools.lsp.api)
+//  compileOnly(libs.graalvm.truffle.api)
+//  compileOnly(libs.graalvm.truffle.nfi)
+//  compileOnly(libs.graalvm.truffle.nfi.libffi)
 
   runtimeOnly(libs.micronaut.runtime)
 

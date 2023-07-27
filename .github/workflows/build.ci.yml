@@ -411,10 +411,6 @@ jobs:
             runner: macos-latest
             arch: amd64
             labs: false
-          - os: Windows
-            runner: windows-latest
-            arch: amd64
-            labs: true
 
     steps:
       - name: "Setup: Checkout"

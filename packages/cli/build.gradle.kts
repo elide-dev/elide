@@ -356,6 +356,7 @@ val releaseFlags = listOf(
   "-O2",
   "-dsa",
   "-H:+AOTInliner",
+  "-H:+BuildReport",
   "-H:+MLProfileInference",
   "-H:+UseCompressedReferences",
   "-H:+LocalizationOptimizedMode",

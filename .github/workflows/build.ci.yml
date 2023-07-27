@@ -88,17 +88,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu]
-        mode: ['strict']
-        machine: [ubuntu-latest]
+        os: [Ubuntu]
+        mode: ['Strict']
+        machine: [ubuntu-latest-8-cores]
         include:
-          - os: macos
-            mode: strict
-            machine: macos-latest
+          - os: macOS
+            mode: Strict
+            machine: macos-13-xl
+          - os: Windows
+            mode: Labs
+            machine: windows-latest-8-cores
 
-    name: "Build"
+    name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}
-    continue-on-error: ${{ matrix.mode == 'labs' }}
+    continue-on-error: ${{ matrix.mode != 'Strict' }}
 
     permissions:
       contents: "read"
@@ -129,7 +132,7 @@ jobs:
           node-version: 18
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -236,7 +239,7 @@ jobs:
           node-version: 20
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Run Tests (JVM)"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         env:
@@ -347,7 +350,7 @@ jobs:
           node-version: 18
           cache: "yarn"
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Run Tests (Native)"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         continue-on-error: true
@@ -438,7 +441,7 @@ jobs:
           cache: "yarn"
       - name: "Setup: Yarn"
         continue-on-error: ${{ fromJson(matrix.labs) }}
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Build: CLI (Native/Debug)"
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         continue-on-error: ${{ fromJson(matrix.labs) }}
@@ -551,7 +554,7 @@ jobs:
         with:
           node-version: 18
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
         uses: "google-github-actions/auth@v1"
@@ -651,7 +654,7 @@ jobs:
         with:
           node-version: 18
       - name: "Setup: Yarn"
-        run: npm install -g yarn@1.22.19 && yarn
+        run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Authorize Service Account"
         uses: "google-github-actions/auth@v1"

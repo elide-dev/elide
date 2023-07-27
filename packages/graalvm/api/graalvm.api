@@ -459,6 +459,40 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
 }
 
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun getName ()Ljava/lang/String;
+	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -508,6 +542,36 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$C
 	public fun getBeanType ()Ljava/lang/Class;
 	public fun getName ()Ljava/lang/String;
 	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue : elide/runtime/intrinsics/js/typed/UUID {
+	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$Companion;
+	public static final synthetic fun box-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue;
+	public final fun charAt (I)C
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Z
+	public fun get (I)C
+	public static fun get-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;I)C
+	public fun getAsString ()Ljava/lang/String;
+	public static fun getAsString-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Ljava/lang/String;
+	public fun getLength ()I
+	public static fun getLength-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)I
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)I
+	public synthetic fun length ()I
+	public fun subSequence (II)Ljava/lang/CharSequence;
+	public static fun subSequence-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;II)Ljava/lang/CharSequence;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$Companion : elide/runtime/intrinsics/js/typed/UUID$Factory {
+	public fun of-8m_k6eQ (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public fun of-KoDiJNU (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public fun of-KoDiJNU (Ljava/util/UUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public fun random-G0GOI2s ()Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
 }
 
 public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
@@ -757,6 +821,20 @@ public final class elide/runtime/gvm/vfs/HostVFS {
 public abstract interface class elide/runtime/intrinsics/js/Blob {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/Crypto : elide/runtime/intrinsics/js/RandomSource {
+	public abstract fun getSubtle ()Lelide/runtime/intrinsics/js/SubtleCrypto;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/CryptoKey {
+	public abstract fun getAlgorithm ()Ljava/lang/Object;
+	public abstract fun getExtractable ()Z
+	public abstract fun getType ()Ljava/lang/String;
+	public abstract fun getUsages ()[Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/CryptoKey$Constructors {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/FetchAPI {
 	public abstract fun fetch (Lelide/runtime/intrinsics/js/FetchRequest;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun fetch (Lelide/runtime/intrinsics/js/URL;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -991,6 +1069,11 @@ public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/r
 	public abstract fun setUsername (Ljava/lang/String;)V
 }
 
+public abstract interface class elide/runtime/intrinsics/js/RandomSource {
+	public abstract fun getRandomValues (Lorg/graalvm/polyglot/Value;)[B
+	public abstract fun randomUUID ()Lelide/runtime/intrinsics/js/typed/UUID;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/ReadableStream {
 	public static final field DefaultFactory Lelide/runtime/intrinsics/js/ReadableStream$DefaultFactory;
 }
@@ -1009,6 +1092,12 @@ public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Facto
 	public abstract fun wrap (Ljava/io/Reader;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public abstract fun wrap (Ljava/nio/ByteBuffer;)Lelide/runtime/intrinsics/js/ReadableStream;
 	public abstract fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/StringLike : java/lang/CharSequence {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/SubtleCrypto {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/Symbol : elide/proto/api/Symbolic {
@@ -1071,6 +1160,11 @@ public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeE
 	public final fun getStackTrace ()Lelide/runtime/intrinsics/js/err/Stacktrace;
 }
 
+public final class elide/runtime/intrinsics/js/err/QuotaExceededError : elide/runtime/intrinsics/js/err/ValueError {
+	public fun <init> ()V
+	public fun getMessage ()Ljava/lang/String;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/err/Stacktrace {
 }
 
@@ -1122,5 +1216,23 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressReque
 
 public abstract interface class elide/runtime/intrinsics/js/express/ExpressResponse {
 	public abstract fun send (Lorg/graalvm/polyglot/Value;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/typed/UUID : elide/runtime/intrinsics/js/StringLike {
+	public abstract fun getAsString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/typed/UUID$Factory {
+	public abstract fun of-8m_k6eQ (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public abstract fun of-KoDiJNU (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public abstract fun of-KoDiJNU (Ljava/util/UUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+	public abstract fun random-G0GOI2s ()Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
+}
+
+public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/Enum {
+	public static final field V4 Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
+	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 }
 

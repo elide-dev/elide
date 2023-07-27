@@ -458,15 +458,6 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - name: "Setup: PGO Profiles"
-        run:
-          pushd packages/cli;
-          xz -dk *.iprof.xz;
-          mkdir -p packages/cli/build/native/nativeOptimizedCompile;
-          cp -fv *.iprof packages/cli/build/native/nativeOptimizedCompile;
-          ls -al packages/cli/build/native/nativeOptimizedCompile;
-          popd;
-          echo "PGO profiles ready.";
       - name: "Build: CLI (Native/Release)"
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
         continue-on-error: ${{ fromJson(matrix.labs) }}

@@ -395,7 +395,7 @@ jobs:
   cli-build-debug:
     name: "CLI: Native (Debug, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
-    needs: [tests-jvm, preflight-checks]
+    needs: [preflight-checks, gradle]
     continue-on-error: true
 
     strategy:
@@ -486,7 +486,7 @@ jobs:
   cli-build-release:
     name: "CLI: Native (Release, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
-    needs: [tests-jvm, preflight-checks]
+    needs: [preflight-checks, gradle]
     continue-on-error: true
 
     strategy:

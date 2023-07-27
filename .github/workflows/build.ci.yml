@@ -399,8 +399,8 @@ jobs:
       fail-fast: false
       matrix:
         os: ["Linux", "macOS"]
-        arch: ["amd64", "arm64"]
-        runner: ["ubuntu-latest", "macos-latest"]
+        arch: ["amd64"]
+        runner: ["ubuntu-latest-8-cores", "macos-latest"]
         include:
           - os: Linux
             runner: ubuntu-latest-8-cores

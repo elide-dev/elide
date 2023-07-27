@@ -8,7 +8,7 @@
     "@mdx-js/react": "2.2.1"
   },
   "devDependencies": {
-    "@mdx-js/loader": "2.2.1",
+    "@mdx-js/loader": "2.3.0",
     "@mdx-js/esbuild": "2.2.1"
   }
 }

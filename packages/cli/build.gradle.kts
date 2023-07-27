@@ -537,6 +537,10 @@ graalvmNative {
   }
 }
 
+val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
+  from(zipTree("$projectDir/profiles.zip"))
+  into("$buildDir/native/nativeOptimizedCompile")
+}
 
 /**
  * Build: CLI Docker Images
@@ -548,6 +552,10 @@ tasks {
       "java-header-style.xml",
       "license.header",
     )
+  }
+
+  nativeOptimizedCompile {
+    dependsOn(decompressProfiles)
   }
 
   dockerfileNative {

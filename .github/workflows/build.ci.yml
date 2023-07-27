@@ -201,7 +201,7 @@ jobs:
     name: "Tests: JVM"
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: [preflight-checks, gradle]
+    needs: [preflight-checks]
 
     permissions:
       contents: "read"

@@ -14,6 +14,7 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+val buildMingw = project.properties["buildMingw"] == "true"
 
 kotlin {
   explicitApi()
@@ -31,7 +32,7 @@ kotlin {
   watchosX64()
   tvosArm64()
   tvosX64()
-  mingwX64()
+  if (buildMingw) mingwX64()
 
   jvm {
     withJava()
@@ -144,7 +145,9 @@ kotlin {
       }
     }
 
-    val mingwX64Main by getting { dependsOn(nativeMain) }
+    if (buildMingw) {
+      val mingwX64Main by getting { dependsOn(nativeMain) }
+    }
     val macosArm64Main by getting { dependsOn(nativeMain) }
     val iosArm64Main by getting { dependsOn(nativeMain) }
     val iosX64Main by getting { dependsOn(nativeMain) }

@@ -88,6 +88,8 @@ import org.graalvm.polyglot.Engine as VMEngine
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
   internal companion object {
+    private const val TOOL_LOGGER_NAME: String = "tool"
+    private const val TOOL_LOGGER_APPENDER: String = "RICH_CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
     private val logging: Logger by lazy {
@@ -624,8 +626,8 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // Redirect logging calls to JLine for output.
   private fun redirectLoggingToJLine(lineReader: LineReader) {
-    val rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME) as ch.qos.logback.classic.Logger
-    val current = rootLogger.getAppender("STDOUT") as ConsoleAppender<ILoggingEvent>
+    val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as ch.qos.logback.classic.Logger
+    val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as ConsoleAppender<ILoggingEvent>
     val ctx = current.context
     val appender = JLineLogbackAppender(ctx, lineReader)
     rootLogger.detachAndStopAllAppenders()

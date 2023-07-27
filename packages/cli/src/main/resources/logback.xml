@@ -50,7 +50,7 @@
 
     <!-- Server/Tool Logger -->
     <logger name="tool">
-        <appender-ref ref="${APPENDER}" />
+        <appender-ref ref="RICH_CONSOLE" />
     </logger>
     <logger name="tool:server">
         <appender-ref ref="${APPENDER}" />

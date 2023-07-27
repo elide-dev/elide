@@ -390,10 +390,24 @@ jobs:
   ## Job: CLI (Native)
   ##
   cli-build:
-    name: "CLI: Native"
-    runs-on: ubuntu-latest-8-cores
+    name: "CLI: Native (${{ matrix.os }} ${{ matrix.arch }})"
+    runs-on: ${{ matrix.runner }}
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["Linux", "macOS"]
+        arch: ["amd64", "arm64"]
+        runner: ["ubuntu-latest", "macos-latest"]
+        include:
+          - os: Linux
+            runner: ubuntu-latest-8-cores
+            arch: amd64
+          - os: macOS
+            runner: macos-latest
+            arch: amd64
 
     steps:
       - name: "Setup: Checkout"

@@ -185,11 +185,12 @@ internal class JsRuntime @Inject constructor (
     // Whether runtime assets have loaded yet.
     private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
 
-    // Core modules which patch Node JS builtins.
+    // Core modules which patch Node.js builtins.
     private val coreModules: Map<String, String> = mapOf(
       "buffer" to "/__runtime__/buffer/buffer.cjs",
       "util" to "/__runtime__/util/util.cjs",
-      "fs" to "/__runtime__/util/fs.mjs",
+      "fs" to "/__runtime__/fs/fs.cjs",
+      "express" to "/__runtime__/express/express.cjs",
     )
 
     init {

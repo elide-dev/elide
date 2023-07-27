@@ -511,7 +511,7 @@ graalvmNative {
     }
 
     named("main") {
-      imageName = "elide"
+      imageName = "elide.debug"
       fallback = false
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild))
       quickBuild = quickbuild

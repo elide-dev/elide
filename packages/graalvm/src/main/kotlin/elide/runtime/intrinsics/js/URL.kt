@@ -27,7 +27,7 @@ import elide.runtime.intrinsics.js.err.TypeError
  * The `URL` constructor and object layout are defined as part of the
  * [WhatWG URL Specification](https://url.spec.whatwg.org/). Elide's implementation of `URL` is based on Java's
  * standard [`java.net.URI`](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/net/URI.html) class and
- * is fully compliant with the WhatWG URL Specification.
+ * is (experimentally) compliant with the WhatWG URL Specification.
  *
  * ### Special behavior
  *

@@ -19,13 +19,15 @@ plugins {
   `maven-publish`
 
   kotlin("jvm")
-  kotlin("kapt")
+  kotlin("plugin.allopen")
   kotlin("plugin.serialization")
-  id("org.jetbrains.kotlinx.kover")
-  id("com.github.gmazzo.buildconfig")
-  id("io.micronaut.application")
-  id("io.micronaut.graalvm")
-  id("io.micronaut.aot")
+
+  id(libs.plugins.ksp.get().pluginId)
+  id(libs.plugins.kover.get().pluginId)
+  id(libs.plugins.buildConfig.get().pluginId)
+  id(libs.plugins.micronaut.application.get().pluginId)
+  id(libs.plugins.micronaut.graalvm.get().pluginId)
+  id(libs.plugins.micronaut.aot.get().pluginId)
   id("dev.elide.build.docker")
   id("dev.elide.build")
 }
@@ -42,8 +44,9 @@ val enableLlvm = false
 val enablePython = false
 val enableRuby = false
 val enableSbom = true
-val enablePgo = true
+val enablePgo = false
 val enablePgoInstrumentation = false
+val enableDashboard = false
 
 java {
   sourceCompatibility = JavaVersion.VERSION_19
@@ -76,13 +79,6 @@ kotlin {
   }
 }
 
-kapt {
-  useBuildCache = true
-  includeCompileClasspath = false
-  strictMode = true
-  correctErrorTypes = true
-}
-
 buildConfig {
   className("ElideCLITool")
   packageName("elide.tool.cli.cfg")
@@ -95,9 +91,8 @@ dependencies {
   implementation(platform(libs.netty.bom))
   api(libs.slf4j)
 
-  kapt(libs.micronaut.inject.java)
-  kapt(mn.micronaut.validation)
-  kapt(libs.picocli.codegen)
+  ksp(mn.micronaut.inject.kotlin)
+  ksp(libs.picocli.codegen)
 
   implementation(project(":packages:core"))
   implementation(project(":packages:base"))
@@ -111,6 +106,8 @@ dependencies {
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.logback)
+  implementation(mn.micronaut.runtime)
+  implementation("org.yaml:snakeyaml")
 
   implementation(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
@@ -127,12 +124,12 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
 
-  implementation(libs.micronaut.inject.java)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.graal)
-  implementation(libs.micronaut.kotlin.extension.functions)
-  implementation(libs.micronaut.kotlin.runtime)
+  implementation(mn.micronaut.inject.java)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.graal)
+  implementation(mn.micronaut.kotlin.extension.functions)
+  implementation(mn.micronaut.kotlin.runtime)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
@@ -160,16 +157,14 @@ dependencies {
   implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
   implementation(libs.netty.resolver.dns.native.macos)
 
-  compileOnly(libs.graalvm.sdk)
-  compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
-  compileOnly(libs.graalvm.tools.lsp.api)
-  compileOnly(libs.graalvm.truffle.api)
-  compileOnly(libs.graalvm.truffle.nfi)
-  compileOnly(libs.graalvm.truffle.nfi.libffi)
-
-  runtimeOnly(libs.micronaut.runtime)
-  runtimeOnly("org.yaml:snakeyaml")
+  compileOnly(libs.graalvm.svm)
+//  compileOnly(libs.graalvm.sdk)
+//  compileOnly(libs.graalvm.espresso.polyglot)
+//  compileOnly(libs.graalvm.espresso.hotswap)
+//  compileOnly(libs.graalvm.tools.lsp.api)
+//  compileOnly(libs.graalvm.truffle.api)
+//  compileOnly(libs.graalvm.truffle.nfi)
+//  compileOnly(libs.graalvm.truffle.nfi.libffi)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -197,9 +192,47 @@ sonarqube {
   isSkipProject = true
 }
 
+/**
+ * JVM Base Args
+ */
 val jvmModuleArgs = listOf(
+  "--add-modules=java.se",
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-exports=java.base/jdk.internal.ref=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+  "--add-opens=java.base/java.text=ALL-UNNAMED",
+  "--add-opens=java.base/java.util=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "--add-opens=java.management/sun.management=ALL-UNNAMED",
+  "--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED",
+)
+
+/**
+ * Args for JVM-only
+ */
+val jvmOnlyArgs = listOf(
+  "-XX:+UseCompressedOops",
+  "-XX:+TieredCompilation",
+  "-XX:+UseFMA",
+  "-XX:+UseStringDeduplication",
+)
+
+/**
+ * Kotlin Compiler Args
+ */
+val kotlinCompilerArgs = listOf(
+  "-progressive",
+  "-Xallow-unstable-dependencies",
+  "-Xcontext-receivers",
+  "-Xemit-jvm-type-annotations",
+  "-Xlambdas=indy",
+  "-Xsam-conversions=indy",
+  "-Xjsr305=strict",
+  "-Xjvm-default=all",
+
+  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
+//  "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.0"
 )
 
 /**
@@ -248,7 +281,7 @@ tasks.test {
 tasks.named<JavaExec>("run") {
   systemProperty("micronaut.environments", "dev")
   systemProperty("picocli.ansi", "tty")
-  jvmArgs(jvmModuleArgs)
+  jvmArgs(jvmModuleArgs.plus(jvmOnlyArgs))
   standardInput = System.`in`
   standardOutput = System.out
 }
@@ -267,13 +300,13 @@ val commonNativeArgs = listOf(
   "--language:icu4j",
   "--language:regex",
   "--tool:chromeinspector",
-  "--tool:coverage",
-  "--tool:lsp",
-  "--tool:sandbox",
-  "--tool:dap",
-  "--tool:insight",
-  "--tool:insightheap",
-  "--tool:profiler",
+//  "--tool:coverage",
+//  "--tool:lsp",
+//  "--tool:sandbox",
+//  "--tool:dap",
+//  "--tool:insight",
+//  "--tool:insightheap",
+//  "--tool:profiler",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -281,6 +314,7 @@ val commonNativeArgs = listOf(
   "--install-exit-handlers",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
+  "-H:+ParseOnceJIT",
   "-H:+AuxiliaryEngineCache",
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
@@ -307,7 +341,7 @@ val dashboardFlags = listOf(
 val debugFlags = listOfNotNull(
   "-g",
   "-march=compatibility",
-).plus(dashboardFlags)
+).plus(if (!enableDashboard) emptyList() else dashboardFlags)
 
 val experimentalFlags = listOf(
   "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
@@ -547,7 +581,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     languageVersion = Elide.kotlinLanguageBeta
     jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
-    freeCompilerArgs = Elide.jvmCompilerArgs
+    freeCompilerArgs = Elide.jvmCompilerArgs.plus(kotlinCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = false
     incremental = true
   }
@@ -602,7 +636,7 @@ afterEvaluate {
       languageVersion = Elide.kotlinLanguageBeta
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
-      freeCompilerArgs = Elide.jvmCompilerArgs
+      freeCompilerArgs = Elide.jvmCompilerArgs.plus(kotlinCompilerArgs).toSortedSet().toList()
       allWarningsAsErrors = false
     }
   }

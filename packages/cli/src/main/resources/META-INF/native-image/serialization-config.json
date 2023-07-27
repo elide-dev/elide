@@ -1,67 +1,10 @@
 {
   "types":[
     {
-      "name":"byte[]"
-    },
-    {
-      "name":"io.micronaut.context.exceptions.BeanContextException"
-    },
-    {
-      "name":"io.micronaut.context.exceptions.BeanCreationException"
-    },
-    {
-      "name":"io.micronaut.context.exceptions.DependencyInjectionException"
-    },
-    {
-      "name":"io.micronaut.context.exceptions.NoSuchBeanException"
-    },
-    {
-      "name":"java.io.IOException"
-    },
-    {
-      "name":"java.io.NotSerializableException"
-    },
-    {
-      "name":"java.io.ObjectStreamException"
-    },
-    {
-      "name":"java.lang.AssertionError"
-    },
-    {
       "name":"java.lang.Enum"
     },
     {
-      "name":"java.lang.Error"
-    },
-    {
-      "name":"java.lang.Exception"
-    },
-    {
       "name":"java.lang.Object[]"
-    },
-    {
-      "name":"java.lang.RuntimeException"
-    },
-    {
-      "name":"java.lang.StackTraceElement"
-    },
-    {
-      "name":"java.lang.StackTraceElement[]"
-    },
-    {
-      "name":"java.lang.String"
-    },
-    {
-      "name":"java.lang.Throwable"
-    },
-    {
-      "name":"java.util.ArrayList"
-    },
-    {
-      "name":"java.util.Collections$EmptyList"
-    },
-    {
-      "name":"java.util.Collections$SingletonList"
     },
     {
       "name":"java.util.HashSet"
@@ -89,9 +32,6 @@
     },
     {
       "name":"java.util.concurrent.locks.ReentrantLock$Sync"
-    },
-    {
-      "name":"org.opentest4j.AssertionFailedError"
     }
   ],
   "lambdaCapturingTypes":[

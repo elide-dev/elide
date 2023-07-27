@@ -34,7 +34,6 @@ dependencies {
   // API Deps
   api(libs.jakarta.inject)
   api(libs.slf4j)
-  api(libs.graalvm.sdk)
 
   // Protocol dependencies.
   implementation(project(":packages:proto:proto-core"))
@@ -69,6 +68,8 @@ dependencies {
   implementation(libs.kotlinx.coroutines.slf4j)
   implementation(libs.kotlinx.coroutines.guava)
   implementation(libs.kotlinx.coroutines.reactive)
+
+  compileOnly(libs.graalvm.sdk)
 
   // Testing
   testImplementation(kotlin("test"))

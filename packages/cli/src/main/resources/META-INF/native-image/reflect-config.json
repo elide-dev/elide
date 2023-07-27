@@ -1,5 +1,8 @@
 [
 {
+  "name":"[B"
+},
+{
   "name":"[Lcom.fasterxml.jackson.databind.deser.BeanDeserializerModifier;"
 },
 {
@@ -18,7 +21,13 @@
   "name":"[Lcom.fasterxml.jackson.databind.ser.Serializers;"
 },
 {
+  "name":"[Lcom.intellij.rt.coverage.data.LineMapData;"
+},
+{
   "name":"[Lio.micronaut.http.HttpMethod;"
+},
+{
+  "name":"[Ljava.lang.CharSequence;"
 },
 {
   "name":"[Ljava.lang.Object;"
@@ -27,26 +36,8 @@
   "name":"android.os.Build"
 },
 {
-  "name":"ch.qos.logback.classic.AsyncAppender",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true
-},
-{
   "name":"ch.qos.logback.classic.encoder.PatternLayoutEncoder",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
+  "queryAllPublicMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -55,73 +46,19 @@
 },
 {
   "name":"ch.qos.logback.classic.pattern.DateConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"ch.qos.logback.classic.pattern.LevelConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"ch.qos.logback.classic.pattern.LineSeparatorConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"ch.qos.logback.classic.pattern.LoggerConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true
 },
 {
   "name":"ch.qos.logback.classic.pattern.MessageConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"ch.qos.logback.classic.pattern.ThreadConverter",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true
 },
 {
   "name":"ch.qos.logback.classic.pattern.color.HighlightingCompositeConverter",
@@ -139,26 +76,8 @@
 },
 {
   "name":"ch.qos.logback.core.ConsoleAppender",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true,
+  "queryAllPublicMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setTarget","parameterTypes":["java.lang.String"] }, {"name":"setWithJansi","parameterTypes":["boolean"] }]
-},
-{
-  "name":"ch.qos.logback.core.FileAppender",
-  "allDeclaredFields":true,
-  "allPublicFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true
 },
 {
   "name":"ch.qos.logback.core.OutputStreamAppender",
@@ -224,15 +143,7 @@
   "name":"com.typesafe.config.Config"
 },
 {
-  "name":"elide.runtime.graalvm.$JsRuntime$JsRuntimeProvider$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.$VMFacadeFactory$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.cfg.$GuestIOConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -240,15 +151,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.cfg.$GuestVMConfiguration$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.cfg.$GuestVMConfiguration$Intercepted$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.cfg.$GuestVMEEConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -256,15 +159,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.cfg.$GuestVMEESandboxConfig$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.cfg.$GuestVMEESandboxConfig$Intercepted$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.cfg.$GuestVMInspectConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -272,23 +167,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsEsmConfig$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.runtime.gvm.cfg.$JsRuntimeConfig$JsNpmConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -396,10 +279,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.runtime.gvm.internals.vfs.$GuestVFSPolicy$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.runtime.gvm.internals.vfs.$GuestVFSPolicy$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -414,6 +293,13 @@
 {
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.server.StreamedFileResponseType",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.io.ByteArrayInputStream","io.micronaut.http.MediaType"] }, {"name":"getContentType","parameterTypes":[] }, {"name":"getStream","parameterTypes":[] }]
 },
 {
   "name":"elide.server.assets.$AssetController$Definition$Reference",
@@ -442,10 +328,6 @@
 {
   "name":"elide.server.assets.ServerAssetIndex$AssetStartupListener",
   "fields":[{"name":"beanContext"}]
-},
-{
-  "name":"elide.server.cfg.$AssetConfig$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference",
@@ -481,10 +363,6 @@
 },
 {
   "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.server.ssr.$ServerSSRRenderer$SSRInitializer$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -544,11 +422,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.AbstractSubcommand",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
   "name":"elide.tool.cli.AbstractSubtoolTest",
   "allDeclaredFields":true,
   "allDeclaredClasses":true,
@@ -581,7 +454,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllPublicMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }, {"name":"testRunRoot","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.NettyPropertiesAOTContextConfigurer",
@@ -609,7 +482,8 @@
 {
   "name":"elide.tool.cli.cmd.express.ToolExpressCommand",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "fields":[{"name":"express"}]
 },
 {
   "name":"elide.tool.cli.cmd.info.$ToolInfoCommand$Definition$Reference",
@@ -662,10 +536,6 @@
   "queryAllDeclaredMethods":true
 },
 {
-  "name":"elide.tool.cli.info.$ToolInfoCommand$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.tool.cli.info.$ToolInfoSubcommandTest$Definition",
   "allDeclaredClasses":true,
   "queryAllDeclaredMethods":true,
@@ -685,11 +555,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.info.ToolInfoCommand",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
   "name":"elide.tool.cli.info.ToolInfoSubcommandTest",
   "allDeclaredFields":true,
   "allDeclaredClasses":true,
@@ -697,10 +562,6 @@
   "queryAllPublicMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }]
-},
-{
-  "name":"elide.tool.cli.repl.$ToolShellCommand$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.repl.$ToolShellSubcommandTest$Definition",
@@ -722,11 +583,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.repl.ToolShellCommand",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
   "name":"elide.tool.cli.repl.ToolShellSubcommandTest",
   "allDeclaredFields":true,
   "allDeclaredClasses":true,
@@ -737,6 +593,9 @@
 },
 {
   "name":"groovy.lang.Closure"
+},
+{
+  "name":"io.methvin.watchservice.MacOSXListeningWatchService"
 },
 {
   "name":"io.micrometer.context.ContextRegistry"
@@ -842,6 +701,11 @@
   "queryAllPublicMethods":true
 },
 {
+  "name":"io.micronaut.context.BeanContextConfigurable",
+  "allDeclaredClasses":true,
+  "queryAllPublicMethods":true
+},
+{
   "name":"io.micronaut.context.EnvironmentConfigurable",
   "allDeclaredClasses":true,
   "queryAllPublicMethods":true
@@ -870,6 +734,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.context.env.hocon.HoconPropertySourceLoader",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -886,12 +754,8 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.context.exceptions.DependencyInjectionException",
-  "queryAllDeclaredMethods":true
-},
-{
-  "name":"io.micronaut.context.exceptions.NoSuchBeanException",
-  "queryAllDeclaredMethods":true
+  "name":"io.micronaut.context.propagation.instrument.execution.$ExecutorServiceInstrumenter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.core.annotation.AnnotationMetadata",
@@ -910,6 +774,27 @@
 },
 {
   "name":"io.micronaut.core.annotation.AnnotationSource",
+  "allDeclaredClasses":true,
+  "queryAllPublicMethods":true
+},
+{
+  "name":"io.micronaut.core.async.converters.ReactiveTypeConverterRegistrar",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.core.async.publisher.CompletableFuturePublisher"
+},
+{
+  "name":"io.micronaut.core.async.publisher.Publishers$JustPublisher"
+},
+{
+  "name":"io.micronaut.core.async.publisher.Publishers$JustThrowPublisher"
+},
+{
+  "name":"io.micronaut.core.async.subscriber.Completable"
+},
+{
+  "name":"io.micronaut.core.beans.BeanInfo",
   "allDeclaredClasses":true,
   "queryAllPublicMethods":true
 },
@@ -968,11 +853,57 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.MediaType",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.micronaut.http.MediaTypeConvertersRegistrar",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.http.bind.$DefaultRequestBinderRegistry$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.bind.binders.$DefaultBodyAnnotationBinder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$CharSequenceBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$ConversionTextPlainHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$DefaultMessageBodyHandlerRegistry$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawByteArrayHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawByteBufferHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$RawMessageBodyHandlerRegistry$RawStringHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$TextPlainHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$TextStreamBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.body.$WritableBodyWriter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -989,6 +920,10 @@
 },
 {
   "name":"io.micronaut.http.client.$DefaultLoadBalancerResolver$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.client.$ServiceHttpClientCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1052,11 +987,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.client.loadbalance.$LoadBalancerConverters$Definition$Reference",
+  "name":"io.micronaut.http.client.loadbalance.$ServiceInstanceListLoadBalancerFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.client.loadbalance.$ServiceInstanceListLoadBalancerFactory$Definition$Reference",
+  "name":"io.micronaut.http.client.loadbalance.LoadBalancerConverters",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1080,7 +1015,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.converters.SharedHttpConvertersRegistrar",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.cookie.$SameSiteConverter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.expression.$RequestConditionContext$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1105,6 +1048,26 @@
 },
 {
   "name":"io.micronaut.http.hateoas.$VndError$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$ByteBufRawMessageBodyHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyJsonHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyJsonStreamHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyTextPlainHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.body.$NettyWritableBodyWriter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1133,6 +1096,14 @@
 },
 {
   "name":"io.micronaut.http.netty.channel.$EpollEventLoopGroupFactory$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$IoUringAvailabilityCondition$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.netty.channel.$IoUringEventLoopGroupFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1240,14 +1211,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.server.context.$ServerRequestContextInstrumentation$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.http.server.cors.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.micronaut.http.server.cors.$CorsFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1272,6 +1235,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.exceptions.$JacksonExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.exceptions.$JsonExceptionHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1292,10 +1259,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.server.exceptions.response.$HateoasErrorResponseProcessorReplacement$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.micronaut.http.server.netty.$DefaultHttpCompressionStrategy$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1312,14 +1275,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.server.netty.$FormDataHttpContentSubscriberFactory$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.http.server.netty.$NettyEmbeddedServerInstance$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.micronaut.http.server.netty.$NettyRequestArgumentSatisfier$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1330,11 +1285,23 @@
   "name":"io.micronaut.http.server.netty.NettyHttpServer$1"
 },
 {
-  "name":"io.micronaut.http.server.netty.binders.$NettyBinderRegistrar$Definition$Reference",
+  "name":"io.micronaut.http.server.netty.binders.$NettyServerRequestBinderRegistry$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.server.netty.binders.$PublisherBodyBinder$Definition$Reference",
+  "name":"io.micronaut.http.server.netty.body.$FileBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.body.$InputStreamBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.body.$StreamFileBodyWriter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.body.$SystemFileBodyWriter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1358,6 +1325,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$Http3Settings$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.http.server.netty.configuration.$NettyHttpServerConfiguration$NettyListenerConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1375,6 +1346,22 @@
 },
 {
   "name":"io.micronaut.http.server.netty.converters.NettyConvertersSpi",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyEmbeddedServerInstance$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$ApplicationEventListener$onStart1$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$ApplicationEventListener$onStop2$Intercepted$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.http.server.netty.discovery.$NettyServiceDiscovery$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1478,11 +1465,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.http.server.netty.types.files.$FileTypeHandlerConfiguration$CacheControlConfiguration$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.http.server.netty.types.files.$FileTypeHandlerConfiguration$Definition$Reference",
+  "name":"io.micronaut.http.server.netty.websocket.$WebSocketUpgradeHandlerFactory$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1589,17 +1572,27 @@
   "queryAllPublicMethods":true
 },
 {
-  "name":"io.micronaut.inject.BeanFactory",
-  "allDeclaredClasses":true,
-  "queryAllPublicMethods":true
-},
-{
   "name":"io.micronaut.inject.BeanType",
   "allDeclaredClasses":true,
   "queryAllPublicMethods":true
 },
 {
   "name":"io.micronaut.inject.ExecutableMethodsDefinition",
+  "allDeclaredClasses":true,
+  "queryAllPublicMethods":true
+},
+{
+  "name":"io.micronaut.inject.InjectableBeanDefinition",
+  "allDeclaredClasses":true,
+  "queryAllPublicMethods":true
+},
+{
+  "name":"io.micronaut.inject.InstantiatableBeanDefinition",
+  "allDeclaredClasses":true,
+  "queryAllPublicMethods":true
+},
+{
+  "name":"io.micronaut.inject.QualifiedBeanType",
   "allDeclaredClasses":true,
   "queryAllPublicMethods":true
 },
@@ -1616,7 +1609,8 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.inject.provider.JavaxProviderBeanDefinition"
+  "name":"io.micronaut.inject.provider.JavaxProviderBeanDefinition",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.jackson.$BeanConfiguration",
@@ -1719,11 +1713,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.jackson.validation.$ValidationJacksonDeserializationPreInstantiateCallback$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.json.$JsonObjectSerializer$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.json.bind.$JsonBeanPropertyBinder$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.json.body.$JsonMessageHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1736,6 +1738,14 @@
 },
 {
   "name":"io.micronaut.json.convert.$JsonConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.kotlin.converters.$FlowPublisherConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.kotlin.converters.$FlowReactorConverterRegistrar$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1895,6 +1905,14 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.management.health.indicator.$HealthResult$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.management.health.indicator.client.$ServiceHttpClientHealthIndicator$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.micronaut.management.health.indicator.discovery.$DiscoveryClientHealthIndicator$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1951,19 +1969,39 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.reactive.flow.converters.$FlowConverterRegistrar$Definition$Reference",
+  "name":"io.micronaut.protobuf.handler.$ProtobufBodyHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.reactive.reactor.instrument.$ReactorInstrumentation$Definition$Reference",
+  "name":"io.micronaut.reactor.config.$ReactorConfiguration$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.reactive.reactor.instrument.$ReactorInstrumentation$ReactorInstrumenterFactory$Definition$Reference",
+  "name":"io.micronaut.reactor.convert.$ReactorToRxJava2ConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.reactor.convert.$ReactorToRxJava3ConverterRegistrar$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.reactor.convert.ReactorConverterRegistrar",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.reactor.instrument.$ReactorAutomaticContextPropagation$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.reactor.instrument.$ReactorInstrumentation$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.retry.annotation.$DefaultRetryPredicate$IntrospectionRef",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.retry.annotation.$RetryPredicate$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1995,15 +2033,14 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.micronaut.runtime.context.scope.Refreshable"
+},
+{
   "name":"io.micronaut.runtime.context.scope.refresh.$RefreshInterceptor$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.runtime.context.scope.refresh.$RefreshScope$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.runtime.converters.reactive.$ReactiveTypeConverterRegistrar$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2032,6 +2069,10 @@
 },
 {
   "name":"io.micronaut.scheduling.$DefaultTaskExceptionHandler$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.$LoomSupport$LoomCondition$IntrospectionRef",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2067,11 +2108,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Configuration0$Definition$Reference",
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Blocking2$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Io0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.scheduling.executor.$IOExecutorServiceConfig$Virtual1$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2084,14 +2133,6 @@
 },
 {
   "name":"io.micronaut.scheduling.executor.$UserExecutorConfiguration$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.scheduling.executor.$UserExecutorConfiguration$IntrospectionRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.scheduling.instrument.$ExecutorServiceInstrumenter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2139,62 +2180,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.views.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsModelDecorator$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsRendererLocator$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsResolver$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$ViewsConfigurationProperties$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$ViewsFilter$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$CspConfiguration$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$CspFilter$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$SecurityViewModelProcessor$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$SecurityViewModelProcessorConfigurationProperties$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.turbo.$DefaultTurboFrameRenderer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.turbo.$DefaultTurboStreamRenderer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.micronaut.web.router.$AnnotatedFilterRouteBuilder$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2204,6 +2189,10 @@
 },
 {
   "name":"io.micronaut.web.router.$DefaultRouter$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.micronaut.web.router.$ServerFilterRouteBuilder$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2376,10 +2365,6 @@
   "queryAllDeclaredMethods":true
 },
 {
-  "name":"io.netty.util.ResourceLeakDetector$DefaultResourceLeak",
-  "fields":[{"name":"droppedRecords"}, {"name":"head"}]
-},
-{
   "name":"io.netty.util.concurrent.DefaultPromise",
   "fields":[{"name":"result"}]
 },
@@ -2416,8 +2401,51 @@
   "fields":[{"name":"producerLimit"}]
 },
 {
+  "name":"io.reactivex.Completable"
+},
+{
+  "name":"io.reactivex.Maybe"
+},
+{
+  "name":"io.reactivex.Observable"
+},
+{
+  "name":"io.reactivex.Single"
+},
+{
+  "name":"io.reactivex.rxjava3.core.Completable"
+},
+{
+  "name":"io.reactivex.rxjava3.core.Flowable"
+},
+{
+  "name":"io.reactivex.rxjava3.core.Maybe"
+},
+{
+  "name":"io.reactivex.rxjava3.core.Observable"
+},
+{
+  "name":"io.reactivex.rxjava3.core.Single"
+},
+{
   "name":"jakarta.inject.Inject",
   "queryAllPublicMethods":true
+},
+{
+  "name":"java.io.ByteArrayInputStream",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"java.io.ByteArrayOutputStream",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"java.io.Closeable",
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"java.io.FileDescriptor"
@@ -2426,7 +2454,33 @@
   "name":"java.io.FilePermission"
 },
 {
+  "name":"java.io.Flushable",
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"java.io.IOException"
+},
+{
+  "name":"java.io.InputStream",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.io.OutputStream",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.AutoCloseable",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.CharSequence",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"java.lang.Class",
+  "methods":[{"name":"getPermittedSubclasses","parameterTypes":[] }, {"name":"getRecordComponents","parameterTypes":[] }, {"name":"isRecord","parameterTypes":[] }, {"name":"isSealed","parameterTypes":[] }]
 },
 {
   "name":"java.lang.ClassValue"
@@ -2453,9 +2507,20 @@
   "name":"java.lang.RuntimePermission"
 },
 {
+  "name":"java.lang.System",
+  "methods":[{"name":"console","parameterTypes":[] }]
+},
+{
   "name":"java.lang.Thread",
   "fields":[{"name":"threadLocalRandomProbe"}],
-  "methods":[{"name":"isVirtual","parameterTypes":[] }]
+  "methods":[{"name":"ofVirtual","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Thread$Builder",
+  "methods":[{"name":"factory","parameterTypes":[] }, {"name":"name","parameterTypes":["java.lang.String","long"] }]
+},
+{
+  "name":"java.lang.Thread$Builder$OfVirtual"
 },
 {
   "name":"java.lang.invoke.MethodHandle"
@@ -2621,6 +2686,10 @@
   "name":"java.util.concurrent.ArrayBlockingQueue"
 },
 {
+  "name":"java.util.concurrent.Executors",
+  "methods":[{"name":"newThreadPerTaskExecutor","parameterTypes":["java.util.concurrent.ThreadFactory"] }]
+},
+{
   "name":"java.util.concurrent.ForkJoinTask",
   "fields":[{"name":"aux"}, {"name":"status"}]
 },
@@ -2641,10 +2710,6 @@
   "fields":[{"name":"base"}, {"name":"cellsBusy"}]
 },
 {
-  "name":"java.util.concurrent.atomic.Striped64$Cell",
-  "fields":[{"name":"value"}]
-},
-{
   "name":"java.util.concurrent.locks.AbstractOwnableSynchronizer"
 },
 {
@@ -2663,14 +2728,20 @@
   "name":"java.util.concurrent.locks.ReentrantLock$Sync"
 },
 {
-  "name":"javax.management.ObjectName"
-},
-{
   "name":"javax.smartcardio.CardPermission"
 },
 {
   "name":"jdk.internal.misc.Unsafe",
   "methods":[{"name":"getUnsafe","parameterTypes":[] }]
+},
+{
+  "name":"kotlin.Any"
+},
+{
+  "name":"kotlin.Boolean"
+},
+{
+  "name":"kotlin.Int"
 },
 {
   "name":"kotlin.Metadata",
@@ -2683,7 +2754,7 @@
   "fields":[{"name":"_value"}]
 },
 {
-  "name":"kotlin.Unit"
+  "name":"kotlin.String"
 },
 {
   "name":"kotlin.annotation.MustBeDocumented",
@@ -2698,15 +2769,15 @@
   "queryAllPublicMethods":true
 },
 {
-  "name":"kotlin.internal.jdk8.JDK8PlatformImplementations",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"kotlin.jvm.internal.DefaultConstructorMarker"
 },
 {
   "name":"kotlin.reflect.jvm.internal.ReflectionFactoryImpl",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"kotlin.reflect.jvm.internal.impl.resolve.scopes.DescriptorKindFilter",
+  "allPublicFields":true
 },
 {
   "name":"kotlinx.coroutines.EventLoopImplBase",
@@ -2744,7 +2815,7 @@
 },
 {
   "name":"kotlinx.coroutines.test.internal.TestMainDispatcher$NonConcurrentlyModifiable",
-  "fields":[{"name":"exceptionWhenReading"}, {"name":"isWriting"}, {"name":"readers"}]
+  "fields":[{"name":"_value"}, {"name":"exceptionWhenReading"}, {"name":"reader"}, {"name":"readers"}, {"name":"writer"}]
 },
 {
   "name":"kotlinx.coroutines.test.internal.TestMainDispatcherFactory",
@@ -2752,6 +2823,11 @@
 },
 {
   "name":"libcore.io.Memory"
+},
+{
+  "name":"org.fusesource.jansi.AnsiConsole",
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"out","parameterTypes":[] }]
 },
 {
   "name":"org.graalvm.polyglot.Engine",
@@ -2762,11 +2838,6 @@
 },
 {
   "name":"org.graalvm.polyglot.management.Management"
-},
-{
-  "name":"org.opentest4j.AssertionFailedError",
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"getActual","parameterTypes":[] }, {"name":"getExpected","parameterTypes":[] }]
 },
 {
   "name":"org.robolectric.Robolectric"
@@ -2863,15 +2934,6 @@
 {
   "name":"reactor.util.concurrent.SpscArrayQueueProducer",
   "fields":[{"name":"producerIndex"}]
-},
-{
-  "name":"sun.misc.SignalHandler",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true,
-  "allDeclaredClasses":true,
-  "allPublicClasses":true
 },
 {
   "name":"sun.misc.Unsafe",

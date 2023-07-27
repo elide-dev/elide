@@ -348,6 +348,7 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
+graalvm_svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm_sdk" }
 graalvm_truffle_api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm_sdk" }
 graalvm_truffle_processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm_sdk" }
 graalvm_truffle_nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm_sdk" }

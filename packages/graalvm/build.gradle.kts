@@ -128,7 +128,6 @@ dependencies {
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
-  implementation(libs.micronaut.test.junit5)
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.cache.core)
   implementation(libs.micronaut.cache.caffeine)
@@ -144,8 +143,8 @@ dependencies {
   implementation(project(":packages:proto:proto-kotlinx"))
   implementation(project(":packages:proto:proto-flatbuffers"))
 
-  compileOnly(libs.graalvm.sdk)
-  compileOnly(libs.graalvm.truffle.api)
+  compileOnly(libs.graalvm.svm)
+//  compileOnly(libs.graalvm.truffle.api)
 
   // Testing
   testImplementation(project(":packages:test"))

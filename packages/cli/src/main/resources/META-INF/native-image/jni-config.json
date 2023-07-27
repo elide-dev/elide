@@ -11,19 +11,6 @@
   "fields":[{"name":"file"}, {"name":"transferred"}]
 },
 {
-  "name":"io.netty.channel.epoll.LinuxSocket"
-},
-{
-  "name":"io.netty.channel.epoll.Native"
-},
-{
-  "name":"io.netty.channel.epoll.NativeDatagramPacketArray$NativeDatagramPacket",
-  "fields":[{"name":"count"}, {"name":"memoryAddress"}, {"name":"recipientAddr"}, {"name":"recipientAddrLen"}, {"name":"recipientPort"}, {"name":"recipientScopeId"}, {"name":"segmentSize"}, {"name":"senderAddr"}, {"name":"senderAddrLen"}, {"name":"senderPort"}, {"name":"senderScopeId"}]
-},
-{
-  "name":"io.netty.channel.epoll.NativeStaticallyReferencedJniMethods"
-},
-{
   "name":"io.netty.channel.kqueue.BsdSocket"
 },
 {
@@ -105,6 +92,10 @@
 {
   "name":"java.nio.channels.ClosedChannelException",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.fusesource.jansi.internal.CLibrary",
+  "fields":[{"name":"HAVE_ISATTY"}, {"name":"HAVE_TTYNAME"}, {"name":"TCSADRAIN"}, {"name":"TCSAFLUSH"}, {"name":"TCSANOW"}, {"name":"TIOCGETA"}, {"name":"TIOCGETD"}, {"name":"TIOCGWINSZ"}, {"name":"TIOCSETA"}, {"name":"TIOCSETD"}, {"name":"TIOCSWINSZ"}]
 },
 {
   "name":"sun.management.VMManagementImpl",

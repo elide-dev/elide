@@ -387,6 +387,58 @@ jobs:
             tools/reports/build/test-results/**/*.xml
 
   ##
+  ## Job: CLI (Native)
+  ##
+  cli-build:
+    name: "CLI: Native"
+    runs-on: ubuntu-latest-8-cores
+    needs: [tests-jvm, preflight-checks]
+    continue-on-error: true
+
+    steps:
+      - name: "Setup: Checkout"
+        uses: actions/checkout@v3
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@v1
+        with:
+          components: "native-image,js,wasm"
+          distribution: 'graalvm'
+          java-version: 20
+          check-for-updates: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "yarn"
+      - name: "Setup: Yarn"
+        run: npm install -g yarn@1.22.19 && yarn
+      - name: "Build: CLI (Native)"
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
+        continue-on-error: true
+        env:
+          CI: true
+        with:
+          cache-read-only: false
+          arguments: |
+            :packages:cli:nativeOptimizedCompile
+            -Prelease=true
+            -PbuildMode=release
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-reports-native
+          path: |
+            ./packages/cli/build/native/nativeOptimizedCompile/elide
+
+  ##
   ## Job: Docker Samples (JVM)
   ##
   docker-jvm:

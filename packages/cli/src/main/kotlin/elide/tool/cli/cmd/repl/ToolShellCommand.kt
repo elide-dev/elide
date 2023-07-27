@@ -89,7 +89,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
-    private const val TOOL_LOGGER_APPENDER: String = "RICH_CONSOLE"
+    private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
     private val logging: Logger by lazy {

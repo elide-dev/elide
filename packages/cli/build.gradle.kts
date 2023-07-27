@@ -339,11 +339,19 @@ val experimentalFlags = listOf(
   "-H:+UseThinLocking",
 )
 
+// CFlags for release mode.
 val releaseCFlags = listOf(
   "-O3",
   "-flto",
 )
 
+// PGO profiles to specify in release mode.
+val profiles = listOf(
+  "cli.iprof",
+  "serve.iprof",
+)
+
+// Full release flags (for all operating systems and platforms).
 val releaseFlags = listOf(
   "-O2",
   "-dsa",
@@ -366,7 +374,7 @@ val releaseFlags = listOf(
     "-H:CCompilerOption=$it",
   )
 }).plus(if (enablePgo) listOf(
-  "--pgo=cli.iprof",
+  "--pgo=${profiles.joinToString(",")}",
   "-H:CodeSectionLayoutOptimization=ClusterByEdges",
 ) else emptyList(),
 ).plus(

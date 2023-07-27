@@ -390,7 +390,7 @@ jobs:
   ## Job: CLI (Native)
   ##
   cli-build:
-    name: "CLI: Native (${{ matrix.os }} ${{ matrix.arch || 'amd64' }})"
+    name: "CLI: Native (${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
@@ -441,10 +441,39 @@ jobs:
           node-version: 20
           cache: "yarn"
       - name: "Setup: Yarn"
+        continue-on-error: ${{ fromJson(matrix.labs) }}
         run: npm install -g yarn@1.22.19 && yarn
-      - name: "Build: CLI (Native)"
+      - name: "Build: CLI (Native/Debug)"
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
-        continue-on-error: true
+        continue-on-error: ${{ fromJson(matrix.labs) }}
+        env:
+          CI: true
+        with:
+          cache-read-only: false
+          arguments: |
+            :packages:cli:nativeCompile
+            -Prelease=false
+            -PbuildMode=dev
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocsSite=false
+            -PbuildDocs=false
+      - name: "Setup: PGO Profiles"
+        run:
+          cd packages/cli \
+            && xz -dk *.iprof.xz \
+            && mkdir -p packages/cli/build/native/nativeOptimizedCompile \
+            && cp -fv *.iprof packages/cli/build/native/nativeOptimizedCompile \
+            && ls -al packages/cli/build/native/nativeOptimizedCompile \
+            && cd ../.. \
+            && echo "PGO profiles ready."
+      - name: "Build: CLI (Native/Release)"
+        uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
+        continue-on-error: ${{ fromJson(matrix.labs) }}
         env:
           CI: true
         with:
@@ -461,11 +490,23 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
+      - name: "Post-process: Compress"
+        run: |
+          pushd packages/cli/build/native/nativeOptimizedCompile \
+            && xz -9kv elide \
+            && popd;
+          pushd packages/cli/build/native/nativeCompile \
+            && xz -9kv elide.debug \
+            && popd;
+          echo "Binaries compressed.";
       - uses: actions/upload-artifact@v3
+        if: success()
         with:
           name: test-reports-native
           path: |
-            ./packages/cli/build/native/nativeOptimizedCompile/elide
+            ./packages/cli/build/native/nativeOptimizedCompile/elide.xz
+            ./packages/cli/build/native/nativeCompile/elide.debug.xz
+            ./packages/cli/build/native/nativeCompile/elide-tool.bgv
 
   ##
   ## Job: Docker Samples (JVM)

@@ -1,4 +1,9 @@
-@file:Suppress("JSUnresolvedFunction", "JSUnresolvedVariable")
+@file:Suppress(
+  "JSUnresolvedFunction",
+  "JSUnresolvedVariable",
+  "JSVoidFunctionReturnValueUsed",
+  "JSCheckFunctionSignatures",
+)
 
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
@@ -8,10 +13,10 @@ import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 
@@ -126,9 +131,9 @@ import kotlin.test.assertNotNull
       test(uuid).isEqualTo(uuid);
       test(uuid).isNotEqualTo(uuid2);
       uuid;
-    """.trimIndent()
+    """
   }.thenAssert {
-    Assertions.assertNotNull(
+    assertNotNull(
       it.returnValue(),
       "should get a return value for first uuid from guest",
     )
@@ -139,8 +144,143 @@ import kotlin.test.assertNotNull
     val uuid = assertNotNull(UUIDValue.of(test), "should be able to parse UUID from string")
     assertEquals('9', uuid[0], "retrieving character by index should be correct value")
 
-    assertThrows<ValueError> {
+    assertFailsWith<ValueError> {
       UUIDValue.of("not-a-uuid")
+    }
+  }
+
+  @Test fun testRandomValuesHost() {
+    val size = 64
+    val empty = ByteArray(size)
+    val data = ByteArray(size)
+    crypto.getRandomValues(data)
+    assertNotEquals(empty, data, "random bytes should not be empty")
+    val data2 = ByteArray(size)
+    crypto.getRandomValues(data2)
+    assertNotEquals(data, data2, "random bytes should not be the same")
+  }
+
+  @Test fun testRandomValuesGuestInt8Array() = executeGuest {
+    // language=javascript
+    """
+      const data = new Int8Array(64);
+      crypto.getRandomValues(data);
+      test(data).isNotNull("random bytes should not be empty");
+      test(data).isEqualTo(data);  // sanity test
+      test(data).isNotEqualTo(new Int8Array(64));
+      test(data).isNotEqualTo(new Int8Array(64));
+    """
+  }.doesNotFail()
+
+  @Test fun testRandomValuesGuestUInt8Array() = executeGuest {
+    // language=javascript
+    """
+      const data = new Uint8Array(64);
+      crypto.getRandomValues(data);
+      test(data).isNotNull("random bytes should not be empty");
+      test(data).isEqualTo(data);  // sanity test
+      test(data).isNotEqualTo(new Uint8Array(64));
+      test(data).isNotEqualTo(new Uint8Array(64));
+    """
+  }.doesNotFail()
+
+  @Test fun testRandomValuesGuestInt16Array() = executeGuest {
+    // language=javascript
+    """
+      const data = new Int16Array(64);
+      crypto.getRandomValues(data);
+      test(data).isNotNull("random bytes should not be empty");
+      test(data).isEqualTo(data);  // sanity test
+      test(data).isNotEqualTo(new Int16Array(64));
+      test(data).isNotEqualTo(new Int16Array(64));
+    """
+  }.doesNotFail()
+
+  @Test fun testRandomValuesGuestUInt32Array() = executeGuest {
+    // language=javascript
+    """
+      const data = new Uint32Array(64);
+      crypto.getRandomValues(data);
+      test(data).isNotNull("random bytes should not be empty");
+      test(data).isEqualTo(data);  // sanity test
+      test(data).isNotEqualTo(new Uint32Array(64));
+      test(data).isNotEqualTo(new Uint32Array(64));
+    """
+  }.doesNotFail()
+
+  @Test fun testRandomValuesNonNumericArray() = executeGuest {
+    // language=javascript
+    """
+      crypto.getRandomValues(["hi", "hello"]);
+    """
+  }.failsWith<ValueError>()
+
+  @Test fun testRandomValuesNullArray() = executeGuest {
+    // language=javascript
+    """
+      crypto.getRandomValues([null]);
+    """
+  }.failsWith<ValueError>()
+
+  @Test fun testRandomValuesNonArray() = executeGuest {
+    // language=javascript
+    """
+      crypto.getRandomValues({});
+    """
+  }.failsWith<ValueError>()
+
+  @Test fun testRandomValuesAsGuestValue() = executeGuest {
+    // language=javascript
+    """
+      new Int16Array(64);
+    """
+  }.thenAssert {
+    val typedArray = it.returnValue()
+    assertNotNull(
+      typedArray,
+      "should get numeric array (empty) as return value from guest",
+    )
+    crypto.getRandomValues(typedArray)
+  }
+
+  @Test fun testRandomValuesAsGuestValueInvalid() = executeGuest {
+    // language=javascript
+    """
+      {}
+    """
+  }.thenAssert {
+    val invalidObj = it.returnValue()
+    assertNotNull(
+      invalidObj,
+      "should get numeric array (empty) as return value from guest",
+    )
+    assertFailsWith<ValueError> {
+      crypto.getRandomValues(invalidObj)
+    }
+  }
+
+  @Test fun testRandomValuesTooBigHost() {
+    assertFailsWith<ValueError> {
+      crypto.getRandomValues(ByteArray(65537))
+    }
+  }
+
+  @Test fun testRandomValuesTooBigGuest() = executeGuest {
+    // language=javascript
+    """
+      const data = new Uint8Array(65537);
+      crypto.getRandomValues(data);
+    """
+  }.failsWith<ValueError>()
+
+  @Test fun testSubtleCryptoAvailable() {
+    assumeTrue {
+      try {
+        crypto.subtle
+        true
+      } catch (err: Throwable) {
+        false
+      }
     }
   }
 }

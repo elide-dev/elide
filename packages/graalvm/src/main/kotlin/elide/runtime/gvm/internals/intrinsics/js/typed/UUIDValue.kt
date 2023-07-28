@@ -44,23 +44,25 @@ import java.util.UUID as JavaUUID
    */
   public companion object: UUID.Factory {
     // Length of a V4 UUID.
-    private const val UUID_LENGTH: Int = 36
+    internal const val UUID_LENGTH: Int = 36
 
     override fun random(): UUIDValue = of(
       JavaUUID.randomUUID()
     )
 
     @Throws(ValueError::class)
-    override fun of(value: String): UUIDValue = UUIDValue(
-      ValidUUID(
-      uuid = JavaUUID.fromString(value),
+    override fun of(value: String): UUIDValue = UUIDValue(ValidUUID(
       cachedString = value,
+      uuid = try {
+        JavaUUID.fromString(value)
+      } catch (iae: IllegalArgumentException) {
+        throw ValueError.create("Not a valid UUID string: '$value'", iae)
+      },
     ))
 
-    override fun of(value: UUIDValue): UUIDValue = UUIDValue(value.value.copy())
+    override fun of(value: UUIDValue): UUIDValue = UUIDValue(value.value)
 
-    override fun of(value: JavaUUID): UUIDValue = UUIDValue(
-      ValidUUID(
+    override fun of(value: JavaUUID): UUIDValue = UUIDValue(ValidUUID(
       uuid = value,
     ))
   }

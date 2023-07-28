@@ -95,9 +95,9 @@ jobs:
           - os: macOS
             mode: Strict
             machine: macos-13-xl
-          - os: Windows
-            mode: Labs
-            machine: windows-latest-8-cores
+#          - os: Windows
+#            mode: Labs
+#            machine: windows-latest-8-cores
 
     name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}
@@ -417,11 +417,11 @@ jobs:
             arch: amd64
             labs: false
             tag: darwin-amd64
-          - os: Windows
-            runner: windows-latest-8-cores
-            arch: amd64
-            tag: windows-amd64
-            labs: true
+#          - os: Windows
+#            runner: windows-latest-8-cores
+#            arch: amd64
+#            tag: windows-amd64
+#            labs: true
 
     steps:
       - name: "Setup: Checkout"

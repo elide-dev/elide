@@ -16,7 +16,7 @@ import elide.runtime.intrinsics.js.Crypto as WebCryptoAPI
 internal class WebCryptoIntrinsic : WebCryptoAPI, AbstractJsIntrinsic() {
   internal companion object {
     /** Injected name of the Base64 global. */
-    const val GLOBAL_CRYPTO = "__elide_crypto"
+    const val GLOBAL_CRYPTO = "crypto"
 
     /** Base64 symbol. */
     private val CRYPTO_SYMBOL = GLOBAL_CRYPTO.asJsSymbol()

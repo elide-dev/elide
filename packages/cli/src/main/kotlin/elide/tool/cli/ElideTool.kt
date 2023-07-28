@@ -1,3 +1,5 @@
+@file:Suppress("MnInjectionPoints")
+
 package elide.tool.cli
 
 import ch.qos.logback.classic.Level
@@ -7,7 +9,6 @@ import elide.annotations.Singleton
 import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.bundle.ToolBundleCommand
-import elide.tool.cli.cmd.express.ToolExpressCommand
 import elide.tool.cli.err.ToolError
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
@@ -38,7 +39,6 @@ import kotlin.system.exitProcess
     ToolInfoCommand::class,
     ToolShellCommand::class,
     ToolBundleCommand::class,
-    ToolExpressCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +
@@ -99,6 +99,7 @@ import kotlin.system.exitProcess
 
     // Private execution entrypoint for customizing core Picocli settings.
     @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {
+      Statics.args.set(args.toList())
       CommandLine(ElideTool::class.java, MicronautFactory(it))
         .setCommandName(TOOL_NAME)
         .setResourceBundle(ResourceBundle.getBundle("ElideTool"))

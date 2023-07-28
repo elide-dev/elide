@@ -11,7 +11,9 @@ import elide.runtime.gvm.VMFacade
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.intrinsics.js.express.Express
 import elide.tool.cli.GuestLanguage
+import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.err.ShellError
@@ -52,6 +54,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import java.util.concurrent.Phaser
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -68,8 +71,8 @@ import org.graalvm.polyglot.Engine as VMEngine
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  aliases = ["shell", "r"],
-  description = ["%nRun a script or an interactive shell in a given language"],
+  aliases = ["shell", "r", "s", "serve", "start"],
+  description = ["%nRun a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
   abbreviateSynopsis = true,
@@ -84,6 +87,10 @@ import org.graalvm.polyglot.Engine as VMEngine
     "    or:  elide @|bold,fg(cyan) shell|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) shell|@ --languages",
     "    or:  elide @|bold,fg(cyan) shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) serve|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) serve|@ --js [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) serve|@ --languages",
+    "    or:  elide @|bold,fg(cyan) serve|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
   ]
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
@@ -125,6 +132,34 @@ import org.graalvm.polyglot.Engine as VMEngine
       description = ["Equivalent to passing '--language=JS'."],
     )
     internal var javascript: Boolean = false
+
+    /** Alias flag for JVM support. */
+    @Option(
+      names = ["--jvm"],
+      description = ["Equivalent to passing '--language=JVM'."],
+    )
+    internal var jvm: Boolean = false
+
+    /** Alias flag for Ruby support. */
+    @Option(
+      names = ["--ruby"],
+      description = ["Equivalent to passing '--language=RUBY'."],
+    )
+    internal var ruby: Boolean = false
+
+    /** Alias flag for Python support. */
+    @Option(
+      names = ["--python"],
+      description = ["Equivalent to passing '--language=PYTHON'."],
+    )
+    internal var python: Boolean = false
+
+    /** Alias flag for WebAssembly support. */
+    @Option(
+      names = ["--wasm"],
+      description = ["Equivalent to passing '--language=WASM'."],
+    )
+    internal var wasm: Boolean = true
 
     // Resolve the specified language.
     internal fun resolve(): GuestLanguage = GuestLanguage.JS
@@ -293,6 +328,15 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // All VFS configurators.
   @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
+
+  // Express (serving) intrinsics.
+  @Inject private lateinit var express: Express
+
+  // Server runner.
+  private val phaser: AtomicReference<Phaser> = AtomicReference(null)
+
+  // Whether a server is running.
+  private val serverRunning: AtomicBoolean = AtomicBoolean(false)
 
   /** Specifies the guest language to run. */
   @Option(
@@ -490,9 +534,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   private fun buildHistory(): History = DefaultHistory()
 
   // Resolve the current guest language to a named syntax highlighting package.
-  private fun syntaxHighlightName(language: GuestLanguage): String = when (language) {
-    GuestLanguage.JS -> "JavaScript"
-  }
+  private fun syntaxHighlightName(language: GuestLanguage): String = language.name
 
   // Build a highlighting manager for use by the line reader.
   private fun buildHighlighter(language: GuestLanguage, jnanorc: Path): Pair<SystemHighlighter, SyntaxHighlighter> {
@@ -518,7 +560,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     val terminal = buildTerminal()
 
     // tweak unsupported commands for native images
-    val commands: MutableSet<Builtins.Command> = EnumSet.copyOf(Builtins.Command.values().toList())
+    val commands: MutableSet<Builtins.Command> = EnumSet.copyOf(Builtins.Command.entries)
     commands.remove(Builtins.Command.TTOP)
     val builtins = Builtins(commands, workDir, configPath, null)
 
@@ -833,8 +875,7 @@ import org.graalvm.polyglot.Engine as VMEngine
         internal = true,
       )
     }
-    return null
-//    return ShellError.USER_CODE_ERROR.asError()
+    return ShellError.USER_CODE_ERROR.asError()
   }
 
   // Wrap an interactive REPL session in exit protection.
@@ -970,9 +1011,60 @@ import org.graalvm.polyglot.Engine as VMEngine
       .build()
   }
 
-  // Read an executable script, and then execute the script.
-  private fun readExecuteCode(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
+  // Detect whether we are running in `serve` mode (with alias `start`).
+  private fun serveMode(): Boolean = Statics.args.get().let {
+    it.contains("serve") || it.contains("start")
+  }
+
+  // Read an executable script, and then execute the script and keep it started as a server.
+  private fun readStartServer(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
     try {
+      // enter VM context
+      logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
+
+      // synchronization helper
+      val sync = Phaser(1)
+      phaser.set(sync)
+
+      // initialize the Express intrinsic
+      express.initialize(ctx, sync)
+
+      // parse the source
+      val parsed = runCatching {
+        logging.debug("Parsing entrypoint source")
+        ctx.parse(source)
+      }.getOrElse { cause ->
+        logging.error("Failed to parse entrypoint source", cause)
+        throw cause
+      }
+
+      // sanity check
+      if(!parsed.canExecute()) {
+        logging.error("Parsed entrypoint is not executable, aborting")
+        return
+      }
+
+      // execute the script
+      logging.debug("Executing parsed source")
+      parsed.executeVoid()
+      logging.debug("Finished entrypoint execution")
+      serverRunning.set(true)
+    } catch (exc: PolyglotException) {
+      when (val throwable = processUserCodeError(language, exc)) {
+        null -> {}
+        else -> throw throwable
+      }
+    }
+  }
+
+  // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
+  private fun readExecuteCode(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
+    if (serveMode()) readStartServer(
+      label,
+      language,
+      ctx,
+      source,
+    ) else try {
       // enter VM context
       logging.trace("Entered VM for script execution (language: ${language.id}). Consuming script from: '$label'")
 
@@ -1014,7 +1106,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   override fun initializeVM(base: ToolState): Boolean {
     val baseProps: Stream<VMProperty> = emptyList<VMProperty>().stream()
 
-    when (language.resolve()) {
+    when (val lang = language.resolve()) {
       GuestLanguage.JS -> {
         logging.debug("Configuring JS VM")
         configureVM(Stream.concat(
@@ -1026,6 +1118,7 @@ import org.graalvm.polyglot.Engine as VMEngine
         vm = vmFactory.acquireVM(GuestLanguage.JS)
         return true  // initialize the VM now that it has been configured
       }
+      else -> error("Language is not supported yet for CLI use: ${lang.name}")
     }
   }
 
@@ -1083,7 +1176,7 @@ import org.graalvm.polyglot.Engine as VMEngine
               "from stdin",
               lang,
               it,
-              Source.create(lang.id, buffer.readText())
+              Source.create(lang.id, buffer.readText()),
             )
           }
         } else {
@@ -1113,6 +1206,14 @@ import org.graalvm.polyglot.Engine as VMEngine
           }
         }
       }
+    }
+
+    // don't exit if we have a running server
+    if (serverRunning.get()) {
+      // wait for all tasks to arrive
+      logging.debug("Waiting for long-lived tasks to arrive")
+      phaser.get().arriveAndAwaitAdvance()
+      logging.debug("Exiting")
     }
   }
 }

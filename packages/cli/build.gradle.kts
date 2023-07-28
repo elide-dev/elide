@@ -45,6 +45,44 @@ val enableSbom = true
 val enableG1 = false
 val enablePgo = true
 val enablePgoInstrumentation = false
+val enableMosaic = true
+val enableProguard = false
+val enableUpx = false
+
+val ktCompilerArgs = listOf(
+  "-progressive",
+  "-Xallow-unstable-dependencies",
+  "-Xcontext-receivers",
+  "-Xemit-jvm-type-annotations",
+  "-Xlambdas=indy",
+  "-Xsam-conversions=indy",
+  "-Xjsr305=strict",
+  "-Xjvm-default=all",
+
+  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
+  "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.0"
+)
+
+buildscript {
+  repositories {
+    maven("https://maven.pkg.st/")
+    maven("https://gradle.pkg.st/")
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven {
+      url = uri("https://maven.pkg.github.com/sgammon/mosaic")
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
+    }
+  }
+  dependencies {
+    classpath(libs.plugin.proguard)
+    classpath(libs.plugin.mosaic)
+  }
+}
+
+if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 java {
   sourceCompatibility = JavaVersion.VERSION_20
@@ -72,7 +110,7 @@ kotlin {
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta
+      freeCompilerArgs = ktCompilerArgs
     }
   }
 }
@@ -606,7 +644,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     languageVersion = Elide.kotlinLanguageBeta
     jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
-    freeCompilerArgs = Elide.jvmCompilerArgs
+    freeCompilerArgs = ktCompilerArgs
     allWarningsAsErrors = false
     incremental = true
   }
@@ -657,7 +695,7 @@ afterEvaluate {
       languageVersion = Elide.kotlinLanguageBeta
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
-      freeCompilerArgs = Elide.jvmCompilerArgs
+      freeCompilerArgs = ktCompilerArgs
       allWarningsAsErrors = false
     }
   }

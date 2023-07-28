@@ -97,6 +97,7 @@ testLoggerPlugin = "3.2.0"
 kotlin_uuid = "0.6.0"
 guava = "32.1.1-jre"
 gax = "2.31.1"
+mosaic = "0.8.0-beta1"
 flatbuffers = "2.0.3"
 flatbuffers_java = "22.12.06"
 flatbuffers_plugin = "1.0.7"
@@ -589,6 +590,7 @@ larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref 
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 ## Plugin Aliases
+plugin_mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }
 plugin_versionCheck = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version.ref = "versionCheck" }

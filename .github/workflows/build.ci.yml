@@ -94,7 +94,7 @@ jobs:
         include:
           - os: macOS
             mode: Strict
-            machine: macos-13-xl
+            machine: macos-13
 #          - os: Windows
 #            mode: Labs
 #            machine: windows-latest-8-cores
@@ -413,7 +413,7 @@ jobs:
             labs: false
             tag: linux-amd64
           - os: macOS
-            runner: macos-13-xl
+            runner: macos-13
             arch: amd64
             labs: false
             tag: darwin-amd64
@@ -513,7 +513,7 @@ jobs:
             labs: false
             tag: linux-amd64
           - os: macOS
-            runner: macos-13-xl
+            runner: macos-13
             arch: amd64
             labs: false
             tag: darwin-amd64

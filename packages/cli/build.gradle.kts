@@ -492,7 +492,7 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
-  "-march=native",
+  "-march=compatibility",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
 )).plus(

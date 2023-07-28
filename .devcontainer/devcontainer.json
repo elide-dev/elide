@@ -17,7 +17,6 @@
     "storage": "128gb"
   },
   "extensions": [
-    "asf.apache-netbeans-java",
     "bazelbuild.vscode-bazel",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
@@ -29,7 +28,6 @@
     "ms-vscode.vscode-typescript-tslint-plugin",
     "redhat.vscode-yaml",
     "naco-siren.gradle-language",
-    "vscjava.vscode-gradle",
     "bufbuild.vscode-buf",
     "sswg.swift-lang",
     "fwcd.kotlin",
@@ -46,8 +44,25 @@
     "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
     "ghcr.io/devcontainers/features/docker-from-docker:1": {}
   },
+  "remoteEnv": {
+    "ELIDE_ENV": "codespace",
+    "TEST_EXCEPTIONS": "true",
+    "GRAALVM_HOME": "/usr/lib/gvm",
+    "GRAALVM_HOME": "/usr/lib/gvm"
+  },
   "customizations": {
+    "vscode": {
+      "settings": {}
+		},
     "codespaces": {
+      "repositories": {
+        "elide-dev/runtime": {
+          "permissions": {
+            "issues": "read",
+            "pull_requests": "read"
+          }
+        }
+      },
       "openFiles": [
         "README.md"
       ]

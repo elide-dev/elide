@@ -25,7 +25,7 @@
             <defaultValue>user</defaultValue>
         </discriminator>
         <sift>
-            <appender name="RICH_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender name="RICH_CONSOLE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
                 <discardingThreshold>20</discardingThreshold>
                 <appender-ref ref="CONSOLE" />
                 <queueSize>256</queueSize>

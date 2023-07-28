@@ -5,7 +5,9 @@ import elide.tool.bundler.cmd.inspect.BundleInspectCommand
 import elide.tool.bundler.cmd.pack.BundlePackCommand
 import elide.tool.bundler.cmd.unpack.BundleUnpackCommand
 import elide.tool.cli.ToolState
-import elide.tool.cli.cmd.AbstractSubcommand
+import elide.tool.cli.AbstractSubcommand
+import elide.tool.cli.CommandContext
+import elide.tool.cli.CommandResult
 import picocli.CommandLine
 
 /** TBD. */
@@ -19,9 +21,10 @@ import picocli.CommandLine
     BundleUnpackCommand::class,
   ],
 )
-@Singleton internal class ToolBundleCommand : AbstractSubcommand<ToolState>() {
+@Singleton internal class ToolBundleCommand : AbstractSubcommand<ToolState, CommandContext>() {
   /** @inheritDoc */
-  override fun invoke(context: ToolContext<ToolState>) {
+  override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     println("Please pick a sub-command (see `elide bundle --help`) for options")
+    return success()
   }
 }

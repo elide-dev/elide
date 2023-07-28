@@ -11,6 +11,7 @@ import elide.runtime.gvm.VMFacade
 import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.intrinsics.js.ServerAgent
 import elide.runtime.intrinsics.js.express.Express
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.Statics
@@ -64,6 +65,7 @@ import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.system.exitProcess
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 
@@ -80,17 +82,13 @@ import org.graalvm.polyglot.Engine as VMEngine
   synopsisHeading = "",
   customSynopsis = [
     "",
-    " Usage:  elide @|bold,fg(cyan) run|@ [OPTIONS] FILE",
-    "    or:  elide @|bold,fg(cyan) run|@ [OPTIONS] @|bold,fg(cyan) --stdin|@",
-    "    or:  elide @|bold,fg(cyan) run|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]",
-    "    or:  elide @|bold,fg(cyan) shell|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) shell|@ --js [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) shell|@ --languages",
-    "    or:  elide @|bold,fg(cyan) shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) serve|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) serve|@ --js [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) serve|@ --languages",
-    "    or:  elide @|bold,fg(cyan) serve|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
+    " Usage:  elide @|bold,fg(cyan) run|shell|serve|@ [OPTIONS] FILE",
+    "    or:  elide @|bold,fg(cyan) run|shell|serve|@ [OPTIONS] @|bold,fg(cyan) --stdin|@",
+    "    or:  elide @|bold,fg(cyan) run|shell|serve|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]",
+    "    or:  elide @|bold,fg(cyan) run|shell|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
+    "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
   ]
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
@@ -329,11 +327,11 @@ import org.graalvm.polyglot.Engine as VMEngine
   // All VFS configurators.
   @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
 
-  // Express (serving) intrinsics.
-  @Inject private lateinit var express: Express
+  // Server manager.
+  @Inject private lateinit var server: ServerAgent
 
   // Server runner.
-  private val phaser: AtomicReference<Phaser> = AtomicReference(null)
+  private val phaser: AtomicReference<Phaser> = AtomicReference(Phaser(1))
 
   // Whether a server is running.
   private val serverRunning: AtomicBoolean = AtomicBoolean(false)
@@ -501,7 +499,25 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // Execute a single chunk of code as a literal statement.
   private fun executeSingleStatement(language: GuestLanguage, ctx: VMContext, code: String) {
-    executeOneChunk(language, ctx, "stdin", code, interactive = false, literal = false)
+    if (serveMode()) {
+      serverRunning.set(true)
+      readExecuteCode(
+        "stdin",
+        language,
+        ctx,
+        Source.newBuilder(language.id, code, "stdin")
+          .encoding(StandardCharsets.UTF_8)
+          .internal(false)
+          .buildLiteral()
+      )
+    } else executeOneChunk(
+      language,
+      ctx,
+      "stdin",
+      code,
+      interactive = false,
+      literal = false
+    )
   }
 
   // Build or detect a terminal to use for interactive REPL use.
@@ -838,6 +854,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   // Handle an error which occurred within guest code.
+  @Suppress("RedundantNullableReturnType")  // might want to return `null` at a later time
   private fun processUserCodeError(language: GuestLanguage, exc: PolyglotException): Throwable? {
     when {
       exc.isSyntaxError -> displayFormattedError(
@@ -1022,12 +1039,8 @@ import org.graalvm.polyglot.Engine as VMEngine
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
-      // synchronization helper
-      val sync = Phaser(1)
-      phaser.set(sync)
-
       // initialize the Express intrinsic
-      express.initialize(ctx, sync)
+      server.initialize(ctx, phaser.get())
 
       // parse the source
       val parsed = runCatching {
@@ -1179,9 +1192,11 @@ import org.graalvm.polyglot.Engine as VMEngine
               Source.create(lang.id, buffer.readText()),
             )
           }
-        } else {
+        } else if (!serveMode()) {
           logging.debug("Beginning interactive guest session")
           beginInteractiveSession(lang, it.engine, it)
+        } else {
+          logging.error("To run a server, pass a file, or code via stdin or `-c`")
         }
 
         // run a script as a file, or perhaps a string literal

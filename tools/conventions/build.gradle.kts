@@ -22,7 +22,7 @@ val enableAtomicfu = project.properties["elide.atomicFu"] == "true"
 
 repositories {
   maven("https://maven.pkg.st/")
-  gradlePluginPortal()
+  maven("https://gradle.pkg.st/")
 }
 
 dependencies {

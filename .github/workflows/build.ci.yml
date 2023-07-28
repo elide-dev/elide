@@ -448,11 +448,9 @@ jobs:
           node-version: 20
           cache: "yarn"
       - name: "Setup: Yarn"
-        continue-on-error: ${{ fromJson(matrix.labs) }}
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Build: CLI (Native/Debug)"
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
-        continue-on-error: ${{ fromJson(matrix.labs) }}
         env:
           CI: true
         with:
@@ -550,11 +548,9 @@ jobs:
           node-version: 20
           cache: "yarn"
       - name: "Setup: Yarn"
-        continue-on-error: ${{ fromJson(matrix.labs) }}
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - name: "Build: CLI (Native/Release)"
         uses: gradle/gradle-build-action@915a66c096a03101667f9df2e56c9efef558b165 # v2.6.1
-        continue-on-error: ${{ fromJson(matrix.labs) }}
         env:
           CI: true
         with:

@@ -1,11 +1,16 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.reflect.KClass
 import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
@@ -77,16 +82,58 @@ internal abstract class AbstractDualTest {
     internal fun returnValue(): Value? = returnValue.get()
 
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
-    fun thenAssert(assertions: VMContext.(GuestTestExecution) -> Unit) = factory {
-      val result = test.invoke(this)
-      if (result != null) {
-        setReturnValue(result)
+    fun thenAssert(
+      allowFailure: Boolean = false,
+      assertions: (VMContext.(GuestTestExecution) -> Unit)? = null,
+    ) = factory {
+      if (allowFailure) {
+        failsWith<Throwable> {
+          if (assertions != null) assertions.invoke(this@factory, this@GuestTestExecution) else {
+            test.invoke(this)
+          }
+        }
+      } else {
+        val result = test.invoke(this)
+        if (result != null) setReturnValue(result)
+        assertions?.invoke(this@factory, this@GuestTestExecution)
       }
-      assertions.invoke(this@factory, this@GuestTestExecution)
+    }
+
+    /** After guest execution concludes, execute the provided [assertions] against the test context. */
+    inline fun <reified X: Throwable> failsWith(
+      noinline assertions: (VMContext.(GuestTestExecution) -> Unit)? = null
+    ) = factory {
+      val exc = assertThrows<Throwable> {
+        val result = test.invoke(this)
+        if (result != null) setReturnValue(result)
+        assertions?.invoke(this@factory, this@GuestTestExecution)
+      }
+      when (exc) {
+        is X -> {
+          // expected
+        }
+
+        is PolyglotException -> if (exc.isHostException) {
+          assert(exc.asHostException() is X) {
+            "Invalid exception type '${exc::class.simpleName}' raised " +
+            "(expected '${X::class.java.simpleName}')"
+          }
+        }
+
+        else -> throw AssertionError(
+          "Invalid exception type '${exc::class.simpleName}' raised " +
+            "(expected '${X::class.java.simpleName}')"
+        )
+      }
     }
 
     /** Stubbed `Unit` returning function which ties off the execution. */
     fun doesNotFail(): Unit = thenAssert {
+      // nothing: stubbed
+    }
+
+    /** Stubbed `Unit` returning function which expects failure. */
+    fun fails(): Unit = thenAssert(allowFailure = true) {
       // nothing: stubbed (should raise)
     }
   }

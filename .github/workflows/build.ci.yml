@@ -28,6 +28,7 @@ jobs:
       contents: "read"
       id-token: "write"
       checks: "write"
+      packages: "read"
       pull-requests: "write"
     steps:
       - name: "Setup: Checkout"
@@ -109,6 +110,7 @@ jobs:
       id-token: "write"
       checks: "write"
       pull-requests: "write"
+      packages: "read"
       security-events: "write"
 
     defaults:
@@ -210,6 +212,7 @@ jobs:
       contents: "read"
       id-token: "write"
       checks: "write"
+      packages: "read"
       pull-requests: "write"
 
     steps:
@@ -602,6 +605,7 @@ jobs:
       contents: "read"
       id-token: "write"
       checks: "write"
+      packages: "read"
       pull-requests: "write"
 
     strategy:
@@ -702,6 +706,7 @@ jobs:
       contents: "read"
       id-token: "write"
       checks: "write"
+      packages: "read"
       pull-requests: "write"
 
     strategy:
@@ -821,6 +826,7 @@ jobs:
       pull-requests: "write"
       deployments: "write"
       statuses: "write"
+      packages: "read"
 
     uses: ./.github/workflows/deploy.ci.yml
     secrets: inherit
@@ -851,6 +857,7 @@ jobs:
       pull-requests: "write"
       deployments: "write"
       statuses: "write"
+      packages: "write"
 
     uses: ./.github/workflows/publish.ci.yml
     secrets: inherit
@@ -888,6 +895,7 @@ jobs:
       pull-requests: "write"
       deployments: "write"
       statuses: "write"
+      packages: "write"
 
     uses: ./.github/workflows/publish.ci.yml
     secrets: inherit

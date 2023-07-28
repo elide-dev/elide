@@ -7,7 +7,6 @@ import Java9Modularity.configureJava9ModuleInfo
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -270,7 +269,6 @@ afterEvaluate {
     enabled = false
   }
 }
-
 
 /**
  * Build: CLI Native Image

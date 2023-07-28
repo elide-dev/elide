@@ -15,7 +15,7 @@ import kotlin.concurrent.withLock
 
 /**
  * Implementation for the [Express] intrinsic, capable of managing the VM context from which the route handlers are
- * passed and guarantee safe multi-threaded execution of said handlers.
+ * passed and guarantee safe multithreaded execution of said handlers.
  */
 @Intrinsic(global = ExpressIntrinsic.GLOBAL_EXPRESS)
 internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic() {
@@ -27,10 +27,7 @@ internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic()
     bindings[EXPRESS_SYMBOL] = ProxyExecutable { create() }
   }
   
-  override fun initialize(contextHandle: Any, phaserHandle: Any) {
-    require(contextHandle is Context) { "contextHandle must be a GraalVM Context instance" }
-    require(phaserHandle is Phaser) { "phaserHandle must be a Phaser instance" }
-    
+  override fun initialize(contextHandle: Context, phaserHandle: Phaser) {
     context = contextHandle
     phaser = phaserHandle
   }

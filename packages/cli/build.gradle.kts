@@ -69,7 +69,7 @@ buildscript {
     maven("https://gradle.pkg.st/")
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     maven {
-      url = uri("https://maven.pkg.github.com/sgammon/mosaic")
+      url = uri("https://maven.pkg.github.com/elide-dev/elide")
       credentials {
         username = System.getenv("GITHUB_ACTOR")
         password = System.getenv("GITHUB_TOKEN")

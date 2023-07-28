@@ -6,7 +6,4 @@ import elide.annotations.core.Polyglot
  * # JavaScript: `QuotaExceededError`
  *
  */
-public class QuotaExceededError : ValueError() {
-  @get:Polyglot override val message: String
-    get() = TODO("Not yet implemented")
-}
+public class QuotaExceededError (@get:Polyglot override val message: String) : ValueError()

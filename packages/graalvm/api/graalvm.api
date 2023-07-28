@@ -1094,6 +1094,10 @@ public abstract interface class elide/runtime/intrinsics/js/ReadableStream$Facto
 	public abstract fun wrap ([B)Lelide/runtime/intrinsics/js/ReadableStream;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/ServerAgent {
+	public abstract fun initialize (Lorg/graalvm/polyglot/Context;Ljava/util/concurrent/Phaser;)V
+}
+
 public abstract interface class elide/runtime/intrinsics/js/StringLike : java/lang/CharSequence {
 }
 
@@ -1194,8 +1198,7 @@ public final class elide/runtime/intrinsics/js/err/ValueError$Factory : elide/ru
 	public fun create (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/js/err/ValueError;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/express/Express {
-	public abstract fun initialize (Ljava/lang/Object;Ljava/lang/Object;)V
+public abstract interface class elide/runtime/intrinsics/js/express/Express : elide/runtime/intrinsics/js/ServerAgent {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/ExpressApp {

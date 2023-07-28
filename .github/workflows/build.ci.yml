@@ -470,6 +470,7 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
       - name: "Post-process: Compress"
+        if: success()
         run: |
           pushd packages/cli/build/native/nativeCompile;
           xz -9kv elide.debug;
@@ -571,6 +572,7 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
       - name: "Post-process: Compress"
+        if: success()
         run: |
           pushd packages/cli/build/native/nativeOptimizedCompile;
           xz -9kv elide;

@@ -46,23 +46,23 @@ import java.util.UUID as JavaUUID
     // Length of a V4 UUID.
     private const val UUID_LENGTH: Int = 36
 
-    override fun random(): UUIDValue = of(JavaUUID.randomUUID())
+    override fun random(): UUIDValue = of(
+      JavaUUID.randomUUID()
+    )
 
     @Throws(ValueError::class)
     override fun of(value: String): UUIDValue = UUIDValue(
       ValidUUID(
       uuid = JavaUUID.fromString(value),
       cachedString = value,
-    )
-    )
+    ))
 
     override fun of(value: UUIDValue): UUIDValue = UUIDValue(value.value.copy())
 
     override fun of(value: JavaUUID): UUIDValue = UUIDValue(
       ValidUUID(
       uuid = value,
-    )
-    )
+    ))
   }
 
   @get:Polyglot override val length: Int get() = UUID_LENGTH

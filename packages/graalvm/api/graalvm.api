@@ -822,7 +822,13 @@ public abstract interface class elide/runtime/intrinsics/js/Blob {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/Crypto : elide/runtime/intrinsics/js/RandomSource {
+	public static final field Companion Lelide/runtime/intrinsics/js/Crypto$Companion;
+	public static final field MAX_RANDOM_BYTES_SIZE I
 	public abstract fun getSubtle ()Lelide/runtime/intrinsics/js/SubtleCrypto;
+}
+
+public final class elide/runtime/intrinsics/js/Crypto$Companion {
+	public static final field MAX_RANDOM_BYTES_SIZE I
 }
 
 public abstract interface class elide/runtime/intrinsics/js/CryptoKey {
@@ -1070,7 +1076,7 @@ public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/r
 }
 
 public abstract interface class elide/runtime/intrinsics/js/RandomSource {
-	public abstract fun getRandomValues (Lorg/graalvm/polyglot/Value;)[B
+	public abstract fun getRandomValues (Ljava/lang/Object;)V
 	public abstract fun randomUUID ()Lelide/runtime/intrinsics/js/typed/UUID;
 }
 
@@ -1165,7 +1171,7 @@ public abstract class elide/runtime/intrinsics/js/err/Error : java/lang/RuntimeE
 }
 
 public final class elide/runtime/intrinsics/js/err/QuotaExceededError : elide/runtime/intrinsics/js/err/ValueError {
-	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
 	public fun getMessage ()Ljava/lang/String;
 }
 

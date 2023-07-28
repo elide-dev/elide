@@ -34,8 +34,8 @@ import org.graalvm.polyglot.Value as GuestValue
  * # JavaScript Runtime
  *
  * Implements a guest runtime for Elide which is powered by ECMAScript-compliant JavaScript code. The JavaScript runtime
- * is based on GraalJS (as distinguished from Graal's NodeJS engine). As a pure JavaScript environment, GraalJS does not
- * support the standard set of NodeJS intrinsics that might, collectively, be considered the "Node APIs."
+ * is based on GraalJS (as distinguished from GraalVM's Node.js engine). As a pure JavaScript environment, GraalJS does
+ * not support the standard set of Node.js intrinsics collectively known as the "Node APIs."
  *
  * Elide's JavaScript engine implementation helps bridge this gap, by adding support for now-standard interfaces (such
  * as CloudFlare's Workers APIs), and by wiring together polyglot support across other guests and the main host app.
@@ -65,7 +65,7 @@ import org.graalvm.polyglot.Value as GuestValue
  *
  * Like all Elide guest VMs, the JavaScript VM also supports the use of a virtualized file-system, which can be backed
  * by a tarball or Elide VFS file. Files made available via file-system settings are supported for import via regular
- * NodeJS `require(...)` calls, as well as ECMAScript Module (ESM) imports (`import ... from ...`).
+ * Node.js `require(...)` calls, as well as ECMAScript Module (ESM) imports (`import ... from ...`).
  *
  * &nbsp;
  *
@@ -73,7 +73,7 @@ import org.graalvm.polyglot.Value as GuestValue
  *
  * Contexts are managed and acquired through the active [ContextManager] implementation. The [ContextManager] is
  * configured with methods from this implementation in order to configure VM contexts consistently. The context manager
- * is charged with managing safe multi-threaded access to the active suite of VM contexts (one or more depending on
+ * is charged with managing safe multithreaded access to the active suite of VM contexts (one or more depending on
  * operating context).
  *
  * &nbsp;
@@ -174,7 +174,7 @@ internal class JsRuntime @Inject constructor (
     )
 
     // Root where we can find runtime-related files.
-    private const val embeddedRoot = "/META-INF/elide/embedded/runtime/js"
+    private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"
 
     // Info about the runtime, loaded from the runtime bundle manifest.
     private val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
@@ -199,7 +199,7 @@ internal class JsRuntime @Inject constructor (
       }
 
       try {
-        (JsRuntime::class.java.getResourceAsStream("$embeddedRoot/$runtimeManifest") ?: error(
+        (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$runtimeManifest") ?: error(
           "Failed to locate embedded JS runtime manifest"
         )).let { manifestFile ->
           // decode manifest from JSON to discover injected artifacts
@@ -209,14 +209,14 @@ internal class JsRuntime @Inject constructor (
 
           // collect JS runtime internal sources as a string
           val collectedRuntimeSource = runtimeInfo.get().artifacts.stream().flatMap {
-            (JsRuntime::class.java.getResourceAsStream("$embeddedRoot/${it.name}") ?: error(
+            (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/${it.name}") ?: error(
               "Failed to locate embedded JS runtime artifact: ${it.name}"
             )).bufferedReader(StandardCharsets.UTF_8).lines()
           }.filter {
             it.isNotBlank() && !it.startsWith("//")
           }.collect(Collectors.joining("\n"))
 
-          // load each file into a giant blob which can be used to pre-load contexts
+          // load each file into a giant blob which can be used to preload contexts
           runtimeInit.set(Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
             .encoding(StandardCharsets.UTF_8)
             .cached(true)
@@ -242,7 +242,7 @@ internal class JsRuntime @Inject constructor (
       override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
         "Failed to resolve runtime info: cannot prepare VFS."
       )).vfs.map {
-        JsRuntime::class.java.getResource("$embeddedRoot/${it.name}")?.toURI() ?: error(
+        JsRuntime::class.java.getResource("$EMBEDDED_ROOT/${it.name}")?.toURI() ?: error(
           "Failed to locate embedded JS runtime asset: $it"
         )
       }

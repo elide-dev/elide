@@ -49,10 +49,10 @@
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
 
     <!-- Server/Tool Logger -->
-    <logger name="tool">
+    <logger name="tool" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="tool:server">
+    <logger name="tool:server" additivity="false">
         <appender-ref ref="${APPENDER}" />
     </logger>
 

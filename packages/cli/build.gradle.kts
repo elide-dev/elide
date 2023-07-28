@@ -6,6 +6,7 @@
 import Java9Modularity.configureJava9ModuleInfo
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -199,6 +200,13 @@ val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
 )
+
+val targetOs = when {
+  Os.isFamily(Os.FAMILY_WINDOWS) -> "windows"
+  Os.isFamily(Os.FAMILY_MAC) -> "darwin"
+  Os.isFamily(Os.FAMILY_UNIX) -> "linux"
+  else -> "generic"
+}
 
 /**
  * Framework: Micronaut
@@ -421,6 +429,10 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
+val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
+  "-J-Xmx12g",
+))
+
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
@@ -429,6 +441,8 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx24g",
 ) else emptyList()))
+
+val windowsReleaseArgs = windowsOnlyArgs
 
 val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
   "-H:+NativeArchitecture",
@@ -469,6 +483,7 @@ fun nativeCliImageArgs(
   ).plus(
     rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" }
   ).plus(when (platform) {
+    "windows" -> if (release) windowsReleaseArgs else windowsOnlyArgs
     "darwin" -> if (release) darwinReleaseArgs else darwinOnlyArgs
     "linux" -> if (target == "musl") muslArgs else (if (release) linuxReleaseArgs else linuxOnlyArgs)
     else -> defaultPlatformArgs
@@ -516,7 +531,7 @@ graalvmNative {
     named("main") {
       imageName = "elide.debug"
       fallback = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild))
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
@@ -525,7 +540,7 @@ graalvmNative {
     named("optimized") {
       imageName = "elide"
       fallback = false
-      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true))
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
@@ -623,10 +638,6 @@ afterEvaluate {
     systemProperty("picocli.ansi", "tty")
   }
 
-  tasks.withType(KaptTask::class.java).configureEach {
-
-  }
-
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguageBeta
@@ -649,4 +660,3 @@ afterEvaluate {
     }
   }
 }
-

@@ -1,4 +1,4 @@
-package elide.tool.cli.cmd
+package elide.tool.cli
 
 import elide.annotations.Inject
 import elide.runtime.Logger
@@ -8,14 +8,9 @@ import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.gvm.vfs.HostVFS
 import elide.tool.bundler.AbstractBundlerSubcommand
-import elide.tool.cli.*
-import elide.tool.cli.GuestLanguage
-import elide.tool.cli.OutputCallable
-import elide.tool.cli.Statics
-import elide.tool.cli.ToolState
-import elide.tool.cli.VMCallable
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
+import elide.tool.cli.state.CommandState
 import kotlinx.coroutines.*
 import org.graalvm.polyglot.Language
 import java.io.BufferedReader
@@ -32,18 +27,22 @@ import java.util.LinkedList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
 import kotlin.coroutines.CoroutineContext
 
 /**
  * TBD.
  */
-@Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<State: ToolState> :
+@Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<
+  State: ToolState,
+  Context: CommandContext,
+> :
   CoroutineScope,
   Closeable,
   AutoCloseable,
   AbstractBundlerSubcommand.BundlerParentCommand,
-  AbstractToolCommand() {
+  ToolCommandBase<Context>() {
   protected companion object {
     private val _stdout = System.out
     private val _stderr = System.err
@@ -53,6 +52,7 @@ import kotlin.coroutines.CoroutineContext
     private val threadFactory: ToolThreadFactory = ToolThreadFactory()
     private val threadedExecutor: ExecutorService = Executors.newCachedThreadPool(threadFactory)
     private val dispatcher: CoroutineDispatcher = threadedExecutor.asCoroutineDispatcher()
+    private val engineInitialized: AtomicBoolean = AtomicBoolean(false)
 
     // Determine the set of supported guest languages.
     internal fun determineSupportedLanguages(): List<Pair<GuestLanguage, Language>> {
@@ -327,9 +327,9 @@ import kotlin.coroutines.CoroutineContext
   }
 
   // Initialize shared streams, sessions, and any other tool resources.
-  private fun <R> initializeToolResources(
+  private suspend fun <R> initializeToolResources(
     state: State,
-    op: ToolContext<State>.() -> R,
+    op: suspend ToolContext<State>.() -> R,
   ): R {
     logging.debug("Prepping tool resources")
     attachShutdownHook()
@@ -406,34 +406,19 @@ import kotlin.coroutines.CoroutineContext
    * After state has been acquired, resources are initialized and held open via the [initialize] method, which may also
    * be overridden by sub-commands to customize initialization.
    */
-  @Suppress("UNCHECKED_CAST")
-  override fun run() = protect {
-//    use {
-      // allow the subclass to register its own shared resources
-      sharedResources.addAll(initialize(base))
+  override suspend fun Context.invoke(state: CommandState): CommandResult = use {
+    // allow the subclass to register its own shared resources
+    sharedResources.addAll(initialize(base))
 
-      // build initial state
-      val state = state(base) ?: materializeInitialState()
+    // build initial state
+    val toolState = state(base) ?: materializeInitialState()
+    val ctx = context(state)
 
-      // pretty-format output session
-//      if (terminal != null) {
-//        outputSession(terminal) {
-//          bootAndExecute(this)
-//        }
-//        initializeToolResources(state as State) {
-          // finally, call the sub-command entrypoint
-//          invoke(this)
-//        }
-//      } else {
-        // unable to bind to system terminal; fall back to non-pretty output.
-//        bootAndExecute(null)
-//      }
-    initializeToolResources(state as State) {
+    @Suppress("UNCHECKED_CAST")
+    initializeToolResources(toolState as State) {
       // finally, call the sub-command entrypoint
-      invoke(this)
+      ctx.invoke(this)
     }
-
-//    }
   }
 
   /**
@@ -455,6 +440,11 @@ import kotlin.coroutines.CoroutineContext
     contextBuilder: (VMContext.Builder) -> Unit = {},
     op: VMCallable<State>,
   ) {
+    require(!engineInitialized.get()) {
+      "Cannot re-initialize CLI guest VM"
+    }
+    engineInitialized.set(true)
+
     logging.debug("Acquiring VM context for CLI tool")
     val wrappedBuilder: (VMContext.Builder) -> Unit = {
       // configure the VM as normal
@@ -553,21 +543,6 @@ import kotlin.coroutines.CoroutineContext
   /**
    * TBD.
    */
-  protected open fun protect(op: () -> Unit) {
-    try {
-      op.invoke()
-    } catch (err: AbstractToolError) {
-      // it's a known tool error. re-throw.
-      throw err
-    } catch (err: Throwable) {
-      logging.error("Uncaught exception. Please catch and handle all exceptions within the scope of a sub-command", err)
-      throw err
-    }
-  }
-
-  /**
-   * TBD.
-   */
   protected open fun initializeVM(base: State): Boolean = false
 
   /**
@@ -583,5 +558,5 @@ import kotlin.coroutines.CoroutineContext
   /**
    * TBD.
    */
-  protected abstract fun invoke(context: ToolContext<State>)
+  protected abstract suspend fun CommandContext.invoke(state: ToolContext<State>): CommandResult
 }

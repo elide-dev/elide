@@ -6,7 +6,7 @@ import build.less.plugin.settings.buildless
 
 pluginManagement {
   repositories {
-    gradlePluginPortal()
+    maven("https://gradle.pkg.st/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     google()
   }

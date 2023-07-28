@@ -4,7 +4,7 @@
 
 pluginManagement {
   repositories {
-    gradlePluginPortal()
+    maven("https://gradle.pkg.st/")
     maven("https://maven.pkg.st/")
   }
 }

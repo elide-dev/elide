@@ -22,6 +22,14 @@ internal class JsRuntimeFeature : FrameworkFeature {
       "base64.Base64Intrinsic",
       "console.ConsoleIntrinsic",
 
+      // Utility Types
+      "typed.UUIDValue",
+      "typed.UUIDValue${'$'}ValidUUID",
+
+      // Web Crypto API
+      "crypto.WebCryptoIntrinsic",
+      "crypto.WebCryptoKey",
+
       // Fetch API
       "fetch.FetchIntrinsic",
       "fetch.FetchHeadersIntrinsic",

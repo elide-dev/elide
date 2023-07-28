@@ -67,14 +67,8 @@ buildscript {
   repositories {
     maven("https://maven.pkg.st/")
     maven("https://gradle.pkg.st/")
+    maven("https://elide.pkg.st/")
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    maven {
-      url = uri("https://maven.pkg.github.com/elide-dev/elide")
-      credentials {
-        username = System.getenv("GITHUB_ACTOR")
-        password = System.getenv("GITHUB_TOKEN")
-      }
-    }
   }
   dependencies {
     classpath(libs.plugin.proguard)

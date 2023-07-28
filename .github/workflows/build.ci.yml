@@ -405,18 +405,22 @@ jobs:
         arch: ["amd64"]
         runner: ["ubuntu-latest-8-cores"]
         labs: [false]
+        tag: [linux-amd64]
         include:
           - os: Linux
             runner: ubuntu-latest-8-cores
             arch: amd64
             labs: false
+            tag: linux-amd64
           - os: macOS
             runner: macos-13-xl
             arch: amd64
             labs: false
+            tag: darwin-amd64
           - os: Windows
             runner: windows-latest-8-cores
             arch: amd64
+            tag: windows-amd64
             labs: true
 
     steps:
@@ -475,9 +479,15 @@ jobs:
         uses: actions/upload-artifact@v3
         if: success()
         with:
-          name: cli-debug
+          name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
+      - name: "Artifacts: Dashboard Dump"
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: cli-debug-report-${{ matrix.tag }}
+          path: |
             ./packages/cli/build/native/nativeCompile/elide-tool.bgv
 
   ##
@@ -496,18 +506,22 @@ jobs:
         arch: ["amd64"]
         runner: ["ubuntu-latest-8-cores"]
         labs: [false]
+        tag: [linux-amd64]
         include:
           - os: Linux
             runner: ubuntu-latest-8-cores
             arch: amd64
             labs: false
+            tag: linux-amd64
           - os: macOS
             runner: macos-13-xl
             arch: amd64
             labs: false
+            tag: darwin-amd64
           - os: Windows
             runner: windows-latest-8-cores
             arch: amd64
+            tag: windows-amd64
             labs: true
 
     steps:
@@ -566,7 +580,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: success()
         with:
-          name: cli-release
+          name: cli-release-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeOptimizedCompile/elide.xz
 

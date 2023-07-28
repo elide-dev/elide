@@ -12,6 +12,9 @@ import elide.tool.cli.cmd.bundle.ToolBundleCommand
 import elide.tool.cli.err.ToolError
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.output.Counter
+import elide.tool.cli.output.runJestSample
+import elide.tool.cli.state.CommandState
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -51,7 +54,8 @@ import kotlin.system.exitProcess
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Singleton public class ElideTool internal constructor () :
-  AbstractToolCommand(), AbstractBundlerSubcommand.BundlerParentCommand {
+  ToolCommandBase<CommandContext>(),
+  AbstractBundlerSubcommand.BundlerParentCommand {
   companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
@@ -217,9 +221,30 @@ import kotlin.system.exitProcess
   )
   internal var timeout: Int = 30
 
-  // Nothing here (an empty tool run cannot occur anyway).
-  override fun run() {
-    // proxy to the `shell` command for a naked run
-    beanContext.getBean(ToolShellCommand::class.java).run()
+  /** Whether to activate pretty logging; on by default. */
+  @Option(
+    names = ["--self-test"],
+    negatable = true,
+    description = ["Run a binary self-test"],
+    defaultValue = "false",
+    hidden = true,
+  )
+  var selftest: Boolean = false
+
+  override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
+    return if (!selftest) {
+      // proxy to the `shell` command for a naked run
+      val cmd = beanContext.getBean(ToolShellCommand::class.java)
+      cmd.call()
+      cmd.commandResult.get()
+    } else {
+      // run output samples
+      output {
+        append("Running rich output self-test")
+      }
+      Counter()
+      runJestSample()
+      success()
+    }
   }
 }

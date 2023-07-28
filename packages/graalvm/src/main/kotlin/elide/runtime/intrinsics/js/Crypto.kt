@@ -25,6 +25,11 @@ import elide.annotations.core.Polyglot
  * provided via the [subtle] property.
  */
 public interface Crypto: RandomSource {
+  public companion object {
+    /** Maximum number of bytes that can be requested from [getRandomValues]; above this size, an error is thrown. */
+    public const val MAX_RANDOM_BYTES_SIZE: Int = 65_535
+  }
+
   /**
    * ## Subtle Crypto
    *

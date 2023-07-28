@@ -40,15 +40,17 @@ public interface RandomSource {
    * pseudorandom numbers, such as a platform-specific random number function, the Unix `/dev/urandom` device, or other
    * source of random or pseudorandom data."
    *
+   * @Throws ValueError If [typedArray] is not an acceptable type ([ByteArray] or guest value type).
    * @throws QuotaExceededError Thrown if the byteLength of typedArray exceeds 65,536.
-   * @param typedArray An integer-based `TypedArray`, that is one of: `Int8Array`, `Uint8Array`, `Uint8ClampedArray`,
-   *  `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `BigInt64Array`, `BigUint64Array` (but not
-   *  `Float32Array` nor `Float64Array`). All elements in the array will be overwritten with random numbers.
+   * @param typedArray Can either be a [ByteArray], or a guest value, using any of the following types: An integer-based
+   *  `TypedArray`, that is one of: `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`,
+   *  `Int32Array`, `Uint32Array`, `BigInt64Array`, `BigUint64Array` (but not `Float32Array` nor `Float64Array`). All
+   *  elements in the array will be overwritten with random numbers.
    * @return The same array passed as typedArray but with its contents replaced with the newly generated random numbers.
    *  Note that typedArray is modified in-place, and no copy is made.
    */
   @Throws(ValueError::class, QuotaExceededError::class)
-  @Polyglot public fun getRandomValues(typedArray: GuestValue): ByteArray
+  @Polyglot public fun getRandomValues(typedArray: Any)
 
   /**
    * ## Crypto: `randomUUID`

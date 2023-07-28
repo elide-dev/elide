@@ -11,6 +11,11 @@ internal object Statics {
     Logging.named("tool")
   }
 
+  /** Server tool logger. */
+  internal val serverLogger: Logger by lazy {
+    Logging.named("tool:server")
+  }
+
   /** Invocation args. */
   internal val args: AtomicReference<List<String>> = AtomicReference(emptyList())
 }

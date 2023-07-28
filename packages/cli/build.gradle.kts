@@ -43,6 +43,7 @@ val enableLlvm = false
 val enablePython = false
 val enableRuby = false
 val enableSbom = true
+val enableG1 = false
 val enablePgo = true
 val enablePgoInstrumentation = false
 
@@ -297,9 +298,9 @@ val commonNativeArgs = listOf(
   "-H:DefaultCharset=UTF-8",
   "-H:+AuxiliaryEngineCache",
   "-H:+UseContainerSupport",
+  "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
   "-R:MaxDirectMemorySize=256M",
-  "-R:MaximumHeapSizePercent=80",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
@@ -366,7 +367,6 @@ val releaseFlags = listOf(
   "-H:+AOTInliner",
   "-H:+BuildReport",
   "-H:+MLProfileInference",
-  "-H:+UseCompressedReferences",
   "-H:+LocalizationOptimizedMode",
   "-H:+RunMainInNewThread",
   "-H:+BouncyCastleIntrinsics",
@@ -430,12 +430,19 @@ val defaultPlatformArgs = listOf(
 )
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
+  "-march=native",
+  "--gc=serial",
+  "-R:MaximumHeapSizePercent=80",
+  "-H:InitialCollectionPolicy=Adaptive",
+  "-XX:-CollectYoungGenerationSeparately",
+).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-))
+) else emptyList()))
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
+  "-R:MaximumHeapSizePercent=80",
   "-H:InitialCollectionPolicy=Adaptive",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx24g",
@@ -449,11 +456,20 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
-  "--gc=G1",
   "-march=native",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
-))
+)).plus(
+  if (enableG1) listOf(
+    "--gc=G1",
+    "-H:+UseG1GC",
+    "-XX:MaxRAMPercentage=40",
+  ) else listOf(
+    "--gc=serial",
+    "-R:MaximumHeapSizePercent=80",
+    "-H:InitialCollectionPolicy=Adaptive",
+  )
+)
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
   "-R:+WriteableCodeCache",

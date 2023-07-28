@@ -11,6 +11,11 @@
   },
   "runArgs": ["--init", "--privileged"],
   "overrideCommand": false,
+  "hostRequirements": {
+    "cpus": 16,
+    "memory": "32gb",
+    "storage": "128gb"
+  },
   "extensions": [
     "asf.apache-netbeans-java",
     "bazelbuild.vscode-bazel",
@@ -40,6 +45,19 @@
     "ghcr.io/devcontainers/features/go:1": {"version":  "1.19"},
     "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"},
     "ghcr.io/devcontainers/features/docker-from-docker:1": {}
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md"
+      ]
+    }
+  },
+  "secrets": {
+    "BUILDLESS_APIKEY": {
+      "description": "API key for build caching via Buildless.",
+      "documentationUrl": "https://docs.less.build/reference/intro/getting-started"
+    }
   },
   "updateContentCommand": "./gradlew dependencies --refresh-dependencies && ./gradlew tasks && git checkout kotlin-js-store || exit 0",
   "forwardPorts": [8080, 50051],

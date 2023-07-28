@@ -23,7 +23,8 @@
     "packages/rpc",
     "packages/test",
     "packages/cli",
-    "site/docs/content"
+    "site/docs/content",
+    "tools/scripts"
   ],
   "dependencies": {
     "browserslist": "^4.21.4",

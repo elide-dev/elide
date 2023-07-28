@@ -13,7 +13,7 @@ internal enum class GuestLanguage (
   JS (
     id = "js",
     formalName = "JavaScript",
-    experimental = true,
+    experimental = false,
     extensions = listOf("js", "cjs", "mjs"),
     mimeTypes = listOf("application/javascript", "application/ecmascript"),
   ),

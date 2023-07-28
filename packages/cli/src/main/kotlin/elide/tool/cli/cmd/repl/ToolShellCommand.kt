@@ -12,13 +12,14 @@ import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.intrinsics.js.ServerAgent
-import elide.runtime.intrinsics.js.express.Express
+import elide.tool.cli.*
+import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.GuestLanguage
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tool.cli.cmd.AbstractSubcommand
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.output.JLineLogbackAppender
+import elide.tool.cli.state.CommandState
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -65,7 +66,6 @@ import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
-import kotlin.system.exitProcess
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 
@@ -73,7 +73,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  aliases = ["shell", "r", "s", "serve", "start"],
+  aliases = ["shell", "r", "s", "serve", "start", "js", "node", "deno", "bun", "python", "ruby", "wasm"],
   description = ["%nRun a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -89,14 +89,17 @@ import org.graalvm.polyglot.Engine as VMEngine
     "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|bun|python|ruby|wasm|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|node|deno|bun|python|ruby|wasm|@ [OPTIONS] FILE",
   ]
 )
-@Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState>() {
+@Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
+    private val initialized: AtomicBoolean = AtomicBoolean(false)
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
@@ -359,6 +362,14 @@ import org.graalvm.polyglot.Engine as VMEngine
     defaultValue = "false",
   )
   internal var executeLiteral: Boolean = false
+
+  /** Specifies that a server is started within guest code; equivalent to calling `serve` or variants. */
+  @Option(
+    names = ["--serve", "-s", "--server"],
+    description = ["Start in server mode"],
+    defaultValue = "false",
+  )
+  internal var executeServe: Boolean = false
 
   /** Specifies the file-system to mount and use for guest VM access. */
   @Option(
@@ -1028,10 +1039,14 @@ import org.graalvm.polyglot.Engine as VMEngine
       .build()
   }
 
-  // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = Statics.args.get().let {
-    it.contains("serve") || it.contains("start")
+  private val commandSpecifiesServer: Boolean by lazy {
+    Statics.args.get().let {
+      it.contains("serve") || it.contains("start") || it.contains("node")
+    }
   }
+
+  // Detect whether we are running in `serve` mode (with alias `start`).
+  private fun serveMode(): Boolean = commandSpecifiesServer || executeServe
 
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
@@ -1136,20 +1151,20 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** @inheritDoc */
-  override fun invoke(context: ToolContext<ToolState>) {
+  override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
     val supported = determineSupportedLanguages()
     val allSupported = EnumSet.copyOf(supported.map { it.first })
     if (languages) {
       logging.debug("User asked for a list of supported languages. Printing and exiting.")
       out.line("Supported languages: ${allSupported.joinToString(", ")}")
-      return
+      return success()
     }
 
     // resolve the language to use
     val lang = language.resolve()
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
-    val engineLang = supported.find { it.first == lang }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
+    supported.find { it.first == lang }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language context ('${lang.id}')")
 
     // resolve the file-system bundle to use
@@ -1178,7 +1193,12 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     withVM(context, userBundleUris, bundleUris, hostIO = hostIo, accessControl::apply) {
       // warn about experimental status, as applicable
-      logging.warn("Caution: Elide support for ${engineLang.name} is considered experimental.")
+      require(!initialized.get()) {
+        "Cannot re-initialize guest VM"
+      }
+      initialized.compareAndSet(false, true)
+      if (lang.experimental)
+        logging.warn("Caution: Elide support for ${lang.name} is considered experimental.")
 
       when (val scriptTargetOrCode = runnable) {
         // run in interactive mode
@@ -1230,5 +1250,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       phaser.get().arriveAndAwaitAdvance()
       logging.debug("Exiting")
     }
+    return success()
   }
 }

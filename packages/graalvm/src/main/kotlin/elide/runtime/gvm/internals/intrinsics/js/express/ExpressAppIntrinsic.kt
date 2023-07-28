@@ -1,7 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
 import elide.annotations.core.Polyglot
-import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
@@ -25,8 +24,6 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
     val handler: Value,
   )
 
-  private val logging by lazy { Logging.of(ExpressAppIntrinsic::class) }
-
   /** Internal collection of route handlers requested by guest scripts. */
   private val routeRegistry = mutableSetOf<RouteHandler>()
 
@@ -46,9 +43,9 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
         val response = ExpressResponseIntrinsic(res)
 
         // invoke the JS handler
-        logging.info("Calling guest handler")
-        useCallback(handler) { executeVoid(request, response) }
-        logging.info("Exited guest handler")
+        useCallback(handler) {
+          executeVoid(request, response)
+        }
 
         // return the internal publisher handled by the wrapper
         response.end()

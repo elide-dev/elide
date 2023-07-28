@@ -15,7 +15,7 @@ val javaLanguageTarget = project.properties["versions.java.target"] as String
 
 repositories {
   maven("https://maven.pkg.st/")
-  gradlePluginPortal()
+  maven("https://gradle.pkg.st/")
 }
 
 dependencies {

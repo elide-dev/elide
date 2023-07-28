@@ -1,7 +1,7 @@
 dependencyResolutionManagement {
   repositories {
     maven("https://maven.pkg.st/")
-    gradlePluginPortal()
+    maven("https://gradle.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   versionCatalogs {
@@ -13,14 +13,10 @@ dependencyResolutionManagement {
 
 pluginManagement {
   repositories {
-    gradlePluginPortal()
-    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
+    maven("https://gradle.pkg.st/")
     maven("https://maven.pkg.st/")
+    maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
 }
-
-//plugins {
-//  id("dev.elide.build.jvm.toolchains")
-//}
 
 rootProject.name = "elideBuild"

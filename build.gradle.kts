@@ -72,7 +72,7 @@ val buildDocs by properties
 buildscript {
   repositories {
     maven("https://maven.pkg.st/")
-    gradlePluginPortal()
+    maven("https://gradle.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {

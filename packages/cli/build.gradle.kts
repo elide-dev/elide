@@ -461,7 +461,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
-  "-H:+AuxiliaryEngineCache",
+  "-H:-AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(

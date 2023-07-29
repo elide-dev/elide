@@ -476,7 +476,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx24g",
+  "-J-Xmx8g",
 ) else emptyList()))
 
 val windowsReleaseArgs = windowsOnlyArgs
@@ -503,7 +503,9 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
   )
-)
+).plus(if (project.properties["elide.ci"] == "true") listOf(
+  "-J-Xmx8g",
+) else emptyList())
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
   "-R:+WriteableCodeCache",

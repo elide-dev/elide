@@ -53,7 +53,7 @@ import kotlin.system.exitProcess
   )
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Singleton public class ElideTool internal constructor () :
+@Singleton class ElideTool internal constructor () :
   ToolCommandBase<CommandContext>(),
   AbstractBundlerSubcommand.BundlerParentCommand {
   companion object {
@@ -242,8 +242,10 @@ import kotlin.system.exitProcess
       output {
         append("Running rich output self-test")
       }
-      Counter()
-      runJestSample()
+      startMosaicSession {
+        Counter()
+        runJestSample()
+      }
       success()
     }
   }

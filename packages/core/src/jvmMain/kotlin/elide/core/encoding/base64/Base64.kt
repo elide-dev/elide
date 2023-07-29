@@ -1,6 +1,6 @@
 package elide.core.encoding.base64
 
-import elide.annotations.Static
+import elide.core.annotations.Static
 import elide.core.encoding.Codec
 import elide.core.encoding.Encoding
 import kotlin.math.min
@@ -136,10 +136,12 @@ public actual object Base64 : Codec<Base64Data> {
 
     public actual companion object {
       /** Default encoder instance. */
-      @Static public actual val DEFAULT: Encoder = encoder
+      @Static
+      public actual val DEFAULT: Encoder = encoder
 
       /** Default encoder instance for un-padded encoding. */
-      @Static public actual val DEFAULT_WEBSAFE: Encoder = encoderWebsafe
+      @Static
+      public actual val DEFAULT_WEBSAFE: Encoder = encoderWebsafe
     }
 
     private fun outLength(srclen: Int): Int {
@@ -245,7 +247,8 @@ public actual object Base64 : Codec<Base64Data> {
   public actual class Decoder {
     public actual companion object {
       /** Decoder singleton. */
-      @Static public actual val DEFAULT: Decoder = decoder
+      @Static
+      public actual val DEFAULT: Decoder = decoder
     }
 
     /**

@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.MutableMapLike
 import elide.runtime.intrinsics.js.err.TypeError

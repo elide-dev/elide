@@ -1,5 +1,6 @@
 package elide.tool.cli
 
+import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.runMosaic
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
@@ -99,32 +100,31 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
     logging.trace {
       "Initializing Mosaic scope"
     }
-    runMosaic {
-      // build state, context
-      val state = CommandState.resolve() ?: CommandState.of(this, options).register()
-      logging.trace {
-        "Built command state: \n$state"
-      }
-      val ctx = context(state)
-      logging.trace {
-        "Built command context: \n$ctx"
-      }
 
-      // invoke and set exit code
-      logging.trace {
-        "Invoking command implementation"
-      }
-      op.invoke(ctx, state).let { result ->
-        exit.set(when (result) {
-          is CommandResult.Success -> 0
-          is CommandResult.Error -> result.exitCode
-        }.also {
-          logging.trace {
-            "Command implementation returned exit code: $it"
-          }
-          commandResult.set(result)
-        })
-      }
+    // build state, context
+    val state = CommandState.resolve() ?: CommandState.of(options).register()
+    logging.trace {
+      "Built command state: \n$state"
+    }
+    val ctx = context(state)
+    logging.trace {
+      "Built command context: \n$ctx"
+    }
+
+    // invoke and set exit code
+    logging.trace {
+      "Invoking command implementation"
+    }
+    op.invoke(ctx, state).let { result ->
+      exit.set(when (result) {
+        is CommandResult.Success -> 0
+        is CommandResult.Error -> result.exitCode
+      }.also {
+        logging.trace {
+          "Command implementation returned exit code: $it"
+        }
+        commandResult.set(result)
+      })
     }
 
     // return exit code
@@ -162,6 +162,19 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
   open fun context(state: CommandState): Context {
     @Suppress("UNCHECKED_CAST")
     return CommandContext.default(state) as Context
+  }
+
+  /**
+   * Start a Mosaic rich output session and run the provided [op].
+   *
+   * @param op Operation to run.
+   */
+  suspend inline fun <reified V> startMosaicSession(crossinline op: suspend MosaicScope.() -> V): V {
+    val container: AtomicReference<V> = AtomicReference(null)
+    runMosaic {
+      container.set(op.invoke(this))
+    }
+    return container.get()
   }
 
   /**

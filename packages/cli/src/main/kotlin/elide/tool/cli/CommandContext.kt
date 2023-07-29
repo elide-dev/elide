@@ -1,9 +1,12 @@
 package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
+import com.jakewharton.mosaic.runMosaic
 import elide.runtime.Logger
 import elide.tool.cli.state.CommandState
 import kotlinx.coroutines.CoroutineScope
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.coroutines.CoroutineContext
 
 /**
  * # Command Context
@@ -36,11 +39,12 @@ import kotlinx.coroutines.CoroutineScope
  * APIs provided here for rendering call into Mosaic. Mosaic's own functions can be imported and used, transparently, as
  * well. It's up to you.
  */
-sealed interface CommandContext : MosaicScope, CoroutineScope {
+sealed interface CommandContext : CoroutineScope {
   companion object {
     /** @return Default command context implementation. */
     @JvmStatic
-    fun default(state: CommandState): CommandContext = object : DefaultCommandContext, MosaicScope by state.mosaic {
+    fun default(state: CommandState): CommandContext = object : DefaultCommandContext {
+      override val coroutineContext: CoroutineContext get() = TODO("Not yet implemented")
       override val logging: Logger get() = Statics.logging
       override val serverLogging: Logger get() = Statics.serverLogger
       override val accessLogging: Logger get() = Statics.serverLogger

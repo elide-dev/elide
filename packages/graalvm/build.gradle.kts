@@ -5,14 +5,14 @@
   "UNUSED_VARIABLE",
 )
 
-import Java9Modularity.configureJava9ModuleInfo
+import Java9Modularity.configure as configureJava9ModuleInfo
 import kotlinx.benchmark.gradle.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
-  kotlin("kapt")
   kotlin("plugin.allopen")
   id("dev.elide.build.native.lib")
   alias(libs.plugins.jmh)
@@ -88,7 +88,6 @@ configurations["benchmarksRuntimeOnly"].extendsFrom(
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
-  kapt(libs.micronaut.inject.java)
 
   // Modules
   api(project(":packages:base"))
@@ -99,33 +98,24 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
   implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.coroutines.jdk9)
-  implementation(libs.kotlinx.coroutines.reactor)
-  implementation(libs.kotlinx.coroutines.slf4j)
+  implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
+  runtimeOnly(libs.kotlinx.coroutines.reactor)
 
   // General
   implementation(libs.jimfs)
-  implementation(libs.flatbuffers.java.core)
   implementation(libs.lmax.disruptor.core)
-  implementation(libs.lmax.disruptor.proxy)
 
   // Compression
-  implementation(libs.lz4)
-  implementation(libs.brotli)
   implementation(libs.commons.compress)
 
   // Micronaut
-  implementation(libs.micronaut.graal)
+  runtimeOnly(libs.micronaut.graal)
   implementation(libs.micronaut.http)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
-  implementation(libs.micronaut.test.junit5)
-  implementation(libs.micronaut.inject.java)
-  implementation(libs.micronaut.cache.core)
-  implementation(libs.micronaut.cache.caffeine)
 
   // Reactor Netty
   implementation(libs.reactor.netty)
@@ -151,9 +141,7 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
-configureJava9ModuleInfo(
-  multiRelease = true,
-)
+configureJava9ModuleInfo(project)
 
 tasks {
   test {
@@ -193,3 +181,21 @@ publishing {
     }
   }
 }
+
+val compileKotlin: KotlinCompile by tasks
+val compileJava: JavaCompile by tasks
+compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
+
+tasks.jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Unused dependencies:
+//  implementation(libs.lmax.disruptor.proxy)
+//  implementation(libs.brotli)
+//  implementation(libs.micronaut.inject.java)
+//  implementation(libs.micronaut.cache.core)
+//  implementation(libs.micronaut.cache.caffeine)
+//  implementation(libs.lz4)
+//  implementation(libs.flatbuffers.java.core)
+//  implementation(libs.kotlinx.coroutines.slf4j)

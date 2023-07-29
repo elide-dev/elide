@@ -12,7 +12,7 @@ import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.runtime.gvm.internals.js.JsInvocationBindings
-import elide.runtime.ssr.ServerResponse
+import elide.ssr.ServerResponse
 import elide.util.RuntimeFlag
 import io.micronaut.http.HttpRequest
 import kotlinx.coroutines.*

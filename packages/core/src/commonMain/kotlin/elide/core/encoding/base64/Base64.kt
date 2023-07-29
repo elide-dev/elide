@@ -1,6 +1,6 @@
 package elide.core.encoding.base64
 
-import elide.annotations.Static
+import elide.core.annotations.Static
 import elide.core.encoding.*
 import elide.core.encoding.Encoding
 
@@ -56,12 +56,14 @@ public expect object Base64 : Codec<Base64Data> {
       /**
        * Default encoder instance.
        */
-      @Static public val DEFAULT: Encoder
+      @Static
+      public val DEFAULT: Encoder
 
       /**
        * Default encoder instance for un-padded encoding.
        */
-      @Static public val DEFAULT_WEBSAFE: Encoder
+      @Static
+      public val DEFAULT_WEBSAFE: Encoder
     }
 
     /**
@@ -94,7 +96,8 @@ public expect object Base64 : Codec<Base64Data> {
   public class Decoder() {
     public companion object {
       /** Default decoder instance. */
-      @Static public val DEFAULT: Decoder
+      @Static
+      public val DEFAULT: Decoder
     }
 
     /**

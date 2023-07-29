@@ -1,16 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.intrinsics.js.*
 import io.micronaut.http.HttpRequest
-import kotlinx.coroutines.jdk9.awaitSingle
-import kotlinx.coroutines.runBlocking
-import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import java.net.http.HttpRequest as JavaNetHttpRequest
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
 internal class FetchRequestIntrinsic internal constructor (
@@ -21,26 +17,6 @@ internal class FetchRequestIntrinsic internal constructor (
 ) : FetchMutableRequest {
   /** TBD. */
   internal companion object Factory : FetchMutableRequest.RequestFactory<FetchMutableRequest> {
-    /**
-     * TBD.
-     */
-    @JvmStatic override fun forRequest(request: JavaNetHttpRequest): FetchMutableRequest {
-      return FetchRequestIntrinsic(
-        targetUrl = URLIntrinsic.URLValue.fromURL(request.uri()),
-        targetMethod = request.method(),
-        requestHeaders = FetchHeaders.fromPairs(request.headers().map().flatMap {
-          it.value.map { value ->
-            it.key to value
-          }
-        }),
-        ByteArrayInputStream(
-          runBlocking {
-            request.bodyPublisher().orElse(null)?.awaitSingle()?.array() ?: ByteArray(0)
-          }
-        )
-      )
-    }
-
     /**
      * TBD.
      */

@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js
 
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorResult
 import elide.runtime.intrinsics.js.err.Error

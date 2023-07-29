@@ -3,10 +3,11 @@
   "UnstableApiUsage",
 )
 
-import Java9Modularity.configureJava9ModuleInfo
+import Java9Modularity.configure as configureJava9ModuleInfo
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -48,7 +49,7 @@ val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
 val enableUpx = false
-val enableDashboard = true
+val enableDashboard = false
 
 val ktCompilerArgs = listOf(
   "-progressive",
@@ -127,59 +128,46 @@ buildConfig {
 
 dependencies {
   implementation(platform(libs.netty.bom))
-  api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
   kapt(libs.picocli.codegen)
 
-  implementation(project(":packages:core"))
-  implementation(project(":packages:base"))
+  api(project(":packages:base"))
   implementation(project(":packages:graalvm"))
-  // implementation(project(":packages:server"))
-  implementation(project(":tools:bundler"))
-  // implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
-  // implementation(kotlin("reflect"))
-  // implementation(libs.kotlin.scripting.common)
-  // implementation(libs.kotlin.scripting.jvm)
-  // implementation(libs.kotlin.scripting.jvm.host)
+  implementation(libs.kotlin.scripting.common)
+  implementation(libs.kotlin.scripting.jvm)
+  implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.logback)
 
-  implementation(libs.picocli)
-  implementation(libs.picocli.jansi.graalvm)
-  implementation(libs.picocli.jline3)
+  api(libs.picocli)
+  compileOnly(libs.picocli.jansi.graalvm)
+  implementation(libs.slf4j)
   implementation(libs.slf4j.jul)
-  implementation(libs.jline.all)
+  implementation(libs.jline.reader)
+  implementation(libs.jline.console)
+  implementation(libs.jline.terminal.core)
+  implementation(libs.jline.terminal.jansi)
   implementation(libs.jline.builtins)
-  implementation(libs.jline.graal) {
+  compileOnly(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
   }
 
   implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.kotlinx.coroutines.jdk9)
-  implementation(libs.kotlinx.serialization.core)
-  implementation(libs.kotlinx.serialization.json)
 
-  implementation(libs.micronaut.inject.java)
-  implementation(libs.micronaut.context)
+  api(libs.micronaut.inject)
   implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.kotlin.extension.functions)
-  implementation(libs.micronaut.kotlin.runtime)
-  implementation(libs.micronaut.graal)
+  runtimeOnly(libs.micronaut.context)
+  runtimeOnly(libs.micronaut.kotlin.runtime)
 
-  implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
-  implementation(project(":packages:proto:proto-kotlinx"))
+  runtimeOnly(project(":packages:proto:proto-kotlinx"))
 
-  // Netty: Native
-  implementation(libs.netty.tcnative)
-  implementation(libs.netty.transport.native.unixCommon)
-  implementation(libs.netty.transport.native.epoll)
-  implementation(libs.netty.transport.native.kqueue)
+  runtimeOnly(libs.micronaut.graal)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
-    "arm64", "aarch_64" -> "aarch_64"
+    "arm64", "aarch64", "aarch_64" -> "aarch_64"
     else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
   }
   when {
@@ -187,22 +175,22 @@ dependencies {
       implementation(libs.netty.tcnative.boringssl.static)
     }
 
-    Os.isFamily(Os.FAMILY_UNIX) -> when {
-      Os.isFamily(Os.FAMILY_MAC) -> {
-        implementation(libs.netty.transport.native.unixCommon)
-        implementation(libs.netty.transport.native.kqueue)
-        implementation(libs.netty.transport.native.kqueue)
-        implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-        implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-        implementation(libs.netty.resolver.dns.native.macos)
-      }
+    Os.isFamily(Os.FAMILY_UNIX) -> {
+      when {
+        Os.isFamily(Os.FAMILY_MAC) -> {
+          implementation(libs.netty.transport.native.kqueue)
+          implementation(libs.netty.transport.native.kqueue)
+          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+          implementation(libs.netty.resolver.dns.native.macos)
+        }
 
-      else -> {
-        implementation(libs.netty.transport.native.unixCommon)
-        implementation(libs.netty.transport.native.epoll)
-        implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
-        implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
-        implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+        else -> {
+          implementation(libs.netty.transport.native.epoll)
+          implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
+          implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
+          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+        }
       }
     }
 
@@ -248,6 +236,9 @@ sonarqube {
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-reads=ch.qos.logback.core=org.jline",
+  "--add-reads=ch.qos.logback.core=org.jline.console",
+  "--add-reads=ch.qos.logback.core=org.jline.terminal",
 )
 
 val targetOs = when {
@@ -324,17 +315,17 @@ afterEvaluate {
 
 val commonNativeArgs = listOf(
   "--language:js",
-  // "--language:nfi",
+  "--language:nfi",
   "--language:icu4j",
   "--language:regex",
-  // "--tool:chromeinspector",
-  // "--tool:coverage",
-  // "--tool:lsp",
-  // "--tool:sandbox",
-  // "--tool:dap",
-  // "--tool:insight",
-  // "--tool:insightheap",
-  // "--tool:profiler",
+  "--tool:chromeinspector",
+  "--tool:coverage",
+  "--tool:lsp",
+  "--tool:sandbox",
+  "--tool:dap",
+  "--tool:insight",
+  "--tool:insightheap",
+  "--tool:profiler",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -342,6 +333,7 @@ val commonNativeArgs = listOf(
   "--install-exit-handlers",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
+  "-H:+PrintHeapHistogram",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
@@ -367,7 +359,9 @@ val dashboardFlags: List<String> = listOf(
 val debugFlags: List<String> = listOfNotNull(
   "-g",
   "-march=compatibility",
-).plus(dashboardFlags)
+).plus(
+  if (enableDashboard) dashboardFlags else emptyList()
+)
 
 val experimentalFlags = listOf(
   "-H:+SupportContinuations",  // -H:+SupportContinuations is in use, but is not supported together with Truffle JIT compilation
@@ -399,8 +393,8 @@ val experimentalFlags = listOf(
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
-  // "-O3",
-  // "-flto",
+  "-O3",
+  "-flto",
 )
 
 // PGO profiles to specify in release mode.
@@ -570,7 +564,7 @@ fun nativeCliImageArgs(
 
 graalvmNative {
   toolchainDetection = false
-  testSupport = false
+  testSupport = true
 
   metadataRepository {
     enabled = true
@@ -660,7 +654,7 @@ tasks {
   }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
@@ -694,9 +688,7 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   enabled = false
 }
 
-configureJava9ModuleInfo(
-  multiRelease = false,
-)
+configureJava9ModuleInfo(project)
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {
@@ -733,3 +725,6 @@ afterEvaluate {
     }
   }
 }
+
+// Unused dependencies:
+// implementation(libs.picocli.jline3)

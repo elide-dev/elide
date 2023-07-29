@@ -1,6 +1,6 @@
 package elide.runtime.gvm
 
-import elide.runtime.ssr.ServerResponse
+import elide.ssr.ServerResponse
 
 /**
  * TBD.

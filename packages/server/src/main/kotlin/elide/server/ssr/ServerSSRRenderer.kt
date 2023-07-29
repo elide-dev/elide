@@ -2,7 +2,7 @@
 
 package elide.server.ssr
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
@@ -10,11 +10,11 @@ import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.js.JavaScript
-import elide.runtime.ssr.ServerResponse
+import elide.ssr.ServerResponse
+import elide.ssr.type.RequestState
 import elide.server.SuspensionRenderer
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
-import elide.server.type.RequestState
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import kotlinx.coroutines.*
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
 @Suppress("MemberVisibilityCanBePrivate", "unused", "SpreadOperator")
-public class ServerSSRRenderer constructor(
+public class ServerSSRRenderer (
   private val body: BODY,
   private val handler: ElideController,
   private val request: HttpRequest<*>,

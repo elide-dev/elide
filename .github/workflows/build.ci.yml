@@ -323,7 +323,7 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-8-cores
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
     if: false
@@ -411,7 +411,7 @@ jobs:
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest
+            runner: ubuntu-latest-8-cores
             arch: amd64
             labs: false
             tag: linux-amd64
@@ -511,7 +511,7 @@ jobs:
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest
+            runner: ubuntu-latest-8-cores
             arch: amd64
             labs: false
             tag: linux-amd64

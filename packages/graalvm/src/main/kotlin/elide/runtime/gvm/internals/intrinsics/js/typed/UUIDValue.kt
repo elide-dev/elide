@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.typed
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
 import java.util.UUID as JavaUUID

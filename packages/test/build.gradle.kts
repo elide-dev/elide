@@ -6,7 +6,7 @@
   "OPT_IN_USAGE",
 )
 
-import Java9Modularity.configureJava9ModuleInfo
+//import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   id("dev.elide.build.multiplatform")
@@ -165,9 +165,7 @@ kotlin {
   }
 }
 
-configureJava9ModuleInfo(
-  multiRelease = true,
-)
+//configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

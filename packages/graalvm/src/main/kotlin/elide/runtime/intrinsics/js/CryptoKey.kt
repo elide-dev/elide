@@ -1,6 +1,6 @@
 package elide.runtime.intrinsics.js
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 
 /**
  * # JavaScript: `CryptoKey`

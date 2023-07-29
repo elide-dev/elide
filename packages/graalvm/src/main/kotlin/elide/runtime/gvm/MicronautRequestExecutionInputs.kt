@@ -1,6 +1,6 @@
 package elide.runtime.gvm
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import io.micronaut.http.HttpRequest
 
 /**

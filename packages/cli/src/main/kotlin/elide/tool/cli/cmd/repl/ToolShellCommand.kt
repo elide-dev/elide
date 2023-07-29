@@ -89,8 +89,8 @@ import org.graalvm.polyglot.Engine as VMEngine
     "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|bun|python|ruby|wasm|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|bun|python|ruby|wasm|@ [OPTIONS] FILE",
+    "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ]
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
@@ -125,32 +125,39 @@ import org.graalvm.polyglot.Engine as VMEngine
       description = ["Specify language by name. Options: \${COMPLETION-CANDIDATES}."],
       defaultValue = "JS",
     )
-    internal var language: GuestLanguage = GuestLanguage.JS
+    internal var language: EnumSet<GuestLanguage> = EnumSet.of(GuestLanguage.JS)
 
     /** Alias flag for a JavaScript VM. */
     @Option(
-      names = ["--js", "--javascript"],
+      names = ["--js", "--javascript", "-js"],
       description = ["Equivalent to passing '--language=JS'."],
     )
     internal var javascript: Boolean = false
 
     /** Alias flag for JVM support. */
     @Option(
-      names = ["--jvm"],
+      names = ["--jvm", "--java", "-java"],
       description = ["Equivalent to passing '--language=JVM'."],
     )
     internal var jvm: Boolean = false
 
+    /** Alias flag for Kotlin support. */
+    @Option(
+      names = ["--kotlin", "--kt", "-kt"],
+      description = ["Equivalent to passing '--language=JVM'."],
+    )
+    internal var kotlin: Boolean = false
+
     /** Alias flag for Ruby support. */
     @Option(
-      names = ["--ruby"],
+      names = ["--ruby", "--rb", "-rb"],
       description = ["Equivalent to passing '--language=RUBY'."],
     )
     internal var ruby: Boolean = false
 
     /** Alias flag for Python support. */
     @Option(
-      names = ["--python"],
+      names = ["--python", "--py", "-py"],
       description = ["Equivalent to passing '--language=PYTHON'."],
     )
     internal var python: Boolean = false

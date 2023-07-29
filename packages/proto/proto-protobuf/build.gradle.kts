@@ -165,9 +165,8 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
   implementation(project(":packages:core"))
-  implementation(project(":packages:base"))
   implementation(libs.google.common.html.types.proto)
-  implementation(libs.google.common.html.types.types)
+  api(libs.google.common.html.types.types)
 
   // Compile-only
   compileOnly(libs.google.cloud.nativeImageSupport)

@@ -6,7 +6,6 @@
 )
 
 import com.google.protobuf.gradle.*
-import Java9Modularity.configureJava9ModuleInfo
 
 plugins {
   id("dev.elide.build")
@@ -164,10 +163,6 @@ kotlin {
     }
   }
 }
-
-configureJava9ModuleInfo(
-  multiRelease = true,
-)
 
 tasks {
   withType(Copy::class).configureEach {

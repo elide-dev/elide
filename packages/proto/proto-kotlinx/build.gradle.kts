@@ -134,16 +134,14 @@ dependencies {
   // API
   api(libs.kotlinx.datetime)
   api(project(":packages:proto:proto-core"))
-  api(libs.kotlinx.serialization.core.jvm)
-  api(libs.kotlinx.serialization.json.jvm)
-  api(libs.kotlinx.serialization.protobuf.jvm)
+  implementation(libs.kotlinx.serialization.core.jvm)
+  implementation(libs.kotlinx.serialization.protobuf.jvm)
 
   // Implementation
   implementation(kotlin("stdlib"))
   implementation(kotlin("stdlib-jdk8"))
-  implementation(kotlin("reflect"))
   implementation(project(":packages:core"))
-  implementation(project(":packages:base"))
+  runtimeOnly(kotlin("reflect"))
 
   // Testing
   testImplementation(libs.truth)

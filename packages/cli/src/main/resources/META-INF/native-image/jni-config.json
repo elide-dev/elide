@@ -113,9 +113,5 @@
 {
   "name":"sun.nio.ch.FileChannelImpl",
   "fields":[{"name":"fd"}]
-},
-{
-  "name":"worker.org.gradle.process.internal.worker.GradleWorkerMain",
-  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 }
 ]

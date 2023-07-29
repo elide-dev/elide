@@ -27,6 +27,7 @@ import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
 import kotlin.io.path.Path
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
+import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Context as VMContext
 
 /** TBD. */
@@ -43,7 +44,12 @@ import org.graalvm.polyglot.Context as VMContext
     private val isNativeImage = ImageInfo.inImageCode()
 
     // Whether the auxiliary cache is effectively enabled.
-    private val auxCache = enableAuxiliaryCache && isNativeImage
+    private val auxCache = (
+      enableAuxiliaryCache &&
+      isNativeImage &&
+      System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+      !Platform.includedIn(Platform.LINUX_AMD64::class.java)  // disabled to prefer G1GC on linux AMD64
+    )
 
     // Static options which are supplied to the engine.
     private val staticEngineOptions = listOfNotNull(
@@ -54,7 +60,6 @@ import org.graalvm.polyglot.Context as VMContext
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
       StaticProperty.active("engine.InlineAcrossTruffleBoundary"),
-      StaticProperty.of("engine.PreinitializeContexts", "js"),
 
       // isolate options
       if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),
@@ -62,6 +67,7 @@ import org.graalvm.polyglot.Context as VMContext
       if (!enableIsolates) null else StaticProperty.of("engine.MaxIsolateMemory", "2GB"),
 
       // if we're running in a native image, enabled the code compile cache
+      if (!auxCache) null else StaticProperty.of("engine.PreinitializeContexts", "js"),
       if (!auxCache) null else StaticProperty.active("engine.CachePreinitializeContext"),
       if (!auxCache) null else StaticProperty.of("engine.CacheCompile", "hot"),
       if (!auxCache) null else StaticProperty.of("engine.Cache",

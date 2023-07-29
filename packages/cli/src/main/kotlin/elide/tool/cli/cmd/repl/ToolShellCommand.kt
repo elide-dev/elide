@@ -903,7 +903,7 @@ import org.graalvm.polyglot.Engine as VMEngine
         internal = true,
       )
     }
-    return ShellError.USER_CODE_ERROR.asError()
+    return ShellError.USER_CODE_ERROR.raise(exc)
   }
 
   // Wrap an interactive REPL session in exit protection.

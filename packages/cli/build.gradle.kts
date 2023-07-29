@@ -42,7 +42,7 @@ val enableLlvm = false
 val enablePython = false
 val enableRuby = false
 val enableSbom = true
-val enableG1 = false
+val enableG1 = true
 val enablePgo = true
 val enablePgoInstrumentation = false
 val enableMosaic = true
@@ -325,7 +325,6 @@ val commonNativeArgs = listOf(
   "--install-exit-handlers",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
-  "-H:+AuxiliaryEngineCache",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
@@ -342,12 +341,12 @@ val commonNativeArgs = listOf(
   jvmModuleArgs
 )
 
-val dashboardFlags = listOf(
+val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
   "-H:+DashboardAll",
 )
 
-val debugFlags = listOfNotNull(
+val debugFlags: List<String> = listOfNotNull(
   "-g",
   "-march=compatibility",
 ).plus(dashboardFlags)
@@ -461,9 +460,10 @@ val defaultPlatformArgs = listOf(
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
-  "-R:MaximumHeapSizePercent=80",
+  "-Delide.vm.engine.preinitialize=true",
+  "-H:+AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
-  "-XX:-CollectYoungGenerationSeparately",
+  "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else emptyList()))
@@ -471,8 +471,10 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
-  "-R:MaximumHeapSizePercent=80",
+  "-Delide.vm.engine.preinitialize=true",
+  "-H:+AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
+  "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx24g",
 ) else emptyList()))
@@ -485,16 +487,19 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
-  "-march=compatibility",
+  "-march=native",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
 )).plus(
   if (enableG1) listOf(
     "--gc=G1",
     "-H:+UseG1GC",
-    "-XX:MaxRAMPercentage=40",
+    "-H:-AuxiliaryEngineCache",
+    "-Delide.vm.engine.preinitialize=false",
   ) else listOf(
     "--gc=serial",
+    "-H:+AuxiliaryEngineCache",
+    "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
   )

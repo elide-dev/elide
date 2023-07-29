@@ -406,7 +406,7 @@ jobs:
       matrix:
         os: ["Linux"]
         arch: ["amd64"]
-        runner: ["ubuntu-latest"]
+        runner: ["ubuntu-latest-8-cores"]
         labs: [false]
         tag: [linux-amd64]
         include:

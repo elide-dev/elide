@@ -374,6 +374,9 @@ val experimentalFlags = listOf(
   // Crashes
   "-H:+ProtectionKeys",
   "-H:+UseThinLocking",
+
+  // Significant slowdowns
+  "-H:+RunMainInNewThread",
 )
 
 // CFlags for release mode.
@@ -396,7 +399,6 @@ val releaseFlags: List<String> = listOf(
   "-H:+BuildReport",
   "-H:+MLProfileInference",
   "-H:+LocalizationOptimizedMode",
-  "-H:+RunMainInNewThread",
   "-H:+BouncyCastleIntrinsics",
   "-H:+VectorPolynomialIntrinsics",
   "-H:+VectorizeSIMD",

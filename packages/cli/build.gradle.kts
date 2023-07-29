@@ -48,6 +48,7 @@ val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
 val enableUpx = false
+val enableDashboard = true
 
 val ktCompilerArgs = listOf(
   "-progressive",
@@ -134,14 +135,14 @@ dependencies {
   implementation(project(":packages:core"))
   implementation(project(":packages:base"))
   implementation(project(":packages:graalvm"))
-  implementation(project(":packages:server"))
+  // implementation(project(":packages:server"))
   implementation(project(":tools:bundler"))
-  implementation(kotlin("stdlib-jdk7"))
+  // implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
-  implementation(kotlin("reflect"))
-  implementation(libs.kotlin.scripting.common)
-  implementation(libs.kotlin.scripting.jvm)
-  implementation(libs.kotlin.scripting.jvm.host)
+  // implementation(kotlin("reflect"))
+  // implementation(libs.kotlin.scripting.common)
+  // implementation(libs.kotlin.scripting.jvm)
+  // implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.logback)
 
   implementation(libs.picocli)
@@ -162,9 +163,9 @@ dependencies {
   implementation(libs.micronaut.inject.java)
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.graal)
   implementation(libs.micronaut.kotlin.extension.functions)
   implementation(libs.micronaut.kotlin.runtime)
+  implementation(libs.micronaut.graal)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
@@ -172,25 +173,41 @@ dependencies {
 
   // Netty: Native
   implementation(libs.netty.tcnative)
-  implementation(libs.netty.tcnative.boringssl.static)
   implementation(libs.netty.transport.native.unixCommon)
   implementation(libs.netty.transport.native.epoll)
   implementation(libs.netty.transport.native.kqueue)
 
-  // Linux
-  implementation(libs.netty.transport.native.epoll)
-  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
-  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
+  val arch = when (System.getProperty("os.arch")) {
+    "amd64", "x86_64" -> "x86_64"
+    "arm64", "aarch_64" -> "aarch_64"
+    else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+  }
+  when {
+    Os.isFamily(Os.FAMILY_WINDOWS) -> {
+      implementation(libs.netty.tcnative.boringssl.static)
+    }
 
-  // macOS/BSD
-  implementation(libs.netty.transport.native.kqueue)
-  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
-  implementation(libs.netty.resolver.dns.native.macos)
+    Os.isFamily(Os.FAMILY_UNIX) -> when {
+      Os.isFamily(Os.FAMILY_MAC) -> {
+        implementation(libs.netty.transport.native.unixCommon)
+        implementation(libs.netty.transport.native.kqueue)
+        implementation(libs.netty.transport.native.kqueue)
+        implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+        implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+        implementation(libs.netty.resolver.dns.native.macos)
+      }
+
+      else -> {
+        implementation(libs.netty.transport.native.unixCommon)
+        implementation(libs.netty.transport.native.epoll)
+        implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
+        implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
+        implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+      }
+    }
+
+    else -> {}
+  }
 
   compileOnly(libs.graalvm.sdk)
   compileOnly(libs.graalvm.espresso.polyglot)
@@ -307,17 +324,17 @@ afterEvaluate {
 
 val commonNativeArgs = listOf(
   "--language:js",
-  "--language:nfi",
+  // "--language:nfi",
   "--language:icu4j",
   "--language:regex",
-  "--tool:chromeinspector",
-  "--tool:coverage",
-  "--tool:lsp",
-  "--tool:sandbox",
-  "--tool:dap",
-  "--tool:insight",
-  "--tool:insightheap",
-  "--tool:profiler",
+  // "--tool:chromeinspector",
+  // "--tool:coverage",
+  // "--tool:lsp",
+  // "--tool:sandbox",
+  // "--tool:dap",
+  // "--tool:insight",
+  // "--tool:insightheap",
+  // "--tool:profiler",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -328,6 +345,7 @@ val commonNativeArgs = listOf(
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
+  "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
@@ -381,8 +399,8 @@ val experimentalFlags = listOf(
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
-  "-O3",
-  "-flto",
+  // "-O3",
+  // "-flto",
 )
 
 // PGO profiles to specify in release mode.
@@ -418,6 +436,8 @@ val releaseFlags: List<String> = listOf(
 ) else emptyList(),
 ).plus(
   if (enableSbom) listOf("--enable-sbom") else emptyList()
+).plus(
+  if (enableDashboard) dashboardFlags else emptyList()
 )
 
 val jvmDefs = mapOf(
@@ -577,9 +597,9 @@ graalvmNative {
   }
 
   binaries {
-    all {
-      resources.autodetect()
-    }
+    // all {
+    //   resources.autodetect()
+    // }
 
     named("main") {
       imageName = "elide.debug"

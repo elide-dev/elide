@@ -498,7 +498,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx8g",
+  "-J-Xmx12g",
 ) else emptyList()))
 
 val windowsReleaseArgs = windowsOnlyArgs

@@ -23,6 +23,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
   id("org.jetbrains.kotlinx.binary-compatibility-validator")
   id("io.gitlab.arturbosch.detekt")
+  id("com.autonomousapps.dependency-analysis") version "1.20.0"
 
   id("com.android.application") version "7.3.1" apply false
   id("com.android.library") version "7.3.1" apply false

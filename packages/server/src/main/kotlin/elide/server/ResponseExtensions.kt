@@ -2,7 +2,7 @@
 
 package elide.server
 
-import elide.server.ResponseRenderer
+import elide.ssr.ResponseRenderer
 import elide.server.assets.AssetType
 import elide.server.controller.ElideController
 import elide.server.controller.PageController

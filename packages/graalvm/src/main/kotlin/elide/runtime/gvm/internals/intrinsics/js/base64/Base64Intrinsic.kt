@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.core.encoding.base64.DefaultBase64
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic

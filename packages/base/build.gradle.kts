@@ -5,7 +5,7 @@
     "DSL_SCOPE_VIOLATION",
 )
 
-import Java9Modularity.configureJava9ModuleInfo
+import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
     id("dev.elide.build")
@@ -119,9 +119,7 @@ kotlin {
     }
 }
 
-configureJava9ModuleInfo(
-    multiRelease = true,
-)
+configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
@@ -134,6 +132,10 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
     }
     javadocJar
 } else null
+
+tasks.jvmJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 publishing {
     publications.withType<MavenPublication> {

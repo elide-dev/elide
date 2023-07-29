@@ -3,7 +3,7 @@
 package elide.runtime.gvm.internals.js
 
 import elide.annotations.Inject
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic

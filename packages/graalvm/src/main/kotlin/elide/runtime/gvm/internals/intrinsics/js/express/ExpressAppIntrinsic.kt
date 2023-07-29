@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.express.ExpressApp
 import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value

@@ -1,7 +1,7 @@
 package elide.site
 
 import elide.annotations.Props
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.annotations.data.Sensitive
 import kotlinx.serialization.Transient
 

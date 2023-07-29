@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic

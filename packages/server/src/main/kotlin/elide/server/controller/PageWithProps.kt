@@ -2,7 +2,7 @@ package elide.server.controller
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
-import elide.server.type.RequestState
+import elide.ssr.type.RequestState
 import org.graalvm.polyglot.HostAccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

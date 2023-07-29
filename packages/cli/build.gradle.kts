@@ -377,19 +377,19 @@ val experimentalFlags = listOf(
 )
 
 // CFlags for release mode.
-val releaseCFlags = listOf(
+val releaseCFlags: List<String> = listOf(
   "-O3",
   "-flto",
 )
 
 // PGO profiles to specify in release mode.
-val profiles = listOf(
+val profiles: List<String> = listOf(
   "cli.iprof",
   "serve.iprof",
 )
 
 // Full release flags (for all operating systems and platforms).
-val releaseFlags = listOf(
+val releaseFlags: List<String> = listOf(
   "-O2",
   "-dsa",
   "-H:+AOTInliner",
@@ -504,7 +504,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
     "-H:InitialCollectionPolicy=Adaptive",
   )
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx8g",
+  "-J-Xmx12g",
 ) else emptyList())
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(

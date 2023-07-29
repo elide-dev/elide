@@ -12,6 +12,8 @@ import elide.tool.cli.cmd.bundle.ToolBundleCommand
 import elide.tool.cli.err.ToolError
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.err.ShellError
 import elide.tool.cli.output.Counter
 import elide.tool.cli.output.runJestSample
 import elide.tool.cli.state.CommandState
@@ -27,6 +29,8 @@ import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
 import picocli.jansi.graalvm.Workaround
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.ResourceBundle
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
@@ -144,14 +148,26 @@ import kotlin.system.exitProcess
     /** Maps exceptions to exit codes. */
     private class ExceptionMapper : IExitCodeExceptionMapper {
       /** @inheritDoc */
-      override fun getExitCode(exception: Throwable): Int {
-        val exitCode = if (exception is ToolError) {
-          exception.exitCode
-        } else {
-          1
+      override fun getExitCode(exception: Throwable): Int = when (exception) {
+        // user code errors arising from the repl/shell/server
+        is AbstractToolError -> {
+          val exitCode = exception.exitCode
+          val inner = exception.cause ?: exception.exception ?: exception
+          logging.error("Execution failed with code $exitCode due to ${inner.message}")
+          val out = StringWriter()
+          val printer = PrintWriter(out)
+          inner.printStackTrace(printer)
+          logging.error(StringBuilder().apply {
+            append("Stacktrace:\n")
+            append(out.toString())
+          }.toString())
+          exitCode
         }
-        logging.error("Exiting with code $exitCode due to uncaught $exception")
-        return exitCode
+
+        else -> {
+          logging.error("Exiting with code -1 due to uncaught $exception")
+          -1
+        }
       }
     }
   }

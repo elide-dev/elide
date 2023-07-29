@@ -91,14 +91,14 @@ jobs:
       matrix:
         os: [Ubuntu]
         mode: ['Strict']
-        machine: [ubuntu-latest-8-cores]
+        machine: [ubuntu-latest]
         include:
           - os: macOS
             mode: Strict
             machine: macos-13
 #          - os: Windows
 #            mode: Labs
-#            machine: windows-latest-8-cores
+#            machine: windows-latest
 
     name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}
@@ -323,7 +323,7 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
     if: false
@@ -406,12 +406,12 @@ jobs:
       matrix:
         os: ["Linux"]
         arch: ["amd64"]
-        runner: ["ubuntu-latest-8-cores"]
+        runner: ["ubuntu-latest"]
         labs: [false]
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest-8-cores
+            runner: ubuntu-latest
             arch: amd64
             labs: false
             tag: linux-amd64
@@ -421,7 +421,7 @@ jobs:
             labs: false
             tag: darwin-amd64
 #          - os: Windows
-#            runner: windows-latest-8-cores
+#            runner: windows-latest
 #            arch: amd64
 #            tag: windows-amd64
 #            labs: true
@@ -506,12 +506,12 @@ jobs:
       matrix:
         os: ["Linux"]
         arch: ["amd64"]
-        runner: ["ubuntu-latest-8-cores"]
+        runner: ["ubuntu-latest"]
         labs: [false]
         tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ubuntu-latest-8-cores
+            runner: ubuntu-latest
             arch: amd64
             labs: false
             tag: linux-amd64
@@ -521,7 +521,7 @@ jobs:
             labs: false
             tag: darwin-amd64
 #          - os: Windows
-#            runner: windows-latest-8-cores
+#            runner: windows-latest
 #            arch: amd64
 #            tag: windows-amd64
 #            labs: true
@@ -590,7 +590,7 @@ jobs:
   ##
   docker-jvm:
     name: "Docker: JVM"
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
     needs: [gradle, preflight-checks]
     if: |
       (
@@ -690,7 +690,7 @@ jobs:
 
   docker-native:
     name: "Docker: Native"
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
     continue-on-error: true
     needs: [gradle, preflight-checks]
     if: |

@@ -1,6 +1,7 @@
 package elide.tool.cli.state
 
 import com.jakewharton.mosaic.MosaicScope
+import com.jakewharton.mosaic.runMosaic
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -10,9 +11,6 @@ import java.util.concurrent.atomic.AtomicReference
  * Describes early command invocation state, before command execution context is created; command state may not vary
  * across implementations. State which is carried in the [CommandState.CommandInfo] record is parsed at the first
  * opportunity of all command executions.
- *
- * Enclosed on the command state are the following utilities:
- * - [mosaic] - the active Mosaic scope, for advanced rendering
  */
 @JvmInline value class CommandState private constructor (
   private val commandInfo: CommandInfo
@@ -20,14 +18,12 @@ import java.util.concurrent.atomic.AtomicReference
   /**
    * ## Command Info
    *
-   * Holds early invocation info, including the current [mosaic] scope and other useful utilities. This record is used
+   * Holds early invocation info, including the current coroutine scope and other useful utilities. This record is used
    * to spawn command context.
    *
-   * @param mosaic Active Mosaic rendering scope.
    * @param options Top-level (global) command options.
    */
   @JvmRecord internal data class CommandInfo(
-    val mosaic: MosaicScope,
     val options: CommandOptions,
   )
 
@@ -39,8 +35,7 @@ import java.util.concurrent.atomic.AtomicReference
     private val initialized = AtomicBoolean(false)
 
     /** @return Root command state. */
-    @JvmStatic fun of(mosaic: MosaicScope, options: CommandOptions): CommandState = CommandState(CommandInfo(
-      mosaic = mosaic,
+    @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(CommandInfo(
       options = options,
     ))
 
@@ -67,9 +62,6 @@ import java.util.concurrent.atomic.AtomicReference
       )
     }
   }
-
-  /** Return the active Mosaic scope. */
-  val mosaic: MosaicScope get() = commandInfo.mosaic
 
   /**
    * Register this instance as the canonical global instance, so it may be resolved statically.

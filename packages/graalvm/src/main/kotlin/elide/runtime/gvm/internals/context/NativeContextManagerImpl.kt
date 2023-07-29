@@ -48,7 +48,8 @@ import org.graalvm.polyglot.Context as VMContext
       enableAuxiliaryCache &&
       isNativeImage &&
       System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
-      !Platform.includedIn(Platform.LINUX_AMD64::class.java)  // disabled to prefer G1GC on linux AMD64
+      !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
+      !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
     )
 
     // Static options which are supplied to the engine.

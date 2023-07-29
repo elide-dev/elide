@@ -22,3 +22,5 @@ tmp
 app-glibc
 app-musl
 tmpdocs/
+elide
+elide*

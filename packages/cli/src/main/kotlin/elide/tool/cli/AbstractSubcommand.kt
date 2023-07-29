@@ -7,7 +7,6 @@ import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.gvm.vfs.HostVFS
-import elide.tool.bundler.AbstractBundlerSubcommand
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.state.CommandState
@@ -41,7 +40,6 @@ import kotlin.coroutines.CoroutineContext
   CoroutineScope,
   Closeable,
   AutoCloseable,
-  AbstractBundlerSubcommand.BundlerParentCommand,
   ToolCommandBase<Context>() {
   protected companion object {
     private val _stdout = System.out
@@ -292,16 +290,16 @@ import kotlin.coroutines.CoroutineContext
   protected lateinit var context: ToolContext<State>
 
   /** @inheritDoc */
-  override val debug: Boolean get() = base.debug
+  val debug: Boolean get() = base.debug
 
   /** @inheritDoc */
-  override val verbose: Boolean get() = base.verbose
+  val verbose: Boolean get() = base.verbose
 
   /** @inheritDoc */
-  override val quiet: Boolean get() = base.quiet
+  val quiet: Boolean get() = base.quiet
 
   /** @inheritDoc */
-  override val pretty: Boolean get() = base.pretty
+  val pretty: Boolean get() = base.pretty
 
   // Base execution context.
   private val baseExecContext: CoroutineContext = Dispatchers.Default + CoroutineName("elide")

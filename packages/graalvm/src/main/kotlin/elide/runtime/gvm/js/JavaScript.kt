@@ -7,7 +7,7 @@ import elide.runtime.gvm.internals.js.JsExecutableScript
 import elide.runtime.gvm.internals.js.JsMicronautRequestExecutionInputs
 import elide.runtime.gvm.js.JavaScript.embedded
 import elide.runtime.gvm.js.JavaScript.literal
-import elide.server.type.RequestState
+import elide.ssr.type.RequestState
 import io.micronaut.http.HttpRequest
 import java.io.InputStream
 import java.io.Reader

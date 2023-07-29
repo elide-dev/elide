@@ -3,8 +3,6 @@
   "unused",
 )
 
-import Java9Modularity.configureJava9ModuleInfo
-
 plugins {
   java
   `jvm-test-suite`
@@ -450,10 +448,6 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuil
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
   enabled = false
 }
-
-configureJava9ModuleInfo(
-  multiRelease = false,
-)
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {

@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.console
 
-import elide.annotations.core.Polyglot
+import elide.vm.annotations.Polyglot
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging

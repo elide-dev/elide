@@ -37,7 +37,7 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = false
+val enableEspresso = true
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false
@@ -323,6 +323,7 @@ val commonNativeArgs = listOf(
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
+  "-H:+AllowJRTFileSystem",
   "-H:+ReportExceptionStackTraces",
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
@@ -417,6 +418,7 @@ val releaseFlags: List<String> = listOf(
   "-H:+LSRAOptimization",
   "-H:+RemoveUnusedSymbols",
   "-R:+BouncyCastleIntrinsics",
+  "-J-Djdk.image.use.jvm.map=false",
 ).plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -457,12 +459,16 @@ val initializeAtBuildTime = listOf(
   "org.bouncycastle.jcajce.provider.drbg.DRBG",
   "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
   "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
+  "com.sun.tools.doclint",
+  "jdk.jshell.Snippet${'$'}SubKind",
+  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
 )
 
 val initializeAtRuntime: List<String> = listOf(
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
+  "com.sun.tools.javac.file.Locations",
 )
 
 val rerunAtRuntime: List<String> = emptyList()

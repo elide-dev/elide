@@ -32,6 +32,13 @@ kotlin {
   watchosX64()
   tvosArm64()
   tvosX64()
+
+  wasm {
+    nodejs()
+    d8()
+    browser()
+  }
+
   if (buildMingw) mingwX64()
 
   jvm {

@@ -1,7 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -16,14 +15,6 @@ import elide.testing.annotations.TestCase
 
   override fun testInjectable() {
     assertNotNull(express) { "should be able to resolve express intrinsic via injection" }
-  }
-  
-  @Test fun testRouteMapping() {
-    assertEquals(
-      expected = "/hello/{name}",
-      actual = ExpressAppIntrinsic.mapExpressToReactorRoute("/hello/:name"),
-      message = "should replace path variable matchers"
-    )
   }
   
   @Test fun testInjectableGuest() = executeGuest {

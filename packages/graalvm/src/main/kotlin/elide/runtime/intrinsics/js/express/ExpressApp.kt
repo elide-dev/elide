@@ -41,6 +41,18 @@ public interface ExpressApp {
    */
   @Polyglot public fun options(path: String, handler: Value)
 
+  /**
+   * Register a global middleware [handler]. The [handler] must be a function and will receive an [ExpressRequest], an
+   * [ExpressResponse], and a callable `next` value, which can be used to call the next handler in the pipeline.
+   */
+  @Polyglot public fun use(handler: Value)
+
+  /**
+   * Register a middleware [handler] at [path]. The [handler] must be a function and will receive an [ExpressRequest],
+   * an [ExpressResponse], and a callable `next` value, which can be used to call the next handler in the pipeline.
+   */
+  @Polyglot public fun use(path: String, handler: Value)
+
   /** Bind the server to a given [port]. */
   @Polyglot public fun listen(port: Int) {
     listen(port, null)

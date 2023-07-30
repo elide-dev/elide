@@ -23,7 +23,7 @@ class Base64Test: AbstractEncoderTest<Base64>() {
       "should get expected output from non-websafe Base64 encode"
     )
     assertEquals(
-      "YWJjMTIzMTIzMQ",
+      "YWJjMTIzMTIzMQ==",
       Base64.encodeWebSafe(inputPadded),
       "should get expected output from websafe Base64 encode"
     )

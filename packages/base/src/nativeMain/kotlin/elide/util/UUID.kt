@@ -1,6 +1,6 @@
 package elide.util
 
-import com.benasher44.uuid.uuid4
+import dev.elide.uuid.uuid4
 
 /** UUID tools provided to all platforms. */
 public actual object UUID {

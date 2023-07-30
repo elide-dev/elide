@@ -9,6 +9,8 @@ module elide.graalvm {
     requires kotlinx.datetime;
     requires kotlinx.serialization.core;
     requires kotlinx.serialization.json;
+    requires io.micronaut.http;
+    requires io.micronaut.inject;
 
     requires org.graalvm.sdk;
     requires org.graalvm.truffle;

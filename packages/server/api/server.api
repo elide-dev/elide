@@ -417,9 +417,9 @@ public final class elide/server/controller/PageController$AssetReferenceBuilder 
 public abstract class elide/server/controller/PageWithProps : elide/server/controller/PageController {
 	protected fun <init> (Lkotlinx/serialization/KSerializer;Ljava/lang/Object;)V
 	public synthetic fun <init> (Lkotlinx/serialization/KSerializer;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun finalizeAsync (Lelide/server/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun props (Lelide/server/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun propsAsync (Lelide/server/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun finalizeAsync (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun props (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun propsAsync (Lelide/ssr/type/RequestState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/server/controller/StatusEnabledController {

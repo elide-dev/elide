@@ -91,7 +91,6 @@ public final class elide/runtime/gvm/ExecutableScript$State : java/lang/Enum {
 	public static final field EXECUTED Lelide/runtime/gvm/ExecutableScript$State;
 	public static final field PARSED Lelide/runtime/gvm/ExecutableScript$State;
 	public static final field UNINITIALIZED Lelide/runtime/gvm/ExecutableScript$State;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript$State;
 	public static fun values ()[Lelide/runtime/gvm/ExecutableScript$State;
 }
@@ -129,7 +128,6 @@ public final class elide/runtime/gvm/InvocationMode : java/lang/Enum {
 	public static final field ASYNC Lelide/runtime/gvm/InvocationMode;
 	public static final field STREAMING Lelide/runtime/gvm/InvocationMode;
 	public static final field SYNC Lelide/runtime/gvm/InvocationMode;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/InvocationMode;
 	public static fun values ()[Lelide/runtime/gvm/InvocationMode;
 }
@@ -255,7 +253,6 @@ public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/ru
 	public fun getDefaultLocale ()Ljava/util/Locale;
 	public fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
 	public fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
-	public fun getLocale ()Ljava/util/Locale;
 	public fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
 	public fun getSourceMaps ()Ljava/lang/Boolean;
 	public fun getTimezone ()Ljava/time/ZoneId;
@@ -317,7 +314,6 @@ public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Defi
 
 public final class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/runtime/gvm/GuestLanguage {
 	public static final field JAVASCRIPT Lelide/runtime/gvm/internals/GraalVMGuest;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/GraalVMGuest;
@@ -685,7 +681,6 @@ public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVF
 public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {
 	public static final field GUEST Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static final field HOST Lelide/runtime/gvm/internals/vfs/AccessDomain;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessDomain;
 }
@@ -722,7 +717,6 @@ public final class elide/runtime/gvm/internals/vfs/AccessResponse {
 public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum {
 	public static final field ALLOW Lelide/runtime/gvm/internals/vfs/AccessResult;
 	public static final field DENY Lelide/runtime/gvm/internals/vfs/AccessResult;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResult;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessResult;
 }
@@ -731,7 +725,6 @@ public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum 
 	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field FILE Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field UNSPECIFIED Lelide/runtime/gvm/internals/vfs/AccessScope;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessScope;
 }
@@ -740,7 +733,6 @@ public final class elide/runtime/gvm/internals/vfs/AccessType : java/lang/Enum {
 	public static final field DELETE Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field READ Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field WRITE Lelide/runtime/gvm/internals/vfs/AccessType;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessType;
 }
@@ -1059,7 +1051,7 @@ public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/r
 	public abstract fun getHref ()Ljava/lang/String;
 	public abstract fun getPassword ()Ljava/lang/String;
 	public abstract fun getPathname ()Ljava/lang/String;
-	public abstract fun getPort ()Ljava/lang/Integer;
+	public abstract fun getPort ()I
 	public abstract fun getProtocol ()Ljava/lang/String;
 	public abstract fun getSearch ()Ljava/lang/String;
 	public abstract fun getUsername ()Ljava/lang/String;
@@ -1069,7 +1061,7 @@ public abstract interface class elide/runtime/intrinsics/js/MutableURL : elide/r
 	public abstract fun setHref (Ljava/lang/String;)V
 	public abstract fun setPassword (Ljava/lang/String;)V
 	public abstract fun setPathname (Ljava/lang/String;)V
-	public abstract fun setPort (Ljava/lang/Integer;)V
+	public abstract fun setPort (I)V
 	public abstract fun setProtocol (Ljava/lang/String;)V
 	public abstract fun setSearch (Ljava/lang/String;)V
 	public abstract fun setUsername (Ljava/lang/String;)V
@@ -1122,7 +1114,7 @@ public abstract interface class elide/runtime/intrinsics/js/URL : java/io/Serial
 	public abstract fun getOrigin ()Ljava/lang/String;
 	public abstract fun getPassword ()Ljava/lang/String;
 	public abstract fun getPathname ()Ljava/lang/String;
-	public abstract fun getPort ()Ljava/lang/Integer;
+	public abstract fun getPort ()I
 	public abstract fun getProtocol ()Ljava/lang/String;
 	public abstract fun getSearch ()Ljava/lang/String;
 	public abstract fun getSearchParams ()Lelide/runtime/intrinsics/js/URLSearchParams;

@@ -280,6 +280,7 @@ kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-comp
 kotlin_scripting_common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin_sdk" }
 kotlin_scripting_jvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin_sdk" }
 kotlin_scripting_jvm_host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin_sdk" }
+kotlin_scripting_jvm_engine = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jsr223", version.ref = "kotlin_sdk" }
 kotlin_main_kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin_sdk" }
 kotlin_compiler_testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin_compile_testing" }
 kotlin_compiler_testing_ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin_compile_testing" }

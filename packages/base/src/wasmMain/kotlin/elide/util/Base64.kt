@@ -2,18 +2,13 @@
 
 package elide.util
 
-import java.nio.charset.StandardCharsets
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-public actual object Base64: Encoder {
-  /** @inheritDoc */
-  override fun encoding(): Encoding {
-    return Encoding.BASE64
-  }
+@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
+  override fun encoding(): Encoding = Encoding.BASE64
 
   // -- Base64: Encoding -- //
-
   /**
    * Encode the provided [string] into a Base64-encoded string, which includes padding if necessary.
    *
@@ -21,21 +16,7 @@ public actual object Base64: Encoder {
    * @return Base64-encoded string.
    */
   actual override fun encode(string: String): ByteArray {
-    return java.util.Base64.getEncoder().encode(
-      string.toByteArray(StandardCharsets.UTF_8)
-    )
-  }
-
-  /**
-   * Encode the provided [data] into a Base64-encoded set of bytes, which includes padding if necessary.
-   *
-   * @param data Raw bytes to encode with Base64.
-   * @return Base64-encoded bytes.
-   */
-  actual override fun encode(data: ByteArray): ByteArray {
-    return java.util.Base64.getEncoder().encode(
-      data
-    )
+    return kotlin.io.encoding.Base64.Default.encodeToByteArray(string.encodeToByteArray())
   }
 
   /**
@@ -45,9 +26,17 @@ public actual object Base64: Encoder {
    * @return Base64-encoded string.
    */
   actual override fun encodeToString(string: String): String {
-    return java.util.Base64.getEncoder().encodeToString(
-      string.toByteArray(StandardCharsets.UTF_8)
-    )
+    return kotlin.io.encoding.Base64.Default.encode(string.encodeToByteArray())
+  }
+
+  /**
+   * Encode the provided [data] into a Base64-encoded set of bytes, which includes padding if necessary.
+   *
+   * @param data Raw bytes to encode with Base64.
+   * @return Base64-encoded bytes.
+   */
+  actual override fun encode(data: ByteArray): ByteArray {
+    return kotlin.io.encoding.Base64.Default.encodeToByteArray(data)
   }
 
   /**
@@ -57,9 +46,7 @@ public actual object Base64: Encoder {
    * @return Base64-encoded string.
    */
   actual override fun encodeToString(data: ByteArray): String {
-    return java.util.Base64.getEncoder().encodeToString(
-      data
-    )
+    return kotlin.io.encoding.Base64.Default.encode(data)
   }
 
   // -- Base64: Encoding (Web-safe) -- //
@@ -95,9 +82,7 @@ public actual object Base64: Encoder {
    * @return Raw bytes of decoded data.
    */
   actual override fun decode(data: ByteArray): ByteArray {
-    return java.util.Base64.getDecoder().decode(
-      data
-    )
+    return kotlin.io.encoding.Base64.Default.decode(data)
   }
 
   /**
@@ -107,9 +92,7 @@ public actual object Base64: Encoder {
    * @return Raw bytes of decoded data.
    */
   actual override fun decode(string: String): ByteArray {
-    return java.util.Base64.getDecoder().decode(
-      string
-    )
+    return kotlin.io.encoding.Base64.Default.decode(string)
   }
 
   /**
@@ -119,9 +102,7 @@ public actual object Base64: Encoder {
    * @return Decoded string value.
    */
   actual override fun decodeToString(data: ByteArray): String {
-    return String(java.util.Base64.getDecoder().decode(
-      data
-    ))
+    return kotlin.io.encoding.Base64.Default.decode(data).decodeToString()
   }
 
   /**
@@ -131,8 +112,6 @@ public actual object Base64: Encoder {
    * @return Decoded string value.
    */
   actual override fun decodeToString(string: String): String {
-    return String(java.util.Base64.getDecoder().decode(
-      string
-    ))
+    return kotlin.io.encoding.Base64.Default.decode(string).decodeToString()
   }
 }

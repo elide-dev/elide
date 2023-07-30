@@ -1,17 +1,10 @@
-public abstract interface annotation class elide/annotations/Props : java/lang/annotation/Annotation {
-}
-
-public synthetic class elide/annotations/Props$Impl : elide/annotations/Props {
-	public fun <init> ()V
-}
-
-public final class elide/runtime/ssr/CssChunk {
+public final class elide/ssr/CssChunk {
 	public fun <init> ([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()[Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy ([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/ssr/CssChunk;
-	public static synthetic fun copy$default (Lelide/runtime/ssr/CssChunk;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/ssr/CssChunk;
+	public final fun copy ([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/ssr/CssChunk;
+	public static synthetic fun copy$default (Lelide/ssr/CssChunk;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/ssr/CssChunk;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCss ()Ljava/lang/String;
 	public final fun getIds ()[Ljava/lang/String;
@@ -20,26 +13,33 @@ public final class elide/runtime/ssr/CssChunk {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/ssr/RenderedStream {
-	public fun <init> (ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/runtime/ssr/CssChunk;)V
+public final class elide/ssr/RenderedStream {
+	public fun <init> (ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/ssr/CssChunk;)V
 	public final fun component1 ()I
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/util/Map;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()[Lelide/runtime/ssr/CssChunk;
-	public final fun copy (ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/runtime/ssr/CssChunk;)Lelide/runtime/ssr/RenderedStream;
-	public static synthetic fun copy$default (Lelide/runtime/ssr/RenderedStream;ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/runtime/ssr/CssChunk;ILjava/lang/Object;)Lelide/runtime/ssr/RenderedStream;
+	public final fun component5 ()[Lelide/ssr/CssChunk;
+	public final fun copy (ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/ssr/CssChunk;)Lelide/ssr/RenderedStream;
+	public static synthetic fun copy$default (Lelide/ssr/RenderedStream;ILjava/lang/String;Ljava/util/Map;Ljava/lang/String;[Lelide/ssr/CssChunk;ILjava/lang/Object;)Lelide/ssr/RenderedStream;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCriticalCss ()Ljava/lang/String;
 	public final fun getHeaders ()Ljava/util/Map;
 	public final fun getHtml ()Ljava/lang/String;
 	public final fun getStatus ()I
-	public final fun getStyleChunks ()[Lelide/runtime/ssr/CssChunk;
+	public final fun getStyleChunks ()[Lelide/ssr/CssChunk;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/ssr/ServerResponse {
+public abstract interface class elide/ssr/ResponseRenderer {
+	public abstract fun render ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/ssr/ServerRenderer : elide/ssr/ResponseRenderer {
+}
+
+public abstract interface class elide/ssr/ServerResponse {
 	public abstract fun getContent ()Ljava/lang/String;
 	public abstract fun getCss ()Ljava/lang/String;
 	public abstract fun getFin ()Z
@@ -48,17 +48,17 @@ public abstract interface class elide/runtime/ssr/ServerResponse {
 	public abstract fun getStatus ()Ljava/lang/Integer;
 }
 
-public final class elide/runtime/ssr/ServerResponse$DefaultImpls {
-	public static fun getContent (Lelide/runtime/ssr/ServerResponse;)Ljava/lang/String;
-	public static fun getCss (Lelide/runtime/ssr/ServerResponse;)Ljava/lang/String;
-	public static fun getFin (Lelide/runtime/ssr/ServerResponse;)Z
-	public static fun getHasContent (Lelide/runtime/ssr/ServerResponse;)Z
-	public static fun getHeaders (Lelide/runtime/ssr/ServerResponse;)Ljava/util/Map;
-	public static fun getStatus (Lelide/runtime/ssr/ServerResponse;)Ljava/lang/Integer;
+public final class elide/ssr/ServerResponse$DefaultImpls {
+	public static fun getContent (Lelide/ssr/ServerResponse;)Ljava/lang/String;
+	public static fun getCss (Lelide/ssr/ServerResponse;)Ljava/lang/String;
+	public static fun getFin (Lelide/ssr/ServerResponse;)Z
+	public static fun getHasContent (Lelide/ssr/ServerResponse;)Z
+	public static fun getHeaders (Lelide/ssr/ServerResponse;)Ljava/util/Map;
+	public static fun getStatus (Lelide/ssr/ServerResponse;)Ljava/lang/Integer;
 }
 
-public abstract class elide/runtime/ssr/StreamResponse : elide/runtime/ssr/ServerResponse {
-	public static final field Companion Lelide/runtime/ssr/StreamResponse$Companion;
+public abstract class elide/ssr/StreamResponse : elide/ssr/ServerResponse {
+	public static final field Companion Lelide/ssr/StreamResponse$Companion;
 	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (ILjava/util/Map;Ljava/lang/String;ZZLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getContent ()Ljava/lang/String;
@@ -69,38 +69,38 @@ public abstract class elide/runtime/ssr/StreamResponse : elide/runtime/ssr/Serve
 	public fun getStatus ()Ljava/lang/Integer;
 }
 
-public final class elide/runtime/ssr/StreamResponse$Companion {
-	public final fun error (Ljava/lang/Throwable;)Lelide/runtime/ssr/StreamResponse;
-	public final fun success (Ljava/lang/String;Ljava/util/Map;ILjava/lang/String;[Lelide/runtime/ssr/CssChunk;)Lelide/runtime/ssr/StreamResponse;
-	public static synthetic fun success$default (Lelide/runtime/ssr/StreamResponse$Companion;Ljava/lang/String;Ljava/util/Map;ILjava/lang/String;[Lelide/runtime/ssr/CssChunk;ILjava/lang/Object;)Lelide/runtime/ssr/StreamResponse;
+public final class elide/ssr/StreamResponse$Companion {
+	public final fun error (Ljava/lang/Throwable;)Lelide/ssr/StreamResponse;
+	public final fun success (Ljava/lang/String;Ljava/util/Map;ILjava/lang/String;[Lelide/ssr/CssChunk;)Lelide/ssr/StreamResponse;
+	public static synthetic fun success$default (Lelide/ssr/StreamResponse$Companion;Ljava/lang/String;Ljava/util/Map;ILjava/lang/String;[Lelide/ssr/CssChunk;ILjava/lang/Object;)Lelide/ssr/StreamResponse;
 }
 
-public final class elide/runtime/ssr/StreamResponse$Error : elide/runtime/ssr/StreamResponse {
+public final class elide/ssr/StreamResponse$Error : elide/ssr/StreamResponse {
 	public fun <init> (Ljava/lang/Object;ILjava/util/Map;)V
 	public synthetic fun <init> (Ljava/lang/Object;ILjava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getErr ()Ljava/lang/Object;
 }
 
-public final class elide/runtime/ssr/StreamResponse$Success : elide/runtime/ssr/StreamResponse {
-	public fun <init> (Lelide/runtime/ssr/RenderedStream;)V
-	public final fun getStream ()Lelide/runtime/ssr/RenderedStream;
+public final class elide/ssr/StreamResponse$Success : elide/ssr/StreamResponse {
+	public fun <init> (Lelide/ssr/RenderedStream;)V
+	public final fun getStream ()Lelide/ssr/RenderedStream;
 }
 
-public abstract interface class elide/server/ResponseRenderer {
-	public abstract fun render ()Ljava/lang/Object;
+public abstract interface annotation class elide/ssr/annotations/Props : java/lang/annotation/Annotation {
 }
 
-public abstract interface class elide/server/ssr/ServerRenderer : elide/server/ResponseRenderer {
+public synthetic class elide/ssr/annotations/Props$Impl : elide/ssr/annotations/Props {
+	public fun <init> ()V
 }
 
-public final class elide/server/type/RequestState {
+public final class elide/ssr/type/RequestState {
 	public fun <init> (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;)V
 	public synthetic fun <init> (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lio/micronaut/http/HttpRequest;
 	public final fun component2 ()Ljava/security/Principal;
 	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;)Lelide/server/type/RequestState;
-	public static synthetic fun copy$default (Lelide/server/type/RequestState;Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;ILjava/lang/Object;)Lelide/server/type/RequestState;
+	public final fun copy (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;)Lelide/ssr/type/RequestState;
+	public static synthetic fun copy$default (Lelide/ssr/type/RequestState;Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;ILjava/lang/Object;)Lelide/ssr/type/RequestState;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPath ()Ljava/lang/String;
 	public final fun getPrincipal ()Ljava/security/Principal;

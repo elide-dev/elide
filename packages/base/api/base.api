@@ -21,6 +21,12 @@ public abstract interface annotation class elide/annotations/Generated : java/la
 public abstract interface annotation class elide/annotations/Logic : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class elide/annotations/base/Experimental : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/base/Internal : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class elide/annotations/core/Experimental : java/lang/annotation/Annotation {
 }
 

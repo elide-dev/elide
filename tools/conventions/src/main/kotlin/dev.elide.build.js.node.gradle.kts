@@ -1,9 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 
 plugins {
-  kotlin("js")
   kotlin("kapt")
+  kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("org.jetbrains.kotlinx.kover")
   id("dev.elide.build.core")

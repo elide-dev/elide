@@ -1,3 +1,5 @@
+@file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
+
 package elide.runtime.gvm.internals
 
 import elide.annotations.Inject
@@ -79,14 +81,14 @@ internal abstract class AbstractVMEngine<
   Config : GuestRuntimeConfiguration,
   Code: ExecutableScript,
   Bindings: InvocationBindings,
-> constructor (
+> (
   private val contextManager: ContextManager<VMContext, VMContext.Builder>,
   protected val language: GraalVMGuest,
   protected val config: Config,
 ) : VMEngineImpl<Config> {
   internal companion object {
     /** Manifest name for runtime info. */
-    internal const val runtimeManifest = "runtime.json"
+    internal const val RUNTIME_MANIFEST = "runtime.json"
   }
 
   /**
@@ -606,7 +608,6 @@ internal abstract class AbstractVMEngine<
   }
 
   /** @inheritDoc */
-  @Suppress("UNCHECKED_CAST", "IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION")
   override suspend fun executeRender(
     script: ExecutableScript,
     request: HttpRequest<*>,
@@ -711,9 +712,9 @@ internal abstract class AbstractVMEngine<
    *
    * @param context VM context with which to initialize the script.
    * @param script Guest script to initialize.
-   * @return Casted, checked, initialized script.
+   * @return Type-casted, checked, initialized script.
    */
-  @Suppress("UNUSED_PARAMETER", "UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST")
   private fun initializeScript(context: VMContext, script: ExecutableScript): Code {
     return when (script) {
       is AbstractGVMScript -> {

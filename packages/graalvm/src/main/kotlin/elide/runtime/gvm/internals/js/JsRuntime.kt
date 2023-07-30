@@ -1,3 +1,5 @@
+@file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
+
 package elide.runtime.gvm.internals.js
 
 import elide.annotations.Context
@@ -199,7 +201,7 @@ internal class JsRuntime @Inject constructor (
       }
 
       try {
-        (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$runtimeManifest") ?: error(
+        (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$RUNTIME_MANIFEST") ?: error(
           "Failed to locate embedded JS runtime manifest"
         )).let { manifestFile ->
           // decode manifest from JSON to discover injected artifacts

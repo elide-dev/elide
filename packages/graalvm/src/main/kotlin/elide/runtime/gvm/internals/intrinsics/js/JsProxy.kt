@@ -2,12 +2,18 @@ package elide.runtime.gvm.internals.intrinsics.js
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 
 /** Base implementations for JS proxy objects. */
 public object JsProxy {
   /** @return Wrapped [delegate]. */
   public fun wrap(delegate: Any): PropertyProxy = PropertyProxy(delegate)
+
+  /** Returns a new mutable [ProxyObject] containing the properties added by the [builder]. */
+  public fun build(builder: MutableObjectProxy.Builder.() -> Unit): ProxyObject {
+    return MutableObjectProxy.Builder().apply(builder).build()
+  }
 
   /** Property wrapping proxy for a given delegate. */
   public class PropertyProxy internal constructor (delegate: Any? = null) : ProxyObject {
@@ -102,5 +108,54 @@ public object JsProxy {
 
     /** @inheritDoc */
     override fun toString(): String = hostDelegate.toString()
+  }
+
+
+  /** A mutable [ProxyObject] that can be used to mimic JS plain objects created in the JVM. */
+  @JvmInline public value class MutableObjectProxy internal constructor(
+    private val members: MutableMap<String, Any?> = mutableMapOf(),
+  ) : ProxyObject {
+    /** DSL scope for [building][JsProxy.build] [MutableObjectProxy] instances. */
+    @JvmInline public value class Builder internal constructor(
+      private val members: MutableMap<String, Any?> = mutableMapOf()
+    ) {
+      /**
+       * Set the [value] associated with a given [key] in the proxy. The [value] will be converted to a polyglot value
+       * using [Value.asValue].
+       */
+      public fun put(key: String, value: Any?) {
+        members[key] = value
+      }
+
+      /**
+       * Associates a new object obtained using the [builder] function to the specified [key].
+       */
+      public fun putObject(key: String, builder: Builder.() -> Unit) {
+        put(key, build(builder))
+      }
+
+      /**
+       * Associates a new empty object to the specified [key].
+       */
+      public fun putObject(key: String) {
+        put(key, MutableObjectProxy())
+      }
+
+      /**
+       * Associates a [ProxyExecutable] [function] with the specified [key]. The [function] receives a [Value] array,
+       * containing the arguments passed by the caller.
+       */
+      public fun putFunction(key: String, function: ProxyExecutable) {
+        put(key, function)
+      }
+
+      /** Returns the fully constructed proxy. */
+      public fun build(): MutableObjectProxy = MutableObjectProxy(members)
+    }
+
+    override fun getMember(key: String): Any = members[key] ?: error("Member not found: $key")
+    override fun getMemberKeys(): Any = members.keys
+    override fun hasMember(key: String): Boolean = members.containsKey(key)
+    override fun putMember(key: String, value: Value?): Unit = members.set(key, value)
   }
 }

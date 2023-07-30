@@ -60,9 +60,6 @@ val ktCompilerArgs = listOf(
   "-Xsam-conversions=indy",
   "-Xjsr305=strict",
   "-Xjvm-default=all",
-
-  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.0"
 )
 
 buildscript {
@@ -140,7 +137,7 @@ dependencies {
   implementation(libs.logback)
 
   api(libs.picocli)
-  compileOnly(libs.picocli.jansi.graalvm)
+  implementation(libs.picocli.jansi.graalvm)
   implementation(libs.slf4j)
   implementation(libs.slf4j.jul)
   implementation(libs.jline.reader)
@@ -235,9 +232,6 @@ sonarqube {
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
-  "--add-reads=ch.qos.logback.core=org.jline",
-  "--add-reads=ch.qos.logback.core=org.jline.console",
-  "--add-reads=ch.qos.logback.core=org.jline.terminal",
 )
 
 val targetOs = when {

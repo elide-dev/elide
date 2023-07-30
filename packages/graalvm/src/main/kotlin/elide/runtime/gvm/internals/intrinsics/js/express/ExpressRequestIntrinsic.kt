@@ -1,27 +1,19 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import org.graalvm.polyglot.Value
+import elide.runtime.gvm.internals.intrinsics.js.JsProxy
 import org.graalvm.polyglot.proxy.ProxyObject
 import reactor.netty.http.server.HttpServerRequest
 import elide.runtime.intrinsics.js.express.ExpressRequest
 
-/** An [ExpressRequest] implemented as a wrapper around a Reactor Netty [HttpServerRequest]. */
-internal class ExpressRequestIntrinsic(private val request: HttpServerRequest) : ExpressRequest {
-  /** A JavaScript object proxy wrapping a [request]'s parameters. */
-  @JvmInline private value class ParamsProxy(private val params: Map<String, String>) : ProxyObject {
-    constructor(request: HttpServerRequest) : this(request.params() ?: emptyMap())
-    
-    override fun getMember(key: String): Any? = params[key]
-    override fun getMemberKeys(): Any = params.keys
-    override fun hasMember(key: String): Boolean = params.containsKey(key)
-    override fun putMember(key: String, value: Value?): Unit = error(
-      "Modifying the request parameters is not supported"
-    )
+/** An intrinsic helper used to construct JavaScript request objects around a Reactor Netty [HttpServerRequest]. */
+internal object ExpressRequestIntrinsic {
+  fun from(request: HttpServerRequest): ProxyObject = JsProxy.build {
+    // members extracted from the request by Reactor Netty
+    put("path", request.path())
+    put("url", request.uri())
+    put("method", request.method().name())
 
-    override fun removeMember(key: String): Boolean = error(
-      "Modifying the request parameters is not supported"
-    )
+    // request parameters are populated by the routing code
+    putObject("params")
   }
-  
-  override val params: Value = Value.asValue(ParamsProxy(request))
 }

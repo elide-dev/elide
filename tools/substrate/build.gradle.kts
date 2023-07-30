@@ -49,12 +49,16 @@ tasks.named("build").configure {
 }
 
 tasks.named("publish").configure {
-  dependsOn(allPlugins.map {
-    ":$it:publish"
-  }.plus(listOf(
-    ":bom:publish",
-    ":compiler-util:publish",
-  )))
+  dependsOn(
+    allPlugins.map {
+      ":$it:publish"
+    }.plus(
+      listOf(
+        ":bom:publish",
+        ":compiler-util:publish",
+      )
+    )
+  )
 }
 
 kotlin {
@@ -84,14 +88,19 @@ sonarqube {
 }
 
 subprojects {
-  if (name != "bom") sonarqube {
-    properties {
-      property("sonar.sources", "src/main/kotlin")
-      property("sonar.tests", "src/test/kotlin")
-      property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
-      property("sonar.coverage.jacoco.xmlReportPaths", listOf(
-        "$buildDir/reports/kover/xml/report.xml",
-      ))
+  if (name != "bom") {
+    sonarqube {
+      properties {
+        property("sonar.sources", "src/main/kotlin")
+        property("sonar.tests", "src/test/kotlin")
+        property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
+        property(
+          "sonar.coverage.jacoco.xmlReportPaths",
+          listOf(
+            "$buildDir/reports/kover/xml/report.xml",
+          )
+        )
+      }
     }
   }
 }

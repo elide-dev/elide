@@ -1,10 +1,8 @@
-import Elide
-import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 
 plugins {
-  kotlin("js")
   kotlin("kapt")
+  kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("org.jetbrains.kotlinx.kover")
   id("dev.elide.build.core")
@@ -18,6 +16,7 @@ val strictMode = project.properties["strictMode"] as? String == "true"
 // Settings for compiling Kotlin to JavaScript.
 kotlin {
   org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
+
   js(IR) {
     browser()
   }

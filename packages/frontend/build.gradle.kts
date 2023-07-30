@@ -1,4 +1,5 @@
 @file:Suppress(
+  "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
 
@@ -11,19 +12,31 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
+
+  sourceSets {
+    val jsMain by getting {
+      dependencies {
+        implementation(kotlin("stdlib-js"))
+        implementation(project(":packages:base"))
+
+        implementation(libs.kotlinx.coroutines.core.js)
+        implementation(libs.kotlinx.serialization.core.js)
+        implementation(libs.kotlinx.serialization.json.js)
+        implementation(libs.kotlinx.serialization.protobuf.js)
+      }
+    }
+
+    val jsTest by getting {
+      dependencies {
+        implementation(project(":packages:test"))
+      }
+    }
+  }
 }
 
 dependencies {
-  implementation(kotlin("stdlib-js"))
-  implementation(project(":packages:base"))
 
-  implementation(libs.kotlinx.coroutines.core.js)
-  implementation(libs.kotlinx.serialization.core.js)
-  implementation(libs.kotlinx.serialization.json.js)
-  implementation(libs.kotlinx.serialization.protobuf.js)
 
-  // Testing
-  testImplementation(project(":packages:test"))
 }
 
 val buildDocs = project.properties["buildDocs"] == "true"

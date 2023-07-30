@@ -1,7 +1,6 @@
 package elide.runtime.js
 
 import elide.runtime.LogLevel
-import elide.runtime.js.ConsoleCallable
 
 
 /** @return Console function implementing the current log level. */

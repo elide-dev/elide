@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalEncodingApi::class)
+
 package elide.util
+
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
 public actual object Base64: Encoder {
@@ -67,9 +71,7 @@ public actual object Base64: Encoder {
    * @return Base64-encoded string, using only web-safe characters.
    */
   public actual fun encodeWebSafe(string: String): String {
-    return Base64Kt.Encoder.DEFAULT_WEBSAFE.encode(
-      string.encodeToByteArray()
-    ).decodeToString()
+    return kotlin.io.encoding.Base64.UrlSafe.encode(string.encodeToByteArray())
   }
 
   /**
@@ -80,9 +82,7 @@ public actual object Base64: Encoder {
    * @return Base64-encoded bytes, using only web-safe characters.
    */
   public actual fun encodeWebSafe(data: ByteArray): ByteArray {
-    return Base64Kt.Encoder.DEFAULT_WEBSAFE.encode(
-      data
-    )
+    return kotlin.io.encoding.Base64.UrlSafe.encodeToByteArray(data)
   }
 
   // -- Base64: Decoding -- //

@@ -32,6 +32,9 @@ object Java9Modularity {
    * The correct module info has to contain `atomicfu` requirement because atomicfu plugin kicks-in **after**
    * the compilation process. But `atomicfu` is compile-only dependency that shouldn't be present in the final
    * `module-info.java` and that's exactly what this task ensures.
+   *
+   * Additionally, we need to perform this same trick for GraalVM modules (`org.graalvm.sdk` and `org.graalvm.truffle`),
+   * which are provided by the runtime.
    */
   abstract class ProcessModuleInfoFile : DefaultTask() {
     @get:InputFile
@@ -54,6 +57,8 @@ object Java9Modularity {
         outputFile.outputStream().bufferedWriter().use { writer ->
           for (line in lines) {
             if ("kotlinx.atomicfu" in line) continue
+            if ("org.graalvm.sdk" in line) continue
+            if ("org.graalvm.truffle" in line) continue
             writer.write(line)
             writer.newLine()
           }

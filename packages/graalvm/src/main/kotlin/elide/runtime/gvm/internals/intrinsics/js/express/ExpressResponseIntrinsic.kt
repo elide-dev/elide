@@ -14,7 +14,7 @@ internal class ExpressResponseIntrinsic(
 ) : ExpressResponse {
   private val publisher = AtomicReference<NettyOutbound>()
 
-  /** Finish processing this response and return a [Publisher] to be returned from the oute handler */
+  /** Finish processing this response and return a [Publisher] to be returned from the outer handler */
   fun end(): Publisher<Void> = publisher.get() ?: response.send()
 
   private fun publish(next: NettyOutbound) {

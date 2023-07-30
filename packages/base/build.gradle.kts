@@ -4,6 +4,9 @@
     "UNUSED_VARIABLE",
     "DSL_SCOPE_VIOLATION",
 )
+@file:OptIn(
+    org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import Java9Modularity.configure as configureJava9ModuleInfo
 
@@ -36,6 +39,12 @@ kotlin {
     watchosX64()
     tvosArm64()
     tvosX64()
+
+    wasm {
+        nodejs()
+        d8()
+    }
+
     if (buildMingw) mingwX64()
 
     sourceSets {
@@ -43,11 +52,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
                 api(project(":packages:core"))
-                api(libs.kotlinx.serialization.core)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.collections.immutable)
-                api(libs.kotlinx.datetime)
-                implementation(libs.uuid)
+                implementation(libs.elide.uuid)
             }
         }
         val commonTest by getting {
@@ -62,6 +67,8 @@ kotlin {
                 api(libs.slf4j)
                 api(libs.jakarta.inject)
                 api(libs.micronaut.inject.java)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.coroutines.core.jvm)
                 implementation(libs.kotlinx.coroutines.jdk9)
@@ -85,6 +92,8 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
                 implementation(libs.kotlinx.coroutines.core.js)
                 implementation(libs.kotlinx.serialization.json.js)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.datetime)
             }
         }
         val jsTest by getting {
@@ -96,6 +105,9 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation(libs.kotlinx.coroutines.core)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.datetime)
             }
         }
         val nativeTest by getting {
@@ -116,6 +128,7 @@ kotlin {
         val watchosX64Main by getting { dependsOn(nativeMain) }
         val tvosArm64Main by getting { dependsOn(nativeMain) }
         val tvosX64Main by getting { dependsOn(nativeMain) }
+        val wasmMain by getting { dependsOn(commonMain) }
     }
 }
 

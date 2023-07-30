@@ -1,3 +1,5 @@
+@file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
+
 package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
@@ -19,7 +21,6 @@ import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.output.JLineLogbackAppender
-import elide.tool.cli.state.CommandState
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils

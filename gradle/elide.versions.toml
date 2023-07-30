@@ -94,7 +94,7 @@ gauth_plugin = "2.2.0"
 kotest = "5.5.4"
 kotest_plugin = "0.8.18"
 testLoggerPlugin = "3.2.0"
-kotlin_uuid = "0.6.0"
+elide_uuid = "0.8.22"
 guava = "32.1.1-jre"
 gax = "2.31.1"
 mosaic = "0.8.0"
@@ -343,7 +343,6 @@ slf4j_jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j_j
 jakarta_annotation_api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta_annotation_api" }
 jakarta_inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 jakarta_persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta_persistence" }
-uuid = { group = "com.benasher44", name = "uuid", version.ref = "kotlin_uuid" }
 logback_core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
@@ -616,6 +615,7 @@ plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
 plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
 ## Elide Internal
+elide_uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide_uuid" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }

@@ -43,17 +43,8 @@ kotlin {
     if (buildMingw) mingwX64()
 
     wasm {
+        nodejs()
         d8()
-
-        browser {
-            testTask {
-                useKarma {
-                    this.webpackConfig.experiments.add("topLevelAwait")
-                    useChromeHeadless()
-                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-                }
-            }
-        }
     }
 
     sourceSets {

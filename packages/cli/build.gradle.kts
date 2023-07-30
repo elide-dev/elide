@@ -70,7 +70,6 @@ buildscript {
     maven("https://maven.pkg.st/")
     maven("https://gradle.pkg.st/")
     maven("https://elide.pkg.st/")
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
   }
   dependencies {
     classpath(libs.plugin.proguard)

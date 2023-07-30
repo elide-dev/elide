@@ -42,6 +42,7 @@ val enableWasm = true
 val enableLlvm = false
 val enablePython = false
 val enableRuby = false
+val enableTools = true
 val enableSbom = true
 val enableG1 = true
 val enablePgo = true
@@ -134,6 +135,7 @@ dependencies {
   implementation(libs.kotlin.scripting.common)
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
+  implementation(libs.kotlin.scripting.jvm.engine)
   implementation(libs.logback)
 
   api(libs.picocli)
@@ -311,22 +313,14 @@ val commonNativeArgs = listOf(
   "--language:nfi",
   "--language:icu4j",
   "--language:regex",
-  "--tool:chromeinspector",
-  "--tool:coverage",
-  "--tool:lsp",
-  "--tool:sandbox",
-  "--tool:dap",
-  "--tool:insight",
-  "--tool:insightheap",
-  "--tool:profiler",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
+  "-H:+BuildReport",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
-  "-H:+PrintHeapHistogram",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
@@ -341,6 +335,17 @@ val commonNativeArgs = listOf(
   if (enablePython) "--language:python" else null,
   if (enableRuby) "--language:ruby" else null,
 )).plus(
+  if (enableTools) listOf(
+    "--tool:chromeinspector",
+    "--tool:coverage",
+    "--tool:lsp",
+    "--tool:sandbox",
+    "--tool:dap",
+    "--tool:insight",
+    "--tool:insightheap",
+    "--tool:profiler",
+  ) else emptyList()
+).plus(
   jvmModuleArgs
 )
 

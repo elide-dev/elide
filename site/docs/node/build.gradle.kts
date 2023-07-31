@@ -109,7 +109,7 @@ tasks.create("copyMdxSourcesSsr", Copy::class.java) {
   from("${project(":site:docs:ui").projectDir}/src/main/mdx") {
     include("**/*.*")
   }
-  into("${layout.buildDirectory}/ssr/")
+  into(layout.buildDirectory.dir("ssr"))
 }
 
 listOf(

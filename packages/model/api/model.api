@@ -1,6 +1,3 @@
-public abstract interface annotation class elide/annotations/Model : java/lang/annotation/Annotation {
-}
-
 public abstract interface class elide/model/AppModel {
 	public abstract fun toMessage ()Lelide/model/WireMessage;
 }
@@ -48,6 +45,9 @@ public class elide/model/WireMessage {
 	public final fun getProto ()Lcom/google/protobuf/Message;
 	public fun toSerializedBytes ()[B
 	public fun toSerializedString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class elide/model/annotations/Model : java/lang/annotation/Annotation {
 }
 
 public final class elide/model/token/Token {

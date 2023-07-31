@@ -60,6 +60,9 @@ on:
         type: string
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   deployment:
     name: "Deploy (${{ inputs.environment }})"
@@ -76,10 +79,15 @@ jobs:
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: Fly"
-        uses: superfly/flyctl-actions/setup-flyctl@master
+        uses: superfly/flyctl-actions/setup-flyctl@5e0688e3d0586e2cad2288e6c49c3e9bedac39e5 # master
       - name: "Deploy: Fly (${{ inputs.environment }})"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

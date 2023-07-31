@@ -89,6 +89,7 @@ include(
   ":packages:model",
   ":packages:platform",
   ":packages:proto:proto-core",
+  ":packages:proto:proto-capnp",
   ":packages:proto:proto-flatbuffers",
   ":packages:proto:proto-kotlinx",
   ":packages:proto:proto-protobuf",

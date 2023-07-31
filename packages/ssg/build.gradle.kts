@@ -180,10 +180,10 @@ tasks.test {
 
   useJUnitPlatform()
   systemProperty("elide.test", "true")
-  systemProperty("tests.buildDir", "${project.layout.buildDirectory}/ssgTests/")
-  systemProperty("tests.exampleManifest", project.layout.buildDirectory.asFile.get().resolve("resources/test/app.manifest.pb"))
-  systemProperty("tests.textManifest", project.layout.buildDirectory.asFile.get().resolve("resources/test/example-manifest.txt.pb"))
-  systemProperty("tests.invalidManifest", project.layout.buildDirectory.asFile.get().resolve("resources/test/example-invalid.txt.pb"))
+  systemProperty("tests.buildDir", layout.buildDirectory.dir("ssgTests"))
+  systemProperty("tests.exampleManifest", layout.buildDirectory.file("resources/test/app.manifest.pb"))
+  systemProperty("tests.textManifest", layout.buildDirectory.file("resources/test/example-manifest.txt.pb"))
+  systemProperty("tests.invalidManifest", layout.buildDirectory.file("resources/test/example-invalid.txt.pb"))
 }
 
 tasks.compileTestKotlin {

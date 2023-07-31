@@ -83,7 +83,7 @@ tasks {
    */
   val testJar by registering(Jar::class) {
     description = "Base (abstract) test classes for all implementations"
-    archiveClassifier.set("tests")
+    archiveClassifier = "tests"
     from(sourceSets.named("test").get().output)
   }
 
@@ -101,7 +101,7 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 
   val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(dokkaHtml.outputDirectory)
   }
   javadocJar
@@ -120,24 +120,24 @@ publishing {
       artifactId = artifactId.replace("proto-core", "elide-proto-core")
 
       pom {
-        name.set("Elide Protocol: API")
-        description.set("API headers and services for the Elide Protocol")
-        url.set("https://elide.dev")
+        name = "Elide Protocol: API"
+        description = "API headers and services for the Elide Protocol"
+        url = "https://elide.dev"
         licenses {
           license {
-            name.set("MIT License")
-            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+            name = "MIT License"
+            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
           }
         }
         developers {
           developer {
-            id.set("sgammon")
-            name.set("Sam Gammon")
-            email.set("samuel.gammon@gmail.com")
+            id = "sgammon"
+            name = "Sam Gammon"
+            email = "samuel.gammon@gmail.com"
           }
         }
         scm {
-          url.set("https://github.com/elide-dev/elide")
+          url = "https://github.com/elide-dev/elide"
         }
       }
     }

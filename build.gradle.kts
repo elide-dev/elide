@@ -236,12 +236,12 @@ subprojects {
   }
 
   ktlint {
-    debug.set(false)
-    verbose.set(false)
-    android.set(false)
-    outputToConsole.set(false)
-    ignoreFailures.set(true)
-    enableExperimentalRules.set(true)
+    debug = false
+    verbose = false
+    android = false
+    outputToConsole = false
+    ignoreFailures = true
+    enableExperimentalRules = true
     filter {
       exclude("**/proto/**")
       exclude("**/generated/**")
@@ -257,13 +257,13 @@ subprojects {
   }
 
   val detektMerge by tasks.registering(ReportMergeTask::class) {
-    output.set(rootProject.buildDir.resolve("reports/detekt/elide.sarif"))
+    output = rootProject.buildDir.resolve("reports/detekt/elide.sarif")
   }
 
   plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
     tasks.withType(io.gitlab.arturbosch.detekt.Detekt::class) detekt@{
       finalizedBy(detektMerge)
-      reports.sarif.required.set(true)
+      reports.sarif.required = true
       detektMerge.configure {
         input.from(this@detekt.sarifReportFile) // or .sarifReportFile
       }
@@ -293,7 +293,7 @@ subprojects {
   if (project.property("elide.lockDeps") == "true") {
     dependencyLocking {
       lockAllConfigurations()
-      lockMode.set(LockMode.LENIENT)
+      lockMode = LockMode.LENIENT
     }
   }
 }
@@ -340,11 +340,11 @@ koverMerged {
   enable()
 
   xmlReport {
-    onCheck.set(isCI)
+    onCheck = isCI
   }
 
   htmlReport {
-    onCheck.set(isCI)
+    onCheck = isCI
   }
 }
 
@@ -417,7 +417,7 @@ afterEvaluate {
 if (buildDocs == "true") {
   tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
     includes.from("README.md")
-    outputDirectory.set(buildDir.resolve("docs/kotlin/html"))
+    outputDirectory = buildDir.resolve("docs/kotlin/html")
   }
 }
 
@@ -429,7 +429,7 @@ tasks {
   }
 
   htmlDependencyReport {
-    reports.html.outputLocation.set(file("${project.buildDir}/reports/project/dependencies"))
+    reports.html.outputLocation = file("${project.buildDir}/reports/project/dependencies")
   }
 }
 

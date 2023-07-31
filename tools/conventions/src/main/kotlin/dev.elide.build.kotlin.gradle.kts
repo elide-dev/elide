@@ -41,7 +41,7 @@ java {
 
 kotlin {
 //  jvmToolchain {
-//    languageVersion.set(JavaLanguageVersion.of(javaLanguageVersion))
+//    languageVersion = JavaLanguageVersion.of(javaLanguageVersion)
 //  }
 
   sourceSets.all {
@@ -73,6 +73,6 @@ noArg {
 // Settings for Kotlin coverage.
 kover {
   xmlReport {
-    onCheck.set(true)
+    onCheck = true
   }
 }

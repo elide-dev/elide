@@ -45,7 +45,7 @@ dependencies {
 }
 
 val testArchive by tasks.registering(Jar::class) {
-  archiveClassifier.set("tests")
+  archiveClassifier = "tests"
   from(sourceSets["test"].output)
 }
 
@@ -63,27 +63,25 @@ publishing {
       artifact(tasks["testArchive"])
 
       pom {
-        name.set("Elide Substrate: Compiler Utilities")
-        url.set("https://github.com/elide-dev/v3")
-        description.set(
-          "Provides utilities for Elide Kotlin Compiler plugins."
-        )
+        name = "Elide Substrate: Compiler Utilities"
+        url = "https://github.com/elide-dev/v3"
+        description = "Provides utilities for Elide Kotlin Compiler plugins."
 
         licenses {
           license {
-            name.set("MIT License")
-            url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+            name = "MIT License"
+            url = "https://github.com/elide-dev/v3/blob/v3/LICENSE"
           }
         }
         developers {
           developer {
-            id.set("sgammon")
-            name.set("Sam Gammon")
-            email.set("samuel.gammon@gmail.com")
+            id = "sgammon"
+            name = "Sam Gammon"
+            email = "samuel.gammon@gmail.com"
           }
         }
         scm {
-          url.set("https://github.com/elide-dev/v3")
+          url = "https://github.com/elide-dev/v3"
         }
       }
     }

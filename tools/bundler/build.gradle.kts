@@ -406,12 +406,12 @@ graalvmNative {
 
 tasks {
   dockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
+    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
   }
 
   optimizedDockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm19:latest")
+    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest")
     buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
   }
 }

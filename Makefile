@@ -12,6 +12,8 @@ REPOSITORY ?= $(DEFAULT_REPOSITORY)
 
 SAMPLES ?= no
 SIGNING_KEY ?= F812016B
+REMOTE ?= no
+PUSH ?= no
 
 # Flags that control this makefile, along with their defaults:
 #
@@ -27,6 +29,8 @@ SIGNING_KEY ?= F812016B
 # RELOCK ?= no
 # SIGNING ?= no
 # SIGNING_KEY ?= "F812016B"
+# REMOTE ?= no
+# PUSH ?= no
 
 GRADLE ?= ./gradlew
 YARN ?= $(shell which yarn)
@@ -468,7 +472,52 @@ serve-site:  ## Serve Elide site locally.
 	@echo "Serving site at http://localhost:8000..."
 	$(CMD)cd $(SITE_BUILD) \
 		&& open http://localhost:8000 \
-		&& python -m SimpleHTTPServer
+		&& python3 -m http.server
+
+IMAGES ?= image-base image-base-alpine image-gvm17 image-gvm20 image-jdk17 image-jdk20 image-runtime-jvm17 image-runtime-jvm20 image-native image-native-alpine
+
+images: $(IMAGES)  ## Build all Docker images.
+	@echo "All Docker images built."
+
+image-base:  ## Build base Ubuntu image.
+	@echo "Building image 'base'..."
+	$(CMD)$(MAKE) -C tools/images/base PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-base-alpine:  ## Build base Alpine image.
+	@echo "Building image 'base/alpine'..."
+	$(CMD)$(MAKE) -C tools/images/base-alpine PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-gvm17:  ## Build GVM17 builder image.
+	@echo "Building image 'gvm17'..."
+	$(CMD)$(MAKE) -C tools/images/gvm17 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-gvm20:  ## Build GVM20 builder image.
+	@echo "Building image 'gvm20'..."
+	$(CMD)$(MAKE) -C tools/images/gvm20 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-jdk17:  ## Build JDK17 builder image.
+	@echo "Building image 'jdk17'..."
+	$(CMD)$(MAKE) -C tools/images/jdk17 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-jdk20:  ## Build JDK20 builder image.
+	@echo "Building image 'jdk20'..."
+	$(CMD)$(MAKE) -C tools/images/jdk20 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-runtime-jvm17:  ## Build runtime GVM17 builder image.
+	@echo "Building image 'gvm17'..."
+	$(CMD)$(MAKE) -C tools/images/runtime-jvm17 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-runtime-jvm20:  ## Build runtime GVM20 builder image.
+	@echo "Building image 'gvm20'..."
+	$(CMD)$(MAKE) -C tools/images/runtime-jvm20 PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-native:  ## Build native Ubuntu base image.
+	@echo "Building image 'native'..."
+	$(CMD)$(MAKE) -C tools/images/native PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-native-alpine:  ## Build native Alpine base image.
+	@echo "Building image 'native-alpine'..."
+	$(CMD)$(MAKE) -C tools/images/native-alpine PUSH=$(PUSH) REMOTE=$(REMOTE)
 
 distclean: clean  ## DANGER: Clean and remove any persistent caches. Drops changes.
 	@echo "Cleaning caches..."
@@ -484,4 +533,4 @@ help:  ## Show this help text ('make help').
 	$(info Elide:)
 	@grep -E '^[a-z1-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all build test clean distclean forceclean docs
+.PHONY: all build test clean distclean forceclean docs images image-base image-base-alpine image-jdk17 image-jdk20 image-gvm17 image-gvm20 image-runtime-jvm17 image-runtime-jvm20 image-native image-native-alpine

@@ -127,3 +127,12 @@ publishing {
     }
   }
 }
+
+afterEvaluate {
+  tasks.named("compileTestDevelopmentExecutableKotlinJs") {
+    enabled = false
+  }
+  tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
+    enabled = false
+  }
+}

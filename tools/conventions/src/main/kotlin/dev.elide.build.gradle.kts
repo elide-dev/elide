@@ -54,6 +54,7 @@ tasks.withType<Zip>().configureEach {
 // ---------------------
 // Produces sealed dependency locks for each module.
 dependencyLocking {
+  lockMode.set(LockMode.LENIENT)
   ignoredDependencies.addAll(listOf(
     "org.jetbrains.kotlinx:atomicfu*",
     "org.jetbrains.kotlinx:kotlinx-serialization*",

@@ -70,7 +70,12 @@ kotlin {
         runtimeOnly(libs.junit.jupiter.engine)
       }
     }
-    val jsMain by getting
+    val jsMain by getting {
+      dependencies {
+        // KT-57235: fix for atomicfu-runtime error
+        api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+      }
+    }
     val jsTest by getting
   }
 }

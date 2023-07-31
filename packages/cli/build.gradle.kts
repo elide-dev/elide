@@ -108,6 +108,10 @@ kotlin {
   }
 }
 
+// use consistent compose plugin version
+//the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
+//  libs.versions.compose.get()
+
 kapt {
   useBuildCache = true
   includeCompileClasspath = false
@@ -133,6 +137,8 @@ dependencies {
   implementation(project(":packages:graalvm"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.kotlin.scripting.common)
+  implementation(libs.kotlin.scripting.dependencies)
+  implementation(libs.kotlin.scripting.dependencies.maven)
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.kotlin.scripting.jvm.engine)

@@ -1,6 +1,7 @@
 module elide.cli {
     requires java.base;
     requires java.logging;
+    requires jdk.jshell;
     requires jakarta.inject;
     requires jakarta.annotation;
     requires kotlin.stdlib;

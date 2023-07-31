@@ -5,12 +5,15 @@
   "UNUSED_VARIABLE",
 )
 
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+
+
 plugins {
   `maven-publish`
   distribution
   signing
   kotlin("plugin.serialization")
-  id("dev.elide.build.kotlin")
+  id("dev.elide.build.multiplatform")
 }
 
 group = "dev.elide"
@@ -19,33 +22,64 @@ version = rootProject.version as String
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as String
 
-sourceSets {
-  /**
-   * Variant: KotlinX
-   */
-  val main by getting
-  val test by getting
-}
-
 configurations {
-  // `modelInternal` is the dependency used internally by other Elide packages to access the protocol model. at present,
-  // the internal dependency uses the Protocol Buffers implementation, + the KotlinX tooling on top of that.
-  create("modelInternal") {
+  // `modelInternalJvm` is the dependency used internally by other Elide packages to access the protocol model. at
+  // present, the internal dependency uses the Protocol Buffers implementation, + the KotlinX tooling on top of that.
+  create("modelInternalJvm") {
     isCanBeResolved = false
     isCanBeConsumed = true
 
-    extendsFrom(configurations["implementation"])
+    extendsFrom(configurations["jvmRuntimeClasspath"])
   }
 }
 
 kotlin {
-  target.compilations.all {
-    kotlinOptions {
-      jvmTarget = javaLanguageTarget
-      javaParameters = true
-      apiVersion = Elide.kotlinLanguage
-      languageVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = false
+  jvm {
+    withJava()
+  }
+
+  sourceSets {
+    /**
+     * Variant: KotlinX
+     */
+    val jvmMain by getting {
+      dependencies {
+        // API
+        api(libs.kotlinx.datetime)
+        api(project(":packages:proto:proto-core"))
+        implementation(libs.kotlinx.serialization.core.jvm)
+        implementation(libs.kotlinx.serialization.protobuf.jvm)
+
+        // Implementation
+        implementation(kotlin("stdlib"))
+        implementation(kotlin("stdlib-jdk8"))
+        implementation(project(":packages:core"))
+        runtimeOnly(kotlin("reflect"))
+      }
+    }
+    val jvmTest by getting {
+      dependencies {
+        // Testing
+        implementation(libs.truth)
+        implementation(libs.truth.java8)
+        implementation(project(":packages:test"))
+        implementation(project(":packages:proto:proto-core", configuration = "testBase"))
+      }
+    }
+  }
+
+  targets.all {
+    compilations.all {
+      kotlinOptions {
+        apiVersion = Elide.kotlinLanguage
+        languageVersion = Elide.kotlinLanguage
+        allWarningsAsErrors = false
+
+        if (this is KotlinJvmOptions) {
+          jvmTarget = javaLanguageTarget
+          javaParameters = true
+        }
+      }
     }
   }
 
@@ -66,21 +100,17 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks {
-  test {
+  jvmTest {
     useJUnitPlatform()
   }
 
   artifacts {
-    archives(jar)
-    add("modelInternal", jar)
-  }
-
-  val sourcesJar by registering(Jar::class) {
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    archiveClassifier.set("sources")
-    from(sourceSets["main"].allSource)
+    archives(jvmJar)
+    add("modelInternalJvm", jvmJar)
   }
 }
+
+val sourcesJar by tasks.getting(org.gradle.jvm.tasks.Jar::class)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
@@ -128,24 +158,4 @@ publishing {
       }
     }
   }
-}
-
-dependencies {
-  // API
-  api(libs.kotlinx.datetime)
-  api(project(":packages:proto:proto-core"))
-  implementation(libs.kotlinx.serialization.core.jvm)
-  implementation(libs.kotlinx.serialization.protobuf.jvm)
-
-  // Implementation
-  implementation(kotlin("stdlib"))
-  implementation(kotlin("stdlib-jdk8"))
-  implementation(project(":packages:core"))
-  runtimeOnly(kotlin("reflect"))
-
-  // Testing
-  testImplementation(libs.truth)
-  testImplementation(libs.truth.java8)
-  testImplementation(project(":packages:test"))
-  testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
 }

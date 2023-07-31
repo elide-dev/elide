@@ -2,9 +2,14 @@ public abstract interface class elide/proto/ElideProtocol {
 	public abstract fun base ()Ljava/lang/Class;
 	public abstract fun dialects ()Ljava/util/EnumSet;
 	public abstract fun engine ()Lelide/proto/ElideProtocol$ImplementationLibrary;
-	public fun getCompression ()Z
-	public fun getReflection ()Z
+	public abstract fun getCompression ()Z
+	public abstract fun getReflection ()Z
 	public abstract fun strategy ()Lelide/proto/ElideProtocol$ModelAdapterStrategy;
+}
+
+public final class elide/proto/ElideProtocol$DefaultImpls {
+	public static fun getCompression (Lelide/proto/ElideProtocol;)Z
+	public static fun getReflection (Lelide/proto/ElideProtocol;)Z
 }
 
 public final class elide/proto/ElideProtocol$Dialect : java/lang/Enum {
@@ -81,7 +86,11 @@ public abstract interface class elide/proto/api/Symbolic {
 
 public abstract interface class elide/proto/api/Symbolic$Resolver {
 	public abstract fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
-	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
+	public abstract fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
+}
+
+public final class elide/proto/api/Symbolic$Resolver$DefaultImpls {
+	public static fun unresolved (Lelide/proto/api/Symbolic$Resolver;Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
 }
 
 public final class elide/proto/api/Symbolic$SymbolUnresolved : java/lang/IllegalStateException {
@@ -150,28 +159,50 @@ public abstract interface class elide/proto/api/data/DataModelStrategy {
 }
 
 public abstract interface class elide/proto/api/wkt/Timestamp : elide/proto/api/Record, java/lang/Comparable {
-	public fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
-	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public fun getMillis ()J
-	public fun getNanos ()I
-	public fun getSeconds ()J
+	public abstract fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
+	public abstract fun getMillis ()J
+	public abstract fun getNanos ()I
+	public abstract fun getSeconds ()J
 	public abstract fun toInstant ()Lkotlinx/datetime/Instant;
-	public fun toJavaInstant ()Ljava/time/Instant;
+	public abstract fun toJavaInstant ()Ljava/time/Instant;
+}
+
+public final class elide/proto/api/wkt/Timestamp$DefaultImpls {
+	public static fun compareTo (Lelide/proto/api/wkt/Timestamp;Lelide/proto/api/wkt/Timestamp;)I
+	public static fun getMillis (Lelide/proto/api/wkt/Timestamp;)J
+	public static fun getNanos (Lelide/proto/api/wkt/Timestamp;)I
+	public static fun getSeconds (Lelide/proto/api/wkt/Timestamp;)J
+	public static fun toJavaInstant (Lelide/proto/api/wkt/Timestamp;)Ljava/time/Instant;
 }
 
 public abstract interface class elide/proto/api/wkt/Timestamp$Factory : elide/proto/api/Record$Factory {
-	public fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
-	public fun atMilli (J)Ljava/lang/Object;
-	public fun atSecond (J)Ljava/lang/Object;
-	public fun atSecond (JI)Ljava/lang/Object;
-	public fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public fun from (Ljava/sql/Date;)Ljava/lang/Object;
-	public fun from (Ljava/time/Instant;)Ljava/lang/Object;
-	public fun from (Ljava/util/Date;)Ljava/lang/Object;
-	public fun fromNow-LRDsOJo (J)Ljava/lang/Object;
-	public fun millisFromNow (J)Ljava/lang/Object;
-	public fun now ()Ljava/lang/Object;
-	public fun secondsFromNow (J)Ljava/lang/Object;
+	public abstract fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public abstract fun atMilli (J)Ljava/lang/Object;
+	public abstract fun atSecond (J)Ljava/lang/Object;
+	public abstract fun atSecond (JI)Ljava/lang/Object;
+	public abstract fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public abstract fun from (Ljava/sql/Date;)Ljava/lang/Object;
+	public abstract fun from (Ljava/time/Instant;)Ljava/lang/Object;
+	public abstract fun from (Ljava/util/Date;)Ljava/lang/Object;
+	public abstract fun fromNow-LRDsOJo (J)Ljava/lang/Object;
+	public abstract fun millisFromNow (J)Ljava/lang/Object;
+	public abstract fun now ()Ljava/lang/Object;
+	public abstract fun secondsFromNow (J)Ljava/lang/Object;
+}
+
+public final class elide/proto/api/wkt/Timestamp$Factory$DefaultImpls {
+	public static fun at (Lelide/proto/api/wkt/Timestamp$Factory;Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public static fun atMilli (Lelide/proto/api/wkt/Timestamp$Factory;J)Ljava/lang/Object;
+	public static fun atSecond (Lelide/proto/api/wkt/Timestamp$Factory;J)Ljava/lang/Object;
+	public static fun atSecond (Lelide/proto/api/wkt/Timestamp$Factory;JI)Ljava/lang/Object;
+	public static fun create (Lelide/proto/api/wkt/Timestamp$Factory;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static fun from (Lelide/proto/api/wkt/Timestamp$Factory;Ljava/sql/Date;)Ljava/lang/Object;
+	public static fun from (Lelide/proto/api/wkt/Timestamp$Factory;Ljava/time/Instant;)Ljava/lang/Object;
+	public static fun from (Lelide/proto/api/wkt/Timestamp$Factory;Ljava/util/Date;)Ljava/lang/Object;
+	public static fun fromNow-LRDsOJo (Lelide/proto/api/wkt/Timestamp$Factory;J)Ljava/lang/Object;
+	public static fun millisFromNow (Lelide/proto/api/wkt/Timestamp$Factory;J)Ljava/lang/Object;
+	public static fun now (Lelide/proto/api/wkt/Timestamp$Factory;)Ljava/lang/Object;
+	public static fun secondsFromNow (Lelide/proto/api/wkt/Timestamp$Factory;J)Ljava/lang/Object;
 }
 
 public abstract interface class elide/proto/api/wkt/Timestamp$IBuilder {

@@ -37,7 +37,7 @@ kotlin {
 // Settings for Kotlin coverage.
 kover {
   xmlReport {
-    onCheck.set(true)
+    onCheck = true
   }
 }
 

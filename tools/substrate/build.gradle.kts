@@ -69,11 +69,11 @@ koverMerged {
   enable()
 
   xmlReport {
-    onCheck.set(isCI)
+    onCheck = isCI
   }
 
   htmlReport {
-    onCheck.set(isCI)
+    onCheck = isCI
   }
 }
 

@@ -42,7 +42,7 @@ sourceSets {
 
 graalvmNative {
   agent {
-    enabled.set(false)
+    enabled = false
   }
 }
 
@@ -63,9 +63,9 @@ benchmark {
 
 micronaut {
   enableNativeImage(true)
-  version.set(libs.versions.micronaut.lib.get())
+  version = libs.versions.micronaut.lib.get()
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "elide.runtime.*",
       "elide.runtime.gvm.*",
@@ -156,27 +156,25 @@ publishing {
     artifactId = artifactId.replace("graalvm", "elide-graalvm")
 
     pom {
-      name.set("Elide for GraalVM")
-      url.set("https://elide.dev")
-      description.set(
-        "Integration package with GraalVM and GraalJS."
-      )
+      name = "Elide for GraalVM"
+      url = "https://elide.dev"
+      description = "Integration package with GraalVM and GraalJS."
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/elide")
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }
@@ -184,7 +182,7 @@ publishing {
 
 val compileKotlin: KotlinCompile by tasks
 val compileJava: JavaCompile by tasks
-compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
+compileKotlin.destinationDirectory = compileJava.destinationDirectory
 
 tasks.jar {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE

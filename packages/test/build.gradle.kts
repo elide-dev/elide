@@ -51,11 +51,11 @@ kotlin {
   wasm {
     browser {
       testTask {
-        useKarma {
+        useKarma(Action {
           this.webpackConfig.experiments.add("topLevelAwait")
           useChromeHeadless()
           useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-        }
+        })
       }
     }
   }
@@ -182,7 +182,7 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 
   val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(dokkaHtml.outputDirectory)
   }
   javadocJar
@@ -196,27 +196,25 @@ publishing {
     artifactId = artifactId.replace("test", "elide-test")
 
     pom {
-      name.set("Elide Test")
-      url.set("https://github.com/elide-dev/elide")
-      description.set(
-        "Universal testing utilities in every language supported by Kotlin and Elide."
-      )
+      name = "Elide Test"
+      url = "https://github.com/elide-dev/elide"
+      description = "Universal testing utilities in every language supported by Kotlin and Elide."
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/v3")
+        url = "https://github.com/elide-dev/v3"
       }
     }
   }

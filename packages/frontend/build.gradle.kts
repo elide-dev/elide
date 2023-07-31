@@ -45,7 +45,7 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 
   val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(dokkaHtml.outputDirectory)
   }
   javadocJar
@@ -59,27 +59,27 @@ publishing {
     artifactId = artifactId.replace("frontend", "elide-frontend")
 
     pom {
-      name.set("Elide Model")
-      url.set("https://elide.dev")
-      description.set(
+      name = "Elide Model"
+      url = "https://elide.dev"
+      description = (
         "Tools for building UI experiences on top of the Elide Framework/Runtime"
-      )
+        )
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/elide")
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

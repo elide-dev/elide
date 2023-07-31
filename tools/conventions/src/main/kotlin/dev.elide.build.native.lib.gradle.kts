@@ -26,21 +26,21 @@ publishing {
 }
 
 graalvmNative {
-  testSupport.set(true)
+  testSupport = true
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(true)
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = true
 
     modes {
       standard {}
@@ -48,15 +48,15 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
     named("main") {
-      fallback.set(false)
-      sharedLibrary.set(true)
-      quickBuild.set(quickbuild)
+      fallback = false
+      sharedLibrary = true
+      quickBuild = quickbuild
       buildArgs.addAll(listOf(
         "--language:js",
         "--language:regex",
@@ -64,18 +64,18 @@ graalvmNative {
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+            vendor = JvmVendorSpec.matching(when (variant.trim()) {
               "ENTERPRISE" -> "Oracle"
               else -> "GraalVM Community"
-            }))
+            })
           }
         }
-      })
+      }
     }
 
     named("test") {
@@ -86,19 +86,19 @@ graalvmNative {
         "-Dpolyglot.image-build-time.PreinitializeContexts=js",
       ))
 
-      quickBuild.set(quickbuild)
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+      quickBuild = quickbuild
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+            vendor = JvmVendorSpec.matching(when (variant.trim()) {
               "ENTERPRISE" -> "Oracle"
               else -> "GraalVM Community"
-            }))
+            })
           }
         }
-      })
+      }
     }
   }
 }

@@ -54,27 +54,25 @@ publishing {
     artifactId = artifactId.replace("graalvm", "elide-graalvm")
 
     pom {
-      name.set("Elide React integration for GraalJS")
-      url.set("https://elide.dev")
-      description.set(
-        "Integration package with GraalVM and GraalJS."
-      )
+      name = "Elide React integration for GraalJS"
+      url = "https://elide.dev"
+      description = "Integration package with GraalVM and GraalJS."
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/elide")
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

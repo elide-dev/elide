@@ -74,7 +74,7 @@ afterEvaluate {
 // ---------------------
 // Produces sealed dependency locks for each module.
 dependencyLocking {
-  lockMode.set(LockMode.LENIENT)
+  lockMode = LockMode.LENIENT
   ignoredDependencies.addAll(listOf(
     "org.jetbrains.kotlinx:atomicfu*",
     "org.jetbrains.kotlinx:kotlinx-serialization*",
@@ -142,25 +142,25 @@ publishing {
 
   publications.withType<MavenPublication> {
     pom {
-      name.set("Elide Tools: Conventions")
-      description.set("Gradle convention plugins for use with Elide.")
-      url.set("https://github.com/elide-dev/v3")
+      name = "Elide Tools: Conventions"
+      description = "Gradle convention plugins for use with Elide."
+      url = "https://github.com/elide-dev/v3"
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/v3/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/v3")
+        url = "https://github.com/elide-dev/v3"
       }
     }
   }

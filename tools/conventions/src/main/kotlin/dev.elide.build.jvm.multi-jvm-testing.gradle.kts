@@ -69,13 +69,13 @@ fun Project.enableMultiJvmTesting(
     val jdkTest = tasks.register("testJdk$major", Test::class.java) {
       description = "Runs the test suite on JDK $major"
       group = LifecycleBasePlugin.VERIFICATION_GROUP
-      javaLauncher.set(javaToolchains.launcherFor {
-        this.languageVersion.set(JavaLanguageVersion.of(major))
-        this.vendor.set(vendor)
+      javaLauncher = javaToolchains.launcherFor {
+        this.languageVersion = JavaLanguageVersion.of(major)
+        this.vendor = vendor
         if (engine != null) {
-          this.implementation.set(engine)
+          this.implementation = engine
         }
-      })
+      }
       val testTask = tasks.named("test", Test::class.java).get()
       classpath = testTask.classpath
       testClassesDirs = testTask.testClassesDirs

@@ -205,27 +205,55 @@ public final class elide/proto/impl/data/ProtoDataFingerprint$Factory : elide/pr
 public final class elide/proto/impl/wkt/ProtoTimestamp : elide/proto/api/wkt/Timestamp {
 	public static final field Factory Lelide/proto/impl/wkt/ProtoTimestamp$Factory;
 	public synthetic fun <init> (Lcom/google/protobuf/Timestamp;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public synthetic fun factory ()Lelide/proto/api/Record$Factory;
 	public fun factory ()Lelide/proto/impl/wkt/ProtoTimestamp$Factory;
+	public fun getMillis ()J
 	public fun getNanos ()I
 	public fun getSeconds ()J
 	public fun toBuilder ()Lelide/proto/impl/wkt/ProtoTimestamp$TimestampBuilder;
 	public synthetic fun toBuilder ()Ljava/lang/Object;
 	public fun toInstant ()Lkotlinx/datetime/Instant;
+	public fun toJavaInstant ()Ljava/time/Instant;
 }
 
 public abstract interface class elide/proto/impl/wkt/ProtoTimestamp$Builder : elide/proto/api/wkt/Timestamp$IBuilder {
 }
 
 public final class elide/proto/impl/wkt/ProtoTimestamp$Factory : elide/proto/api/wkt/Timestamp$Factory {
+	public fun at (Lkotlinx/datetime/Instant;)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public fun atMilli (J)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun atMilli (J)Ljava/lang/Object;
+	public fun atSecond (J)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun atSecond (J)Ljava/lang/Object;
+	public fun atSecond (JI)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun atSecond (JI)Ljava/lang/Object;
 	public fun builder ()Lelide/proto/impl/wkt/ProtoTimestamp$TimestampBuilder;
 	public synthetic fun builder ()Ljava/lang/Object;
 	public fun copy (Lelide/proto/impl/wkt/ProtoTimestamp;)Lelide/proto/impl/wkt/ProtoTimestamp;
 	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun create (Lkotlin/jvm/functions/Function1;)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public fun defaultInstance ()Lelide/proto/impl/wkt/ProtoTimestamp;
 	public synthetic fun defaultInstance ()Ljava/lang/Object;
 	public fun empty ()Lelide/proto/impl/wkt/ProtoTimestamp;
 	public synthetic fun empty ()Ljava/lang/Object;
+	public fun from (Ljava/sql/Date;)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun from (Ljava/sql/Date;)Ljava/lang/Object;
+	public fun from (Ljava/time/Instant;)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun from (Ljava/time/Instant;)Ljava/lang/Object;
+	public fun from (Ljava/util/Date;)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun from (Ljava/util/Date;)Ljava/lang/Object;
+	public fun fromNow-LRDsOJo (J)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun fromNow-LRDsOJo (J)Ljava/lang/Object;
+	public fun millisFromNow (J)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun millisFromNow (J)Ljava/lang/Object;
+	public fun now ()Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun now ()Ljava/lang/Object;
+	public fun secondsFromNow (J)Lelide/proto/impl/wkt/ProtoTimestamp;
+	public synthetic fun secondsFromNow (J)Ljava/lang/Object;
 	public final fun toJavaInstant (Lcom/google/protobuf/Timestamp;)Ljava/time/Instant;
 	public final fun toKotlinInstant (Lcom/google/protobuf/Timestamp;)Lkotlinx/datetime/Instant;
 	public final fun toModel (Lcom/google/protobuf/Timestamp;)Lelide/proto/impl/wkt/ProtoTimestamp;

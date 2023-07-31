@@ -53,13 +53,14 @@ micronaut_rss = "3.2.0"
 micronaut_kafka = "4.4.0"
 micronaut_beanvalidation = "3.2.0"
 micronaut_kotlin = "3.2.2"
-kotlinx_coroutines = "1.7.2"
-kotlinx_collections = "0.3.5"
-kotlinx_datetime = "0.4.0"
+compose = "1.4.0-dev-wasm09"
+kotlinx_coroutines = "1.7.2-wasm0"
+kotlinx_collections = "0.4-wasm0"
+kotlinx_datetime = "0.4.0-wasm1"
+kotlinx_serialization = "1.5.2-wasm0"
+atomicfu = "0.21.0-wasm0"
 kotlinx_html = "0.8.0"
-kotlinx_serialization = "1.5.1"
 kotlinx_metadata_jvm = "0.5.0"
-atomicfu = "0.21.0"
 kotlinx_benchmark = "0.4.8"
 detekt = "1.22.0-RC3"
 dokka = "1.8.10"
@@ -278,6 +279,8 @@ flatbuffers_java_grpc = { group = "com.google.flatbuffers", name = "flatbuffers-
 kotter = { group = "com.varabyte.kotter", name = "kotter", version.ref = "kotter" }
 kotlin_compiler_embedded = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-embeddable", version.ref = "kotlin_sdk" }
 kotlin_scripting_common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin_sdk" }
+kotlin_scripting_dependencies = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies", version.ref = "kotlin_sdk" }
+kotlin_scripting_dependencies_maven = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-dependencies-maven", version.ref = "kotlin_sdk" }
 kotlin_scripting_jvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin_sdk" }
 kotlin_scripting_jvm_host = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm-host", version.ref = "kotlin_sdk" }
 kotlin_scripting_jvm_engine = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jsr223", version.ref = "kotlin_sdk" }
@@ -293,6 +296,7 @@ kotlinx_coroutines_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx_coroutines_test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_core_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx_coroutines" }
+kotlinx_coroutines_core_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-wasm", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_jdk9 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk9", version.ref = "kotlinx_coroutines" }
 kotlinx_coroutines_slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "kotlinx_coroutines" }
@@ -306,17 +310,22 @@ kotlinx_datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 kotlinx_html = { group = "org.jetbrains.kotlinx", name = "kotlinx-html", version.ref = "kotlinx_html" }
 kotlinx_html_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-js", version.ref = "kotlinx_html" }
 kotlinx_html_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm", version.ref = "kotlinx_html" }
+kotlinx_html_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-wasm", version.ref = "kotlinx_html" }
 kotlinx_serialization_core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_core_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-js", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_core_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_core_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-wasm", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_json_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-js", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_json_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_json_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-wasm", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_protobuf_js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-js", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_protobuf_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-jvm", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_protobuf_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf-wasm", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties", version.ref = "kotlinx_serialization" }
 kotlinx_serialization_properties_jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx_serialization" }
+kotlinx_serialization_properties_wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-wasm", version.ref = "kotlinx_serialization" }
 ksp_api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 autoService_ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.0.0" }

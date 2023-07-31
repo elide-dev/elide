@@ -28,9 +28,9 @@ kotlin {
     }
 
     js(IR) {
-        binaries.executable()
+        browser {}
+        nodejs {}
     }
-
     macosArm64()
     iosArm64()
     iosX64()
@@ -53,6 +53,10 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 api(project(":packages:core"))
                 implementation(libs.elide.uuid)
+                api(libs.kotlinx.collections.immutable)
+                api(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.core)
             }
         }
         val commonTest by getting {
@@ -88,7 +92,6 @@ kotlin {
             dependencies {
                 // KT-57235: fix for atomicfu-runtime error
                 api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
-
                 implementation(kotlin("stdlib-js"))
                 implementation(libs.kotlinx.coroutines.core.js)
                 implementation(libs.kotlinx.serialization.json.js)
@@ -181,5 +184,14 @@ publishing {
                 url.set("https://github.com/elide-dev/elide")
             }
         }
+    }
+}
+
+afterEvaluate {
+    tasks.named("compileTestDevelopmentExecutableKotlinJs") {
+        enabled = false
+    }
+    tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
+        enabled = false
     }
 }

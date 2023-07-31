@@ -103,7 +103,9 @@ rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
 rootProject.plugins.withType(YarnPlugin::class.java) {
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.WARNING
   rootProject.the<YarnRootExtension>().reportNewYarnLock = false
-  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
+  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = false
+  rootProject.the<YarnRootExtension>().lockFileDirectory = project.rootDir
+  rootProject.the<YarnRootExtension>().lockFileName = "yarn.lock"
 }
 
 apiValidation {

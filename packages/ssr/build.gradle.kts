@@ -88,7 +88,7 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 
   val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(dokkaHtml.outputDirectory)
   }
   javadocJar
@@ -102,27 +102,25 @@ publishing {
     artifactId = artifactId.replace("ssr", "elide-ssr")
 
     pom {
-      name.set("Elide SSR")
-      url.set("https://elide.dev")
-      description.set(
-        "Package for server-side rendering (SSR) capabilities with the Elide Framework."
-      )
+      name = "Elide SSR"
+      url = "https://elide.dev"
+      description = "Package for server-side rendering (SSR) capabilities with the Elide Framework."
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/elide")
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

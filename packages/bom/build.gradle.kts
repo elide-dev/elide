@@ -43,7 +43,7 @@ val peers = mapOf(
 )
 
 kover {
-  isDisabled.set(true)
+  isDisabled = true
 }
 
 catalog {

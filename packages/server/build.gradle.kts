@@ -20,10 +20,10 @@ kotlin {
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
+  version = libs.versions.micronaut.lib.get()
 
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "elide.server",
       "elide.server.*",
@@ -154,15 +154,15 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
 }
 
 graalvmNative {
-  testSupport.set(false)
+  testSupport = false
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
   agent {
-    enabled.set(false)
+    enabled = false
   }
 }
 
@@ -172,27 +172,25 @@ publishing {
     artifactId = artifactId.replace("server", "elide-server")
 
     pom {
-      name.set("Elide for Servers")
-      url.set("https://elide.dev")
-      description.set(
-        "Server-side tools, framework, and runtime, based on GraalVM and Micronaut"
-      )
+      name = "Elide for Servers"
+      url = "https://elide.dev"
+      description = "Server-side tools, framework, and runtime, based on GraalVM and Micronaut"
 
       licenses {
         license {
-          name.set("MIT License")
-          url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
       }
       developers {
         developer {
-          id.set("sgammon")
-          name.set("Sam Gammon")
-          email.set("samuel.gammon@gmail.com")
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
       }
       scm {
-        url.set("https://github.com/elide-dev/elide")
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

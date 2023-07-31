@@ -52,7 +52,7 @@ tasks.withType<Copy>().named("processResources") {
 
 tasks.register<Copy>("copyStatic") {
   from("src/main/resources/static/**/*.*")
-  into("${layout.buildDirectory}/resources/main/static")
+  into(layout.buildDirectory.dir("resources/main/static"))
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

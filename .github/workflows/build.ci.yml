@@ -37,7 +37,7 @@ jobs:
           egress-policy: audit
 
       - name: "Setup: Checkout"
-        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3"
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
@@ -48,7 +48,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -57,7 +57,7 @@ jobs:
       - name: "Patch: Neutralize Yarn Lock"
         run: mv yarn.lock yarn.inert
       - name: "Check: Dependency Review"
-        uses: "actions/dependency-review-action@1360a344ccb0ab6e9475edef90ad2f46bf8003b1 # v3.0.6"
+        uses: actions/dependency-review-action@1360a344ccb0ab6e9475edef90ad2f46bf8003b1 # v3.0.6
         continue-on-error: true
         with:
           config-file: "./.github/dependency-review-config.yml"
@@ -152,7 +152,7 @@ jobs:
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -269,7 +269,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -385,7 +385,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -475,7 +475,7 @@ jobs:
         uses: actions/checkout@v3
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -575,7 +575,7 @@ jobs:
         uses: actions/checkout@v3
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -694,14 +694,14 @@ jobs:
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Setup Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1"
+        uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1
         with:
           version: 389.0.0
           project_id: elide-fw
@@ -800,14 +800,14 @@ jobs:
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Authorize Service Account"
-        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1"
+        uses: google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1
         with:
           version: 389.0.0
           project_id: elide-fw

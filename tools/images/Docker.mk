@@ -20,6 +20,12 @@ ORIGIN_IMAGE_PATH ?= $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)
 PUB_IMAGE_PATH ?= $(PUB_REGISTRY)/$(REPOSITORY):$(VERSION)
 HUB_IMAGE_PATH ?= $(HUB_REGISTRY)/$(PUB_IMAGE):$(VERSION)
 
+ifeq ($(PROVENANCE),yes)
+ATTESTATIONS ?= --attest type=provenance --attest type=sbom
+else
+ATTESTATIONS ?=
+endif
+
 ifeq ($(VERBOSE),yes)
 CMD ?=
 else
@@ -40,7 +46,7 @@ endif
 
 ifeq ($(REMOTE),no)
 image:
-	$(CMD)$(DOCKER) buildx build --platform $(PLATFORMS) $(DOCKER_ARGS) --tag $(ORIGIN_IMAGE) .
+	$(CMD)$(DOCKER) buildx build --platform $(PLATFORMS) $(ATTESTATIONS) $(DOCKER_ARGS) --tag $(ORIGIN_IMAGE) .
 
 push:
 	$(CMD)$(DOCKER) buildx push $(ORIGIN_IMAGE)

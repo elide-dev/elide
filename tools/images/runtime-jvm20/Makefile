@@ -2,14 +2,14 @@
 #
 # Elide: Docker Images
 # --------------------
-# Image: JDK (v17)
+# Image: JVM (v20)
 #
 
-IMAGE ?= jdk17
+IMAGE ?= runtime/jvm20
 PROVENANCE ?= yes
-PUB_IMAGE ?= tools-$(IMAGE)
+PUB_IMAGE ?= runtime-jvm20
 REPOSITORY ?= tools/$(IMAGE)
-PUB_IMAGE_PATH ?= ghcr.io/elide-dev/tools/jdk17
+PUB_IMAGE_PATH ?= ghcr.io/elide-dev/runtime/jvm20:$(VERSION)
 ORIGIN_IMAGE ?= $(PUB_IMAGE_PATH)
 
 include ../Docker.mk

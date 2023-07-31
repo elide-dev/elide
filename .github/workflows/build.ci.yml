@@ -41,7 +41,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
@@ -139,7 +139,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
@@ -242,7 +242,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
@@ -358,7 +358,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: true
@@ -464,7 +464,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: true
@@ -564,7 +564,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: true
@@ -652,7 +652,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: false
@@ -758,7 +758,7 @@ jobs:
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
-          components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
+          components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: false

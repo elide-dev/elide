@@ -4,6 +4,9 @@
   "unused_variable",
   "DSL_SCOPE_VIOLATION",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import Java9Modularity.configure as configureJava9ModuleInfo
 
@@ -18,10 +21,14 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
-  js {
+  js(IR) {
     browser()
     nodejs()
-    binaries.executable()
+  }
+  wasm {
+    browser()
+    nodejs()
+    d8()
   }
 
   sourceSets {

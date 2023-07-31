@@ -1,6 +1,7 @@
 @file:Suppress(
   "DSL_SCOPE_VIOLATION",
   "unused",
+  "UNUSED_VARIABLE",
 )
 
 plugins {

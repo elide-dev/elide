@@ -120,9 +120,9 @@ kotlin {
     }
     val jvmTest by getting {
       kotlin.srcDirs(
-        "$projectDir/src/jvmTest/kotlin",
-        "${layout.buildDirectory}/generated/source/proto/test/grpckt",
-        "${layout.buildDirectory}/generated/source/proto/test/kotlin",
+        layout.projectDirectory.dir("src/jvmTest/kotlin"),
+        layout.buildDirectory.dir("generated/source/proto/test/grpckt"),
+        layout.buildDirectory.dir("generated/source/proto/test/kotlin"),
       )
 
       dependencies {

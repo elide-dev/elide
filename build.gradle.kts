@@ -169,7 +169,7 @@ sonarqube {
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
     property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
+    property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/merged/xml/report.xml"))
   }
 }
 
@@ -206,14 +206,15 @@ subprojects {
           Elide.serverModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.java.binaries", "${layout.buildDirectory}/classes/kotlin/main")
+            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/main"))
             property(
               "sonar.coverage.jacoco.xmlReportPaths",
               listOf(
-                "${layout.buildDirectory}reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml",
-                "${layout.buildDirectory}/reports/kover/xml/report.xml",
+                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
+                layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
+                layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
+                layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
+                layout.buildDirectory.file("reports/kover/xml/report.xml"),
               )
             )
           }
@@ -222,18 +223,18 @@ subprojects {
           Elide.frontendModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/xml/report.xml")
+            property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/xml/report.xml"))
           }
 
           // Kotlin MPP coverage via Kover
           Elide.multiplatformModules.contains(name) -> {
             property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
-            property("sonar.java.binaries", "${layout.buildDirectory}/classes/kotlin/jvm/main")
+            property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/jvm/main"))
             property(
               "sonar.coverage.jacoco.xmlReportPaths",
               listOf(
-                "${layout.buildDirectory}/reports/kover/xml/report.xml",
+                layout.buildDirectory.file("reports/kover/xml/report.xml"),
               )
             )
           }
@@ -264,7 +265,7 @@ subprojects {
   }
 
   val detektMerge by tasks.registering(ReportMergeTask::class) {
-    output = rootProject.layout.buildDirectory.asFile.get().resolve("reports/detekt/elide.sarif")
+    output = rootProject.layout.buildDirectory.file("reports/detekt/elide.sarif")
   }
 
   plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
@@ -424,7 +425,7 @@ afterEvaluate {
 if (buildDocs == "true") {
   tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
     includes.from("README.md")
-    outputDirectory = layout.buildDirectory.asFile.get().resolve("docs/kotlin/html")
+    outputDirectory = layout.buildDirectory.dir("docs/kotlin/html").get().asFile
   }
 }
 
@@ -436,7 +437,7 @@ tasks {
   }
 
   htmlDependencyReport {
-    reports.html.outputLocation = file("${layout.buildDirectory}/reports/project/dependencies")
+    reports.html.outputLocation = file(layout.buildDirectory.dir("reports/project/dependencies"))
   }
 }
 

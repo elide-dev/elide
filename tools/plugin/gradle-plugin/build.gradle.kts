@@ -58,7 +58,7 @@ sonarqube {
         property("sonar.dynamicAnalysis", "reuseReports")
         property("sonar.junit.reportsPath", "build/reports/")
         property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/merged/xml/report.xml"))
         property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
         property("sonar.sourceEncoding", "UTF-8")
     }
@@ -91,10 +91,11 @@ subprojects {
             property(
                 "sonar.coverage.jacoco.xmlReportPaths",
                 listOf(
-                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                    "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml",
-                    "${layout.buildDirectory}/reports/kover/xml/coverage.xml",
+                    layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
+                    layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
+                    layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
+                    layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
+                    layout.buildDirectory.file("reports/kover/xml/report.xml"),
                 )
             )
         }

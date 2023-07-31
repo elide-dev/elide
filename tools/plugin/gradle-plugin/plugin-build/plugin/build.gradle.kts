@@ -57,9 +57,9 @@ sonarqube {
         property("sonar.organization", "elide-dev")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.dynamicAnalysis", "reuseReports")
-        property("sonar.junit.reportsPath", "${layout.buildDirectory}/reports/")
+        property("sonar.junit.reportsPath", layout.buildDirectory.dir("reports"))
         property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/merged/xml/report.xml"))
         property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
         property("sonar.sourceEncoding", "UTF-8")
     }
@@ -320,10 +320,11 @@ subprojects {
             property(
                 "sonar.coverage.jacoco.xmlReportPaths",
                 listOf(
-                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                    "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml",
-                    "${layout.buildDirectory}/reports/kover/xml/coverage.xml",
+                    layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"),
+                    layout.buildDirectory.file("reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml"),
+                    layout.buildDirectory.file("reports/jacoco/test/jacocoTestReport.xml"),
+                    layout.buildDirectory.file("reports/kover/xml/coverage.xml"),
+                    layout.buildDirectory.file("reports/kover/xml/report.xml"),
                 )
             )
         }
@@ -345,7 +346,7 @@ tasks.create<Copy>("copyNodeRuntimeAssets") {
         include("**/*.js")
         include("**/*.json")
     }
-    into("${project.layout.buildDirectory}/elideJsRuntime/sources")
+    into(project.layout.buildDirectory.dir("elideJsRuntime/sources"))
 }
 
 tasks.create<Tar>("packageRuntimeAssets") {
@@ -357,14 +358,14 @@ tasks.create<Tar>("packageRuntimeAssets") {
     archiveExtension.set("tar.gz")
     archiveVersion.set("")
     destinationDirectory.set(
-        file("${project.layout.buildDirectory}/resources/main/dev/elide/buildtools/js/runtime")
+        file(layout.buildDirectory.dir("resources/main/dev/elide/buildtools/js/runtime"))
     )
 
     dependsOn(
         tasks.named("copyNodeRuntimeAssets")
     )
     into("/") {
-        from("${project.layout.buildDirectory}/elideJsRuntime/sources")
+        from(layout.buildDirectory.dir("elideJsRuntime/sources"))
         include(
             "**/*.json",
             "**/*.js"

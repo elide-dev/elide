@@ -194,27 +194,6 @@ jobs:
           name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
             build/reports/**/*.*
-      - name: "Run: Detekt"
-        if: ${{ matrix.os == 'ubuntu' }}
-        run: ./gradlew --no-daemon --warning-mode=none detekt -Pelide.ci=true -PbuildDocs=false -PbuildSamples=true -PbuildDocsSite=false -Pversions.java.language=19
-        continue-on-error: true
-      - name: "Fix: SARIF Paths"
-        if: ${{ matrix.os == 'ubuntu' }}
-        continue-on-error: true
-        run: |
-          echo "$(
-          jq \
-           --arg github_workspace ${{ github.workspace }} \
-           '. | ( .runs[].results[].locations[].physicalLocation.artifactLocation.uri |= if test($github_workspace) then .[($github_workspace | length | . + 1):] else . end )' \
-           ${{ github.workspace }}/build/reports/detekt/elide.sarif
-          )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
-      - name: "Report: SARIF"
-        if: ${{ matrix.os == 'ubuntu' }}
-        uses: github/codeql-action/upload-sarif@0ba4244466797eb048eb91a6cd43d5c03ca8bd05 # v2.21.2
-        continue-on-error: true
-        with:
-          sarif_file: ./build/reports/detekt/elide.sarif
-          category: detekt
       - name: "Build: Provenance Subject"
         id: hash
         if: ${{ matrix.os == 'ubuntu' }}

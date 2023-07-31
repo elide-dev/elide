@@ -40,12 +40,12 @@ buildConfig {
 }
 
 ktlint {
-  debug.set(false)
-  verbose.set(false)
-  android.set(false)
-  outputToConsole.set(false)
-  ignoreFailures.set(true)
-  enableExperimentalRules.set(true)
+  debug = false
+  verbose = false
+  android = false
+  outputToConsole = false
+  ignoreFailures = true
+  enableExperimentalRules = true
 }
 
 // JVM: Testing
@@ -133,7 +133,7 @@ dependencies {
 }
 
 application {
-  mainClass.set(entrypoint)
+  mainClass = entrypoint
 }
 
 publishing {
@@ -153,10 +153,10 @@ sonarqube {
  * Framework: Micronaut
  */
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NONE)
+  version = libs.versions.micronaut.lib.get()
+  runtime = io.micronaut.gradle.MicronautRuntime.NONE
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "elide.tool.bundler",
       "elide.tool.bundler.*",
@@ -164,13 +164,13 @@ micronaut {
   }
 
   aot {
-    configFile.set(file("$projectDir/aot-native.properties"))
+    configFile = file("$projectDir/aot-native.properties")
 
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    optimizeClassLoading.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+    optimizeClassLoading = true
   }
 }
 
@@ -305,22 +305,22 @@ fun nativeImageArgs(
   ).toList()
 
 graalvmNative {
-  toolchainDetection.set(false)
-  testSupport.set(true)
+  toolchainDetection = false
+  testSupport = true
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(System.getenv("GRAALVM_AGENT") == "true")
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = System.getenv("GRAALVM_AGENT") == "true"
 
     modes {
       standard {}
@@ -328,73 +328,73 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
     named("main") {
-      imageName.set("bundler")
-      fallback.set(false)
+      imageName = "bundler"
+      fallback = false
       buildArgs.addAll(nativeImageArgs())
-      quickBuild.set(quickbuild)
-      sharedLibrary.set(false)
+      quickBuild = quickbuild
+      sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
 
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+            vendor = JvmVendorSpec.matching(when (variant.trim()) {
               "ENTERPRISE" -> "Oracle"
               else -> "GraalVM Community"
-            }))
+            })
           }
         }
-      })
+      }
     }
 
     named("optimized") {
-      imageName.set("bundler")
-      fallback.set(false)
+      imageName = "bundler"
+      fallback = false
       buildArgs.addAll(nativeImageArgs())
-      quickBuild.set(quickbuild)
-      sharedLibrary.set(false)
+      quickBuild = quickbuild
+      sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
 
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+            vendor = JvmVendorSpec.matching(when (variant.trim()) {
               "ENTERPRISE" -> "Oracle"
               else -> "GraalVM Community"
-            }))
+            })
           }
         }
-      })
+      }
     }
 
     named("test") {
-      imageName.set("bundler-test")
-      fallback.set(false)
+      imageName = "bundler-test"
+      fallback = false
       buildArgs.addAll(nativeImageArgs().plus(testOnlyArgs))
-      quickBuild.set(quickbuild)
+      quickBuild = quickbuild
 
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of((project.properties["versions.java.language"] as String)))
+      javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
         if (project.hasProperty("elide.graalvm.variant")) {
           val variant = project.property("elide.graalvm.variant") as String
           if (variant != "COMMUNITY") {
-            vendor.set(JvmVendorSpec.matching(when (variant.trim()) {
+            vendor = JvmVendorSpec.matching(when (variant.trim()) {
               "ENTERPRISE" -> "Oracle"
               else -> "GraalVM Community"
-            }))
+            })
           }
         }
-      })
+      }
     }
   }
 }
@@ -406,13 +406,13 @@ graalvmNative {
 
 tasks {
   dockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest")
-    buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    buildStrategy = io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT
   }
 
   optimizedDockerfileNative {
-    graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest")
-    buildStrategy.set(io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT)
+    graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
+    buildStrategy = io.micronaut.gradle.docker.DockerBuildStrategy.DEFAULT
   }
 }
 
@@ -429,15 +429,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
-  images.set(listOf(
+  images = listOf(
     "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:latest"
-  ))
+  )
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
-  images.set(listOf(
+  images = listOf(
     "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:opt-latest"
-  ))
+  )
 }
 
 // Bundler tool is native-only.

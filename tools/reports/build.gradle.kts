@@ -16,19 +16,19 @@ plugins {
 val antJUnit: Configuration by configurations.creating
 
 kover {
-  isDisabled.set(true)
+  isDisabled = true
 }
 
 reporting {
   reports {
     val testAggregateTestReport by creating(AggregateTestReport::class) {
-      testType.set(TestSuiteType.UNIT_TEST)
+      testType = TestSuiteType.UNIT_TEST
     }
     val testCodeCoverageReport by creating(JacocoCoverageReport::class) {
-      testType.set(TestSuiteType.UNIT_TEST)
+      testType = TestSuiteType.UNIT_TEST
       reportTask {
         reports {
-          xml.required.set(true)
+          xml.required = true
         }
       }
     }

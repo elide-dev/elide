@@ -78,6 +78,7 @@ jobs:
           arguments: |
             apiCheck
             --dependency-verification=lenient
+            --write-locks
             --no-daemon
             --warning-mode=none
             -Pelide.ci=true

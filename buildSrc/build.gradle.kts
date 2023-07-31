@@ -31,12 +31,9 @@ dependencies {
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.ksp)
-  implementation(libs.plugin.kotlin.allopen)
-  implementation(libs.plugin.kotlin.noarg)
   implementation(libs.plugin.kotlinx.serialization)
   implementation(libs.plugin.kotlinx.abiValidator)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-  api("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 }
 
 java {
@@ -48,6 +45,8 @@ afterEvaluate {
   tasks {
     compileKotlin.configure {
       kotlinOptions {
+        apiVersion = "1.9"
+        languageVersion = "1.9"
         jvmTarget = javaLanguageTarget
         javaParameters = true
       }
@@ -55,6 +54,8 @@ afterEvaluate {
 
     compileTestKotlin.configure {
       kotlinOptions {
+        apiVersion = "1.9"
+        languageVersion = "1.9"
         jvmTarget = javaLanguageTarget
         javaParameters = true
       }

@@ -1,6 +1,6 @@
 [versions]
-elide = "1.0-v3-alpha3-b7"
-elide_plugin = "1.0.0-beta21"
+elide = "1.0-v3-alpha4-b9"
+elide_plugin = "1.0.0-beta23"
 kotlin_sdk = "1.9.0"
 kotlin_language = "1.9"
 jna = "5.8.0"
@@ -630,21 +630,21 @@ elide_uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide_uu
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_test = { group = "dev.elide", name = "elide-test", version.ref = "elide" }
-elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
-elide_proto = { group = "dev.elide", name = "proto-core", version.ref = "elide" }
-elide_proto_protobuf = { group = "dev.elide", name = "proto-protobuf", version.ref = "elide" }
-elide_proto_flatbuffers = { group = "dev.elide", name = "proto-flatbuffers", version.ref = "elide" }
-elide_proto_kotlinx = { group = "dev.elide", name = "proto-kotlinx", version.ref = "elide" }
-elide_platform = { group = "dev.elide.tools", name = "platform", version.ref = "elide" }
-elide_bom = { group = "dev.elide", name = "bom", version.ref = "elide" }
-elide_bom_catalog = { group = "dev.elide", name = "bom-catalog", version.ref = "elide" }
-elide_frontend = { group = "dev.elide", name = "frontend", version.ref = "elide" }
-elide_graalvm = { group = "dev.elide", name = "graalvm", version.ref = "elide" }
-elide_graalvm_js = { group = "dev.elide", name = "graalvm-js", version.ref = "elide" }
-elide_graalvm_react = { group = "dev.elide", name = "graalvm-react", version.ref = "elide" }
-elide_model = { group = "dev.elide", name = "model", version.ref = "elide" }
-elide_rpc = { group = "dev.elide", name = "rpc", version.ref = "elide" }
-elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
+elide_ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
+elide_proto = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
+elide_proto_protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
+elide_proto_flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
+elide_proto_kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }
+elide_platform = { group = "dev.elide.tools", name = "elide-platform", version.ref = "elide" }
+elide_bom = { group = "dev.elide", name = "elide-bom", version.ref = "elide" }
+elide_bom_catalog = { group = "dev.elide", name = "elide-bom-catalog", version.ref = "elide" }
+elide_frontend = { group = "dev.elide", name = "elide-frontend", version.ref = "elide" }
+elide_graalvm = { group = "dev.elide", name = "elide-graalvm", version.ref = "elide" }
+elide_graalvm_js = { group = "dev.elide", name = "elide-graalvm-js", version.ref = "elide" }
+elide_graalvm_react = { group = "dev.elide", name = "elide-graalvm-react", version.ref = "elide" }
+elide_model = { group = "dev.elide", name = "elide-model", version.ref = "elide" }
+elide_rpc = { group = "dev.elide", name = "elide-rpc", version.ref = "elide" }
+elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
 elide_tools_processor = { group = "dev.elide.tools", name = "processor", version.ref = "elide" }
 elide_tools_conventions = { group = "dev.elide.tools", name = "elide-convention-plugins", version.ref = "elide" }
 elide_tools_substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }

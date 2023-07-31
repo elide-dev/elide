@@ -103,7 +103,7 @@ val assetStatic by configurations.creating {
 artifacts {
   add(assetStatic.name, file("${projectDir}/src/main/assets/base.css"))
 
-  add(assetDist.name, file("${buildDir}/distributions/ui.js")) {
+  add(assetDist.name, file("${layout.buildDirectory}/distributions/ui.js")) {
     builtBy("browserDistribution")
   }
 }
@@ -134,7 +134,7 @@ tasks.create("copyStaticAssets", Copy::class.java) {
   from("$projectDir/src/main/assets/") {
     include("*.*")
   }
-  into("${buildDir}/processedResources/js/main/assets/")
+  into("${layout.buildDirectory}/processedResources/js/main/assets/")
 }
 
 tasks.named("processResources").configure {

@@ -19,14 +19,13 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Felide-dev%2Fv3.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Felide-dev%2Fv3?ref=badge_shield)
-
-[![Java 19](https://img.shields.io/badge/Java-19-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
+[![Java 20](https://img.shields.io/badge/Java-20-blue.svg?logo=oracle)](https://openjdk.org/projects/jdk/19/)
 [![GraalVM](https://img.shields.io/badge/GraalVM-22.3.x-blue.svg?logo=oracle)](https://www.graalvm.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 
-Latest version: `1.0-v3-alpha3-b7`
+Latest version: `1.0-v3-alpha4-b9`
 
 <hr />
 
@@ -35,7 +34,7 @@ Kotlin and deploy everywhere: your server, the browser, and native app targets.
 
 ## Using Elide as a runtime
 
-First and foremost, Elide is a runtime. The runtime is **still in alpha**. You can try it like with:
+First and foremost, Elide is a runtime. The runtime is **still in alpha**. You can try it with:
 ```bash
 curl -sSL --tlsv1.2 "dl.elide.dev/cli/install.sh" | bash -s -
 ```
@@ -55,13 +54,13 @@ to use (typically `server`) and add it via Gradle or Maven:
 
 ```groovy
 dependencies {
-    implementation 'dev.elide:elide-server:1.0-v3-alpha3-b7'
+    implementation 'dev.elide:elide-server:1.0-v3-alpha4-b9'
 }
 ```
 
 ```kotlin
 dependencies {
-    implementation("dev.elide:elide-server:1.0-v3-alpha3-b7")
+    implementation("dev.elide:elide-server:1.0-v3-alpha4-b9")
 }
 ```
 
@@ -71,7 +70,7 @@ dependencies {
 <dependency>
     <groupId>dev.elide</groupId>
     <artifactId>elide-server</artifactId>
-    <version>1.0-v3-alpha3-b7</version>
+    <version>1.0-v3-alpha4-b9</version>
 </dependency>
 ```
 
@@ -302,12 +301,13 @@ The following version matrix indicates tested support across tool and platform v
 Following this guide is recommended but optional. Depending on the style of development you're doing with Elide, you may
 not need some of these components:
 
-| Status                                                          | **Java**    | **Kotlin** | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-| --------------------------------------------------------------- |-------------|------------| ----------- |---------------| --------- |--------------------|
-| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 19`   | `1.9.0`    | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.51.0` |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`   | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.1`/`1.51.0`  |
-| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`   | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
-| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --         | --          | --            | --        | --                 |
+| Status                                                          | **Java**    | **Kotlin**   | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
+| --------------------------------------------------------------- |-------------|--------------|-------------|---------------| --------- |--------------------|
+| ![Status](https://img.shields.io/badge/-experimental-important) | `Java 20`   | `1.9.0-wasm` | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.0`      | `23.0.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.56.1` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`     | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |
+| ![Status](https://img.shields.io/badge/-tested-success)         | `Java 11`   | `1.7.22`     | `22.3.x`    | `3.5.x`       | `18.x`    | `3.20.1`/`1.46.0`  |
+| ![Status](https://img.shields.io/badge/-no%20support-yellow)    | `Java 8-10` | --           | --          | --            | --        | --                 |
 
 If you aren't using certain components on this list, for example, gRPC/Protobuf, you can ignore that column entirely.
 

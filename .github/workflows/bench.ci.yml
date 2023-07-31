@@ -10,6 +10,9 @@ on:
 env:
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
+permissions:
+  contents: read
+
 jobs:
   ##
   ## Job: Benchmarks
@@ -53,10 +56,15 @@ jobs:
         shell: bash
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         if: ${{ matrix.engine == 'graalvm' }}
         with:
           components: "native-image,js,wasm"
@@ -64,13 +72,13 @@ jobs:
           java-version: ${{ matrix.java }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Zulu"
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2 # v3.12.0
         if: ${{ matrix.engine != 'graalvm' }}
         with:
           distribution: ${{ matrix.engine }}
           java-version: ${{ matrix.java }}
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 18
           cache: "yarn"
@@ -105,7 +113,7 @@ jobs:
           path: ./benchmark_reports
           key: ${{ runner.os }}-${{ matrix.engine }}-${{ matrix.java }}-benchmark
       - name: "Upload Benchmark Report"
-        uses: benchmark-action/github-action-benchmark@v1
+        uses: benchmark-action/github-action-benchmark@70405016b032d44f409e4b1b451c40215cbe2393 # v1.18.0
         continue-on-error: true
         with:
           name: "Elide: Server (${{ matrix.os }}, ${{ matrix.engine }}, JDK ${{ matrix.java }})"

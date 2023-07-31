@@ -17,13 +17,13 @@ steps:
       "--use"
     ]
   - name: "gcr.io/cloud-builders/docker"
-    dir: "tools/images/gvm11"
+    dir: "tools/images/gvm20"
     args: [
       "buildx",
       "build",
       "--push",
       "--platform", "linux/arm64,linux/amd64",
-      "--tag", "us-docker.pkg.dev/elide-fw/tools/gvm11",
+      "--tag", "us-docker.pkg.dev/elide-fw/tools/gvm20",
       "."
     ]
 options:

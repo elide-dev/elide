@@ -331,15 +331,25 @@ cloning the project, you can run `make help` to get familiar with some standard 
   Elide:
   api-check                      Check API/ABI compatibility with current changes.
   build                          Build the main library, and code-samples if SAMPLES=yes.
+  clean-cli                      Clean built CLI targets.
   clean-docs                     Clean documentation targets.
   clean-site                     Clean site targets.
   clean                          Clean build outputs and caches.
   cli-local                      Build the Elide command line tool and install it locally (into ~/bin, or LOCAL_CLI_INSTALL_DIR).
+  cli-release                    Build an Elide command-line release.
   cli                            Build the Elide command-line tool (native target).
   distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
   docs                           Generate docs for all library modules.
   forceclean                     DANGER: Clean, distclean, and clear untracked files.
   help                           Show this help text ('make help').
+  image-base-alpine              Build base Alpine image.
+  image-base                     Build base Ubuntu image.
+  image-gvm17                    Build GVM17 builder image.
+  image-jdk17                    Build JDK17 builder image.
+  image-native-alpine            Build native Alpine base image.
+  image-native                   Build native Ubuntu base image.
+  image-runtime-jvm17            Build runtime GVM17 builder image.
+  images                         Build all Docker images.
   publish                        Publish a new version of all Elide packages.
   relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
   reports                        Generate reports for tests, coverage, etc.

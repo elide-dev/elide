@@ -152,7 +152,7 @@ updates:
       interval: daily
 
   - package-ecosystem: docker
-    directory: /tools/images/gvm19
+    directory: /tools/images/gvm20
     schedule:
       interval: daily
 

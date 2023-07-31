@@ -27,9 +27,7 @@ val embeddedCompose: String by settings
 val embeddedR8: String by settings
 
 dependencyResolutionManagement {
-  repositoriesMode.set(
-    RepositoriesMode.PREFER_PROJECT
-  )
+  repositoriesMode = RepositoriesMode.PREFER_PROJECT
   repositories {
     maven("https://maven.pkg.st/")
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")

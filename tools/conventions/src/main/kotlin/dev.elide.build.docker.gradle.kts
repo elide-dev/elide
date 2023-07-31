@@ -11,9 +11,9 @@ docker {
     val creds = System.getenv("GOOGLE_APPLICATION_CREDENTIALS")
     if (creds?.isNotBlank() == true) {
       registryCredentials {
-        url.set("https://us-docker.pkg.dev")
-        username.set("_json_key")
-        password.set(file(creds).readText())
+        url = "https://us-docker.pkg.dev"
+        username = "_json_key"
+        password = file(creds).readText()
       }
     } else error(
       "Failed to resolve Docker credentials for CI"

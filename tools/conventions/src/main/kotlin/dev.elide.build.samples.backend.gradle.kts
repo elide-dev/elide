@@ -14,21 +14,21 @@ val quickbuild = (
 )
 
 graalvmNative {
-  testSupport.set(true)
+  testSupport = true
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
   agent {
-    defaultMode.set("standard")
-    builtinCallerFilter.set(true)
-    builtinHeuristicFilter.set(true)
-    enableExperimentalPredefinedClasses.set(false)
-    enableExperimentalUnsafeAllocationTracing.set(false)
-    trackReflectionMetadata.set(true)
-    enabled.set(true)
+    defaultMode = "standard"
+    builtinCallerFilter = true
+    builtinHeuristicFilter = true
+    enableExperimentalPredefinedClasses = false
+    enableExperimentalUnsafeAllocationTracing = false
+    trackReflectionMetadata = true
+    enabled = true
 
     modes {
       standard {}
@@ -36,19 +36,19 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.add("test")
       outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting.set(true)
+      mergeWithExisting = true
     }
   }
 
   binaries {
     named("main") {
-      fallback.set(false)
-      sharedLibrary.set(false)
-      quickBuild.set(quickbuild)
+      fallback = false
+      sharedLibrary = false
+      quickBuild = quickbuild
     }
 
     named("test") {
-      quickBuild.set(quickbuild)
+      quickBuild = quickbuild
     }
   }
 }
@@ -70,13 +70,13 @@ tasks.named<io.micronaut.gradle.docker.MicronautDockerfile>("optimizedDockerfile
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/builder:latest"
   baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }
 
 tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("optimizedDockerfileNative") {
-  graalImage.set("${project.properties["elide.publish.repo.docker.tools"]}/builder:latest")
+  graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/builder:latest"
   baseImage("${project.properties["elide.publish.repo.docker.tools"]}/runtime/native:latest")
   args("-H:+StaticExecutableWithDynamicLibC")
 }

@@ -24,9 +24,7 @@ val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
 
 kover {
   xmlReport {
-    onCheck.set(
-      project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
-    )
+    onCheck = project.hasProperty("elide.ci") && project.properties["elide.ci"] == "true"
   }
 }
 
@@ -41,7 +39,7 @@ kotlin {
     browser {
       commonWebpackConfig(Action {
         cssSupport {
-          enabled.set(true)
+          enabled = true
         }
       })
     }

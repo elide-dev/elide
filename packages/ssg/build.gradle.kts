@@ -134,7 +134,7 @@ dependencies {
 }
 
 application {
-  mainClass.set("elide.tool.ssg.SiteCompiler")
+  mainClass = "elide.tool.ssg.SiteCompiler"
 }
 
 publishing {
@@ -150,25 +150,25 @@ sonarqube {
 }
 
 micronaut {
-  version.set(libs.versions.micronaut.lib.get())
-  runtime.set(io.micronaut.gradle.MicronautRuntime.NETTY)
+  version = libs.versions.micronaut.lib.get()
+  runtime = io.micronaut.gradle.MicronautRuntime.NETTY
   processing {
-    incremental.set(true)
+    incremental = true
     annotations.addAll(listOf(
       "elide.tool.ssg.*",
     ))
   }
 
   aot {
-    optimizeServiceLoading.set(true)
-    convertYamlToJava.set(true)
-    precomputeOperations.set(true)
-    cacheEnvironment.set(true)
-    optimizeClassLoading.set(true)
-    optimizeNetty.set(true)
+    optimizeServiceLoading = true
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+    optimizeClassLoading = true
+    optimizeNetty = true
 
     netty {
-      enabled.set(true)
+      enabled = true
     }
   }
 }
@@ -210,21 +210,21 @@ afterEvaluate {
 }
 
 graalvmNative {
-  testSupport.set(false)  // disabled for now due to micronaut test bugs in native
+  testSupport = false  // disabled for now due to micronaut test bugs in native
 
   metadataRepository {
-    enabled.set(true)
-    version.set(GraalVMVersions.graalvmMetadata)
+    enabled = true
+    version = GraalVMVersions.graalvmMetadata
   }
 
 //  agent {
-//    defaultMode.set("standard")
-//    builtinCallerFilter.set(true)
-//    builtinHeuristicFilter.set(true)
-//    enableExperimentalPredefinedClasses.set(false)
-//    enableExperimentalUnsafeAllocationTracing.set(false)
-//    trackReflectionMetadata.set(true)
-//    enabled.set(true)
+//    defaultMode = "standard"
+//    builtinCallerFilter = true
+//    builtinHeuristicFilter = true
+//    enableExperimentalPredefinedClasses = false
+//    enableExperimentalUnsafeAllocationTracing = false
+//    trackReflectionMetadata = true
+//    enabled = true
 //
 //    modes {
 //      standard {}
@@ -232,14 +232,14 @@ graalvmNative {
 //    metadataCopy {
 //      inputTaskNames.add("test")
 //      outputDirectories.add("src/main/resources/META-INF/native-image")
-//      mergeWithExisting.set(true)
+//      mergeWithExisting = true
 //    }
 //  }
 
   binaries {
     named("main") {
-      fallback.set(false)
-      sharedLibrary.set(false)
+      fallback = false
+      sharedLibrary = false
       buildArgs.addAll(listOf(
         "--language:regex",
         "--gc=epsilon",
@@ -261,7 +261,7 @@ graalvmNative {
         "-H:IncludeLocales=en",
         "--enable-all-security-services",
       ))
-      quickBuild.set(quickbuild)
+      quickBuild = quickbuild
     }
 
     named("test") {
@@ -269,7 +269,7 @@ graalvmNative {
         "--language:regex",
         "--enable-all-security-services",
       ))
-      quickBuild.set(quickbuild)
+      quickBuild = quickbuild
     }
   }
 }

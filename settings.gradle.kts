@@ -25,6 +25,7 @@ System.setProperty("elide.home", rootProject.projectDir.toString())
 val micronautVersion: String by settings
 val embeddedCompose: String by settings
 val embeddedR8: String by settings
+val buildUuid: String by settings
 
 dependencyResolutionManagement {
   repositoriesMode = RepositoriesMode.PREFER_PROJECT
@@ -74,7 +75,7 @@ if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
 if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
 
 // 4: External builds.
-includeBuild("packages/uuid") {
+if (buildUuid == "true") includeBuild("packages/uuid") {
   dependencySubstitution {
     substitute(module("dev.elide:elide-uuid")).using(project(":"))
   }

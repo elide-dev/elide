@@ -52,16 +52,16 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 afterEvaluate {
   tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-      apiVersion = "1.8"
-      languageVersion = "1.8"
-      jvmTarget = "11"
+      apiVersion = "1.9"
+      languageVersion = "1.9"
+      jvmTarget = "17"
       javaParameters = true
       allWarningsAsErrors = false
       incremental = true

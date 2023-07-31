@@ -40,10 +40,6 @@ java {
 }
 
 kotlin {
-//  jvmToolchain {
-//    languageVersion = JavaLanguageVersion.of(javaLanguageVersion)
-//  }
-
   sourceSets.all {
     languageSettings.apply {
       apiVersion = kotlinLanguageVersion

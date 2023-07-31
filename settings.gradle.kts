@@ -98,12 +98,9 @@ include(
   ":packages:proto:proto-flatbuffers",
   ":packages:proto:proto-kotlinx",
   ":packages:proto:proto-protobuf",
-  ":packages:rpc",
   ":packages:server",
-  ":packages:ssg",
   ":packages:ssr",
   ":packages:test",
-  ":tools:bundler",
   ":tools:processor",
   ":tools:reports",
 )
@@ -113,12 +110,19 @@ val buildDocsSite: String by settings
 val buildSamples: String by settings
 val buildPlugins: String by settings
 val buildBenchmarks: String by settings
+val buildRpc: String by settings
+val buildSsg: String by settings
 
 if (buildPlugins == "true") {
   includeBuild(
     "tools/plugin/gradle-plugin",
   )
 }
+
+if (buildSsg =="true") include(
+  ":packages:ssg",
+  ":tools:bundler",
+)
 
 if (buildSamples == "true") {
   include(
@@ -135,6 +139,8 @@ if (buildSamples == "true") {
     ":samples:fullstack:react-ssr:server",
   )
 }
+
+if (buildRpc == "true") include(":packages:rpc")
 
 if (buildDocs == "true") {
   include(

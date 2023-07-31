@@ -35,8 +35,16 @@ reporting {
   }
 }
 
+val buildSsg by properties
+
 dependencies {
   Elide.serverModules.plus(
+    if (buildSsg == "true") {
+      listOf("ssg")
+    } else {
+      emptyList()
+    }
+  ).plus(
     Elide.multiplatformModules
   ).forEach {
     testReportAggregation(project(":packages:$it"))
@@ -57,7 +65,7 @@ task<Copy>("locateCopyJUnitReports") {
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
-    val path = file("${it.buildDir}/test-results/test")
+    val path = file("${it.layout.buildDirectory}/test-results/test")
     if (path.exists()) {
       java.util.Optional.of(path)
     } else {

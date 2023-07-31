@@ -15,7 +15,6 @@ pluginManagement {
 plugins {
   id("build.less") version("1.0.0-beta1")
   id("com.gradle.enterprise") version("3.14")
-//  id("org.gradle.toolchains.foojay-resolver-convention") version("0.6.0")
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -173,22 +172,6 @@ val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 buildless {
   // nothing to configure at this time
 }
-
-// buildCache {
-//   local {
-//     isEnabled = false
-//   }
-//   remote<HttpBuildCache> {
-//     url = uri("https://gradle.less.build/cache/generic")
-//     isEnabled = true
-//     isPush = true
-//     isUseExpectContinue = true
-//     credentials {
-//       username = "apikey"
-//       password = System.getenv("BUILDLESS_APIKEY")
-//     }
-//   }
-// }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")

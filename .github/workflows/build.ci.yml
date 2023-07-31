@@ -31,10 +31,15 @@ jobs:
       packages: "read"
       pull-requests: "write"
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3"
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -43,7 +48,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -52,7 +57,7 @@ jobs:
       - name: "Patch: Neutralize Yarn Lock"
         run: mv yarn.lock yarn.inert
       - name: "Check: Dependency Review"
-        uses: "actions/dependency-review-action@v3"
+        uses: "actions/dependency-review-action@1360a344ccb0ab6e9475edef90ad2f46bf8003b1 # v3.0.6"
         continue-on-error: true
         with:
           config-file: "./.github/dependency-review-config.yml"
@@ -123,10 +128,15 @@ jobs:
       hashes: ${{ steps.hash.outputs.hashes }}
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: GraalVM (Java 20)"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -134,7 +144,7 @@ jobs:
           check-for-updates: ${{ matrix.os == 'ubuntu' }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
           cache: "yarn"
@@ -142,7 +152,7 @@ jobs:
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -178,7 +188,7 @@ jobs:
             -Pversions.java.language=19
       - name: "Build reports"
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: build-reports-${{ matrix.os }}-latest-gvm-latest
           path: |
@@ -199,7 +209,7 @@ jobs:
           )" > ${{ github.workspace }}/build/reports/detekt/elide.sarif
       - name: "Report: SARIF"
         if: ${{ matrix.os == 'ubuntu' }}
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@0ba4244466797eb048eb91a6cd43d5c03ca8bd05 # v2.21.2
         continue-on-error: true
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
@@ -240,12 +250,17 @@ jobs:
       pull-requests: "write"
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
       - name: "Setup: GraalVM (Java 20)"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -254,14 +269,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
           cache: "yarn"
@@ -299,7 +314,7 @@ jobs:
             -PbuildDocs=false
             -PbuildDocsSite=false
             -Pversions.java.language=19
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: test-reports-jvm
           path: |
@@ -310,12 +325,12 @@ jobs:
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
       - name: "Annotate: Test Results"
-        uses: elide-tools/action-junit-report@v3
+        uses: elide-tools/action-junit-report@f14b1271fab649beb23e70eae2a258f3ee24a591 # v3.1.0
         if: always() # always run even if the previous step fails
         with:
           report_paths: "**/build/test-results/test/TEST-*.xml"
       - name: "Report: Codecov (Main)"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/reports/kover/merged/xml/report.xml
@@ -324,7 +339,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Substrate)"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./tools/substrate/build/reports/kover/merged/xml/report.xml
@@ -333,7 +348,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Plugin)"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./tools/plugin/gradle-plugin/plugin-build/plugin/build/reports/kover/xml/report.xml
@@ -353,10 +368,15 @@ jobs:
     if: false
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -365,14 +385,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
           cache: "yarn"
@@ -406,7 +426,7 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
             -Pversions.java.language=19
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: test-reports-native
           path: |
@@ -644,8 +664,13 @@ jobs:
             labs: true
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -653,30 +678,30 @@ jobs:
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2.2.0
       - name: "Setup: Docker"
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@4c0219f9ac95b02789c1075625400b2acbff50b1 # v2.9.1
         id: buildx
         with:
           install: true
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Setup Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v1"
+        uses: "google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1"
         with:
           version: 389.0.0
           project_id: elide-fw
@@ -684,7 +709,7 @@ jobs:
         run: |
           gcloud auth configure-docker us-docker.pkg.dev
       - name: "Authorize Docker: GHCR"
-        uses: docker/login-action@v2
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
           registry: ghcr.io
           username: elidebot
@@ -745,8 +770,13 @@ jobs:
             image: "elide-fw/samples/fullstack/react-ssr/native"
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js,wasm,python,ruby,llvm,llvm-toolchain,espresso"
           distribution: 'graalvm'
@@ -754,30 +784,30 @@ jobs:
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2.2.0
       - name: "Setup: Docker"
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@4c0219f9ac95b02789c1075625400b2acbff50b1 # v2.9.1
         id: buildx
         with:
           install: true
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
       - id: "auth"
         name: "Authorize Service Account"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1"
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
       - name: "Setup: Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v1"
+        uses: "google-github-actions/setup-gcloud@e30db14379863a8c79331b04a9969f4c1e225e0b # v1.1.1"
         with:
           version: 389.0.0
           project_id: elide-fw
@@ -786,7 +816,7 @@ jobs:
         run: |
           gcloud auth configure-docker us-docker.pkg.dev
       - name: "Authorize Docker: GHCR"
-        uses: docker/login-action@v2
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
           registry: ghcr.io
           username: elidebot

@@ -10,3 +10,6 @@
 	path = tools/runtime
 	url = git@github.com:elide-dev/runtime.git
 	branch = main
+[submodule "elide-uuid"]
+	path = packages/uuid
+	url = git@github.com:elide-dev/uuid.git

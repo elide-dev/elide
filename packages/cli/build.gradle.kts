@@ -633,7 +633,7 @@ graalvmNative {
 }
 
 val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
-  from(zipTree("$projectDir/profiles.zip"))
+  from(zipTree(layout.projectDirectory.file("profiles.zip")))
   into(layout.buildDirectory.dir("native/nativeOptimizedCompile"))
 }
 

@@ -35,3 +35,193 @@ updates:
       interval: "daily"
     assignees:
       - "sgammon"
+
+  - package-ecosystem: docker
+    directory: /.devcontainer
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /kotlin-js-store
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/base
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/cli
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /packages/cli/packaging
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/cli/packaging/npm
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/core
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/frontend
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-js
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-react
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-react/src/main/node/emotion-server
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-react/src/main/node/stream
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/model
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/rpc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/test
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /site/docs/content
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/base-alpine
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/base
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/builder
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/codespace
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/gvm11
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/gvm17
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/gvm19
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/jdk11
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/jdk17
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/jdk19
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/native-alpine
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/native
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/qodana-jvm
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/rbe
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/runtime-jvm11
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/runtime-jvm17
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/runtime-jvm19
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/plugin/gradle-plugin/.devcontainer
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /tools/plugin/gradle-plugin
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /tools/plugin/gradle-plugin/plugin-build/plugin/src/main/node/runtime/emotion-server
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /tools/plugin/gradle-plugin/plugin-build/plugin/src/main/node/runtime/stream
+    schedule:
+      interval: daily

@@ -206,15 +206,22 @@ jobs:
           category: detekt
       - name: "Build: Provenance Subject"
         id: hash
-        if: inputs.provenance
+        if: ${{ matrix.os == 'ubuntu' }}
         run: |
           echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
-      - name: "Report: Provenance"
-        continue-on-error: true
-        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.7.0
-        with:
-          base64-subjects: "${{ steps.hash.outputs.hashes }}"
-          upload-assets: false
+
+  ## Report: Provenance
+  provenance:
+    name: Provenance
+    needs: [gradle]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.7.0
+    with:
+      base64-subjects: "${{ needs.gradle.outputs.hashes }}"
+      upload-assets: ${{ github.event_name == 'push' }}
 
   ##
   ## Job: Testsuite (JVM)

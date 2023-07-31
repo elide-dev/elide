@@ -1,7 +1,7 @@
 ARG BASE_VERSION=":latest"
-ARG BASE_HASH="@sha256:e350485a408c626aba6e143a18bf912bb490fcc2711b5f5df0cd2cc6f12ad4b4"
+ARG BASE_HASH="@sha256:ce2fe9474ca168eebfd35b0c7682db11045b0f10418ec46ae9b0c7610c295913"
 
-FROM us-docker.pkg.dev/elide-fw/tools/base${BASE_VERSION}${BASE_HASH}
+FROM ghcr.io/elide-dev/base${BASE_VERSION}${BASE_HASH}
 
 ARG JAVA_VERSION=zulu17
 

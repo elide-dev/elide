@@ -1,8 +1,8 @@
 ARG BASE_IMAGE=base/alpine
 ARG BASE_VERSION=""
-ARG BASE_HASH="@sha256:19d5f4a076c739143aa1c4dd95081e1aeaa2403cbfee8bbbb2679bbdb48a28c5"
+ARG BASE_HASH="@sha256:c9f3323d2c363b8c87234a54a5f22810b8f921afbb88c21b20c86ff186972214"
 
-FROM us-docker.pkg.dev/elide-fw/tools/${BASE_IMAGE}${BASE_VERSION}${BASE_HASH}
+FROM ghcr.io/elide-dev/base/alpine${BASE_VERSION}${BASE_HASH}
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native/Alpine)"

@@ -52,8 +52,8 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
 }
 
 afterEvaluate {
@@ -61,7 +61,7 @@ afterEvaluate {
     kotlinOptions {
       apiVersion = "1.9"
       languageVersion = "1.9"
-      jvmTarget = "17"
+      jvmTarget = "20"
       javaParameters = true
       allWarningsAsErrors = false
       incremental = true

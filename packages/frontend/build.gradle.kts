@@ -34,11 +34,6 @@ kotlin {
   }
 }
 
-dependencies {
-
-
-}
-
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
   val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)

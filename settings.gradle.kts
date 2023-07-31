@@ -75,7 +75,14 @@ includeBuild("tools/substrate") {
 if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
 if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
 
-// 4: Build modules.
+// 4: External builds.
+includeBuild("packages/uuid") {
+  dependencySubstitution {
+    substitute(module("dev.elide:elide-uuid")).using(project(":"))
+  }
+}
+
+// 5: Build modules.
 include(
   ":packages:base",
   ":packages:bom",

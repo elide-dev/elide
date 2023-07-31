@@ -3015,6 +3015,7 @@ public final class elide/proto/impl/data/FlatEncoding : java/lang/Enum, elide/pr
 public final class elide/proto/impl/data/FlatEncoding$Companion : elide/proto/api/Symbolic$Resolver {
 	public fun resoleSymbol (I)Lelide/proto/impl/data/FlatEncoding;
 	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
 }
 
 public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, elide/proto/api/Symbolic {
@@ -3037,16 +3038,22 @@ public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, eli
 public final class elide/proto/impl/data/FlatHashAlgorithm$Companion : elide/proto/api/Symbolic$Resolver {
 	public fun resoleSymbol (I)Lelide/proto/impl/data/FlatHashAlgorithm;
 	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
 }
 
 public final class elide/proto/impl/wkt/FlatTimestamp : elide/proto/api/wkt/Timestamp {
 	public static final field Factory Lelide/proto/impl/wkt/FlatTimestamp$Factory;
 	public static final synthetic fun box-impl (Lgoogle/protobuf/Timestamp;)Lelide/proto/impl/wkt/FlatTimestamp;
+	public fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public static fun compareTo-impl (Lgoogle/protobuf/Timestamp;Lelide/proto/api/wkt/Timestamp;)I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lgoogle/protobuf/Timestamp;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lgoogle/protobuf/Timestamp;Lgoogle/protobuf/Timestamp;)Z
 	public fun factory ()Lelide/proto/api/Record$Factory;
 	public static fun factory-impl (Lgoogle/protobuf/Timestamp;)Lelide/proto/api/Record$Factory;
+	public fun getMillis ()J
+	public static fun getMillis-impl (Lgoogle/protobuf/Timestamp;)J
 	public fun getNanos ()I
 	public static fun getNanos-impl (Lgoogle/protobuf/Timestamp;)I
 	public fun getSeconds ()J
@@ -3058,20 +3065,46 @@ public final class elide/proto/impl/wkt/FlatTimestamp : elide/proto/api/wkt/Time
 	public static fun toBuilder-impl (Lgoogle/protobuf/Timestamp;)Lelide/proto/impl/wkt/FlatTimestamp$TimestampBuilder;
 	public fun toInstant ()Lkotlinx/datetime/Instant;
 	public static fun toInstant-impl (Lgoogle/protobuf/Timestamp;)Lkotlinx/datetime/Instant;
+	public fun toJavaInstant ()Ljava/time/Instant;
+	public static fun toJavaInstant-impl (Lgoogle/protobuf/Timestamp;)Ljava/time/Instant;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Lgoogle/protobuf/Timestamp;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Lgoogle/protobuf/Timestamp;
 }
 
 public final class elide/proto/impl/wkt/FlatTimestamp$Factory : elide/proto/api/wkt/Timestamp$Factory {
+	public synthetic fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public fun at-naF9VOA (Lkotlinx/datetime/Instant;)Lgoogle/protobuf/Timestamp;
+	public synthetic fun atMilli (J)Ljava/lang/Object;
+	public fun atMilli-naF9VOA (J)Lgoogle/protobuf/Timestamp;
+	public synthetic fun atSecond (J)Ljava/lang/Object;
+	public synthetic fun atSecond (JI)Ljava/lang/Object;
+	public fun atSecond-naF9VOA (J)Lgoogle/protobuf/Timestamp;
+	public fun atSecond-rya2ubM (JI)Lgoogle/protobuf/Timestamp;
 	public fun builder ()Lelide/proto/impl/wkt/FlatTimestamp$TimestampBuilder;
 	public synthetic fun builder ()Ljava/lang/Object;
 	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun copy-bM9pFW4 (Lgoogle/protobuf/Timestamp;)Lgoogle/protobuf/Timestamp;
+	public synthetic fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun create-naF9VOA (Lkotlin/jvm/functions/Function1;)Lgoogle/protobuf/Timestamp;
 	public synthetic fun defaultInstance ()Ljava/lang/Object;
 	public fun defaultInstance-H99Res0 ()Lgoogle/protobuf/Timestamp;
 	public synthetic fun empty ()Ljava/lang/Object;
 	public fun empty-H99Res0 ()Lgoogle/protobuf/Timestamp;
+	public synthetic fun from (Ljava/sql/Date;)Ljava/lang/Object;
+	public synthetic fun from (Ljava/time/Instant;)Ljava/lang/Object;
+	public synthetic fun from (Ljava/util/Date;)Ljava/lang/Object;
+	public fun from-naF9VOA (Ljava/sql/Date;)Lgoogle/protobuf/Timestamp;
+	public fun from-naF9VOA (Ljava/time/Instant;)Lgoogle/protobuf/Timestamp;
+	public fun from-naF9VOA (Ljava/util/Date;)Lgoogle/protobuf/Timestamp;
+	public synthetic fun fromNow-LRDsOJo (J)Ljava/lang/Object;
+	public fun fromNow-SlsQ_FY (J)Lgoogle/protobuf/Timestamp;
+	public synthetic fun millisFromNow (J)Ljava/lang/Object;
+	public fun millisFromNow-naF9VOA (J)Lgoogle/protobuf/Timestamp;
+	public synthetic fun now ()Ljava/lang/Object;
+	public fun now-H99Res0 ()Lgoogle/protobuf/Timestamp;
+	public synthetic fun secondsFromNow (J)Ljava/lang/Object;
+	public fun secondsFromNow-naF9VOA (J)Lgoogle/protobuf/Timestamp;
 	public final fun toJavaInstant (Lgoogle/protobuf/Timestamp;)Ljava/time/Instant;
 	public final fun toKotlinInstant (Lgoogle/protobuf/Timestamp;)Lkotlinx/datetime/Instant;
 	public final fun toModel-naF9VOA (Lgoogle/protobuf/Timestamp;)Lgoogle/protobuf/Timestamp;

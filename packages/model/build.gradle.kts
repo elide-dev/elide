@@ -5,6 +5,9 @@
   "DSL_SCOPE_VIOLATION",
   "OPT_IN_USAGE",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import Java9Modularity.configure as configureJava9ModuleInfo
 
@@ -38,7 +41,11 @@ kotlin {
   js(IR) {
     browser {}
     nodejs {}
-    binaries.executable()
+  }
+  wasm {
+    browser()
+    nodejs()
+    d8()
   }
 
   macosArm64()
@@ -101,6 +108,9 @@ kotlin {
     }
     val jsMain by getting {
       dependencies {
+        // KT-57235: fix for atomicfu-runtime error
+        api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+
         implementation(kotlin("stdlib-js"))
         implementation(project(":packages:base"))
         implementation(project(":packages:frontend"))
@@ -129,6 +139,8 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
+    val wasmMain by getting { dependsOn(commonMain) }
+    val wasmTest by getting { dependsOn(commonTest) }
   }
 }
 
@@ -177,5 +189,14 @@ publishing {
         url.set("https://github.com/elide-dev/elide")
       }
     }
+  }
+}
+
+afterEvaluate {
+  tasks.named("compileTestDevelopmentExecutableKotlinJs") {
+    enabled = false
+  }
+  tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
+    enabled = false
   }
 }

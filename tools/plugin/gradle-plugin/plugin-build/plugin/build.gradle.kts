@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val defaultJavaVersion = "11"
+val defaultJavaVersion = "17"
 val defaultKotlinVersion = "1.9"
 
 val defaultElideGroup = "dev.elide"
@@ -57,9 +57,9 @@ sonarqube {
         property("sonar.organization", "elide-dev")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.dynamicAnalysis", "reuseReports")
-        property("sonar.junit.reportsPath", "$buildDir/reports/")
+        property("sonar.junit.reportsPath", "${layout.buildDirectory}/reports/")
         property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
         property("sonar.jacoco.reportPath", "build/jacoco/test.exec")
         property("sonar.sourceEncoding", "UTF-8")
     }
@@ -124,7 +124,7 @@ pluginBundle {
 
 val minimumMicronaut = "3.7.8"
 val preferredMicronaut = "3.9.4"
-val defaultJavaMin = "11"
+val defaultJavaMin = "17"
 val defaultJavaMax = "19"
 val baseJavaMin: Int = (defaultJavaMin).toInt()
 val skipVersions = sortedSetOf(
@@ -243,8 +243,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {
@@ -320,10 +320,10 @@ subprojects {
             property(
                 "sonar.coverage.jacoco.xmlReportPaths",
                 listOf(
-                    "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                    "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                    "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
-                    "$buildDir/reports/kover/xml/coverage.xml",
+                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+                    "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+                    "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml",
+                    "${layout.buildDirectory}/reports/kover/xml/coverage.xml",
                 )
             )
         }
@@ -345,7 +345,7 @@ tasks.create<Copy>("copyNodeRuntimeAssets") {
         include("**/*.js")
         include("**/*.json")
     }
-    into("${project.buildDir}/elideJsRuntime/sources")
+    into("${project.layout.buildDirectory}/elideJsRuntime/sources")
 }
 
 tasks.create<Tar>("packageRuntimeAssets") {
@@ -357,14 +357,14 @@ tasks.create<Tar>("packageRuntimeAssets") {
     archiveExtension.set("tar.gz")
     archiveVersion.set("")
     destinationDirectory.set(
-        file("${project.buildDir}/resources/main/dev/elide/buildtools/js/runtime")
+        file("${project.layout.buildDirectory}/resources/main/dev/elide/buildtools/js/runtime")
     )
 
     dependsOn(
         tasks.named("copyNodeRuntimeAssets")
     )
     into("/") {
-        from("${project.buildDir}/elideJsRuntime/sources")
+        from("${project.layout.buildDirectory}/elideJsRuntime/sources")
         include(
             "**/*.json",
             "**/*.js"

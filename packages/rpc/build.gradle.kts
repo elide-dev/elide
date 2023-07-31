@@ -121,8 +121,8 @@ kotlin {
     val jvmTest by getting {
       kotlin.srcDirs(
         "$projectDir/src/jvmTest/kotlin",
-        "$buildDir/generated/source/proto/test/grpckt",
-        "$buildDir/generated/source/proto/test/kotlin",
+        "${layout.buildDirectory}/generated/source/proto/test/grpckt",
+        "${layout.buildDirectory}/generated/source/proto/test/kotlin",
       )
 
       dependencies {
@@ -173,7 +173,7 @@ tasks {
   }
 
   named("compileTestKotlinJvm").configure {
-    dependsOn(named("generateTestProto"))
+    dependsOn("generateProto", "generateTestProto")
   }
 }
 

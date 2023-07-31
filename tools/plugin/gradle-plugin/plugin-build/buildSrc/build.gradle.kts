@@ -3,7 +3,7 @@
 )
 
 val kotlinVersion = "1.9.0"
-val javaVersion = "11"
+val javaVersion = "17"
 
 plugins {
     `kotlin-dsl`

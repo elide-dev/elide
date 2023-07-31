@@ -16,6 +16,9 @@ indent_size = 2
 [*.{kt,kts}]
 ktlint_disabled_rules = indent,experimental:argument-list-wrapping,no-wildcard-imports
 
+[packages/uuid/**/*.*]
+ktlint_disabled_rules = indent
+
 [packages/proto/build/generated/source/proto]
 ktlint_disabled_rules = indent,experimental:spacing-between-declarations-with-annotations,parameter-list-wrapping,no-wildcard-imports,experimental:spacing-between-declarations-with-comments,experimental:argument-list-wrapping,comment-spacing,no-semi,no-consecutive-blank-lines,no-blank-line-before-rbrace,curly-spacing
 

@@ -65,7 +65,7 @@ task<Copy>("locateCopyJUnitReports") {
       project.path.contains(it) || project.name.contains(it)
     }
   }.map {
-    val path = file("${it.layout.buildDirectory}/test-results/test")
+    val path = file(layout.buildDirectory.dir("test-results/test"))
     if (path.exists()) {
       java.util.Optional.of(path)
     } else {

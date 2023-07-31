@@ -15,6 +15,7 @@ pluginManagement {
 plugins {
   id("build.less") version("1.0.0-beta1")
   id("com.gradle.enterprise") version("3.14")
+  id("org.gradle.toolchains.foojay-resolver-convention") version("0.6.0")
 }
 
 // Fix: Force CWD to proper value and store secondary value.

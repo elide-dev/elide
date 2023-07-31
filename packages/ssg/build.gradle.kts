@@ -65,7 +65,6 @@ dependencies {
   implementation(project(":packages:server"))
   implementation(libs.jsoup)
   implementation(libs.picocli)
-  implementation(libs.kotter)
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))

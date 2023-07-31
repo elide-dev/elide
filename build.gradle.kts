@@ -25,6 +25,7 @@ plugins {
   id("io.gitlab.arturbosch.detekt")
   id("com.autonomousapps.dependency-analysis") version "1.20.0"
 
+  `embedded-kotlin` apply false
   id("com.android.application") version "7.3.1" apply false
   id("com.android.library") version "7.3.1" apply false
 
@@ -68,6 +69,7 @@ val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as St
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val enableKnit: String? by properties
 
+val buildSsg: String by properties
 val buildDocs by properties
 
 buildscript {
@@ -114,12 +116,17 @@ apiValidation {
   )
 
   ignoredProjects += listOf(
-    "bundler",
     "bom",
     "cli",
     "proto",
     "processor",
     "reports",
+  ).plus(
+    if (buildSsg == "true") {
+      listOf("bundler",)
+    } else {
+      emptyList()
+    }
   ).plus(
     if (project.properties["buildDocs"] == "true") {
       listOf("docs")
@@ -162,7 +169,7 @@ sonarqube {
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
     property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
+    property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
   }
 }
 
@@ -199,14 +206,14 @@ subprojects {
           Elide.serverModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
+            property("sonar.java.binaries", "${layout.buildDirectory}/classes/kotlin/main")
             property(
               "sonar.coverage.jacoco.xmlReportPaths",
               listOf(
-                "$buildDir/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
-                "$buildDir/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
-                "$buildDir/reports/jacoco/test/jacocoTestReport.xml",
-                "$buildDir/reports/kover/xml/report.xml",
+                "${layout.buildDirectory}reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml",
+                "${layout.buildDirectory}/reports/jacoco/testCodeCoverageReport/jacocoTestReport.xml",
+                "${layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml",
+                "${layout.buildDirectory}/reports/kover/xml/report.xml",
               )
             )
           }
@@ -215,18 +222,18 @@ subprojects {
           Elide.frontendModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
-            property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/xml/report.xml")
+            property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/xml/report.xml")
           }
 
           // Kotlin MPP coverage via Kover
           Elide.multiplatformModules.contains(name) -> {
             property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
-            property("sonar.java.binaries", "$buildDir/classes/kotlin/jvm/main")
+            property("sonar.java.binaries", "${layout.buildDirectory}/classes/kotlin/jvm/main")
             property(
               "sonar.coverage.jacoco.xmlReportPaths",
               listOf(
-                "$buildDir/reports/kover/xml/report.xml",
+                "${layout.buildDirectory}/reports/kover/xml/report.xml",
               )
             )
           }
@@ -257,7 +264,7 @@ subprojects {
   }
 
   val detektMerge by tasks.registering(ReportMergeTask::class) {
-    output = rootProject.buildDir.resolve("reports/detekt/elide.sarif")
+    output = rootProject.layout.buildDirectory.asFile.get().resolve("reports/detekt/elide.sarif")
   }
 
   plugins.withType(io.gitlab.arturbosch.detekt.DetektPlugin::class) {
@@ -417,7 +424,7 @@ afterEvaluate {
 if (buildDocs == "true") {
   tasks.named("dokkaHtmlMultiModule", DokkaMultiModuleTask::class).configure {
     includes.from("README.md")
-    outputDirectory = buildDir.resolve("docs/kotlin/html")
+    outputDirectory = layout.buildDirectory.asFile.get().resolve("docs/kotlin/html")
   }
 }
 
@@ -429,7 +436,7 @@ tasks {
   }
 
   htmlDependencyReport {
-    reports.html.outputLocation = file("${project.buildDir}/reports/project/dependencies")
+    reports.html.outputLocation = file("${layout.buildDirectory}/reports/project/dependencies")
   }
 }
 

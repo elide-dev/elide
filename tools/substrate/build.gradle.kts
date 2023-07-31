@@ -83,7 +83,7 @@ sonarqube {
     property("sonar.junit.reportsPath", "build/reports/")
     property("sonar.java.coveragePlugin", "jacoco")
     property("sonar.sourceEncoding", "UTF-8")
-    property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/kover/merged/xml/report.xml")
+    property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory}/reports/kover/merged/xml/report.xml")
   }
 }
 
@@ -93,11 +93,11 @@ subprojects {
       properties {
         property("sonar.sources", "src/main/kotlin")
         property("sonar.tests", "src/test/kotlin")
-        property("sonar.java.binaries", "$buildDir/classes/kotlin/main")
+        property("sonar.java.binaries", "${layout.buildDirectory}/classes/kotlin/main")
         property(
           "sonar.coverage.jacoco.xmlReportPaths",
           listOf(
-            "$buildDir/reports/kover/xml/report.xml",
+            "${layout.buildDirectory}/reports/kover/xml/report.xml",
           )
         )
       }

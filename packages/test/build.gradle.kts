@@ -50,13 +50,13 @@ kotlin {
 
   wasm {
     browser {
-      testTask {
-        useKarma(Action {
+      testTask(Action {
+        useKarma {
           this.webpackConfig.experiments.add("topLevelAwait")
           useChromeHeadless()
           useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-        })
-      }
+        }
+      })
     }
   }
 

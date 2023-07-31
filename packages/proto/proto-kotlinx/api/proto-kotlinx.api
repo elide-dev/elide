@@ -151,6 +151,7 @@ public final class elide/proto/impl/data/KxEncoding : java/lang/Enum, elide/prot
 public final class elide/proto/impl/data/KxEncoding$Companion : elide/proto/api/Symbolic$Resolver {
 	public fun resoleSymbol (I)Lelide/proto/impl/data/KxEncoding;
 	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
 }
 
 public final class elide/proto/impl/data/KxHashAlgorithm : java/lang/Enum, elide/proto/api/Symbolic {
@@ -174,17 +175,27 @@ public final class elide/proto/impl/data/KxHashAlgorithm : java/lang/Enum, elide
 public final class elide/proto/impl/data/KxHashAlgorithm$Companion : elide/proto/api/Symbolic$Resolver {
 	public fun resoleSymbol (I)Lelide/proto/impl/data/KxHashAlgorithm;
 	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
+	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
 }
 
 public final class elide/proto/impl/wkt/KxTimestamp : elide/proto/api/wkt/Timestamp {
 	public static final field Factory Lelide/proto/impl/wkt/KxTimestamp$Factory;
 	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp;
+	public fun compareTo (Lelide/proto/api/wkt/Timestamp;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public static fun compareTo-impl (Lkotlin/Pair;Lelide/proto/api/wkt/Timestamp;)I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
 	public synthetic fun factory ()Lelide/proto/api/Record$Factory;
 	public fun factory ()Lelide/proto/impl/wkt/KxTimestamp$Factory;
 	public static fun factory-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp$Factory;
+	public fun getMillis ()J
+	public static fun getMillis-impl (Lkotlin/Pair;)J
+	public fun getNanos ()I
+	public static fun getNanos-impl (Lkotlin/Pair;)I
+	public fun getSeconds ()J
+	public static fun getSeconds-impl (Lkotlin/Pair;)J
 	public fun hashCode ()I
 	public static fun hashCode-impl (Lkotlin/Pair;)I
 	public fun toBuilder ()Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
@@ -192,20 +203,46 @@ public final class elide/proto/impl/wkt/KxTimestamp : elide/proto/api/wkt/Timest
 	public static fun toBuilder-impl (Lkotlin/Pair;)Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
 	public fun toInstant ()Lkotlinx/datetime/Instant;
 	public static fun toInstant-impl (Lkotlin/Pair;)Lkotlinx/datetime/Instant;
+	public fun toJavaInstant ()Ljava/time/Instant;
+	public static fun toJavaInstant-impl (Lkotlin/Pair;)Ljava/time/Instant;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
 public final class elide/proto/impl/wkt/KxTimestamp$Factory : elide/proto/api/wkt/Timestamp$Factory {
+	public synthetic fun at (Lkotlinx/datetime/Instant;)Ljava/lang/Object;
+	public fun at-Ls1ehMI (Lkotlinx/datetime/Instant;)Lkotlin/Pair;
+	public synthetic fun atMilli (J)Ljava/lang/Object;
+	public fun atMilli-Ls1ehMI (J)Lkotlin/Pair;
+	public synthetic fun atSecond (J)Ljava/lang/Object;
+	public synthetic fun atSecond (JI)Ljava/lang/Object;
+	public fun atSecond-Ls1ehMI (J)Lkotlin/Pair;
+	public fun atSecond-_QdDiug (JI)Lkotlin/Pair;
 	public fun builder ()Lelide/proto/impl/wkt/KxTimestamp$TimestampBuilder;
 	public synthetic fun builder ()Ljava/lang/Object;
 	public synthetic fun copy (Ljava/lang/Object;)Ljava/lang/Object;
 	public fun copy-LWzlT1A (Lkotlin/Pair;)Lkotlin/Pair;
+	public synthetic fun create (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public fun create-Ls1ehMI (Lkotlin/jvm/functions/Function1;)Lkotlin/Pair;
 	public synthetic fun defaultInstance ()Ljava/lang/Object;
 	public fun defaultInstance-sGgy6_s ()Lkotlin/Pair;
 	public synthetic fun empty ()Ljava/lang/Object;
 	public fun empty-sGgy6_s ()Lkotlin/Pair;
+	public synthetic fun from (Ljava/sql/Date;)Ljava/lang/Object;
+	public synthetic fun from (Ljava/time/Instant;)Ljava/lang/Object;
+	public synthetic fun from (Ljava/util/Date;)Ljava/lang/Object;
+	public fun from-Ls1ehMI (Ljava/sql/Date;)Lkotlin/Pair;
+	public fun from-Ls1ehMI (Ljava/time/Instant;)Lkotlin/Pair;
+	public fun from-Ls1ehMI (Ljava/util/Date;)Lkotlin/Pair;
+	public fun fromNow-9DaZEWo (J)Lkotlin/Pair;
+	public synthetic fun fromNow-LRDsOJo (J)Ljava/lang/Object;
+	public synthetic fun millisFromNow (J)Ljava/lang/Object;
+	public fun millisFromNow-Ls1ehMI (J)Lkotlin/Pair;
+	public synthetic fun now ()Ljava/lang/Object;
+	public fun now-sGgy6_s ()Lkotlin/Pair;
+	public synthetic fun secondsFromNow (J)Ljava/lang/Object;
+	public fun secondsFromNow-Ls1ehMI (J)Lkotlin/Pair;
 }
 
 public final class elide/proto/impl/wkt/KxTimestamp$TimestampBuilder : elide/proto/api/wkt/Timestamp$IBuilder {

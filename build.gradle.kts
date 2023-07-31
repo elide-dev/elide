@@ -291,6 +291,7 @@ subprojects {
   if (project.property("elide.lockDeps") == "true") {
     dependencyLocking {
       lockAllConfigurations()
+      lockMode.set(LockMode.LENIENT)
     }
   }
 }

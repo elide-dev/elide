@@ -45,6 +45,7 @@ kotlin {
     wasm {
         nodejs()
         d8()
+        browser()
     }
 
     sourceSets {

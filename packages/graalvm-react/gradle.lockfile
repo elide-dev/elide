@@ -106,6 +106,7 @@ org.jetbrains.kotlin:kotlin-test-common:1.9.0=allSourceSetsCompileDependenciesMe
 org.jetbrains.kotlin:kotlin-test-js-runner:1.9.0=jsNpmAggregated,jsTestNpmAggregated
 org.jetbrains.kotlin:kotlin-test-js:1.9.0=jsTestCompileClasspath,jsTestRuntimeClasspath
 org.jetbrains.kotlin:kotlin-test:1.9.0=allSourceSetsCompileDependenciesMetadata,jsTestApiDependenciesMetadata,jsTestCompileClasspath,jsTestCompileOnlyDependenciesMetadata,jsTestImplementationDependenciesMetadata,jsTestResolvableDependenciesMetadata,jsTestRuntimeClasspath
+org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC=jsCompileClasspath
 org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.9.0=jsNpmAggregated,jsRuntimeClasspath,jsTestNpmAggregated,jsTestRuntimeClasspath
 org.jetbrains.kotlinx:kotlinx-collections-immutable-js:0.4-wasm0=jsRuntimeClasspath,jsTestRuntimeClasspath
 org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4-wasm0=jsRuntimeClasspath,jsTestRuntimeClasspath

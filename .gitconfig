@@ -1,0 +1,7 @@
+[commit]
+	gpgsign = true
+	signoff = true
+[merge]
+	conflictstyle = diff3
+[tag]
+	gpgsign = true

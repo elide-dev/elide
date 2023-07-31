@@ -75,9 +75,11 @@ if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
 if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
 
 // 4: External builds.
-if (buildUuid == "true") includeBuild("packages/uuid") {
-  dependencySubstitution {
-    substitute(module("dev.elide:elide-uuid")).using(project(":"))
+if (buildUuid == "true") {
+  includeBuild("packages/uuid") {
+    dependencySubstitution {
+      substitute(module("dev.elide:elide-uuid")).using(project(":"))
+    }
   }
 }
 
@@ -120,10 +122,12 @@ if (buildPlugins == "true") {
   )
 }
 
-if (buildSsg =="true") include(
-  ":packages:ssg",
-  ":tools:bundler",
-)
+if (buildSsg == "true") {
+  include(
+    ":packages:ssg",
+    ":tools:bundler",
+  )
+}
 
 if (buildSamples == "true") {
   include(

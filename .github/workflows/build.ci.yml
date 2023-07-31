@@ -92,10 +92,12 @@ jobs:
         os: [Ubuntu]
         mode: ['Strict']
         machine: [ubuntu-latest]
+        provenance: [true]
         include:
           - os: macOS
             mode: Strict
             machine: macos-13
+            provenance: false
 #          - os: Windows
 #            mode: Labs
 #            machine: windows-latest
@@ -105,7 +107,7 @@ jobs:
     continue-on-error: ${{ matrix.mode != 'Strict' }}
 
     permissions:
-      contents: "read"
+      contents: "write"
       actions: "read"
       id-token: "write"
       checks: "write"
@@ -116,6 +118,9 @@ jobs:
     defaults:
       run:
         shell: bash
+
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
 
     steps:
       - name: "Setup: Checkout"
@@ -151,6 +156,7 @@ jobs:
           CI: true
         with:
           cache-read-only: false
+          dependency-graph: generate-and-submit
           arguments: |
             build
             -x check
@@ -198,6 +204,17 @@ jobs:
         with:
           sarif_file: ./build/reports/detekt/elide.sarif
           category: detekt
+      - name: "Build: Provenance Subject"
+        id: hash
+        if: inputs.provenance
+        run: |
+          echo "hashes=$(sha256sum ./packages/*/build/libs/* | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "Report: Provenance"
+        continue-on-error: true
+        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.7.0
+        with:
+          base64-subjects: "${{ steps.hash.outputs.hashes }}"
+          upload-assets: false
 
   ##
   ## Job: Testsuite (JVM)

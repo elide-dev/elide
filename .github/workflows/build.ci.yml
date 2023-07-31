@@ -104,9 +104,9 @@ jobs:
             mode: Strict
             machine: macos-13
             provenance: false
-#          - os: Windows
-#            mode: Labs
-#            machine: windows-latest
+          - os: Windows
+            mode: Labs
+            machine: windows-latest
 
     name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}

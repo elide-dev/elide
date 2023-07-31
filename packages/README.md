@@ -5,18 +5,19 @@
 This directory contains the main framework source code for each distinct package. Packages are organized in a flat
 directory structure.
 
-| **Package**                       | Artifact                     | Platforms            | Summary                                            |
-| --------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------- |
-| [`base`][1] ([docs][11])          | `dev.elide.v3:base`          | Multiplatform        | Base library (annotations, x-plat code)            |
-| [`frontend`][2] ([docs][12])      | `dev.elide.v3:frontend`      | JavaScript (Browser) | Baseline frontend code, lib bindings (proto, gRPC) |
-| [`graalvm`][3] ([docs][13])       | `dev.elide.v3:graalvm`       | JVM/Native           | JVM integration code for GraalVM support           |
-| [`graalvm-js`][4] ([docs][14])    | `dev.elide.v3:graalvm-js`    | JavaScript (SSR)     | JS tooling and env code for in-VM JS SSR           |
-| [`graalvm-react`][5] ([docs][15]) | `dev.elide.v3:graalvm-react` | JavaScript (SSR)     | React-specific JS VM env extensions and tooling    |
-| [`model`][6] ([docs][16])         | `dev.elide.v3:model`         | Multiplatform        | Cross-platform data modeling and RPC API layer     |
-| [`rpc-js`][7] ([docs][17])        | `dev.elide.v3:rpc-js`        | JavaScript           | JavaScript code for client-side RPC dispatch       |
-| [`rpc-jvm`][8] ([docs][18])       | `dev.elide.v3:rpc-jvm`       | JVM/Native           | JVM code for server-side RPC dispatch, gRPC Web    |
-| [`server`][9] ([docs][19])        | `dev.elide.v3:server`        | JVM/Native           | Server-side JVM application library base           |
-| [`test`][10] ([docs][20])         | `dev.elide.v3:test`          | Multiplatform        | Cross-platform testing utilities                   |
+| **Package**                       | Artifact                        | Platforms            | Summary                                            |
+| --------------------------------- | ------------------------------- | -------------------- | -------------------------------------------------- |
+| [`core`][8] ([docs][18])          | `dev.elide:elide-core`          | Multiplatform        | Core, pure-Kotlin utilities                        |
+| [`base`][1] ([docs][11])          | `dev.elide:elide-base`          | Multiplatform        | Base library (annotations, x-plat code)            |
+| [`model`][6] ([docs][16])         | `dev.elide:elide-model`         | Multiplatform        | Cross-platform data modeling and RPC API layer     |
+| [`test`][10] ([docs][20])         | `dev.elide:elide-test`          | Multiplatform        | Cross-platform testing utilities                   |
+| [`ssr`][22] ([docs][23])          | `dev.elide:elide-ssr`           | Multiplatform        | Type bindings for SSR / server flows               |
+| [`rpc`][7] ([docs][17])           | `dev.elide:elide-rpc`           | Multiplatform        | Multiplatform code for RPC services and dispatch   |
+| [`frontend`][2] ([docs][12])      | `dev.elide:elide-frontend`      | JavaScript (Browser) | Baseline frontend code, lib bindings (proto, gRPC) |
+| [`graalvm`][3] ([docs][13])       | `dev.elide:elide-graalvm`       | JVM/Native           | JVM integration code for GraalVM support           |
+| [`graalvm-js`][4] ([docs][14])    | `dev.elide:elide-graalvm-js`    | JavaScript (SSR)     | JS tooling and env code for in-VM JS SSR           |
+| [`graalvm-react`][5] ([docs][15]) | `dev.elide:elide-graalvm-react` | JavaScript (SSR)     | React-specific JS VM env extensions and tooling    |
+| [`server`][9] ([docs][19])        | `dev.elide:elide-server`        | JVM/Native           | Server-side JVM application library base           |
 
 ## Reports
 
@@ -117,7 +118,7 @@ After dependency changes, locks can be updated with `make relock-deps`.
 [5]: ./graalvm-react
 [6]: ./model
 [7]: ./rpc-js
-[8]: ./rpc-jvm
+[8]: ./core
 [9]: ./server
 [10]: ./test
 [11]: https://v3.docs.elide.dev/kotlin/html/packages/base/index.html
@@ -127,7 +128,10 @@ After dependency changes, locks can be updated with `make relock-deps`.
 [15]: https://v3.docs.elide.dev/kotlin/html/packages/graalvm-react/index.html
 [16]: https://v3.docs.elide.dev/kotlin/html/packages/model/index.html
 [17]: https://v3.docs.elide.dev/kotlin/html/packages/rpc-js/index.html
-[18]: https://v3.docs.elide.dev/kotlin/html/packages/rpc-jvm/index.html
+[18]: https://v3.docs.elide.dev/kotlin/html/packages/core/index.html
 [19]: https://v3.docs.elide.dev/kotlin/html/packages/server/index.html
 [20]: https://v3.docs.elide.dev/kotlin/html/packages/test/index.html
 [21]: https://docs.gradle.org/7.4.2/userguide/dependency_verification.html#sub:enabling-verification
+[22]: ./ssr
+[23]: https://v3.docs.elide.dev/kotlin/html/packages/ssr/index.html
+

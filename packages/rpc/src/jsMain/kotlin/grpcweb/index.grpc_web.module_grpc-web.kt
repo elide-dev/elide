@@ -11,7 +11,8 @@
 
 package grpcweb
 
-import kotlin.js.*
+import kotlin.js.Json
+import kotlin.js.Promise
 
 public external interface Metadata {
     @nativeGetter

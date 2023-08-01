@@ -1,11 +1,11 @@
 package elide.tool.cli.repl
 
+import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.repl.ToolShellCommand
-import kotlin.test.assertNotNull
 
 /** Tests for the Elide tool `shell`/`repl` subcommand. */
 @TestCase class ToolShellSubcommandTest : AbstractSubtoolTest() {

@@ -6,9 +6,9 @@ import io.grpc.ServiceDescriptor
 import io.grpc.health.v1.HealthCheckResponse.ServingStatus
 import io.grpc.protobuf.services.HealthStatusManager
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Singleton
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
+import jakarta.inject.Singleton
 
 /**
  * Dedicated manager for service health signals; controls the central gRPC health checking service.

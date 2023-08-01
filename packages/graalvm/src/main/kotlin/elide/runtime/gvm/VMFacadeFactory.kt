@@ -1,13 +1,13 @@
 package elide.runtime.gvm
 
+import io.micronaut.context.BeanContext
+import kotlin.reflect.KClass
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
-import io.micronaut.context.BeanContext
-import kotlin.reflect.KClass
 import org.graalvm.polyglot.Context as VMContext
 
 /**

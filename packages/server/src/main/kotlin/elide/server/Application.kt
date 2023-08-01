@@ -1,16 +1,15 @@
 package elide.server
 
-import elide.server.annotations.Eager
-import elide.server.runtime.jvm.SecurityProviderConfigurator
-import elide.util.RuntimeFlag
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut
 import io.micronaut.runtime.server.event.ServerStartupEvent
-import kotlinx.coroutines.runBlocking
-import java.util.LinkedList
-import java.util.ServiceLoader
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.runBlocking
+import elide.server.annotations.Eager
+import elide.server.runtime.jvm.SecurityProviderConfigurator
+import elide.util.RuntimeFlag
 
 /**
  * Static class interface which equips a Micronaut application with extra initialization features powered by Elide; to

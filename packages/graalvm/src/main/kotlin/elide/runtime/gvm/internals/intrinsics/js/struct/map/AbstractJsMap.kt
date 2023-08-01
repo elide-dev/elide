@@ -1,7 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.intrinsics.js.MapLike
 import java.util.stream.Stream
+import elide.runtime.intrinsics.js.MapLike
 
 /**
  * # JS: Abstract Map

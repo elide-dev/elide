@@ -1,7 +1,5 @@
 package elide.tool.cli.state
 
-import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaic
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 

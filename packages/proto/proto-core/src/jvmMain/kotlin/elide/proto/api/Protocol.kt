@@ -2,11 +2,10 @@
 
 package elide.proto.api
 
-import elide.proto.ElideProtocol
-import java.util.ServiceLoader
-import java.util.TreeMap
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Collectors
+import elide.proto.ElideProtocol
 
 /**
  * TBD.

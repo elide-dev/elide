@@ -15,7 +15,6 @@ package elide.core.encoding.base64
 
 import elide.core.annotations.Static
 import elide.core.encoding.*
-import elide.core.encoding.Encoding
 
 /**
  * # Base64

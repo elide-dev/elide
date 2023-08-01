@@ -1,9 +1,9 @@
 package elide.runtime.gvm
 
-import elide.runtime.gvm.ExecutableScript.State
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.*
+import elide.runtime.gvm.ExecutableScript.State
 
 /**
  * # Executable Script

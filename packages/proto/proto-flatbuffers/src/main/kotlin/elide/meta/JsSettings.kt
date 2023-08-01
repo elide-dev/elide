@@ -2,9 +2,11 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
-import com.google.flatbuffers.*
+import com.google.flatbuffers.Constants
+import com.google.flatbuffers.FlatBufferBuilder
+import com.google.flatbuffers.Table
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 @Suppress("unused")
 class JsSettings : Table() {

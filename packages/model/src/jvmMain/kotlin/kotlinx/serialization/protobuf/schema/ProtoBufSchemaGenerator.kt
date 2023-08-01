@@ -3,9 +3,12 @@
 
 package kotlinx.serialization.protobuf.schema
 
-import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.protobuf.*
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.protobuf.ProtoBuf
 
 /**
  * Experimental generator of ProtoBuf schema that is compatible with [serializable][Serializable] Kotlin classes

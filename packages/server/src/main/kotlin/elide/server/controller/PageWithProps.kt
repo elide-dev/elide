@@ -2,7 +2,6 @@ package elide.server.controller
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
-import elide.ssr.type.RequestState
 import org.graalvm.polyglot.HostAccess
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -10,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.guava.asDeferred
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import elide.ssr.type.RequestState
 
 /**
  * Extends [PageController] with support for page-level [State], produced via the [props] method; computed state is

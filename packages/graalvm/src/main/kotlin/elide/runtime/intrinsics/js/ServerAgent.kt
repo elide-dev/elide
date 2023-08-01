@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js
 
-import org.graalvm.polyglot.Context as VMContext
 import java.util.concurrent.Phaser
+import org.graalvm.polyglot.Context as VMContext
 
 /**
  * # Server Agent

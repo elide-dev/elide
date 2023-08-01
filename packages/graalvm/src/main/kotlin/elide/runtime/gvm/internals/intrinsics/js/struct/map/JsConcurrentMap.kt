@@ -1,8 +1,8 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.intrinsics.js.MapLike
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
+import elide.runtime.intrinsics.js.MapLike
 
 /** Implements a thread-safe map for use with JavaScript; backed by a [ConcurrentMap]. */
 @Suppress("unused") internal class JsConcurrentMap<K: Any, V> constructor (backingMap: ConcurrentMap<K, V>) :

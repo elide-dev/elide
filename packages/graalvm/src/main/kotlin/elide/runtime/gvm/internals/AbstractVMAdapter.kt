@@ -2,12 +2,12 @@
 
 package elide.runtime.gvm.internals
 
-import elide.runtime.gvm.ExecutableScript
-import elide.runtime.gvm.ExecutionInputs
 import org.reactivestreams.Publisher
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.Future
+import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.ExecutionInputs
 
 /**
  * # VM: Adapter.

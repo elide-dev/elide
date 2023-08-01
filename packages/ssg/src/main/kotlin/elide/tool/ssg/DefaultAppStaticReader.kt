@@ -13,19 +13,19 @@
 
 package elide.tool.ssg
 
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.StaticContentReader.ArtifactType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import jakarta.inject.Singleton
 import org.jsoup.Jsoup
 import java.net.URI
 import java.net.URL
 import java.nio.ByteBuffer
+import jakarta.inject.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.StaticContentReader.ArtifactType
 
 /** Default content transformation and parsing logic. */
 @Singleton internal class DefaultAppStaticReader : StaticContentReader {

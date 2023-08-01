@@ -7,6 +7,9 @@
          <trust group="org.gradle" name="github-dependency-graph-gradle-plugin" reason="Injected by build in CI"/>
          <trust group="org.jetbrains.dokka" reason="Lots of artifact variance building docs"/>
          <trust group="org.jetbrains.kotlin" reason="Kotlin native artifacts are verified and signed"/>
+         <trust file=".*-javadoc[.]jar" regex="true" reason="Documentation JARs are safe to trust, they are not bundled or executed" />
+         <trust file=".*-sources[.]jar" regex="true" reason="Source JARs are safe to trust, they are not bundled or executed" />
+         <trust file="^gradle-(.*).zip" regex="true" reason="Gradle releases are signed and checked manually" />
          <trust file="^.*wasm.*" regex="true" reason="WASM artifacts aren't signed yet"/>
       </trusted-artifacts>
       <trusted-keys>

@@ -10,7 +10,6 @@ import org.gradle.api.file.*
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.bundling.*
 import org.gradle.api.tasks.compile.*
-import org.gradle.jvm.toolchain.*
 import org.gradle.kotlin.dsl.*
 import org.gradle.work.*
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -71,8 +70,6 @@ object Java9Modularity {
 
   @JvmStatic
   fun configure(project: Project) = with(project) {
-    val javaToolchains = extensions.findByType(JavaToolchainService::class.java)
-      ?: error("Gradle JavaToolchainService is not available")
     val (target, multiplatform) = when (val kotlin = extensions.getByName("kotlin")) {
       is KotlinJvmProjectExtension -> kotlin.target to false
       is KotlinMultiplatformExtension -> kotlin.targets.getByName("jvm") to true
@@ -90,10 +87,10 @@ object Java9Modularity {
     }
 
     val processModuleInfoFile by tasks.registering(ProcessModuleInfoFile::class) {
-      if (multiplatform) {
-        moduleInfoFile = file("${project.projectDir}/src/jvmMain/kotlin/module-info.java")
+      moduleInfoFile = if (multiplatform) {
+        file("${project.projectDir}/src/jvmMain/kotlin/module-info.java")
       } else {
-        moduleInfoFile = file("${project.projectDir}/src/main/kotlin/module-info.java")
+        file("${project.projectDir}/src/main/kotlin/module-info.java")
       }
       processedModuleInfoFile = project.layout.buildDirectory.file("generated-sources/module-info-processor/module-info.java")
     }
@@ -104,12 +101,7 @@ object Java9Modularity {
       val compileKotlinTask =
         compilation.compileTaskProvider.get() as? org.jetbrains.kotlin.gradle.tasks.KotlinCompile
           ?: error("Cannot access Kotlin compile task ${compilation.compileKotlinTaskName}")
-      val targetDir = compileKotlinTask.destinationDirectory.dir("../java9")
-
-      // Use a Java 11 compiler for the module-info.
-      javaCompiler = javaToolchains.compilerFor {
-        languageVersion = JavaLanguageVersion.of(11)
-      }
+      val targetDir = compileKotlinTask.destinationDirectory.dir("../jpms")
 
       // Always compile kotlin classes before the module descriptor.
       dependsOn(compileKotlinTask)

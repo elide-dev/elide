@@ -1,3 +1,21 @@
+public final class Bundle {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class Ecosystem {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class Graph {
+	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
+	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
 public abstract class elide/proto/impl/AbstractElideProtobufProtocol : elide/proto/ElideProtocol {
 	public fun <init> ()V
 	public fun base ()Ljava/lang/Class;
@@ -2584,10 +2602,32 @@ public final class tools/elide/assets/EmbeddedScriptKtKt {
 }
 
 public final class tools/elide/assets/EmbeddedScriptLanguage : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field GROOVY Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field GROOVY_VALUE I
+	public static final field JAVA Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field JAVASCRIPT Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field JAVASCRIPT_VALUE I
+	public static final field JAVA_VALUE I
 	public static final field JS Ltools/elide/assets/EmbeddedScriptLanguage;
 	public static final field JS_VALUE I
+	public static final field JVM Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field JVM_VALUE I
+	public static final field KOTLIN Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field KOTLIN_VALUE I
+	public static final field KT Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field KT_VALUE I
 	public static final field LANGUAGE_UNSPECIFIED Ltools/elide/assets/EmbeddedScriptLanguage;
 	public static final field LANGUAGE_UNSPECIFIED_VALUE I
+	public static final field PY Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field PYTHON Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field PYTHON_VALUE I
+	public static final field PY_VALUE I
+	public static final field RB Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field RB_VALUE I
+	public static final field RUBY Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field RUBY_VALUE I
+	public static final field SCALA Ltools/elide/assets/EmbeddedScriptLanguage;
+	public static final field SCALA_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/assets/EmbeddedScriptLanguage;
 	public static fun forNumber (I)Ltools/elide/assets/EmbeddedScriptLanguage;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
@@ -2603,6 +2643,9 @@ public final class tools/elide/assets/EmbeddedScriptLanguage : java/lang/Enum, c
 
 public final class tools/elide/assets/EmbeddedScriptMetadata : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadataOrBuilder {
 	public static final field JAVASCRIPT_FIELD_NUMBER I
+	public static final field JVM_FIELD_NUMBER I
+	public static final field PYTHON_FIELD_NUMBER I
+	public static final field RUBY_FIELD_NUMBER I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
@@ -2611,11 +2654,20 @@ public final class tools/elide/assets/EmbeddedScriptMetadata : com/google/protob
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getJavascript ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
 	public fun getJavascriptOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadataOrBuilder;
+	public fun getJvm ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public fun getJvmOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder;
 	public fun getMetadataCase ()Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getPython ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public fun getPythonOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder;
+	public fun getRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public fun getRubyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder;
 	public fun getSerializedSize ()I
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasJavascript ()Z
+	public fun hasJvm ()Z
+	public fun hasPython ()Z
+	public fun hasRuby ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
@@ -2661,11 +2713,14 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$Builder : com/googl
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun clearJavascript ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun clearJvm ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun clearMetadata ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun clearPython ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun clearRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -2681,8 +2736,20 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$Builder : com/googl
 	public fun getJavascript ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
 	public fun getJavascriptBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$Builder;
 	public fun getJavascriptOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadataOrBuilder;
+	public fun getJvm ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public fun getJvmBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun getJvmOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder;
 	public fun getMetadataCase ()Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public fun getPython ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public fun getPythonBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public fun getPythonOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder;
+	public fun getRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public fun getRubyBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public fun getRubyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder;
 	public fun hasJavascript ()Z
+	public fun hasJvm ()Z
+	public fun hasPython ()Z
+	public fun hasRuby ()Z
 	public final fun isInitialized ()Z
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
@@ -2694,6 +2761,9 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$Builder : com/googl
 	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun mergeJavascript (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun mergeJvm (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun mergePython (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun mergeRuby (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
@@ -2703,9 +2773,15 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$Builder : com/googl
 	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun setJavascript (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public fun setJavascript (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setJvm (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setJvm (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setPython (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setPython (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setRuby (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
+	public fun setRuby (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$Builder;
@@ -2833,6 +2909,10 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$Js
 	public static final field ES6_VALUE I
 	public static final field JS_LANGUAGE_LEVEL_DEFAULT Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
 	public static final field JS_LANGUAGE_LEVEL_DEFAULT_VALUE I
+	public static final field LATEST Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public static final field LATEST_VALUE I
+	public static final field STABLE Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public static final field STABLE_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
 	public static fun forNumber (I)Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
@@ -2851,9 +2931,378 @@ public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$JsScri
 	public abstract fun getLevelValue ()I
 }
 
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder {
+	public static final field GROOVY_FIELD_NUMBER I
+	public static final field KOTLIN_FIELD_NUMBER I
+	public static final field LEVEL_FIELD_NUMBER I
+	public static final field TARGET_EFFECTIVE_FIELD_NUMBER I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public fun getGroovyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder;
+	public fun getKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public fun getKotlinOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder;
+	public fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public fun getLevelValue ()I
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public fun getTargetEffective ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hasGroovy ()Z
+	public fun hasKotlin ()Z
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public static fun newBuilder (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom ([B)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun clearGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun clearKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun clearLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun clearTargetEffective ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public fun getGroovyBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public fun getGroovyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder;
+	public fun getKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public fun getKotlinBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public fun getKotlinOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder;
+	public fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public fun getLevelValue ()I
+	public fun getTargetEffective ()I
+	public fun hasGroovy ()Z
+	public fun hasKotlin ()Z
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun mergeGroovy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun mergeKotlin (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setGroovy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setGroovy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setKotlin (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setKotlin (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setLevel (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setLevelValue (I)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public fun setTargetEffective (I)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public static fun newBuilder (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom ([B)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;
+}
+
+public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field JAVA_11 Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field JAVA_11_VALUE I
+	public static final field JAVA_17 Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field JAVA_17_VALUE I
+	public static final field JAVA_20 Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field JAVA_20_VALUE I
+	public static final field JVM_LANGUAGE_LEVEL_DEFAULT Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field JVM_LANGUAGE_LEVEL_DEFAULT_VALUE I
+	public static final field LATEST Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field LATEST_VALUE I
+	public static final field STABLE Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final field STABLE_VALUE I
+	public static final field UNRECOGNIZED Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static fun forNumber (I)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
+	public final fun getNumber ()I
+	public final fun getValueDescriptor ()Lcom/google/protobuf/Descriptors$EnumValueDescriptor;
+	public static fun internalGetValueMap ()Lcom/google/protobuf/Internal$EnumLiteMap;
+	public static fun valueOf (I)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static fun valueOf (Lcom/google/protobuf/Descriptors$EnumValueDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public static fun values ()[Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public static fun newBuilder (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom ([B)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;
+}
+
+public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public abstract fun getGroovyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfigurationOrBuilder;
+	public abstract fun getKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public abstract fun getKotlinOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfigurationOrBuilder;
+	public abstract fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public abstract fun getLevelValue ()I
+	public abstract fun getTargetEffective ()I
+	public abstract fun hasGroovy ()Z
+	public abstract fun hasKotlin ()Z
+}
+
 public final class tools/elide/assets/EmbeddedScriptMetadata$MetadataCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
 	public static final field JAVASCRIPT Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public static final field JVM Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
 	public static final field METADATA_NOT_SET Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public static final field PYTHON Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public static final field RUBY Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
 	public static fun forNumber (I)Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
 	public fun getNumber ()I
 	public static fun valueOf (I)Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
@@ -2861,9 +3310,208 @@ public final class tools/elide/assets/EmbeddedScriptMetadata$MetadataCase : java
 	public static fun values ()[Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
 }
 
+public final class tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public static fun newBuilder (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom ([B)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;
+}
+
+public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata : com/google/protobuf/GeneratedMessageV3, tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public static fun newBuilder (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom ([B)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public fun mergeFrom (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;
+}
+
+public abstract interface class tools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
 public final class tools/elide/assets/EmbeddedScriptMetadataKt {
 	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt;
 	public final fun -initializejsScriptMetadata (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
+	public final fun -initializejvmScriptMetadata (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public final fun -initializepyScriptMetadata (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public final fun -initializerbScriptMetadata (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
 }
 
 public final class tools/elide/assets/EmbeddedScriptMetadataKt$Dsl {
@@ -2871,11 +3519,23 @@ public final class tools/elide/assets/EmbeddedScriptMetadataKt$Dsl {
 	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata;
 	public final fun clearJavascript ()V
+	public final fun clearJvm ()V
 	public final fun clearMetadata ()V
+	public final fun clearPython ()V
+	public final fun clearRuby ()V
 	public final fun getJavascript ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
+	public final fun getJvm ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
 	public final fun getMetadataCase ()Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public final fun getPython ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public final fun getRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
 	public final fun hasJavascript ()Z
+	public final fun hasJvm ()Z
+	public final fun hasPython ()Z
+	public final fun hasRuby ()Z
 	public final fun setJavascript (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;)V
+	public final fun setJvm (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;)V
+	public final fun setPython (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;)V
+	public final fun setRuby (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;)V
 }
 
 public final class tools/elide/assets/EmbeddedScriptMetadataKt$Dsl$Companion {
@@ -2899,18 +3559,123 @@ public final class tools/elide/assets/EmbeddedScriptMetadataKt$JsScriptMetadataK
 	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$JsScriptMetadataKt$Dsl;
 }
 
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt {
+	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt;
+	public final fun -initializegroovyConfiguration (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public final fun -initializekotlinConfiguration (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$Dsl {
+	public static final field Companion Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public final fun clearGroovy ()V
+	public final fun clearKotlin ()V
+	public final fun clearLevel ()V
+	public final fun clearTargetEffective ()V
+	public final fun getGroovy ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public final fun getKotlin ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public final fun getLevel ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;
+	public final fun getTargetEffective ()I
+	public final fun hasGroovy ()Z
+	public final fun hasKotlin ()Z
+	public final fun setGroovy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;)V
+	public final fun setKotlin (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;)V
+	public final fun setLevel (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$JvmLanguageLevel;)V
+	public final fun setTargetEffective (I)V
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$Dsl;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt {
+	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt$Dsl {
+	public static final field Companion Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$GroovyConfigurationKt$Dsl;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt {
+	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt$Dsl {
+	public static final field Companion Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$JvmScriptMetadataKt$KotlinConfigurationKt$Dsl;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt {
+	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt$Dsl {
+	public static final field Companion Ltools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$PyScriptMetadataKt$Dsl;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt {
+	public static final field INSTANCE Ltools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt$Dsl {
+	public static final field Companion Ltools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+}
+
+public final class tools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata$Builder;)Ltools/elide/assets/EmbeddedScriptMetadataKt$RbScriptMetadataKt$Dsl;
+}
+
 public final class tools/elide/assets/EmbeddedScriptMetadataKtKt {
 	public static final fun -initializeembeddedScriptMetadata (Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata;
 	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
+	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
+	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
 	public static final synthetic fun copy (Ltools/elide/assets/EmbeddedScriptMetadata;Lkotlin/jvm/functions/Function1;)Ltools/elide/assets/EmbeddedScriptMetadata;
+	public static final fun getGroovyOrNull (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$GroovyConfiguration;
 	public static final fun getJavascriptOrNull (Ltools/elide/assets/EmbeddedScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
+	public static final fun getJvmOrNull (Ltools/elide/assets/EmbeddedScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public static final fun getKotlinOrNull (Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata$KotlinConfiguration;
+	public static final fun getPythonOrNull (Ltools/elide/assets/EmbeddedScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public static final fun getRubyOrNull (Ltools/elide/assets/EmbeddedScriptMetadataOrBuilder;)Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
 }
 
 public abstract interface class tools/elide/assets/EmbeddedScriptMetadataOrBuilder : com/google/protobuf/MessageOrBuilder {
 	public abstract fun getJavascript ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata;
 	public abstract fun getJavascriptOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadataOrBuilder;
+	public abstract fun getJvm ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadata;
+	public abstract fun getJvmOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$JvmScriptMetadataOrBuilder;
 	public abstract fun getMetadataCase ()Ltools/elide/assets/EmbeddedScriptMetadata$MetadataCase;
+	public abstract fun getPython ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadata;
+	public abstract fun getPythonOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$PyScriptMetadataOrBuilder;
+	public abstract fun getRuby ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadata;
+	public abstract fun getRubyOrBuilder ()Ltools/elide/assets/EmbeddedScriptMetadata$RbScriptMetadataOrBuilder;
 	public abstract fun hasJavascript ()Z
+	public abstract fun hasJvm ()Z
+	public abstract fun hasPython ()Z
+	public abstract fun hasRuby ()Z
 }
 
 public abstract interface class tools/elide/assets/EmbeddedScriptOrBuilder : com/google/protobuf/MessageOrBuilder {
@@ -2971,12 +3736,22 @@ public final class tools/elide/base/BaseLanguage {
 }
 
 public final class tools/elide/base/Language : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
+	public static final field ARABIC Ltools/elide/base/Language;
+	public static final field ARABIC_VALUE I
 	public static final field CHINESE Ltools/elide/base/Language;
 	public static final field CHINESE_VALUE I
 	public static final field ENGLISH Ltools/elide/base/Language;
 	public static final field ENGLISH_VALUE I
 	public static final field FRENCH Ltools/elide/base/Language;
 	public static final field FRENCH_VALUE I
+	public static final field HINDI Ltools/elide/base/Language;
+	public static final field HINDI_VALUE I
+	public static final field ITALIAN Ltools/elide/base/Language;
+	public static final field ITALIAN_VALUE I
+	public static final field JAPANESE Ltools/elide/base/Language;
+	public static final field JAPANESE_VALUE I
+	public static final field KOREAN Ltools/elide/base/Language;
+	public static final field KOREAN_VALUE I
 	public static final field SPANISH Ltools/elide/base/Language;
 	public static final field SPANISH_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/base/Language;
@@ -3431,9 +4206,11 @@ public final class tools/elide/cli/ElideToolOptions$Builder : com/google/protobu
 }
 
 public final class tools/elide/cli/ElideToolOptions$OutputOptions : com/google/protobuf/GeneratedMessageV3, tools/elide/cli/ElideToolOptions$OutputOptionsOrBuilder {
+	public static final field DEBUG_FIELD_NUMBER I
 	public static final field PRETTY_FIELD_NUMBER I
 	public static final field QUIET_FIELD_NUMBER I
 	public static final field VERBOSE_FIELD_NUMBER I
+	public fun getDebug ()Z
 	public static fun getDefaultInstance ()Ltools/elide/cli/ElideToolOptions$OutputOptions;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
@@ -3482,6 +4259,7 @@ public final class tools/elide/cli/ElideToolOptions$OutputOptions$Builder : com/
 	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
 	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
 	public fun clear ()Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
+	public fun clearDebug ()Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
@@ -3499,6 +4277,7 @@ public final class tools/elide/cli/ElideToolOptions$OutputOptions$Builder : com/
 	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
 	public synthetic fun clone ()Ljava/lang/Object;
 	public fun clone ()Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
+	public fun getDebug ()Z
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/cli/ElideToolOptions$OutputOptions;
@@ -3511,6 +4290,7 @@ public final class tools/elide/cli/ElideToolOptions$OutputOptions$Builder : com/
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
+	public fun setDebug (Z)Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;
@@ -3526,6 +4306,7 @@ public final class tools/elide/cli/ElideToolOptions$OutputOptions$Builder : com/
 }
 
 public abstract interface class tools/elide/cli/ElideToolOptions$OutputOptionsOrBuilder : com/google/protobuf/MessageOrBuilder {
+	public abstract fun getDebug ()Z
 	public abstract fun getPretty ()Z
 	public abstract fun getQuiet ()Z
 	public abstract fun getVerbose ()Z
@@ -3558,12 +4339,15 @@ public final class tools/elide/cli/ElideToolOptionsKt$OutputOptionsKt$Dsl {
 	public static final field Companion Ltools/elide/cli/ElideToolOptionsKt$OutputOptionsKt$Dsl$Companion;
 	public synthetic fun <init> (Ltools/elide/cli/ElideToolOptions$OutputOptions$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun _build ()Ltools/elide/cli/ElideToolOptions$OutputOptions;
+	public final fun clearDebug ()V
 	public final fun clearPretty ()V
 	public final fun clearQuiet ()V
 	public final fun clearVerbose ()V
+	public final fun getDebug ()Z
 	public final fun getPretty ()Z
 	public final fun getQuiet ()Z
 	public final fun getVerbose ()Z
+	public final fun setDebug (Z)V
 	public final fun setPretty (Z)V
 	public final fun setQuiet (Z)V
 	public final fun setVerbose (Z)V

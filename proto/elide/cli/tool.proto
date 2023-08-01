@@ -65,6 +65,9 @@ message ElideToolOptions {
 
     // Coming soon.
     bool pretty = 3;
+
+    // Coming soon.
+    bool debug = 4;
   }
 
   // Options that control tool output.

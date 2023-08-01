@@ -1,11 +1,22 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaic
 import elide.runtime.Logger
 import elide.tool.cli.state.CommandState
 import kotlinx.coroutines.CoroutineScope
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -42,7 +53,7 @@ import kotlin.coroutines.CoroutineContext
 sealed interface CommandContext : CoroutineScope {
   companion object {
     /** @return Default command context implementation. */
-    @JvmStatic
+    @JvmStatic @Suppress("unused_parameter")
     fun default(state: CommandState): CommandContext = object : DefaultCommandContext {
       override val coroutineContext: CoroutineContext get() = TODO("Not yet implemented")
       override val logging: Logger get() = Statics.logging

@@ -3,7 +3,8 @@ package elide.runtime.gvm.internals.intrinsics
 import elide.annotations.Context
 import elide.annotations.Singleton
 import elide.runtime.gvm.GuestLanguage
-import elide.runtime.gvm.internals.IntrinsicsResolver
+import elide.runtime.intrinsics.IntrinsicsResolver
+import elide.runtime.intrinsics.GuestIntrinsic
 import io.micronaut.context.annotation.Infrastructure
 import java.util.*
 

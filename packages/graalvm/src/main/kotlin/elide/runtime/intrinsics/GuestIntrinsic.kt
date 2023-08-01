@@ -1,4 +1,4 @@
-package elide.runtime.gvm.internals.intrinsics
+package elide.runtime.intrinsics
 
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol

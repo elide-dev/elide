@@ -119,6 +119,8 @@ internal class JsRuntime @Inject constructor (
   private companion object {
     const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
     const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"
+    const val JS_LANGUAGE_LEVEL_STABLE: String = "stable"
+    const val JS_LANGUAGE_LEVEL_LATEST: String = "latest"
     const val DEFAULT_JS_LOCALE: String = "en-US"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
@@ -261,6 +263,8 @@ internal class JsRuntime @Inject constructor (
     JsLanguageLevel.ES2020,
     JsLanguageLevel.ES2021,
     JsLanguageLevel.ES2022 -> this.name.drop(2)
+    JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
+    JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
     JsLanguageLevel.UNRECOGNIZED,
     JsLanguageLevel.JS_LANGUAGE_LEVEL_DEFAULT -> DEFAULT_JS_LANGUAGE_LEVEL
   }

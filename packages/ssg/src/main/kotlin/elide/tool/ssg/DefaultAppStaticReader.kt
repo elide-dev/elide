@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.tool.ssg
 
 import elide.runtime.LogLevel
@@ -10,6 +23,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import jakarta.inject.Singleton
 import org.jsoup.Jsoup
+import java.net.URI
 import java.net.URL
 import java.nio.ByteBuffer
 
@@ -91,10 +105,10 @@ import java.nio.ByteBuffer
         "link" -> ArtifactType.STYLE
         else -> null
       }
-      if ((artifactType == null || src.isNullOrBlank()) && logging.isEnabled(LogLevel.TRACE)) logging.trace(
+      if ((artifactType == null || src.isBlank()) && logging.isEnabled(LogLevel.TRACE)) logging.trace(
         "Skipping ineligible artifact '${it}'"
       )
-      if (src.isNullOrBlank() || src == "/" || src == "." || src == "./" || src == request.uri.toString()) {
+      if (src.isBlank() || src == "/" || src == "." || src == "./" || src == request.uri.toString()) {
         // special case: don't allow detection of the root page as an artifact, which can happen with standards-breaking
         // HTML that is missing a `src` for a media element, in some cases.
         return@mapNotNull null
@@ -102,21 +116,24 @@ import java.nio.ByteBuffer
 
       // detect relative URLs
       val resolvedUrl: URL = if (src.startsWith("http:") || src.startsWith("https:")) {
-        URL(src)  // it's an absolute URL
+        URI.create(src).toURL()  // it's an absolute URL
       } else if (src.startsWith("://")) {
         // special case: it's a protocol-relative URL. these are rare and simply reference the origin URL protocol
         // instead of an explicit protocol.
-        URL("${request.uri.scheme}://${src.drop("://".length)}")
+        URI.create("${request.uri.scheme}://${src.drop("://".length)}").toURL()
       } else {
-        // if it starts with `/`, it's a reference from the origin base, i.e. an origin-relative URL. we should
-        // initialize the URL with the origin base but `src` as the path.
+        // if it starts with, `/`, it's a reference from the origin base, i.e., an origin-relative URL.
+        // we should initialize the URL with the origin base but `src` as the path.
         if (src.startsWith("/")) {
-          URL(
+          URI(
             request.uri.scheme,
+            null,
             request.uri.host,
             request.uri.port,
             src,
-          )
+            null,
+            null,
+          ).toURL()
         } else {
           // otherwise, it's a completely relative link, so we need the original URL to calculate it.
           request.uri.resolve(src).toURL()

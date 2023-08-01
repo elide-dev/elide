@@ -2,7 +2,7 @@
 
 package elide.runtime.gvm.internals
 
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions.assertNotNull

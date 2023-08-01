@@ -4,7 +4,7 @@ import elide.vm.annotations.Polyglot
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol

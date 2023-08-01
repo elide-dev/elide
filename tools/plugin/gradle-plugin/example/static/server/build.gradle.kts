@@ -19,7 +19,7 @@ plugins {
 }
 
 application {
-    mainClass.set("example.App")
+    mainClass = "example.App"
 }
 
 dependencies {
@@ -36,7 +36,7 @@ dependencies {
 }
 
 micronaut {
-    version.set("3.9.4")
+    version = "3.9.4"
 }
 
 elide {

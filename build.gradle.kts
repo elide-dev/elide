@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
@@ -16,37 +29,39 @@ import java.util.Properties
 
 plugins {
   idea
-  id("dev.elide.build")
-  id("project-report")
-  id("org.sonarqube")
-  id("org.jetbrains.dokka")
-  id("org.jetbrains.kotlinx.kover")
-  id("org.jetbrains.kotlinx.binary-compatibility-validator")
-  id("io.gitlab.arturbosch.detekt")
-  id("com.autonomousapps.dependency-analysis") version "1.20.0"
-
-  `embedded-kotlin` apply false
-  id("com.android.application") version "7.3.1" apply false
-  id("com.android.library") version "7.3.1" apply false
-
-  alias(libs.plugins.qodana)
-  alias(libs.plugins.ktlint)
   jacoco
   signing
+  `project-report`
+  `embedded-kotlin` apply false
+
+  id(libs.plugins.sonar.get().pluginId)
+  id(libs.plugins.dokka.get().pluginId)
+  id(libs.plugins.kover.get().pluginId)
+  id(libs.plugins.kotlinx.plugin.abiValidator.get().pluginId)
+  id(libs.plugins.detekt.get().pluginId)
+  alias(libs.plugins.dependencyAnalysis)
+  alias(libs.plugins.gradle.checksum)
+  alias(libs.plugins.gradle.testretry)
+  alias(libs.plugins.ktlint)
+  alias(libs.plugins.openrewrite)
+  alias(libs.plugins.lombok)
+  id("dev.elide.build")
 }
 
 group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
-val versionFile = File("./.version")
+val versionFile: File = rootProject.layout.projectDirectory.file(".version").asFile
 version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
-  file(".version").readText().trim().replace("\n", "").ifBlank {
-    throw IllegalStateException("Failed to load `.version`")
+  if (project.hasProperty("version")) {
+    project.properties["version"] as String
+  } else if (versionFile.exists()) {
+    versionFile.readText().trim().replace("\n", "").ifBlank {
+      throw IllegalStateException("Failed to load `.version`")
+    }
+  } else {
+    "1.0-SNAPSHOT"
   }
-} else if (project.hasProperty("version")) {
-  project.properties["version"] as String
-} else if (versionFile.exists()) {
-  versionFile.readText()
 } else {
   "1.0-SNAPSHOT"
 }
@@ -68,6 +83,7 @@ val javaLanguageVersion = project.properties["versions.java.language"] as String
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as String
 val ecmaVersion = project.properties["versions.ecma.language"] as String
 val enableKnit: String? by properties
+val enableProguard: String? by properties
 
 val buildSsg: String by properties
 val buildDocs by properties
@@ -79,10 +95,11 @@ buildscript {
     maven("https://elide-snapshots.storage-download.googleapis.com/repository/v3/")
   }
   dependencies {
+    val enableProguard: String? by properties
     classpath("org.jetbrains.kotlinx:kotlinx-knit:${libs.versions.kotlin.knit.get()}")
-    classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
-    classpath("org.jetbrains.dokka:dokka-gradle-plugin:${libs.versions.dokka.get()}")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.sdk.get()}")
+    if (enableProguard == "true") {
+      classpath("com.guardsquare:proguard-gradle:${libs.versions.proguard.get()}")
+    }
     if (project.hasProperty("elide.pluginMode") && project.properties["elide.pluginMode"] == "repository") {
       classpath("dev.elide.buildtools:plugin:${project.properties["elide.pluginVersion"] as String}")
     }
@@ -123,7 +140,7 @@ apiValidation {
     "reports",
   ).plus(
     if (buildSsg == "true") {
-      listOf("bundler",)
+      listOf("bundler")
     } else {
       emptyList()
     }
@@ -173,8 +190,34 @@ sonarqube {
   }
 }
 
-val dokkaVersion = libs.versions.dokka.get()
-val mermaidDokka = libs.versions.mermaidDokka.get()
+val dokkaVersion: Provider<String> = libs.versions.dokka
+val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
+
+dependencies {
+  kover(project(":packages:base"))
+  kover(project(":packages:cli"))
+  kover(project(":packages:core"))
+  kover(project(":packages:graalvm"))
+  kover(project(":packages:model"))
+  kover(project(":packages:proto:proto-core"))
+  kover(project(":packages:proto:proto-capnp"))
+  kover(project(":packages:proto:proto-flatbuffers"))
+  kover(project(":packages:proto:proto-kotlinx"))
+  kover(project(":packages:proto:proto-protobuf"))
+  kover(project(":packages:rpc"))
+  kover(project(":packages:server"))
+  kover(project(":packages:ssg"))
+  kover(project(":packages:ssr"))
+  kover(project(":packages:test"))
+  kover(project(":tools:bundler"))
+  kover(project(":tools:processor"))
+}
+
+rewrite {
+  activeRecipe(
+    "org.openrewrite.java.OrderImports",
+  )
+}
 
 subprojects {
   val name = this.name
@@ -189,12 +232,13 @@ subprojects {
     }
   }
 
-  if (buildDocs == "true") {
-    val dokkaPlugin by configurations
-    dependencies {
-      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:$dokkaVersion")
-      dokkaPlugin("org.jetbrains.dokka:templating-plugin:$dokkaVersion")
-      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:$dokkaVersion")
+  dependencies {
+    if (buildDocs == "true") {
+      val dokkaPlugin by configurations
+      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
+      dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
+      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
+      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
     }
   }
 
@@ -244,12 +288,16 @@ subprojects {
   }
 
   ktlint {
+    version = "0.50.0"
+
     debug = false
     verbose = false
     android = false
     outputToConsole = false
     ignoreFailures = true
     enableExperimentalRules = true
+    coloredOutput = true
+
     filter {
       exclude("**/proto/**")
       exclude("**/generated/**")
@@ -261,7 +309,7 @@ subprojects {
   detekt {
     parallel = true
     ignoreFailures = true
-    config = rootProject.files("config/detekt/detekt.yml")
+    config.from(rootProject.files("config/detekt/detekt.yml"))
   }
 
   val detektMerge by tasks.registering(ReportMergeTask::class) {
@@ -344,18 +392,6 @@ if (tasks.findByName("resolveAllDependencies") == null) {
   }
 }
 
-koverMerged {
-  enable()
-
-  xmlReport {
-    onCheck = isCI
-  }
-
-  htmlReport {
-    onCheck = isCI
-  }
-}
-
 tasks.register("samples") {
   description = "Build and test all built-in code samples, in the `samples` path and with Knit."
 
@@ -408,18 +444,6 @@ tasks.register("preMerge") {
     ":ktlintCheck",
     ":check",
   )
-}
-
-afterEvaluate {
-  tasks.named("koverMergedReport") {
-    Elide.multiplatformModules.plus(
-      Elide.serverModules
-    ).plus(
-      Elide.frontendModules
-    ).forEach {
-      dependsOn(":packages:$it:koverXmlReport")
-    }
-  }
 }
 
 if (buildDocs == "true") {

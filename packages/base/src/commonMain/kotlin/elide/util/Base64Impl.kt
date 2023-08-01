@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.util
 
 import kotlin.math.min
@@ -58,7 +71,7 @@ private val defaultDecoder: Base64Kt.Decoder = Base64Kt.Decoder()
   "LoopWithTooManyJumpStatements",
   "ComplexMethod",
   "LongMethod",
-  "NestedBlockDepth"
+  "NestedBlockDepth",
 )
 public object Base64Kt {
   /**
@@ -70,7 +83,7 @@ public object Base64Kt {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/',
   )
 
   /**
@@ -82,7 +95,7 @@ public object Base64Kt {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
   )
 
   /**
@@ -136,7 +149,7 @@ public object Base64Kt {
   public class Encoder internal constructor(
     private val newline: ByteArray?,
     private val linemax: Int,
-    private val doPadding: Boolean
+    private val doPadding: Boolean,
     ) {
     public companion object {
       /** Default encoder instance. */
@@ -269,14 +282,13 @@ public object Base64Kt {
       return dst
     }
 
-
     private fun outLength(src: ByteArray, sp: Int, sl: Int): Int {
       var paddings = 0
       val len = sl - sp
       if (len == 0) return 0
       if (len < 2) {
         throw IllegalArgumentException(
-          "Input byte[] should at least have 2 bytes for base64 bytes"
+          "Input byte[] should at least have 2 bytes for base64 bytes",
         )
       }
       if (src[sl - 1].toInt().toChar() == '=') {
@@ -321,8 +333,10 @@ public object Base64Kt {
             // xx=   shiftto==6&&sp==sl missing last =
             // xx=y  shiftto==6 last is not =
             require(
-              !(shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
-                shiftto == 18)
+              !(
+                shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
+                shiftto == 18
+              ),
             ) { "Input byte array has wrong 4-byte ending unit" }
             break
           }
@@ -356,7 +370,7 @@ public object Base64Kt {
       // if MIME, ignore all non-base64 character
       while (sp < sl) {
         throw IllegalArgumentException(
-          "Input byte array has incorrect ending byte at $sp"
+          "Input byte array has incorrect ending byte at $sp",
         )
       }
       return dp

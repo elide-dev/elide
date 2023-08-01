@@ -10,8 +10,8 @@ import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.runtime.gvm.internals.js.JsInvocationBindings
 import elide.ssr.ServerResponse

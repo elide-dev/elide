@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.tool.ssg
 
 import elide.runtime.Logger
@@ -14,6 +27,7 @@ import kotlinx.coroutines.reactive.awaitFirst
 import tools.elide.meta.AppManifest
 import tools.elide.meta.Endpoint
 import java.io.Closeable
+import java.net.URI
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -155,12 +169,12 @@ import java.util.concurrent.atomic.AtomicReference
     app: AppManifest,
   ): Deferred<LoadedAppInfo> = coroutineScope {
     // parse the `target` value
-    val url = URL(if (params.target.contains("://")) {
+    val url = URI.create(if (params.target.contains("://")) {
       params.target
     } else {
       // if the target has no protocol, assume `file://`
       "jar:file://${params.target}!/"
-    })
+    }).toURL()
     if (params.options.httpMode) {
       logging.debug("Detected HTTP mode is active; validating target as HTTP URL.")
       require(url.protocol == "http" || url.protocol == "https") {

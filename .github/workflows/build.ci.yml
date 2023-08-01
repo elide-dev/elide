@@ -211,7 +211,7 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.7.0
     with:
       base64-subjects: "${{ needs.gradle.outputs.hashes }}"
-      upload-assets: ${{ github.event_name == 'push' }}
+      upload-assets: ${{ github.ref == 'refs/heads/stable' || github.ref == 'refs/heads/v3' || startsWith(github.ref, 'release/') || startsWith(github.ref, 'refs/tags/v') }}
 
   ##
   ## Job: Testsuite (JVM)
@@ -508,20 +508,27 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - name: "Post-process: Compress"
-        if: success()
+      - name: "Post-process: Compress (xz)"
+        if: success() && !contains(matrix.runner, 'windows')
         run: |
           pushd packages/cli/build/native/nativeCompile;
           xz -9kv elide.debug;
           popd;
           echo "Binary compressed.";
-      - name: "Artifacts: Debug Binary"
+      - name: "Artifacts: Debug Binary (Unix)"
         uses: actions/upload-artifact@v3
-        if: success()
+        if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
+      - name: "Artifacts: Debug Binary (Windows)"
+        uses: actions/upload-artifact@v3
+        if: success() && contains(matrix.runner, 'windows')
+        with:
+          name: cli-debug-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/native/nativeCompile/elide.debug
       - name: "Artifacts: Dashboard Dump"
         uses: actions/upload-artifact@v3
         if: success()
@@ -622,20 +629,27 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - name: "Post-process: Compress"
-        if: success()
+      - name: "Post-process: Compress (xz)"
+        if: success() && !contains(matrix.runner, 'windows')
         run: |
           pushd packages/cli/build/native/nativeOptimizedCompile;
-          xz -9kv elide;
+          xz -9kv elide.debug;
           popd;
           echo "Binary compressed.";
-      - name: "Artifacts: Release Binary"
+      - name: "Artifacts: Release Binary (Unix)"
         uses: actions/upload-artifact@v3
-        if: success()
+        if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-release-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeOptimizedCompile/elide.xz
+      - name: "Artifacts: Release Binary (Windows)"
+        uses: actions/upload-artifact@v3
+        if: success() && contains(matrix.runner, 'windows')
+        with:
+          name: cli-release-${{ matrix.tag }}
+          path: |
+            ./packages/cli/build/native/nativeOptimizedCompile/elide.exe
 
   ##
   ## Job: Docker Samples (JVM)

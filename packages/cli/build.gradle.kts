@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "DSL_SCOPE_VIOLATION",
   "UnstableApiUsage",
@@ -51,17 +64,7 @@ val enableMosaic = true
 val enableProguard = false
 val enableUpx = false
 val enableDashboard = false
-
-val ktCompilerArgs = listOf(
-  "-progressive",
-  "-Xallow-unstable-dependencies",
-  "-Xcontext-receivers",
-  "-Xemit-jvm-type-annotations",
-  "-Xlambdas=indy",
-  "-Xsam-conversions=indy",
-  "-Xjsr305=strict",
-  "-Xjvm-default=all",
-)
+val encloseSdk = false
 
 buildscript {
   repositories {
@@ -76,6 +79,27 @@ buildscript {
 }
 
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
+
+val jvmCompileArgs = listOf(
+  "--add-exports=java.base/jdk.internal.module=elide.cli",
+)
+
+val jvmModuleArgs = listOf(
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
+).plus(jvmCompileArgs)
+
+val ktCompilerArgs = listOf(
+  "-progressive",
+  "-Xallow-unstable-dependencies",
+  "-Xcontext-receivers",
+  "-Xemit-jvm-type-annotations",
+  "-Xlambdas=indy",
+  "-Xsam-conversions=indy",
+  "-Xjsr305=strict",
+  "-Xjvm-default=all",
+  "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
+)
 
 java {
   sourceCompatibility = JavaVersion.VERSION_20
@@ -117,6 +141,7 @@ kapt {
   includeCompileClasspath = false
   strictMode = true
   correctErrorTypes = true
+  keepJavacAnnotationProcessors = true
 }
 
 buildConfig {
@@ -143,6 +168,8 @@ dependencies {
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.kotlin.scripting.jvm.engine)
   implementation(libs.logback)
+  implementation(libs.conscrypt)
+  implementation(libs.tink)
 
   api(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
@@ -201,11 +228,13 @@ dependencies {
     else -> {}
   }
 
-  compileOnly(libs.graalvm.sdk)
+  if (encloseSdk) {
+    compileOnly(libs.graalvm.sdk)
+    compileOnly(libs.graalvm.truffle.api)
+  }
   compileOnly(libs.graalvm.espresso.polyglot)
   compileOnly(libs.graalvm.espresso.hotswap)
   compileOnly(libs.graalvm.tools.lsp.api)
-  compileOnly(libs.graalvm.truffle.api)
   compileOnly(libs.graalvm.truffle.nfi)
   compileOnly(libs.graalvm.truffle.nfi.libffi)
 
@@ -233,15 +262,6 @@ publishing {
   }
 }
 
-sonarqube {
-  isSkipProject = true
-}
-
-val jvmModuleArgs = listOf(
-  "--add-opens=java.base/java.io=ALL-UNNAMED",
-  "--add-opens=java.base/java.nio=ALL-UNNAMED",
-)
-
 val targetOs = when {
   Os.isFamily(Os.FAMILY_WINDOWS) -> "windows"
   Os.isFamily(Os.FAMILY_MAC) -> "darwin"
@@ -256,6 +276,7 @@ val targetOs = when {
 micronaut {
   version = libs.versions.micronaut.lib.get()
   runtime = MicronautRuntime.NETTY
+  enableNativeImage(true)
 
   processing {
     incremental = true
@@ -318,6 +339,7 @@ val commonNativeArgs = listOf(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
+  "--features=elide.tool.cli.features.JLine3Feature",
   "-H:+BuildReport",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
@@ -638,7 +660,7 @@ graalvmNative {
     named("test") {
       imageName = "elide.test"
       fallback = false
-      quickBuild = quickbuild
+      quickBuild = true
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).filter {
         it != "--language:java"  // espresso is not supported in test mode
       })
@@ -682,6 +704,10 @@ tasks {
     graalImage = "${project.properties["elide.publish.repo.docker.tools"]}/gvm20:latest"
     buildStrategy = DockerBuildStrategy.DEFAULT
   }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+  options.compilerArgs.addAll(jvmModuleArgs)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

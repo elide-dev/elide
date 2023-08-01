@@ -32,6 +32,7 @@ val libraries = listOf(
   "elide-frontend",
   "elide-rpc",
   "elide-ssg",
+  "elide-wasm",
 )
 
 // Peer modules.
@@ -43,7 +44,7 @@ val peers = mapOf(
 )
 
 kover {
-  isDisabled = true
+  disable()
 }
 
 catalog {

@@ -1,11 +1,25 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+@file:Suppress("UnstableApiUsage")
+
 plugins {
   `maven-publish`
   distribution
   signing
-
-  id("java")
-  id("java-test-fixtures")
-  kotlin("jvm")
+  java
+  `java-test-fixtures`
+  `embedded-kotlin`
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")
@@ -18,15 +32,20 @@ version = rootProject.version as String
 
 kotlin {
   explicitApi()
+
+  sourceSets.all {
+    languageSettings.apiVersion = ElideSubstrate.KOTLIN_VERSION
+    languageSettings.languageVersion = ElideSubstrate.KOTLIN_VERSION
+  }
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
 }
 
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"
-val test by configurations.creating
+val test: Configuration by configurations.creating
 
 dependencies {
   api(libs.google.auto.service.annotations)

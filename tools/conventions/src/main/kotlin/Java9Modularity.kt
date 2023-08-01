@@ -2,7 +2,7 @@
  * Copyright 2016-2022 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "unused")
 
 import org.gradle.api.*
 import org.gradle.api.attributes.*
@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.gradle.dsl.*
  * The source file for the module descriptor is expected at <project-dir>/src/module-info.java.
  *
  * To maintain backwards compatibility with Java 8, the jvm JAR is marked as a multi-release JAR
- * with the module-info.class being moved to META-INF/versions/9/module-info.class.
+ * with the module-info being moved to META-INF/versions/9/module-info.class.
  *
  * The Java toolchains feature of Gradle is used to detect or provision a JDK 11,
  * which is used to compile the module descriptor.

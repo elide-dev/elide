@@ -1,3 +1,4 @@
+@file:Suppress("UnstableApiUsage")
 
 plugins {
   kotlin("plugin.serialization")

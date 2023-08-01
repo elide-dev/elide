@@ -1,5 +1,6 @@
 @file:Suppress(
   "DSL_SCOPE_VIOLATION",
+  "UnstableApiUsage",
 )
 
 plugins {
@@ -216,25 +217,6 @@ graalvmNative {
     enabled = true
     version = GraalVMVersions.graalvmMetadata
   }
-
-//  agent {
-//    defaultMode = "standard"
-//    builtinCallerFilter = true
-//    builtinHeuristicFilter = true
-//    enableExperimentalPredefinedClasses = false
-//    enableExperimentalUnsafeAllocationTracing = false
-//    trackReflectionMetadata = true
-//    enabled = true
-//
-//    modes {
-//      standard {}
-//    }
-//    metadataCopy {
-//      inputTaskNames.add("test")
-//      outputDirectories.add("src/main/resources/META-INF/native-image")
-//      mergeWithExisting = true
-//    }
-//  }
 
   binaries {
     named("main") {

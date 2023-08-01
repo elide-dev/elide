@@ -266,7 +266,7 @@ tasks.compileKotlin.configure {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }
@@ -278,7 +278,7 @@ tasks.compileTestKotlin.configure {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }
@@ -290,7 +290,7 @@ tasks.withType<KotlinCompile>().configureEach {
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
         freeCompilerArgs = Elide.kaptCompilerArgs
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
         incremental = true
     }
 }

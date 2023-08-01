@@ -73,7 +73,7 @@ kotlin {
       kotlinOptions {
         apiVersion = Elide.kotlinLanguage
         languageVersion = Elide.kotlinLanguage
-        allWarningsAsErrors = false
+        allWarningsAsErrors = true
 
         if (this is KotlinJvmOptions) {
           jvmTarget = javaLanguageTarget
@@ -86,7 +86,7 @@ kotlin {
   // force -Werror to be off
   afterEvaluate {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-      kotlinOptions.allWarningsAsErrors = false
+      kotlinOptions.allWarningsAsErrors = true
     }
   }
 }

@@ -63,7 +63,7 @@ afterEvaluate {
       languageVersion = "1.9"
       jvmTarget = "20"
       javaParameters = true
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       incremental = true
     }
   }

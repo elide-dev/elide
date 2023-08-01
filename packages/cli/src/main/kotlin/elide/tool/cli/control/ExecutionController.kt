@@ -193,6 +193,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
       return asString(guestException.invokeMember("causeExceptionClass"))
     }
 
+    @Suppress("unused_parameter")
     protected fun getStackTrace(@Suppress("unused") guestException: Value?): Array<StackTraceElement?> {
       // TODO(peterssen): Create host stack trace.
       return arrayOfNulls(0)

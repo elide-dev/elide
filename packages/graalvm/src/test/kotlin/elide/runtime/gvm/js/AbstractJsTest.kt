@@ -7,7 +7,7 @@ import elide.runtime.gvm.internals.AbstractDualTest
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.gvm.internals.js.JsRuntime

@@ -3,6 +3,7 @@ package elide.runtime.gvm.internals
 import elide.annotations.Context
 import elide.annotations.Singleton
 import elide.runtime.gvm.internals.intrinsics.CompoundIntrinsicsResolver
+import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolves intrinsics for use with guest VMs. */
 @Suppress("MnInjectionPoints")

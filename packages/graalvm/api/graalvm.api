@@ -411,7 +411,47 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/$ServiceIntr
 
 public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy {
 	public static final field INSTANCE Lelide/runtime/gvm/internals/intrinsics/js/JsProxy;
+	public final fun build (Lkotlin/jvm/functions/Function1;)Lorg/graalvm/polyglot/proxy/ProxyObject;
 	public final fun wrap (Ljava/lang/Object;)Lelide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyProxy;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$MutableObjectProxy : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final synthetic fun box-impl (Ljava/util/Map;)Lelide/runtime/gvm/internals/intrinsics/js/JsProxy$MutableObjectProxy;
+	public static synthetic fun constructor-impl$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/Map;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/Map;Ljava/util/Map;)Z
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public static fun getMember-impl (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public static fun getMemberKeys-impl (Ljava/util/Map;)Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun hasMember-impl (Ljava/util/Map;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/Map;)I
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public static fun putMember-impl (Ljava/util/Map;Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/Map;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/Map;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$MutableObjectProxy$Builder {
+	public static final synthetic fun box-impl (Ljava/util/Map;)Lelide/runtime/gvm/internals/intrinsics/js/JsProxy$MutableObjectProxy$Builder;
+	public static final fun build-Vf0lDTY (Ljava/util/Map;)Ljava/util/Map;
+	public static synthetic fun constructor-impl$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/Map;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/Map;Ljava/util/Map;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/Map;)I
+	public static final fun put-impl (Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)V
+	public static final fun putFunction-impl (Ljava/util/Map;Ljava/lang/String;Lorg/graalvm/polyglot/proxy/ProxyExecutable;)V
+	public static final fun putObject-impl (Ljava/util/Map;Ljava/lang/String;)V
+	public static final fun putObject-impl (Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/Map;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/Map;
 }
 
 public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyProxy : org/graalvm/polyglot/proxy/ProxyObject {
@@ -1213,6 +1253,8 @@ public abstract interface class elide/runtime/intrinsics/js/express/ExpressApp {
 	public abstract fun options (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun post (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun put (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun use (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public abstract fun use (Lorg/graalvm/polyglot/Value;)V
 }
 
 public abstract interface class elide/runtime/intrinsics/js/express/ExpressRequest {

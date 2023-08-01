@@ -340,19 +340,6 @@ graalvmNative {
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
-
-      javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor = JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            })
-          }
-        }
-      }
     }
 
     named("optimized") {
@@ -362,19 +349,6 @@ graalvmNative {
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
-
-      javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor = JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            })
-          }
-        }
-      }
     }
 
     named("test") {
@@ -382,19 +356,6 @@ graalvmNative {
       fallback = false
       buildArgs.addAll(nativeImageArgs().plus(testOnlyArgs))
       quickBuild = quickbuild
-
-      javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of((project.properties["versions.java.language"] as String))
-        if (project.hasProperty("elide.graalvm.variant")) {
-          val variant = project.property("elide.graalvm.variant") as String
-          if (variant != "COMMUNITY") {
-            vendor = JvmVendorSpec.matching(when (variant.trim()) {
-              "ENTERPRISE" -> "Oracle"
-              else -> "GraalVM Community"
-            })
-          }
-        }
-      }
     }
   }
 }

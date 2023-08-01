@@ -211,7 +211,7 @@ afterEvaluate {
 }
 
 graalvmNative {
-  testSupport = false  // disabled for now due to micronaut test bugs in native
+  testSupport = true
 
   metadataRepository {
     enabled = true

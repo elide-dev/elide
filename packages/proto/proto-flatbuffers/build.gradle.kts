@@ -46,7 +46,7 @@ kotlin {
       javaParameters = true
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = false
+      allWarningsAsErrors = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
         // do not warn for generated code
         "-nowarn"
@@ -57,7 +57,7 @@ kotlin {
   // force -Werror to be off
   afterEvaluate {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-      kotlinOptions.allWarningsAsErrors = false
+      kotlinOptions.allWarningsAsErrors = true
     }
   }
 }

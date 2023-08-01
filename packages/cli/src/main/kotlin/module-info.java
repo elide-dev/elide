@@ -26,7 +26,6 @@ module elide.cli {
 
     requires io.micronaut.inject;
     requires io.micronaut.picocli.picocli;
-    requires mosaic.runtime.jvm;
 
     requires ch.qos.logback.classic;
     requires info.picocli;

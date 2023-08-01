@@ -84,6 +84,10 @@ val jvmCompileArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=elide.cli",
 )
 
+val nativeCompileJvmArgs = jvmCompileArgs.map {
+  "-J$it"
+}
+
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
@@ -170,6 +174,7 @@ dependencies {
   implementation(libs.logback)
   implementation(libs.conscrypt)
   implementation(libs.tink)
+  implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
   api(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
@@ -339,7 +344,6 @@ val commonNativeArgs = listOf(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "--features=elide.tool.cli.features.JLine3Feature",
   "-H:+BuildReport",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
@@ -663,7 +667,9 @@ graalvmNative {
       quickBuild = true
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).filter {
         it != "--language:java"  // espresso is not supported in test mode
-      })
+      }.plus(
+        nativeCompileJvmArgs
+      ))
     }
   }
 }
@@ -707,7 +713,7 @@ tasks {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  options.compilerArgs.addAll(jvmModuleArgs)
+  options.compilerArgs.addAll(jvmCompileArgs)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -751,6 +757,10 @@ configurations.all {
     substitute(module("net.java.dev.jna:jna"))
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
   }
+
+  // provided by runtime
+  exclude(group = "org.graalvm.sdk", module = "graal-sdk")
+  exclude(group = "org.graalvm.truffle", module = "truffle-api")
 }
 
 afterEvaluate {
@@ -781,6 +791,3 @@ afterEvaluate {
     }
   }
 }
-
-// Unused dependencies:
-// implementation(libs.picocli.jline3)

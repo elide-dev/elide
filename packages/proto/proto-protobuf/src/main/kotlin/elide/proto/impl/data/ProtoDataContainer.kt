@@ -1,4 +1,4 @@
-@file:Suppress("RedundantVisibilityModifier")
+@file:Suppress("RedundantVisibilityModifier", "unused", "UNUSED_PARAMETER")
 
 package elide.proto.impl.data
 

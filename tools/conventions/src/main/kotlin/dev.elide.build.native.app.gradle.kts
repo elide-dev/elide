@@ -11,12 +11,6 @@ val quickbuild = (
   project.properties["elide.buildMode"] == "dev"
 )
 
-afterEvaluate {
-  tasks.named("testNativeImage") {
-    enabled = false
-  }
-}
-
 graalvmNative {
   testSupport = true
 

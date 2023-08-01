@@ -286,7 +286,7 @@ micronaut {
   }
 }
 
-tasks.test {
+tasks.withType(Test::class).configureEach {
   useJUnitPlatform()
   systemProperty("elide.test", "true")
 }
@@ -303,12 +303,6 @@ val quickbuild = (
   project.properties["elide.release"] != "true" ||
   project.properties["elide.buildMode"] == "dev"
 )
-
-afterEvaluate {
-  tasks.named("testNativeImage") {
-    enabled = false
-  }
-}
 
 /**
  * Build: CLI Native Image
@@ -470,6 +464,11 @@ val initializeAtBuildTime = listOf(
   "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
 )
 
+val initializeAtBuildTimeTest: List<String> = listOf(
+  "org.junit.platform.launcher.core.LauncherConfig",
+  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
+)
+
 val initializeAtRuntime: List<String> = listOf(
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
@@ -477,7 +476,11 @@ val initializeAtRuntime: List<String> = listOf(
   "com.sun.tools.javac.file.Locations",
 )
 
+val initializeAtRuntimeTest: List<String> = emptyList()
+
 val rerunAtRuntime: List<String> = emptyList()
+
+val rerunAtRuntimeTest: List<String> = emptyList()
 
 val defaultPlatformArgs = listOf(
   "--libc=glibc",
@@ -551,7 +554,8 @@ fun nativeCliImageArgs(
   platform: String = "generic",
   target: String = "glibc",
   debug: Boolean = quickbuild,
-  release: Boolean = (!quickbuild && project.properties["elide.release"] != "true"),
+  test: Boolean = false,
+  release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
 ): List<String> =
   commonNativeArgs.asSequence().plus(
     initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
@@ -565,6 +569,18 @@ fun nativeCliImageArgs(
     "linux" -> if (target == "musl") muslArgs else (if (release) linuxReleaseArgs else linuxOnlyArgs)
     else -> defaultPlatformArgs
   }).plus(
+    if (test) {
+      testOnlyArgs.plus(initializeAtBuildTimeTest.map {
+        "--initialize-at-build-time=$it"
+      }).plus(initializeAtRuntimeTest.map {
+        "--initialize-at-run-time=$it"
+      }).plus(rerunAtRuntimeTest.map {
+        "--rerun-class-initialization-at-runtime=$it"
+      })
+    } else {
+      emptyList()
+    }
+  ).plus(
     jvmDefs.map { "-D${it.key}=${it.value}" }
   ).plus(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
@@ -601,10 +617,6 @@ graalvmNative {
   }
 
   binaries {
-    // all {
-    //   resources.autodetect()
-    // }
-
     named("main") {
       imageName = "elide.debug"
       fallback = false
@@ -624,10 +636,12 @@ graalvmNative {
     }
 
     named("test") {
-      imageName = "elide-test"
+      imageName = "elide.test"
       fallback = false
       quickBuild = quickbuild
-      buildArgs.addAll(nativeCliImageArgs().plus(testOnlyArgs))
+      buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).filter {
+        it != "--language:java"  // espresso is not supported in test mode
+      })
     }
   }
 }
@@ -642,7 +656,13 @@ val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
  */
 
 tasks {
+  jar {
+    from(collectReachabilityMetadata)
+  }
+
   shadowJar {
+    from(collectReachabilityMetadata)
+
     exclude(
       "java-header-style.xml",
       "license.header",

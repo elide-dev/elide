@@ -568,7 +568,7 @@ jobs:
             labs: false
             tag: darwin-amd64
           - os: Windows
-            runner: windows-latest
+            runner: windows-latest-8-cores
             arch: amd64
             tag: windows-amd64
             labs: true
@@ -584,6 +584,11 @@ jobs:
           create_credentials_file: true
           export_environment_variables: true
           cleanup_credentials: true
+      - name: "Setup: MSVC"
+        if: contains(matrix.runner, 'windows')
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM"
         uses: graalvm/setup-graalvm@v1
         with:

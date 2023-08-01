@@ -13,9 +13,8 @@ plugins {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(
-        RepositoriesMode.FAIL_ON_PROJECT_REPOS
-    )
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+
     repositories {
         maven("https://maven.pkg.st/")
         maven("https://gradle.pkg.st/")

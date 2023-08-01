@@ -71,6 +71,7 @@ tasks.withType<JavaCompile>().configureEach {
   options.isFork = true
   options.isIncremental = true
   options.isWarnings = false
+  options.compilerArgs.add("-Xlint:-deprecation")
 }
 
 tasks {

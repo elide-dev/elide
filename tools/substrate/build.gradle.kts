@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
@@ -12,12 +25,12 @@ plugins {
   distribution
   signing
   idea
-  kotlin("jvm")
+  `embedded-kotlin`
+
   alias(libs.plugins.ktlint)
   alias(libs.plugins.dokka)
   alias(libs.plugins.versionCheck)
   alias(libs.plugins.testLogger)
-  id(libs.plugins.detekt.get().pluginId)
   id(libs.plugins.sonar.get().pluginId)
   id(libs.plugins.kover.get().pluginId)
 }
@@ -29,6 +42,10 @@ val allPlugins = listOf(
   "sekret",
 )
 
+val enabledPlugins = listOf(
+  "redakt",
+)
+
 group = "dev.elide.tools"
 version = if (project.hasProperty("version")) {
   project.properties["version"] as String
@@ -38,7 +55,7 @@ version = if (project.hasProperty("version")) {
 
 tasks.create("buildPlugins") {
   description = "Build all Kotlin compiler plugins"
-  dependsOn(allPlugins.map { ":$it:build" })
+  dependsOn(enabledPlugins.map { ":$it:build" })
 }
 
 val libPlugins = libs.plugins
@@ -50,7 +67,7 @@ tasks.named("build").configure {
 
 tasks.named("publish").configure {
   dependsOn(
-    allPlugins.map {
+    enabledPlugins.map {
       ":$it:publish"
     }.plus(
       listOf(
@@ -65,15 +82,17 @@ kotlin {
   explicitApi()
 }
 
-koverMerged {
-  enable()
+dependencies {
+  kover(project(":compiler-util"))
+  kover(project(":redakt"))
+}
 
-  xmlReport {
-    onCheck = isCI
-  }
-
-  htmlReport {
-    onCheck = isCI
+extensions.configure<kotlinx.kover.gradle.plugin.dsl.KoverReportExtension> {
+  defaults {
+    xml {
+      //  generate an XML report when running the `check` task
+      onCheck = properties["elide.ci"] == "true"
+    }
   }
 }
 
@@ -107,10 +126,7 @@ subprojects {
 
 dependencies {
   api(libs.elide.tools.compilerUtil)
-  api(libs.elide.kotlin.plugin.injekt)
-  api(libs.elide.kotlin.plugin.interakt)
   api(libs.elide.kotlin.plugin.redakt)
-  api(libs.elide.kotlin.plugin.sekret)
 }
 
 publishing {

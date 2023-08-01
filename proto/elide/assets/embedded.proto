@@ -35,11 +35,46 @@ import "elide/data/data.proto";
 
 // Enumerates languages which are supported for embedded scripting in Elide.
 enum EmbeddedScriptLanguage {
+  option allow_alias = true;
+
   // The language is unknown or unspecified; regular code should not use this value.
   LANGUAGE_UNSPECIFIED = 0;
 
   // The language is a dialect of JavaScript.
   JS = 1;
+
+  // The language is a dialect of JavaScript.
+  JAVASCRIPT = 1;
+
+  // The language is Python; language support for Python.
+  PY = 2;
+
+  // The language is Python; language support for Python.
+  PYTHON = 2;
+
+  // The language is Ruby; language support for Ruby.
+  RB = 3;
+
+  // The language is Ruby; language support for Ruby.
+  RUBY = 3;
+
+  // The language is supported by the JVM.
+  JVM = 4;
+
+  // The language is Java; language support for JVM.
+  JAVA = 4;
+
+  // The language is Kotlin; language support for JVM with Kotlin compiler.
+  KT = 5;
+
+  // The language is Kotlin; language support for JVM with Kotlin compiler.
+  KOTLIN = 5;
+
+  // The language is Groovy; language support for JVM with Groovy compiler.
+  GROOVY = 6;
+
+  // The language is Scala; language support for JVM with Scala compiler.
+  SCALA = 7;
 }
 
 
@@ -75,16 +110,87 @@ message EmbeddedScriptMetadata {
 
       // The language level is ES2022.
       ES2022 = 8;
+
+      // Stable language features.
+      STABLE = 98;
+
+      // Latest language features, stability be damned.
+      LATEST = 99;
     }
 
     // Describes the JavaScript language level for the embedded script.
     JsLanguageLevel level = 1;
   }
 
+  // Specifies Python-specific script metadata.
+  message PyScriptMetadata {
+    // Nothing at this time.
+  }
+
+  // Specifies Ruby-specific script metadata.
+  message RbScriptMetadata {
+    // Nothing at this time.
+  }
+
+  // Specifies JVM-specific script metadata.
+  message JvmScriptMetadata {
+    // Configuration relating to the Kotlin compiler and Kotlin language support.
+    message KotlinConfiguration {
+      // Nothing at this time.
+    }
+
+    // Configuration relating to the Groovy compiler and Groovy language support.
+    message GroovyConfiguration {
+      // Nothing at this time.
+    }
+
+    // Enumerates available JVM language levels.
+    enum JvmLanguageLevel {
+      // Default language level; regular code should not use this value.
+      JVM_LANGUAGE_LEVEL_DEFAULT = 0;
+
+      // Java 11.
+      JAVA_11 = 11;
+
+      // Java 17.
+      JAVA_17 = 17;
+
+      // Java 20.
+      JAVA_20 = 20;
+
+      // Latest stable (LTS) release.
+      STABLE = 98;
+
+      // Latest release, stability be damned.
+      LATEST = 99;
+    }
+
+    // Effective JVM target.
+    uint32 target_effective = 1;
+
+    // Selected JVM language level.
+    JvmLanguageLevel level = 2;
+
+    // Whether Kotlin support is enabled.
+    KotlinConfiguration kotlin = 3;
+
+    // Whether Groovy support is enabled.
+    GroovyConfiguration groovy = 4;
+  }
+
   // Language-specific script metadata.
   oneof metadata {
     // JavaScript-related metadata.
     JsScriptMetadata javascript = 1;
+
+    // Python-related metadata.
+    PyScriptMetadata python = 2;
+
+    // Ruby-related metadata.
+    RbScriptMetadata ruby = 3;
+
+    // JVM-related metadata.
+    JvmScriptMetadata jvm = 4;
   }
 }
 

@@ -27,9 +27,7 @@
   "name":"[Ljava.lang.Object;"
 },
 {
-  "name":"android.os.Build"
-},
-{
+  "conditional": { "typeReachable": "ch.qos.logback.classic.encoder.PatternLayoutEncoder" },
   "name":"ch.qos.logback.classic.encoder.PatternLayoutEncoder",
   "queryAllPublicMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -239,70 +237,87 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.$Application$AppStartupListener$Definition$Reference" },
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$AssetController$Definition$Reference" },
   "name":"elide.server.assets.$AssetController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetIndex$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetIndex$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetManager$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetManager$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetManifestProvider$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetManifestProvider$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetReader$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetReader$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.ServerAssetIndex$AssetStartupListener" },
   "name":"elide.server.assets.ServerAssetIndex$AssetStartupListener",
   "fields":[{"name":"beanContext"}]
 },
 {
+  "condition": { "typeReachable": "elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference" },
   "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.cfg.$ServerConfig$Definition$Reference" },
   "name":"elide.server.cfg.$ServerConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.cfg.ServerConfigurator" },
   "name":"elide.server.cfg.ServerConfigurator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.controller.builtin.$NotFoundController$Definition$Reference" },
   "name":"elide.server.controller.builtin.$NotFoundController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.controller.builtin.$ServerErrorController$Definition$Reference" },
   "name":"elide.server.controller.builtin.$ServerErrorController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.http.$HeaderFinalizingFilter$Definition$Reference" },
   "name":"elide.server.http.$HeaderFinalizingFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.http.$RequestContextFilter$Definition$Reference" },
   "name":"elide.server.http.$RequestContextFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference" },
   "name":"elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference" },
   "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1823,30 +1838,39 @@
   "fields":[{"name":"producerIndex"}]
 },
 {
+  "condition": { "typeReachable": "io.reactivex.Completable" },
   "name":"io.reactivex.Completable"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.Maybe" },
   "name":"io.reactivex.Maybe"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.Observable" },
   "name":"io.reactivex.Observable"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.Single" },
   "name":"io.reactivex.Single"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.rxjava3.core.Completable" },
   "name":"io.reactivex.rxjava3.core.Completable"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.rxjava3.core.Flowable" },
   "name":"io.reactivex.rxjava3.core.Flowable"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.rxjava3.core.Maybe" },
   "name":"io.reactivex.rxjava3.core.Maybe"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.rxjava3.core.Observable" },
   "name":"io.reactivex.rxjava3.core.Observable"
 },
 {
+  "condition": { "typeReachable": "io.reactivex.rxjava3.core.Single" },
   "name":"io.reactivex.rxjava3.core.Single"
 },
 {

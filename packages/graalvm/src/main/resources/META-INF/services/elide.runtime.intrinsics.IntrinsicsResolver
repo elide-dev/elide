@@ -1,0 +1,2 @@
+elide.runtime.gvm.internals.intrinsics.BuiltinIntrinsicsResolver
+elide.runtime.gvm.internals.intrinsics.ServiceIntrinsicsResolver

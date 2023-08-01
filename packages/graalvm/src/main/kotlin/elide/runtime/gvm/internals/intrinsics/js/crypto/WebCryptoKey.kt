@@ -1,6 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol

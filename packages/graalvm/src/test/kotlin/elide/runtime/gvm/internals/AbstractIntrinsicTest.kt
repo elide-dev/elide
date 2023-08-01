@@ -1,11 +1,9 @@
 package elide.runtime.gvm.internals
 
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.testing.annotations.Test
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Engine
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow

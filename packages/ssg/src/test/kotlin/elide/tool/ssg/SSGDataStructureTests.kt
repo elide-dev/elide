@@ -16,10 +16,10 @@
 package elide.tool.ssg
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import java.net.URL
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
 /** Tests for data structures used by the SSG compiler. */

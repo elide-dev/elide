@@ -1,12 +1,6 @@
 package kotlinx.html.tagext
 
-import kotlinx.html.BODY
-import kotlinx.html.HEAD
-import kotlinx.html.HTML
-import kotlinx.html.HtmlTagMarker
-import kotlinx.html.attributesMapOf
-import kotlinx.html.emptyMap
-import kotlinx.html.visitSuspend
+import kotlinx.html.*
 
 /**
  * Open a `<body>` tag with support for suspension calls.

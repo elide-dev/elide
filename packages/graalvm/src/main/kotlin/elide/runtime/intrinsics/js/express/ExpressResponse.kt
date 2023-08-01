@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js.express
 
-import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value
+import elide.vm.annotations.Polyglot
 
 /**
  * Represents a very basic binding for a response object passed to an Express handler function.

@@ -1,11 +1,6 @@
 package elide.rpc.server.web
 
-import elide.rpc.server.web.GrpcWebCall.Companion.newCall
-import io.grpc.Metadata
-import io.grpc.ServerCall
-import io.grpc.ServerMethodDefinition
-import io.grpc.ServerServiceDefinition
-import io.grpc.Status
+import io.grpc.*
 import io.grpc.health.v1.HealthCheckRequest
 import io.grpc.health.v1.HealthGrpc
 import io.grpc.inprocess.InProcessChannelBuilder
@@ -15,6 +10,7 @@ import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.security.Principal
 import kotlin.test.*
+import elide.rpc.server.web.GrpcWebCall.Companion.newCall
 
 /** Tests for the [GrpcWebCall] container. */
 class GrpcWebCallTest {

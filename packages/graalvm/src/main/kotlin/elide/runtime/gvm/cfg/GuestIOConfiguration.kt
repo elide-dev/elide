@@ -1,9 +1,9 @@
 package elide.runtime.gvm.cfg
 
-import elide.runtime.gvm.internals.vfs.AbstractBaseVFS
-import elide.runtime.gvm.internals.vfs.GuestVFSPolicy
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.core.util.Toggleable
+import elide.runtime.gvm.internals.vfs.AbstractBaseVFS
+import elide.runtime.gvm.internals.vfs.GuestVFSPolicy
 
 /**
  * Configuration for the guest VM virtual file-system (VFS).

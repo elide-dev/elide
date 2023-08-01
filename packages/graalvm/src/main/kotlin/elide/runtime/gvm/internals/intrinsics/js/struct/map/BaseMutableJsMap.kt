@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.*
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.MutableMapLike
 import elide.runtime.intrinsics.js.err.TypeError
-import java.util.*
+import elide.vm.annotations.Polyglot
 
 /** Abstract implementation of a mutable JS map, backed by a Java map. */
 internal sealed class BaseMutableJsMap<K: Any, V> constructor (

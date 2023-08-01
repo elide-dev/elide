@@ -1,12 +1,12 @@
 package elide.proto.impl
 
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import elide.proto.ElideProtocol.Dialect.*
-import elide.proto.ElideProtocol.ImplementationLibrary.FLATBUFFERS as FLAT
 import elide.proto.api.Protocol
 import elide.proto.test.AbstractProtocolFacadeTest
 import elide.testing.annotations.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import elide.proto.ElideProtocol.ImplementationLibrary.FLATBUFFERS as FLAT
 
 /** Tests to load the Elide Protocol implementation backed by Flatbuffers. */
 internal class FlatbuffersProtocolTest : AbstractProtocolFacadeTest<ElideFlatbuffersProtocol>() {

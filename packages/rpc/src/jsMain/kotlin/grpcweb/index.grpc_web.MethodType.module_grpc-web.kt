@@ -8,8 +8,6 @@
 )
 package grpcweb
 
-import kotlin.js.*
-
 public external var UNARY: String
 
 public external var SERVER_STREAMING: String

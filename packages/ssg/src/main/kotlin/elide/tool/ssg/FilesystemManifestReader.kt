@@ -14,14 +14,14 @@
 package elide.tool.ssg
 
 import com.google.protobuf.InvalidProtocolBufferException
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import tools.elide.meta.AppManifest
 import java.io.File
 import java.io.IOException
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Implementation of a [ManifestReader] which reads off disk. */
 @Singleton internal class FilesystemManifestReader (

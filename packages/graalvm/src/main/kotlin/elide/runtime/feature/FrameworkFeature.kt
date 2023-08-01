@@ -1,13 +1,13 @@
 package elide.runtime.feature
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.RuntimeReflection
 import java.io.IOException
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.net.JarURLConnection
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * # Framework: Feature

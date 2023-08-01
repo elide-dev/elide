@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.js
 
+import java.io.InputStream
+import java.net.URI
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchRequest
 import elide.runtime.intrinsics.js.ReadableStream
-import java.io.InputStream
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
 
 /**

@@ -14,29 +14,27 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import elide.tool.ssg.SiteCompilerParams as CompilerParams
-import elide.tool.ssg.SiteCompilerParams.Options
-import elide.tool.ssg.SiteCompileResult as CompileResult
 import com.google.errorprone.annotations.CanIgnoreReturnValue
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.SiteCompilerParams
-import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
-import jakarta.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import picocli.CommandLine
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import picocli.CommandLine.Parameters
+import picocli.CommandLine.*
 import tools.elide.data.CompressionMode
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.SiteCompilerParams
+import elide.tool.ssg.SiteCompilerParams.Options
+import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
+import elide.tool.ssg.SiteCompileResult as CompileResult
+import elide.tool.ssg.SiteCompilerParams as CompilerParams
 
 /** Entrypoint for the site compiler command-line tool. */
 @Command(

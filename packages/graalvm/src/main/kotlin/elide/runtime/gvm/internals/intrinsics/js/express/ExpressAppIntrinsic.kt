@@ -1,7 +1,5 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.js.express.ExpressApp
 import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
 import org.reactivestreams.Publisher
@@ -9,6 +7,8 @@ import reactor.netty.http.server.HttpServer
 import reactor.netty.http.server.HttpServerRequest
 import reactor.netty.http.server.HttpServerResponse
 import reactor.netty.http.server.HttpServerRoutes
+import elide.runtime.intrinsics.js.express.ExpressApp
+import elide.vm.annotations.Polyglot
 
 /**
  * An [ExpressApp] implemented as a wrapper around a Reactor Netty server.

@@ -1,10 +1,9 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.QuotaExceededError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
-import org.graalvm.polyglot.Value as GuestValue
+import elide.vm.annotations.Polyglot
 
 /**
  * # JavaScript: `RandomSource`

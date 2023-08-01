@@ -13,13 +13,12 @@
 
 package elide.tool.ssg
 
-import elide.tool.ssg.SiteCompilerParams.OutputFormat
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.tool.ssg.SiteCompilerParams.OutputFormat
 
 /** Tests which invoke the SSG compiler over the Java API. */
 @MicronautTest(

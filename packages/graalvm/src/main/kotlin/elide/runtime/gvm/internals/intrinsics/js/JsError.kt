@@ -1,11 +1,11 @@
 package elide.runtime.gvm.internals.intrinsics.js
 
+import kotlin.reflect.KClass
+import kotlin.reflect.full.companionObjectInstance
 import elide.runtime.intrinsics.js.err.AbstractJSException
 import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
-import kotlin.reflect.KClass
-import kotlin.reflect.full.companionObjectInstance
 
 /** Utility for wrapping JavaScript error types. */
 @Suppress("unused") internal object JsError {

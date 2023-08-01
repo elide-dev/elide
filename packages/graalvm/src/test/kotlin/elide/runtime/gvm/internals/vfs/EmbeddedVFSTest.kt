@@ -1,18 +1,16 @@
 package elide.runtime.gvm.internals.vfs
 
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.assertDoesNotThrow
+import java.nio.charset.StandardCharsets
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Builder
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory.buildFs
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.assertDoesNotThrow
-import java.nio.ByteBuffer
-import java.nio.charset.StandardCharsets
-import java.nio.file.Path
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /** Tests for the embedded VFS implementation. */
 @TestCase internal class EmbeddedVFSTest : AbstractVFSTest<EmbeddedGuestVFSImpl, Builder, EmbeddedVFSFactory>() {

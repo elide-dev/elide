@@ -1,13 +1,13 @@
 package elide.server.http
 
-import elide.server.assets.AssetManager
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
 import io.micronaut.http.filter.HttpServerFilter
 import io.micronaut.http.filter.ServerFilterChain
-import jakarta.inject.Inject
 import org.reactivestreams.Publisher
+import jakarta.inject.Inject
+import elide.server.assets.AssetManager
 
 /**
  * Provides an [HttpServerFilter] which affixes context values at known keys in [HttpRequest]s processed by Elide apps;

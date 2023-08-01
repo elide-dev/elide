@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js.express
 
-import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value
+import elide.vm.annotations.Polyglot
 
 /** An interface mapped to an Express app object, providing route configuration and other methods. */
 public interface ExpressApp {

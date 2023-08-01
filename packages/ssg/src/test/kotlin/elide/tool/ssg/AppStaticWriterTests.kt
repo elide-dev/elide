@@ -14,10 +14,10 @@
 package elide.tool.ssg
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
 import tools.elide.meta.Endpoint
 import tools.elide.meta.EndpointType
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 

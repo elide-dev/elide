@@ -16,12 +16,12 @@
   "UnstableApiUsage",
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   java

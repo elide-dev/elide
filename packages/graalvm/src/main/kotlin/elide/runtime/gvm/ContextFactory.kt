@@ -1,8 +1,8 @@
 package elide.runtime.gvm
 
-import elide.runtime.gvm.internals.VMProperty
 import org.graalvm.polyglot.Engine
 import java.util.stream.Stream
+import elide.runtime.gvm.internals.VMProperty
 
 /**
  * TBD.

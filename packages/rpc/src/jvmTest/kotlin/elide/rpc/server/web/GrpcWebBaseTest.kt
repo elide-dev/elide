@@ -1,24 +1,24 @@
 package elide.rpc.server.web
 
 import com.google.protobuf.Message
-import elide.rpc.server.RpcRuntime
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.grpc.Metadata
 import io.grpc.Status
 import io.micronaut.context.BeanContext
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.security.Principal
 import java.util.*
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.rpc.server.RpcRuntime
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Provides shared testing logic to tests in the `elide.rpc.web` package. */
 @Suppress("unused", "SameParameterValue", "MemberVisibilityCanBePrivate") abstract class GrpcWebBaseTest {

@@ -2,13 +2,13 @@
 
 package elide.proto.impl.data
 
-import elide.core.encoding.base64.Base64Data
-import elide.core.encoding.hex.HexData
 import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.DataFingerprint
-import tools.elide.data.DataFingerprint.Builder as ProtoBuilder
 import tools.elide.data.DataFingerprintOrBuilder
 import tools.elide.data.Encoding
+import elide.core.encoding.base64.Base64Data
+import elide.core.encoding.hex.HexData
+import tools.elide.data.DataFingerprint.Builder as ProtoBuilder
 import elide.proto.api.data.DataFingerprint as IDataFingerprint
 
 /** Implements a universal data fingerprint, backed by a protocol buffer record. */

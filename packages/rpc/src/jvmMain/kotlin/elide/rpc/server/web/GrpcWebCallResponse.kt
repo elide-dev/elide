@@ -3,6 +3,8 @@ package elide.rpc.server.web
 import io.grpc.Metadata
 import io.grpc.Status
 import io.micronaut.http.MutableHttpResponse
+import elide.rpc.server.web.GrpcWebCallResponse.Error
+import elide.rpc.server.web.GrpcWebCallResponse.UnaryResponse
 
 /**
  * Describes the possible states that a gRPC Web call outcome can take on, namely an error state and a success state

@@ -13,13 +13,13 @@
 
 package elide.tool.ssg
 
-import elide.runtime.Logger
-import elide.runtime.Logging
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Default static app compiler implementation, which executes the request against the app. */
 @Singleton internal class DefaultAppStaticCompiler (

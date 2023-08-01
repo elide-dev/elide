@@ -1,7 +1,7 @@
 package elide.model.token
 
-import elide.annotations.data.Sensitive
 import kotlinx.serialization.Serializable
+import elide.annotations.data.Sensitive
 
 /** Describes a sensitive token value. */
 @Serializable public actual data class Token (

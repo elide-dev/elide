@@ -1,9 +1,5 @@
 package elide.server.controller.builtin
 
-import elide.server.RawPayload
-import elide.server.RawResponse
-import elide.server.annotations.Eager
-import elide.server.html
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -11,12 +7,16 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
+import java.io.ByteArrayOutputStream
 import kotlinx.html.h1
 import kotlinx.html.p
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
-import java.io.ByteArrayOutputStream
+import elide.server.RawPayload
+import elide.server.RawResponse
+import elide.server.annotations.Eager
+import elide.server.html
 
 /** Default built-in controller which handles `404 Not Found` events. */
 @Eager @Controller public class NotFoundController : BuiltinController() {

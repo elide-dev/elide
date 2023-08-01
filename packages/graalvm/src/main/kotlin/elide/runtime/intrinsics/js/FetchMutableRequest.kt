@@ -1,8 +1,8 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import io.micronaut.http.HttpRequest
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
+import elide.vm.annotations.Polyglot
 
 /**
  * TBD.

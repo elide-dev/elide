@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.js
 
-import elide.runtime.gvm.internals.AbstractVMAdapter
 import io.micronaut.http.HttpResponse
 import org.reactivestreams.Publisher
 import java.io.InputStream
 import java.util.concurrent.CompletableFuture
+import elide.runtime.gvm.internals.AbstractVMAdapter
 
 /** Implements an adapter to [JsRuntime] for server-side use. */
 internal class JsServerAdapter : AbstractVMAdapter<

@@ -1,19 +1,19 @@
 package elide.runtime.gvm.internals.intrinsics.js.console
 
-import elide.vm.annotations.Polyglot
+import java.time.Instant
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptConsole
-import java.time.Instant
-import java.util.Date
+import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Value as GuestValue
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 
 /**
  * # Console

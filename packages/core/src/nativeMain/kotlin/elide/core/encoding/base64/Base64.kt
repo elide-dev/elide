@@ -13,11 +13,11 @@
 
 package elide.core.encoding.base64
 
+import kotlin.math.min
+import kotlin.native.concurrent.SharedImmutable
 import elide.core.annotations.Static
 import elide.core.encoding.Codec
 import elide.core.encoding.Encoding
-import kotlin.math.min
-import kotlin.native.concurrent.SharedImmutable
 
 // Default globally-shared Base64 encoder.
 @SharedImmutable private val defaultEncoder: Base64.Encoder = Base64.Encoder(

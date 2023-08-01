@@ -1,7 +1,7 @@
 package elide.tool.cli
 
-import elide.testing.annotations.Test
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import elide.testing.annotations.Test
 
 /** Common test utilities for Elide Tool sub-commands. */
 abstract class AbstractSubtoolTest {

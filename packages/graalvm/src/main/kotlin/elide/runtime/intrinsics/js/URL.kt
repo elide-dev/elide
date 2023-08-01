@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.TypeError
+import elide.vm.annotations.Polyglot
 
 /**
  * # JavaScript: `URL`

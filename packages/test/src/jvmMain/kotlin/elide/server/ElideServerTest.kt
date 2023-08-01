@@ -8,10 +8,10 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import jakarta.inject.Inject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.URI
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 

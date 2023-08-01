@@ -1,16 +1,16 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
+import org.graalvm.polyglot.Value
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.stream.Collectors
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMultiMap
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableHeaders
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MultiMapLike
-import org.graalvm.polyglot.Value
-import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.stream.Collectors
+import elide.vm.annotations.Polyglot
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
 internal class FetchHeadersIntrinsic private constructor (

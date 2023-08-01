@@ -2,13 +2,6 @@
 
 package elide.runtime.gvm.internals.js
 
-import elide.annotations.Inject
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.AbstractIntrinsicTest
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.junit.jupiter.api.Assertions.*
@@ -16,6 +9,13 @@ import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import kotlinx.coroutines.runBlocking
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.AbstractIntrinsicTest
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 

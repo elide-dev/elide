@@ -1,11 +1,10 @@
 package elide.runtime.gvm.internals.js
 
+import io.micronaut.context.BeanContext
+import org.junit.jupiter.api.Assertions.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import io.micronaut.context.BeanContext
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 
 /** Tests for the V3 JS runtime implementation, on top of GraalVM. */
 @TestCase class JsRuntimeTest {

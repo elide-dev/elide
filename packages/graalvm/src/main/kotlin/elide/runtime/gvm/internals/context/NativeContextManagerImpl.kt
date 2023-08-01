@@ -1,19 +1,13 @@
 package elide.runtime.gvm.internals.context
 
-import com.lmax.disruptor.*
+import com.lmax.disruptor.EventFactory
+import com.lmax.disruptor.EventHandler
+import com.lmax.disruptor.LifecycleAware
+import com.lmax.disruptor.SleepingWaitStrategy
 import com.lmax.disruptor.dsl.Disruptor
 import com.lmax.disruptor.dsl.ProducerType
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.cfg.GuestVMConfiguration
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
-import elide.util.RuntimeFlag
 import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
@@ -26,9 +20,17 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
 import kotlin.io.path.Path
-import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-import org.graalvm.nativeimage.Platform
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.VMProperty
+import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
+import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
 /** TBD. */
 @Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :

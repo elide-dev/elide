@@ -16,9 +16,6 @@ package elide.util
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
-import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 
 /** Tests for generating UUIDs via [UUID]. */

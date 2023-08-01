@@ -3,8 +3,8 @@ package elide.rpc.server
 import io.grpc.ServerServiceDefinition
 import io.grpc.health.v1.HealthGrpc
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 

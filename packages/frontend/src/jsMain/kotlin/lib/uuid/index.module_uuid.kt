@@ -13,7 +13,6 @@
 
 package lib.uuid
 
-import kotlin.js.*
 import lib.tsstdlib.ArrayLike
 
 public external interface RandomOptions {

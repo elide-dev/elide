@@ -1,9 +1,9 @@
 package elide.server.assets
 
 import com.google.protobuf.ByteString
-import elide.server.AssetModuleId
 import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressionMode
+import elide.server.AssetModuleId
 
 /**
  * Intermediary class which represents an asset that has been fully prepared to serve to an end-user request, including

@@ -2,19 +2,19 @@ package elide.server.assets
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
-import elide.server.AssetModuleId
-import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
+import tools.elide.assets.AssetBundle.AssetContent
+import tools.elide.data.CompressedData
+import tools.elide.data.CompressionMode
+import java.util.*
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.guava.asDeferred
-import tools.elide.assets.AssetBundle.AssetContent
-import tools.elide.data.CompressedData
-import tools.elide.data.CompressionMode
-import java.util.EnumSet
+import elide.server.AssetModuleId
+import elide.server.cfg.AssetConfig
 
 /**
  * Default implementation of an [AssetReader]; used in concert with the default [AssetManager] to fulfill HTTP requests

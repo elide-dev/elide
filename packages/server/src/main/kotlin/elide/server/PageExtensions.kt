@@ -2,14 +2,9 @@
 
 package elide.server
 
+import java.util.*
+import kotlinx.html.*
 import elide.server.assets.AssetReference
-import kotlinx.html.BODY
-import kotlinx.html.HEAD
-import kotlinx.html.LINK
-import kotlinx.html.SCRIPT
-import kotlinx.html.attributesMapOf
-import kotlinx.html.visit
-import java.util.SortedMap
 
 // DOM type for JavaScript files.
 private const val JAVASCRIPT_TYPE = "application/javascript"

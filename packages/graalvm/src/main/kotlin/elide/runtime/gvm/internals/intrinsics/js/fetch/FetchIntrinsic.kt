@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
+import org.graalvm.polyglot.Value
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.*
-import org.graalvm.polyglot.Value
+import elide.vm.annotations.Polyglot
 
 /**
  * # Fetch API

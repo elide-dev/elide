@@ -1,9 +1,9 @@
 package elide.server.assets
 
+import tools.elide.assets.AssetBundle
+import java.util.*
 import elide.server.AssetModuleId
 import elide.server.AssetTag
-import tools.elide.assets.AssetBundle
-import java.util.SortedMap
 
 /**
  * Loaded/interpreted asset manifest data structure.

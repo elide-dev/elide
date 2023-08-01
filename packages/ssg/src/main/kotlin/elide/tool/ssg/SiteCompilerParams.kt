@@ -14,7 +14,7 @@
 package elide.tool.ssg
 
 import tools.elide.data.CompressionMode
-import java.util.SortedSet
+import java.util.*
 
 /**
  * Parameters held internally for the site compiler.

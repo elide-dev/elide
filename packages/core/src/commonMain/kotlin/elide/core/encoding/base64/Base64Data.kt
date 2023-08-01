@@ -13,9 +13,9 @@
 
 package elide.core.encoding.base64
 
+import kotlin.jvm.JvmInline
 import elide.core.encoding.EncodedData
 import elide.core.encoding.Encoding
-import kotlin.jvm.JvmInline
 
 /** Carrier value-class for base64-encoded data. */
 @JvmInline public value class Base64Data (override val data: ByteArray): EncodedData {

@@ -1,13 +1,13 @@
 package elide.rpc.server.web
 
-import elide.rpc.server.web.GrpcWeb.BINARY_HEADER_SUFFIX
-import elide.rpc.server.web.GrpcWeb.GRPC_HEADER_PREFIX
 import io.grpc.Metadata
 import io.micronaut.core.type.Headers
 import io.micronaut.core.type.MutableHeaders
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import java.util.*
+import elide.rpc.server.web.GrpcWeb.BINARY_HEADER_SUFFIX
+import elide.rpc.server.web.GrpcWeb.GRPC_HEADER_PREFIX
 
 /** Provides metadata-related declarations and tooling for gRPC and gRPC Web. */
 public object MetadataUtil {

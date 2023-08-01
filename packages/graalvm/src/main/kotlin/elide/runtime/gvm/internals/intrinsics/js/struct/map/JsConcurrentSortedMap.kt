@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.intrinsics.js.MapLike
-import elide.runtime.intrinsics.js.MapLike.Entry
 import java.util.*
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
+import elide.runtime.intrinsics.js.MapLike
+import elide.runtime.intrinsics.js.MapLike.Entry
 
 /** Implements a mutable, sorted, and thread-safe map for use with JavaScript; backed by a [ConcurrentSkipListMap]. */
 @Suppress("unused")

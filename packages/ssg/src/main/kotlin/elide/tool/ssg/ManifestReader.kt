@@ -13,9 +13,9 @@
 
 package elide.tool.ssg
 
-import kotlinx.coroutines.Deferred
 import tools.elide.meta.AppManifest
 import java.io.Closeable
+import kotlinx.coroutines.Deferred
 
 /**
  * # SSG: Manifest Reader

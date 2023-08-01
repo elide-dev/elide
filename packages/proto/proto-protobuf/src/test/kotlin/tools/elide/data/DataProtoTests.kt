@@ -3,12 +3,12 @@ package tools.elide.data
 import com.google.protobuf.kotlin.toByteString
 import com.google.protobuf.kotlin.toByteStringUtf8
 import com.google.protobuf.util.JsonFormat
-import elide.proto.test.data.AbstractDataContainerTests
-import elide.testing.annotations.Test
 import tools.elide.crypto.HashAlgorithm
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import kotlin.test.assertNotNull
+import elide.proto.test.data.AbstractDataContainerTests
+import elide.testing.annotations.Test
 
 /** Tests for data container protocol buffer models. */
 class DataProtoTests : AbstractDataContainerTests<DataContainer>() {

@@ -71,9 +71,5 @@ configurations.all {
 
     // prefer modules that are part of this build
     preferProjectModules()
-
-    if (name.contains("detached")) {
-      disableDependencyVerification()
-    }
   }
 }

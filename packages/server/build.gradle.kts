@@ -4,16 +4,18 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
+
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
   id("dev.elide.build.native.lib")
-//  id("dev.elide.build.jvm.multi-jvm-testing")
 }
 
 group = "dev.elide"
 version = rootProject.version as String
-
+val encloseSdk = false
 
 kotlin {
   explicitApi()
@@ -98,27 +100,6 @@ dependencies {
   implementation(libs.micronaut.protobuf)
   implementation(libs.micronaut.management)
 
-  // Netty: Native
-  implementation(libs.netty.tcnative)
-  implementation(libs.netty.tcnative.boringssl.static)
-  implementation(libs.netty.transport.native.unixCommon)
-  implementation(libs.netty.transport.native.epoll)
-  implementation(libs.netty.transport.native.kqueue)
-
-  // Linux
-  implementation(libs.netty.transport.native.epoll)
-  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-aarch_64") })
-  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-aarch_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-x86_64") })
-  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-aarch_64") })
-
-  // macOS/BSD
-  implementation(libs.netty.transport.native.kqueue)
-  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-x86_64") })
-  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-aarch_64") })
-
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.core.jvm)
@@ -131,7 +112,45 @@ dependencies {
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
-  compileOnly(libs.graalvm.sdk)
+
+  if (encloseSdk) {
+    compileOnly(libs.graalvm.sdk)
+  }
+
+  // Netty: Native
+  implementation(libs.netty.tcnative)
+
+  val arch = when (System.getProperty("os.arch")) {
+    "amd64", "x86_64" -> "x86_64"
+    "arm64", "aarch64", "aarch_64" -> "aarch_64"
+    else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
+  }
+  when {
+    Os.isFamily(Os.FAMILY_WINDOWS) -> {
+      implementation(libs.netty.tcnative.boringssl.static)
+    }
+
+    Os.isFamily(Os.FAMILY_UNIX) -> {
+      when {
+        Os.isFamily(Os.FAMILY_MAC) -> {
+          implementation(libs.netty.transport.native.kqueue)
+          implementation(libs.netty.transport.native.kqueue)
+          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+          implementation(libs.netty.resolver.dns.native.macos)
+        }
+
+        else -> {
+          implementation(libs.netty.transport.native.epoll)
+          implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
+          implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
+          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
+        }
+      }
+    }
+
+    else -> {}
+  }
 
   // Testing
   kaptTest(libs.micronaut.inject)

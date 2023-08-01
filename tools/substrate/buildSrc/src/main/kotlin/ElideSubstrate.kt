@@ -2,16 +2,14 @@ import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.withType
-import java.net.URI
 
 /** Build tools for the build tools. */
 object ElideSubstrate {
   // Substrate Kotlin API version.
-  const val apiVersion = "1.9"
+  const val API_VERSION = "1.9"
 
   // Substrate Kotlin language version.
-  const val kotlinVerison = "1.9"
+  const val KOTLIN_VERSION = "1.9"
 
   // Publishing: Repositories
   // ------------------------

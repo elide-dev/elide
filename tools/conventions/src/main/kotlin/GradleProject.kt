@@ -1,3 +1,15 @@
+/*
+* Copyright (c) 2023 Elide Ventures, LLC.
+*
+* Licensed under the MIT license (the "License"); you may not use this file except in compliance
+* with the License. You may obtain a copy of the License at
+*
+*   https://opensource.org/license/mit/
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+* License for the specific language governing permissions and limitations under the License.
+*/
 
 import com.github.gmazzo.gradle.plugins.BuildConfigExtension
 import org.gradle.api.*
@@ -11,7 +23,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.*
 import org.jetbrains.kotlin.gradle.targets.jvm.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.*
-
 
 /** Defines extensions to the Gradle [Project] type. */
 public object GradleProject {

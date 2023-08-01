@@ -1,6 +1,15 @@
 /*
- * Copyright 2016-2022 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
+* Copyright (c) 2023 Elide Ventures, LLC.
+*
+* Licensed under the MIT license (the "License"); you may not use this file except in compliance
+* with the License. You may obtain a copy of the License at
+*
+*   https://opensource.org/license/mit/
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+* License for the specific language governing permissions and limitations under the License.
+*/
 
 @file:Suppress("UnstableApiUsage", "unused")
 
@@ -119,15 +128,8 @@ object Java9Modularity {
       destinationDirectory = targetDir
 
       // Configure JVM compatibility
-      sourceCompatibility = JavaVersion.VERSION_1_9.toString()
-      targetCompatibility = JavaVersion.VERSION_1_9.toString()
-
-      // Set the Java release version.
-      options.release = 9
-
-      // Ignore warnings about using 'requires transitive' on automatic modules.
-      // not needed when compiling with recent JDKs, e.g. 17
-      options.compilerArgs.add("-Xlint:-requires-transitive-automatic")
+      sourceCompatibility = JavaVersion.VERSION_17.toString()
+      targetCompatibility = JavaVersion.VERSION_17.toString()
 
       // Patch the compileKotlinJvm output classes into the compilation so exporting packages works correctly.
       val destinationDirProperty = compileKotlinTask.destinationDirectory.asFile
@@ -149,7 +151,7 @@ object Java9Modularity {
       from(compileJavaModuleInfo) {
         // Include **only** file we are interested in as JavaCompile output also contains some tmp files
         include("module-info.class")
-        into("META-INF/versions/9/")
+        into("META-INF/versions/17/")
       }
     }
   }

@@ -6,7 +6,7 @@ import elide.annotations.Inject
 import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context

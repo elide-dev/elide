@@ -1,7 +1,21 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "DSL_SCOPE_VIOLATION", "UNUSED_VARIABLE",
+  "DSL_SCOPE_VIOLATION",
+  "UNUSED_VARIABLE",
 )
 
 import com.google.protobuf.gradle.*
@@ -53,7 +67,8 @@ kotlin {
       allWarningsAsErrors = false
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
         // do not warn for generated code
-        "-nowarn"
+        "-nowarn",
+        "-Xjavac-arguments=-Xlint:-deprecation",
       ))
     }
   }
@@ -62,6 +77,11 @@ kotlin {
   afterEvaluate {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
       kotlinOptions.allWarningsAsErrors = false
+      kotlinOptions.freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+        // do not warn for generated code
+        "-nowarn",
+        "-Xjavac-arguments=-Xlint:-deprecation",
+      ))
     }
   }
 }
@@ -85,6 +105,7 @@ tasks.withType<JavaCompile>().configureEach {
   options.isFork = true
   options.isIncremental = true
   options.isWarnings = false
+  options.compilerArgs.add("-Xlint:-deprecation")
 }
 
 tasks {

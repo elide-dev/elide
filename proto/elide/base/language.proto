@@ -46,6 +46,21 @@ enum Language {
 
   // Generic, unqualified reference to Chinese.
   CHINESE = 3;
+
+  // Generic, unqualified reference to Korean.
+  KOREAN = 4;
+
+  // Generic, unqualified reference to Japanese.
+  JAPANESE = 5;
+
+  // Generic, unqualified reference to Arabic.
+  ARABIC = 6;
+
+  // Generic, unqualified reference to Hindi.
+  HINDI = 7;
+
+  // Generic, unqualified reference to Italian.
+  ITALIAN = 8;
 }
 
 // Specifies a given language, along with a nationality for that language.

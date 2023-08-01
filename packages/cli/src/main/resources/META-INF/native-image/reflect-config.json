@@ -24,9 +24,6 @@
   "name":"[Ljava.lang.Object;"
 },
 {
-  "name":"android.os.Build"
-},
-{
   "name":"ch.qos.logback.classic.AsyncAppender",
   "allDeclaredFields":true,
   "allPublicFields":true,
@@ -169,6 +166,7 @@
   "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
+  "condition": { "typeReachable": "ch.qos.logback.core.encoder.LayoutWrappingEncoder" },
   "name":"ch.qos.logback.core.encoder.LayoutWrappingEncoder",
   "methods":[{"name":"setParent","parameterTypes":["ch.qos.logback.core.spi.ContextAware"] }]
 },
@@ -412,105 +410,119 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.$Application$AppStartupListener$Definition$Reference" },
   "name":"elide.server.$Application$AppStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$AssetController$Definition$Reference" },
   "name":"elide.server.assets.$AssetController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetIndex$AssetStartupListener$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetIndex$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetIndex$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetManager$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetManager$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetManifestProvider$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetManifestProvider$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.$ServerAssetReader$Definition$Reference" },
   "name":"elide.server.assets.$ServerAssetReader$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.assets.ServerAssetIndex$AssetStartupListener" },
   "name":"elide.server.assets.ServerAssetIndex$AssetStartupListener",
   "fields":[{"name":"beanContext"}]
 },
 {
-  "name":"elide.server.cfg.$AssetConfig$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
+  "condition": { "typeReachable": "elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference" },
   "name":"elide.server.cfg.$AssetConfig$Intercepted$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.cfg.$ServerConfig$Definition$Reference" },
   "name":"elide.server.cfg.$ServerConfig$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.cfg.ServerConfigurator" },
   "name":"elide.server.cfg.ServerConfigurator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.controller.builtin.$NotFoundController$Definition$Reference" },
   "name":"elide.server.controller.builtin.$NotFoundController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.controller.builtin.$ServerErrorController$Definition$Reference" },
   "name":"elide.server.controller.builtin.$ServerErrorController$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.http.$HeaderFinalizingFilter$Definition$Reference" },
   "name":"elide.server.http.$HeaderFinalizingFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.http.$RequestContextFilter$Definition$Reference" },
   "name":"elide.server.http.$RequestContextFilter$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference" },
   "name":"elide.server.runtime.$AppExecutor$DefaultExecutor$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference" },
   "name":"elide.server.runtime.jvm.$UncaughtExceptionHandler$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.server.ssr.$ServerSSRRenderer$SSRInitializer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
+  "condition": { "typeReachable": "elide.tool.bundler.AbstractBundlerSubcommand" },
   "name":"elide.tool.bundler.AbstractBundlerSubcommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },
 {
+  "condition": { "typeReachable": "elide.tool.bundler.CommonBundleOptions" },
   "name":"elide.tool.bundler.CommonBundleOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.tool.bundler.cmd.inspect.BundleInspectCommand" },
   "name":"elide.tool.bundler.cmd.inspect.BundleInspectCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.tool.bundler.cmd.pack.BundlePackCommand" },
   "name":"elide.tool.bundler.cmd.pack.BundlePackCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "condition": { "typeReachable": "elide.tool.bundler.cmd.unpack.BundleUnpackCommand" },
   "name":"elide.tool.bundler.cmd.unpack.BundleUnpackCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -521,25 +533,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.$ElideToolTest$Definition",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.$ElideToolTest$Definition$Exec",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.$ElideToolTest$Definition$Reference",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.tool.cli.AOTApplicationContextConfigurer",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -547,14 +540,6 @@
   "name":"elide.tool.cli.AbstractSubcommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
-},
-{
-  "name":"elide.tool.cli.AbstractSubtoolTest",
-  "allDeclaredFields":true,
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"testRunPlain","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.AbstractToolCommand",
@@ -573,15 +558,6 @@
 {
   "name":"elide.tool.cli.ElideTool$Companion$ToolConfigurator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"elide.tool.cli.ElideToolTest",
-  "allDeclaredFields":true,
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }, {"name":"testRunRoot","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.NettyPropertiesAOTContextConfigurer",
@@ -666,74 +642,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.info.$ToolInfoSubcommandTest$Definition",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.info.$ToolInfoSubcommandTest$Definition$Exec",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.info.$ToolInfoSubcommandTest$Definition$Reference",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.tool.cli.info.ToolInfoCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
-},
-{
-  "name":"elide.tool.cli.info.ToolInfoSubcommandTest",
-  "allDeclaredFields":true,
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.repl.$ToolShellCommand$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"elide.tool.cli.repl.$ToolShellSubcommandTest$Definition",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.repl.$ToolShellSubcommandTest$Definition$Exec",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
-},
-{
-  "name":"elide.tool.cli.repl.$ToolShellSubcommandTest$Definition$Reference",
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"elide.tool.cli.repl.ToolShellCommand",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
-},
-{
-  "name":"elide.tool.cli.repl.ToolShellSubcommandTest",
-  "allDeclaredFields":true,
-  "allDeclaredClasses":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"testEntrypoint","parameterTypes":[] }]
 },
 {
   "name":"groovy.lang.Closure"
@@ -2119,82 +2039,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.micronaut.test.condition.$TestActiveCondition$IntrospectionRef",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.test.extensions.junit5.MicronautJunit5Extension",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.test.extensions.junit5.annotation.MicronautTest",
-  "queryAllPublicMethods":true
-},
-{
-  "name":"io.micronaut.test.support.server.$TestEmbeddedServer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.test.support.server.$TestExecutableEmbeddedServer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsModelDecorator$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsRendererLocator$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$DefaultViewsResolver$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$ViewsConfigurationProperties$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.$ViewsFilter$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$CspConfiguration$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.csp.$CspFilter$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$BeanConfiguration",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$SecurityViewModelProcessor$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.model.security.$SecurityViewModelProcessorConfigurationProperties$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.turbo.$DefaultTurboFrameRenderer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.micronaut.views.turbo.$DefaultTurboStreamRenderer$Definition$Reference",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.micronaut.web.router.$AnnotatedFilterRouteBuilder$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2743,14 +2587,6 @@
   "fields":[{"name":"_isTerminated"}, {"name":"controlState"}, {"name":"parkedWorkersStack"}]
 },
 {
-  "name":"kotlinx.coroutines.test.internal.TestMainDispatcher$NonConcurrentlyModifiable",
-  "fields":[{"name":"exceptionWhenReading"}, {"name":"isWriting"}, {"name":"readers"}]
-},
-{
-  "name":"kotlinx.coroutines.test.internal.TestMainDispatcherFactory",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"libcore.io.Memory"
 },
 {
@@ -2762,11 +2598,6 @@
 },
 {
   "name":"org.graalvm.polyglot.management.Management"
-},
-{
-  "name":"org.opentest4j.AssertionFailedError",
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"getActual","parameterTypes":[] }, {"name":"getExpected","parameterTypes":[] }]
 },
 {
   "name":"org.robolectric.Robolectric"

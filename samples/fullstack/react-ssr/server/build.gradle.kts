@@ -89,7 +89,6 @@ application {
 }
 
 dependencies {
-  api(libs.graalvm.sdk)
   api(kotlin("stdlib"))
   api(kotlin("stdlib-jdk8"))
   implementation(project(":packages:base"))

@@ -52,7 +52,7 @@ TARGET ?= $(PWD)/build
 DOCS ?= $(PWD)/docs
 SITE_BUILD ?= $(PWD)/build/site
 REPORTS ?= $(SITE_BUILD)/reports
-JVM ?= 19
+JVM ?= 20
 SYSTEM ?= $(shell uname -s)
 JQ ?= $(shell which jq)
 

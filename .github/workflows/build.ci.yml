@@ -274,11 +274,9 @@ jobs:
             test
             check
             jacocoTestReport
-            koverMergedHtmlReport
-            koverMergedXmlReport
-            koverMergedReport
+            koverXmlReport
             :substrate:redakt:test
-            :substrate:koverMergedXmlReport
+            :substrate:koverXmlReport
             :tools:reports:reports
             -x :packages:core:wasmBrowserTest
             --scan
@@ -390,9 +388,8 @@ jobs:
             test
             check
             jacocoTestReport
-            koverMergedHtmlReport
-            koverMergedXmlReport
-            koverMergedReport
+            koverHtmlReport
+            koverXmlReport
             :tools:reports:reports
             -x :packages:ssg:testNativeImage
             -x :packages:ssg:test

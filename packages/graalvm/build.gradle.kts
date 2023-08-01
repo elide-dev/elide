@@ -136,7 +136,6 @@ dependencies {
   // Modules
   api(project(":packages:base"))
   api(project(":packages:core"))
-  api(project(":packages:wasm"))
   api(project(":packages:ssr"))
 
   // Kotlin / KotlinX

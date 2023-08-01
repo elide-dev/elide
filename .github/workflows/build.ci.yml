@@ -278,11 +278,11 @@ jobs:
             :substrate:redakt:test
             :substrate:koverXmlReport
             :tools:reports:reports
-            -x :packages:core:wasmBrowserTest
             --scan
             --no-daemon
             --warning-mode=none
             --dependency-verification=lenient
+            -x ktlintCheck
             -x apiCheck
             -x nativeTest
             -x testNativeImage

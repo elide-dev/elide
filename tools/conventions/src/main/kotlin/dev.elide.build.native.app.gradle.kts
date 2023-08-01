@@ -18,7 +18,7 @@ afterEvaluate {
 }
 
 graalvmNative {
-  testSupport = false
+  testSupport = true
 
   metadataRepository {
     enabled = true

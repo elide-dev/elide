@@ -12,7 +12,8 @@
  */
 
 @file:Suppress(
-  "DSL_SCOPE_VIOLATION", "UnstableApiUsage",
+  "DSL_SCOPE_VIOLATION",
+  "UnstableApiUsage",
 )
 
 import java.net.URI

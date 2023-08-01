@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.runtime.intrinsics.js.express.ExpressResponse
 import io.micronaut.core.async.publisher.Publishers
 import org.graalvm.polyglot.Value
 import org.reactivestreams.Publisher
 import reactor.netty.NettyOutbound
 import reactor.netty.http.server.HttpServerResponse
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.intrinsics.js.express.ExpressResponse
 
 /** An [ExpressResponse] implemented as a wrapper around a Reactor Netty [HttpServerResponse]. */
 internal class ExpressResponseIntrinsic(

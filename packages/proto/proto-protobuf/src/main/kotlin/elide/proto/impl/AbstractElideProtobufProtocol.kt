@@ -3,19 +3,15 @@
 package elide.proto.impl
 
 import com.google.protobuf.GeneratedMessageV3
+import tools.elide.crypto.HashAlgorithm
+import tools.elide.data.Encoding
+import java.util.*
 import elide.proto.ElideProtocol
-import elide.proto.ElideProtocol.Dialect
-import elide.proto.ElideProtocol.ImplementationLibrary
-import elide.proto.ElideProtocol.ModelAdapterStrategy
+import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
 import elide.proto.impl.data.ProtoDataContainer
 import elide.proto.impl.data.ProtoDataFingerprint
 import elide.proto.impl.wkt.ProtoTimestamp
-import tools.elide.crypto.HashAlgorithm
-import tools.elide.data.DataContainer
-import tools.elide.data.DataFingerprint
-import tools.elide.data.Encoding
-import java.util.*
 
 /**
  * TBD.

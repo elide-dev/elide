@@ -19,7 +19,7 @@ import tools.elide.meta.Endpoint
 import tools.elide.meta.EndpointType
 import java.net.URL
 import java.nio.ByteBuffer
-import java.util.SortedSet
+import java.util.*
 
 /**
  * Internal payload for a single static site fragment, associated with the HTTP request that produced it.

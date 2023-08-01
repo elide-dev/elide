@@ -2,7 +2,7 @@ package elide.model.util
 
 import com.google.protobuf.Timestamp
 import java.time.Instant
-import java.util.Date
+import java.util.*
 
 /**
  * Utilities to convert between different time objects, particularly a standard Protocol Buffer [Timestamp] and Java's

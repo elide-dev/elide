@@ -1,7 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.MapLike
+import elide.vm.annotations.Polyglot
 
 /** Implements a JavaScript-compatible `Map` with no mutable abilities. */
 @Suppress("unused") internal class JsMap<K: Any, V> constructor (backingMap: Map<K, V>) :

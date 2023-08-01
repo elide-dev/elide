@@ -1,5 +1,3 @@
-import Elide
-
 plugins {
   `version-catalog`
   `maven-publish`

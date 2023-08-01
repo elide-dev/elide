@@ -2,9 +2,9 @@ package elide.server.assets
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.assertDoesNotThrow
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals

@@ -1,18 +1,18 @@
 package elide.server.controller
 
-import elide.server.assets.AssetReference
-import elide.server.assets.AssetType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.server.assets.AssetReference
+import elide.server.assets.AssetType
 
 /** Tests for the top-level [PageController] extension point. */
 @MicronautTest class PageControllerTest {

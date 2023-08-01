@@ -2,16 +2,6 @@
 
 package elide.runtime.gvm.js
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.AbstractDualTest
-import elide.runtime.gvm.internals.GraalVMGuest
-import elide.runtime.gvm.internals.IntrinsicsManager
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.gvm.internals.js.JsRuntime
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
@@ -20,6 +10,16 @@ import org.graalvm.polyglot.io.FileSystem
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.runBlocking
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.AbstractDualTest
+import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.internals.IntrinsicsManager
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.gvm.internals.js.JsRuntime
+import elide.runtime.intrinsics.GuestIntrinsic
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @Suppress("unused")

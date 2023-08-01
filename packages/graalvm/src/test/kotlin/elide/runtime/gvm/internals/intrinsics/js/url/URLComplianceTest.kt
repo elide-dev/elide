@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.intrinsics.js.err.ValueError
-import elide.testing.annotations.TestCase
 import org.junit.jupiter.api.*
 import java.util.stream.Stream
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.intrinsics.js.err.ValueError
+import elide.testing.annotations.TestCase
 
 /** WPT compliance tests for the intrinsic `URL` implementation provided by Elide. */
 @Ignore @TestCase internal class URLComplianceTest : AbstractJsIntrinsicTest<URLIntrinsic>() {

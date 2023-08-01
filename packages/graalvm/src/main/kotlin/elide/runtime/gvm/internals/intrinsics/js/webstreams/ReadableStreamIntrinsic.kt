@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.Intrinsic
-import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.intrinsics.js.ReadableStream
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
+import elide.runtime.gvm.internals.intrinsics.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.js.ReadableStream
 
 /** Implementation of readable streams (via the Web Streams standard). */
 @Intrinsic(global = "ReadableStream") internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {

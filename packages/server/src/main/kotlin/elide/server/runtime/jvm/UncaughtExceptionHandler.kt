@@ -1,8 +1,8 @@
 package elide.server.runtime.jvm
 
+import jakarta.inject.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
-import jakarta.inject.Singleton
 
 /**
  * Default uncaught exception handler; logs the error to the root logger, along with a stacktrace and message from the

@@ -1,15 +1,15 @@
 package elide.rpc.server.web
 
 import com.google.protobuf.Message
-import io.grpc.ServerServiceDefinition
 import io.grpc.Metadata
+import io.grpc.ServerServiceDefinition
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.health.v1.HealthCheckResponse
 import io.grpc.health.v1.HealthGrpc
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

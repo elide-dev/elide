@@ -10,7 +10,7 @@
 
 package lib.tsstdlib.intl
 
-import kotlin.js.*
+import kotlin.js.Date
 
 public external interface CollatorOptions {
   public var usage: String?

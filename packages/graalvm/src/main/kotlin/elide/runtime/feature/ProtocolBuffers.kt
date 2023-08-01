@@ -13,10 +13,10 @@
 
 package elide.runtime.feature
 
-import elide.annotations.internal.VMFeature
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.RuntimeReflection
 import java.lang.reflect.Executable
+import elide.annotations.internal.VMFeature
 
 /**
  * # Feature: Protocol Buffers

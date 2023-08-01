@@ -5,13 +5,6 @@ import com.google.common.jimfs.Feature
 import com.google.common.jimfs.Jimfs
 import com.google.protobuf.ByteString
 import com.google.protobuf.Timestamp
-import elide.annotations.Factory
-import elide.annotations.Singleton
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
-import elide.util.UUID
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
@@ -28,6 +21,13 @@ import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import kotlin.io.path.toPath
+import elide.annotations.Factory
+import elide.annotations.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.GuestVFS
+import elide.util.UUID
 
 /**
  * # VFS: Embedded.

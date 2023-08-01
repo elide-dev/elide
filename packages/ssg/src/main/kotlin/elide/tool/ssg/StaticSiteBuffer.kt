@@ -14,14 +14,14 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope as coroutine
 import java.io.Closeable
-import java.util.Queue
+import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope as coroutine
 
 /** Class which holds output fragments and state as they are built within the SSG compiler. */
 public class StaticSiteBuffer : Closeable, AutoCloseable {

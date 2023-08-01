@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.annotations.Singleton
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.cfg.GuestIOConfiguration
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Requires
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
+import elide.annotations.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.cfg.GuestIOConfiguration
 
 /**
  * # VFS: Host.

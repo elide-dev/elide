@@ -1,11 +1,11 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.intrinsics.js.MapLike
-import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import elide.runtime.intrinsics.js.MapLike
+import elide.testing.annotations.Test
+import elide.testing.annotations.TestCase
 
 /** Tests for the [JsSortedMap] implementation. */
 @TestCase internal class JsSortedMapTest : AbstractJsMapTest<JsSortedMap<String, Any?>>() {

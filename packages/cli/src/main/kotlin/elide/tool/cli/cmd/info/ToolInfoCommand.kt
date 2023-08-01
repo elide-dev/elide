@@ -1,11 +1,11 @@
 package elide.tool.cli.cmd.info
 
+import picocli.CommandLine.Command
 import elide.annotations.Singleton
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
-import picocli.CommandLine.Command
 
 /** TBD. */
 @Command(

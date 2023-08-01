@@ -16,7 +16,8 @@ import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.protobuf.*
 import kotlinx.serialization.protobuf.internal.isPackable
-import kotlinx.serialization.protobuf.schema.ProtoBufSyntaxVersion.*
+import kotlinx.serialization.protobuf.schema.ProtoBufSyntaxVersion.PROTO2
+import kotlinx.serialization.protobuf.schema.ProtoBufSyntaxVersion.PROTO3
 
 /** Implementation of a protocol buffer syntax generator, from Kotlin models; supports proto syntax 2 and 3. */
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)

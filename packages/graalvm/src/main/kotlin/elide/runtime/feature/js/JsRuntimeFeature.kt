@@ -13,9 +13,9 @@
 
 package elide.runtime.feature.js
 
+import org.graalvm.nativeimage.hosted.Feature
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
-import org.graalvm.nativeimage.hosted.Feature
 
 
 /** GraalVM feature which enables reflection required for the Elide JavaScript guest runtime. */

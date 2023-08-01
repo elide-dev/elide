@@ -11,8 +11,8 @@
 
 package lib.protobuf
 
-import kotlin.js.*
-import org.khronos.webgl.*
+import org.khronos.webgl.ArrayBuffer
+import org.khronos.webgl.Uint8Array
 
 public typealias MessageArray = Array<Any>
 

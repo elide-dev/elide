@@ -14,10 +14,12 @@
 package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
-import elide.runtime.Logger
-import elide.tool.cli.state.CommandState
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
+import elide.runtime.Logger
+import elide.tool.cli.CommandContext.DefaultCommandContext
+import elide.tool.cli.CommandContext.SpecializedCommandContext
+import elide.tool.cli.state.CommandState
 
 /**
  * # Command Context

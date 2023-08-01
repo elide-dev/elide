@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 /** Tests for the [JsMutableMultiMap] implementation. */
 @TestCase internal class JsMutableMultiMapTest : AbstractJsMapTest<JsMutableMultiMap<String, Any?>>() {

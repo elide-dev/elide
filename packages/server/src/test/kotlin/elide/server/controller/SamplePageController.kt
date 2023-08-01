@@ -1,8 +1,5 @@
 package elide.server.controller
 
-import elide.server.*
-import elide.server.annotations.Page
-import elide.server.assets.AssetType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
@@ -10,6 +7,9 @@ import kotlinx.html.strong
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
+import elide.server.*
+import elide.server.annotations.Page
+import elide.server.assets.AssetType
 
 /** Sample page controller for testing. */
 @Page class SamplePageController : PageController() {

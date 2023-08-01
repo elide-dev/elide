@@ -2,14 +2,14 @@
 
 package elide.runtime.gvm.internals.js
 
+import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.assertDoesNotThrow
+import kotlin.test.*
 import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.internals.GVMInvocationBindings
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.graalvm.polyglot.Value
-import org.junit.jupiter.api.assertDoesNotThrow
-import kotlin.test.*
 
 /** Tests for resolving invocation bindings from JavaScript guest code. */
 @TestCase internal class JsInvocationBindingsTest : AbstractJsTest() {

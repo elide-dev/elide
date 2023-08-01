@@ -1,7 +1,6 @@
-package elide.runtime.gvm.internals
+package elide.runtime.intrinsics
 
 import elide.runtime.gvm.GuestLanguage
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 
 /**
  * # Intrinsics Resolver

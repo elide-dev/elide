@@ -8,14 +8,16 @@ pluginManagement {
   repositories {
     maven("https://gradle.pkg.st/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    gradlePluginPortal()
     google()
   }
 }
 
 plugins {
   id("build.less") version("1.0.0-beta1")
-  id("com.gradle.enterprise") version("3.14")
+  id("com.gradle.enterprise") version("3.14.1")
   id("org.gradle.toolchains.foojay-resolver-convention") version("0.6.0")
+  id("com.gradle.common-custom-user-data-gradle-plugin") version("1.11.1")
 }
 
 // Fix: Force CWD to proper value and store secondary value.
@@ -63,10 +65,7 @@ includeBuild("tools/substrate") {
     substitute(module("dev.elide.tools:elide-substrate")).using(project(":"))
     substitute(module("dev.elide.tools:elide-substrate-bom")).using(project(":bom"))
     substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
-    substitute(module("dev.elide.tools.kotlin.plugin:injekt-plugin")).using(project(":injekt"))
-    substitute(module("dev.elide.tools.kotlin.plugin:interakt-plugin")).using(project(":interakt"))
     substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
-    substitute(module("dev.elide.tools.kotlin.plugin:sekret-plugin")).using(project(":sekret"))
   }
 }
 
@@ -104,8 +103,10 @@ include(
   ":packages:server",
   ":packages:ssr",
   ":packages:test",
+  ":packages:wasm",
   ":tools:processor",
   ":tools:reports",
+  ":tools:wrappers",
 )
 
 val buildDocs: String by settings
@@ -186,3 +187,4 @@ buildless {
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

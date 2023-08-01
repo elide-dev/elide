@@ -29,11 +29,11 @@ koverMerged {
     enable()
 
     xmlReport {
-        onCheck.set(isCI)
+        onCheck = isCI
     }
 
     htmlReport {
-        onCheck.set(isCI)
+        onCheck = isCI
     }
 }
 
@@ -48,12 +48,12 @@ allprojects {
     }
 
     ktlint {
-        debug.set(false)
-        verbose.set(true)
-        android.set(false)
-        outputToConsole.set(true)
-        ignoreFailures.set(false)
-        enableExperimentalRules.set(true)
+        debug = false
+        verbose = true
+        android = false
+        outputToConsole = true
+        ignoreFailures = false
+        enableExperimentalRules = true
         filter {
             exclude("**/generated/**")
             include("**/kotlin/**")
@@ -67,8 +67,8 @@ allprojects {
 
 tasks.withType<Detekt>().configureEach {
     reports {
-        html.required.set(true)
-        html.outputLocation.set(file("build/reports/detekt.html"))
+        html.required = true
+        html.outputLocation = file("build/reports/detekt.html")
     }
 }
 

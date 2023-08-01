@@ -1,4 +1,16 @@
-import Elide
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 import GradleProject.projectConstants
 import ElideSubstrate.elideTarget
 
@@ -6,6 +18,7 @@ plugins {
   `maven-publish`
   distribution
   signing
+  `embedded-kotlin`
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")
@@ -24,6 +37,11 @@ projectConstants(
   )
 )
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
+}
+
 publishing {
   elideTarget(
     project,
@@ -39,6 +57,7 @@ dependencies {
   api(project(":compiler-util"))
   compileOnly(libs.kotlin.compiler.embedded)
   implementation(libs.google.auto.service)
+  implementation(kotlin("stdlib"))
 
   testImplementation(kotlin("test"))
   testImplementation(libs.truth)

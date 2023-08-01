@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
@@ -25,7 +38,7 @@ allOpen {
 
 group = "dev.elide"
 version = rootProject.version as String
-
+val encloseSdk = false
 
 kotlin {
   explicitApi()
@@ -40,9 +53,41 @@ sourceSets {
   }
 }
 
+val initializeAtBuildTime = listOf(
+  "kotlin.DeprecationLevel",
+  "kotlin.annotation.AnnotationRetention",
+  "kotlin.annotation.AnnotationTarget",
+  "kotlin.coroutines.intrinsics.CoroutineSingletons",
+)
+
+val initializeAtBuildTimeTest = listOf(
+  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
+  "org.junit.platform.launcher.core.LauncherConfig",
+)
+
 graalvmNative {
+  testSupport = true
+
   agent {
     enabled = false
+  }
+
+  binaries {
+    create("shared") {
+      sharedLibrary = true
+      buildArgs(initializeAtBuildTime.map {
+        "--initialize-at-build-time=$it"
+      }.plus(emptyList()))
+    }
+
+    named("test") {
+      fallback = false
+      sharedLibrary = false
+      quickBuild = true
+      buildArgs(initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
+        "--initialize-at-build-time=$it"
+      }.plus(emptyList()))
+    }
   }
 }
 
@@ -56,7 +101,7 @@ benchmark {
   targets {
     register("benchmarks") {
       this as JvmBenchmarkTarget
-      jmhVersion = "1.36"
+      jmhVersion = libs.versions.jmh.lib.get()
     }
   }
 }
@@ -92,7 +137,8 @@ dependencies {
   // Modules
   api(project(":packages:base"))
   api(project(":packages:core"))
-  implementation(project(":packages:ssr"))
+  api(project(":packages:wasm"))
+  api(project(":packages:ssr"))
 
   // Kotlin / KotlinX
   implementation(kotlin("stdlib"))
@@ -128,8 +174,10 @@ dependencies {
   implementation(project(":packages:proto:proto-kotlinx"))
   implementation(project(":packages:proto:proto-flatbuffers"))
 
-  compileOnly(libs.graalvm.sdk)
-  compileOnly(libs.graalvm.truffle.api)
+  if (encloseSdk) {
+    compileOnly(libs.graalvm.sdk)
+    compileOnly(libs.graalvm.truffle.api)
+  }
 
   // Testing
   testImplementation(project(":packages:test"))
@@ -137,8 +185,11 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(libs.micronaut.test.junit5)
-  testCompileOnly(libs.graalvm.sdk)
   testRuntimeOnly(libs.junit.jupiter.engine)
+
+  if (encloseSdk) {
+    testCompileOnly(libs.graalvm.sdk)
+  }
 }
 
 configureJava9ModuleInfo(project)
@@ -150,7 +201,6 @@ tasks {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
 publishing {
   publications.withType<MavenPublication> {
     artifactId = artifactId.replace("graalvm", "elide-graalvm")
@@ -179,21 +229,3 @@ publishing {
     }
   }
 }
-
-val compileKotlin: KotlinCompile by tasks
-val compileJava: JavaCompile by tasks
-compileKotlin.destinationDirectory = compileJava.destinationDirectory
-
-tasks.jar {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-// Unused dependencies:
-//  implementation(libs.lmax.disruptor.proxy)
-//  implementation(libs.brotli)
-//  implementation(libs.micronaut.inject.java)
-//  implementation(libs.micronaut.cache.core)
-//  implementation(libs.micronaut.cache.caffeine)
-//  implementation(libs.lz4)
-//  implementation(libs.flatbuffers.java.core)
-//  implementation(libs.kotlinx.coroutines.slf4j)

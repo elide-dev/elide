@@ -2,7 +2,7 @@ package elide.runtime.gvm.internals.intrinsics.js.base64
 
 import elide.vm.annotations.Polyglot
 import elide.core.encoding.base64.DefaultBase64
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol

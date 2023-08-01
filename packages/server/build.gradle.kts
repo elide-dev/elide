@@ -154,7 +154,7 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
 }
 
 graalvmNative {
-  testSupport = false
+  testSupport = true
 
   metadataRepository {
     enabled = true

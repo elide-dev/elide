@@ -10,8 +10,8 @@ import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.inject.BeanDefinition
 import io.micronaut.inject.BeanIdentifier
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull

@@ -1,10 +1,10 @@
 package elide.frontend.ssr
 
+import js.core.jso
 import react.ReactElement
 import web.streams.ReadableStreamDefaultReadValueResult
 import web.streams.ReadableStreamDefaultReader
 import kotlin.js.Promise
-import js.core.jso
 import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
 

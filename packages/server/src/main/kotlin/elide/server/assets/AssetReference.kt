@@ -1,7 +1,7 @@
 package elide.server.assets
 
-import elide.server.AssetModuleId
 import kotlinx.serialization.Serializable
+import elide.server.AssetModuleId
 
 /**
  * Represents a resolved reference to an asset at serving-time, before it is rendered into a link or other tag.

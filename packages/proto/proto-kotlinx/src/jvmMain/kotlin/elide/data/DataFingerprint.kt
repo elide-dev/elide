@@ -3,7 +3,6 @@
 
 package elide.data
 
-import elide.core.encoding.Encoding
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber

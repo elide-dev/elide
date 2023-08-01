@@ -1,8 +1,8 @@
 package elide.tool.cli
 
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.Logger
 import elide.runtime.Logging
-import java.util.concurrent.atomic.AtomicReference
 
 /** Internal static tools and utilities used across the Elide CLI. */
 internal object Statics {

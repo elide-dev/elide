@@ -2,23 +2,7 @@
 
 package elide.runtime.gvm.internals
 
-import elide.annotations.Inject
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.*
-import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
-import elide.runtime.gvm.cfg.GuestVMConfiguration
-import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
-import elide.runtime.gvm.internals.js.JsInvocationBindings
-import elide.ssr.ServerResponse
-import elide.util.RuntimeFlag
 import io.micronaut.http.HttpRequest
-import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -28,6 +12,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 import java.util.stream.Stream
+import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
+import elide.annotations.Inject
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.*
+import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
+import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
+import elide.runtime.gvm.internals.js.JsInvocationBindings
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.ssr.ServerResponse
+import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 

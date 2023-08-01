@@ -3,16 +3,9 @@
 package elide.proto.impl.wkt
 
 import com.google.protobuf.Timestamp
-import com.google.protobuf.TimestampOrBuilder
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.toKotlinInstant
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 import elide.proto.api.wkt.Timestamp as ITimestamp
-import java.time.Instant as JavaInstant
 
 /** Implements a universal model timestamp, backed by a well-known-type Protocol Buffers [Timestamp]. */
 public class ProtoTimestamp private constructor (private val timestamp: Timestamp) :

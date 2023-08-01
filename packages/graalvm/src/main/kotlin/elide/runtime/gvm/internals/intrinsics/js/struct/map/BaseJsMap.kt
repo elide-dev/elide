@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.stream.Stream
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Base implementation of a regular (non-mutable) JS map which is backed by a Java map. */
 internal sealed class BaseJsMap<K: Any, V> constructor (

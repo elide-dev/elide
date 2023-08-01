@@ -1,10 +1,10 @@
 package elide.js.ssr
 
-import web.dom.document
 import react.Props
 import react.ReactElement
 import react.dom.client.createRoot
 import react.dom.client.hydrateRoot
+import web.dom.document
 
 const val SSR_FLAG = "data-serving-mode"
 const val SERVING_MODE_SSR = "ssr"

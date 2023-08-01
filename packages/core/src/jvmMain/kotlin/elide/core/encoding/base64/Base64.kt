@@ -13,10 +13,10 @@
 
 package elide.core.encoding.base64
 
+import kotlin.math.min
 import elide.core.annotations.Static
 import elide.core.encoding.Codec
 import elide.core.encoding.Encoding
-import kotlin.math.min
 
 /**
  * # Base64

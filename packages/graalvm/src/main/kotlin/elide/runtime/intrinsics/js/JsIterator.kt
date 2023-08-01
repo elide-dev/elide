@@ -1,12 +1,12 @@
 package elide.runtime.intrinsics.js
 
 
-import elide.vm.annotations.Polyglot
+import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyIterator
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorResult
 import elide.runtime.intrinsics.js.err.Error
-import org.graalvm.polyglot.proxy.ProxyIterable
-import org.graalvm.polyglot.proxy.ProxyIterator
+import elide.vm.annotations.Polyglot
 
 /**
  * # JS: Iterator

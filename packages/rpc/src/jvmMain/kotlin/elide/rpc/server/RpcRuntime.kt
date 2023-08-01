@@ -2,8 +2,6 @@
 
 package elide.rpc.server
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.grpc.*
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
@@ -11,10 +9,12 @@ import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.reflection.v1alpha.ServerReflectionGrpc
 import io.grpc.stub.AbstractStub
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Manages access to gRPC services at runtime, primarily for the purpose of dispatching arbitrary gRPC methods from RPCs

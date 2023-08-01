@@ -2,7 +2,19 @@
 
 package elide.server.ssr
 
-import elide.vm.annotations.Polyglot
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.html.BODY
+import kotlinx.html.script
+import kotlinx.html.stream.appendHTML
+import kotlinx.html.unsafe
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
@@ -10,21 +22,12 @@ import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.js.JavaScript
-import elide.ssr.ServerResponse
-import elide.ssr.type.RequestState
 import elide.server.SuspensionRenderer
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.MutableHttpResponse
-import kotlinx.coroutines.*
-import kotlinx.html.BODY
-import kotlinx.html.script
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.unsafe
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicReference
+import elide.ssr.ServerResponse
+import elide.ssr.type.RequestState
+import elide.vm.annotations.Polyglot
 
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
 @Suppress("MemberVisibilityCanBePrivate", "unused", "SpreadOperator")

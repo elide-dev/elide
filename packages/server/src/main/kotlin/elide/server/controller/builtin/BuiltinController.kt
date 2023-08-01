@@ -1,11 +1,11 @@
 package elide.server.controller.builtin
 
+import io.micronaut.http.HttpRequest
 import elide.server.RawResponse
 import elide.server.controller.BaseController
 import elide.server.controller.PageController
 import elide.server.controller.StatusEnabledController
 import elide.server.runtime.jvm.UncaughtExceptionHandler
-import io.micronaut.http.HttpRequest
 
 /**
  * Base class for built-in controllers provided by Elide.

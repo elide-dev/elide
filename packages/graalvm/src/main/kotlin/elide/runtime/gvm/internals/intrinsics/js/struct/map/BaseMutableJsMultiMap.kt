@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.*
+import java.util.stream.Stream
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.js.MutableMultiMapLike
 import elide.runtime.intrinsics.js.err.TypeError
-import java.util.*
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Implements a JS-compatible map structure which is mutable and accepts multiple values per key. */
 internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (

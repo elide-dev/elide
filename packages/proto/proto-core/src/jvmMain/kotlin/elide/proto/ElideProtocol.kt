@@ -2,8 +2,8 @@
 
 package elide.proto
 
+import java.util.*
 import elide.proto.api.data.DataModelStrategy
-import java.util.EnumSet
 
 /**
  * TBD.

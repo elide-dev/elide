@@ -13,14 +13,14 @@
 
 package elide.tool.ssg
 
-import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpRequest
-import jakarta.inject.Singleton
 import tools.elide.meta.Endpoint
 import java.net.URI
 import java.net.URL
+import jakarta.inject.Singleton
+import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 
 /** Default request factory implementation. */
 @Suppress("unused")

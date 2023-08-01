@@ -7,7 +7,7 @@
 )
 package lib.tsstdlib
 
-import kotlin.js.*
+import kotlin.js.Promise
 
 public external interface IteratorYieldResult<TYield> {
   public var done: Boolean?

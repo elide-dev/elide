@@ -1,12 +1,13 @@
 package elide.proto.impl
 
-import elide.proto.ElideProtocol.Dialect.*
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import elide.proto.ElideProtocol.Dialect.JSON
+import elide.proto.ElideProtocol.Dialect.PROTO
 import elide.proto.ElideProtocol.ImplementationLibrary.PROTOBUF
 import elide.proto.api.Protocol
 import elide.proto.test.AbstractProtocolFacadeTest
 import elide.testing.annotations.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /** Tests to load the Elide Protocol implementation backed by Protocol Buffers. */
 internal class ProtobufProtocolTest : AbstractProtocolFacadeTest<ElideProtoJava>() {

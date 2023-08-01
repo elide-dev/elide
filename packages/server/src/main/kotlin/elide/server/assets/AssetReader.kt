@@ -1,10 +1,10 @@
 package elide.server.assets
 
+import io.micronaut.http.HttpRequest
+import java.io.FileNotFoundException
+import kotlinx.coroutines.Deferred
 import elide.annotations.API
 import elide.server.AssetModuleId
-import io.micronaut.http.HttpRequest
-import kotlinx.coroutines.Deferred
-import java.io.FileNotFoundException
 
 /**
  * Describes the API surface expected for a reader of static assets from some data source; responsible for efficiently

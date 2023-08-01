@@ -1,18 +1,18 @@
 package elide.server.assets
 
-import elide.server.StreamedAsset
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import tools.elide.assets.AssetBundle.AssetContent
 import tools.elide.assets.AssetBundle.GenericBundle
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import elide.server.StreamedAsset
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
 @MicronautTest class ServerAssetServingTest {

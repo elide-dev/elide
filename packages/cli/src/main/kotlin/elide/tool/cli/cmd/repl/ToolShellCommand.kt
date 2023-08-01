@@ -17,23 +17,6 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.VMFacade
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
-import elide.runtime.intrinsics.js.ServerAgent
-import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.GuestLanguage
-import elide.tool.cli.Statics
-import elide.tool.cli.ToolState
-import elide.tool.cli.err.ShellError
-import elide.tool.cli.output.JLineLogbackAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -59,11 +42,7 @@ import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.io.PrintWriter
-import java.io.StringWriter
+import java.io.*
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -76,10 +55,22 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
 import java.util.stream.Stream
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.VMFacade
+import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.intrinsics.js.ServerAgent
+import elide.tool.cli.*
+import elide.tool.cli.err.ShellError
+import elide.tool.cli.output.JLineLogbackAppender
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 

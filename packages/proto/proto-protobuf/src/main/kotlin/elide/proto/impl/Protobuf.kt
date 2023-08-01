@@ -1,14 +1,15 @@
 package elide.proto.impl
 
+import com.google.protobuf.Message
+import com.google.protobuf.Timestamp
+import java.util.*
+import kotlinx.datetime.Instant
+import kotlin.reflect.KClass
+import kotlin.reflect.full.companionObjectInstance
+import elide.proto.impl.Protobuf.ProtoBuilderContext
 import elide.util.proto.adapters.ProtoConvertible
 import elide.util.proto.adapters.ProtoModel
 import elide.util.proto.adapters.ProtoSchemaConvertible
-import com.google.protobuf.Message
-import com.google.protobuf.Timestamp
-import kotlinx.datetime.Instant
-import java.util.*
-import kotlin.reflect.KClass
-import kotlin.reflect.full.companionObjectInstance
 
 /**
  * # Utilities: Protocol Buffers

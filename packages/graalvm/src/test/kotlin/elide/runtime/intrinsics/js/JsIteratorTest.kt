@@ -2,14 +2,14 @@
 
 package elide.runtime.intrinsics.js
 
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.assertDoesNotThrow
+import kotlin.test.*
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMap
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.assertDoesNotThrow
-import kotlin.test.*
 
 /** Tests for [JsIterator]. */
 @TestCase internal class JsIteratorTest : AbstractJsTest() {

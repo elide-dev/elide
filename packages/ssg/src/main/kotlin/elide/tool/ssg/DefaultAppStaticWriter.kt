@@ -14,12 +14,6 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.AppStaticWriter.FragmentOutputs
-import elide.tool.ssg.AppStaticWriter.FragmentWrite
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveOutputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
@@ -34,7 +28,13 @@ import java.io.OutputStream
 import java.nio.file.Path
 import java.nio.file.attribute.FileTime
 import java.util.concurrent.atomic.AtomicLong
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
 import kotlin.io.path.Path
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.AppStaticWriter.FragmentOutputs
+import elide.tool.ssg.AppStaticWriter.FragmentWrite
 
 /** Default writer implementation for static sites. */
 @Singleton internal class DefaultAppStaticWriter (

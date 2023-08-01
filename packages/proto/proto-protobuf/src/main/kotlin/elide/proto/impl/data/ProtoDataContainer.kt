@@ -2,13 +2,13 @@
 
 package elide.proto.impl.data
 
+import tools.elide.crypto.HashAlgorithm
+import tools.elide.data.DataContainer
+import tools.elide.data.DataContainerOrBuilder
+import tools.elide.data.Encoding
 import elide.core.encoding.base64.Base64Data
 import elide.core.encoding.hex.HexData
-import tools.elide.crypto.HashAlgorithm
 import elide.proto.api.data.DataContainer as IDataContainer
-import tools.elide.data.DataContainer
-import tools.elide.data.Encoding
-import tools.elide.data.DataContainerOrBuilder
 
 /** TBD. */
 public class ProtoDataContainer private constructor (private val container: DataContainer) : IDataContainer<

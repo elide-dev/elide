@@ -1,8 +1,5 @@
 package elide.rpc.server.web
 
-import elide.grpctest.HelloServiceGrpc
-import elide.grpctest.Nopackage.HelloRequest
-import elide.grpctest.Nopackage.HelloResponse
 import io.grpc.health.v1.HealthCheckRequest
 import io.grpc.health.v1.HealthCheckResponse
 import io.grpc.health.v1.HealthGrpc
@@ -13,6 +10,9 @@ import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.grpctest.HelloServiceGrpc
+import elide.grpctest.Nopackage.HelloRequest
+import elide.grpctest.Nopackage.HelloResponse
 
 /** Tests for well-formed requests to the [HealthGrpc] service via the gRPC-Web gateway layer. */
 @MicronautTest

@@ -1,9 +1,9 @@
 package elide.runtime.intrinsics.js
 
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
 
 /**
  * # Web Streams: Readable Stream.

@@ -1,8 +1,8 @@
 package elide.server.assets
 
-import elide.server.AssetModuleId
 import tools.elide.assets.AssetBundle
-import java.util.SortedSet
+import java.util.*
+import elide.server.AssetModuleId
 
 /**
  * Describes a server-side asset which is embedded in an application bundle through Elide's asset tools and protocol

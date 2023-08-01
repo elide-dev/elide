@@ -1,15 +1,14 @@
 package elide.server.cfg
 
-import elide.annotations.Logic
-import elide.server.annotations.Eager
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.annotation.ContextConfigurer
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourcePropertyResolver
-import java.util.SortedMap
-import java.util.SortedSet
+import java.util.*
+import elide.annotations.Logic
+import elide.server.annotations.Eager
 
 /**
  * Configures Micronaut on behalf of an Elide application with default configuration state.

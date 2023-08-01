@@ -32,7 +32,7 @@ tasks.withType<KotlinCompile>().configureEach {
     languageVersion = ElideSubstrate.kotlinVerison
     jvmTarget = "11"
     javaParameters = true
-    allWarningsAsErrors = false
+    allWarningsAsErrors = true
     incremental = true
   }
 }

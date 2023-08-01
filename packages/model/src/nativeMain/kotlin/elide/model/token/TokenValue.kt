@@ -1,6 +1,7 @@
 package elide.model.token
 
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import elide.annotations.data.Sensitive
 
 /** Wraps a secure token value in an inline class on each platform. */

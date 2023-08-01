@@ -164,7 +164,7 @@ tasks.register("preMerge") {
     description = "Runs all the tests/verification tasks on both top level and included build."
 
     dependsOn("build", "test", "check")
-    dependsOn("koverReport", "koverVerify", "koverMergedXmlReport")
+    dependsOn("koverReport", "koverVerify", "koverXmlReport")
 
     if ((properties["buildExamples"] as? String) == "true") {
         dependsOn(":example:fullstack:node:check")

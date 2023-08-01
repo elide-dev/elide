@@ -25,6 +25,9 @@ module elide.graalvm {
     requires io.micronaut.http;
     requires io.micronaut.inject;
 
+    requires reactor.netty.http;
+    requires io.netty.codec.http;
+
     requires org.graalvm.sdk;
     requires org.graalvm.truffle;
 
@@ -33,6 +36,7 @@ module elide.graalvm {
     requires elide.ssr;
 
     exports elide.runtime.intrinsics.js;
+    exports elide.runtime.intrinsics.js.express;
     exports elide.runtime.gvm;
     exports elide.runtime.gvm.internals;
     exports elide.runtime.gvm.internals.intrinsics.js.base64;

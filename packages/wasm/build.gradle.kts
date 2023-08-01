@@ -28,7 +28,11 @@ kotlin {
   }
 
   sourceSets {
-    val wasmMain by getting
+    val wasmMain by getting {
+      dependencies {
+        implementation(kotlin("stdlib"))
+      }
+    }
     val wasmTest by getting {
       dependencies {
         implementation(kotlin("test"))

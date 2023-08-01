@@ -26,7 +26,6 @@ plugins {
   `java`
   kotlin("kapt")
   alias(libs.plugins.protobuf)
-  id(libs.plugins.gradle.testretry.get().pluginId)
 }
 
 group = "dev.elide"
@@ -188,14 +187,6 @@ tasks {
 
   named("compileTestKotlinJvm").configure {
     dependsOn("generateProto", "generateTestProto")
-  }
-
-  test {
-    retry {
-      maxRetries = 3
-      maxFailures = 20
-      failOnPassedAfterRetry = false
-    }
   }
 }
 

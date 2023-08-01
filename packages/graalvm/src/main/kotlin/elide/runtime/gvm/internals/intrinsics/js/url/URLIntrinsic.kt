@@ -14,6 +14,8 @@ import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.Serializable
 import java.net.URI

@@ -1,0 +1,104 @@
+[
+{
+  "name":"io.netty.channel.ChannelException"
+},
+{
+  "name":"io.netty.channel.DefaultFileRegion",
+  "fields":[{"name":"file"}, {"name":"transferred"}]
+},
+{
+  "name":"io.netty.channel.kqueue.BsdSocket"
+},
+{
+  "name":"io.netty.channel.kqueue.KQueueEventArray"
+},
+{
+  "name":"io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods"
+},
+{
+  "name":"io.netty.channel.kqueue.Native"
+},
+{
+  "name":"io.netty.channel.unix.Buffer"
+},
+{
+  "name":"io.netty.channel.unix.DatagramSocketAddress",
+  "methods":[{"name":"<init>","parameterTypes":["byte[]","int","int","int","io.netty.channel.unix.DatagramSocketAddress"] }]
+},
+{
+  "name":"io.netty.channel.unix.DomainDatagramSocketAddress",
+  "methods":[{"name":"<init>","parameterTypes":["byte[]","int","io.netty.channel.unix.DomainDatagramSocketAddress"] }]
+},
+{
+  "name":"io.netty.channel.unix.ErrorsStaticallyReferencedJniMethods"
+},
+{
+  "name":"io.netty.channel.unix.FileDescriptor"
+},
+{
+  "name":"io.netty.channel.unix.LimitsStaticallyReferencedJniMethods"
+},
+{
+  "name":"io.netty.channel.unix.PeerCredentials",
+  "methods":[{"name":"<init>","parameterTypes":["int","int","int[]"] }]
+},
+{
+  "name":"io.netty.channel.unix.Socket"
+},
+{
+  "name":"java.io.FileDescriptor",
+  "fields":[{"name":"fd"}]
+},
+{
+  "name":"java.io.IOException"
+},
+{
+  "name":"java.lang.OutOfMemoryError"
+},
+{
+  "name":"java.lang.RuntimeException"
+},
+{
+  "name":"java.lang.String",
+  "methods":[{"name":"lastIndexOf","parameterTypes":["int"] }, {"name":"substring","parameterTypes":["int"] }]
+},
+{
+  "name":"java.lang.System",
+  "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
+  "name":"java.net.InetSocketAddress",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","int"] }]
+},
+{
+  "name":"java.net.PortUnreachableException"
+},
+{
+  "name":"java.nio.Buffer",
+  "fields":[{"name":"limit"}, {"name":"position"}],
+  "methods":[{"name":"limit","parameterTypes":[] }, {"name":"position","parameterTypes":[] }]
+},
+{
+  "name":"java.nio.DirectByteBuffer"
+},
+{
+  "name":"java.nio.channels.ClosedChannelException",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.fusesource.jansi.internal.CLibrary",
+  "fields":[{"name":"HAVE_ISATTY"}, {"name":"HAVE_TTYNAME"}, {"name":"TCSADRAIN"}, {"name":"TCSAFLUSH"}, {"name":"TCSANOW"}, {"name":"TIOCGETA"}, {"name":"TIOCGETD"}, {"name":"TIOCGWINSZ"}, {"name":"TIOCSETA"}, {"name":"TIOCSETD"}, {"name":"TIOCSWINSZ"}]
+},
+{
+  "name":"sun.management.VMManagementImpl",
+  "fields":[{"name":"compTimeMonitoringSupport"}, {"name":"currentThreadCpuTimeSupport"}, {"name":"objectMonitorUsageSupport"}, {"name":"otherThreadCpuTimeSupport"}, {"name":"remoteDiagnosticCommandsSupport"}, {"name":"synchronizerUsageSupport"}, {"name":"threadAllocatedMemorySupport"}, {"name":"threadContentionMonitoringSupport"}]
+},
+{
+  "name":"sun.nio.ch.FileChannelImpl",
+  "fields":[{"name":"fd"}]
+},
+{
+  "name":"worker.org.gradle.process.internal.worker.GradleWorkerMain",
+  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
+}
+]

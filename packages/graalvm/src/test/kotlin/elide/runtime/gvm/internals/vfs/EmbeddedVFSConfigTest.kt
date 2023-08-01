@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.GuestVFS
-import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
 import io.micronaut.test.support.TestPropertyProvider
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.GuestVFS
+import elide.testing.annotations.Test
+import elide.testing.annotations.TestCase
 
 /** Test injection of a file-system implementation when `vfs.mode=GUEST`. */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

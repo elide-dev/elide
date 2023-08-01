@@ -1,7 +1,5 @@
 package elide.rpc.server.web
 
-import elide.rpc.server.web.GrpcWebCall.Binary
-import elide.rpc.server.web.GrpcWebCall.Text
 import io.grpc.ManagedChannel
 import io.grpc.ServerMethodDefinition
 import io.grpc.ServerServiceDefinition
@@ -9,6 +7,8 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import java.security.Principal
+import elide.rpc.server.web.GrpcWebCall.Binary
+import elide.rpc.server.web.GrpcWebCall.Text
 
 /**
  * Sealed class which represents all format cases for a gRPC Web call, namely [Text] and [Binary] cases; objects are

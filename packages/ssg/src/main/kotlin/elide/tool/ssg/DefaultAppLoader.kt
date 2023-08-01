@@ -13,24 +13,23 @@
 
 package elide.tool.ssg
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.ssl.ClientSslConfiguration
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
-import kotlinx.coroutines.reactive.awaitFirst
 import tools.elide.meta.AppManifest
 import tools.elide.meta.Endpoint
 import java.io.Closeable
 import java.net.URI
-import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import kotlinx.coroutines.reactive.awaitFirst
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Default [AppLoader] implementation, which works based on an isolated class-loader. */
 @Singleton public class DefaultAppLoader @Inject internal constructor (

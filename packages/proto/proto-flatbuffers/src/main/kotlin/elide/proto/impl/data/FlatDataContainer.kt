@@ -4,8 +4,8 @@ package elide.proto.impl.data
 
 import elide.core.encoding.base64.Base64Data
 import elide.core.encoding.hex.HexData
-import elide.proto.api.data.DataContainer as IDataContainer
 import elide.data.DataContainer
+import elide.proto.api.data.DataContainer as IDataContainer
 
 /** TBD. */
 public class FlatDataContainer private constructor (private val container: DataContainer) : IDataContainer<

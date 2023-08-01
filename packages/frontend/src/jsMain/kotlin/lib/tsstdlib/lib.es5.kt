@@ -9,7 +9,7 @@
 )
 package lib.tsstdlib
 
-import kotlin.js.*
+import kotlin.js.Date
 
 public external interface DateConstructor {
   public var prototype: Date

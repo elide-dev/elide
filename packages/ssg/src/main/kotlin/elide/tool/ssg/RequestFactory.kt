@@ -16,7 +16,6 @@ package elide.tool.ssg
 import io.micronaut.http.HttpRequest
 import tools.elide.meta.Endpoint
 import java.net.URL
-import kotlin.jvm.Throws
 
 /**
  * # SSG: Request Factory

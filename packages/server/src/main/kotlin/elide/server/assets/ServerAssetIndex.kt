@@ -5,15 +5,10 @@ import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
-import elide.server.AssetModuleId
-import elide.server.AssetTag
-import elide.server.cfg.AssetConfig
-import elide.util.Base64
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.server.event.ServerStartupEvent
-import jakarta.inject.Inject
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundle.AssetContent
 import java.nio.charset.StandardCharsets
@@ -25,7 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import jakarta.inject.Inject
 import kotlin.math.max
+import elide.server.AssetModuleId
+import elide.server.AssetTag
+import elide.server.assets.ServerAssetIndex.AssetStartupListener
+import elide.server.cfg.AssetConfig
+import elide.util.Base64
 
 /**
  * Server-side utility which, at server startup, consumes the embedded asset bundle (if any), and generates a set of

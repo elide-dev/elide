@@ -1,11 +1,11 @@
 package elide.grpctest
 
-import elide.rpc.server.web.GrpcWeb
 import io.grpc.Metadata
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 import java.nio.charset.StandardCharsets
+import elide.rpc.server.web.GrpcWeb
 
 /** Implementation of the test sample service for error case testing via the gRPC Web layer. */
 @GrpcService class TestSampleServiceV1: SampleServiceGrpc.SampleServiceImplBase() {

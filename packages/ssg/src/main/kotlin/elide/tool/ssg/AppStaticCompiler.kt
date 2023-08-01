@@ -13,9 +13,8 @@
 
 package elide.tool.ssg
 
-import kotlinx.coroutines.Deferred
 import java.io.Closeable
-import kotlin.jvm.Throws
+import kotlinx.coroutines.Deferred
 
 /**
  * # SSG: Static Compiler

@@ -1,5 +1,8 @@
 package elide.runtime.gvm.js
 
+import io.micronaut.http.HttpRequest
+import java.io.InputStream
+import java.io.Reader
 import elide.runtime.gvm.ExecutableScript
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.RequestExecutionInputs
@@ -8,9 +11,6 @@ import elide.runtime.gvm.internals.js.JsMicronautRequestExecutionInputs
 import elide.runtime.gvm.js.JavaScript.embedded
 import elide.runtime.gvm.js.JavaScript.literal
 import elide.ssr.type.RequestState
-import io.micronaut.http.HttpRequest
-import java.io.InputStream
-import java.io.Reader
 
 /**
  * # Guest VM: JavaScript

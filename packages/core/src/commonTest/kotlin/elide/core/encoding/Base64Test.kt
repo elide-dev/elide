@@ -13,10 +13,10 @@
 
 package elide.core.encoding
 
-import elide.core.encoding.base64.DefaultBase64
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.core.encoding.base64.DefaultBase64
 
 /** Tests for built in [DefaultBase64] tools. */
 class Base64Test: AbstractEncoderTest<DefaultBase64>() {

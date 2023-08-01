@@ -2,17 +2,15 @@
 
 package elide.proto.impl
 
+import java.util.*
 import elide.proto.ElideProtocol
-import elide.proto.ElideProtocol.Dialect
-import elide.proto.ElideProtocol.ImplementationLibrary
-import elide.proto.ElideProtocol.ModelAdapterStrategy
+import elide.proto.ElideProtocol.*
 import elide.proto.api.data.DataModelStrategy
 import elide.proto.impl.data.FlatDataContainer
 import elide.proto.impl.data.FlatDataFingerprint
 import elide.proto.impl.data.FlatEncoding
 import elide.proto.impl.data.FlatHashAlgorithm
 import elide.proto.impl.wkt.FlatTimestamp
-import java.util.*
 
 /**
  * TBD.

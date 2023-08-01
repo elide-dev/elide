@@ -3,9 +3,6 @@ package elide.rpc.server.web
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import com.google.protobuf.Message
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.rpc.server.RpcRuntime
 import io.grpc.*
 import io.grpc.protobuf.ProtoFileDescriptorSupplier
 import io.grpc.protobuf.ProtoServiceDescriptorSupplier
@@ -13,9 +10,6 @@ import io.grpc.stub.AbstractStub
 import io.grpc.stub.MetadataUtils
 import io.grpc.stub.StreamObserver
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Inject
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.guava.asDeferred
 import java.io.ByteArrayInputStream
 import java.lang.reflect.Method
 import java.util.*
@@ -23,6 +17,12 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
+import elide.rpc.server.RpcRuntime
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Implementation of a [GrpcWebService] which calls the underlying gRPC service directly, in essence simulating an

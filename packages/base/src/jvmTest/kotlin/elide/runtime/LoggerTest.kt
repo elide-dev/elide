@@ -15,7 +15,6 @@ package elide.runtime
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
-import kotlin.test.assertNotNull
 
 /** Tests for acquiring [Logger] instances on the JVM. */
 class LoggerTest {

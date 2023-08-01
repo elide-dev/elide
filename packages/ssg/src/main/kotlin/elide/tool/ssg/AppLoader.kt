@@ -13,11 +13,10 @@
 
 package elide.tool.ssg
 
-import kotlinx.coroutines.Deferred
 import tools.elide.meta.AppManifest
 import java.io.Closeable
 import java.net.URL
-import kotlin.jvm.Throws
+import kotlinx.coroutines.Deferred
 
 /**
  * # SSG: Application Runner

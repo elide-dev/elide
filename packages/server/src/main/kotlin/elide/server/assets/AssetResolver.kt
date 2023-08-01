@@ -1,8 +1,8 @@
 package elide.server.assets
 
+import io.micronaut.http.HttpRequest
 import elide.annotations.API
 import elide.server.AssetModuleId
-import io.micronaut.http.HttpRequest
 
 /**
  * Describes the expected API surface for a resolver of server-side assets, which, in cooperation with an [AssetReader]

@@ -16,9 +16,9 @@ package elide.tool.ssg
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
-import jakarta.inject.Inject
 import tools.elide.meta.*
 import java.nio.ByteBuffer
+import jakarta.inject.Inject
 
 /** Baseline utilities that don't boot the SSG compiler. */
 abstract class AbstractSSGTest {

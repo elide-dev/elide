@@ -1,11 +1,10 @@
 package elide.model
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import elide.model.token.Token
 import elide.model.token.TokenType
 import elide.model.token.TokenValue
-import kotlin.test.Ignore
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 /** Tests for redaction during model formatting, using the Redakt plugin. */
 class ModelRedactionTest {

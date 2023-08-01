@@ -13,9 +13,9 @@
 
 package elide.core.encoding
 
-import elide.core.encoding.hex.DefaultHex
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import elide.core.encoding.hex.DefaultHex
 
 /** Tests for built-in [DefaultHex] encoding tools. */
 class HexTest : AbstractEncoderTest<DefaultHex>() {

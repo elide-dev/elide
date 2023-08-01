@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
-import elide.runtime.intrinsics.js.*
 import io.micronaut.http.HttpRequest
 import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
+import elide.runtime.intrinsics.js.*
+import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
 internal class FetchRequestIntrinsic internal constructor (

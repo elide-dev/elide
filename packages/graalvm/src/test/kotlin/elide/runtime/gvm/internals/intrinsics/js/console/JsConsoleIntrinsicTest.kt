@@ -2,23 +2,21 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.console
 
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import java.time.Instant
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import java.time.Instant
-import java.util.Date
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.test.assertEquals
 
-/** Tests for intrinsic JS console implementation, which pipes to logging. */
+ /** Tests for intrinsic JS console implementation, which pipes to logging. */
 @TestCase internal class JsConsoleIntrinsicTest : AbstractJsIntrinsicTest<ConsoleIntrinsic>() {
   // Logger facade to use for testing.
   private val loggerFacade: AtomicReference<Logger> = AtomicReference(null)

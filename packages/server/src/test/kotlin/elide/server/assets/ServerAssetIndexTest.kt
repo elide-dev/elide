@@ -11,16 +11,10 @@ import elide.server.cfg.AssetConfig
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
-import tools.elide.assets.AssetBundle.AssetContent
-import tools.elide.assets.AssetBundle.AssetDependencies
-import tools.elide.assets.AssetBundle.GenericBundle
-import tools.elide.assets.AssetBundle.ScriptBundle
-import tools.elide.assets.AssetBundle.StyleBundle
+import tools.elide.assets.AssetBundle.*
 import tools.elide.assets.ManifestFormat
 import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressedData
@@ -32,6 +26,8 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 
 /** Tests for [ServerAssetIndex]. */

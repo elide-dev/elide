@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.testing.annotations.Test
-import elide.runtime.gvm.internals.GuestVFS
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.AccessMode
 import java.nio.file.Path
-import java.util.EnumSet
+import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.gvm.internals.GuestVFS
+import elide.testing.annotations.Test
 
 /** Baseline abstract tests for VFS implementations ([GuestVFS]). */
 internal abstract class AbstractVFSTest<VFS, Builder, Factory>

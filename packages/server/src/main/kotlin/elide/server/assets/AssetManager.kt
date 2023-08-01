@@ -1,15 +1,15 @@
 package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import org.slf4j.Logger
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
 import elide.annotations.API
 import elide.server.AssetModuleId
 import elide.server.StreamedAsset
 import elide.server.StreamedAssetResponse
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.guava.asDeferred
-import org.slf4j.Logger
 
 /**
  * Describes the API surface of an *Asset Manager*, which controls access to embedded server-side assets such as CSS and

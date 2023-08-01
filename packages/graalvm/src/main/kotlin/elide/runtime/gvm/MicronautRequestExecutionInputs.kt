@@ -1,7 +1,7 @@
 package elide.runtime.gvm
 
-import elide.vm.annotations.Polyglot
 import io.micronaut.http.HttpRequest
+import elide.vm.annotations.Polyglot
 
 /**
  * # Execution Inputs: Server Request

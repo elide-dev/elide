@@ -8,8 +8,6 @@
 )
 package lib.protobuf
 
-import kotlin.js.*
-
 public external enum class FieldType {
   INVALID /* = -1 */,
   DOUBLE /* = 1 */,

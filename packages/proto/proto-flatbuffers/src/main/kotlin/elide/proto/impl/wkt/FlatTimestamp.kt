@@ -3,10 +3,10 @@
 package elide.proto.impl.wkt
 
 import com.google.flatbuffers.FlatBufferBuilder
-import elide.proto.api.Record
 import google.protobuf.Timestamp
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
+import elide.proto.api.Record
 import elide.proto.api.wkt.Timestamp as ITimestamp
 
 /** Flatbuffers-backed model timestamp. */

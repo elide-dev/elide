@@ -1,7 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js
 
-import elide.runtime.intrinsics.js.Symbol
 import kotlinx.serialization.Serializable
+import elide.runtime.intrinsics.js.Symbol
 
 /**
  * TBD.

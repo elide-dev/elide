@@ -18,9 +18,8 @@
   "UNUSED_VARIABLE",
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
 import kotlinx.benchmark.gradle.*
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   id("io.micronaut.library")

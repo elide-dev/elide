@@ -5,7 +5,6 @@ import java.util.concurrent.CountDownLatch
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 /** Basic tests for state held by [GrpcWebClientInterceptor]. */
 class GrpcWebClientInterceptorTest {

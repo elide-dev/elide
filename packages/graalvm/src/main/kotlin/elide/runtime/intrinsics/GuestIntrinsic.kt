@@ -1,12 +1,12 @@
 package elide.runtime.intrinsics
 
-import elide.runtime.gvm.GuestLanguage
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
+import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 
 /**
  * # Guest Intrinsic

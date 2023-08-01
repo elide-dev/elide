@@ -2,17 +2,17 @@
 
 package elide.proto.impl
 
+import java.util.*
 import elide.proto.ElideProtocol
 import elide.proto.ElideProtocol.Dialect
 import elide.proto.ElideProtocol.ImplementationLibrary
 import elide.proto.ElideProtocol.ModelAdapterStrategy
 import elide.proto.api.data.DataModelStrategy
-import elide.proto.impl.data.KxHashAlgorithm
 import elide.proto.impl.data.KxDataContainer
 import elide.proto.impl.data.KxDataFingerprint
 import elide.proto.impl.data.KxEncoding
+import elide.proto.impl.data.KxHashAlgorithm
 import elide.proto.impl.wkt.KxTimestamp
-import java.util.*
 
 /**
  * TBD.

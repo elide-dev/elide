@@ -13,9 +13,9 @@
 
 package elide.core.encoding.hex
 
+import kotlin.jvm.JvmInline
 import elide.core.encoding.EncodedData
 import elide.core.encoding.Encoding
-import kotlin.jvm.JvmInline
 
 /** Carrier value-class for hex-encoded data. */
 @JvmInline public value class HexData (private val encoded: String) : EncodedData {

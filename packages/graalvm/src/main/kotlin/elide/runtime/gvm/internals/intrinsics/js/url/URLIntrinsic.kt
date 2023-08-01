@@ -1,21 +1,32 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyExecutable
+import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.Serializable
 import java.net.URI
@@ -37,11 +48,11 @@ import java.net.URI as NativeURL
     @JvmStatic private fun knownProtocol(target: NativeURL): KnownProtocol? = when (val scheme = target.scheme) {
       // special case: protocol-relative URLs
       null -> KnownProtocol.RELATIVE
-      else -> KnownProtocol.values().firstOrNull { it.scheme == scheme }
+      else -> KnownProtocol.entries.firstOrNull { it.scheme == scheme }
     }
 
     // Resolve a known protocol for the provided URI, or `null`.
-    @JvmStatic private fun knownProtocol(port: Int): KnownProtocol? = KnownProtocol.values().find {
+    @JvmStatic private fun knownProtocol(port: Int): KnownProtocol? = KnownProtocol.entries.find {
       it.port != -1 && it.port == port
     }
 

@@ -8,8 +8,6 @@
 )
 package lib.protobuf
 
-import kotlin.js.*
-
 public open external class UInt64(lo: Number, hi: Number) {
   public open var lo: Number
   public open var hi: Number

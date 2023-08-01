@@ -1,18 +1,18 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.gvm.js.AbstractJsTest
-import elide.runtime.intrinsics.js.MutableMapLike
-import elide.runtime.intrinsics.js.MapLike as JsMapLike
-import elide.testing.annotations.Test
 import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.DynamicTest.dynamicTest as test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
-import java.util.SortedMap
+import java.util.*
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 import kotlin.test.*
+import elide.runtime.gvm.js.AbstractJsTest
+import elide.runtime.intrinsics.js.MutableMapLike
+import elide.testing.annotations.Test
+import org.junit.jupiter.api.DynamicTest.dynamicTest as test
+import elide.runtime.intrinsics.js.MapLike as JsMapLike
 
 /** Test for JavaScript `Map` and `MapLike` intrinsic behaviors. */
 @Suppress("UNCHECKED_CAST")

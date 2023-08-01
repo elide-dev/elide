@@ -6,15 +6,16 @@ import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.ListeningScheduledExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import elide.server.runtime.jvm.UncaughtExceptionHandler
 import io.micronaut.context.annotation.Context
+import java.util.concurrent.Executor
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.concurrent.Executor
-import java.util.concurrent.ScheduledThreadPoolExecutor
+import elide.server.runtime.AppExecutor.DefaultExecutor
+import elide.server.runtime.jvm.UncaughtExceptionHandler
 
 
 /**

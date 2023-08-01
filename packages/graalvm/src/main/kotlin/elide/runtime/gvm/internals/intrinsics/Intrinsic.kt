@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics
 
-import elide.annotations.Context
-import elide.annotations.Singleton
-import elide.runtime.gvm.internals.GraalVMGuest
 import io.micronaut.context.annotation.DefaultScope
 import io.micronaut.context.annotation.Infrastructure
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import elide.annotations.Context
+import elide.annotations.Singleton
+import elide.runtime.gvm.internals.GraalVMGuest
 
 /**
  * # Intrinsic Class

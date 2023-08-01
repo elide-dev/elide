@@ -3,14 +3,13 @@
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.reflect.KClass
+import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */

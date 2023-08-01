@@ -2,8 +2,6 @@
 
 package elide.proto.impl.wkt
 
-import elide.proto.api.Record
-import elide.proto.api.wkt.Timestamp
 import kotlinx.datetime.Instant
 import elide.proto.api.wkt.Timestamp as ITimestamp
 

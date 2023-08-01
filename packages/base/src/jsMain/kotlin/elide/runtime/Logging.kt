@@ -13,8 +13,8 @@
 
 package elide.runtime
 
-import elide.runtime.js.resolve
 import kotlin.reflect.KClass
+import elide.runtime.js.resolve
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
 @Suppress("MemberVisibilityCanBePrivate", "unused") public actual class Logging {

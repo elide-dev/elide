@@ -1,22 +1,25 @@
 package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
-import elide.server.AssetModuleId
-import elide.server.StreamedAsset
-import elide.server.StreamedAssetResponse
-import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
-import jakarta.inject.Inject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import jakarta.inject.Inject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.guava.asDeferred
+import kotlinx.coroutines.withContext
+import elide.server.AssetModuleId
+import elide.server.StreamedAsset
+import elide.server.StreamedAssetResponse
+import elide.server.cfg.AssetConfig
 
 /**
  * Built-in asset manager implementation for use with Elide applications.

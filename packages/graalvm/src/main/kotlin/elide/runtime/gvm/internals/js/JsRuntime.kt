@@ -1,7 +1,33 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
 
 package elide.runtime.gvm.internals.js
 
+import io.micronaut.context.annotation.Requires
+import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
+import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+import java.net.URI
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -13,24 +39,10 @@ import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.cfg.JsRuntimeConfig
 import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
-import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.context.ContextManager
-import io.micronaut.context.annotation.Requires
-import kotlinx.serialization.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.Source
-import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
-import java.net.URI
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import java.util.stream.Collectors
-import java.util.stream.Stream
-import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
+import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
 /**
  * # JavaScript Runtime
@@ -58,7 +70,7 @@ import org.graalvm.polyglot.Value as GuestValue
  *
  * - **JS intrinsics**: implementations of standard APIs in Java/Kotlin, which are exposed for guest code use in JS via
  *   globals or built-in modules. JavaScript intrinsics are managed by the [IntrinsicsManager], which uses a suite of
- *   [IntrinsicsResolver] instances to locate and mount intrinsics within the guest environment.
+ *   `IntrinsicsResolver` instances to locate and mount intrinsics within the guest environment.
  *
  * - **JS facade and polyfills**: this code is written in TypeScript or JavaScript, and forms the substrate upon which
  *   guest JavaScript code runs. Sometimes, JS intrinsics are exposed only via JS facade code, which helps smooth over
@@ -310,7 +322,7 @@ internal class JsRuntime @Inject constructor (
     },
 
     // static: configure module replacements.
-    VMStaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.isEnabled) {
+    StaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.isEnabled) {
       coreModules.entries.joinToString(",") {
         "${it.key}:${it.value}"
       }

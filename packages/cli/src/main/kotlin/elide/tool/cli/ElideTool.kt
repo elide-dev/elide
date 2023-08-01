@@ -3,16 +3,6 @@
 package elide.tool.cli
 
 import ch.qos.logback.classic.Level
-import elide.annotations.Eager
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
-import elide.tool.cli.cmd.info.ToolInfoCommand
-import elide.tool.cli.cmd.repl.ToolShellCommand
-import elide.tool.cli.err.AbstractToolError
-import elide.tool.cli.output.Counter
-import elide.tool.cli.output.runJestSample
-import elide.tool.cli.state.CommandState
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -27,9 +17,19 @@ import picocli.jansi.graalvm.AnsiConsole
 import picocli.jansi.graalvm.Workaround
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.ResourceBundle
+import java.util.*
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
+import elide.annotations.Eager
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.output.Counter
+import elide.tool.cli.output.runJestSample
+import elide.tool.cli.state.CommandState
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(

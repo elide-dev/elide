@@ -1,14 +1,13 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.intrinsics.js.express.ExpressApp
-import elide.testing.annotations.TestCase
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.testing.annotations.TestCase
 
 @TestCase internal class ExpressIntrinsicTest : AbstractJsIntrinsicTest<ExpressIntrinsic>() {
   @Inject lateinit var express: ExpressIntrinsic

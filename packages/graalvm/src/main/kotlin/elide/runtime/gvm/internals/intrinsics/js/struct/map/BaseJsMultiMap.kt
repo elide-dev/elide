@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.stream.Stream
+import kotlinx.collections.immutable.toImmutableList
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.MapLike
-import kotlinx.collections.immutable.toImmutableList
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Abstract implementation of a JS-compatible multi-map structure. */
 internal abstract class BaseJsMultiMap<K: Any, V>(

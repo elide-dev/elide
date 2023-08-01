@@ -2,13 +2,13 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 
 /** Tests for intrinsic JS Base64 implementation. */
 @TestCase internal class JsBase64IntrinsicTest : AbstractJsIntrinsicTest<Base64Intrinsic>() {

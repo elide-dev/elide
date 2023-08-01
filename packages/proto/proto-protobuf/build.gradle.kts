@@ -18,7 +18,8 @@
   "UNUSED_VARIABLE",
 )
 
-import com.google.protobuf.gradle.*
+import com.google.protobuf.gradle.id
+import com.google.protobuf.gradle.proto
 
 plugins {
   `maven-publish`

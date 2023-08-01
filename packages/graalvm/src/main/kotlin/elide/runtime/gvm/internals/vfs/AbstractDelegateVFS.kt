@@ -1,8 +1,5 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.runtime.LogLevel
-import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -12,6 +9,9 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.*
 import java.nio.file.attribute.FileAttribute
 import java.util.*
+import elide.runtime.LogLevel
+import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.GuestVFS
 
 /**
  * # VFS: Backed Implementation

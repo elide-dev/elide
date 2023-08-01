@@ -2,12 +2,12 @@
 
 package elide.runtime.gvm.internals
 
-import elide.runtime.intrinsics.GuestIntrinsic
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import jakarta.inject.Inject
+import elide.runtime.intrinsics.GuestIntrinsic
 
 /** Tests for the [IntrinsicsManager]. */
 @MicronautTest class IntrinsicsManagerTest {

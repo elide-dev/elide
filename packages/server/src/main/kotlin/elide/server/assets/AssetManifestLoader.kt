@@ -1,9 +1,10 @@
 package elide.server.assets
 
-import elide.annotations.API
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.ManifestFormat
 import java.io.InputStream
+import elide.annotations.API
+import elide.server.assets.AssetManifestLoader.Companion.assetManifestCandidates
 
 /**
  * Defines the API surface of a loader which is capable of searching for an asset manifest at server startup, and then

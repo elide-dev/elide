@@ -13,8 +13,8 @@
 
 package elide.util
 
-import elide.AppEnvironment
 import java.util.concurrent.atomic.AtomicReference
+import elide.AppEnvironment
 
 
 /** Static server flags, which may be set via Java system properties or environment variables. */

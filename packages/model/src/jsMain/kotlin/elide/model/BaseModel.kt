@@ -1,7 +1,7 @@
 package elide.model
 
-import elide.runtime.js.toByteArray
 import kotlinx.datetime.Instant
+import elide.runtime.js.toByteArray
 
 
 /** Describes the expected interface for wire messages, usually implemented via Protocol Buffers on a given platform. */

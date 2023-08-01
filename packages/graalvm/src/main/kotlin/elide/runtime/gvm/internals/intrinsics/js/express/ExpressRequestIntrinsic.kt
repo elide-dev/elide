@@ -1,9 +1,9 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.runtime.intrinsics.js.express.ExpressRequest
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import reactor.netty.http.server.HttpServerRequest
+import elide.runtime.intrinsics.js.express.ExpressRequest
 
 /** An [ExpressRequest] implemented as a wrapper around a Reactor Netty [HttpServerRequest]. */
 internal class ExpressRequestIntrinsic(private val request: HttpServerRequest) : ExpressRequest {

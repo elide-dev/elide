@@ -1,15 +1,15 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMultiMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseMutableJsMultiMap
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.vm.annotations.Polyglot
+import org.graalvm.polyglot.Value as GuestValue
 import elide.runtime.intrinsics.js.URLMutableSearchParams as IMutableSearchParams
 import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
-import org.graalvm.polyglot.Value as GuestValue
 
 /** Implements an intrinsic for the `URLSearchParams` global defined by the WhatWG URL Specification. */
 @Suppress("RedundantVisibilityModifier")

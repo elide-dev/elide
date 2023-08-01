@@ -2,14 +2,14 @@
 
 package elide.server
 
-import elide.server.assets.AssetReference
+import java.util.SortedMap
 import kotlinx.html.BODY
 import kotlinx.html.HEAD
 import kotlinx.html.LINK
 import kotlinx.html.SCRIPT
 import kotlinx.html.attributesMapOf
 import kotlinx.html.visit
-import java.util.SortedMap
+import elide.server.assets.AssetReference
 
 // DOM type for JavaScript files.
 private const val JAVASCRIPT_TYPE = "application/javascript"
@@ -18,7 +18,7 @@ private const val JAVASCRIPT_TYPE = "application/javascript"
 public fun HEAD.stylesheet(
   asset: AssetReference,
   media: String? = null,
-  attrs: SortedMap<String, String>? = null
+  attrs: SortedMap<String, String>? = null,
 ): Unit = LINK(
   attributesMapOf(
     "rel",
@@ -26,9 +26,9 @@ public fun HEAD.stylesheet(
     "href",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (media?.isNotBlank() == true) {
     this.media = media
@@ -41,11 +41,11 @@ public fun HEAD.stylesheet(uri: String, media: String? = null, attrs: Map<String
     "rel",
     "stylesheet",
     "href",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (media?.isNotBlank() == true) {
     this.media = media
@@ -67,9 +67,9 @@ public fun HEAD.script(
     "src",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -88,11 +88,11 @@ public fun HEAD.script(
     "type",
     type,
     "src",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -110,11 +110,11 @@ public fun BODY.script(
     "type",
     type,
     "src",
-    uri
+    uri,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true
@@ -134,9 +134,9 @@ public fun BODY.script(
     "src",
     asset.href,
   ).plus(
-    attrs ?: emptyMap()
+    attrs ?: emptyMap(),
   ),
-  consumer
+  consumer,
 ).visit {
   if (defer) this.defer = true
   if (async) this.async = true

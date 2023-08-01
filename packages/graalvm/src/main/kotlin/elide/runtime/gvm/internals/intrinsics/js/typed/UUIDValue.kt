@@ -1,8 +1,8 @@
 package elide.runtime.gvm.internals.intrinsics.js.typed
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
+import elide.vm.annotations.Polyglot
 import java.util.UUID as JavaUUID
 
 /**
@@ -18,7 +18,7 @@ import java.util.UUID as JavaUUID
  * If a string happens to be available (for instance, when a UUID is constructed from a string), it is cached after
  * parsing occurs.
  */
-@JvmInline public value class UUIDValue private constructor (private val value: ValidUUID): UUID {
+@JvmInline public value class UUIDValue private constructor(private val value: ValidUUID) : UUID {
   /** Internal representation of a UUID string and structured value. */
   internal data class ValidUUID(
     /** Structural (parsed and validated) UUID. */
@@ -42,29 +42,33 @@ import java.util.UUID as JavaUUID
    * Internal factory implementation which handles the generation and parsing of UUIDs; these are always returned as an
    * instance of [UUIDValue].
    */
-  public companion object: UUID.Factory {
+  public companion object : UUID.Factory {
     // Length of a V4 UUID.
     internal const val UUID_LENGTH: Int = 36
 
     override fun random(): UUIDValue = of(
-      JavaUUID.randomUUID()
+      JavaUUID.randomUUID(),
     )
 
     @Throws(ValueError::class)
-    override fun of(value: String): UUIDValue = UUIDValue(ValidUUID(
+    override fun of(value: String): UUIDValue = UUIDValue(
+      ValidUUID(
       cachedString = value,
       uuid = try {
         JavaUUID.fromString(value)
       } catch (iae: IllegalArgumentException) {
         throw ValueError.create("Not a valid UUID string: '$value'", iae)
       },
-    ))
+    ),
+    )
 
     override fun of(value: UUIDValue): UUIDValue = UUIDValue(value.value)
 
-    override fun of(value: JavaUUID): UUIDValue = UUIDValue(ValidUUID(
+    override fun of(value: JavaUUID): UUIDValue = UUIDValue(
+      ValidUUID(
       uuid = value,
-    ))
+    ),
+    )
   }
 
   @get:Polyglot override val length: Int get() = UUID_LENGTH

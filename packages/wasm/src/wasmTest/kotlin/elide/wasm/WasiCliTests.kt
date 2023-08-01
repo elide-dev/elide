@@ -19,6 +19,7 @@ class WasiCliTests {
     @Test fun testArgs() {
         assertEquals(listOf("argument1", "argument2"), Wasi.args)
     }
+
     @Test fun testEnvVars() {
         assertEquals(listOf(Pair("PATH", "/usr/local/bin:/usr/bin"), Pair("HOME", "/home/seb")), Wasi.envVars)
     }

@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
+import org.graalvm.polyglot.Value
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.*
-import org.graalvm.polyglot.Value
+import elide.vm.annotations.Polyglot
 
 /**
  * # Fetch API
@@ -64,12 +64,12 @@ import org.graalvm.polyglot.Value
 
     // invocation with a mocked `Request`
     request.isHostObject && request.asHostObject<Any>() is FetchRequest -> fetch(
-      request.asHostObject() as FetchRequest
+      request.asHostObject() as FetchRequest,
     )
 
     // invocation with a mocked `Request`
     request.isHostObject && request.asHostObject<Any>() is URL -> fetch(
-      request.asHostObject() as URL
+      request.asHostObject() as URL,
     )
 
     else -> error("Unsupported invocation of `fetch`")
@@ -77,7 +77,7 @@ import org.graalvm.polyglot.Value
 
   /** @inheritDoc */
   override fun fetch(url: String): JsPromise<FetchResponse> = fetch(
-    FetchRequestIntrinsic(url)
+    FetchRequestIntrinsic(url),
   )
 
   /** @inheritDoc */

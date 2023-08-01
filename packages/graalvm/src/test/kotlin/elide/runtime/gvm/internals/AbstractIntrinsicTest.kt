@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals
 
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.testing.annotations.Test
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 
 /** Abstract base for intrinsic-bound tests. */
 internal abstract class AbstractIntrinsicTest<T : GuestIntrinsic> : AbstractDualTest() {

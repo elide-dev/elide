@@ -76,7 +76,8 @@ import java.util.EnumSet
  * }
  * ```
  */
-@Suppress("unused") public sealed interface ProtoOption<T: Any> {
+@Suppress("unused")
+public sealed interface ProtoOption<T : Any> {
   /**
    * ### Option field: `value`.
    *
@@ -151,27 +152,27 @@ import java.util.EnumSet
    *
    * @return String-rendered symbol name and value.
    */
-  public fun render(): String = "${symbol}=${symbolValue}"
+  public fun render(): String = "$symbol=$symbolValue"
 
   // -- Abstract Option Types -- //
 
   /** Convenience type for a boolean-typed proto option. */
-  public interface BooleanOption: ProtoOption<Boolean> {
+  public interface BooleanOption : ProtoOption<Boolean> {
     override val symbolValue: String get() = (value ?: false).toString()
   }
 
   /** Convenience type for a string-typed proto option. */
-  public interface StringOption: ProtoOption<String> {
+  public interface StringOption : ProtoOption<String> {
     override val symbolValue: String get() = "\"${value ?: ""}\""
   }
 
   /** Convenience type for an enum-typed proto option. */
-  public interface EnumTypeOption<T: Enum<T>>: ProtoOption<T> {
+  public interface EnumTypeOption<T : Enum<T>> : ProtoOption<T> {
     override val symbolValue: String get() = this.value?.name ?: ""
   }
 
   /** Defines the expected interface for a "known" (built-in) option. */
-  public interface KnownOption<T: Any> : ProtoOption<T> {
+  public interface KnownOption<T : Any> : ProtoOption<T> {
     public val option: ProtoOption<T>
     override val builtin: Boolean get() = true
   }
@@ -185,24 +186,24 @@ import java.util.EnumSet
 
   /** Defines the supported "scopes" at which proto-options may be applied. */
   @Suppress("unused", "CanBeParameter", "MemberVisibilityCanBePrivate")
-  public sealed class Scope constructor (public val symbol: String) {
+  public sealed class Scope constructor(public val symbol: String) {
     /** Nothing scope: default scope which matches nothing. */
-    public class None: Scope("__none__")
+    public class None : Scope("__none__")
 
     /** Global scope: no applicable scope (only usable with [Target.FILE]). */
-    public class Global: Scope("")
+    public class Global : Scope("")
 
     /** "All" scope: Apply this option to all relevant structures (for example, all messages). */
-    public class All: Scope("*")
+    public class All : Scope("*")
 
     /** "Package" scope: Apply this option to all relevant structures within a given package. */
-    public class Package(public val packageName: String): Scope("package:${packageName}")
+    public class Package(public val packageName: String) : Scope("package:$packageName")
 
     /** "Message" scope: Apply this option to a specific message, or all fields within a message. */
-    public class Message(public val messageName: String): Scope("message:${messageName}")
+    public class Message(public val messageName: String) : Scope("message:$messageName")
 
     /** "Enum" scope: Apply this option to a specific enumeration. */
-    public class Enum(public val enumName: String): Scope("enum:${enumName}")
+    public class Enum(public val enumName: String) : Scope("enum:$enumName")
 
     public companion object {
       /** Default scope matching nothing. */
@@ -217,7 +218,8 @@ import java.util.EnumSet
   }
 
   /** Enumerates the proto-type "targets" which can be affixed with options. */
-  @Suppress("unused") public enum class Target {
+  @Suppress("unused")
+  public enum class Target {
     /** File-targeted options are expressed at the top of a Protocol Buffers file. */
     FILE,
 
@@ -243,7 +245,8 @@ import java.util.EnumSet
   // -- Known Options: Files -- //
 
   /** Enumerates all available known [Target.FILE]-level options; see [FileOptions] for easy use. */
-  @Suppress("unused") public enum class FileOption constructor (override val symbol: String) : SymbolicOption {
+  @Suppress("unused")
+  public enum class FileOption constructor(override val symbol: String) : SymbolicOption {
     /** @see [FileOptions.JavaPackage]. */
     JAVA_PACKAGE("java_package"),
 
@@ -303,14 +306,14 @@ import java.util.EnumSet
   }
 
   /** Specifies the structure for a "known" (built-in) file option. */
-  public sealed class KnownFileOption<T: Any>(
+  public sealed class KnownFileOption<T : Any>(
     public val option: FileOption,
     override val value: T,
     override val scope: Scope = Scope.ALL,
     override val symbol: String = option.symbol,
     override val targets: EnumSet<Target> = EnumSet.of(Target.FILE),
     override val builtin: Boolean = true,
-  ): ProtoOption<T>
+  ) : ProtoOption<T>
 
   /**
    * ## File Options
@@ -333,7 +336,7 @@ import java.util.EnumSet
      *
      * @property packageName The Java package name to use for generated Protocol Buffer implementation classes.
      */
-    public data class JavaPackage(val packageName: String): KnownFileOption<String>(
+    public data class JavaPackage(val packageName: String) : KnownFileOption<String>(
       FileOption.JAVA_PACKAGE,
       packageName,
     )
@@ -361,7 +364,7 @@ import java.util.EnumSet
      *
      * @property className The name of the outermost Java class generated for this file, if applicable.
      */
-    public data class JavaOuterClassname(val className: String): KnownFileOption<String>(
+    public data class JavaOuterClassname(val className: String) : KnownFileOption<String>(
       FileOption.JAVA_OUTER_CLASSNAME,
       className,
     )
@@ -387,7 +390,7 @@ import java.util.EnumSet
      *
      * @property multipleFiles Whether or not multiple Java classes are generated for a given proto source file.
      */
-    public data class JavaMultipleFiles(val multipleFiles: Boolean = true): KnownFileOption<Boolean>(
+    public data class JavaMultipleFiles(val multipleFiles: Boolean = true) : KnownFileOption<Boolean>(
       FileOption.JAVA_MULTIPLE_FILES,
       multipleFiles,
     )
@@ -402,7 +405,7 @@ import java.util.EnumSet
      *
      * @property generateEqualsAndHash Whether to generate `equals()` and `hashCode()` methods for generated classes.
      */
-    public data class JavaGenerateEqualsAndHash(val generateEqualsAndHash: Boolean = true): KnownFileOption<Boolean>(
+    public data class JavaGenerateEqualsAndHash(val generateEqualsAndHash: Boolean = true) : KnownFileOption<Boolean>(
       FileOption.JAVA_GENERATE_EQUALS_AND_HASH,
       generateEqualsAndHash,
     )
@@ -423,7 +426,7 @@ import java.util.EnumSet
      *
      * @property checkUtf8 Whether to perform extra UTF-8 checks.
      */
-    public data class JavaStringCheckUtf8(val checkUtf8: Boolean = false): KnownFileOption<Boolean>(
+    public data class JavaStringCheckUtf8(val checkUtf8: Boolean = false) : KnownFileOption<Boolean>(
       FileOption.JAVA_STRING_CHECK_UTF8,
       checkUtf8,
     )
@@ -443,7 +446,7 @@ import java.util.EnumSet
      *
      * @property optimizeFor Optimization setting for the Protobuf code generator.
      */
-    public data class OptimizeFor(val optimizeFor: OptimizeMode): KnownFileOption<OptimizeMode>(
+    public data class OptimizeFor(val optimizeFor: OptimizeMode) : KnownFileOption<OptimizeMode>(
       FileOption.OPTIMIZE_FOR,
       optimizeFor,
     )
@@ -462,7 +465,7 @@ import java.util.EnumSet
      * @property deprecated Whether to consider a given file deprecated; defaults to `true` so that the presence of this
      *   annotation is enough to trigger the option.
      */
-    public data class Deprecated(val deprecated: Boolean = true): KnownFileOption<Boolean>(
+    public data class Deprecated(val deprecated: Boolean = true) : KnownFileOption<Boolean>(
       FileOption.DEPRECATED,
       deprecated,
     )
@@ -477,7 +480,7 @@ import java.util.EnumSet
   // -- Known Options: Messages -- //
 
   /** Enumerates all available known [Target.MESSAGE]-level options; see [MessageOptions] for easy use. */
-  public enum class MessageOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class MessageOption constructor(override val symbol: String) : SymbolicOption {
     /** @see [MessageOptions.MessageSetWireFormat]. */
     MESSAGE_SET_WIRE_FORMAT("message_set_wire_format"),
 
@@ -492,13 +495,13 @@ import java.util.EnumSet
   }
 
   /** Specifies the structure for a "known" (built-in) message option. */
-  public sealed class KnownMessageOption<T: Any>(
+  public sealed class KnownMessageOption<T : Any>(
     public val option: MessageOption,
     override val value: T,
     override val symbol: String = option.symbol,
     override val targets: EnumSet<Target> = EnumSet.of(Target.MESSAGE),
     override val builtin: Boolean = true,
-  ): ProtoOption<T>
+  ) : ProtoOption<T>
 
   /**
    * ## Message Options
@@ -522,7 +525,7 @@ import java.util.EnumSet
     public data class MessageSetWireFormat(
       val messageSetWireFormat: Boolean,
       override val scope: Scope,
-    ): KnownMessageOption<Boolean>(
+    ) : KnownMessageOption<Boolean>(
       MessageOption.MESSAGE_SET_WIRE_FORMAT,
       messageSetWireFormat,
     )
@@ -541,7 +544,7 @@ import java.util.EnumSet
     public data class NoStandardDescriptorAccessor(
       val noStandardDescriptorAccessor: Boolean = true,
       override val scope: Scope,
-    ): KnownMessageOption<Boolean>(
+    ) : KnownMessageOption<Boolean>(
       MessageOption.NO_STANDARD_DESCRIPTOR_ACCESSOR,
       noStandardDescriptorAccessor,
     )
@@ -560,7 +563,7 @@ import java.util.EnumSet
     public data class Deprecated(
       val deprecated: Boolean = true,
       override val scope: Scope,
-    ): KnownMessageOption<Boolean>(
+    ) : KnownMessageOption<Boolean>(
       MessageOption.NO_STANDARD_DESCRIPTOR_ACCESSOR,
       deprecated,
     )
@@ -569,7 +572,7 @@ import java.util.EnumSet
   // -- Known Options: Fields -- //
 
   /** Enumerates all available known [Target.FIELD]-level options; see [FieldOptions] for easy use. */
-  public enum class FieldOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class FieldOption constructor(override val symbol: String) : SymbolicOption {
     /** @see [FieldOptions.CType]. */
     CTYPE("ctype"),
 
@@ -602,7 +605,7 @@ import java.util.EnumSet
   // -- Known Options: Enumerations -- //
 
   /** Enumerates all available known [Target.ENUM]-level options; see [EnumOptions] for easy use. */
-  public enum class EnumOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class EnumOption constructor(override val symbol: String) : SymbolicOption {
     /** @see [EnumOptions.Deprecated]. */
     DEPRECATED("deprecated"),
 
@@ -623,7 +626,7 @@ import java.util.EnumSet
   // -- Known Options: Enumeration Values -- //
 
   /** Enumerates all available known [Target.ENUM_VALUE]-level options; see [EnumValueOptions] for easy use. */
-  public enum class EnumValueOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class EnumValueOption constructor(override val symbol: String) : SymbolicOption {
     DEPRECATED("deprecated"),
   }
 
@@ -633,12 +636,12 @@ import java.util.EnumSet
    * This object defines classes and defaults for [Target.ENUM_VALUE]-targeted Protocol Buffer options. Enum value
    * options are expressed within the context of a single enumeration value instance.
    */
-  public object EnumValueOptions {}
+  public object EnumValueOptions
 
   // -- Known Options: Services -- //
 
   /** Enumerates all available known [Target.SERVICE]-level options; see [ServiceOptions] for easy use. */
-  public enum class ServiceOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class ServiceOption constructor(override val symbol: String) : SymbolicOption {
     DEPRECATED("deprecated"),
   }
 
@@ -655,7 +658,7 @@ import java.util.EnumSet
   // -- Known Options: Methods -- //
 
   /** Enumerates all available known [Target.METHOD]-level options; see [MethodOptions] for easy use. */
-  public enum class MethodOption constructor (override val symbol: String) : SymbolicOption {
+  public enum class MethodOption constructor(override val symbol: String) : SymbolicOption {
     DEPRECATED("deprecated"),
     IDEMPOTENCY_LEVEL("idempotency_level"),
   }

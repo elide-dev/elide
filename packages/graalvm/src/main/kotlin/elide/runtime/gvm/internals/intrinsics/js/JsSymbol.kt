@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.intrinsics.js
 
-import elide.runtime.intrinsics.js.Symbol
 import kotlinx.serialization.Serializable
+import elide.runtime.intrinsics.js.Symbol
 
 /**
  * TBD.
  */
 @Serializable
-@JvmInline internal value class JsSymbol (override val symbol: String) :
+@JvmInline internal value class JsSymbol(override val symbol: String) :
   Symbol,
   Comparable<Symbol>,
   java.io.Serializable {

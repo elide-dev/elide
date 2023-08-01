@@ -9,7 +9,7 @@ class EndpointType private constructor() {
         const val PAGE: Int = 1
         const val ASSET: Int = 2
         const val API: Int = 3
-        val names : Array<String> = arrayOf("ENDPOINT_TYPE_UNSPECIFIED", "PAGE", "ASSET", "API")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("ENDPOINT_TYPE_UNSPECIFIED", "PAGE", "ASSET", "API")
+        fun name(e: Int): String = names[e]
     }
 }

@@ -2,21 +2,20 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class ClientHints : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : ClientHints {
+    fun __assign(_i: Int, _bb: ByteBuffer): ClientHints {
         __init(_i, _bb)
         return this
     }
-    fun supported(j: Int) : Int {
+    fun supported(j: Int): Int {
         val o = __offset(4)
         return if (o != 0) {
             bb.getInt(__vector(o) + j * 4)
@@ -24,13 +23,14 @@ class ClientHints : Table() {
             0
         }
     }
-    val supportedLength : Int
+    val supportedLength: Int
         get() {
-            val o = __offset(4); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(4)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val supportedAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 4)
-    fun supportedInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 4)
-    fun indicated(j: Int) : Int {
+    val supportedAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 4)
+    fun supportedInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 4)
+    fun indicated(j: Int): Int {
         val o = __offset(6)
         return if (o != 0) {
             bb.getInt(__vector(o) + j * 4)
@@ -38,56 +38,57 @@ class ClientHints : Table() {
             0
         }
     }
-    val indicatedLength : Int
+    val indicatedLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val indicatedAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 4)
-    fun indicatedInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
-    val lifetime : ULong
+    val indicatedAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 4)
+    fun indicatedInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
+    val lifetime: ULong
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val width : UInt
+    val width: UInt
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val viewportWidth : UInt
+    val viewportWidth: UInt
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val devicePixelRatio : UInt
+    val devicePixelRatio: UInt
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val roundTripTime : UInt
+    val roundTripTime: UInt
         get() {
             val o = __offset(16)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val downlink : Float
+    val downlink: Float
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+            return if (o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val effectiveConnectionType : Int
+    val effectiveConnectionType: Int
         get() {
             val o = __offset(20)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val saveData : Boolean
+    val saveData: Boolean
         get() {
             val o = __offset(22)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val deviceMemory : Float
+    val deviceMemory: Float
         get() {
             val o = __offset(24)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+            return if (o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -96,7 +97,20 @@ class ClientHints : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createClientHints(builder: FlatBufferBuilder, supportedOffset: Int, indicatedOffset: Int, lifetime: ULong, width: UInt, viewportWidth: UInt, devicePixelRatio: UInt, roundTripTime: UInt, downlink: Float, effectiveConnectionType: Int, saveData: Boolean, deviceMemory: Float) : Int {
+        fun createClientHints(
+          builder: FlatBufferBuilder,
+          supportedOffset: Int,
+          indicatedOffset: Int,
+          lifetime: ULong,
+          width: UInt,
+          viewportWidth: UInt,
+          devicePixelRatio: UInt,
+          roundTripTime: UInt,
+          downlink: Float,
+          effectiveConnectionType: Int,
+          saveData: Boolean,
+          deviceMemory: Float,
+        ): Int {
             builder.startTable(11)
             addLifetime(builder, lifetime)
             addDeviceMemory(builder, deviceMemory)
@@ -113,7 +127,7 @@ class ClientHints : Table() {
         }
         fun startClientHints(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addSupported(builder: FlatBufferBuilder, supported: Int) = builder.addOffset(0, supported, 0)
-        fun createSupportedVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createSupportedVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addInt(data[i])
@@ -122,7 +136,7 @@ class ClientHints : Table() {
         }
         fun startSupportedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addIndicated(builder: FlatBufferBuilder, indicated: Int) = builder.addOffset(1, indicated, 0)
-        fun createIndicatedVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createIndicatedVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addInt(data[i])
@@ -132,14 +146,26 @@ class ClientHints : Table() {
         fun startIndicatedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addLifetime(builder: FlatBufferBuilder, lifetime: ULong) = builder.addLong(2, lifetime.toLong(), 0)
         fun addWidth(builder: FlatBufferBuilder, width: UInt) = builder.addInt(3, width.toInt(), 0)
-        fun addViewportWidth(builder: FlatBufferBuilder, viewportWidth: UInt) = builder.addInt(4, viewportWidth.toInt(), 0)
-        fun addDevicePixelRatio(builder: FlatBufferBuilder, devicePixelRatio: UInt) = builder.addInt(5, devicePixelRatio.toInt(), 0)
-        fun addRoundTripTime(builder: FlatBufferBuilder, roundTripTime: UInt) = builder.addInt(6, roundTripTime.toInt(), 0)
+        fun addViewportWidth(
+          builder: FlatBufferBuilder,
+          viewportWidth: UInt,
+        ) = builder.addInt(4, viewportWidth.toInt(), 0)
+        fun addDevicePixelRatio(
+          builder: FlatBufferBuilder,
+          devicePixelRatio: UInt,
+        ) = builder.addInt(5, devicePixelRatio.toInt(), 0)
+        fun addRoundTripTime(
+          builder: FlatBufferBuilder,
+          roundTripTime: UInt,
+        ) = builder.addInt(6, roundTripTime.toInt(), 0)
         fun addDownlink(builder: FlatBufferBuilder, downlink: Float) = builder.addFloat(7, downlink, 0.0)
-        fun addEffectiveConnectionType(builder: FlatBufferBuilder, effectiveConnectionType: Int) = builder.addInt(8, effectiveConnectionType, 0)
+        fun addEffectiveConnectionType(
+          builder: FlatBufferBuilder,
+          effectiveConnectionType: Int,
+        ) = builder.addInt(8, effectiveConnectionType, 0)
         fun addSaveData(builder: FlatBufferBuilder, saveData: Boolean) = builder.addBoolean(9, saveData, false)
         fun addDeviceMemory(builder: FlatBufferBuilder, deviceMemory: Float) = builder.addFloat(10, deviceMemory, 0.0)
-        fun endClientHints(builder: FlatBufferBuilder) : Int {
+        fun endClientHints(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -71,7 +71,7 @@ public sealed class StaticFragmentSpec(
     override fun request(): HttpRequest<*> = request
 
     override fun endpoint(): Endpoint = error(
-      "Cannot acquire endpoint for synthesized spec"
+      "Cannot acquire endpoint for synthesized spec",
     )
 
     internal companion object {

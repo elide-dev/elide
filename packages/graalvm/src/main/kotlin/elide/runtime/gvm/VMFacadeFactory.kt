@@ -1,19 +1,21 @@
 package elide.runtime.gvm
 
+import io.micronaut.context.BeanContext
+import kotlin.reflect.KClass
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
-import io.micronaut.context.BeanContext
-import kotlin.reflect.KClass
 import org.graalvm.polyglot.Context as VMContext
 
 /**
  * TBD.
  */
-@Singleton public class VMFacadeFactory @Inject internal constructor (
+@Singleton public class VMFacadeFactory
+  @Inject
+  internal constructor(
   // VM execution bridge.
   private val contextManager: ContextManager<VMContext, VMContext.Builder>,
 
@@ -37,7 +39,7 @@ import org.graalvm.polyglot.Context as VMContext
     val language = languages.first()
     val impl = resolveVMFactoryImpl(language)
     val vm = beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>
-    return object: VMFacade by vm {
+    return object : VMFacade by vm {
       /* No overrides at this time. */
     }
   }

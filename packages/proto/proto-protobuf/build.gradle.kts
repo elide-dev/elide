@@ -65,11 +65,13 @@ kotlin {
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(
+        listOf(
         // do not warn for generated code
         "-nowarn",
         "-Xjavac-arguments=-Xlint:-deprecation",
-      ))
+      ),
+      )
     }
   }
 
@@ -77,11 +79,13 @@ kotlin {
   afterEvaluate {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
       kotlinOptions.allWarningsAsErrors = false
-      kotlinOptions.freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+      kotlinOptions.freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(
+        listOf(
         // do not warn for generated code
         "-nowarn",
         "-Xjavac-arguments=-Xlint:-deprecation",
-      ))
+      ),
+      )
     }
   }
 }

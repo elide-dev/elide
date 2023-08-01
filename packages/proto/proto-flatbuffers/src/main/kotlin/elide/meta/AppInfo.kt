@@ -2,36 +2,35 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AppInfo : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AppInfo {
+    fun __assign(_i: Int, _bb: ByteBuffer): AppInfo {
         __init(_i, _bb)
         return this
     }
-    val version : String?
+    val version: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val versionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val name : String?
+    val versionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val name: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    fun endpoints(j: Int) : elide.meta.AppInfo_.EndpointsEntry? = endpoints(elide.meta.AppInfo_.EndpointsEntry(), j)
-    fun endpoints(obj: elide.meta.AppInfo_.EndpointsEntry, j: Int) : elide.meta.AppInfo_.EndpointsEntry? {
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    fun endpoints(j: Int): elide.meta.AppInfo_.EndpointsEntry? = endpoints(elide.meta.AppInfo_.EndpointsEntry(), j)
+    fun endpoints(obj: elide.meta.AppInfo_.EndpointsEntry, j: Int): elide.meta.AppInfo_.EndpointsEntry? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -39,11 +38,12 @@ class AppInfo : Table() {
             null
         }
     }
-    val endpointsLength : Int
+    val endpointsLength: Int
         get() {
-            val o = __offset(8); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(8)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun endpointsByKey(key: String) : elide.meta.AppInfo_.EndpointsEntry? {
+    fun endpointsByKey(key: String): elide.meta.AppInfo_.EndpointsEntry? {
         val o = __offset(8)
         return if (o != 0) {
             elide.meta.AppInfo_.EndpointsEntry.__lookup_by_key(null, __vector(o), key, bb)
@@ -51,7 +51,7 @@ class AppInfo : Table() {
             null
         }
     }
-    fun endpointsByKey(obj: elide.meta.AppInfo_.EndpointsEntry, key: String) : elide.meta.AppInfo_.EndpointsEntry? {
+    fun endpointsByKey(obj: elide.meta.AppInfo_.EndpointsEntry, key: String): elide.meta.AppInfo_.EndpointsEntry? {
         val o = __offset(8)
         return if (o != 0) {
             elide.meta.AppInfo_.EndpointsEntry.__lookup_by_key(obj, __vector(o), key, bb)
@@ -66,7 +66,7 @@ class AppInfo : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAppInfo(builder: FlatBufferBuilder, versionOffset: Int, nameOffset: Int, endpointsOffset: Int) : Int {
+        fun createAppInfo(builder: FlatBufferBuilder, versionOffset: Int, nameOffset: Int, endpointsOffset: Int): Int {
             builder.startTable(3)
             addEndpoints(builder, endpointsOffset)
             addName(builder, nameOffset)
@@ -77,7 +77,7 @@ class AppInfo : Table() {
         fun addVersion(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
         fun addName(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addEndpoints(builder: FlatBufferBuilder, endpoints: Int) = builder.addOffset(2, endpoints, 0)
-        fun createEndpointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createEndpointsVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -85,7 +85,7 @@ class AppInfo : Table() {
             return builder.endVector()
         }
         fun startEndpointsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endAppInfo(builder: FlatBufferBuilder) : Int {
+        fun endAppInfo(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

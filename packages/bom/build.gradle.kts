@@ -1,4 +1,4 @@
-import Elide
+
 
 plugins {
   `version-catalog`
@@ -72,7 +72,7 @@ catalog {
     // define peer library aliases
     peers.forEach { alias, (group, _) ->
       library(alias, group.split(":").first(), group.split(":").last()).versionRef(
-        alias
+        alias,
       )
     }
   }

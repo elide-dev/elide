@@ -16,7 +16,8 @@ import java.util.*
  *
  * The header finalizing filter does not touch headers except ones which are registered on a local allow-list.
  */
-@Filter("/**") public class HeaderFinalizingFilter : HttpServerFilter {
+@Filter("/**")
+public class HeaderFinalizingFilter : HttpServerFilter {
   private companion object {
     // Whether to enforce consistent header casing.
     private const val consistentCasing = true

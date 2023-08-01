@@ -1,14 +1,14 @@
 package elide.server.assets
 
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.server.StreamedAssetResponse
-import elide.server.controller.StatusEnabledController
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import jakarta.inject.Inject
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.server.StreamedAssetResponse
+import elide.server.controller.StatusEnabledController
 
 /**
  * Built-in controller implementation which bridges the configured asset serving prefix to the active [AssetManager]
@@ -21,7 +21,9 @@ import jakarta.inject.Inject
  */
 @Requires(property = "elide.assets.isEnabled", notEquals = "false")
 @Controller("\${elide.assets.prefix:/_/assets}")
-public class AssetController @Inject constructor(private val assetManager: AssetManager) : StatusEnabledController {
+public class AssetController
+  @Inject
+  constructor(private val assetManager: AssetManager) : StatusEnabledController {
   // Logger pipe.
   private val logging: Logger = Logging.of(AssetController::class)
 
@@ -36,10 +38,10 @@ public class AssetController @Inject constructor(private val assetManager: Asset
   @Get("/{tag}.{ext}")
   public suspend fun assetGet(request: HttpRequest<*>, tag: String, ext: String): StreamedAssetResponse {
     logging.debug(
-      "Loading asset with tag '$tag' (extension: '$ext')"
+      "Loading asset with tag '$tag' (extension: '$ext')",
     )
     return assetManager.serveAsync(
-      request
+      request,
     ).await()
   }
 }

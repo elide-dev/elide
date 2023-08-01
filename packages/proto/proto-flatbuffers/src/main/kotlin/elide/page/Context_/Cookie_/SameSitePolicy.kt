@@ -8,7 +8,7 @@ class SameSitePolicy private constructor() {
         const val NOSAMESITEPOLICY: Int = 0
         const val LAX: Int = 1
         const val STRICT: Int = 2
-        val names : Array<String> = arrayOf("NO_SAME_SITE_POLICY", "LAX", "STRICT")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("NO_SAME_SITE_POLICY", "LAX", "STRICT")
+        fun name(e: Int): String = names[e]
     }
 }

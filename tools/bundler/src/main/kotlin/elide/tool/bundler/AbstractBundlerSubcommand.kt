@@ -2,12 +2,12 @@
 
 package elide.tool.bundler
 
-import elide.runtime.Logger
-import kotlinx.coroutines.runBlocking
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.ParentCommand
 import java.io.Closeable
 import java.io.File
+import kotlinx.coroutines.runBlocking
+import elide.runtime.Logger
 
 /**
  * # Bundler: Sub-command
@@ -60,7 +60,8 @@ public abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoClose
   @ParentCommand protected lateinit var top: BundlerParentCommand
 
   // Common options for all bundle-handling sub-commands.
-  @Mixin(name = "Common bundle options") protected lateinit var bundle: CommonBundleOptions
+  @Mixin(name = "Common bundle options")
+  protected lateinit var bundle: CommonBundleOptions
 
   // Prepare tooling resources and context, and then invoke the `operation`, with the provided `context`.
   private fun prepareAndInvoke(operation: BundlerOperation, context: CommandContext) = use {
@@ -70,14 +71,17 @@ public abstract class AbstractBundlerSubcommand : Runnable, Closeable, AutoClose
   }
 
   /** Runnable entrypoint for the sub-command. */
-  override fun run() = prepareAndInvoke(invoke(), object: CommandContext {
+  override fun run() = prepareAndInvoke(
+    invoke(),
+    object : CommandContext {
     override val debug: Boolean get() = top.debug
     override val verbose: Boolean get() = top.verbose
     override val quiet: Boolean get() = top.quiet
     override val file: File? get() = bundle.file
     override val stdin: Boolean get() = bundle.stdin
     override val pretty: Boolean get() = top.pretty
-  })
+  },
+  )
 
   /** Close any command resources. */
   override fun close() {

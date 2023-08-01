@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.*
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.MutableMapLike
 import elide.runtime.intrinsics.js.err.TypeError
-import java.util.*
+import elide.vm.annotations.Polyglot
 
 /** Abstract implementation of a mutable JS map, backed by a Java map. */
-internal sealed class BaseMutableJsMap<K: Any, V> constructor (
+internal sealed class BaseMutableJsMap<K : Any, V> constructor(
   map: MutableMap<K, V>,
   threadsafe: Boolean = false,
   multi: Boolean = false,
@@ -18,7 +18,8 @@ internal sealed class BaseMutableJsMap<K: Any, V> constructor (
   multi = multi,
   sorted = sorted,
   mutable = true,
-), MutableMapLike<K, V> {
+),
+MutableMapLike<K, V> {
   // Cast as a mutable map.
   private fun asMutable(): MutableMap<K, V> = backingMap as MutableMap<K, V>
 
@@ -68,7 +69,8 @@ internal sealed class BaseMutableJsMap<K: Any, V> constructor (
 
   /** @inheritDoc */
   @Throws(TypeError::class)
-  @Polyglot override fun sort() = jsErrors {
+  @Polyglot
+  override fun sort() = jsErrors {
     if (backingMap.isNotEmpty()) {
       backingMap = TreeMap<K, V>(backingMap)
     }

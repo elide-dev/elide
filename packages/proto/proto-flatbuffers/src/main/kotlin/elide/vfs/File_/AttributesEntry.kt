@@ -2,62 +2,63 @@
 
 package elide.vfs.File_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AttributesEntry : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AttributesEntry {
+    fun __assign(_i: Int, _bb: ByteBuffer): AttributesEntry {
         __init(_i, _bb)
         return this
     }
-    val key : String?
+    val key: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val keyAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun keyInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val value : String?
+    val keyAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun keyInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val value: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val valueAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer) : Int {
+    val valueAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer): Int {
          return compareStrings(__offset(4, o1, _bb), __offset(4, o2, _bb), _bb)
     }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsAttributesEntry(_bb: ByteBuffer): AttributesEntry = getRootAsAttributesEntry(_bb, AttributesEntry())
+        fun getRootAsAttributesEntry(
+          _bb: ByteBuffer,
+        ): AttributesEntry = getRootAsAttributesEntry(_bb, AttributesEntry())
         fun getRootAsAttributesEntry(_bb: ByteBuffer, obj: AttributesEntry): AttributesEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAttributesEntry(builder: FlatBufferBuilder, keyOffset: Int, valueOffset: Int) : Int {
+        fun createAttributesEntry(builder: FlatBufferBuilder, keyOffset: Int, valueOffset: Int): Int {
             builder.startTable(2)
             addValue(builder, valueOffset)
             addKey(builder, keyOffset)
             return endAttributesEntry(builder)
         }
         fun startAttributesEntry(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addKey(builder: FlatBufferBuilder, key: Int)  {
+        fun addKey(builder: FlatBufferBuilder, key: Int) {
             builder.addOffset(key)
             builder.slot(0)
         }
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
-        fun endAttributesEntry(builder: FlatBufferBuilder) : Int {
+        fun endAttributesEntry(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
                 builder.required(o, 4)
             return o
         }
-        fun __lookup_by_key(obj: AttributesEntry?, vectorLocation: Int, key: String, bb: ByteBuffer) : AttributesEntry? {
+        fun __lookup_by_key(obj: AttributesEntry?, vectorLocation: Int, key: String, bb: ByteBuffer): AttributesEntry? {
             val byteKey = key.toByteArray(java.nio.charset.StandardCharsets.UTF_8)
             var span = bb.getInt(vectorLocation - 4)
             var start = 0

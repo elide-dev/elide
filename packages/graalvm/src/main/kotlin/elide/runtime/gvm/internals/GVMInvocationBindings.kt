@@ -32,7 +32,7 @@ import org.graalvm.polyglot.Value as GuestValue
  */
 internal abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindings
   where Bindings : GVMInvocationBindings<Bindings, Script>,
-        Script: ExecutableScript {
+        Script : ExecutableScript {
   /** Enumerates dispatch styles supported by this implementation. */
   enum class DispatchStyle {
     /** Regular "unary"-style dispatch, with a single source execution and output. */
@@ -69,7 +69,7 @@ internal abstract class GVMInvocationBindings<Bindings, Script> : InvocationBind
    */
   internal interface Resolver<Script, Bindings>
     where Bindings : GVMInvocationBindings<Bindings, Script>,
-          Script: ExecutableScript {
+          Script : ExecutableScript {
     /**
      * ## Implementation API: Resolve.
      *

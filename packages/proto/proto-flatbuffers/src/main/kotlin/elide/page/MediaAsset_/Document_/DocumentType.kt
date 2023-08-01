@@ -14,7 +14,8 @@ class DocumentType private constructor() {
         const val PDF: Int = 6
         const val WORDDOC: Int = 7
         const val WORDDOCX: Int = 8
-        val names : Array<String> = arrayOf("GENERIC_DOCUMENT", "TEXT_PLAIN", "TEXT_RICH", "TEXT_MARKDOWN", "TEXT_HTML", "TEXT_CSV", "PDF", "WORD_DOC", "WORD_DOCX")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("GENERIC_DOCUMENT", "TEXT_PLAIN", "TEXT_RICH", "TEXT_MARKDOWN", "TEXT_HTML", "TEXT_CSV", "PDF", "WORD_DOC", "WORD_DOCX")
+        fun name(e: Int): String = names[e]
     }
 }

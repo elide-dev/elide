@@ -2,19 +2,19 @@ package elide.server.assets
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
-import elide.server.AssetModuleId
-import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.guava.asDeferred
 import tools.elide.assets.AssetBundle.AssetContent
 import tools.elide.data.CompressedData
 import tools.elide.data.CompressionMode
 import java.util.EnumSet
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
+import elide.server.AssetModuleId
+import elide.server.cfg.AssetConfig
 
 /**
  * Default implementation of an [AssetReader]; used in concert with the default [AssetManager] to fulfill HTTP requests
@@ -24,7 +24,9 @@ import java.util.EnumSet
  * @Param assetIndex Live index of asset data.
  */
 @Context @Singleton
-public class ServerAssetReader @Inject internal constructor(
+public class ServerAssetReader
+  @Inject
+  internal constructor(
   private val assetConfig: AssetConfig,
   private val assetIndex: ServerAssetIndex,
 ) : AssetReader {
@@ -53,7 +55,7 @@ public class ServerAssetReader @Inject internal constructor(
   @VisibleForTesting
   internal fun selectBestVariant(
     content: AssetContent,
-    request: HttpRequest<*>
+    request: HttpRequest<*>,
   ): Pair<Map<String, String>, CompressedData> {
     val identity = content.getVariant(0)
     val acceptEncoding = request.headers[HttpHeaders.ACCEPT_ENCODING]
@@ -135,8 +137,8 @@ public class ServerAssetReader @Inject internal constructor(
           subj.hash to subj.fingerprint
         } else {
           null
-        }
-      ) { selectedVariant.data.raw }
+        },
+      ) { selectedVariant.data.raw },
     ).asDeferred()
   }
 
@@ -147,7 +149,7 @@ public class ServerAssetReader @Inject internal constructor(
       unextensioned = unextensioned.dropLast(unextensioned.length - unextensioned.lastIndexOf("."))
     }
     return assetIndex.resolveByTag(
-      unextensioned.removePrefix((assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX)).removePrefix("/")
+      unextensioned.removePrefix((assetConfig.prefix ?: AssetConfig.DEFAULT_ASSET_PREFIX)).removePrefix("/"),
     )
   }
 }

@@ -18,7 +18,8 @@ import kotlin.test.*
 
 /** Tests for response streaming across polyglot boundaries. */
 @Ignore class StreamResponseTest {
-  @Test @Ignore fun testSSRBasic() {
+  @Test @Ignore
+  fun testSSRBasic() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -47,7 +48,8 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRPluckMethod() {
+  @Test @Ignore
+  fun testSSRPluckMethod() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -97,7 +99,8 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRInterface() {
+  @Test @Ignore
+  fun testSSRInterface() {
     // language=javascript
     val testCode = """
       var embedded = (() => {
@@ -152,7 +155,8 @@ import kotlin.test.*
       }
   }
 
-  @Test @Ignore fun testSSRStream() {
+  @Test @Ignore
+  fun testSSRStream() {
     // language=javascript
     val testCode = """
       var embedded = (() => {

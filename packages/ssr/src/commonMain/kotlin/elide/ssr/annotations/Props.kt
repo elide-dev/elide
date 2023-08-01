@@ -22,4 +22,4 @@ import kotlinx.serialization.MetaSerializable
  */
 @Target(AnnotationTarget.CLASS)
 @MetaSerializable
-public expect annotation class Props ()
+public expect annotation class Props()

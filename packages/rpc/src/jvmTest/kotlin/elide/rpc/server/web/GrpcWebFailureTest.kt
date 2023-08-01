@@ -1,26 +1,26 @@
 package elide.rpc.server.web
 
-import elide.grpctest.Sample.SampleRequest
-import elide.grpctest.SampleServiceGrpc
-import elide.grpctest.TestSampleServiceV1
 import io.grpc.Status
 import io.grpc.health.v1.HealthCheckRequest
 import io.grpc.health.v1.HealthGrpc
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.nio.charset.StandardCharsets
 import java.time.Duration
+import jakarta.inject.Inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.grpctest.Sample.SampleRequest
+import elide.grpctest.SampleServiceGrpc
+import elide.grpctest.TestSampleServiceV1
 
 /** Error cases from remote gRPC servers, through the gRPC-Web integration layer. */
 @MicronautTest
-class GrpcWebFailureTest: GrpcWebBaseTest() {
+class GrpcWebFailureTest : GrpcWebBaseTest() {
   private val enabledConfig = object : GrpcWebConfig {
     override fun isEnabled(): Boolean = true
   }
@@ -28,7 +28,8 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   @Inject lateinit var sampleService: TestSampleServiceV1
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testErrorRelayFromServerNotFound(dialect: String) {
+  @ParameterizedTest
+  fun testErrorRelayFromServerNotFound(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
     val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
@@ -58,7 +59,8 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testErrorMethodNotFound(dialect: String) {
+  @ParameterizedTest
+  fun testErrorMethodNotFound(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
     val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
@@ -80,7 +82,8 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testErrorMalformedPayload(dialect: String) {
+  @ParameterizedTest
+  fun testErrorMalformedPayload(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
     val controller = controller(enabledConfig)
     val response = assertDoesNotThrow {
@@ -94,17 +97,18 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC web controller"
+      "should never get `null` response from gRPC web controller",
     )
     assertEquals(
       400,
       response.status.code,
-      "should get HTTP 400 Bad Request for malformed protocol buffer request payload"
+      "should get HTTP 400 Bad Request for malformed protocol buffer request payload",
     )
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testErrorMalformedProto(dialect: String) {
+  @ParameterizedTest
+  fun testErrorMalformedProto(dialect: String) {
     val format = GrpcWebContentType.valueOf(dialect)
     val controller = controller(enabledConfig)
     val badProtoData = "UHDFdiugsLIUHiyfgqyghduihvuiqhiugbfiuvhsiufhafhiaufivhdiuv".toByteArray(StandardCharsets.UTF_8)
@@ -117,54 +121,57 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
           badProtoData,
           RpcSymbol.DATA,
         ).plus(
-          badProtoData
+          badProtoData,
         ),
         contentType = format,
       )
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC web controller"
+      "should never get `null` response from gRPC web controller",
     )
     assertEquals(
       400,
       response.status.code,
-      "should get HTTP 400 Bad Request for malformed protocol buffer request payload"
+      "should get HTTP 400 Bad Request for malformed protocol buffer request payload",
     )
   }
 
   @Test fun testAcquireErrorInjectionService() {
     assertNotNull(
       sampleService,
-      "should be able to inject our sample service for testing"
+      "should be able to inject our sample service for testing",
     )
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testTimeoutError(dialect: String) {
+  @ParameterizedTest
+  fun testTimeoutError(dialect: String) {
     assertNotNull(
       sampleService,
-      "should be able to inject our sample service for testing"
+      "should be able to inject our sample service for testing",
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = object : GrpcWebConfig {
+    val controller = controller(
+      settings = object : GrpcWebConfig {
       override fun isEnabled(): Boolean = true
       override val timeout: Duration get() = Duration.ofSeconds(2)
-    })
+    },
+    )
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
         SampleServiceGrpc.getServiceDescriptor().name,
         SampleServiceGrpc.getMethodThatTakesTooLongMethod().fullMethodName.split("/").last(),
         SampleRequest.newBuilder().setName(
-          "Elide"
+          "Elide",
         ).build(),
         contentType = format,
       )
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC web controller"
+      "should never get `null` response from gRPC web controller",
     )
     validErrorResponse(
       expectedStatus = Status.DEADLINE_EXCEEDED,
@@ -174,30 +181,33 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testErrorWithTrailers(dialect: String) {
+  @ParameterizedTest
+  fun testErrorWithTrailers(dialect: String) {
     assertNotNull(
       sampleService,
-      "should be able to inject our sample service for testing"
+      "should be able to inject our sample service for testing",
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = object : GrpcWebConfig {
+    val controller = controller(
+      settings = object : GrpcWebConfig {
       override fun isEnabled(): Boolean = true
       override val timeout: Duration get() = Duration.ofSeconds(2)
-    })
+    },
+    )
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
         SampleServiceGrpc.getServiceDescriptor().name,
         SampleServiceGrpc.getMethodWithTrailersMethod().fullMethodName.split("/").last(),
         SampleRequest.newBuilder().setName(
-          "Elide"
+          "Elide",
         ).build(),
         contentType = format,
       )
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC web controller"
+      "should never get `null` response from gRPC web controller",
     )
     val trailers = validErrorResponse(
       expectedStatus = Status.FAILED_PRECONDITION,
@@ -207,39 +217,42 @@ class GrpcWebFailureTest: GrpcWebBaseTest() {
     val trailerKeys = trailers.keys()
     assertTrue(
       trailerKeys.contains(GrpcWeb.Metadata.trace.name()),
-      "should be able to decode arbitrary trailers from responses"
+      "should be able to decode arbitrary trailers from responses",
     )
     assertTrue(
       trailerKeys.contains("some-binary-header-bin"),
-      "should be able to decode arbitrary binary trailers from responses"
+      "should be able to decode arbitrary binary trailers from responses",
     )
   }
 
   @CsvSource("BINARY", "TEXT")
-  @ParameterizedTest fun testFatalInProcessError(dialect: String) {
+  @ParameterizedTest
+  fun testFatalInProcessError(dialect: String) {
     assertNotNull(
       sampleService,
-      "should be able to inject our sample service for testing"
+      "should be able to inject our sample service for testing",
     )
     val format = GrpcWebContentType.valueOf(dialect)
-    val controller = controller(settings = object : GrpcWebConfig {
+    val controller = controller(
+      settings = object : GrpcWebConfig {
       override fun isEnabled(): Boolean = true
       override val timeout: Duration get() = Duration.ofSeconds(2)
-    })
+    },
+    )
     val response = assertDoesNotThrow {
       submitRequest(
         controller,
         SampleServiceGrpc.getServiceDescriptor().name,
         SampleServiceGrpc.getMethodWithFatalErrorMethod().fullMethodName.split("/").last(),
         SampleRequest.newBuilder().setName(
-          "Elide"
+          "Elide",
         ).build(),
         contentType = format,
       )
     }
     assertNotNull(
       response,
-      "should never get `null` response from gRPC web controller"
+      "should never get `null` response from gRPC web controller",
     )
     validErrorResponse(
       expectedStatus = Status.UNKNOWN,

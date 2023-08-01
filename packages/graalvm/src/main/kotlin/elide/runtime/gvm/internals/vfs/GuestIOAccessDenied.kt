@@ -13,10 +13,10 @@ internal class GuestIOAccessDenied(
   internal val types: Set<AccessType>,
   file: File,
   message: String? = null,
-  cause: Throwable? = null
+  cause: Throwable? = null,
 ) : GuestIOException(
   message = message ?: "Access denied.",
-  cause = cause ?: AccessDeniedException(file)
+  cause = cause ?: AccessDeniedException(file),
 ) {
   internal companion object {
     /**

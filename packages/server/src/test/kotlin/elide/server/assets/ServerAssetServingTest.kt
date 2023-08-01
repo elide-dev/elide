@@ -1,18 +1,18 @@
 package elide.server.assets
 
-import elide.server.StreamedAsset
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import tools.elide.assets.AssetBundle.AssetContent
 import tools.elide.assets.AssetBundle.GenericBundle
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import elide.server.StreamedAsset
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
 @MicronautTest class ServerAssetServingTest {
@@ -29,7 +29,7 @@ import kotlin.test.*
 
   private fun execute(
     request: HttpRequest<Any>,
-    moduleId: String? = null
+    moduleId: String? = null,
   ): HttpResponse<StreamedAsset> = runBlocking {
     return@runBlocking manager.serveAsync(
       request,
@@ -42,7 +42,7 @@ import kotlin.test.*
     response: HttpResponse<StreamedAsset>?,
     status: Int = 200,
     encoding: String? = null,
-    more: (() -> Unit)? = null
+    more: (() -> Unit)? = null,
   ) {
     assertNotNull(response)
     assertEquals(status, response.status.code)
@@ -98,7 +98,7 @@ import kotlin.test.*
     )
     val conditionNotSatisified = execute(
       HttpRequest.GET<Any>(sampleStylesheet)
-        .header("If-None-Match", "some-value-that-isnt-the-etag")
+        .header("If-None-Match", "some-value-that-isnt-the-etag"),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -106,7 +106,7 @@ import kotlin.test.*
     )
     val conditionSatisfied = execute(
       HttpRequest.GET<Any>(sampleStylesheet)
-        .header("If-None-Match", response.header("ETag")!!)
+        .header("If-None-Match", response.header("ETag")!!),
     )
     assertAsset(AssetType.STYLESHEET, conditionSatisfied, status = 304) {
       assertTrue(response.headers.contains("Content-Length"))
@@ -117,7 +117,7 @@ import kotlin.test.*
     assertNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "unknown-module")
-      }
+      },
     )
   }
 
@@ -125,7 +125,7 @@ import kotlin.test.*
     assertNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"))
-      }
+      },
     )
   }
 
@@ -133,7 +133,7 @@ import kotlin.test.*
     assertNotNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>("/_/assets/some-asset.css"), "styles.base")
-      }
+      },
     )
   }
 
@@ -141,7 +141,7 @@ import kotlin.test.*
     assertNotNull(
       assertDoesNotThrow {
         manager.resolve(HttpRequest.GET<Any>(manager.linkForAsset("styles.base")))
-      }
+      },
     )
   }
 
@@ -186,7 +186,7 @@ import kotlin.test.*
     )
     val compressedResponse = execute(
       HttpRequest.GET<Any?>(sampleStylesheet)
-        .header("Accept-Encoding", encodingName)
+        .header("Accept-Encoding", encodingName),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -203,7 +203,7 @@ import kotlin.test.*
     )
     val identityResponse = execute(
       HttpRequest.GET<Any?>(sampleStylesheet)
-        .header("Accept-Encoding", "some-encoding, some-other-unfamiliar-encoding, perhaps-another")
+        .header("Accept-Encoding", "some-encoding, some-other-unfamiliar-encoding, perhaps-another"),
     )
     assertAsset(
       AssetType.STYLESHEET,
@@ -215,7 +215,7 @@ import kotlin.test.*
     assertNotNull(
       assertDoesNotThrow {
         manager.findAssetByModuleId("styles.base")
-      }
+      },
     )
   }
 
@@ -223,7 +223,7 @@ import kotlin.test.*
     assertNull(
       assertDoesNotThrow {
         manager.findAssetByModuleId("some.unknown.module.here")
-      }
+      },
     )
   }
 
@@ -234,7 +234,7 @@ import kotlin.test.*
     val idx = List(
       bundle.assetList.filter {
         it.module == someScript.module
-      }.size
+      }.size,
     ) { idx ->
       idx
     }.first()
@@ -259,7 +259,7 @@ import kotlin.test.*
     val idx = List(
       bundle.assetList.filter {
         it.module == someStylesheet.module
-      }.size
+      }.size,
     ) { idx ->
       idx
     }.first()
@@ -290,7 +290,7 @@ import kotlin.test.*
       .addAsset(
         AssetContent.newBuilder()
           .setModule("module-text-id")
-          .setToken("abc123123123123123123")
+          .setToken("abc123123123123123123"),
       )
       .build()
 

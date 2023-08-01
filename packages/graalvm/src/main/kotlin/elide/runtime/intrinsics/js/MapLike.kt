@@ -3,7 +3,7 @@ package elide.runtime.intrinsics.js
 /**
  * TBD.
  */
-public interface MapLike<K: Any, V> : Map<K, V> {
+public interface MapLike<K : Any, V> : Map<K, V> {
   /**
    * TBD.
    */

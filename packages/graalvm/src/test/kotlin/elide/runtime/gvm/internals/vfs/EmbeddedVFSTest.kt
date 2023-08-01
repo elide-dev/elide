@@ -1,18 +1,16 @@
 package elide.runtime.gvm.internals.vfs
 
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.assertDoesNotThrow
+import java.nio.charset.StandardCharsets
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.Builder
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.EmbeddedVFSFactory.buildFs
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.assertDoesNotThrow
-import java.nio.ByteBuffer
-import java.nio.charset.StandardCharsets
-import java.nio.file.Path
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /** Tests for the embedded VFS implementation. */
 @TestCase internal class EmbeddedVFSTest : AbstractVFSTest<EmbeddedGuestVFSImpl, Builder, EmbeddedVFSFactory>() {
@@ -130,7 +128,7 @@ import kotlin.test.assertTrue
     assertEquals(
       "{\"hi\": \"hello\"}",
       exampleFileContents2.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
 
     // read the 2nd txt example path
@@ -142,7 +140,7 @@ import kotlin.test.assertTrue
     assertEquals(
       "hello again",
       exampleFileContents3.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
   }
 
@@ -251,7 +249,7 @@ import kotlin.test.assertTrue
     assertEquals(
       "{\"hi\": \"hello\"}",
       exampleFileContents2.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
 
     // read the 2nd txt example path
@@ -263,7 +261,7 @@ import kotlin.test.assertTrue
     assertEquals(
       "hello again",
       exampleFileContents3.trim(),
-      "example file contents should decode correctly"
+      "example file contents should decode correctly",
     )
   }
 
@@ -287,7 +285,7 @@ import kotlin.test.assertTrue
   }
 
   /** Test: Load a bundle expressed in Elide's internal format. */
-  @Test @Disabled fun testBundleFromElideFormat() {
-
+  @Test @Disabled
+  fun testBundleFromElideFormat() {
   }
 }

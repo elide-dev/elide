@@ -190,7 +190,8 @@ public object Base64Kt {
       var dp0 = dp
       while (sp0 < sl) {
         val bits: Int = src[sp0++].toInt() and 0xff shl 16 or (
-          src[sp0++].toInt() and 0xff shl 8) or
+          src[sp0++].toInt() and 0xff shl 8
+        ) or
           (src[sp0++].toInt() and 0xff)
         dst[dp0++] = toBase64[bits ushr 18 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 12 and 0x3f].code.toByte()

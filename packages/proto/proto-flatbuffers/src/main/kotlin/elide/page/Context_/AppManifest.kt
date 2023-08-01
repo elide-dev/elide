@@ -2,69 +2,68 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AppManifest : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AppManifest {
+    fun __assign(_i: Int, _bb: ByteBuffer): AppManifest {
         __init(_i, _bb)
         return this
     }
-    val name : String?
+    val name: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val shortName : String?
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val shortName: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val shortNameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun shortNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val startUrl : String?
+    val shortNameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun shortNameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val startUrl: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val startUrlAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun startUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val display : Int
+    val startUrlAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun startUrlInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val display: Int
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val backgroundColor : String?
+    val backgroundColor: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val backgroundColorAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun backgroundColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val description : String?
+    val backgroundColorAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun backgroundColorInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val description: String?
         get() {
             val o = __offset(14)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val descriptionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val direction : String?
+    val descriptionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val direction: String?
         get() {
             val o = __offset(16)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val directionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun directionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val language : elide.base.LanguageSpec? get() = language(elide.base.LanguageSpec())
-    fun language(obj: elide.base.LanguageSpec) : elide.base.LanguageSpec? {
+    val directionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun directionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val language: elide.base.LanguageSpec? get() = language(elide.base.LanguageSpec())
+    fun language(obj: elide.base.LanguageSpec): elide.base.LanguageSpec? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -72,25 +71,30 @@ class AppManifest : Table() {
             null
         }
     }
-    val orientation : Int
+    val orientation: Int
         get() {
             val o = __offset(20)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val scope : String?
+    val scope: String?
         get() {
             val o = __offset(22)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val scopeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun scopeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val preferRelatedApplications : Boolean
+    val scopeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun scopeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val preferRelatedApplications: Boolean
         get() {
             val o = __offset(24)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    fun relatedApplication(j: Int) : elide.page.Context_.AppManifest_.RelatedApplication? = relatedApplication(elide.page.Context_.AppManifest_.RelatedApplication(), j)
-    fun relatedApplication(obj: elide.page.Context_.AppManifest_.RelatedApplication, j: Int) : elide.page.Context_.AppManifest_.RelatedApplication? {
+    fun relatedApplication(
+      j: Int,
+    ): elide.page.Context_.AppManifest_.RelatedApplication? = relatedApplication(elide.page.Context_.AppManifest_.RelatedApplication(), j)
+    fun relatedApplication(
+      obj: elide.page.Context_.AppManifest_.RelatedApplication,
+      j: Int,
+    ): elide.page.Context_.AppManifest_.RelatedApplication? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -98,12 +102,13 @@ class AppManifest : Table() {
             null
         }
     }
-    val relatedApplicationLength : Int
+    val relatedApplicationLength: Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun appIcon(j: Int) : elide.page.Context_.AppManifest_.Icon? = appIcon(elide.page.Context_.AppManifest_.Icon(), j)
-    fun appIcon(obj: elide.page.Context_.AppManifest_.Icon, j: Int) : elide.page.Context_.AppManifest_.Icon? {
+    fun appIcon(j: Int): elide.page.Context_.AppManifest_.Icon? = appIcon(elide.page.Context_.AppManifest_.Icon(), j)
+    fun appIcon(obj: elide.page.Context_.AppManifest_.Icon, j: Int): elide.page.Context_.AppManifest_.Icon? {
         val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -111,9 +116,10 @@ class AppManifest : Table() {
             null
         }
     }
-    val appIconLength : Int
+    val appIconLength: Int
         get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -122,7 +128,22 @@ class AppManifest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAppManifest(builder: FlatBufferBuilder, nameOffset: Int, shortNameOffset: Int, startUrlOffset: Int, display: Int, backgroundColorOffset: Int, descriptionOffset: Int, directionOffset: Int, languageOffset: Int, orientation: Int, scopeOffset: Int, preferRelatedApplications: Boolean, relatedApplicationOffset: Int, appIconOffset: Int) : Int {
+        fun createAppManifest(
+          builder: FlatBufferBuilder,
+          nameOffset: Int,
+          shortNameOffset: Int,
+          startUrlOffset: Int,
+          display: Int,
+          backgroundColorOffset: Int,
+          descriptionOffset: Int,
+          directionOffset: Int,
+          languageOffset: Int,
+          orientation: Int,
+          scopeOffset: Int,
+          preferRelatedApplications: Boolean,
+          relatedApplicationOffset: Int,
+          appIconOffset: Int,
+        ): Int {
             builder.startTable(13)
             addAppIcon(builder, appIconOffset)
             addRelatedApplication(builder, relatedApplicationOffset)
@@ -144,24 +165,36 @@ class AppManifest : Table() {
         fun addShortName(builder: FlatBufferBuilder, shortName: Int) = builder.addOffset(1, shortName, 0)
         fun addStartUrl(builder: FlatBufferBuilder, startUrl: Int) = builder.addOffset(2, startUrl, 0)
         fun addDisplay(builder: FlatBufferBuilder, display: Int) = builder.addInt(3, display, 0)
-        fun addBackgroundColor(builder: FlatBufferBuilder, backgroundColor: Int) = builder.addOffset(4, backgroundColor, 0)
+        fun addBackgroundColor(
+          builder: FlatBufferBuilder,
+          backgroundColor: Int,
+        ) = builder.addOffset(4, backgroundColor, 0)
         fun addDescription(builder: FlatBufferBuilder, description: Int) = builder.addOffset(5, description, 0)
         fun addDirection(builder: FlatBufferBuilder, direction: Int) = builder.addOffset(6, direction, 0)
         fun addLanguage(builder: FlatBufferBuilder, language: Int) = builder.addOffset(7, language, 0)
         fun addOrientation(builder: FlatBufferBuilder, orientation: Int) = builder.addInt(8, orientation, 0)
         fun addScope(builder: FlatBufferBuilder, scope: Int) = builder.addOffset(9, scope, 0)
-        fun addPreferRelatedApplications(builder: FlatBufferBuilder, preferRelatedApplications: Boolean) = builder.addBoolean(10, preferRelatedApplications, false)
-        fun addRelatedApplication(builder: FlatBufferBuilder, relatedApplication: Int) = builder.addOffset(11, relatedApplication, 0)
-        fun createRelatedApplicationVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun addPreferRelatedApplications(
+          builder: FlatBufferBuilder,
+          preferRelatedApplications: Boolean,
+        ) = builder.addBoolean(10, preferRelatedApplications, false)
+        fun addRelatedApplication(
+          builder: FlatBufferBuilder,
+          relatedApplication: Int,
+        ) = builder.addOffset(11, relatedApplication, 0)
+        fun createRelatedApplicationVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startRelatedApplicationVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startRelatedApplicationVector(
+          builder: FlatBufferBuilder,
+          numElems: Int,
+        ) = builder.startVector(4, numElems, 4)
         fun addAppIcon(builder: FlatBufferBuilder, appIcon: Int) = builder.addOffset(12, appIcon, 0)
-        fun createAppIconVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createAppIconVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -169,7 +202,7 @@ class AppManifest : Table() {
             return builder.endVector()
         }
         fun startAppIconVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endAppManifest(builder: FlatBufferBuilder) : Int {
+        fun endAppManifest(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

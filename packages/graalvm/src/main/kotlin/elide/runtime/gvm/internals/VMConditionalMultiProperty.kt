@@ -11,7 +11,7 @@ package elide.runtime.gvm.internals
 internal data class VMConditionalMultiProperty(
   private val main: VMConditionalProperty,
   private val properties: List<VMRuntimeProperty>,
-): VMProperty {
+) : VMProperty {
   /** @return Main value for this conditional multi-property set. */
   override fun value(): String = main.value()
 
@@ -21,9 +21,9 @@ internal data class VMConditionalMultiProperty(
   /** @return Full list of properties that should apply for this set, including the root property. */
   internal fun explode(): List<VMProperty> {
     return listOf(
-      main
+      main,
     ).plus(
-      properties
+      properties,
     )
   }
 }

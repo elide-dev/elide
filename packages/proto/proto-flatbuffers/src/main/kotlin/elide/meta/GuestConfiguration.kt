@@ -2,27 +2,26 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class GuestConfiguration : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : GuestConfiguration {
+    fun __assign(_i: Int, _bb: ByteBuffer): GuestConfiguration {
         __init(_i, _bb)
         return this
     }
-    val enabled : Boolean
+    val enabled: Boolean
         get() {
             val o = __offset(4)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    fun settings(j: Int) : elide.meta.GuestSettingsStanza? = settings(elide.meta.GuestSettingsStanza(), j)
-    fun settings(obj: elide.meta.GuestSettingsStanza, j: Int) : elide.meta.GuestSettingsStanza? {
+    fun settings(j: Int): elide.meta.GuestSettingsStanza? = settings(elide.meta.GuestSettingsStanza(), j)
+    fun settings(obj: elide.meta.GuestSettingsStanza, j: Int): elide.meta.GuestSettingsStanza? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -30,18 +29,21 @@ class GuestConfiguration : Table() {
             null
         }
     }
-    val settingsLength : Int
+    val settingsLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsGuestConfiguration(_bb: ByteBuffer): GuestConfiguration = getRootAsGuestConfiguration(_bb, GuestConfiguration())
+        fun getRootAsGuestConfiguration(
+          _bb: ByteBuffer,
+        ): GuestConfiguration = getRootAsGuestConfiguration(_bb, GuestConfiguration())
         fun getRootAsGuestConfiguration(_bb: ByteBuffer, obj: GuestConfiguration): GuestConfiguration {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGuestConfiguration(builder: FlatBufferBuilder, enabled: Boolean, settingsOffset: Int) : Int {
+        fun createGuestConfiguration(builder: FlatBufferBuilder, enabled: Boolean, settingsOffset: Int): Int {
             builder.startTable(2)
             addSettings(builder, settingsOffset)
             addEnabled(builder, enabled)
@@ -50,7 +52,7 @@ class GuestConfiguration : Table() {
         fun startGuestConfiguration(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addEnabled(builder: FlatBufferBuilder, enabled: Boolean) = builder.addBoolean(0, enabled, false)
         fun addSettings(builder: FlatBufferBuilder, settings: Int) = builder.addOffset(1, settings, 0)
-        fun createSettingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createSettingsVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -58,7 +60,7 @@ class GuestConfiguration : Table() {
             return builder.endVector()
         }
         fun startSettingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endGuestConfiguration(builder: FlatBufferBuilder) : Int {
+        fun endGuestConfiguration(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -1,7 +1,8 @@
 package elide.tool.cli.err
 
 /** Enumerates error cases that may arise during shell execution. */
-@Suppress("unused") internal enum class ShellError : ToolErrorCase<ShellError> {
+@Suppress("unused")
+internal enum class ShellError : ToolErrorCase<ShellError> {
   /** Thrown when a requested language is not supported. */
   LANGUAGE_NOT_SUPPORTED,
 

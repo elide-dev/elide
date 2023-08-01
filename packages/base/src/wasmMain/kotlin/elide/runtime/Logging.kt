@@ -16,7 +16,8 @@ package elide.runtime
 import kotlin.reflect.KClass
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
-@Suppress("MemberVisibilityCanBePrivate", "unused") public actual class Logging {
+@Suppress("MemberVisibilityCanBePrivate", "unused")
+public actual class Logging {
   public companion object {
     // Singleton logging manager instance.
     private val singleton = Logging()
@@ -26,12 +27,12 @@ import kotlin.reflect.KClass
 
     /** @return Logger created, or resolved, for the [target] Kotlin class. */
     public fun of(target: KClass<*>): elide.runtime.wasm.Logger = named(
-      target.simpleName ?: ""
+      target.simpleName ?: "",
     )
 
     /** @return Logger resolved at the root name. */
     public fun root(): elide.runtime.wasm.Logger = named(
-      ""
+      "",
     )
 
     /** @return Logger created for the specified [name]. */

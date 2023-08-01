@@ -1,11 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.gvm.js.AbstractJsTest
-import elide.runtime.intrinsics.js.MutableMapLike
-import elide.runtime.intrinsics.js.MapLike as JsMapLike
-import elide.testing.annotations.Test
 import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.DynamicTest.dynamicTest as test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.SortedMap
@@ -13,10 +8,15 @@ import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 import kotlin.test.*
+import elide.runtime.gvm.js.AbstractJsTest
+import elide.runtime.intrinsics.js.MutableMapLike
+import elide.testing.annotations.Test
+import elide.runtime.intrinsics.js.MapLike as JsMapLike
+import org.junit.jupiter.api.DynamicTest.dynamicTest as test
 
 /** Test for JavaScript `Map` and `MapLike` intrinsic behaviors. */
 @Suppress("UNCHECKED_CAST")
-internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapLike: AbstractJsMap<String, Any?> {
+internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapLike : AbstractJsMap<String, Any?> {
   // Build a generic map for testing, from test data.
   private fun allocateGeneric(): MapLike = spawnGeneric(testDataForGenericMap())
 
@@ -43,7 +43,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
 
   /** @return Generic-test map of the implementation type under test (from a collection of entries). */
   protected abstract fun spawnFromEntries(entries: Collection<Map.Entry<String, Any?>>): MapLike
-  
+
   /** @return Generic-test map of the implementation type under test (from a collection of JS map-like entries). */
   protected abstract fun spawnFromJsEntries(entries: Collection<JsMapLike.Entry<String, Any?>>): MapLike
 
@@ -115,12 +115,14 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from map entries. */
   @Test fun testCreateFromMapEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnFromEntries(testData.map {
-      object: Map.Entry<String, Any?> {
+    val subject = spawnFromEntries(
+      testData.map {
+      object : Map.Entry<String, Any?> {
         override val key: String get() = it.first
         override val value: Any? get() = it.second
       }
-    })
+    },
+    )
     assertNotNull(subject, "should be able to spawn a map from a collection of entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -130,9 +132,11 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from JS map entries. */
   @Test fun testCreateFromJSMapEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnFromJsEntries(testData.map {
+    val subject = spawnFromJsEntries(
+      testData.map {
       BaseJsMap.entry(it.first, it.second)
-    })
+    },
+    )
     assertNotNull(subject, "should be able to spawn a map from a collection of JS entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -152,12 +156,14 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from iterable of entries. */
   @Test fun testCreateFromIterableEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnUnboundedEntries(testData.map {
-      object: Map.Entry<String, Any?> {
+    val subject = spawnUnboundedEntries(
+      testData.map {
+      object : Map.Entry<String, Any?> {
         override val key: String get() = it.first
         override val value: Any? get() = it.second
       }
-    }.asIterable())
+    }.asIterable(),
+    )
     assertNotNull(subject, "should be able to spawn a map from iterable of entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -167,9 +173,11 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
   /** Test: Create from iterable of JS entries. */
   @Test fun testCreateFromIterableJsEntries() {
     val testData = testDataForGenericMap()
-    val subject = spawnUnboundedJsEntries(testData.map {
+    val subject = spawnUnboundedJsEntries(
+      testData.map {
       BaseJsMap.entry(it.first, it.second)
-    }.asIterable())
+    }.asIterable(),
+    )
     assertNotNull(subject, "should be able to spawn a map from iterable of JS entries")
     assertFalse(subject.isEmpty(), "map should accurately report non-empty status")
     assertTrue(subject.isNotEmpty(), "map should accurately report non-empty status")
@@ -361,10 +369,12 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
 
   // Build test data for mutable map testing.
   private fun testDataForMutableMap(): Collection<Pair<String, Any?>> {
-    return testDataForGenericMap().plus(listOf(
+    return testDataForGenericMap().plus(
+      listOf(
       "newkey" to "newvalue",
       "another" to 1,
-    ))
+    ),
+    )
   }
 
   /** Test: Generic mutable (`put`, etc). */
@@ -726,7 +736,7 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
     },
     test("$prefix should be able to cast as `SortedMap`") {
       assertNotNull(
-        factory() as? SortedMap<String, Any?>
+        factory() as? SortedMap<String, Any?>,
       )
     },
 
@@ -843,15 +853,17 @@ internal abstract class AbstractJsMapTest<MapLike> : AbstractJsTest() where MapL
       )
     } else {
       emptyList()
-    }
+    },
   )
 
   // Build test data for multi-map testing.
   private fun testDataForMultiMap(): Collection<Pair<String, Any?>> {
-    return testDataForMutableMap().plus(listOf(
+    return testDataForMutableMap().plus(
+      listOf(
       "hello" to "again",
       "nullvalue" to "another",
-    ))
+    ),
+    )
   }
 
   /** Test: Multi-map behaviors. */

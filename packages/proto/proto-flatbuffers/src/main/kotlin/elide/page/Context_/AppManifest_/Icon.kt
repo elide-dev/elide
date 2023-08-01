@@ -2,22 +2,21 @@
 
 package elide.page.Context_.AppManifest_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Icon : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Icon {
+    fun __assign(_i: Int, _bb: ByteBuffer): Icon {
         __init(_i, _bb)
         return this
     }
-    val src : webutil.html.types.TrustedResourceUrlProto? get() = src(webutil.html.types.TrustedResourceUrlProto())
-    fun src(obj: webutil.html.types.TrustedResourceUrlProto) : webutil.html.types.TrustedResourceUrlProto? {
+    val src: webutil.html.types.TrustedResourceUrlProto? get() = src(webutil.html.types.TrustedResourceUrlProto())
+    fun src(obj: webutil.html.types.TrustedResourceUrlProto): webutil.html.types.TrustedResourceUrlProto? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,7 +24,7 @@ class Icon : Table() {
             null
         }
     }
-    fun size(j: Int) : UInt {
+    fun size(j: Int): UInt {
         val o = __offset(6)
         return if (o != 0) {
             bb.getInt(__vector(o) + j * 4).toUInt()
@@ -33,19 +32,20 @@ class Icon : Table() {
             0u
         }
     }
-    val sizeLength : Int
+    val sizeLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val sizeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 4)
-    fun sizeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
-    val mimeType : String?
+    val sizeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 4)
+    fun sizeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
+    val mimeType: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val mimeTypeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun mimeTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val mimeTypeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun mimeTypeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsIcon(_bb: ByteBuffer): Icon = getRootAsIcon(_bb, Icon())
@@ -53,7 +53,7 @@ class Icon : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createIcon(builder: FlatBufferBuilder, srcOffset: Int, sizeOffset: Int, mimeTypeOffset: Int) : Int {
+        fun createIcon(builder: FlatBufferBuilder, srcOffset: Int, sizeOffset: Int, mimeTypeOffset: Int): Int {
             builder.startTable(3)
             addMimeType(builder, mimeTypeOffset)
             addSize(builder, sizeOffset)
@@ -63,7 +63,7 @@ class Icon : Table() {
         fun startIcon(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addSrc(builder: FlatBufferBuilder, src: Int) = builder.addOffset(0, src, 0)
         fun addSize(builder: FlatBufferBuilder, size: Int) = builder.addOffset(1, size, 0)
-        fun createSizeVector(builder: FlatBufferBuilder, data: UIntArray) : Int {
+        fun createSizeVector(builder: FlatBufferBuilder, data: UIntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addInt(data[i].toInt())
@@ -72,7 +72,7 @@ class Icon : Table() {
         }
         fun startSizeVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addMimeType(builder: FlatBufferBuilder, mimeType: Int) = builder.addOffset(2, mimeType, 0)
-        fun endIcon(builder: FlatBufferBuilder) : Int {
+        fun endIcon(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

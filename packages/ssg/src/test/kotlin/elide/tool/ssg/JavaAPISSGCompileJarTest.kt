@@ -13,11 +13,11 @@
 
 package elide.tool.ssg
 
-import elide.tool.ssg.SiteCompilerParams.OutputFormat
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import elide.tool.ssg.SiteCompilerParams.OutputFormat
 
 /** Tests which invoke the SSG compiler over the Java API, using a JAR as the application target. */
 @MicronautTest(
@@ -27,8 +27,10 @@ import org.junit.jupiter.api.assertDoesNotThrow
     "elide.tools.ssg",
     "elide.tools.ssg.*",
   ],
-) class JavaAPISSGCompileJarTest : AbstractSSGCompilerTest() {
-  @Test @Disabled fun testProgrammaticJarCompile(): Unit = withCompiler(outputArchive(OutputFormat.ZIP)) { _, out ->
+)
+class JavaAPISSGCompileJarTest : AbstractSSGCompilerTest() {
+  @Test @Disabled
+  fun testProgrammaticJarCompile(): Unit = withCompiler(outputArchive(OutputFormat.ZIP)) { _, out ->
     assertDoesNotThrow {
       SiteCompiler.compile(
         manifest = helloWorldManifest,
@@ -39,7 +41,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
     }
   }
 
-  @Test @Disabled fun testProgrammaticJarCompileToTar(): Unit = withCompiler(outputArchive(OutputFormat.TAR)) { _, out ->
+  @Test @Disabled
+  fun testProgrammaticJarCompileToTar(): Unit = withCompiler(outputArchive(OutputFormat.TAR)) { _, out ->
     assertDoesNotThrow {
       SiteCompiler.compile(
         manifest = helloWorldManifest,
@@ -50,7 +53,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
     }
   }
 
-  @Test @Disabled fun testProgrammaticJarCompileToDir(): Unit = withCompiler(outputDirectory()) { _, out ->
+  @Test @Disabled
+  fun testProgrammaticJarCompileToDir(): Unit = withCompiler(outputDirectory()) { _, out ->
     assertDoesNotThrow {
       SiteCompiler.compile(
         manifest = helloWorldManifest,

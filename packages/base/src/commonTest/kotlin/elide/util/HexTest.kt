@@ -27,7 +27,7 @@ class HexTest : AbstractEncoderTest<Hex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -37,7 +37,7 @@ class HexTest : AbstractEncoderTest<Hex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 }

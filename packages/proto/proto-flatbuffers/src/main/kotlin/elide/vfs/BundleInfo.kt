@@ -2,22 +2,21 @@
 
 package elide.vfs
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class BundleInfo : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : BundleInfo {
+    fun __assign(_i: Int, _bb: ByteBuffer): BundleInfo {
         __init(_i, _bb)
         return this
     }
-    val header : elide.vfs.BundleHeader? get() = header(elide.vfs.BundleHeader())
-    fun header(obj: elide.vfs.BundleHeader) : elide.vfs.BundleHeader? {
+    val header: elide.vfs.BundleHeader? get() = header(elide.vfs.BundleHeader())
+    fun header(obj: elide.vfs.BundleHeader): elide.vfs.BundleHeader? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class BundleInfo : Table() {
             null
         }
     }
-    val tree : elide.vfs.Filesystem? get() = tree(elide.vfs.Filesystem())
-    fun tree(obj: elide.vfs.Filesystem) : elide.vfs.Filesystem? {
+    val tree: elide.vfs.Filesystem? get() = tree(elide.vfs.Filesystem())
+    fun tree(obj: elide.vfs.Filesystem): elide.vfs.Filesystem? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -34,8 +33,8 @@ class BundleInfo : Table() {
             null
         }
     }
-    val artifacts : elide.vfs.BundleArtifacts? get() = artifacts(elide.vfs.BundleArtifacts())
-    fun artifacts(obj: elide.vfs.BundleArtifacts) : elide.vfs.BundleArtifacts? {
+    val artifacts: elide.vfs.BundleArtifacts? get() = artifacts(elide.vfs.BundleArtifacts())
+    fun artifacts(obj: elide.vfs.BundleArtifacts): elide.vfs.BundleArtifacts? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -50,7 +49,12 @@ class BundleInfo : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBundleInfo(builder: FlatBufferBuilder, headerOffset: Int, treeOffset: Int, artifactsOffset: Int) : Int {
+        fun createBundleInfo(
+          builder: FlatBufferBuilder,
+          headerOffset: Int,
+          treeOffset: Int,
+          artifactsOffset: Int,
+        ): Int {
             builder.startTable(3)
             addArtifacts(builder, artifactsOffset)
             addTree(builder, treeOffset)
@@ -61,7 +65,7 @@ class BundleInfo : Table() {
         fun addHeader(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
         fun addTree(builder: FlatBufferBuilder, tree: Int) = builder.addOffset(1, tree, 0)
         fun addArtifacts(builder: FlatBufferBuilder, artifacts: Int) = builder.addOffset(2, artifacts, 0)
-        fun endBundleInfo(builder: FlatBufferBuilder) : Int {
+        fun endBundleInfo(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

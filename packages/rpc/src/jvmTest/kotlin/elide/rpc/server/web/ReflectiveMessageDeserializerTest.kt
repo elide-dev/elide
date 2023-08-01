@@ -12,7 +12,7 @@ import kotlin.test.assertNotNull
 
 /** Corner case tests for the [ReflectiveMessageDeserializer]. */
 @MicronautTest
-class ReflectiveMessageDeserializerTest: GrpcWebBaseTest() {
+class ReflectiveMessageDeserializerTest : GrpcWebBaseTest() {
   fun emptyStub() {
     // this space left intentionally blank
     System.out.println("hello from an empty method")
@@ -23,7 +23,8 @@ class ReflectiveMessageDeserializerTest: GrpcWebBaseTest() {
     System.out.println("hello from an empty method: $yoo")
   }
 
-  @Suppress("unused", "UNUSED_PARAMETER") class BrokenParserReturnsNull {
+  @Suppress("unused", "UNUSED_PARAMETER")
+  class BrokenParserReturnsNull {
     object BrokenProtoReturnsNull {
       @JvmStatic
       fun parseFrom(bytes: ByteArray): Message? {
@@ -36,7 +37,8 @@ class ReflectiveMessageDeserializerTest: GrpcWebBaseTest() {
     }
   }
 
-  @Suppress("unused", "UNUSED_PARAMETER") class BrokenParserThrowsUnexpectedException {
+  @Suppress("unused", "UNUSED_PARAMETER")
+  class BrokenParserThrowsUnexpectedException {
     object BrokenParserThrows {
       @JvmStatic
       fun parseFrom(bytes: ByteArray): Message? {
@@ -49,7 +51,8 @@ class ReflectiveMessageDeserializerTest: GrpcWebBaseTest() {
     }
   }
 
-  @Suppress("unused", "UNUSED_PARAMETER") class BrokenParserReturnsNonMessage {
+  @Suppress("unused", "UNUSED_PARAMETER")
+  class BrokenParserReturnsNonMessage {
     object BrokenParserInvalidReturn {
       @JvmStatic
       fun parseFrom(bytes: ByteArray): String {

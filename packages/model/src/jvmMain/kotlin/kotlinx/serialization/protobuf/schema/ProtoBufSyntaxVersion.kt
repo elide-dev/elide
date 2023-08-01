@@ -10,7 +10,7 @@ package kotlinx.serialization.protobuf.schema
  *
  * @param symbol Symbol to be emitted when selecting this syntax.
  */
-public enum class ProtoBufSyntaxVersion constructor (internal val symbol: String) {
+public enum class ProtoBufSyntaxVersion constructor(internal val symbol: String) {
   /**
    * ## Syntax: `proto`.
    *
@@ -25,5 +25,5 @@ public enum class ProtoBufSyntaxVersion constructor (internal val symbol: String
    * Describes protocol buffers syntax version 3, which is the current and modern version of the protocol buffers syntax
    * which is recommended for new projects.
    */
-  PROTO3("proto3");
+  PROTO3("proto3"),
 }

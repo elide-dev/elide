@@ -8,7 +8,7 @@ class VideoResolution private constructor() {
         const val LOW: Int = 0
         const val HD: Int = 1
         const val UHD: Int = 2
-        val names : Array<String> = arrayOf("LOW", "HD", "UHD")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("LOW", "HD", "UHD")
+        fun name(e: Int): String = names[e]
     }
 }

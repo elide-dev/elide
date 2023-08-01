@@ -13,9 +13,9 @@
 
 package elide.tool.ssg
 
-import elide.tool.ssg.SiteCompilerParams.OutputFormat
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Test
+import elide.tool.ssg.SiteCompilerParams.OutputFormat
 
 /** Tests which invoke the SSG compiler over the CLI. */
 @MicronautTest(
@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test
     "elide.tools.ssg",
     "elide.tools.ssg.*",
   ],
-) class CLISSGCompileTest : AbstractSSGCompilerTest() {
+)
+class CLISSGCompileTest : AbstractSSGCompilerTest() {
   @Test fun testCommandHelp() {
     assertSuccess {
       cli("--help")
@@ -49,7 +50,7 @@ import org.junit.jupiter.api.Test
         helloWorldManifest,
         embeddedApp().url.toString(),
         out.path,
-      )
+      ),
     )
   }
 
@@ -75,7 +76,7 @@ import org.junit.jupiter.api.Test
         helloWorldManifest,
         embeddedApp().url.toString(),
         out.path,
-      )
+      ),
     )
   }
 

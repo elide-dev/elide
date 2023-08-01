@@ -18,7 +18,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 @file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class,
 )
 
 import Java9Modularity.configure as configureJava9ModuleInfo

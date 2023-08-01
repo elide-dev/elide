@@ -13,10 +13,10 @@
 
 package elide.runtime.feature
 
-import elide.annotations.internal.VMFeature
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.RuntimeReflection
 import java.lang.reflect.Executable
+import elide.annotations.internal.VMFeature
 
 /**
  * # Feature: Protocol Buffers
@@ -38,7 +38,7 @@ internal class ProtocolBuffers : FrameworkFeature {
       for (method in protoClass.methods) {
         val hasAccessorPrefix = METHOD_ACCESSOR_PREFIXES.stream().anyMatch { prefix: String? ->
           method.name.startsWith(
-            prefix!!
+            prefix!!,
           )
         }
         if (hasAccessorPrefix) {
@@ -89,7 +89,7 @@ internal class ProtocolBuffers : FrameworkFeature {
           var method = getMethodOrFail(
             subtypeClass,
             "valueOf",
-            duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS)
+            duringAccess.findClassByName(ENUM_VAL_DESCRIPTOR_CLASS),
           )
           RuntimeReflection.register(method)
           method =

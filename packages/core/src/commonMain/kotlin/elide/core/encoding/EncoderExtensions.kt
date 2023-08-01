@@ -20,7 +20,6 @@ import elide.core.encoding.base64.DefaultBase64
 import elide.core.encoding.hex.DefaultHex
 import elide.core.encoding.hex.HexData
 
-
 // -- Base64: Encoding -- //
 
 /**

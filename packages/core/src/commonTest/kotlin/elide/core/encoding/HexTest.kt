@@ -13,9 +13,9 @@
 
 package elide.core.encoding
 
-import elide.core.encoding.hex.DefaultHex
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import elide.core.encoding.hex.DefaultHex
 
 /** Tests for built-in [DefaultHex] encoding tools. */
 class HexTest : AbstractEncoderTest<DefaultHex>() {
@@ -28,7 +28,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -38,7 +38,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -48,7 +48,7 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 
@@ -58,13 +58,13 @@ class HexTest : AbstractEncoderTest<DefaultHex>() {
     assertEquals(
       "616263313233313233",
       hex,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
     val hex2 = value.toHex().string
     assertEquals(
       "616263313233313233",
       hex2,
-      "hex encoding a basic value should produce expected result"
+      "hex encoding a basic value should produce expected result",
     )
   }
 }

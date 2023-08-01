@@ -8,7 +8,7 @@ class VideoProvider private constructor() {
         const val PRIVATE: Int = 0
         const val YOUTUBE: Int = 1
         const val VIMEO: Int = 2
-        val names : Array<String> = arrayOf("PRIVATE", "YOUTUBE", "VIMEO")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("PRIVATE", "YOUTUBE", "VIMEO")
+        fun name(e: Int): String = names[e]
     }
 }

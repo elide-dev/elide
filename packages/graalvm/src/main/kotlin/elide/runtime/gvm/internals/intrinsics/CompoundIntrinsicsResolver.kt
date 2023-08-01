@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics
 
 import elide.runtime.gvm.GuestLanguage
-import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Implementation of an intrinsics resolver which is backed by one or more foreign resolvers. */
-internal class CompoundIntrinsicsResolver private constructor (
-  private val resolvers: List<IntrinsicsResolver>
+internal class CompoundIntrinsicsResolver private constructor(
+  private val resolvers: List<IntrinsicsResolver>,
 ) : IntrinsicsResolver {
   companion object {
     /** @return Compound intrinsics resolver which is backed by the provided [list]. */

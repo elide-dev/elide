@@ -51,7 +51,7 @@ data class OpenFlags(
     val exclude: Boolean = false,
 
     /** Truncate file to size 0. */
-    val truncate: Boolean = false
+    val truncate: Boolean = false,
 )
 
 /**
@@ -60,7 +60,7 @@ data class OpenFlags(
 data class PathFlags(
 
     /** As long as the resolved path corresponds to a symbolic link, it is expanded. */
-    val symlinkFollow: Boolean
+    val symlinkFollow: Boolean,
 )
 
 /**
@@ -91,6 +91,7 @@ enum class DescriptorType {
      * any of the other types specified.
      */
     UNKNOWN,
+
     /**
      * The descriptor refers to a block device inode.
      */
@@ -119,7 +120,7 @@ enum class DescriptorType {
     /**
      * The descriptor refers to a regular file inode.
      */
-    REGULAR_FILE
+    REGULAR_FILE,
 }
 
 /**
@@ -187,7 +188,7 @@ data class DescriptorFlags(
      *
      * This may only be set on directories.
      */
-    val mutateDirectory: Boolean = true
+    val mutateDirectory: Boolean = true,
 )
 
 /** Permissions mode used by `openAt`, `changeFilePermissionsAt`, and similar. **/
@@ -200,7 +201,7 @@ data class Modes(
     val writeable: Boolean = false,
 
     /** True if the resource is considered executable by the containing filesystem. This does not apply to directories. */
-    val executable: Boolean = false
+    val executable: Boolean = false,
 )
 
 /**
@@ -226,7 +227,7 @@ data class DirectoryEntry(
     /**
      * The name of the object.
      */
-    val name: String
+    val name: String,
 )
 
 /**
@@ -238,76 +239,112 @@ data class DirectoryEntry(
 enum class ErrorCode {
     /** Permission denied. */
     ACCESS,
+
     /** Resource unavailable, or operation would block. */
     WOULD_BLOCK,
+
     /** Connection already in progress. */
     ALREADY,
+
     /**  Bad descriptor. */
     BAD_DESCRIPTOR,
+
     /** Device or resource busy. */
     BUSY,
+
     /** Resource deadlock would occur. */
     DEADLOCK,
+
     /** Storage quota exceeded. */
     QUOTA,
+
     /** File exists. */
     EXIST,
+
     /** File too large. */
     FILE_TOO_LARGE,
+
     /** Illegal byte sequence. */
     ILLEGAL_BYTE_SEQUENCE,
+
     /** Operation in progress. */
     IN_PROGRESS,
+
     /** Interrupted function. */
     INTERRUPTED,
+
     /** Invalid argument. */
     INVALID,
+
     /** I/O error. */
     IO,
+
     /** Is a directory. */
     IS_DIRECTORY,
+
     /** Too many levels of symbolic links. */
     LOOP,
+
     /** Too many links. */
     TOO_MANY_LINKS,
+
     /** Message too large. */
     MESSAGE_SIZE,
+
     /** Filename too long. */
     NAME_TOO_LONG,
+
     /** No such device. */
     NO_DEVICE,
+
     /** No such file or directory. */
     NO_ENTRY,
+
     /** No locks available. */
     NO_LOCK,
+
     /** Not enough space. */
     INSUFFICIENT_MEMORY,
+
     /** No space left on device. */
     INSUFFICIENT_SPACE,
+
     /** Not a directory or a symbolic link to a directory. */
     NOT_DIRECTORY,
+
     /** Directory not empty. */
     NOT_EMPTY,
+
     /** State not recoverable. */
     NOT_RECOVERABLE,
+
     /** Not supported */
     UNSUPPORTED,
+
     /** Inappropriate I/O control operation. */
     NO_TTY,
+
     /** No such device or address. */
     NO_SUCH_DEVICE,
+
     /** Value too large to be stored in data type. */
     OVERFLOW,
+
     /** Operation not permitted. */
     NOT_PERMITTED,
+
     /** Broken pipe. */
     PIPE,
+
     /** Read-only file system. */
     READ_ONLY,
+
     /** Invalid seek. */
     INVALID_SEEK,
+
     /** Text file busy. */
     TEXT_FILE_BUSY,
+
     /** Cross-device link. */
     CROSS_DEVICE,
 }
@@ -364,13 +401,21 @@ interface WasiFileSystem {
      * @param flags Flags to use for the resulting descriptor.
      * @param pathFlags Flags determining the method of how the path is resolved.
      */
-    fun openAt(path: String, openFlags: OpenFlags = OpenFlags(),
-               flags: DescriptorFlags = DescriptorFlags(read = true), pathFlags: PathFlags = PathFlags(true), descriptor: Descriptor = StandardDescriptor.FIRST_PREOPEN): Descriptor
+    fun openAt(
+      path: String,
+      openFlags: OpenFlags = OpenFlags(),
+               flags: DescriptorFlags = DescriptorFlags(read = true),
+      pathFlags: PathFlags = PathFlags(true),
+      descriptor: Descriptor = StandardDescriptor.FIRST_PREOPEN,
+    ): Descriptor
 
     /**
      * Read directory entries from a directory
      */
-    fun readDirectory(path: String = "", descriptor: Descriptor = StandardDescriptor.FIRST_PREOPEN): List<DirectoryEntry>
+    fun readDirectory(
+      path: String = "",
+      descriptor: Descriptor = StandardDescriptor.FIRST_PREOPEN,
+    ): List<DirectoryEntry>
 
     /**
      * Write to a descriptor, without using and updating the descriptor's offset.
@@ -384,7 +429,7 @@ interface WasiFileSystem {
      * @param descriptor The descriptor to write to.
      * @param buffer The data to write.
      */
-    fun write(descriptor: Descriptor, buffer: ByteArray, offset: Filesize = 0u) : Filesize
+    fun write(descriptor: Descriptor, buffer: ByteArray, offset: Filesize = 0u): Filesize
 
     /**
      * Read from a descriptor, without using and updating the descriptor's offset.
@@ -397,23 +442,25 @@ interface WasiFileSystem {
      *
      * Note: This is similar to `pread` in POSIX.
      */
-    fun read(descriptor: Descriptor, length: Filesize, offset: Filesize = 0u) : ReadResult
-
+    fun read(descriptor: Descriptor, length: Filesize, offset: Filesize = 0u): ReadResult
 }
 
-object DefaultWasiFilesystem: WasiFileSystem {
+object DefaultWasiFilesystem : WasiFileSystem {
 
     override fun createDirectoryAt(path: String, descriptor: Descriptor) {
         pathCreateDirectory(descriptor, path)
     }
 
     override fun openAt(path: String, openFlags: OpenFlags, flags: DescriptorFlags, pathFlags: PathFlags, descriptor: Descriptor): Descriptor {
-        return pathOpen(fd = descriptor, dirflags = pathFlags.toLookupFlags(), path = path,
-            oflags = openFlags.toOFlags(), fsRightsBase = flags.toRights(), fsRightsInheriting = 0, fdflags = flags.toFdflags())
+        return pathOpen(
+          fd = descriptor, dirflags = pathFlags.toLookupFlags(), path = path,
+            oflags = openFlags.toOFlags(), fsRightsBase = flags.toRights(), fsRightsInheriting = 0, fdflags = flags.toFdflags(),
+        )
     }
 
     override fun readDirectory(path: String, descriptor: Descriptor): List<DirectoryEntry> {
-        val fd = pathOpen(fd = descriptor, dirflags = 0, path = path,
+        val fd = pathOpen(
+          fd = descriptor, dirflags = 0, path = path,
             oflags = OFlag.DIRECTORY,
             fsRightsBase = Right.FD_READDIR,
             fsRightsInheriting = 0,
@@ -432,7 +479,7 @@ object DefaultWasiFilesystem: WasiFileSystem {
         return fdPRead(descriptor, length, offset).let { ReadResult(it.first, it.second < length.toInt()) }
     }
 
-    private fun Filetype.toDescriptorType() = when(this) {
+    private fun Filetype.toDescriptorType() = when (this) {
         Filetype.BLOCK_DEVICE -> DescriptorType.BLOCK_DEVICE
         Filetype.CHARACTER_DEVICE -> DescriptorType.CHARACTER_DEVICE
         Filetype.DIRECTORY -> DescriptorType.DIRECTORY
@@ -445,7 +492,7 @@ object DefaultWasiFilesystem: WasiFileSystem {
         return if (this.symlinkFollow) LookupFlag.SYMLINK_FOLLOW else 0
     }
 
-    private fun OpenFlags.toOFlags() : OFlags {
+    private fun OpenFlags.toOFlags(): OFlags {
         var flags: OFlags = 0
         if (this.create) flags = flags or OFlag.CREAT
         if (this.directory) flags = flags or OFlag.DIRECTORY

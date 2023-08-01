@@ -1,9 +1,9 @@
 package elide.runtime.gvm
 
-import elide.runtime.gvm.ExecutableScript.State
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.*
+import elide.runtime.gvm.ExecutableScript.State
 
 /**
  * # Executable Script
@@ -42,7 +42,8 @@ import java.util.*
  * @see GuestLanguage for the expected specification adhered to by guest language descriptors.
  * @see State for an exhaustive enumeration of states that a script may inhabit during its lifecycle.
  */
-@Suppress("unused") public sealed interface ExecutableScript {
+@Suppress("unused")
+public sealed interface ExecutableScript {
   /**
    * ## State Lifecycle
    *
@@ -74,7 +75,7 @@ import java.util.*
    * Specifies the type of code contained in a guest VM script, typically in the form of a MIME type; e.g.
    * `text/javascript`. Alternative symbols are provided as calculated properties from the underlying [spec]/
    */
-  @JvmInline public value class ScriptType private constructor (internal val spec: String) {
+  @JvmInline public value class ScriptType private constructor(internal val spec: String) {
     internal companion object {
       /** Prefix used when [spec] is a MIME type. */
       private const val MIME_TYPE_PREFIX = "mime"
@@ -101,7 +102,7 @@ import java.util.*
    * Specifies the source code [target] for a guest VM script. This may be a file, a literal string, an embedded asset,
    * or any other source permitted by the interface defined herein.
    */
-  @JvmInline public value class ScriptSource private constructor (internal val target: String) {
+  @JvmInline public value class ScriptSource private constructor(internal val target: String) {
     internal companion object {
       /** Prefix used when [target] is a file. */
       private const val PROTOCOL_FILE = "file"
@@ -171,9 +172,7 @@ import java.util.*
    * asset, or any other source permitted by the interface defined herein. This source map is expected to correspond
    * with an associated [ScriptSource].
    */
-  @JvmInline public value class SourceMap (private val target: String) {
-
-  }
+  @JvmInline public value class SourceMap(private val target: String)
 
   /**
    * @return The current state of this executable script record.

@@ -1,17 +1,17 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.*
+import java.util.stream.Stream
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
 import elide.runtime.intrinsics.js.MutableMultiMapLike
 import elide.runtime.intrinsics.js.err.TypeError
-import java.util.*
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Implements a JS-compatible map structure which is mutable and accepts multiple values per key. */
-internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
+internal abstract class BaseMutableJsMultiMap<K : Any, V> constructor(
   map: MutableMap<K, MutableList<V>>,
   threadsafe: Boolean,
   sorted: Boolean,
@@ -20,7 +20,9 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   threadsafe = threadsafe,
   sorted = sorted,
   mutable = true,
-), MutableMap<K, V>, MutableMultiMapLike<K, V> {
+),
+MutableMap<K, V>,
+MutableMultiMapLike<K, V> {
   // Shortcut to cast the backing map as mutable.
   private fun asMutable(): MutableMap<K, List<V>> = backingMap as MutableMap<K, List<V>>
 
@@ -56,7 +58,7 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   /** @inheritDoc */
   override val entries: MutableSet<MutableMap.MutableEntry<K, V>> get() = backingMap.entries.flatMap {
     it.value.map { inner ->
-      object: MutableMap.MutableEntry<K, V> {
+      object : MutableMap.MutableEntry<K, V> {
         override var key: K = it.key
         override var value: V = inner
 
@@ -91,7 +93,7 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
   @Polyglot override fun values(): JsIterator<V> = JsIteratorFactory.forIterator(
     backingMap.values.stream().flatMap { inner ->
       inner.stream()
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */
@@ -100,7 +102,7 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
       it.value.stream().map { inner ->
         BaseJsMap.entry(it.key, inner)
       }
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */
@@ -162,7 +164,8 @@ internal abstract class BaseMutableJsMultiMap<K: Any, V> constructor (
 
   /** @inheritDoc */
   @Throws(TypeError::class)
-  @Polyglot override fun sort() = jsErrors {
+  @Polyglot
+  override fun sort() = jsErrors {
     backingMap = TreeMap<K, List<V>>().apply {
       putAll(backingMap)
     }

@@ -2,27 +2,28 @@
 
 package webutil.html.types
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class SafeUrlProto : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : SafeUrlProto {
+    fun __assign(_i: Int, _bb: ByteBuffer): SafeUrlProto {
         __init(_i, _bb)
         return this
     }
-    val privateDoNotAccessOrElseSafeUrlWrappedValue : String?
+    val privateDoNotAccessOrElseSafeUrlWrappedValue: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val privateDoNotAccessOrElseSafeUrlWrappedValueAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun privateDoNotAccessOrElseSafeUrlWrappedValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val privateDoNotAccessOrElseSafeUrlWrappedValueAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun privateDoNotAccessOrElseSafeUrlWrappedValueInByteBuffer(
+      _bb: ByteBuffer,
+    ): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsSafeUrlProto(_bb: ByteBuffer): SafeUrlProto = getRootAsSafeUrlProto(_bb, SafeUrlProto())
@@ -30,14 +31,20 @@ class SafeUrlProto : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSafeUrlProto(builder: FlatBufferBuilder, privateDoNotAccessOrElseSafeUrlWrappedValueOffset: Int) : Int {
+        fun createSafeUrlProto(
+          builder: FlatBufferBuilder,
+          privateDoNotAccessOrElseSafeUrlWrappedValueOffset: Int,
+        ): Int {
             builder.startTable(1)
             addPrivateDoNotAccessOrElseSafeUrlWrappedValue(builder, privateDoNotAccessOrElseSafeUrlWrappedValueOffset)
             return endSafeUrlProto(builder)
         }
         fun startSafeUrlProto(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPrivateDoNotAccessOrElseSafeUrlWrappedValue(builder: FlatBufferBuilder, privateDoNotAccessOrElseSafeUrlWrappedValue: Int) = builder.addOffset(0, privateDoNotAccessOrElseSafeUrlWrappedValue, 0)
-        fun endSafeUrlProto(builder: FlatBufferBuilder) : Int {
+        fun addPrivateDoNotAccessOrElseSafeUrlWrappedValue(
+          builder: FlatBufferBuilder,
+          privateDoNotAccessOrElseSafeUrlWrappedValue: Int,
+        ) = builder.addOffset(0, privateDoNotAccessOrElseSafeUrlWrappedValue, 0)
+        fun endSafeUrlProto(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

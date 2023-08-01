@@ -13,7 +13,8 @@ class HashAlgorithm private constructor() {
         const val SHA3224: Int = 5
         const val SHA3256: Int = 6
         const val SHA3512: Int = 7
-        val names : Array<String> = arrayOf("IDENTITY", "MD5", "SHA1", "SHA256", "SHA512", "SHA3_224", "SHA3_256", "SHA3_512")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("IDENTITY", "MD5", "SHA1", "SHA256", "SHA512", "SHA3_224", "SHA3_256", "SHA3_512")
+        fun name(e: Int): String = names[e]
     }
 }

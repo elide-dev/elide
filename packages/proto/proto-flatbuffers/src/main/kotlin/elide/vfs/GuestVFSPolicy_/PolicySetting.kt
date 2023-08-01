@@ -2,27 +2,26 @@
 
 package elide.vfs.GuestVFSPolicy_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class PolicySetting : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : PolicySetting {
+    fun __assign(_i: Int, _bb: ByteBuffer): PolicySetting {
         __init(_i, _bb)
         return this
     }
-    val allowAll : Boolean
+    val allowAll: Boolean
         get() {
             val o = __offset(4)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val guest : elide.vfs.GuestVFSPolicy_.VirtualIOPolicy? get() = guest(elide.vfs.GuestVFSPolicy_.VirtualIOPolicy())
-    fun guest(obj: elide.vfs.GuestVFSPolicy_.VirtualIOPolicy) : elide.vfs.GuestVFSPolicy_.VirtualIOPolicy? {
+    val guest: elide.vfs.GuestVFSPolicy_.VirtualIOPolicy? get() = guest(elide.vfs.GuestVFSPolicy_.VirtualIOPolicy())
+    fun guest(obj: elide.vfs.GuestVFSPolicy_.VirtualIOPolicy): elide.vfs.GuestVFSPolicy_.VirtualIOPolicy? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -30,8 +29,8 @@ class PolicySetting : Table() {
             null
         }
     }
-    val host : elide.vfs.GuestVFSPolicy_.HostIOPolicy? get() = host(elide.vfs.GuestVFSPolicy_.HostIOPolicy())
-    fun host(obj: elide.vfs.GuestVFSPolicy_.HostIOPolicy) : elide.vfs.GuestVFSPolicy_.HostIOPolicy? {
+    val host: elide.vfs.GuestVFSPolicy_.HostIOPolicy? get() = host(elide.vfs.GuestVFSPolicy_.HostIOPolicy())
+    fun host(obj: elide.vfs.GuestVFSPolicy_.HostIOPolicy): elide.vfs.GuestVFSPolicy_.HostIOPolicy? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -39,8 +38,8 @@ class PolicySetting : Table() {
             null
         }
     }
-    val combined : elide.vfs.GuestVFSPolicy_.CombinedIOPolicy? get() = combined(elide.vfs.GuestVFSPolicy_.CombinedIOPolicy())
-    fun combined(obj: elide.vfs.GuestVFSPolicy_.CombinedIOPolicy) : elide.vfs.GuestVFSPolicy_.CombinedIOPolicy? {
+    val combined: elide.vfs.GuestVFSPolicy_.CombinedIOPolicy? get() = combined(elide.vfs.GuestVFSPolicy_.CombinedIOPolicy())
+    fun combined(obj: elide.vfs.GuestVFSPolicy_.CombinedIOPolicy): elide.vfs.GuestVFSPolicy_.CombinedIOPolicy? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -55,7 +54,13 @@ class PolicySetting : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPolicySetting(builder: FlatBufferBuilder, allowAll: Boolean, guestOffset: Int, hostOffset: Int, combinedOffset: Int) : Int {
+        fun createPolicySetting(
+          builder: FlatBufferBuilder,
+          allowAll: Boolean,
+          guestOffset: Int,
+          hostOffset: Int,
+          combinedOffset: Int,
+        ): Int {
             builder.startTable(4)
             addCombined(builder, combinedOffset)
             addHost(builder, hostOffset)
@@ -68,7 +73,7 @@ class PolicySetting : Table() {
         fun addGuest(builder: FlatBufferBuilder, guest: Int) = builder.addOffset(1, guest, 0)
         fun addHost(builder: FlatBufferBuilder, host: Int) = builder.addOffset(2, host, 0)
         fun addCombined(builder: FlatBufferBuilder, combined: Int) = builder.addOffset(3, combined, 0)
-        fun endPolicySetting(builder: FlatBufferBuilder) : Int {
+        fun endPolicySetting(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

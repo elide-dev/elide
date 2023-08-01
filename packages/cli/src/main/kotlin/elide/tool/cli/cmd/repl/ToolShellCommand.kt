@@ -17,23 +17,6 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.VMFacade
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
-import elide.runtime.intrinsics.js.ServerAgent
-import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.GuestLanguage
-import elide.tool.cli.Statics
-import elide.tool.cli.ToolState
-import elide.tool.cli.err.ShellError
-import elide.tool.cli.output.JLineLogbackAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -80,9 +63,25 @@ import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.VMFacade
+import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.intrinsics.js.ServerAgent
+import elide.tool.cli.*
+import elide.tool.cli.AbstractSubcommand
+import elide.tool.cli.GuestLanguage
+import elide.tool.cli.Statics
+import elide.tool.cli.ToolState
+import elide.tool.cli.err.ShellError
+import elide.tool.cli.output.JLineLogbackAppender
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
-
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
@@ -105,9 +104,10 @@ import org.graalvm.polyglot.Engine as VMEngine
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
-  ]
+  ],
 )
-@Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton
+internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
@@ -132,7 +132,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Allows selecting a language by name. */
-  @Introspected @ReflectiveAccess class LanguageSelector {
+  @Introspected @ReflectiveAccess
+  class LanguageSelector {
     /** Specifies the guest language to run. */
     @Option(
       names = ["--language", "-l"],
@@ -188,7 +189,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /** Specifies debugger/inspector settings. */
-  @Introspected @ReflectiveAccess class DebugConfig {
+  @Introspected @ReflectiveAccess
+  class DebugConfig {
     /** Specifies whether the debugger should suspend immediately at execution start. */
     @Option(
       names = ["--debug:suspend"],
@@ -247,23 +249,28 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     /** Apply configuration to the VM based on the provided arguments. */
     internal fun apply(debug: Boolean): Stream<VMProperty> {
-      return (if (!debug) emptyList<VMProperty>() else listOfNotNull(
+      return (
+        if (!debug) emptyList<VMProperty>() else listOfNotNull(
         // if specified, add custom `path`
         when (val p = path) {
           null -> null
           else -> VMStaticProperty.of("inspect.Path", p)
         },
-      ).plus(sources.joinToString(",").let { targets ->
+      ).plus(
+        sources.joinToString(",").let { targets ->
         // format + add any custom source directories
         if (targets.isEmpty()) emptyList() else listOf(
-          VMStaticProperty.of("inspect.SourcePath", targets)
+          VMStaticProperty.of("inspect.SourcePath", targets),
         )
-      })).stream()
+      },
+      )
+      ).stream()
     }
   }
 
   /** Settings which apply to JavaScript only. */
-  @Introspected @ReflectiveAccess class JavaScriptSettings {
+  @Introspected @ReflectiveAccess
+  class JavaScriptSettings {
     /** Whether to activate JS strict mode. */
     @Option(
       names = ["--js:strict"],
@@ -311,18 +318,21 @@ import org.graalvm.polyglot.Engine as VMEngine
         VMStaticProperty.active("js.strict"),
 
         // set ECMA version
-        VMStaticProperty.of("js.ecmascript-version", if (ecma.name.startsWith("ES")) {
+        VMStaticProperty.of(
+          "js.ecmascript-version",
+          if (ecma.name.startsWith("ES")) {
           ecma.name.substring(2)
         } else {
           ecma.name
-        }),
+        },
+        ),
 
         // if WASM is enabled, pass a prop for it
         if (wasm) {
           VMStaticProperty.active("js.webassembly")
         } else {
           null
-        }
+        },
       ).stream()
     }
   }
@@ -428,7 +438,8 @@ import org.graalvm.polyglot.Engine as VMEngine
     internal var allowEnv: Boolean = false
 
     /** Apply access control settings to the target [context]. */
-    @Suppress("DEPRECATION") fun apply(context: VMContext.Builder) {
+    @Suppress("DEPRECATION")
+    fun apply(context: VMContext.Builder) {
       if (allowAll) context.allowAllAccess(true)
       else {
         if (allowIo) context.allowIO(true)
@@ -447,25 +458,29 @@ import org.graalvm.polyglot.Engine as VMEngine
     validate = false,
     exclusive = false,
     heading = "%nAccess Control:%n",
-  ) internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
+  )
+  internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
 
   /** Debugger settings. */
   @ArgGroup(
     exclusive = false,
     heading = "%nDebugging:%n",
-  ) internal var debugging: DebugConfig = DebugConfig()
+  )
+  internal var debugging: DebugConfig = DebugConfig()
 
   /** Language selector. */
   @ArgGroup(
     exclusive = false,
     heading = "%nLanguage Selection:%n",
-  ) internal var language: LanguageSelector = LanguageSelector()
+  )
+  internal var language: LanguageSelector = LanguageSelector()
 
   /** Settings specific to JavaScript. */
   @ArgGroup(
     validate = false,
     heading = "%nLanguage: JavaScript%n",
-  ) internal var jsSettings: JavaScriptSettings = JavaScriptSettings()
+  )
+  internal var jsSettings: JavaScriptSettings = JavaScriptSettings()
 
   /** File to run within the VM. */
   @Parameters(
@@ -474,7 +489,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     paramLabel = "FILE|CODE",
     description = [
       "File or snippet to run. If `-c|--code` is passed, interpreted " +
-      "as a snippet. If not specified, an interactive shell is started."
+      "as a snippet. If not specified, an interactive shell is started.",
     ],
   )
   internal var runnable: String? = null
@@ -495,7 +510,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   // Execute a single chunk of code, or literal statement.
-  @Suppress("SameParameterValue") private fun executeOneChunk(
+  @Suppress("SameParameterValue")
+  private fun executeOneChunk(
     language: GuestLanguage,
     ctx: VMContext,
     origin: String,
@@ -540,7 +556,7 @@ import org.graalvm.polyglot.Engine as VMEngine
         Source.newBuilder(language.id, code, "stdin")
           .encoding(StandardCharsets.UTF_8)
           .internal(false)
-          .buildLiteral()
+          .buildLiteral(),
       )
     } else executeOneChunk(
       language,
@@ -548,7 +564,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       "stdin",
       code,
       interactive = false,
-      literal = false
+      literal = false,
     )
   }
 
@@ -700,13 +716,13 @@ import org.graalvm.polyglot.Engine as VMEngine
         fw.write(
           """
           theme ${rootPath.absolutePathString()}/nanorc/dark.nanorctheme
-          """.trimIndent()
+          """.trimIndent(),
         )
         fw.write("\n")
         fw.write(
           """
           include ${rootPath.absolutePathString()}/nanorc/*.nanorc
-          """.trimIndent()
+          """.trimIndent(),
         )
         fw.write("\n")
       }
@@ -754,7 +770,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   // Given an error, render a table explaining the error, along with any source context if we have it.
-  @Suppress("UNUSED_PARAMETER") private fun displayFormattedError(
+  @Suppress("UNUSED_PARAMETER")
+  private fun displayFormattedError(
     exc: Throwable,
     message: String,
     advice: String? = null,
@@ -782,7 +799,8 @@ import org.graalvm.polyglot.Engine as VMEngine
     val lineContextRendered = errorContext.mapIndexed { index, line ->
       val lineNumber = startingLineNumber + index
 
-      (if (lineNumber in errRange) {
+      (
+        if (lineNumber in errRange) {
         // it's an error line
         errContextPrefix
       } else if (index == errorContext.lastIndex) {
@@ -790,7 +808,8 @@ import org.graalvm.polyglot.Engine as VMEngine
       } else {
         // it's a context line
         lineContextTemplate
-      }).replace("%lineNum", lineNumber.toString().padStart(lineDigits + 1, ' '))
+      }
+      ).replace("%lineNum", lineNumber.toString().padStart(lineDigits + 1, ' '))
         .replace("%lineText", line)
     }
 
@@ -814,7 +833,9 @@ import org.graalvm.polyglot.Engine as VMEngine
     val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
 
     // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
-    val width = minOf(term?.width ?: 120, maxOf(
+    val width = minOf(
+      term?.width ?: 120,
+      maxOf(
       // message plus padding
       message.length + pad,
 
@@ -826,7 +847,8 @@ import org.graalvm.polyglot.Engine as VMEngine
 
       // stacktrace
       stacktraceLines.maxOf { it.length + pad + 2 },
-    ))
+    ),
+    )
 
     val textWidth = width - (pad / 2)
     val top = ("╔" + "═".repeat(textWidth) + "╗")
@@ -979,7 +1001,6 @@ import org.graalvm.polyglot.Engine as VMEngine
               literal = true,
             )
             exitSeen.set(false)
-
           } catch (exc: NoSuchElementException) {
             logging.debug("User expressed no input: exiting.")
             break
@@ -1088,7 +1109,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       }
 
       // sanity check
-      if(!parsed.canExecute()) {
+      if (!parsed.canExecute()) {
         logging.error("Parsed entrypoint is not executable, aborting")
         return
       }
@@ -1135,7 +1156,6 @@ import org.graalvm.polyglot.Engine as VMEngine
 
       // execute the script
       parsed.execute()
-
     } catch (exc: PolyglotException) {
       when (val throwable = processUserCodeError(language, exc)) {
         null -> {}
@@ -1158,10 +1178,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     when (val lang = language.resolve()) {
       GuestLanguage.JS -> {
         logging.debug("Configuring JS VM")
-        configureVM(Stream.concat(
+        configureVM(
+          Stream.concat(
           Stream.concat(baseProps, jsSettings.apply()),
           debugging.apply(debug),
-        ))
+        ),
+        )
 
         logging.debug("Acquiring JavaScript VM (tool state/args indicate JS)")
         vm = vmFactory.acquireVM(GuestLanguage.JS)

@@ -18,8 +18,8 @@
 
 package elide.tool.cli.features
 
-import org.graalvm.nativeimage.hosted.Feature
 import jdk.internal.module.Modules
+import org.graalvm.nativeimage.hosted.Feature
 
 /**
  * # Feature: JLine3
@@ -32,7 +32,7 @@ class JLine3Feature : Feature {
       ModuleLayer.boot().findModule("org.graalvm.nativeimage.base").ifPresent { base: Module? ->
         Modules.addExportsToAllUnnamed(
           base,
-          "com.oracle.svm.util"
+          "com.oracle.svm.util",
         )
       }
       ModuleLayer.boot().findModule("org.graalvm.nativeimage.builder").ifPresent { builder: Module? ->

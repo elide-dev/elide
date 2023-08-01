@@ -9,7 +9,7 @@ class Language private constructor() {
         const val FRENCH: Int = 1
         const val SPANISH: Int = 2
         const val CHINESE: Int = 3
-        val names : Array<String> = arrayOf("ENGLISH", "FRENCH", "SPANISH", "CHINESE")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("ENGLISH", "FRENCH", "SPANISH", "CHINESE")
+        fun name(e: Int): String = names[e]
     }
 }

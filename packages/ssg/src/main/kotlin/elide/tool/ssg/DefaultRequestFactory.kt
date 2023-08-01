@@ -13,18 +13,19 @@
 
 package elide.tool.ssg
 
-import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MutableHttpRequest
-import jakarta.inject.Singleton
 import tools.elide.meta.Endpoint
 import java.net.URI
 import java.net.URL
+import jakarta.inject.Singleton
+import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 
 /** Default request factory implementation. */
 @Suppress("unused")
-@Singleton public class DefaultRequestFactory : RequestFactory {
+@Singleton
+public class DefaultRequestFactory : RequestFactory {
   private companion object {
     // Synthesized hostname.
     const val ssgSynthesizedHost: String = "elide-ssg.local"
@@ -88,13 +89,17 @@ import java.net.URL
 
   /** @inheritDoc */
   override fun create(spec: StaticFragmentSpec, artifact: DetectedArtifact): HttpRequest<*> {
-    return affixHeaders(HttpRequest.GET<String>(
-      artifact.url.toURI()
-    ))
+    return affixHeaders(
+      HttpRequest.GET<String>(
+      artifact.url.toURI(),
+    ),
+    )
   }
 
   override fun create(base: URL, path: String): HttpRequest<*> {
-    return affixHeaders(HttpRequest.GET<String>(URI(
+    return affixHeaders(
+      HttpRequest.GET<String>(
+        URI(
       base.protocol,
       null,
       base.host,
@@ -102,6 +107,8 @@ import java.net.URL
       path,
       null,
       null,
-    )))
+    ),
+      ),
+    )
   }
 }

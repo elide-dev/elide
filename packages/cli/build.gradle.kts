@@ -16,12 +16,12 @@
   "UnstableApiUsage",
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   java
@@ -133,7 +133,7 @@ kotlin {
 }
 
 // use consistent compose plugin version
-//the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
+// the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
 //  libs.versions.compose.get()
 
 kapt {
@@ -280,9 +280,11 @@ micronaut {
 
   processing {
     incremental = true
-    annotations.addAll(listOf(
+    annotations.addAll(
+      listOf(
       "elide.tool.cli.*",
-    ))
+    ),
+    )
   }
 
   aot {
@@ -351,13 +353,15 @@ val commonNativeArgs = listOf(
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
-).plus(listOfNotNull(
+).plus(
+  listOfNotNull(
   if (enableEspresso) "--language:java" else null,
   if (enableWasm) "--language:wasm" else null,
   if (enableLlvm) "--language:llvm" else null,
   if (enablePython) "--language:python" else null,
   if (enableRuby) "--language:ruby" else null,
-)).plus(
+),
+).plus(
   if (enableTools) listOf(
     "--tool:chromeinspector",
     "--tool:coverage",
@@ -367,9 +371,9 @@ val commonNativeArgs = listOf(
     "--tool:insight",
     "--tool:insightheap",
     "--tool:profiler",
-  ) else emptyList()
+  ) else emptyList(),
 ).plus(
-  jvmModuleArgs
+  jvmModuleArgs,
 )
 
 val dashboardFlags: List<String> = listOf(
@@ -381,7 +385,7 @@ val debugFlags: List<String> = listOfNotNull(
   "-g",
   "-march=compatibility",
 ).plus(
-  if (enableDashboard) dashboardFlags else emptyList()
+  if (enableDashboard) dashboardFlags else emptyList(),
 )
 
 val experimentalFlags = listOf(
@@ -441,19 +445,22 @@ val releaseFlags: List<String> = listOf(
   "-H:+RemoveUnusedSymbols",
   "-R:+BouncyCastleIntrinsics",
   "-J-Djdk.image.use.jvm.map=false",
-).plus(releaseCFlags.flatMap {
+).plus(
+  releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
     "-H:CCompilerOption=$it",
   )
-}).plus(if (enablePgo) listOf(
+},
+).plus(
+  if (enablePgo) listOf(
   "--pgo=${profiles.joinToString(",")}",
   "-H:CodeSectionLayoutOptimization=ClusterByEdges",
 ) else emptyList(),
 ).plus(
-  if (enableSbom) listOf("--enable-sbom") else emptyList()
+  if (enableSbom) listOf("--enable-sbom") else emptyList(),
 ).plus(
-  if (enableDashboard) dashboardFlags else emptyList()
+  if (enableDashboard) dashboardFlags else emptyList(),
 )
 
 val jvmDefs = mapOf(
@@ -508,40 +515,52 @@ val defaultPlatformArgs = listOf(
   "--libc=glibc",
 )
 
-val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
+val windowsOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
   "-H:-AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
+).plus(
+  if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList()))
+) else emptyList(),
+),
+)
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
+val darwinOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
   "-H:+AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
-).plus(if (project.properties["elide.ci"] == "true") listOf(
+).plus(
+  if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList()))
+) else emptyList(),
+),
+)
 
 val windowsReleaseArgs = windowsOnlyArgs
 
-val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
+val darwinReleaseArgs = darwinOnlyArgs.plus(
+  listOf(
   "-H:+NativeArchitecture",
-))
+),
+)
 
-val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
+val linuxOnlyArgs = defaultPlatformArgs.plus(
+  listOf(
   "--static",
   "-march=native",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
-)).plus(
+),
+).plus(
   if (enableG1) listOf(
     "--gc=G1",
     "-H:+UseG1GC",
@@ -553,16 +572,20 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
     "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  )
-).plus(if (project.properties["elide.ci"] == "true") listOf(
+  ),
+).plus(
+  if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList())
+) else emptyList(),
+)
 
-val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
+val linuxReleaseArgs = linuxOnlyArgs.plus(
+  listOf(
   "-R:+WriteableCodeCache",
   "-H:+StripDebugInfo",
   "-H:+ObjectInlining",
-))
+),
+)
 
 val muslArgs = listOf(
   "--libc=musl",
@@ -580,34 +603,42 @@ fun nativeCliImageArgs(
   release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
 ): List<String> =
   commonNativeArgs.asSequence().plus(
-    initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
+    initializeAtBuildTime.map { "--initialize-at-build-time=$it" },
   ).plus(
-    initializeAtRuntime.map { "--initialize-at-run-time=$it" }
+    initializeAtRuntime.map { "--initialize-at-run-time=$it" },
   ).plus(
-    rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" }
-  ).plus(when (platform) {
+    rerunAtRuntime.map { "--rerun-class-initialization-at-runtime=$it" },
+  ).plus(
+    when (platform) {
     "windows" -> if (release) windowsReleaseArgs else windowsOnlyArgs
     "darwin" -> if (release) darwinReleaseArgs else darwinOnlyArgs
     "linux" -> if (target == "musl") muslArgs else (if (release) linuxReleaseArgs else linuxOnlyArgs)
     else -> defaultPlatformArgs
-  }).plus(
+  },
+  ).plus(
     if (test) {
-      testOnlyArgs.plus(initializeAtBuildTimeTest.map {
+      testOnlyArgs.plus(
+        initializeAtBuildTimeTest.map {
         "--initialize-at-build-time=$it"
-      }).plus(initializeAtRuntimeTest.map {
+      },
+      ).plus(
+        initializeAtRuntimeTest.map {
         "--initialize-at-run-time=$it"
-      }).plus(rerunAtRuntimeTest.map {
+      },
+      ).plus(
+        rerunAtRuntimeTest.map {
         "--rerun-class-initialization-at-runtime=$it"
-      })
+      },
+      )
     } else {
       emptyList()
-    }
+    },
   ).plus(
-    jvmDefs.map { "-D${it.key}=${it.value}" }
+    jvmDefs.map { "-D${it.key}=${it.value}" },
   ).plus(
-    hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
+    hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
-    if (debug && !release) debugFlags else if (release) releaseFlags else emptyList()
+    if (debug && !release) debugFlags else if (release) releaseFlags else emptyList(),
   ).filterNotNull().toList()
 
 graalvmNative {
@@ -661,9 +692,11 @@ graalvmNative {
       imageName = "elide.test"
       fallback = false
       quickBuild = true
-      buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).filter {
+      buildArgs.addAll(
+        nativeCliImageArgs(test = true, platform = targetOs).filter {
         it != "--language:java"  // espresso is not supported in test mode
-      })
+      },
+      )
     }
   }
 }
@@ -724,13 +757,13 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
   images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:latest"
+    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:latest",
   )
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
   images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:opt-latest"
+    "${project.properties["elide.publish.repo.docker.tools"]}/cli/elide/native:opt-latest",
   )
 }
 

@@ -3,11 +3,6 @@
 package elide.tool.bundler
 
 import ch.qos.logback.classic.Level
-import elide.annotations.Eager
-import elide.tool.bundler.cfg.ElideBundlerTool.ELIDE_TOOL_VERSION
-import elide.tool.bundler.cmd.inspect.BundleInspectCommand
-import elide.tool.bundler.cmd.pack.BundlePackCommand
-import elide.tool.bundler.cmd.unpack.BundleUnpackCommand
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -18,6 +13,11 @@ import picocli.CommandLine
 import java.util.*
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
+import elide.annotations.Eager
+import elide.tool.bundler.cfg.ElideBundlerTool.ELIDE_TOOL_VERSION
+import elide.tool.bundler.cmd.inspect.BundleInspectCommand
+import elide.tool.bundler.cmd.pack.BundlePackCommand
+import elide.tool.bundler.cmd.unpack.BundleUnpackCommand
 
 /** Entrypoint for the VFS bundler tool. */
 @CommandLine.Command(
@@ -52,18 +52,23 @@ public class Bundler : Runnable, AbstractBundlerSubcommand.BundlerParentCommand 
         .setEndOfOptionsDelimiter("--")
         .setPosixClusteredShortOptionsAllowed(true)
         .setUsageHelpAutoWidth(true)
-        .setColorScheme(CommandLine.Help.defaultColorScheme(if (args.find { arg ->
+        .setColorScheme(
+          CommandLine.Help.defaultColorScheme(
+            if (args.find { arg ->
             arg == "--no-pretty" || arg == "--pretty=false"
-          } != null) {
+          } != null
+            ) {
           CommandLine.Help.Ansi.OFF
         } else {
           CommandLine.Help.Ansi.ON
-        }))
+        },
+          ),
+        )
         .execute(*args)
     }
 
     /** Configures the Micronaut binary. */
-    @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
+    @ContextConfigurer internal class ToolConfigurator : ApplicationContextConfigurer {
       override fun configure(context: ApplicationContextBuilder) {
         context
           .bootstrapEnvironment(false)

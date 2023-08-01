@@ -1,12 +1,11 @@
 package elide.runtime.intrinsics.js
 
-
-import elide.vm.annotations.Polyglot
+import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyIterator
 import elide.runtime.gvm.internals.intrinsics.js.JsError
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorResult
 import elide.runtime.intrinsics.js.err.Error
-import org.graalvm.polyglot.proxy.ProxyIterable
-import org.graalvm.polyglot.proxy.ProxyIterator
+import elide.vm.annotations.Polyglot
 
 /**
  * # JS: Iterator
@@ -19,7 +18,7 @@ import org.graalvm.polyglot.proxy.ProxyIterator
  */
 public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, ProxyIterator, ProxyIterable {
   /** Represents an inner iterator value. */
-  public class JsIteratorResult<T> private constructor (
+  public class JsIteratorResult<T> private constructor(
     private val held: T?,
     @Polyglot public val done: Boolean,
     private val err: Throwable? = null,
@@ -93,7 +92,7 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, Proxy
    *
    * @return The final iterator result.
    */
-  @Polyglot public fun <T, E: Error> `throw`(err: E): JsIteratorResult<T> = JsIteratorResult.ofErr(
+  @Polyglot public fun <T, E : Error> `throw`(err: E): JsIteratorResult<T> = JsIteratorResult.ofErr(
     err,
   )
 

@@ -5,11 +5,10 @@ import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
-
 
 /** Basic tests for polyglot script functionality via Graal. */
 class PolyglotScriptTest {
@@ -20,7 +19,7 @@ class PolyglotScriptTest {
     assertEquals(
       42,
       result,
-      "should be able to evaluate simple array expression"
+      "should be able to evaluate simple array expression",
     )
   }
 
@@ -33,13 +32,13 @@ class PolyglotScriptTest {
           return "Hello, Graal!";
         }
         hello();
-      """.trimIndent()
+      """.trimIndent(),
     )
     val result: String = polyglot.eval(source).asString()
     assertEquals(
       "Hello, Graal!",
       result,
-      "should be able to evaluate simple function return expression"
+      "should be able to evaluate simple function return expression",
     )
   }
 
@@ -55,30 +54,30 @@ class PolyglotScriptTest {
           return hello;
         }
         resolver();
-      """.trimIndent()
+      """.trimIndent(),
     )
     val result: Value = polyglot.eval(source)
     assertFalse(
       result.isNull,
-      "function result provided by embedded resolver should not be `null`"
+      "function result provided by embedded resolver should not be `null`",
     )
     assertTrue(
       result.canExecute(),
-      "should be able to execute function returned by embedded resolver"
+      "should be able to execute function returned by embedded resolver",
     )
     val executionResult = result.execute()
     assertNotNull(
       executionResult,
-      "execution result from resolved function should not be `null`"
+      "execution result from resolved function should not be `null`",
     )
     assertFalse(
       executionResult.canExecute(),
-      "result from execution should not itself be executable"
+      "result from execution should not itself be executable",
     )
     assertEquals(
       "Hello, Graal!",
       executionResult.asString(),
-      "should be able to extract inner execution result"
+      "should be able to extract inner execution result",
     )
   }
 
@@ -94,32 +93,32 @@ class PolyglotScriptTest {
           return hello;
         }
         resolver();
-      """.trimIndent()
+      """.trimIndent(),
     )
     val result: Value = polyglot.eval(source)
     assertFalse(
       result.isNull,
-      "function result provided by embedded resolver should not be `null`"
+      "function result provided by embedded resolver should not be `null`",
     )
     assertTrue(
       result.canExecute(),
-      "should be able to execute function returned by embedded resolver"
+      "should be able to execute function returned by embedded resolver",
     )
     val executionResult = result.execute(
-      "Testsuite"
+      "Testsuite",
     )
     assertNotNull(
       executionResult,
-      "execution result from resolved function should not be `null`"
+      "execution result from resolved function should not be `null`",
     )
     assertFalse(
       executionResult.canExecute(),
-      "result from execution should not itself be executable"
+      "result from execution should not itself be executable",
     )
     assertEquals(
       "Hello, Testsuite!",
       executionResult.asString(),
-      "should be able to extract inner execution result"
+      "should be able to extract inner execution result",
     )
   }
 
@@ -128,35 +127,35 @@ class PolyglotScriptTest {
     val source = Source.create(
       "js",
       PolyglotScriptTest::class.java.getResourceAsStream(
-        "/META-INF/elide/embedded/harness.js"
+        "/META-INF/elide/embedded/harness.js",
       )!!.bufferedReader(
-        StandardCharsets.UTF_8
-      ).readText()
+        StandardCharsets.UTF_8,
+      ).readText(),
     )
 
     val result: Value = polyglot.eval(source)
     assertFalse(
       result.isNull,
-      "function result provided by embedded resolver should not be `null`"
+      "function result provided by embedded resolver should not be `null`",
     )
     assertTrue(
       result.canExecute(),
-      "should have executable result from harness"
+      "should have executable result from harness",
     )
     val executionResult = result.execute()
     assertNotNull(
       executionResult,
-      "execution result from resolved function should not be `null`"
+      "execution result from resolved function should not be `null`",
     )
     val executionOut = executionResult.asString()
     assertNotNull(
       executionOut,
-      "execution result from resolved function should not be `null`"
+      "execution result from resolved function should not be `null`",
     )
     assertEquals(
       "<div><strong>Hello, React SSR!</strong></div>",
       executionOut,
-      "execution output should be expected value"
+      "execution output should be expected value",
     )
   }
 }

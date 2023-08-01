@@ -2,22 +2,21 @@
 
 package elide.vfs.File_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class FileFingerprint : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : FileFingerprint {
+    fun __assign(_i: Int, _bb: ByteBuffer): FileFingerprint {
         __init(_i, _bb)
         return this
     }
-    val compressed : elide.vfs.File_.Fingerprint? get() = compressed(elide.vfs.File_.Fingerprint())
-    fun compressed(obj: elide.vfs.File_.Fingerprint) : elide.vfs.File_.Fingerprint? {
+    val compressed: elide.vfs.File_.Fingerprint? get() = compressed(elide.vfs.File_.Fingerprint())
+    fun compressed(obj: elide.vfs.File_.Fingerprint): elide.vfs.File_.Fingerprint? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class FileFingerprint : Table() {
             null
         }
     }
-    val uncompressed : elide.vfs.File_.Fingerprint? get() = uncompressed(elide.vfs.File_.Fingerprint())
-    fun uncompressed(obj: elide.vfs.File_.Fingerprint) : elide.vfs.File_.Fingerprint? {
+    val uncompressed: elide.vfs.File_.Fingerprint? get() = uncompressed(elide.vfs.File_.Fingerprint())
+    fun uncompressed(obj: elide.vfs.File_.Fingerprint): elide.vfs.File_.Fingerprint? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -36,12 +35,14 @@ class FileFingerprint : Table() {
     }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsFileFingerprint(_bb: ByteBuffer): FileFingerprint = getRootAsFileFingerprint(_bb, FileFingerprint())
+        fun getRootAsFileFingerprint(
+          _bb: ByteBuffer,
+        ): FileFingerprint = getRootAsFileFingerprint(_bb, FileFingerprint())
         fun getRootAsFileFingerprint(_bb: ByteBuffer, obj: FileFingerprint): FileFingerprint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFileFingerprint(builder: FlatBufferBuilder, compressedOffset: Int, uncompressedOffset: Int) : Int {
+        fun createFileFingerprint(builder: FlatBufferBuilder, compressedOffset: Int, uncompressedOffset: Int): Int {
             builder.startTable(2)
             addUncompressed(builder, uncompressedOffset)
             addCompressed(builder, compressedOffset)
@@ -50,7 +51,7 @@ class FileFingerprint : Table() {
         fun startFileFingerprint(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addCompressed(builder: FlatBufferBuilder, compressed: Int) = builder.addOffset(0, compressed, 0)
         fun addUncompressed(builder: FlatBufferBuilder, uncompressed: Int) = builder.addOffset(1, uncompressed, 0)
-        fun endFileFingerprint(builder: FlatBufferBuilder) : Int {
+        fun endFileFingerprint(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

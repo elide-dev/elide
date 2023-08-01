@@ -3,7 +3,7 @@ package elide.runtime.intrinsics.js.err
 import elide.vm.annotations.Polyglot
 
 /** TBD. */
-public abstract class Error () : AbstractJSException, RuntimeException() {
+public abstract class Error() : AbstractJSException, RuntimeException() {
   /**
    * TBD.
    */

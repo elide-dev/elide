@@ -3,16 +3,6 @@
 package elide.tool.cli
 
 import ch.qos.logback.classic.Level
-import elide.annotations.Eager
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
-import elide.tool.cli.cmd.info.ToolInfoCommand
-import elide.tool.cli.cmd.repl.ToolShellCommand
-import elide.tool.cli.err.AbstractToolError
-import elide.tool.cli.output.Counter
-import elide.tool.cli.output.runJestSample
-import elide.tool.cli.state.CommandState
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -30,6 +20,16 @@ import java.io.StringWriter
 import java.util.ResourceBundle
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
+import elide.annotations.Eager
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.output.Counter
+import elide.tool.cli.output.runJestSample
+import elide.tool.cli.state.CommandState
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
@@ -42,17 +42,19 @@ import kotlin.system.exitProcess
     ToolInfoCommand::class,
     ToolShellCommand::class,
   ],
-  headerHeading = ("@|bold,fg(magenta)%n" +
+  headerHeading = (
+    "@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +
     " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
     " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
     "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
     "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
     " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
-  )
+  ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Singleton class ElideTool internal constructor () :
+@Singleton
+class ElideTool internal constructor() :
   ToolCommandBase<CommandContext>() {
   companion object {
     init {
@@ -86,9 +88,11 @@ import kotlin.system.exitProcess
       Workaround.enableLibraryLoad()
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
-      exitProcess(installWindowsTerminalSupport {
+      exitProcess(
+        installWindowsTerminalSupport {
         op.invoke()
-      })
+      },
+      )
     }
 
     /** CLI entrypoint and [args]. */
@@ -112,18 +116,23 @@ import kotlin.system.exitProcess
         .setExitCodeExceptionMapper(exceptionMapper)
         .setPosixClusteredShortOptionsAllowed(true)
         .setUsageHelpAutoWidth(true)
-        .setColorScheme(Help.defaultColorScheme(if (args.find { arg ->
+        .setColorScheme(
+          Help.defaultColorScheme(
+            if (args.find { arg ->
             arg == "--no-pretty" || arg == "--pretty=false"
-        } != null) {
+        } != null
+            ) {
           Help.Ansi.OFF
         } else {
           Help.Ansi.ON
-        }))
+        },
+          ),
+        )
         .execute(*args)
     }
 
     /** Configures the Micronaut binary. */
-    @ContextConfigurer internal class ToolConfigurator: ApplicationContextConfigurer {
+    @ContextConfigurer internal class ToolConfigurator : ApplicationContextConfigurer {
       override fun configure(context: ApplicationContextBuilder) {
         context
           .bootstrapEnvironment(false)
@@ -151,10 +160,12 @@ import kotlin.system.exitProcess
           val out = StringWriter()
           val printer = PrintWriter(out)
           inner.printStackTrace(printer)
-          logging.error(StringBuilder().apply {
+          logging.error(
+            StringBuilder().apply {
             append("Stacktrace:\n")
             append(out.toString())
-          }.toString())
+          }.toString(),
+          )
           exitCode
         }
 

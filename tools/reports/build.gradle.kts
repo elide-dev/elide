@@ -56,9 +56,9 @@ dependencies {
       listOf("ssg")
     } else {
       emptyList()
-    }
+    },
   ).plus(
-    Elide.multiplatformModules
+    Elide.multiplatformModules,
   ).forEach {
     testReportAggregation(project(":packages:$it"))
     jacocoAggregation(project(":packages:$it"))
@@ -97,7 +97,7 @@ task<Copy>("locateCopyJUnitReports") {
     }
   }
   into(
-    "build/test-results/allreports"
+    "build/test-results/allreports",
   )
 }
 
@@ -112,14 +112,14 @@ task("mergeJUnitReports") {
         "taskdef"(
           "name" to "junitreport",
           "classname" to "org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator",
-          "classpath" to antJUnit.asPath
+          "classpath" to antJUnit.asPath,
         )
 
         // generates an XML report
         "junitreport"("todir" to mergedDir) {
           "fileset"(
             "dir" to resultsDir,
-            "includes" to "TEST-*.xml"
+            "includes" to "TEST-*.xml",
           )
         }
       }

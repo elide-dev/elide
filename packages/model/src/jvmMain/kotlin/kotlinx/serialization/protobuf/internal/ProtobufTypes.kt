@@ -7,6 +7,7 @@ internal val SerialDescriptor.isPackable: Boolean
   @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
   get() = when (kind) {
     PrimitiveKind.STRING,
-    !is PrimitiveKind -> false
+    !is PrimitiveKind,
+    -> false
     else -> true
   }

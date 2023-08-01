@@ -1,10 +1,10 @@
 package elide.frontend.ssr
 
+import js.core.jso
 import react.ReactElement
 import web.streams.ReadableStreamDefaultReadValueResult
 import web.streams.ReadableStreamDefaultReader
 import kotlin.js.Promise
-import js.core.jso
 import react.dom.server.rawRenderToString as renderSSRString
 import react.dom.server.renderToReadableStream as renderSSRStreaming
 
@@ -39,16 +39,18 @@ public typealias RenderCallback = (ResponseChunk) -> Unit
 /**
  *
  */
-public class ApplicationBuffer constructor (private val app: ReactElement<*>, private val stream: Boolean = true) {
+public class ApplicationBuffer constructor(private val app: ReactElement<*>, private val stream: Boolean = true) {
   // Whether we have finished streaming.
   private var fin: Boolean = false
 
   // Call the `emitter` with a well-formed `ResponseChunk`.
   private fun finishStream(statusCode: Int, emitter: (ResponseChunk) -> Unit) {
-    emitter.invoke(jso {
+    emitter.invoke(
+      jso {
       status = statusCode
       fin = true
-    })
+    },
+    )
   }
 
   private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
@@ -60,11 +62,13 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
       if (rawContent != null && rawContent.isNotEmpty()) {
         resolved = true  // we're handling a content chunk
         val decoded = rawContent.decodeToString()
-        emitter.invoke(jso {
+        emitter.invoke(
+          jso {
           content = decoded
           fin = false
           hasContent = decoded.isNotBlank()
-        })
+        },
+        )
       }
 
       if (chunk.done) {
@@ -80,7 +84,7 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
       if (!resolved) {
         console.error(
           "Failed to read chunk from stream: got `null` or empty content. Got value: ",
-          JSON.stringify(value)
+          JSON.stringify(value),
         )
         finishStream(500, emitter)
       }

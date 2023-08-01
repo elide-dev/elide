@@ -1,11 +1,11 @@
 package elide.server.assets
 
 import com.google.protobuf.ByteString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.assertThrows
 import tools.elide.crypto.HashAlgorithm
 import tools.elide.data.CompressionMode
 import java.nio.charset.StandardCharsets
+import kotlinx.serialization.json.Json
 import kotlin.test.*
 
 /** Tests for data structures and utilities which implement server-side asset serving. */
@@ -160,7 +160,7 @@ class AssetDataTest {
     )
     val reference = AssetReference.fromPointer(
       pointer,
-      "/_/assets/some-uri.js"
+      "/_/assets/some-uri.js",
     )
     assertNotNull(reference)
     assertEquals(reference.module, "some-module")

@@ -162,7 +162,6 @@ sonarqube {
   isSkipProject = true
 }
 
-
 /**
  * Framework: Micronaut
  */
@@ -171,10 +170,12 @@ micronaut {
   runtime = io.micronaut.gradle.MicronautRuntime.NONE
   processing {
     incremental = true
-    annotations.addAll(listOf(
+    annotations.addAll(
+      listOf(
       "elide.tool.bundler",
       "elide.tool.bundler.*",
-    ))
+    ),
+    )
   }
 
   aot {
@@ -230,7 +231,6 @@ afterEvaluate {
     enabled = false
   }
 }
-
 
 /**
  * Build: Bundler Native Image
@@ -301,21 +301,23 @@ fun nativeImageArgs(
   enterprise: Boolean = isEnterprise,
 ): List<String> =
   commonNativeArgs.asSequence().plus(
-    initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
+    initializeAtBuildTime.map { "--initialize-at-build-time=$it" },
   ).plus(
-    initializeAtRuntime.map { "--initialize-at-run-time=$it" }
-  ).plus(when (platform) {
+    initializeAtRuntime.map { "--initialize-at-run-time=$it" },
+  ).plus(
+    when (platform) {
     "darwin" -> darwinOnlyArgs
     "linux" -> if (target == "musl") muslArgs else linuxOnlyArgs
     else -> defaultPlatformArgs
-  }).plus(
-    jvmDefs.map { "-D${it.key}=${it.value}" }
+  },
   ).plus(
-    hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" }
+    jvmDefs.map { "-D${it.key}=${it.value}" },
   ).plus(
-    if (debug) debugFlags else if (release) releaseFlags else emptyList()
+    hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
   ).plus(
-    if (enterprise) enterpriseOnlyFlags else emptyList()
+    if (debug) debugFlags else if (release) releaseFlags else emptyList(),
+  ).plus(
+    if (enterprise) enterpriseOnlyFlags else emptyList(),
   ).toList()
 
 graalvmNative {
@@ -374,7 +376,6 @@ graalvmNative {
   }
 }
 
-
 /**
  * Build: Bundler Docker Images
  */
@@ -405,13 +406,13 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuildNative") {
   images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:latest"
+    "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:latest",
   )
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuildNative") {
   images = listOf(
-    "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:opt-latest"
+    "${project.properties["elide.publish.repo.docker.tools"]}/cli/bundler/native:opt-latest",
   )
 }
 
@@ -444,4 +445,3 @@ afterEvaluate {
     }
   }
 }
-

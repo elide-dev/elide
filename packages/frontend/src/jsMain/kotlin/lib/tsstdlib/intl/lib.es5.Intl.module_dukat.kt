@@ -50,8 +50,14 @@ public external interface Collator {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: CollatorOptions = definedExternally): Collator
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: CollatorOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: CollatorOptions = definedExternally,
+    ): Collator
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: CollatorOptions = definedExternally,
+    ): Array<String>
   }
 }
 
@@ -117,8 +123,14 @@ public external interface NumberFormat {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: NumberFormatOptions = definedExternally): NumberFormat
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: NumberFormatOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: NumberFormatOptions = definedExternally,
+    ): NumberFormat
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: NumberFormatOptions = definedExternally,
+    ): Array<String>
   }
 }
 
@@ -210,7 +222,13 @@ public external interface DateTimeFormat {
 
   public companion object {
     @nativeInvoke
-    public operator fun invoke(locales: Any /* String | Array<String> */ = definedExternally, options: DateTimeFormatOptions = definedExternally): DateTimeFormat
-    public fun supportedLocalesOf(locales: Any /* String | Array<String> */, options: DateTimeFormatOptions = definedExternally): Array<String>
+    public operator fun invoke(
+      locales: Any /* String | Array<String> */ = definedExternally,
+      options: DateTimeFormatOptions = definedExternally,
+    ): DateTimeFormat
+    public fun supportedLocalesOf(
+      locales: Any /* String | Array<String> */,
+      options: DateTimeFormatOptions = definedExternally,
+    ): Array<String>
   }
 }

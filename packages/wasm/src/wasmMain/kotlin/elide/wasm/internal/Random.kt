@@ -13,9 +13,9 @@
 
 package elide.wasm.internal
 
-import elide.wasm.WasiException
 import kotlin.wasm.WasmImport
 import kotlin.wasm.unsafe.withScopedMemoryAllocator
+import elide.wasm.WasiException
 
 internal fun randomGetInt(): Int {
     withScopedMemoryAllocator { allocator ->

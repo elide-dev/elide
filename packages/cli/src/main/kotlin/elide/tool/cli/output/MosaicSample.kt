@@ -4,7 +4,6 @@ package elide.tool.cli.output
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import elide.tool.cli.output.TestState.*
 import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
@@ -24,6 +23,7 @@ import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import elide.tool.cli.output.TestState.*
 
 suspend fun MosaicScope.Counter() {
   // TODO https://github.com/JakeWharton/mosaic/issues/3
@@ -52,7 +52,7 @@ fun runJestSample() = runMosaicBlocking {
       "tests/posts.kt",
       "tests/post.kt",
       "tests/comments.kt",
-    )
+    ),
   )
   val totalTests = paths.size
 
@@ -116,7 +116,7 @@ fun TestRow(test: Test) {
       modifier = Modifier
         .background(bg)
         .padding(horizontal = 1),
-      color = Black
+      color = Black,
     )
 
     val dir = test.path.substringBeforeLast('/')

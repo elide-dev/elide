@@ -2,38 +2,37 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class ResponseHeader : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : ResponseHeader {
+    fun __assign(_i: Int, _bb: ByteBuffer): ResponseHeader {
         __init(_i, _bb)
         return this
     }
-    val name : String?
+    val name: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val value : String?
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val value: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val valueAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val force : Boolean
+    val valueAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val force: Boolean
         get() {
             val o = __offset(8)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -42,7 +41,7 @@ class ResponseHeader : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createResponseHeader(builder: FlatBufferBuilder, nameOffset: Int, valueOffset: Int, force: Boolean) : Int {
+        fun createResponseHeader(builder: FlatBufferBuilder, nameOffset: Int, valueOffset: Int, force: Boolean): Int {
             builder.startTable(3)
             addValue(builder, valueOffset)
             addName(builder, nameOffset)
@@ -53,7 +52,7 @@ class ResponseHeader : Table() {
         fun addName(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
         fun addForce(builder: FlatBufferBuilder, force: Boolean) = builder.addBoolean(2, force, false)
-        fun endResponseHeader(builder: FlatBufferBuilder) : Int {
+        fun endResponseHeader(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -2,34 +2,33 @@
 
 package elide.cli.ElideToolOptions_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class OutputOptions : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : OutputOptions {
+    fun __assign(_i: Int, _bb: ByteBuffer): OutputOptions {
         __init(_i, _bb)
         return this
     }
-    val verbose : Boolean
+    val verbose: Boolean
         get() {
             val o = __offset(4)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val quiet : Boolean
+    val quiet: Boolean
         get() {
             val o = __offset(6)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val pretty : Boolean
+    val pretty: Boolean
         get() {
             val o = __offset(8)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -38,7 +37,7 @@ class OutputOptions : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOutputOptions(builder: FlatBufferBuilder, verbose: Boolean, quiet: Boolean, pretty: Boolean) : Int {
+        fun createOutputOptions(builder: FlatBufferBuilder, verbose: Boolean, quiet: Boolean, pretty: Boolean): Int {
             builder.startTable(3)
             addPretty(builder, pretty)
             addQuiet(builder, quiet)
@@ -49,7 +48,7 @@ class OutputOptions : Table() {
         fun addVerbose(builder: FlatBufferBuilder, verbose: Boolean) = builder.addBoolean(0, verbose, false)
         fun addQuiet(builder: FlatBufferBuilder, quiet: Boolean) = builder.addBoolean(1, quiet, false)
         fun addPretty(builder: FlatBufferBuilder, pretty: Boolean) = builder.addBoolean(2, pretty, false)
-        fun endOutputOptions(builder: FlatBufferBuilder) : Int {
+        fun endOutputOptions(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

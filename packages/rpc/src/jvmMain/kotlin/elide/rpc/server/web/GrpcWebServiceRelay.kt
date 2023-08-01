@@ -3,9 +3,6 @@ package elide.rpc.server.web
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.util.concurrent.Futures
 import com.google.protobuf.Message
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.rpc.server.RpcRuntime
 import io.grpc.*
 import io.grpc.protobuf.ProtoFileDescriptorSupplier
 import io.grpc.protobuf.ProtoServiceDescriptorSupplier
@@ -13,9 +10,6 @@ import io.grpc.stub.AbstractStub
 import io.grpc.stub.MetadataUtils
 import io.grpc.stub.StreamObserver
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Inject
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.guava.asDeferred
 import java.io.ByteArrayInputStream
 import java.lang.reflect.Method
 import java.util.*
@@ -23,6 +17,12 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.guava.asDeferred
+import elide.rpc.server.RpcRuntime
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Implementation of a [GrpcWebService] which calls the underlying gRPC service directly, in essence simulating an
@@ -40,8 +40,10 @@ import java.util.concurrent.atomic.AtomicReference
  * @see fulfillAsync for details about how reflective fulfillment works.
  * @param runtime Active RPC runtime to use for service fulfillment.
  */
-@Context internal class GrpcWebServiceRelay @Inject constructor(
-  private val runtime: RpcRuntime
+@Context internal class GrpcWebServiceRelay
+  @Inject
+  constructor(
+  private val runtime: RpcRuntime,
 ) : GrpcWebService {
   companion object {
     // Banned Java package paths for class loading.
@@ -97,7 +99,7 @@ import java.util.concurrent.atomic.AtomicReference
         val path = pathSplit.slice(0 until i).joinToString(".")
         if (bannedPackages.contains(path)) {
           throw IllegalStateException(
-            "Reflection-based gRPC service binding is not allowed for package or class '$path'"
+            "Reflection-based gRPC service binding is not allowed for package or class '$path'",
           )
         }
       }
@@ -109,12 +111,12 @@ import java.util.concurrent.atomic.AtomicReference
     } catch (err: Throwable) {
       logging.error(
         "Failed to load class for gRPC relay at name '$className'",
-        err
+        err,
       )
       throw Status.INTERNAL.withCause(
-        err
+        err,
       ).withDescription(
-        "Service or method not found"
+        "Service or method not found",
       ).asRuntimeException()
     }
   }
@@ -128,12 +130,12 @@ import java.util.concurrent.atomic.AtomicReference
     } catch (err: Throwable) {
       logging.error(
         "Failed to resolve method at name '$methodName' from class '${klass.name}' for gRPC web dispatch",
-        err
+        err,
       )
       throw Status.INTERNAL.withCause(
-        err
+        err,
       ).withDescription(
-        "Service or method not found"
+        "Service or method not found",
       ).asRuntimeException()
     }
   }
@@ -153,7 +155,7 @@ import java.util.concurrent.atomic.AtomicReference
     return if (payload is Message) {
       payload.toByteArray()
     } else throw IllegalArgumentException(
-      "No support for decoding non-message responses at this time. Instead, got instance of '${payload.javaClass.name}'"
+      "No support for decoding non-message responses at this time. Instead, got instance of '${payload.javaClass.name}'",
     )
   }
 
@@ -198,11 +200,11 @@ import java.util.concurrent.atomic.AtomicReference
     val incomingMessage: Message = if (deframer.processInput(stream, call.contentType)) {
       deserializer.deserialize(
         grpcMethod,
-        deframer.toByteArray()
+        deframer.toByteArray(),
       )
     } else {
       throw IllegalArgumentException(
-        "Data stream for gRPC Web dispatch was malformed"
+        "Data stream for gRPC Web dispatch was malformed",
       )
     }
 
@@ -220,7 +222,7 @@ import java.util.concurrent.atomic.AtomicReference
       )
       if (!observer.await(call.config.timeout.seconds)) {
         throw Status.DEADLINE_EXCEEDED.withDescription(
-          "CALL_TIMEOUT"
+          "CALL_TIMEOUT",
         ).asRuntimeException()
       }
     } catch (sre: StatusRuntimeException) {
@@ -238,7 +240,7 @@ import java.util.concurrent.atomic.AtomicReference
     return if (observer.failed.get()) {
       logging.debug(
         "Encountered remote error from backing gRPC Web method '${call.method.methodDescriptor.fullMethodName}'",
-        err
+        err,
       )
 
       // try to synthesize the error into a gRPC status
@@ -252,7 +254,7 @@ import java.util.concurrent.atomic.AtomicReference
           headers = errorHeaders,
           trailers = errorTrailers,
           cause = err.get(),
-        )
+        ),
       )
     } else {
       logging.debug {
@@ -265,7 +267,7 @@ import java.util.concurrent.atomic.AtomicReference
           payload = serializeResponses(responses),
           headers = interceptor.headers,
           trailers = interceptor.trailers,
-        )
+        ),
       )
     }
   }
@@ -279,7 +281,7 @@ import java.util.concurrent.atomic.AtomicReference
       fulfillSingleCall(
         call,
         interceptor,
-      )
+      ),
     ).asDeferred()
   }
 
@@ -290,9 +292,9 @@ import java.util.concurrent.atomic.AtomicReference
    * Once the call completes, the provided [latch] is notified, which lets dependent callers begin interrogating this
    * object to determine the outcome of the call.
    */
-  private inner class GrpcCallObserver constructor (
+  private inner class GrpcCallObserver constructor(
     private val latch: CountDownLatch,
-  ): StreamObserver<Any> {
+  ) : StreamObserver<Any> {
     /** Set of values returned via [onNext]. */
     val values = LinkedList<Any>()
 

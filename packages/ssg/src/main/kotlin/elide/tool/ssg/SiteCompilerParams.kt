@@ -43,14 +43,14 @@ public data class SiteCompilerParams(
     /** Output to a directory. */
     public data class Directory(
       override val path: String,
-    ): Output(path, OutputMode.DIRECTORY)
+    ) : Output(path, OutputMode.DIRECTORY)
 
     /** Output to a file. */
     public data class File(
       override val path: String,
       public val format: OutputFormat,
       public val compressed: Boolean,
-    ): Output(path, OutputMode.FILE)
+    ) : Output(path, OutputMode.FILE)
 
     internal companion object {
       // Determine whether the provided `path` seems like, or is, a directory.

@@ -1,9 +1,5 @@
 package elide.server.controller.builtin
 
-import elide.server.RawPayload
-import elide.server.RawResponse
-import elide.server.annotations.Eager
-import elide.server.html
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
@@ -11,20 +7,28 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
 import io.micronaut.http.annotation.Get
+import java.io.ByteArrayOutputStream
 import kotlinx.html.h1
 import kotlinx.html.p
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
-import java.io.ByteArrayOutputStream
+import elide.server.RawPayload
+import elide.server.RawResponse
+import elide.server.annotations.Eager
+import elide.server.html
 
 /** Default built-in controller which handles `404 Not Found` events. */
-@Eager @Controller public class NotFoundController : BuiltinController() {
+@Eager @Controller
+public class NotFoundController : BuiltinController() {
   /** @inheritDoc */
-  @Get("/error/notfound", produces = [
+  @Get(
+    "/error/notfound",
+    produces = [
     MediaType.TEXT_HTML,
     MediaType.APPLICATION_JSON,
-  ])
+  ],
+  )
   @Error(status = HttpStatus.NOT_FOUND, global = true)
   override suspend fun handle(request: HttpRequest<out Any>): RawResponse {
     val accept = (request.accept() ?: listOf(MediaType.TEXT_HTML)).map { it.toString() }
@@ -59,7 +63,7 @@ import java.io.ByteArrayOutputStream
       it.writeBytes("Not found.".toByteArray())
     }
     return HttpResponse.notFound<RawPayload>().contentType(MediaType.TEXT_PLAIN).body(
-      baos
+      baos,
     )
   }
 }

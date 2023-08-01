@@ -2,22 +2,23 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Fonts : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Fonts {
+    fun __assign(_i: Int, _bb: ByteBuffer): Fonts {
         __init(_i, _bb)
         return this
     }
-    fun package_(j: Int) : elide.page.Context_.Fonts_.FontPackage? = package_(elide.page.Context_.Fonts_.FontPackage(), j)
-    fun package_(obj: elide.page.Context_.Fonts_.FontPackage, j: Int) : elide.page.Context_.Fonts_.FontPackage? {
+    fun package_(
+      j: Int,
+    ): elide.page.Context_.Fonts_.FontPackage? = package_(elide.page.Context_.Fonts_.FontPackage(), j)
+    fun package_(obj: elide.page.Context_.Fonts_.FontPackage, j: Int): elide.page.Context_.Fonts_.FontPackage? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -25,9 +26,10 @@ class Fonts : Table() {
             null
         }
     }
-    val package_Length : Int
+    val package_Length: Int
         get() {
-            val o = __offset(4); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(4)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -36,14 +38,14 @@ class Fonts : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFonts(builder: FlatBufferBuilder, package_Offset: Int) : Int {
+        fun createFonts(builder: FlatBufferBuilder, package_Offset: Int): Int {
             builder.startTable(1)
             addPackage_(builder, package_Offset)
             return endFonts(builder)
         }
         fun startFonts(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addPackage_(builder: FlatBufferBuilder, package_: Int) = builder.addOffset(0, package_, 0)
-        fun createPackageVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createPackageVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -51,7 +53,7 @@ class Fonts : Table() {
             return builder.endVector()
         }
         fun startPackageVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endFonts(builder: FlatBufferBuilder) : Int {
+        fun endFonts(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -1,7 +1,5 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.testing.annotations.Test
-import elide.runtime.gvm.internals.GuestVFS
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.AccessMode
@@ -9,12 +7,14 @@ import java.nio.file.Path
 import java.util.EnumSet
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.gvm.internals.GuestVFS
+import elide.testing.annotations.Test
 
 /** Baseline abstract tests for VFS implementations ([GuestVFS]). */
 internal abstract class AbstractVFSTest<VFS, Builder, Factory>
-  where VFS: AbstractBaseVFS<VFS>,
-        Builder: AbstractBaseVFS.VFSBuilder<VFS>,
-        Factory: AbstractBaseVFS.VFSFactory<VFS, Builder> {
+  where VFS : AbstractBaseVFS<VFS>,
+        Builder : AbstractBaseVFS.VFSBuilder<VFS>,
+        Factory : AbstractBaseVFS.VFSFactory<VFS, Builder> {
   /** @return Empty builder for this VFS implementation. */
   abstract fun newBuilder(): Builder
 
@@ -26,20 +26,26 @@ internal abstract class AbstractVFSTest<VFS, Builder, Factory>
 
   /** Assert that the provided [response] represents an allowed I/O call. */
   private fun assertAllowed(response: AccessResponse, message: String? = null) {
-    assertEquals(AccessResult.ALLOW, response.policy, if (message.isNullOrBlank()) {
+    assertEquals(
+      AccessResult.ALLOW, response.policy,
+      if (message.isNullOrBlank()) {
       "Expected access to be allowed, but was denied: $response"
     } else {
       message
-    })
+    },
+    )
   }
 
   /** Assert that the provided [response] represents a disallowed I/O call. */
   private fun assertDenied(response: AccessResponse, message: String? = null) {
-    assertEquals(AccessResult.DENY, response.policy, if (message.isNullOrBlank()) {
+    assertEquals(
+      AccessResult.DENY, response.policy,
+      if (message.isNullOrBlank()) {
       "Expected access to be denied, but was allowed: $response"
     } else {
       message
-    })
+    },
+    )
   }
 
   /** Test: Acquire a new builder for this VFS implementation. */
@@ -68,39 +74,54 @@ internal abstract class AbstractVFSTest<VFS, Builder, Factory>
     assertEquals(true, vfs.config.readOnly)
 
     // should allow reads
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = AccessType.READ,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "read operation should be allowed in read-only mode")
+    ),
+      "read operation should be allowed in read-only mode",
+    )
 
     // should deny writes
-    assertDenied(vfs.checkPolicy(
+    assertDenied(
+      vfs.checkPolicy(
       type = AccessType.WRITE,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "write operation should be denied in read-only mode")
+    ),
+      "write operation should be denied in read-only mode",
+    )
 
     // should deny deletes
-    assertDenied(vfs.checkPolicy(
+    assertDenied(
+      vfs.checkPolicy(
       type = AccessType.DELETE,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "delete operation should be denied in read-only mode")
+    ),
+      "delete operation should be denied in read-only mode",
+    )
 
     // should deny multiple access with write
-    assertDenied(vfs.checkPolicy(
+    assertDenied(
+      vfs.checkPolicy(
       type = EnumSet.of(AccessType.READ, AccessType.WRITE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "write operation should be denied in read-only mode")
+    ),
+      "write operation should be denied in read-only mode",
+    )
 
     // should deny multiple access with write
-    assertDenied(vfs.checkPolicy(
+    assertDenied(
+      vfs.checkPolicy(
       type = EnumSet.of(AccessType.READ, AccessType.DELETE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "delete operation should be denied in read-only mode")
+    ),
+      "delete operation should be denied in read-only mode",
+    )
   }
 
   /** Test: Writable filesystem policy does not reject writes. */
@@ -111,39 +132,54 @@ internal abstract class AbstractVFSTest<VFS, Builder, Factory>
     assertEquals(false, vfs.config.readOnly)
 
     // should allow reads
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = AccessType.READ,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "read operation should be allowed in writable mode")
+    ),
+      "read operation should be allowed in writable mode",
+    )
 
     // should allow writes
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = AccessType.WRITE,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "write operation should be allowed in writable mode")
+    ),
+      "write operation should be allowed in writable mode",
+    )
 
     // should allow deletes
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = AccessType.DELETE,
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "delete operation should be allowed in writable mode")
+    ),
+      "delete operation should be allowed in writable mode",
+    )
 
     // should allow multiple access with write
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = EnumSet.of(AccessType.READ, AccessType.WRITE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "write operation should be allowed in writable mode")
+    ),
+      "write operation should be allowed in writable mode",
+    )
 
     // should deny multiple access with write
-    assertAllowed(vfs.checkPolicy(
+    assertAllowed(
+      vfs.checkPolicy(
       type = EnumSet.of(AccessType.READ, AccessType.DELETE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
-    ), "delete operation should be allowed in writable mode")
+    ),
+      "delete operation should be allowed in writable mode",
+    )
   }
 
   /** Test: Read-only filesystem access check rejects writes. */

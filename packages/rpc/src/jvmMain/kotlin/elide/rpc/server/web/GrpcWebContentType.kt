@@ -7,7 +7,7 @@ import io.micronaut.http.MediaType
  *
  * @param symbol HTTP `Content-Type` value corresponding to this format.
  */
-public enum class GrpcWebContentType constructor (internal val symbol: String) {
+public enum class GrpcWebContentType constructor(internal val symbol: String) {
   /**
    * Binary dispatch for gRPC-Web, potentially with Protocol Buffers.
    *
@@ -20,7 +20,8 @@ public enum class GrpcWebContentType constructor (internal val symbol: String) {
    *
    * @see contentType For calculation of a full `Content-Type` header.
    */
-  TEXT("application/grpc-web-text");
+  TEXT("application/grpc-web-text"),
+  ;
 
   public companion object {
     // All valid `Content-Type` values for gRPC-Web.
@@ -36,9 +37,11 @@ public enum class GrpcWebContentType constructor (internal val symbol: String) {
       contentType.toString().trim().lowercase()
     ) {
       "application/grpc-web+proto",
-      "application/grpc-web" -> BINARY
+      "application/grpc-web",
+      -> BINARY
       "application/grpc-web-text+proto",
-      "application/grpc-web-text" -> TEXT
+      "application/grpc-web-text",
+      -> TEXT
       else -> throw IllegalArgumentException("Cannot resolve invalid `Content-Type` for gRPC-Web: '$contentType'")
     }
   }
@@ -65,7 +68,7 @@ public enum class GrpcWebContentType constructor (internal val symbol: String) {
    */
   public fun mediaType(proto: Boolean = true): MediaType {
     return MediaType(
-      contentType(proto)
+      contentType(proto),
     )
   }
 }

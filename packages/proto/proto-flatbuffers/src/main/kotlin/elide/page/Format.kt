@@ -8,7 +8,7 @@ class Format private constructor() {
         const val GENERIC: Int = 0
         const val OPENGRAPH: Int = 1
         const val JSONLD: Int = 2
-        val names : Array<String> = arrayOf("GENERIC", "OPENGRAPH", "JSON_LD")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("GENERIC", "OPENGRAPH", "JSON_LD")
+        fun name(e: Int): String = names[e]
     }
 }

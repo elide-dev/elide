@@ -5,4 +5,4 @@ import java.util.*
 /**
  * TBD.
  */
-internal interface MutableSortedMap<K: Comparable<K>, V> : MutableMap<K, V>, SortedMap<K, V>
+internal interface MutableSortedMap<K : Comparable<K>, V> : MutableMap<K, V>, SortedMap<K, V>

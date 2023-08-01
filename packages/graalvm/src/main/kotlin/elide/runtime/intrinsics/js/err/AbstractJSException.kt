@@ -20,7 +20,7 @@ public sealed interface AbstractJSException {
    * @param T type of JavaScript error implemented by this factory. Must implement [AbstractJSException].
    * @see AbstractJSException for the regular object interface implemented for each JS exception type.
    */
-  public interface ErrorFactory<T: AbstractJSException> {
+  public interface ErrorFactory<T : AbstractJSException> {
     /**
      * ## Interface: Create from [Throwable]
      *

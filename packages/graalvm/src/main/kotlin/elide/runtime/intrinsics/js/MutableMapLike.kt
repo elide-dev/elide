@@ -5,7 +5,7 @@ import elide.runtime.intrinsics.js.err.TypeError
 /**
  * TBD.
  */
-public interface MutableMapLike<K: Any, V> : MapLike<K, V>, MutableMap<K, V> {
+public interface MutableMapLike<K : Any, V> : MapLike<K, V>, MutableMap<K, V> {
   /**
    * TBD.
    */

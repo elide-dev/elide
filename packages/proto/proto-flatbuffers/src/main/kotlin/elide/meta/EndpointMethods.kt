@@ -10,7 +10,7 @@ class EndpointMethods private constructor() {
         const val PUT: Int = 2
         const val PATCH: Int = 3
         const val DELETE: Int = 5
-        val names : Array<String> = arrayOf("GET", "POST", "PUT", "PATCH", "", "DELETE")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("GET", "POST", "PUT", "PATCH", "", "DELETE")
+        fun name(e: Int): String = names[e]
     }
 }

@@ -2,22 +2,21 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class BuildInfo : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : BuildInfo {
+    fun __assign(_i: Int, _bb: ByteBuffer): BuildInfo {
         __init(_i, _bb)
         return this
     }
-    val stamp : google.protobuf.Timestamp? get() = stamp(google.protobuf.Timestamp())
-    fun stamp(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
+    val stamp: google.protobuf.Timestamp? get() = stamp(google.protobuf.Timestamp())
+    fun stamp(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -32,14 +31,14 @@ class BuildInfo : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBuildInfo(builder: FlatBufferBuilder, stampOffset: Int) : Int {
+        fun createBuildInfo(builder: FlatBufferBuilder, stampOffset: Int): Int {
             builder.startTable(1)
             addStamp(builder, stampOffset)
             return endBuildInfo(builder)
         }
         fun startBuildInfo(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addStamp(builder: FlatBufferBuilder, stamp: Int) = builder.addOffset(0, stamp, 0)
-        fun endBuildInfo(builder: FlatBufferBuilder) : Int {
+        fun endBuildInfo(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

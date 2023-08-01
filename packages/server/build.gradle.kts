@@ -26,12 +26,14 @@ micronaut {
 
   processing {
     incremental = true
-    annotations.addAll(listOf(
+    annotations.addAll(
+      listOf(
       "elide.server",
       "elide.server.*",
       "elide.server.annotations",
       "elide.server.annotations.*",
-    ))
+    ),
+    )
   }
 }
 

@@ -10,7 +10,7 @@ class OrientationMode private constructor() {
         const val NATURAL: Int = 2
         const val LANDSCAPE: Int = 3
         const val PORTRAIT: Int = 4
-        val names : Array<String> = arrayOf("UNSPECIFIED_ORIENTATION", "ANY", "NATURAL", "LANDSCAPE", "PORTRAIT")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("UNSPECIFIED_ORIENTATION", "ANY", "NATURAL", "LANDSCAPE", "PORTRAIT")
+        fun name(e: Int): String = names[e]
     }
 }

@@ -2,22 +2,21 @@
 
 package elide.cli
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class ElideToolState : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : ElideToolState {
+    fun __assign(_i: Int, _bb: ByteBuffer): ElideToolState {
         __init(_i, _bb)
         return this
     }
-    val auth : elide.cli.LocalAuthToken? get() = auth(elide.cli.LocalAuthToken())
-    fun auth(obj: elide.cli.LocalAuthToken) : elide.cli.LocalAuthToken? {
+    val auth: elide.cli.LocalAuthToken? get() = auth(elide.cli.LocalAuthToken())
+    fun auth(obj: elide.cli.LocalAuthToken): elide.cli.LocalAuthToken? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class ElideToolState : Table() {
             null
         }
     }
-    val config : elide.cli.CommandLineConfig? get() = config(elide.cli.CommandLineConfig())
-    fun config(obj: elide.cli.CommandLineConfig) : elide.cli.CommandLineConfig? {
+    val config: elide.cli.CommandLineConfig? get() = config(elide.cli.CommandLineConfig())
+    fun config(obj: elide.cli.CommandLineConfig): elide.cli.CommandLineConfig? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -41,7 +40,7 @@ class ElideToolState : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createElideToolState(builder: FlatBufferBuilder, authOffset: Int, configOffset: Int) : Int {
+        fun createElideToolState(builder: FlatBufferBuilder, authOffset: Int, configOffset: Int): Int {
             builder.startTable(2)
             addConfig(builder, configOffset)
             addAuth(builder, authOffset)
@@ -50,7 +49,7 @@ class ElideToolState : Table() {
         fun startElideToolState(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addAuth(builder: FlatBufferBuilder, auth: Int) = builder.addOffset(0, auth, 0)
         fun addConfig(builder: FlatBufferBuilder, config: Int) = builder.addOffset(1, config, 0)
-        fun endElideToolState(builder: FlatBufferBuilder) : Int {
+        fun endElideToolState(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

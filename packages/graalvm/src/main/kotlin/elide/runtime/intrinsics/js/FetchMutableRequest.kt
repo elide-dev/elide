@@ -1,8 +1,8 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import io.micronaut.http.HttpRequest
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
+import elide.vm.annotations.Polyglot
 
 /**
  * TBD.
@@ -11,22 +11,25 @@ public interface FetchMutableRequest : FetchRequest {
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var headers: FetchHeaders
+  @get:Polyglot @set:Polyglot
+  public override var headers: FetchHeaders
 
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var method: String
+  @get:Polyglot @set:Polyglot
+  public override var method: String
 
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var url: String
+  @get:Polyglot @set:Polyglot
+  public override var url: String
 
   /**
    * TBD.
    */
-  public interface RequestFactory<Impl: FetchRequest> {
+  public interface RequestFactory<Impl : FetchRequest> {
     /**
      * TBD.
      */

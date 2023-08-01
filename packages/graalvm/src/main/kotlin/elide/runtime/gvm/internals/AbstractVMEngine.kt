@@ -2,23 +2,7 @@
 
 package elide.runtime.gvm.internals
 
-import elide.annotations.Inject
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.*
-import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
-import elide.runtime.gvm.cfg.GuestVMConfiguration
-import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
-import elide.runtime.gvm.internals.js.JsInvocationBindings
-import elide.ssr.ServerResponse
-import elide.util.RuntimeFlag
 import io.micronaut.http.HttpRequest
-import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -28,6 +12,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 import java.util.stream.Stream
+import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
+import elide.annotations.Inject
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.*
+import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
+import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
+import elide.runtime.gvm.internals.js.JsInvocationBindings
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.ssr.ServerResponse
+import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -79,8 +79,8 @@ import org.graalvm.polyglot.Value as GuestValue
  */
 internal abstract class AbstractVMEngine<
   Config : GuestRuntimeConfiguration,
-  Code: ExecutableScript,
-  Bindings: InvocationBindings,
+  Code : ExecutableScript,
+  Bindings : InvocationBindings,
 > (
   private val contextManager: ContextManager<VMContext, VMContext.Builder>,
   protected val language: GraalVMGuest,
@@ -189,10 +189,12 @@ internal abstract class AbstractVMEngine<
   @Inject internal lateinit var filesystem: GuestVFS
 
   // Abstract VM options which must be evaluated at the time a context is created.
-  private val conditionalOptions : List<VMProperty> = listOf(
-    VMConditionalMultiProperty(main = VMConditionalProperty("vm.inspect", "inspect", {
+  private val conditionalOptions: List<VMProperty> = listOf(
+    VMConditionalMultiProperty(
+      main = VMConditionalProperty("vm.inspect", "inspect", {
       RuntimeFlag.inspect || guestConfig.inspector?.isEnabled == true
-    }), properties = listOf(
+    }),
+      properties = listOf(
       // Inspection: Path.
       VMRuntimeProperty.ofConfigurable("vm.inspect.path", "inspect.Path") {
         RuntimeFlag.inspectPath ?: guestConfig.inspector?.path
@@ -218,7 +220,8 @@ internal abstract class AbstractVMEngine<
       VMRuntimeProperty.ofBoolean("vm.inspect.internal", "inspect.Internal") {
         RuntimeFlag.inspectInternal
       },
-    )),
+    ),
+    ),
 
     // Sandbox: Max CPU time. Limits CPU time of guest executions.
     VMRuntimeProperty.ofConfigurable("vm.sandbox.maxCpuTime", "sandbox.MaxCPUTime") {
@@ -259,7 +262,7 @@ internal abstract class AbstractVMEngine<
           null
         }
       }
-    }
+    },
   )
 
   init {
@@ -286,7 +289,7 @@ internal abstract class AbstractVMEngine<
 
   // Context builder factory. Provided to the context manager.
   internal fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
-    *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()
+    *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray(),
   ).engine(engine).apply {
     // configure baseline settings for the builder according to the implemented VM
     configureVM(this)
@@ -342,7 +345,8 @@ internal abstract class AbstractVMEngine<
       .allowValueSharing(true)
       .fileSystem(filesystem)
       .allowIO(true)
-      .allowHostAccess(HostAccess.newBuilder(HostAccess.ALL)
+      .allowHostAccess(
+        HostAccess.newBuilder(HostAccess.ALL)
         .allowImplementations(Proxy::class.java)
         .allowAccessAnnotatedBy(HostAccess.Export::class.java)
         .allowArrayAccess(true)
@@ -352,7 +356,8 @@ internal abstract class AbstractVMEngine<
         .allowIteratorAccess(true)
         .allowListAccess(true)
         .allowMapAccess(true)
-        .build())
+        .build(),
+      )
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {
@@ -372,7 +377,7 @@ internal abstract class AbstractVMEngine<
    * @return Collection of intrinsics for the active language.
    */
   protected open fun intrinsics(): Collection<GuestIntrinsic> = intrinsicsManager.resolver().resolve(
-    language()
+    language(),
   )
 
   /** @inheritDoc */
@@ -455,7 +460,7 @@ internal abstract class AbstractVMEngine<
 
   // Decode a `ServerResponse` value from a guest script.
   private fun decodeServerResponse(hasMembers: Boolean, value: GuestValue): ServerResponse {
-    return object: ServerResponse {
+    return object : ServerResponse {
       override val status: Int? get() = (
         if (hasMembers && value.hasMember("status")) {
           value.getMember("status").asInt()
@@ -506,15 +511,17 @@ internal abstract class AbstractVMEngine<
   }
 
   // Build a callable function which can receive streamed render output.
-  private fun buildRenderProxy(receiver: StreamingReceiver) : ProxyExecutable {
+  private fun buildRenderProxy(receiver: StreamingReceiver): ProxyExecutable {
     return ProxyExecutable { arguments ->
       val chunk = arguments.firstOrNull()
       if (chunk != null) {
         val hasMembers = chunk.hasMembers()
-        receiver.invoke(decodeServerResponse(
+        receiver.invoke(
+          decodeServerResponse(
           hasMembers,
           chunk,
-        ))
+        ),
+        )
       }
       null  // no return value
     }
@@ -529,7 +536,7 @@ internal abstract class AbstractVMEngine<
         out.isNull -> logging.warn("Received `null` from `render` in guest script; skipping")
 
         // if the function returned a string directly, emit it as the final chunk
-        out.isString -> receiver.invoke(object: ServerResponse {
+        out.isString -> receiver.invoke(object : ServerResponse {
           override val content: String get() = meta.asString()
           override val hasContent: Boolean get() = true
           override val fin: Boolean get() = true
@@ -557,28 +564,28 @@ internal abstract class AbstractVMEngine<
           }
           out.invokeMember(
             "then",
-            object: ProxyExecutable {
+            object : ProxyExecutable {
               override fun execute(vararg arguments: GuestValue?): Any? {
                 val arg = arguments.firstOrNull()
                 if (arg != null) {
                   resultReceiver.accept(arg)
                 } else error(
-                  "Failed to resolve `then` argument for `render` promise in guest script"
+                  "Failed to resolve `then` argument for `render` promise in guest script",
                 )
                 return null
               }
             },
-            object: ProxyExecutable {
+            object : ProxyExecutable {
               override fun execute(vararg arguments: GuestValue?): Any? {
                 val arg = arguments.firstOrNull()
                 if (arg != null) {
                   errReceiver.accept(arg)
                 } else error(
-                  "Failed to resolve `catch` argument for `render` promise in guest script"
+                  "Failed to resolve `catch` argument for `render` promise in guest script",
                 )
                 return null
               }
-            }
+            },
           )
           val success = latch.await(90, TimeUnit.SECONDS)
           when {
@@ -597,10 +604,12 @@ internal abstract class AbstractVMEngine<
         }
 
         // otherwise, consider it a `ServerResponse`.
-        out.hasMembers() -> receiver.invoke(decodeServerResponse(
+        out.hasMembers() -> receiver.invoke(
+          decodeServerResponse(
           true,
           out,
-        ))
+        ),
+        )
 
         else -> error("Failed to resolve `render` output: Unrecognized value $out")
       }
@@ -612,7 +621,7 @@ internal abstract class AbstractVMEngine<
     script: ExecutableScript,
     request: HttpRequest<*>,
     context: Any?,
-    receiver: StreamingReceiver
+    receiver: StreamingReceiver,
   ): Job {
     require(script.language().symbol == language.symbol) {
       "Cannot execute script of type '${script.language().label}' with VM '${this::class.simpleName}'"
@@ -627,11 +636,13 @@ internal abstract class AbstractVMEngine<
           val initialized = initializeScript(this, script)
 
           // execute the script and obtain an output value
-          when (val bindings = resolve(
+          when (
+            val bindings = resolve(
             this,
             initialized,
             DispatchStyle.RENDER,
-          )) {
+          )
+          ) {
             // we are executing a sidecar render call
             is JsInvocationBindings.JsRender -> {
               val out = try {
@@ -660,7 +671,7 @@ internal abstract class AbstractVMEngine<
               val entry = bindings.mapped.entries.find {
                 it.key.type == JsInvocationBindings.JsEntrypointType.RENDER
               } ?: error(
-                "Entrypoint unresolved: `render` (for embedded script binding $bindings)"
+                "Entrypoint unresolved: `render` (for embedded script binding $bindings)",
               )
 
               val out = try {
@@ -754,7 +765,7 @@ internal abstract class AbstractVMEngine<
         }
       }
       else -> error(
-        "Cannot execute script of type '${script::class.java.simpleName}' via GraalVM engine"
+        "Cannot execute script of type '${script::class.java.simpleName}' via GraalVM engine",
       )
     }
   }
@@ -815,7 +826,7 @@ internal abstract class AbstractVMEngine<
    * @param inputs Inputs to the script, if any.
    * @return Result of the execution, if any.
    */
-  protected abstract fun <Inputs: ExecutionInputs> execute(
+  protected abstract fun <Inputs : ExecutionInputs> execute(
     context: VMContext,
     script: Code,
     bindings: Bindings,

@@ -7,6 +7,7 @@
   "FunctionName",
   "DEPRECATION",
 )
+
 package lib.tsstdlib
 
 import kotlin.js.*
@@ -14,7 +15,15 @@ import kotlin.js.*
 public external interface DateConstructor {
   public var prototype: Date
   public fun parse(s: String): Number
-  public fun UTC(year: Number, month: Number, date: Number = definedExternally, hours: Number = definedExternally, minutes: Number = definedExternally, seconds: Number = definedExternally, ms: Number = definedExternally): Number
+  public fun UTC(
+    year: Number,
+    month: Number,
+    date: Number = definedExternally,
+    hours: Number = definedExternally,
+    minutes: Number = definedExternally,
+    seconds: Number = definedExternally,
+    ms: Number = definedExternally,
+  ): Number
   public fun now(): Number
 }
 
@@ -42,5 +51,8 @@ public external interface ErrorConstructor {
 }
 
 public external interface PromiseLike<T> {
-  public fun then(onfulfilled: ((value: T) -> Any?)? = definedExternally, onrejected: ((reason: Any) -> Any?)? = definedExternally): PromiseLike<dynamic /* TResult1 | TResult2 */>
+  public fun then(
+    onfulfilled: ((value: T) -> Any?)? = definedExternally,
+    onrejected: ((reason: Any) -> Any?)? = definedExternally,
+  ): PromiseLike<dynamic /* TResult1 | TResult2 */>
 }

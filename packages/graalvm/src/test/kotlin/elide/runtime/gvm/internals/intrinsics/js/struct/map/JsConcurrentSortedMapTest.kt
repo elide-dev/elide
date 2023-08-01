@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 /** Tests for the [JsConcurrentSortedMap] implementation. */
 @TestCase internal class JsConcurrentSortedMapTest : AbstractJsMapTest<JsConcurrentSortedMap<String, Any?>>() {
@@ -24,8 +24,9 @@ import kotlin.test.assertNotNull
     JsConcurrentSortedMap.fromEntries(entries)
 
   /** @inheritDoc */
-  override fun spawnFromJsEntries(entries: Collection<MapLike.Entry<String, Any?>>): JsConcurrentSortedMap<String, Any?>
-    = JsConcurrentSortedMap.from(entries)
+  override fun spawnFromJsEntries(
+    entries: Collection<MapLike.Entry<String, Any?>>,
+  ): JsConcurrentSortedMap<String, Any?> = JsConcurrentSortedMap.from(entries)
 
   /** @inheritDoc */
   override fun spawnUnbounded(pairs: Iterable<Pair<String, Any?>>): JsConcurrentSortedMap<String, Any?> =
@@ -37,7 +38,7 @@ import kotlin.test.assertNotNull
 
   /** @inheritDoc */
   override fun spawnUnboundedJsEntries(
-    entries: Iterable<MapLike.Entry<String, Any?>>
+    entries: Iterable<MapLike.Entry<String, Any?>>,
   ): JsConcurrentSortedMap<String, Any?> = JsConcurrentSortedMap.unbounded(entries)
 
   /** @inheritDoc */

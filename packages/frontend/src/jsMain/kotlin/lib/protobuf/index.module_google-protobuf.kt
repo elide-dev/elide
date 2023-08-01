@@ -6,13 +6,13 @@
   "unused",
   "DEPRECATION",
   "ClassName",
-  "PropertyName"
+  "PropertyName",
 )
 
 package lib.protobuf
 
-import kotlin.js.*
 import org.khronos.webgl.*
+import kotlin.js.*
 
 public typealias MessageArray = Array<Any>
 
@@ -23,6 +23,7 @@ public typealias FieldValueArray = Array<dynamic /* String? | Number? | Boolean?
 public external interface `T$0` {
     @nativeGetter
     public operator fun get(key: Number): ExtensionFieldInfo<Message>?
+
     @nativeSetter
     public operator fun set(key: Number, value: ExtensionFieldInfo<Message>)
 }
@@ -30,14 +31,25 @@ public external interface `T$0` {
 public external interface `T$1` {
     @nativeGetter
     public operator fun get(key: Number): ExtensionFieldBinaryInfo<Message>?
+
     @nativeSetter
     public operator fun set(key: Number, value: ExtensionFieldBinaryInfo<Message>)
 }
 
 public open external class Message {
   public open fun getJsPbMessageId(): String?
-  public open fun <T> serializeBinaryExtensions(proto: Message, writer: BinaryWriter, extensions: `T$1`, getExtensionFn: (fieldInfo: ExtensionFieldInfo<T>) -> T)
-  public open fun <T> readBinaryExtension(proto: Message, reader: BinaryReader, extensions: `T$1`, setExtensionFn: (fieldInfo: ExtensionFieldInfo<T>, param_val: T) -> Unit)
+  public open fun <T> serializeBinaryExtensions(
+    proto: Message,
+    writer: BinaryWriter,
+    extensions: `T$1`,
+    getExtensionFn: (fieldInfo: ExtensionFieldInfo<T>) -> T,
+  )
+  public open fun <T> readBinaryExtension(
+    proto: Message,
+    reader: BinaryReader,
+    extensions: `T$1`,
+    setExtensionFn: (fieldInfo: ExtensionFieldInfo<T>, param_val: T) -> Unit,
+  )
   public open fun toArray(): MessageArray
   public override fun toString(): String
   public open fun <T> getExtension(fieldInfo: ExtensionFieldInfo<T>): T
@@ -48,11 +60,38 @@ public open external class Message {
   public open fun toObject(includeInstance: Boolean = definedExternally): Any
 
   public companion object {
-    public fun initialize(msg: Message, data: MessageArray, messageId: String, suggestedPivot: Number, repeatedFields: Array<Number>? = definedExternally, oneofFields: Array<Array<Number>>? = definedExternally)
-    public fun initialize(msg: Message, data: MessageArray, messageId: Number, suggestedPivot: Number, repeatedFields: Array<Number>? = definedExternally, oneofFields: Array<Array<Number>>? = definedExternally)
-    public fun <T : Message> toObjectList(field: Array<T>, toObjectFn: (includeInstance: Boolean, data: T) -> Any, includeInstance: Boolean = definedExternally): Array<Any>
-    public fun toObjectExtension(msg: Message, obj: Any, extensions: `T$0`, getExtensionFn: (fieldInfo: ExtensionFieldInfo<Message>) -> Message, includeInstance: Boolean = definedExternally)
-    public fun getField(msg: Message, fieldNumber: Number): dynamic /* String? | Number? | Boolean? | Uint8Array? | lib.protobuf.FieldValueArray? */
+    public fun initialize(
+      msg: Message,
+      data: MessageArray,
+      messageId: String,
+      suggestedPivot: Number,
+      repeatedFields: Array<Number>? = definedExternally,
+      oneofFields: Array<Array<Number>>? = definedExternally,
+    )
+    public fun initialize(
+      msg: Message,
+      data: MessageArray,
+      messageId: Number,
+      suggestedPivot: Number,
+      repeatedFields: Array<Number>? = definedExternally,
+      oneofFields: Array<Array<Number>>? = definedExternally,
+    )
+    public fun <T : Message> toObjectList(
+      field: Array<T>,
+      toObjectFn: (includeInstance: Boolean, data: T) -> Any,
+      includeInstance: Boolean = definedExternally,
+    ): Array<Any>
+    public fun toObjectExtension(
+      msg: Message,
+      obj: Any,
+      extensions: `T$0`,
+      getExtensionFn: (fieldInfo: ExtensionFieldInfo<Message>) -> Message,
+      includeInstance: Boolean = definedExternally,
+    )
+    public fun getField(
+      msg: Message,
+      fieldNumber: Number,
+    ): dynamic /* String? | Number? | Boolean? | Uint8Array? | lib.protobuf.FieldValueArray? */
     public fun getOptionalFloatingPointField(msg: Message, fieldNumber: Number): Number?
     public fun getRepeatedFloatingPointField(msg: Message, fieldNumber: Number): Array<Number>
     public fun bytesAsB64(bytes: Uint8Array): String
@@ -60,7 +99,12 @@ public open external class Message {
     public fun bytesListAsB64(bytesList: Array<Uint8Array>): Array<String>
     public fun bytesListAsU8(strList: Array<String>): Array<Uint8Array>
     public fun <T> getFieldWithDefault(msg: Message, fieldNumber: Number, defaultValue: T): T
-    public fun getMapField(msg: Message, fieldNumber: Number, noLazyCreate: Boolean, valueCtor: Any = definedExternally): Map<Any, Any>
+    public fun getMapField(
+      msg: Message,
+      fieldNumber: Number,
+      noLazyCreate: Boolean,
+      valueCtor: Any = definedExternally,
+    ): Map<Any, Any>
     public fun setField(msg: Message, fieldNumber: Number, value: String?)
     public fun setField(msg: Message, fieldNumber: Number, value: Number?)
     public fun setField(msg: Message, fieldNumber: Number, value: Boolean?)
@@ -73,14 +117,38 @@ public open external class Message {
     public fun setOneofField(msg: Message, fieldNumber: Number, oneof: Array<Number>, value: Uint8Array?)
     public fun setOneofField(msg: Message, fieldNumber: Number, oneof: Array<Number>, value: FieldValueArray?)
     public fun computeOneofCase(msg: Message, oneof: Array<Number>): Number
-    public fun <T : Message> getWrapperField(msg: Message, ctor: Any, fieldNumber: Number, required: Number = definedExternally): T
+    public fun <T : Message> getWrapperField(
+      msg: Message,
+      ctor: Any,
+      fieldNumber: Number,
+      required: Number = definedExternally,
+    ): T
     public fun <T : Message> getRepeatedWrapperField(msg: Message, ctor: Any, fieldNumber: Number): Array<T>
     public fun <T : Message> setWrapperField(msg: Message, fieldNumber: Number, value: T = definedExternally)
-    public fun <T : Message> setWrapperField(msg: Message, fieldNumber: Number, value: Map<Any, Any> = definedExternally)
+    public fun <T : Message> setWrapperField(
+      msg: Message,
+      fieldNumber: Number,
+      value: Map<Any, Any> = definedExternally,
+    )
     public fun setOneofWrapperField(msg: Message, fieldNumber: Number, oneof: Array<Number>, value: Any)
-    public fun <T : Message> setRepeatedWrapperField(msg: Message, fieldNumber: Number, value: Array<T> = definedExternally)
-    public fun <T : Message> addToRepeatedWrapperField(msg: Message, fieldNumber: Number, value: T?, ctor: Any, index: Number = definedExternally): T
-    public fun toMap(field: Array<Any>, mapKeyGetterFn: (field: Any) -> String, toObjectFn: StaticToObject = definedExternally, includeInstance: Boolean = definedExternally)
+    public fun <T : Message> setRepeatedWrapperField(
+      msg: Message,
+      fieldNumber: Number,
+      value: Array<T> = definedExternally,
+    )
+    public fun <T : Message> addToRepeatedWrapperField(
+      msg: Message,
+      fieldNumber: Number,
+      value: T?,
+      ctor: Any,
+      index: Number = definedExternally,
+    ): T
+    public fun toMap(
+      field: Array<Any>,
+      mapKeyGetterFn: (field: Any) -> String,
+      toObjectFn: StaticToObject = definedExternally,
+      includeInstance: Boolean = definedExternally,
+    )
     public fun <T : Message> difference(m1: T, m2: T): T
     public fun equals(m1: Message, m2: Message): Boolean
     public fun compareExtensions(extension1: Any, extension2: Any): Boolean
@@ -101,6 +169,7 @@ public open external class Message {
 public external interface `T$2` {
     @nativeGetter
     public operator fun get(key: String): Number?
+
     @nativeSetter
     public operator fun set(key: String, value: Number)
 }
@@ -127,7 +196,10 @@ public open external class Map<K, V>(arr: Array<Any /* JsTuple<K, V> */>, valueC
   public open fun toArray(): Array<dynamic /* JsTuple<K, V> */>
   public open fun toObject(includeInstance: Boolean = definedExternally): Array<dynamic /* JsTuple<K, V> */>
   public open fun toObject(): Array<dynamic /* JsTuple<K, V> */>
-  public open fun <VO> toObject(includeInstance: Boolean, valueToObject: (includeInstance: Boolean, valueWrapper: V) -> VO): Array<dynamic /* JsTuple<K, VO> */>
+  public open fun <VO> toObject(
+    includeInstance: Boolean,
+    valueToObject: (includeInstance: Boolean, valueWrapper: V) -> VO,
+  ): Array<dynamic /* JsTuple<K, VO> */>
   public open fun getLength(): Number
   public open fun clear()
   public open fun del(key: K): Boolean
@@ -139,7 +211,13 @@ public open external class Map<K, V>(arr: Array<Any /* JsTuple<K, V> */>, valueC
   public open fun set(key: K, value: V): Map<K, V> /* this */
   public open fun get(key: K): V?
   public open fun has(key: K): Boolean
-  public open fun serializeBinary(fieldNumber: Number, writer: BinaryWriter, keyWriterFn: (field: Number, key: K) -> Unit, valueWriterFn: (field: Number, value: V, writerCallback: BinaryWriteCallback) -> Unit, writeCallback: BinaryWriteCallback = definedExternally)
+  public open fun serializeBinary(
+    fieldNumber: Number,
+    writer: BinaryWriter,
+    keyWriterFn: (field: Number, key: K) -> Unit,
+    valueWriterFn: (field: Number, value: V, writerCallback: BinaryWriteCallback) -> Unit,
+    writeCallback: BinaryWriteCallback = definedExternally,
+  )
   public interface Iterator<T> {
     public fun next(): IteratorResult<T>
   }
@@ -149,8 +227,20 @@ public open external class Map<K, V>(arr: Array<Any /* JsTuple<K, V> */>, valueC
   }
 
   public companion object {
-    public fun <TK, TV> fromObject(entries: Array<Any /* JsTuple<TK, TV> */>, valueCtor: Any, valueFromObject: Any): Map<TK, TV>
-    public fun <K, V> deserializeBinary(map: Map<K, V>, reader: BinaryReader, keyReaderFn: (reader: BinaryReader) -> K, valueReaderFn: (reader: BinaryReader, value: Any, readerCallback: BinaryReadCallback) -> V, readCallback: BinaryReadCallback = definedExternally, defaultKey: K = definedExternally, defaultValue: V = definedExternally)
+    public fun <TK, TV> fromObject(
+      entries: Array<Any /* JsTuple<TK, TV> */>,
+      valueCtor: Any,
+      valueFromObject: Any,
+    ): Map<TK, TV>
+    public fun <K, V> deserializeBinary(
+      map: Map<K, V>,
+      reader: BinaryReader,
+      keyReaderFn: (reader: BinaryReader) -> K,
+      valueReaderFn: (reader: BinaryReader, value: Any, readerCallback: BinaryReadCallback) -> V,
+      readCallback: BinaryReadCallback = definedExternally,
+      defaultKey: K = definedExternally,
+      defaultValue: V = definedExternally,
+    )
   }
 }
 
@@ -165,30 +255,62 @@ public typealias BinaryWriteCallback = (value: Any, binaryWriter: BinaryWriter) 
 public typealias BinaryWrite = (fieldNumber: Number, value: Any, writerCallback: BinaryWriteCallback) -> Unit
 
 public open external class BinaryReader {
-  public constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: ArrayBuffer = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor()
   public constructor(bytes: ArrayBuffer = definedExternally)
   public constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: Uint8Array = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: Uint8Array = definedExternally)
   public constructor(bytes: Uint8Array = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: Array<Number> = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: Array<Number> = definedExternally)
   public constructor(bytes: Array<Number> = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: String = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: String = definedExternally)
   public constructor(bytes: String = definedExternally, start: Number = definedExternally)
-  public open fun alloc(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
+  public open fun alloc(
+    bytes: ArrayBuffer = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  ): BinaryReader
   public open fun alloc(): BinaryReader
   public open fun alloc(bytes: ArrayBuffer = definedExternally): BinaryReader
   public open fun alloc(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally): BinaryReader
-  public open fun alloc(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
+  public open fun alloc(
+    bytes: Uint8Array = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  ): BinaryReader
   public open fun alloc(bytes: Uint8Array = definedExternally): BinaryReader
   public open fun alloc(bytes: Uint8Array = definedExternally, start: Number = definedExternally): BinaryReader
-  public open fun alloc(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
+  public open fun alloc(
+    bytes: Array<Number> = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  ): BinaryReader
   public open fun alloc(bytes: Array<Number> = definedExternally): BinaryReader
   public open fun alloc(bytes: Array<Number> = definedExternally, start: Number = definedExternally): BinaryReader
-  public open fun alloc(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
+  public open fun alloc(
+    bytes: String = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  ): BinaryReader
   public open fun alloc(bytes: String = definedExternally): BinaryReader
   public open fun alloc(bytes: String = definedExternally, start: Number = definedExternally): BinaryReader
   public open fun free()
@@ -200,17 +322,33 @@ public open external class BinaryReader {
   public open fun isDelimited(): Boolean
   public open fun isEndGroup(): Boolean
   public open fun getError(): Boolean
-  public open fun setBlock(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public open fun setBlock(
+    bytes: ArrayBuffer = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public open fun setBlock()
   public open fun setBlock(bytes: ArrayBuffer = definedExternally)
   public open fun setBlock(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally)
-  public open fun setBlock(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public open fun setBlock(
+    bytes: Uint8Array = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public open fun setBlock(bytes: Uint8Array = definedExternally)
   public open fun setBlock(bytes: Uint8Array = definedExternally, start: Number = definedExternally)
-  public open fun setBlock(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public open fun setBlock(
+    bytes: Array<Number> = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public open fun setBlock(bytes: Array<Number> = definedExternally)
   public open fun setBlock(bytes: Array<Number> = definedExternally, start: Number = definedExternally)
-  public open fun setBlock(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public open fun setBlock(
+    bytes: String = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public open fun setBlock(bytes: String = definedExternally)
   public open fun setBlock(bytes: String = definedExternally, start: Number = definedExternally)
   public open fun reset()
@@ -226,7 +364,9 @@ public open external class BinaryReader {
   public open fun skipField()
   public open fun registerReadCallback(callbackName: String, callback: (binaryReader: BinaryReader) -> Any)
   public open fun runReadCallback(callbackName: String): Any
-  public open fun readAny(fieldType: FieldType): dynamic /* Boolean | Number | String | Array<dynamic /* Boolean | Number | String */> | Array<Uint8Array> | Uint8Array */
+  public open fun readAny(
+    fieldType: FieldType,
+  ): dynamic /* Boolean | Number | String | Array<dynamic /* Boolean | Number | String */> | Array<Uint8Array> | Uint8Array */
   public open var readMessage: BinaryRead
   public open fun readGroup(field: Number, message: Message, reader: BinaryReadReader)
   public open fun getFieldDecoder(): BinaryDecoder
@@ -281,16 +421,36 @@ public open external class BinaryReader {
   public open fun readPackedFixedHash64(): Array<String>
 
   public companion object {
-    public fun alloc(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
-    public fun alloc(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
-    public fun alloc(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
-    public fun alloc(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryReader
+    public fun alloc(
+      bytes: ArrayBuffer = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryReader
+    public fun alloc(
+      bytes: Uint8Array = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryReader
+    public fun alloc(
+      bytes: Array<Number> = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryReader
+    public fun alloc(
+      bytes: String = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryReader
   }
 }
 
 public open external class BinaryWriter {
   public open fun writeSerializedMessage(bytes: Uint8Array, start: Number, end: Number)
-  public open fun maybeWriteSerializedMessage(bytes: Uint8Array = definedExternally, start: Number = definedExternally, end: Number = definedExternally)
+  public open fun maybeWriteSerializedMessage(
+    bytes: Uint8Array = definedExternally,
+    start: Number = definedExternally,
+    end: Number = definedExternally,
+  )
   public open fun reset()
   public open fun getResultBuffer(): Uint8Array
   public open fun getResultBase64String(): String
@@ -355,7 +515,10 @@ public open external class BinaryWriter {
   public open fun writeRepeatedBool(field: Number, value: Array<Boolean> = definedExternally)
   public open fun writeRepeatedEnum(field: Number, value: Array<Number> = definedExternally)
   public open fun writeRepeatedString(field: Number, value: Array<String> = definedExternally)
-  public open fun writeRepeatedBytes(field: Number, value: Array<Any /* ArrayBuffer | Uint8Array | Array<Number> | String */> = definedExternally)
+  public open fun writeRepeatedBytes(
+    field: Number,
+    value: Array<Any /* ArrayBuffer | Uint8Array | Array<Number> | String */> = definedExternally,
+  )
   public open fun writeRepeatedMessage(field: Number, value: Array<Message>, writerCallback: BinaryWriteCallback)
   public open fun writeRepeatedGroup(field: Number, value: Array<Message>, writerCallback: BinaryWriteCallback)
   public open fun writeRepeatedFixedHash64(field: Number, value: Array<String> = definedExternally)
@@ -417,17 +580,33 @@ public open external class BinaryEncoder {
 }
 
 public open external class BinaryDecoder {
-  public constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: ArrayBuffer = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor()
   public constructor(bytes: ArrayBuffer = definedExternally)
   public constructor(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: Uint8Array = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: Uint8Array = definedExternally)
   public constructor(bytes: Uint8Array = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: Array<Number> = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: Array<Number> = definedExternally)
   public constructor(bytes: Array<Number> = definedExternally, start: Number = definedExternally)
-  public constructor(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally)
+  public constructor(
+    bytes: String = definedExternally,
+    start: Number = definedExternally,
+    length: Number = definedExternally,
+  )
   public constructor(bytes: String = definedExternally)
   public constructor(bytes: String = definedExternally, start: Number = definedExternally)
   public open fun free()
@@ -489,10 +668,26 @@ public open external class BinaryDecoder {
   public open fun readFixedHash64(): String
 
   public companion object {
-    public fun alloc(bytes: ArrayBuffer = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryDecoder
-    public fun alloc(bytes: Uint8Array = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryDecoder
-    public fun alloc(bytes: Array<Number> = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryDecoder
-    public fun alloc(bytes: String = definedExternally, start: Number = definedExternally, length: Number = definedExternally): BinaryDecoder
+    public fun alloc(
+      bytes: ArrayBuffer = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryDecoder
+    public fun alloc(
+      bytes: Uint8Array = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryDecoder
+    public fun alloc(
+      bytes: Array<Number> = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryDecoder
+    public fun alloc(
+      bytes: String = definedExternally,
+      start: Number = definedExternally,
+      length: Number = definedExternally,
+    ): BinaryDecoder
   }
 }
 
@@ -504,6 +699,10 @@ public open external class BinaryIterator(decoder: BinaryDecoder = definedExtern
   public open fun next(): dynamic /* Boolean? | Number? | String? */
 
   public companion object {
-    public fun alloc(decoder: BinaryDecoder = definedExternally, next: () -> Any? = definedExternally, elements: Array<Any /* Number | Boolean | String */> = definedExternally): BinaryIterator
+    public fun alloc(
+      decoder: BinaryDecoder = definedExternally,
+      next: () -> Any? = definedExternally,
+      elements: Array<Any /* Number | Boolean | String */> = definedExternally,
+    ): BinaryIterator
   }
 }

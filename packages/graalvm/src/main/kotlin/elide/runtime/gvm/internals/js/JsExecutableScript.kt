@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.js
 
+import java.util.*
 import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.ExecutableScript.ScriptType
 import elide.runtime.gvm.InvocationMode
 import elide.runtime.gvm.internals.AbstractGVMScript
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
-import java.util.*
 
 /** Implementation of an [AbstractGVMScript] for the [JsRuntime]. */
-internal class JsExecutableScript private constructor (
+internal class JsExecutableScript private constructor(
   source: Pair<ScriptSource, String>,
   private val scriptType: ScriptType? = null,
 ) : AbstractGVMScript(JAVASCRIPT, source.first, source.second) {
@@ -39,7 +39,7 @@ internal class JsExecutableScript private constructor (
 
     /** @return JavaScript executable script wrapping the provided [ScriptSource]. */
     @JvmStatic internal fun of(source: ScriptSource, spec: String): JsExecutableScript = JsExecutableScript(
-      source to spec
+      source to spec,
     )
 
     /** @return JavaScript executable script wrapping the provided [ScriptSource] and explicit [type]. */
@@ -49,7 +49,7 @@ internal class JsExecutableScript private constructor (
 
   /** @inheritDoc */
   override fun invocation(): EnumSet<InvocationMode> = EnumSet.allOf(
-    InvocationMode::class.java
+    InvocationMode::class.java,
   )
 
   /** @inheritDoc */

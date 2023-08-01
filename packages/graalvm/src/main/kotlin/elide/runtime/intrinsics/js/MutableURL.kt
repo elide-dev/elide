@@ -48,7 +48,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var hash: String
+  @get:Polyglot @set:Polyglot
+  public override var hash: String
 
   /**
    * ### URL: `host`
@@ -77,7 +78,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var host: String
+  @get:Polyglot @set:Polyglot
+  public override var host: String
 
   /**
    * ### URL: `hostname`
@@ -101,7 +103,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var hostname: String
+  @get:Polyglot @set:Polyglot
+  public override var hostname: String
 
   /**
    * ### URL: `href`
@@ -124,7 +127,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var href: String
+  @get:Polyglot @set:Polyglot
+  public override var href: String
 
   /**
    * ### URL: `password`
@@ -149,7 +153,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var password: String
+  @get:Polyglot @set:Polyglot
+  public override var password: String
 
   /**
    * ### URL: `pathname`
@@ -174,7 +179,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var pathname: String
+  @get:Polyglot @set:Polyglot
+  public override var pathname: String
 
   /**
    * ### URL: `port`
@@ -203,7 +209,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var port: Int?
+  @get:Polyglot @set:Polyglot
+  public override var port: Int?
 
   /**
    * ### URL: `protocol`
@@ -228,7 +235,8 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var protocol: String
+  @get:Polyglot @set:Polyglot
+  public override var protocol: String
 
   /**
    * ### URL: `search`
@@ -256,7 +264,8 @@ public interface MutableURL : URL {
    *
    * @see searchParams for a more convenient way to access the query parameters.
    */
-  @get:Polyglot @set:Polyglot public override var search: String
+  @get:Polyglot @set:Polyglot
+  public override var search: String
 
   /**
    * ### URL: `username`
@@ -279,5 +288,6 @@ public interface MutableURL : URL {
    *
    * **Note:** This property is present on a mutable version of the `URL` interface.
    */
-  @get:Polyglot @set:Polyglot public override var username: String
+  @get:Polyglot @set:Polyglot
+  public override var username: String
 }

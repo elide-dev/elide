@@ -2,50 +2,49 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Cookie : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Cookie {
+    fun __assign(_i: Int, _bb: ByteBuffer): Cookie {
         __init(_i, _bb)
         return this
     }
-    val name : String?
+    val name: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val value : String?
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val value: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val valueAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val domain : String?
+    val valueAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val domain: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val domainAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun domainInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val path : String?
+    val domainAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun domainInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val path: String?
         get() {
             val o = __offset(10)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val pathAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun pathInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val expirationStrategy : elide.page.Context_.Cookie_.Anonymous6? get() = expirationStrategy(elide.page.Context_.Cookie_.Anonymous6())
-    fun expirationStrategy(obj: elide.page.Context_.Cookie_.Anonymous6) : elide.page.Context_.Cookie_.Anonymous6? {
+    val pathAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun pathInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val expirationStrategy: elide.page.Context_.Cookie_.Anonymous6? get() = expirationStrategy(elide.page.Context_.Cookie_.Anonymous6())
+    fun expirationStrategy(obj: elide.page.Context_.Cookie_.Anonymous6): elide.page.Context_.Cookie_.Anonymous6? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -53,20 +52,20 @@ class Cookie : Table() {
             null
         }
     }
-    val httpOnly : Boolean
+    val httpOnly: Boolean
         get() {
             val o = __offset(14)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val secure : Boolean
+    val secure: Boolean
         get() {
             val o = __offset(16)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val sameSite : Int
+    val sameSite: Int
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -75,7 +74,17 @@ class Cookie : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCookie(builder: FlatBufferBuilder, nameOffset: Int, valueOffset: Int, domainOffset: Int, pathOffset: Int, expirationStrategyOffset: Int, httpOnly: Boolean, secure: Boolean, sameSite: Int) : Int {
+        fun createCookie(
+          builder: FlatBufferBuilder,
+          nameOffset: Int,
+          valueOffset: Int,
+          domainOffset: Int,
+          pathOffset: Int,
+          expirationStrategyOffset: Int,
+          httpOnly: Boolean,
+          secure: Boolean,
+          sameSite: Int,
+        ): Int {
             builder.startTable(8)
             addSameSite(builder, sameSite)
             addExpirationStrategy(builder, expirationStrategyOffset)
@@ -92,11 +101,14 @@ class Cookie : Table() {
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
         fun addDomain(builder: FlatBufferBuilder, domain: Int) = builder.addOffset(2, domain, 0)
         fun addPath(builder: FlatBufferBuilder, path: Int) = builder.addOffset(3, path, 0)
-        fun addExpirationStrategy(builder: FlatBufferBuilder, expirationStrategy: Int) = builder.addOffset(4, expirationStrategy, 0)
+        fun addExpirationStrategy(
+          builder: FlatBufferBuilder,
+          expirationStrategy: Int,
+        ) = builder.addOffset(4, expirationStrategy, 0)
         fun addHttpOnly(builder: FlatBufferBuilder, httpOnly: Boolean) = builder.addBoolean(5, httpOnly, false)
         fun addSecure(builder: FlatBufferBuilder, secure: Boolean) = builder.addBoolean(6, secure, false)
         fun addSameSite(builder: FlatBufferBuilder, sameSite: Int) = builder.addInt(7, sameSite, 0)
-        fun endCookie(builder: FlatBufferBuilder) : Int {
+        fun endCookie(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

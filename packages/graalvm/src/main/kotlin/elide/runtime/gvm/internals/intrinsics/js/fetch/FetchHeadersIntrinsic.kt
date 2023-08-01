@@ -1,23 +1,23 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
+import org.graalvm.polyglot.Value
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.stream.Collectors
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMutableMultiMap
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableHeaders
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MultiMapLike
-import org.graalvm.polyglot.Value
-import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.stream.Collectors
+import elide.vm.annotations.Polyglot
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
-internal class FetchHeadersIntrinsic private constructor (
+internal class FetchHeadersIntrinsic private constructor(
   initialData: JsMutableMultiMap<String, String>?,
 
   // Internal data map.
-  private val data: JsMutableMultiMap<String, String> = initialData ?: allocateMap()
+  private val data: JsMutableMultiMap<String, String> = initialData ?: allocateMap(),
 ) : FetchMutableHeaders, MultiMapLike<String, String> by data {
   /** Factory for creating new mutable [FetchHeaders] implementations. */
   internal companion object Factory : FetchHeaders.Factory<FetchHeadersIntrinsic> {
@@ -75,11 +75,13 @@ internal class FetchHeadersIntrinsic private constructor (
     @JvmStatic override fun fromMultiMap(map: Map<String, List<String>>): FetchHeadersIntrinsic {
       return FetchHeadersIntrinsic(
         initialData = null,
-        data = JsMutableMultiMap.fromPairs(map.entries.flatMap {
+        data = JsMutableMultiMap.fromPairs(
+          map.entries.flatMap {
           it.value.map { value ->
             it.key to value
           }
-        }),
+        },
+        ),
       )
     }
 
@@ -90,7 +92,7 @@ internal class FetchHeadersIntrinsic private constructor (
      */
     @JvmStatic override fun from(previous: FetchHeaders): FetchHeadersIntrinsic {
       val concrete = previous as? FetchHeadersIntrinsic ?: error(
-        "Failed to cast `FetchHeaders` as only known concrete class `FetchHeadersIntrinsic"
+        "Failed to cast `FetchHeaders` as only known concrete class `FetchHeadersIntrinsic",
       )
       return FetchHeadersIntrinsic(
         initialData = null,
@@ -99,25 +101,28 @@ internal class FetchHeadersIntrinsic private constructor (
     }
   }
 
-
   // Computed joined value cache.
   private val valueCache: SortedMap<String, String> = TreeMap(String.CASE_INSENSITIVE_ORDER)
 
   /** Empty constructor: empty headers. */
-  @Polyglot constructor(): this(null)
+  @Polyglot
+  constructor() : this(null)
 
   /** Construct from a plain JavaScript map-capable object. */
-  @Polyglot constructor(initialValue: Value) : this (
+  @Polyglot
+  constructor(initialValue: Value) : this (
     when {
       // if it's a host object, it should really only be another `FetchHeadersIntrinsic` instance.
       initialValue.isHostObject -> {
-        (try {
+        (
+          try {
           initialValue.`as`(FetchHeadersIntrinsic::class.java)
         } catch (err: ClassCastException) {
           throw IllegalArgumentException(
-            "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+            "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'",
           )
-        }).internalDataForCopy()
+        }
+        ).internalDataForCopy()
       }
 
       // if it's a plain javascript object, we should be able to cast it to a map.
@@ -138,7 +143,7 @@ internal class FetchHeadersIntrinsic private constructor (
       // if it's a regular map-like object, we can add each value wrapped in a single-entry set.
       initialValue.hasHashEntries() -> {
         val mapKeysIter = initialValue.hashKeysIterator
-        val iterWrap = object: Iterator<String> {
+        val iterWrap = object : Iterator<String> {
           override fun hasNext(): Boolean = mapKeysIter.hasIteratorNextElement()
           override fun next(): String = mapKeysIter.iteratorNextElement.asString()
         }
@@ -154,9 +159,9 @@ internal class FetchHeadersIntrinsic private constructor (
 
       // otherwise, we can't accept it, it's an error.
       else -> throw IllegalArgumentException(
-        "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+        "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'",
       )
-    }
+    },
   )
 
   /** @return Copy of internal data. */
@@ -174,7 +179,7 @@ internal class FetchHeadersIntrinsic private constructor (
   }
 
   // Lock the data structure when iteration begins.
-  private fun <R: Any> lockForIteration(op: () -> R): R {
+  private fun <R : Any> lockForIteration(op: () -> R): R {
     return try {
       locked.compareAndSet(false, true)
       op.invoke()
@@ -184,7 +189,7 @@ internal class FetchHeadersIntrinsic private constructor (
   }
 
   // Check the lock before mutating inner data.
-  private fun <R: Any> onlyIfUnlocked(op: () -> R): R {
+  private fun <R : Any> onlyIfUnlocked(op: () -> R): R {
     check(!locked.get()) {
       "Cannot mutate headers while locked for iteration"
     }
@@ -234,9 +239,11 @@ internal class FetchHeadersIntrinsic private constructor (
       } else {
         value
       }
-    }.collect(Collectors.toMap(
+    }.collect(
+      Collectors.toMap(
       { it.first },
       { it.second },
-    ))
+    ),
+    )
   }
 }

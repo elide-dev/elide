@@ -8,7 +8,7 @@ class JsFeature private constructor() {
         const val FEATUREUNRECOGNIZED: Int = 0
         const val ESM: Int = 1
         const val NPM: Int = 2
-        val names : Array<String> = arrayOf("FEATURE_UNRECOGNIZED", "ESM", "NPM")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("FEATURE_UNRECOGNIZED", "ESM", "NPM")
+        fun name(e: Int): String = names[e]
     }
 }

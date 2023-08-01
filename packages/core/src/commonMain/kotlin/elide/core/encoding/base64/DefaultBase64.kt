@@ -13,10 +13,10 @@
 
 package elide.core.encoding.base64
 
-import elide.core.encoding.*
-import elide.core.encoding.Encoding
 import kotlin.math.min
 import kotlin.native.concurrent.SharedImmutable
+import elide.core.encoding.*
+import elide.core.encoding.Encoding
 
 // Default globally-shared Base64 encoder.
 @SharedImmutable private val defaultEncoder: DefaultBase64.Encoder = DefaultBase64.Encoder(
@@ -74,7 +74,7 @@ import kotlin.native.concurrent.SharedImmutable
   "LoopWithTooManyJumpStatements",
   "ComplexMethod",
   "LongMethod",
-  "NestedBlockDepth"
+  "NestedBlockDepth",
 )
 public object DefaultBase64 : Codec<Base64Data> {
   /**
@@ -86,7 +86,7 @@ public object DefaultBase64 : Codec<Base64Data> {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/',
   )
 
   /**
@@ -98,7 +98,7 @@ public object DefaultBase64 : Codec<Base64Data> {
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
   )
 
   /**
@@ -151,10 +151,10 @@ public object DefaultBase64 : Codec<Base64Data> {
   public open class Encoder internal constructor(
     private val newline: ByteArray?,
     private val linemax: Int,
-    private val doPadding: Boolean
+    private val doPadding: Boolean,
   ) {
     // Empty constructor.
-    public constructor(): this(null, -1, true)
+    public constructor() : this(null, -1, true)
 
     public companion object {
       /**
@@ -199,7 +199,8 @@ public object DefaultBase64 : Codec<Base64Data> {
       var dp0 = dp
       while (sp0 < sl) {
         val bits: Int = src[sp0++].toInt() and 0xff shl 16 or (
-          src[sp0++].toInt() and 0xff shl 8) or
+          src[sp0++].toInt() and 0xff shl 8
+        ) or
           (src[sp0++].toInt() and 0xff)
         dst[dp0++] = toBase64[bits ushr 18 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 12 and 0x3f].code.toByte()
@@ -289,14 +290,13 @@ public object DefaultBase64 : Codec<Base64Data> {
       return dst
     }
 
-
     private fun outLength(src: ByteArray, sp: Int, sl: Int): Int {
       var paddings = 0
       val len = sl - sp
       if (len == 0) return 0
       if (len < 2) {
         throw IllegalArgumentException(
-          "Input byte[] should at least have 2 bytes for base64 bytes"
+          "Input byte[] should at least have 2 bytes for base64 bytes",
         )
       }
       if (src[sl - 1].toInt().toChar() == '=') {
@@ -341,8 +341,10 @@ public object DefaultBase64 : Codec<Base64Data> {
             // xx=   shiftto==6&&sp==sl missing last =
             // xx=y  shiftto==6 last is not =
             require(
-              !(shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
-                shiftto == 18)
+              !(
+                shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
+                shiftto == 18
+              ),
             ) { "Input byte array has wrong 4-byte ending unit" }
             break
           }
@@ -376,7 +378,7 @@ public object DefaultBase64 : Codec<Base64Data> {
       // if MIME, ignore all non-base64 character
       while (sp < sl) {
         throw IllegalArgumentException(
-          "Input byte array has incorrect ending byte at $sp"
+          "Input byte array has incorrect ending byte at $sp",
         )
       }
       return dp

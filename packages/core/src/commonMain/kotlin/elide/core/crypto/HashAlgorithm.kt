@@ -37,5 +37,5 @@ public enum class HashAlgorithm {
   SHA3_256,
 
   /** Algorithm: SHA3-512. */
-  SHA3_512;
+  SHA3_512,
 }

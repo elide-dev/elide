@@ -5,7 +5,7 @@ import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 /**
  * TBD.
  */
-internal interface VMEngineFactory<Config: GuestRuntimeConfiguration, Engine: VMEngineImpl<Config>> {
+internal interface VMEngineFactory<Config : GuestRuntimeConfiguration, Engine : VMEngineImpl<Config>> {
   /**
    * TBD.
    */

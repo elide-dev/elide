@@ -37,7 +37,7 @@ public sealed class GrpcWebCallResponse(
     val cause: Throwable?,
     val headers: Metadata,
     val trailers: Metadata,
-  ): GrpcWebCallResponse(success = false) {
+  ) : GrpcWebCallResponse(success = false) {
     /** @inheritDoc */
     override fun fill(response: MutableHttpResponse<RawRpcPayload>) {
       ResponseUtil.writeResponse(
@@ -66,7 +66,7 @@ public sealed class GrpcWebCallResponse(
     val payload: ByteArray,
     val headers: Metadata,
     val trailers: Metadata,
-  ): GrpcWebCallResponse(success = true) {
+  ) : GrpcWebCallResponse(success = true) {
     /** @inheritDoc */
     override fun fill(response: MutableHttpResponse<RawRpcPayload>) {
       ResponseUtil.writeResponse(

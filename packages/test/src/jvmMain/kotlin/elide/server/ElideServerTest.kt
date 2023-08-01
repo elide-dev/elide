@@ -8,10 +8,10 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.runtime.server.EmbeddedServer
-import jakarta.inject.Inject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.URI
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -59,7 +59,7 @@ public abstract class ElideServerTest : elide.testing.Test() {
   ): HttpResponse<Any> {
     assertReady()
     val req: HttpRequest<Any> = request.uri(
-      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}")
+      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}"),
     )
     val client = client.toBlocking()
     val response = client.exchange<Any, Any>(req)
@@ -92,7 +92,7 @@ public abstract class ElideServerTest : elide.testing.Test() {
   ): HttpResponse<R> {
     assertReady()
     val req: HttpRequest<P> = request.uri(
-      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}")
+      URI.create("${app.scheme}://${app.host}:${app.port}${request.uri}"),
     )
     val client = client.toBlocking()
     val response = client.exchange(
@@ -144,7 +144,7 @@ public abstract class ElideServerTest : elide.testing.Test() {
       val page = Jsoup.parse(
         getBody(String::class.java).orElseThrow {
           IllegalStateException("Failed to decode response body into String to parse with JSoup.")
-        }
+        },
       )
       block?.let {
         this.it(page)

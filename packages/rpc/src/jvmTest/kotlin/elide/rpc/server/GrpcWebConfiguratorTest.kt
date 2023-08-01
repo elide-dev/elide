@@ -10,8 +10,8 @@ import io.micronaut.context.event.BeanCreatedEvent
 import io.micronaut.inject.BeanDefinition
 import io.micronaut.inject.BeanIdentifier
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -20,8 +20,11 @@ import kotlin.test.assertNull
 @MicronautTest(startApplication = false)
 class GrpcWebConfiguratorTest {
   @Inject lateinit var beanContext: BeanContext
+
   @Inject internal lateinit var rpcRuntime: RpcRuntime
+
   @Inject internal lateinit var configurator: GrpcConfigurator
+
   @Inject internal lateinit var healthManager: ServiceHealthManager
 
   @Test fun testInitConfigurator() {
@@ -36,17 +39,21 @@ class GrpcWebConfiguratorTest {
     assertEquals(
       HealthCheckResponse.ServingStatus.SERVING,
       healthManager.currentStatus(HealthGrpc.getServiceDescriptor()),
-      "health service should show as serving immediately upon startup"
+      "health service should show as serving immediately upon startup",
     )
   }
 
   @Test fun testOnServerBuilderCreated() {
     val builder = ServerBuilder.forPort(443)
-    builder.addService(ServerServiceDefinition.builder("exampleService")
-      .build())
+    builder.addService(
+      ServerServiceDefinition.builder("exampleService")
+      .build(),
+    )
 
     // build a fake bean event
-    val event = BeanCreatedEvent(beanContext, object: BeanDefinition<ServerBuilder<*>> {
+    val event = BeanCreatedEvent(
+      beanContext,
+      object : BeanDefinition<ServerBuilder<*>> {
       override fun isEnabled(context: BeanContext, resolutionContext: BeanResolutionContext?): Boolean {
         return true
       }
@@ -54,27 +61,29 @@ class GrpcWebConfiguratorTest {
       override fun getBeanType(): Class<ServerBuilder<*>> {
         return ServerBuilder::class.java
       }
-    }, BeanIdentifier.of("abc123"), builder)
+    },
+      BeanIdentifier.of("abc123"), builder,
+    )
 
     // run the `onCreated` event
     configurator.onCreated(
-      event
+      event,
     )
 
     // services should now be registered with the runtime
     val resolvedSample = rpcRuntime.resolveService(
-      "exampleService"
+      "exampleService",
     )
     assertNotNull(
       resolvedSample,
-      "should be able to resolve `exampleService` after registration through bean creation observer"
+      "should be able to resolve `exampleService` after registration through bean creation observer",
     )
     val resolvedNonExistent = rpcRuntime.resolveService(
-      "idonotexist"
+      "idonotexist",
     )
     assertNull(
       resolvedNonExistent,
-      "resolving a service which does not exist should yield `null`"
+      "resolving a service which does not exist should yield `null`",
     )
   }
 }

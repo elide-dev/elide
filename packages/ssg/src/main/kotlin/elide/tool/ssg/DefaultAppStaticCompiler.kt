@@ -13,16 +13,16 @@
 
 package elide.tool.ssg
 
-import elide.runtime.Logger
-import elide.runtime.Logging
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Default static app compiler implementation, which executes the request against the app. */
-@Singleton internal class DefaultAppStaticCompiler (
+@Singleton internal class DefaultAppStaticCompiler(
   private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : AppStaticCompiler {
   // Private logger.
@@ -78,7 +78,8 @@ import java.util.concurrent.atomic.AtomicInteger
   }
 
   // Execute a request against the app loader, with a way to add discovered requests to the stack.
-  @Suppress("UNUSED_PARAMETER") private suspend fun fulfillRequestAsync(
+  @Suppress("UNUSED_PARAMETER")
+  private suspend fun fulfillRequestAsync(
     app: LoadedAppInfo,
     spec: StaticFragmentSpec,
   ): Deferred<StaticFragment?> = withContext(dispatcher) {

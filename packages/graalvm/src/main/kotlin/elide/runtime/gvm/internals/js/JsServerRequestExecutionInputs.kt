@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.js
 
+import java.io.InputStream
+import java.net.URI
+import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchRequest
 import elide.runtime.intrinsics.js.ReadableStream
-import java.io.InputStream
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
 
 /**
@@ -16,7 +16,7 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as UR
  * @see JsMicronautRequestExecutionInputs for an implementation of this input shape based on Micronaut types.
  * @param state State ("props") provided for a single execution run against these inputs.
  */
-internal abstract class JsServerRequestExecutionInputs<Request: Any> (
+internal abstract class JsServerRequestExecutionInputs<Request : Any> (
   private val state: Any? = null,
 ) : RequestExecutionInputs<Request>, FetchRequest {
   /** Internal indicator of whether the request body stream has been consumed. */
@@ -83,7 +83,7 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    * See also: [MDN, Request.headers](https://developer.mozilla.org/en-US/docs/Web/API/Request/headers).
    */
   override val headers: FetchHeaders get() = FetchHeaders.fromMultiMap(
-    requestHeaders()
+    requestHeaders(),
   )
 
   /**

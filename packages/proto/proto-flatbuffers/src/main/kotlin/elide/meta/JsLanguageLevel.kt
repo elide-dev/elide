@@ -14,7 +14,8 @@ class JsLanguageLevel private constructor() {
         const val ES2020: Int = 6
         const val ES2021: Int = 7
         const val ES2022: Int = 8
-        val names : Array<String> = arrayOf("JS_LANGUAGE_LEVEL_DEFAULT", "ES5", "ES6", "ES2017", "ES2018", "ES2019", "ES2020", "ES2021", "ES2022")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("JS_LANGUAGE_LEVEL_DEFAULT", "ES5", "ES6", "ES2017", "ES2018", "ES2019", "ES2020", "ES2021", "ES2022")
+        fun name(e: Int): String = names[e]
     }
 }

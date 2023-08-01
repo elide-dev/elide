@@ -4,6 +4,7 @@ import elide.annotations.Context
 import elide.annotations.Singleton
 
 /** TBD. */
-@Context @Singleton internal class GuestExecutorManager {
+@Context @Singleton
+internal class GuestExecutorManager {
   //
 }

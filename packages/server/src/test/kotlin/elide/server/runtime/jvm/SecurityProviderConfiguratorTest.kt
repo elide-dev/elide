@@ -12,7 +12,7 @@ class SecurityProviderConfiguratorTest {
     }
     assertTrue(
       SecurityProviderConfigurator.ready(),
-      "security providers should show as `ready` after initialization"
+      "security providers should show as `ready` after initialization",
     )
   }
 

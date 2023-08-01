@@ -5,6 +5,7 @@
   "CONFLICTING_OVERLOADS",
   "unused",
 )
+
 package grpcweb
 
 public typealias RpcError = Error

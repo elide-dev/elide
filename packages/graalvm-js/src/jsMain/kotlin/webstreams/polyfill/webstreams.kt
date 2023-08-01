@@ -3,4 +3,4 @@
 package webstreams.polyfill
 
 /** Readable stream. */
-public abstract external class ReadableStream<R>: web.streams.ReadableStream<R>
+public abstract external class ReadableStream<R> : web.streams.ReadableStream<R>

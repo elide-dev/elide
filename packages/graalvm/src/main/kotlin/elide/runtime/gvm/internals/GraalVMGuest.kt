@@ -3,9 +3,9 @@ package elide.runtime.gvm.internals
 import elide.runtime.gvm.GuestLanguage
 
 /** Enumerates known/supported GraalVM guest languages. */
-public enum class GraalVMGuest constructor (override val symbol: String, override val label: String) : GuestLanguage {
+public enum class GraalVMGuest constructor(override val symbol: String, override val label: String) : GuestLanguage {
   /**
    * ECMA2022-compliant JavaScript via Graal JS+JVM.
    */
-  JAVASCRIPT(symbol = "js", label = "JavaScript")
+  JAVASCRIPT(symbol = "js", label = "JavaScript"),
 }

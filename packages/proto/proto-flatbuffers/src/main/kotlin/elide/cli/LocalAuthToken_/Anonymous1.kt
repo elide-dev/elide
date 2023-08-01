@@ -2,22 +2,21 @@
 
 package elide.cli.LocalAuthToken_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Anonymous1 : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Anonymous1 {
+    fun __assign(_i: Int, _bb: ByteBuffer): Anonymous1 {
         __init(_i, _bb)
         return this
     }
-    val userToken : elide.data.secrets.Token? get() = userToken(elide.data.secrets.Token())
-    fun userToken(obj: elide.data.secrets.Token) : elide.data.secrets.Token? {
+    val userToken: elide.data.secrets.Token? get() = userToken(elide.data.secrets.Token())
+    fun userToken(obj: elide.data.secrets.Token): elide.data.secrets.Token? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -32,14 +31,14 @@ class Anonymous1 : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAnonymous1(builder: FlatBufferBuilder, userTokenOffset: Int) : Int {
+        fun createAnonymous1(builder: FlatBufferBuilder, userTokenOffset: Int): Int {
             builder.startTable(1)
             addUserToken(builder, userTokenOffset)
             return endAnonymous1(builder)
         }
         fun startAnonymous1(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addUserToken(builder: FlatBufferBuilder, userToken: Int) = builder.addOffset(0, userToken, 0)
-        fun endAnonymous1(builder: FlatBufferBuilder) : Int {
+        fun endAnonymous1(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

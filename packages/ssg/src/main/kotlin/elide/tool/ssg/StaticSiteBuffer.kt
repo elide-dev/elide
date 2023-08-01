@@ -14,14 +14,14 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope as coroutine
 import java.io.Closeable
 import java.util.Queue
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope as coroutine
 
 /** Class which holds output fragments and state as they are built within the SSG compiler. */
 public class StaticSiteBuffer : Closeable, AutoCloseable {
@@ -96,7 +96,7 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
    * @return A sequence of all fragments within the buffer.
    * @throws IllegalStateException if the buffer has not yet been sealed, or is closed.
    */
-  public suspend fun <R: Any> consumeAsync(consumer: suspend (StaticFragment) -> R): List<Deferred<R>> = coroutine {
+  public suspend fun <R : Any> consumeAsync(consumer: suspend (StaticFragment) -> R): List<Deferred<R>> = coroutine {
     check(!open.get() && !closed.get()) {
       "Cannot consume from output buffer while it is open for additional fragments"
     }
@@ -109,9 +109,11 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
     while (frag != null) {
       // consume the fragment
       val current = frag
-      jobs.add(async {
+      jobs.add(
+        async {
         consumer.invoke(current)
-      })
+      },
+      )
       frag = allFragments.poll()
     }
     consuming.set(false)

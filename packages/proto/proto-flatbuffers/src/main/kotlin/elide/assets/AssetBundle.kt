@@ -2,27 +2,26 @@
 
 package elide.assets
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AssetBundle : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AssetBundle {
+    fun __assign(_i: Int, _bb: ByteBuffer): AssetBundle {
         __init(_i, _bb)
         return this
     }
-    val version : UInt
+    val version: UInt
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val settings : elide.assets.AssetBundle_.BundlerSettings? get() = settings(elide.assets.AssetBundle_.BundlerSettings())
-    fun settings(obj: elide.assets.AssetBundle_.BundlerSettings) : elide.assets.AssetBundle_.BundlerSettings? {
+    val settings: elide.assets.AssetBundle_.BundlerSettings? get() = settings(elide.assets.AssetBundle_.BundlerSettings())
+    fun settings(obj: elide.assets.AssetBundle_.BundlerSettings): elide.assets.AssetBundle_.BundlerSettings? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -30,8 +29,8 @@ class AssetBundle : Table() {
             null
         }
     }
-    val generated : google.protobuf.Timestamp? get() = generated(google.protobuf.Timestamp())
-    fun generated(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
+    val generated: google.protobuf.Timestamp? get() = generated(google.protobuf.Timestamp())
+    fun generated(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -39,7 +38,7 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun digest(j: Int) : UByte {
+    fun digest(j: Int): UByte {
         val o = __offset(10)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -47,14 +46,15 @@ class AssetBundle : Table() {
             0u
         }
     }
-    val digestLength : Int
+    val digestLength: Int
         get() {
-            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(10)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val digestAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun digestInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    fun styles(j: Int) : elide.assets.AssetBundle_.StylesEntry? = styles(elide.assets.AssetBundle_.StylesEntry(), j)
-    fun styles(obj: elide.assets.AssetBundle_.StylesEntry, j: Int) : elide.assets.AssetBundle_.StylesEntry? {
+    val digestAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun digestInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    fun styles(j: Int): elide.assets.AssetBundle_.StylesEntry? = styles(elide.assets.AssetBundle_.StylesEntry(), j)
+    fun styles(obj: elide.assets.AssetBundle_.StylesEntry, j: Int): elide.assets.AssetBundle_.StylesEntry? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -62,11 +62,12 @@ class AssetBundle : Table() {
             null
         }
     }
-    val stylesLength : Int
+    val stylesLength: Int
         get() {
-            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(12)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun stylesByKey(key: String) : elide.assets.AssetBundle_.StylesEntry? {
+    fun stylesByKey(key: String): elide.assets.AssetBundle_.StylesEntry? {
         val o = __offset(12)
         return if (o != 0) {
             elide.assets.AssetBundle_.StylesEntry.__lookup_by_key(null, __vector(o), key, bb)
@@ -74,7 +75,7 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun stylesByKey(obj: elide.assets.AssetBundle_.StylesEntry, key: String) : elide.assets.AssetBundle_.StylesEntry? {
+    fun stylesByKey(obj: elide.assets.AssetBundle_.StylesEntry, key: String): elide.assets.AssetBundle_.StylesEntry? {
         val o = __offset(12)
         return if (o != 0) {
             elide.assets.AssetBundle_.StylesEntry.__lookup_by_key(obj, __vector(o), key, bb)
@@ -82,8 +83,8 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun scripts(j: Int) : elide.assets.AssetBundle_.ScriptsEntry? = scripts(elide.assets.AssetBundle_.ScriptsEntry(), j)
-    fun scripts(obj: elide.assets.AssetBundle_.ScriptsEntry, j: Int) : elide.assets.AssetBundle_.ScriptsEntry? {
+    fun scripts(j: Int): elide.assets.AssetBundle_.ScriptsEntry? = scripts(elide.assets.AssetBundle_.ScriptsEntry(), j)
+    fun scripts(obj: elide.assets.AssetBundle_.ScriptsEntry, j: Int): elide.assets.AssetBundle_.ScriptsEntry? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -91,11 +92,12 @@ class AssetBundle : Table() {
             null
         }
     }
-    val scriptsLength : Int
+    val scriptsLength: Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(14)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun scriptsByKey(key: String) : elide.assets.AssetBundle_.ScriptsEntry? {
+    fun scriptsByKey(key: String): elide.assets.AssetBundle_.ScriptsEntry? {
         val o = __offset(14)
         return if (o != 0) {
             elide.assets.AssetBundle_.ScriptsEntry.__lookup_by_key(null, __vector(o), key, bb)
@@ -103,7 +105,10 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun scriptsByKey(obj: elide.assets.AssetBundle_.ScriptsEntry, key: String) : elide.assets.AssetBundle_.ScriptsEntry? {
+    fun scriptsByKey(
+      obj: elide.assets.AssetBundle_.ScriptsEntry,
+      key: String,
+    ): elide.assets.AssetBundle_.ScriptsEntry? {
         val o = __offset(14)
         return if (o != 0) {
             elide.assets.AssetBundle_.ScriptsEntry.__lookup_by_key(obj, __vector(o), key, bb)
@@ -111,8 +116,8 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun generic(j: Int) : elide.assets.AssetBundle_.GenericEntry? = generic(elide.assets.AssetBundle_.GenericEntry(), j)
-    fun generic(obj: elide.assets.AssetBundle_.GenericEntry, j: Int) : elide.assets.AssetBundle_.GenericEntry? {
+    fun generic(j: Int): elide.assets.AssetBundle_.GenericEntry? = generic(elide.assets.AssetBundle_.GenericEntry(), j)
+    fun generic(obj: elide.assets.AssetBundle_.GenericEntry, j: Int): elide.assets.AssetBundle_.GenericEntry? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -120,11 +125,12 @@ class AssetBundle : Table() {
             null
         }
     }
-    val genericLength : Int
+    val genericLength: Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(16)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun genericByKey(key: String) : elide.assets.AssetBundle_.GenericEntry? {
+    fun genericByKey(key: String): elide.assets.AssetBundle_.GenericEntry? {
         val o = __offset(16)
         return if (o != 0) {
             elide.assets.AssetBundle_.GenericEntry.__lookup_by_key(null, __vector(o), key, bb)
@@ -132,7 +138,10 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun genericByKey(obj: elide.assets.AssetBundle_.GenericEntry, key: String) : elide.assets.AssetBundle_.GenericEntry? {
+    fun genericByKey(
+      obj: elide.assets.AssetBundle_.GenericEntry,
+      key: String,
+    ): elide.assets.AssetBundle_.GenericEntry? {
         val o = __offset(16)
         return if (o != 0) {
             elide.assets.AssetBundle_.GenericEntry.__lookup_by_key(obj, __vector(o), key, bb)
@@ -140,8 +149,8 @@ class AssetBundle : Table() {
             null
         }
     }
-    fun asset(j: Int) : elide.assets.AssetBundle_.AssetContent? = asset(elide.assets.AssetBundle_.AssetContent(), j)
-    fun asset(obj: elide.assets.AssetBundle_.AssetContent, j: Int) : elide.assets.AssetBundle_.AssetContent? {
+    fun asset(j: Int): elide.assets.AssetBundle_.AssetContent? = asset(elide.assets.AssetBundle_.AssetContent(), j)
+    fun asset(obj: elide.assets.AssetBundle_.AssetContent, j: Int): elide.assets.AssetBundle_.AssetContent? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -149,9 +158,10 @@ class AssetBundle : Table() {
             null
         }
     }
-    val assetLength : Int
+    val assetLength: Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -160,7 +170,17 @@ class AssetBundle : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAssetBundle(builder: FlatBufferBuilder, version: UInt, settingsOffset: Int, generatedOffset: Int, digestOffset: Int, stylesOffset: Int, scriptsOffset: Int, genericOffset: Int, assetOffset: Int) : Int {
+        fun createAssetBundle(
+          builder: FlatBufferBuilder,
+          version: UInt,
+          settingsOffset: Int,
+          generatedOffset: Int,
+          digestOffset: Int,
+          stylesOffset: Int,
+          scriptsOffset: Int,
+          genericOffset: Int,
+          assetOffset: Int,
+        ): Int {
             builder.startTable(8)
             addAsset(builder, assetOffset)
             addGeneric(builder, genericOffset)
@@ -177,7 +197,7 @@ class AssetBundle : Table() {
         fun addSettings(builder: FlatBufferBuilder, settings: Int) = builder.addOffset(1, settings, 0)
         fun addGenerated(builder: FlatBufferBuilder, generated: Int) = builder.addOffset(2, generated, 0)
         fun addDigest(builder: FlatBufferBuilder, digest: Int) = builder.addOffset(3, digest, 0)
-        fun createDigestVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+        fun createDigestVector(builder: FlatBufferBuilder, data: UByteArray): Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
                 builder.addByte(data[i].toByte())
@@ -186,7 +206,7 @@ class AssetBundle : Table() {
         }
         fun startDigestVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addStyles(builder: FlatBufferBuilder, styles: Int) = builder.addOffset(4, styles, 0)
-        fun createStylesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createStylesVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -195,7 +215,7 @@ class AssetBundle : Table() {
         }
         fun startStylesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addScripts(builder: FlatBufferBuilder, scripts: Int) = builder.addOffset(5, scripts, 0)
-        fun createScriptsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createScriptsVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -204,7 +224,7 @@ class AssetBundle : Table() {
         }
         fun startScriptsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addGeneric(builder: FlatBufferBuilder, generic: Int) = builder.addOffset(6, generic, 0)
-        fun createGenericVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createGenericVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -213,7 +233,7 @@ class AssetBundle : Table() {
         }
         fun startGenericVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addAsset(builder: FlatBufferBuilder, asset: Int) = builder.addOffset(7, asset, 0)
-        fun createAssetVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createAssetVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -221,7 +241,7 @@ class AssetBundle : Table() {
             return builder.endVector()
         }
         fun startAssetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endAssetBundle(builder: FlatBufferBuilder) : Int {
+        fun endAssetBundle(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

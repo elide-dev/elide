@@ -28,5 +28,5 @@ public enum class Encoding {
   UTF_16,
 
   /** UTF-32 encoding. */
-  UTF_32
+  UTF_32,
 }

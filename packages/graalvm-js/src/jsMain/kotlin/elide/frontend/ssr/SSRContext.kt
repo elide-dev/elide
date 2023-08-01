@@ -3,7 +3,7 @@ package elide.frontend.ssr
 import org.w3c.fetch.Request
 
 /** Context access utility for SSR-shared state. */
-public class SSRContext<State: Any> private constructor (
+public class SSRContext<State : Any> private constructor(
   private val data: State? = null,
   private val req: Request? = null,
 ) {

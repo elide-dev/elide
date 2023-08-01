@@ -9,7 +9,7 @@ class ManifestFormat private constructor() {
         const val BINARY: Int = 1
         const val JSON: Int = 2
         const val TEXT: Int = 3
-        val names : Array<String> = arrayOf("MANIFEST_FORMAT_UNSPECIFIED", "BINARY", "JSON", "TEXT")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("MANIFEST_FORMAT_UNSPECIFIED", "BINARY", "JSON", "TEXT")
+        fun name(e: Int): String = names[e]
     }
 }

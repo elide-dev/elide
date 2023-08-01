@@ -6,10 +6,10 @@ package elide.runtime.gvm.internals
  * @param symbol Symbol to use for the VM property when passing it to a new context.
  * @param staticValue Value for this property.
  */
-public data class VMStaticProperty internal constructor (
+public data class VMStaticProperty internal constructor(
   override val symbol: String,
   val staticValue: String,
-): VMProperty {
+) : VMProperty {
   public companion object {
     private const val ENABLED_TRUE = "true"
     private const val DISABLED_FALSE = "false"

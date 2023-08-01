@@ -49,7 +49,6 @@ interface MonotonicClock {
      * count down from this time until it reaches zero.
      */
     fun newTimer(initial: Instant): MonotonicTimer
-
 }
 
 /**
@@ -85,7 +84,6 @@ interface WallClock {
      * The nanoseconds field of the output is always less than 1000000000.
      */
     fun resolution(): DateTime
-
 }
 
 /**
@@ -99,7 +97,6 @@ interface MonotonicTimer {
 
     /** Returns a future that completes when the timer reaches zero. **/
     // fun expiration(): Deferred<Unit>
-
 }
 
 /**
@@ -123,7 +120,6 @@ object DefaultMonotonicClock : MonotonicClock {
     override fun newTimer(initial: Instant): MonotonicTimer {
         TODO("Not yet implemented")
     }
-
 }
 
 /**
@@ -143,5 +139,4 @@ object DefaultWallClock : WallClock {
         val duration = resolution.toDuration(DurationUnit.NANOSECONDS)
         return duration.toComponents { seconds, nanoseconds -> DateTime(seconds, nanoseconds) }
     }
-
 }

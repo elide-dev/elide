@@ -2,41 +2,40 @@
 
 package elide.assets
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class EmbeddedScript : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : EmbeddedScript {
+    fun __assign(_i: Int, _bb: ByteBuffer): EmbeddedScript {
         __init(_i, _bb)
         return this
     }
-    val module : String?
+    val module: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val moduleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun moduleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val filename : String?
+    val moduleAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun moduleInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val filename: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val filenameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun filenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val language : Int
+    val filenameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun filenameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val language: Int
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val metadata : elide.assets.EmbeddedScriptMetadata? get() = metadata(elide.assets.EmbeddedScriptMetadata())
-    fun metadata(obj: elide.assets.EmbeddedScriptMetadata) : elide.assets.EmbeddedScriptMetadata? {
+    val metadata: elide.assets.EmbeddedScriptMetadata? get() = metadata(elide.assets.EmbeddedScriptMetadata())
+    fun metadata(obj: elide.assets.EmbeddedScriptMetadata): elide.assets.EmbeddedScriptMetadata? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +43,8 @@ class EmbeddedScript : Table() {
             null
         }
     }
-    val lastModified : google.protobuf.Timestamp? get() = lastModified(google.protobuf.Timestamp())
-    fun lastModified(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
+    val lastModified: google.protobuf.Timestamp? get() = lastModified(google.protobuf.Timestamp())
+    fun lastModified(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -53,7 +52,7 @@ class EmbeddedScript : Table() {
             null
         }
     }
-    fun directDependency(j: Int) : String? {
+    fun directDependency(j: Int): String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -61,11 +60,12 @@ class EmbeddedScript : Table() {
             null
         }
     }
-    val directDependencyLength : Int
+    val directDependencyLength: Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(14)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun transitiveDependency(j: Int) : String? {
+    fun transitiveDependency(j: Int): String? {
         val o = __offset(16)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -73,12 +73,13 @@ class EmbeddedScript : Table() {
             null
         }
     }
-    val transitiveDependencyLength : Int
+    val transitiveDependencyLength: Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(16)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val script : elide.data.DataContainerRef? get() = script(elide.data.DataContainerRef())
-    fun script(obj: elide.data.DataContainerRef) : elide.data.DataContainerRef? {
+    val script: elide.data.DataContainerRef? get() = script(elide.data.DataContainerRef())
+    fun script(obj: elide.data.DataContainerRef): elide.data.DataContainerRef? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -86,8 +87,8 @@ class EmbeddedScript : Table() {
             null
         }
     }
-    val sourcemap : elide.data.DataContainerRef? get() = sourcemap(elide.data.DataContainerRef())
-    fun sourcemap(obj: elide.data.DataContainerRef) : elide.data.DataContainerRef? {
+    val sourcemap: elide.data.DataContainerRef? get() = sourcemap(elide.data.DataContainerRef())
+    fun sourcemap(obj: elide.data.DataContainerRef): elide.data.DataContainerRef? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -102,7 +103,18 @@ class EmbeddedScript : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEmbeddedScript(builder: FlatBufferBuilder, moduleOffset: Int, filenameOffset: Int, language: Int, metadataOffset: Int, lastModifiedOffset: Int, directDependencyOffset: Int, transitiveDependencyOffset: Int, scriptOffset: Int, sourcemapOffset: Int) : Int {
+        fun createEmbeddedScript(
+          builder: FlatBufferBuilder,
+          moduleOffset: Int,
+          filenameOffset: Int,
+          language: Int,
+          metadataOffset: Int,
+          lastModifiedOffset: Int,
+          directDependencyOffset: Int,
+          transitiveDependencyOffset: Int,
+          scriptOffset: Int,
+          sourcemapOffset: Int,
+        ): Int {
             builder.startTable(9)
             addSourcemap(builder, sourcemapOffset)
             addScript(builder, scriptOffset)
@@ -121,8 +133,11 @@ class EmbeddedScript : Table() {
         fun addLanguage(builder: FlatBufferBuilder, language: Int) = builder.addInt(2, language, 0)
         fun addMetadata(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(3, metadata, 0)
         fun addLastModified(builder: FlatBufferBuilder, lastModified: Int) = builder.addOffset(4, lastModified, 0)
-        fun addDirectDependency(builder: FlatBufferBuilder, directDependency: Int) = builder.addOffset(5, directDependency, 0)
-        fun createDirectDependencyVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun addDirectDependency(
+          builder: FlatBufferBuilder,
+          directDependency: Int,
+        ) = builder.addOffset(5, directDependency, 0)
+        fun createDirectDependencyVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -130,18 +145,24 @@ class EmbeddedScript : Table() {
             return builder.endVector()
         }
         fun startDirectDependencyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTransitiveDependency(builder: FlatBufferBuilder, transitiveDependency: Int) = builder.addOffset(6, transitiveDependency, 0)
-        fun createTransitiveDependencyVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun addTransitiveDependency(
+          builder: FlatBufferBuilder,
+          transitiveDependency: Int,
+        ) = builder.addOffset(6, transitiveDependency, 0)
+        fun createTransitiveDependencyVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startTransitiveDependencyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startTransitiveDependencyVector(
+          builder: FlatBufferBuilder,
+          numElems: Int,
+        ) = builder.startVector(4, numElems, 4)
         fun addScript(builder: FlatBufferBuilder, script: Int) = builder.addOffset(7, script, 0)
         fun addSourcemap(builder: FlatBufferBuilder, sourcemap: Int) = builder.addOffset(8, sourcemap, 0)
-        fun endEmbeddedScript(builder: FlatBufferBuilder) : Int {
+        fun endEmbeddedScript(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -9,20 +9,24 @@ public interface FetchMutableResponse : FetchResponse {
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var headers: FetchHeaders
+  @get:Polyglot @set:Polyglot
+  public override var headers: FetchHeaders
 
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var status: Int
+  @get:Polyglot @set:Polyglot
+  public override var status: Int
 
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var statusText: String
+  @get:Polyglot @set:Polyglot
+  public override var statusText: String
 
   /**
    * TBD.
    */
-  @get:Polyglot @set:Polyglot public override var url: String
+  @get:Polyglot @set:Polyglot
+  public override var url: String
 }

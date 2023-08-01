@@ -2,27 +2,26 @@
 
 package elide.data
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class CompressedData : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : CompressedData {
+    fun __assign(_i: Int, _bb: ByteBuffer): CompressedData {
         __init(_i, _bb)
         return this
     }
-    val compression : Int
+    val compression: Int
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val data : elide.data.DataContainer? get() = data(elide.data.DataContainer())
-    fun data(obj: elide.data.DataContainer) : elide.data.DataContainer? {
+    val data: elide.data.DataContainer? get() = data(elide.data.DataContainer())
+    fun data(obj: elide.data.DataContainer): elide.data.DataContainer? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -30,13 +29,13 @@ class CompressedData : Table() {
             null
         }
     }
-    val size : ULong
+    val size: ULong
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    fun integrity(j: Int) : elide.data.DataFingerprint? = integrity(elide.data.DataFingerprint(), j)
-    fun integrity(obj: elide.data.DataFingerprint, j: Int) : elide.data.DataFingerprint? {
+    fun integrity(j: Int): elide.data.DataFingerprint? = integrity(elide.data.DataFingerprint(), j)
+    fun integrity(obj: elide.data.DataFingerprint, j: Int): elide.data.DataFingerprint? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -44,9 +43,10 @@ class CompressedData : Table() {
             null
         }
     }
-    val integrityLength : Int
+    val integrityLength: Int
         get() {
-            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(10)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -55,7 +55,13 @@ class CompressedData : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCompressedData(builder: FlatBufferBuilder, compression: Int, dataOffset: Int, size: ULong, integrityOffset: Int) : Int {
+        fun createCompressedData(
+          builder: FlatBufferBuilder,
+          compression: Int,
+          dataOffset: Int,
+          size: ULong,
+          integrityOffset: Int,
+        ): Int {
             builder.startTable(4)
             addSize(builder, size)
             addIntegrity(builder, integrityOffset)
@@ -68,7 +74,7 @@ class CompressedData : Table() {
         fun addData(builder: FlatBufferBuilder, data: Int) = builder.addOffset(1, data, 0)
         fun addSize(builder: FlatBufferBuilder, size: ULong) = builder.addLong(2, size.toLong(), 0)
         fun addIntegrity(builder: FlatBufferBuilder, integrity: Int) = builder.addOffset(3, integrity, 0)
-        fun createIntegrityVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createIntegrityVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -76,7 +82,7 @@ class CompressedData : Table() {
             return builder.endVector()
         }
         fun startIntegrityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endCompressedData(builder: FlatBufferBuilder) : Int {
+        fun endCompressedData(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -9,7 +9,8 @@ class CrossOriginResourcePolicy private constructor() {
         const val SAMESITE: Int = 1
         const val SAMEORIGIN: Int = 2
         const val CROSSORIGIN: Int = 3
-        val names : Array<String> = arrayOf("DEFAULT_CROSS_ORIGIN_RESOURCE_POLICY", "SAME_SITE", "SAME_ORIGIN", "CROSS_ORIGIN")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("DEFAULT_CROSS_ORIGIN_RESOURCE_POLICY", "SAME_SITE", "SAME_ORIGIN", "CROSS_ORIGIN")
+        fun name(e: Int): String = names[e]
     }
 }

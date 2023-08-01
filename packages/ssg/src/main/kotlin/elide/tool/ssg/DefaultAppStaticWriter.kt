@@ -14,12 +14,6 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.AppStaticWriter.FragmentOutputs
-import elide.tool.ssg.AppStaticWriter.FragmentWrite
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveOutputStream
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
@@ -34,10 +28,16 @@ import java.io.OutputStream
 import java.nio.file.Path
 import java.nio.file.attribute.FileTime
 import java.util.concurrent.atomic.AtomicLong
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
 import kotlin.io.path.Path
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.AppStaticWriter.FragmentOutputs
+import elide.tool.ssg.AppStaticWriter.FragmentWrite
 
 /** Default writer implementation for static sites. */
-@Singleton internal class DefaultAppStaticWriter (
+@Singleton internal class DefaultAppStaticWriter(
   private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : AppStaticWriter {
   companion object {
@@ -73,7 +73,7 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to a directory. */
-  private inner class DirectoryOutputWriter(private val parent: File): OutputWriter {
+  private inner class DirectoryOutputWriter(private val parent: File) : OutputWriter {
     override suspend fun prepare(path: Path): Unit = if (!parent.exists()) ioOperation("createOutputTree") {
       if (!parent.mkdirs()) throw IOException("Failed to create output directory tree '$path'")
     } else { /* no-op */ }
@@ -125,9 +125,9 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to an archive. */
-  private abstract inner class ArchiveOutputWriter<A: ArchiveOutputStream, E: ArchiveEntry>(
+  private abstract inner class ArchiveOutputWriter<A : ArchiveOutputStream, E : ArchiveEntry>(
     protected val stream: A,
-  ): OutputWriter {
+  ) : OutputWriter {
     // Write an archive entry.
     @Synchronized private fun writeArchiveEntry(entry: E, write: OutputStream.() -> Unit): E {
       stream.putArchiveEntry(entry)
@@ -180,11 +180,11 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to a tar archive. */
-  private inner class TarArchiveWriter private constructor (target: TarArchiveOutputStream):
+  private inner class TarArchiveWriter private constructor(target: TarArchiveOutputStream) :
     ArchiveOutputWriter<TarArchiveOutputStream, TarArchiveEntry>(target) {
 
     // Alternate constructor which loads from a file.
-    constructor(file: File): this(
+    constructor(file: File) : this(
       TarArchiveOutputStream(file.outputStream()),
     )
 
@@ -197,11 +197,11 @@ import kotlin.io.path.Path
   }
 
   /** Writes outputs to a zip archive. */
-  private inner class ZipArchiveWriter private constructor (target: ZipArchiveOutputStream):
+  private inner class ZipArchiveWriter private constructor(target: ZipArchiveOutputStream) :
     ArchiveOutputWriter<ZipArchiveOutputStream, ZipArchiveEntry>(target) {
 
     // Alternate constructor which loads from a file.
-    constructor(file: File): this(
+    constructor(file: File) : this(
       ZipArchiveOutputStream(file.outputStream()),
     )
 
@@ -223,7 +223,10 @@ import kotlin.io.path.Path
   private val closeables: ArrayList<Closeable> = ArrayList()
 
   // Register a stream as a closeable.
-  private suspend fun <C: Closeable, R> registerAsync(resource: C, op: suspend (C) -> R): Deferred<R> = coroutineScope {
+  private suspend fun <C : Closeable, R> registerAsync(
+    resource: C,
+    op: suspend (C) -> R,
+  ): Deferred<R> = coroutineScope {
     closeables.add(resource)
     async {
       op.invoke(resource)
@@ -231,7 +234,9 @@ import kotlin.io.path.Path
   }
 
   // Build a virtualized output file-path based on the input `fragment`. Relative to output base.
-  @VisibleForTesting @Suppress("unused") internal fun filepathForFragment(fragment: StaticFragment): String {
+  @VisibleForTesting
+  @Suppress("unused")
+  internal fun filepathForFragment(fragment: StaticFragment): String {
     val basepath = fragment.basePath()
     val tailpath = fragment.tailPath()
     val produces = fragment.produces()
@@ -292,7 +297,7 @@ import kotlin.io.path.Path
         folderBase,
         filename,
       ).joinToString(
-        "/"
+        "/",
       )
     } else {
       // folder base is empty; we can just use a filename at the root.
@@ -301,7 +306,7 @@ import kotlin.io.path.Path
   }
 
   // Run an I/O operation, protecting for errors.
-  @VisibleForTesting internal suspend fun <R: Any> ioOperation(phase: String, op: suspend () -> R): R = try {
+  @VisibleForTesting internal suspend fun <R : Any> ioOperation(phase: String, op: suspend () -> R): R = try {
     op.invoke()
   } catch (err: IOException) {
     logging.error("Failed to write static site in I/O phase '$phase'", err)
@@ -318,7 +323,8 @@ import kotlin.io.path.Path
     val base = Path(params.output.path)
 
     // resolve output facade
-    return registerAsync(when (params.output.mode) {
+    return registerAsync(
+      when (params.output.mode) {
       // handle directory output
       SiteCompilerParams.OutputMode.DIRECTORY -> DirectoryOutputWriter(base.toFile())
 
@@ -327,7 +333,8 @@ import kotlin.io.path.Path
         SiteCompilerParams.OutputFormat.ZIP -> ZipArchiveWriter(base.toFile())
         SiteCompilerParams.OutputFormat.TAR -> TarArchiveWriter(base.toFile())
       }
-    }) {
+    },
+    ) {
       // prepare the path, which includes permission tests, creating empty directories, and so on.
       ioOperation("prepare") {
         it.prepare(base)

@@ -13,8 +13,8 @@
 
 package lib.uuid
 
-import kotlin.js.*
 import lib.tsstdlib.ArrayLike
+import kotlin.js.*
 
 public external interface RandomOptions {
   public var random: ArrayLike<Number>?
@@ -65,11 +65,13 @@ public external var stringify: (buffer: ArrayLike<Number>, offset: Number) -> St
 
 public external var v1: (options: dynamic /* V1RandomOptions | V1RngOptions */) -> String /* v1String */
 
-public external var v3: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v3String */
+public external var v3:
+  (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v3String */
 
 public external var v4: (options: dynamic /* RandomOptions | RngOptions */) -> String /* v4String */
 
-public external var v5: (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v5String */
+public external var v5:
+  (name: dynamic /* String | InputBuffer */, namespace: dynamic /* String | InputBuffer */) -> String /* v5String */
 
 public external var validate: (uuid: String) -> Boolean
 

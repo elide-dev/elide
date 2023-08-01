@@ -1,8 +1,5 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.runtime.LogLevel
-import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -12,6 +9,9 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.*
 import java.nio.file.attribute.FileAttribute
 import java.util.*
+import elide.runtime.LogLevel
+import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.GuestVFS
 
 /**
  * # VFS: Backed Implementation
@@ -28,10 +28,10 @@ import java.util.*
  * @param config Effective guest VFS configuration to apply.
  * @param backing Backing file-system instance which implements the FS to use.
  */
-internal abstract class AbstractDelegateVFS<VFS> protected constructor (
+internal abstract class AbstractDelegateVFS<VFS> protected constructor(
   config: EffectiveGuestVFSConfig,
   private val backing: FileSystem,
-) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS: AbstractBaseVFS<VFS> {
+) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS : AbstractBaseVFS<VFS> {
   internal companion object {
     /** Translate an [AccessMode] to an [AccessType]. */
     fun AccessMode.toAccessType(): AccessType = when (this) {
@@ -154,7 +154,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
     backing.provider().createDirectory(
       dir,
-      *attrs
+      *attrs,
     )
   }
 
@@ -162,7 +162,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   override fun newByteChannel(
     path: Path,
     options: MutableSet<out OpenOption>,
-    vararg attrs: FileAttribute<*>
+    vararg attrs: FileAttribute<*>,
   ): SeekableByteChannel {
     debugLog {
       "Opening byte channel for file at path: '$path'"
@@ -176,7 +176,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return backing.provider().newByteChannel(
       path,
       options,
-      *attrs
+      *attrs,
     )
   }
 
@@ -210,7 +210,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return backing.provider().readAttributes(
       path,
       attributes,
-      *options
+      *options,
     )
   }
 
@@ -228,7 +228,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
       path,
       attribute,
       value,
-      *options
+      *options,
     )
   }
 
@@ -250,7 +250,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     backing.provider().copy(
       source,
       target,
-      *options
+      *options,
     )
   }
 
@@ -272,7 +272,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     backing.provider().move(
       source,
       target,
-      *options
+      *options,
     )
   }
 
@@ -405,7 +405,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
     return backing.provider().newInputStream(
       path,
-      *options
+      *options,
     )
   }
 
@@ -421,7 +421,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
     return backing.provider().newOutputStream(
       path,
-      *options
+      *options,
     )
   }
 

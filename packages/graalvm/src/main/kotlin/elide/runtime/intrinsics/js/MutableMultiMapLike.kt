@@ -3,7 +3,7 @@ package elide.runtime.intrinsics.js
 /**
  * TBD.
  */
-public interface MutableMultiMapLike<K: Any, V> : MutableMapLike<K, V>, MultiMapLike<K, V> {
+public interface MutableMultiMapLike<K : Any, V> : MutableMapLike<K, V>, MultiMapLike<K, V> {
   /**
    * TBD.
    */

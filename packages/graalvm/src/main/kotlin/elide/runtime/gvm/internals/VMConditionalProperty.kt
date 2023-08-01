@@ -16,7 +16,7 @@ internal data class VMConditionalProperty(
   private val condition: () -> Boolean,
   private val value: VMRuntimeProperty? = null,
   private val defaultValue: String? = null,
-): VMProperty {
+) : VMProperty {
   override fun value(): String = if (condition.invoke()) {
     value?.value() ?: "true"
   } else {

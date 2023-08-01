@@ -50,9 +50,8 @@ public actual open class WireMessage {
   public fun getProto(): Any = message
 }
 
-
 /** Describes the expected interface for model objects which are reliably serializable into [WireMessage] instances. */
-public actual interface AppModel<M: WireMessage> {
+public actual interface AppModel<M : WireMessage> {
   // Nothing yet.
   /**
    * Translate the current [AppModel] into an equivalent [WireMessage] instance [M].
@@ -61,7 +60,6 @@ public actual interface AppModel<M: WireMessage> {
    */
   public actual fun toMessage(): M
 }
-
 
 /**
  * Describes the expected interface for model objects which are designated as records.
@@ -81,7 +79,7 @@ public actual interface AppModel<M: WireMessage> {
  * but are not always addressable or persistent. [AppRecord] objects are expected to be identified (perhaps with type
  * annotations), and typically correspond to database records which need CRUD-like operations.
  */
-public actual interface AppRecord<K, M: WireMessage> {
+public actual interface AppRecord<K, M : WireMessage> {
   /** @return Assigned ID (of type [K]) for this record, or `null` if no ID has been assigned at this time. */
   public actual fun id(): K? {
     return null
@@ -98,7 +96,6 @@ public actual interface AppRecord<K, M: WireMessage> {
   }
 }
 
-
 /**
  * Describes the expected interface for model records which carry designated create/update timestamps.
  *
@@ -106,7 +103,7 @@ public actual interface AppRecord<K, M: WireMessage> {
  * fields are typically provided by the database or the application runtime, and don't need to be set explicitly by the
  * developer, although explicitly set values do override automatic values.
  */
-public actual interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
+public actual interface StampedRecord<K, M : WireMessage> : AppRecord<K, M> {
   /** @return Created-at timestamp for this record, or `null` if the record has not yet been persisted. */
   public actual fun createdAt(): Instant? {
     TODO("not yet implemented")
@@ -118,7 +115,6 @@ public actual interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
   }
 }
 
-
 /**
  * Describes the expected interface for model records which are versioned.
  *
@@ -126,7 +122,7 @@ public actual interface StampedRecord<K, M: WireMessage>: AppRecord<K, M> {
  * update to the associated entity. The Micronaut Data layer will enforce optimistic concurrency when persisting records
  * which inherit from this interface and provide a valid version value.
  */
-public actual interface VersionedRecord<K, M: WireMessage>: StampedRecord<K, M> {
+public actual interface VersionedRecord<K, M : WireMessage> : StampedRecord<K, M> {
   /** @return Version number assigned to this instance, within the scope of [id], or `-1` if no version is present. */
   public actual fun version(): Long {
     TODO("not yet implemented")

@@ -6,4 +6,6 @@ import elide.vm.annotations.Polyglot
  * # JavaScript: `QuotaExceededError`
  *
  */
-public class QuotaExceededError (@get:Polyglot override val message: String) : ValueError()
+public class QuotaExceededError(
+  @get:Polyglot override val message: String,
+) : ValueError()

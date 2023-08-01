@@ -1,7 +1,7 @@
 package elide.tool.cli
 
 /** Specifies languages supported for REPL access. */
-internal enum class GuestLanguage (
+internal enum class GuestLanguage(
   internal val id: String,
   internal val formalName: String,
   internal val experimental: Boolean = false,
@@ -10,7 +10,7 @@ internal enum class GuestLanguage (
   internal val mimeTypes: List<String> = emptyList(),
 ) : elide.runtime.gvm.GuestLanguage {
   /** Interactive JavaScript VM. */
-  JS (
+  JS(
     id = "js",
     formalName = "JavaScript",
     experimental = false,
@@ -19,7 +19,7 @@ internal enum class GuestLanguage (
   ),
 
   /** Interactive Python VM. */
-  PYTHON (
+  PYTHON(
     id = "py",
     formalName = "Python",
     experimental = true,
@@ -29,7 +29,7 @@ internal enum class GuestLanguage (
   ),
 
   /** Interactive Python VM. */
-  RUBY (
+  RUBY(
     id = "rb",
     formalName = "Ruby",
     experimental = true,
@@ -39,7 +39,7 @@ internal enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM. */
-  JVM (
+  JVM(
     id = "jvm",
     formalName = "JVM",
     experimental = true,
@@ -49,7 +49,7 @@ internal enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM with Kotlin support. */
-  KOTLIN (
+  KOTLIN(
     id = "kt",
     formalName = "Kotlin",
     experimental = true,
@@ -59,13 +59,14 @@ internal enum class GuestLanguage (
   ),
 
   /** Interactive nested JVM. */
-  WASM (
+  WASM(
     id = "wasm",
     formalName = "WASM",
     experimental = true,
     extensions = listOf("wasm"),
     mimeTypes = listOf("application/wasm"),
-  );
+  ),
+  ;
 
   companion object {
     /** @return Language based on the provided ID, or `null`. */

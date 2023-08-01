@@ -5,14 +5,9 @@ import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.NetworkBuilder
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
 import com.google.protobuf.ByteString
-import elide.server.AssetModuleId
-import elide.server.TestUtil
-import elide.server.cfg.AssetConfig
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import tools.elide.assets.AssetBundle
@@ -32,7 +27,12 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import elide.server.AssetModuleId
+import elide.server.TestUtil
+import elide.server.cfg.AssetConfig
 
 /** Tests for [ServerAssetIndex]. */
 @Suppress("UnstableApiUsage")
@@ -49,7 +49,7 @@ class ServerAssetIndexTest {
 
   private fun createIndexer(
     assetBundle: AssetBundle? = null,
-    config: AssetConfig? = null
+    config: AssetConfig? = null,
   ): Pair<AssetBundle, ServerAssetIndex> {
     val sample = assetBundle ?: assertNotNull(loadSampleManifest())
     return sample to ServerAssetIndex(
@@ -62,7 +62,7 @@ class ServerAssetIndexTest {
         override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream> {
           return ManifestFormat.BINARY to ByteArrayInputStream(ByteArray(0))
         }
-      }
+      },
     )
   }
 
@@ -70,7 +70,7 @@ class ServerAssetIndexTest {
     val (sample, indexer) = createIndexer()
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        sample
+        sample,
       )
     }
     assertNotNull(indexes, "should not get `null` from `buildAssetIndexes`")
@@ -90,7 +90,7 @@ class ServerAssetIndexTest {
           dataFingerprint {
             this.hash = HashAlgorithm.SHA256
             this.fingerprint = ByteString.copyFrom(MessageDigest.getInstance("SHA-256").digest(data))
-          }
+          },
         )
       }
     }
@@ -134,14 +134,14 @@ class ServerAssetIndexTest {
         .setModule("test2")
         .setDependencies(
           AssetDependencies.newBuilder()
-            .addDirect("test1")
+            .addDirect("test1"),
         )
-        .build()
+        .build(),
     )
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -158,17 +158,17 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
-      depGraph.hasEdgeConnecting("test2", "test1")
+      depGraph.hasEdgeConnecting("test2", "test1"),
     )
     assertTrue(
-      depGraph.adjacentNodes("test2").contains("test1")
+      depGraph.adjacentNodes("test2").contains("test1"),
     )
     assertTrue(
-      depGraph.outEdges("test2").isNotEmpty()
+      depGraph.outEdges("test2").isNotEmpty(),
     )
     assertTrue(
       depGraph.outEdges("test2").contains(
@@ -176,8 +176,8 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
       depGraph.inEdges("test1").contains(
@@ -185,8 +185,8 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
   }
 
@@ -202,14 +202,14 @@ class ServerAssetIndexTest {
         .setModule("test2")
         .setDependencies(
           AssetDependencies.newBuilder()
-            .addDirect("test1")
+            .addDirect("test1"),
         )
-        .build()
+        .build(),
     )
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -226,17 +226,17 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
-      depGraph.hasEdgeConnecting("test2", "test1")
+      depGraph.hasEdgeConnecting("test2", "test1"),
     )
     assertTrue(
-      depGraph.adjacentNodes("test2").contains("test1")
+      depGraph.adjacentNodes("test2").contains("test1"),
     )
     assertTrue(
-      depGraph.outEdges("test2").isNotEmpty()
+      depGraph.outEdges("test2").isNotEmpty(),
     )
     assertTrue(
       depGraph.outEdges("test2").contains(
@@ -244,8 +244,8 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
     assertTrue(
       depGraph.inEdges("test1").contains(
@@ -253,8 +253,8 @@ class ServerAssetIndexTest {
           depender = "test2",
           dependee = "test1",
           optional = false,
-        )
-      )
+        ),
+      ),
     )
   }
 
@@ -265,7 +265,7 @@ class ServerAssetIndexTest {
         override fun isEnabled(): Boolean = true
         override val etags: Boolean get() = true
         override val preferWeakEtags: Boolean get() = false
-      }
+      },
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -287,7 +287,7 @@ class ServerAssetIndexTest {
         override val preferWeakEtags: Boolean get() {
           return true
         }
-      }
+      },
     )
     assertDoesNotThrow {
       indexer.initialize()
@@ -347,9 +347,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -365,7 +365,7 @@ class ServerAssetIndexTest {
 
   @Test fun testRenderConditionalStrongETagMismatch() {
     // standard config
-    val cfg =object : AssetConfig {
+    val cfg = object : AssetConfig {
       override fun isEnabled(): Boolean = true
       override val etags: Boolean get() = true
       override val preferWeakEtags: Boolean get() = false
@@ -412,9 +412,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -473,9 +473,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -538,9 +538,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -601,9 +601,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     assertThrows<ItMismatched> {
       runBlocking {
@@ -621,7 +621,7 @@ class ServerAssetIndexTest {
         override fun isEnabled(): Boolean = true
         override val etags: Boolean get() = true
         override val preferWeakEtags: Boolean get() = true
-      }
+      },
     )
     assertDoesNotThrow {
       indexerWithWeakEtags.initialize()
@@ -679,9 +679,9 @@ class ServerAssetIndexTest {
         List(
           sample.assetList.filter {
             it.module == descriptor.module
-          }.size
-        ) { idx -> idx }.first()
-      )
+          }.size,
+        ) { idx -> idx }.first(),
+      ),
     )
     val response = assertDoesNotThrow {
       runBlocking {
@@ -702,7 +702,7 @@ class ServerAssetIndexTest {
     val (_, indexer) = createIndexer(bundle.build())
     val indexes = assertDoesNotThrow {
       indexer.buildAssetIndexes(
-        bundle.build()
+        bundle.build(),
       )
     }
     assertNotNull(indexes)
@@ -785,7 +785,7 @@ class ServerAssetIndexTest {
             throw IllegalStateException("FAIL")
           }
         }
-      }
+      },
     )
     assertNotNull(indexer)
     assertDoesNotThrow {
@@ -807,7 +807,7 @@ class ServerAssetIndexTest {
         override fun findManifest(candidates: List<Pair<ManifestFormat, String>>): Pair<ManifestFormat, InputStream>? {
           return null
         }
-      }
+      },
     )
 
     assertDoesNotThrow {
@@ -848,11 +848,11 @@ class ServerAssetIndexTest {
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good script by tag"
+      "should be able to resolve known-good script by tag",
     )
     assertTrue(
       resolved is ServerAsset.Script,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -870,11 +870,11 @@ class ServerAssetIndexTest {
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good stylesheet by tag"
+      "should be able to resolve known-good stylesheet by tag",
     )
     assertTrue(
       resolved is ServerAsset.Stylesheet,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -892,11 +892,11 @@ class ServerAssetIndexTest {
     }
     assertNotNull(
       resolved,
-      "should be able to resolve known-good text asset by tag"
+      "should be able to resolve known-good text asset by tag",
     )
     assertTrue(
       resolved is ServerAsset.Text,
-      "resolved asset should be the right sub-type"
+      "resolved asset should be the right sub-type",
     )
   }
 
@@ -914,7 +914,7 @@ class ServerAssetIndexTest {
     }
     assertNull(
       resolved,
-      "should NOT be able to resolve known-bad asset by tag"
+      "should NOT be able to resolve known-bad asset by tag",
     )
   }
 
@@ -987,7 +987,7 @@ class ServerAssetIndexTest {
         .addDirect("should-be-there")
         .addDirect("should-also-be-there")
         .addTransitive("should-not-be-there")
-        .build()
+        .build(),
     )
     val depGraph = builder.build()
     assertTrue(depGraph.nodes().isNotEmpty())

@@ -1,16 +1,16 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchMutableResponse
 import elide.runtime.intrinsics.js.FetchResponse.Defaults
 import elide.runtime.intrinsics.js.ReadableStream
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
+import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Response` object. */
-internal class FetchResponseIntrinsic private constructor (
+internal class FetchResponseIntrinsic private constructor(
   responseUrl: String,
   responseStatus: Int,
   responseText: String,
@@ -21,7 +21,8 @@ internal class FetchResponseIntrinsic private constructor (
   /** Typed constructor methods for `Response` objects. */
   internal object ResponseConstructors {
     /** @return Empty response. */
-    @JvmStatic @Polyglot internal fun empty(): FetchResponseIntrinsic = FetchResponseIntrinsic(
+    @JvmStatic @Polyglot
+    internal fun empty(): FetchResponseIntrinsic = FetchResponseIntrinsic(
       responseUrl = Defaults.DEFAULT_URL,
       responseStatus = Defaults.DEFAULT_STATUS,
       responseText = Defaults.DEFAULT_STATUS_TEXT,

@@ -7,7 +7,7 @@ class FontReferenceType private constructor() {
     companion object {
         const val INTERNAL: Int = 0
         const val GOOGLEFONTS: Int = 1
-        val names : Array<String> = arrayOf("INTERNAL", "GOOGLE_FONTS")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("INTERNAL", "GOOGLE_FONTS")
+        fun name(e: Int): String = names[e]
     }
 }

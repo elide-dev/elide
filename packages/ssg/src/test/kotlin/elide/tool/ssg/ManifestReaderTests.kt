@@ -14,17 +14,17 @@
 package elide.tool.ssg
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
+import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /** Tests for the [ManifestReader] interface and [FilesystemManifestReader] implementation. */
-@MicronautTest(startApplication = false) class ManifestReaderTests {
+@MicronautTest(startApplication = false)
+class ManifestReaderTests {
   companion object {
     private const val testManifest = "classpath:app.manifest.pb"
     private const val testManifestInvalid = "classpath:example-manifest.txt.pb"
@@ -87,7 +87,7 @@ import kotlin.test.assertTrue
       testManifest,
       "i-am-invalid.jar",
       SiteCompilerParams.Output.fromParams("/sample/directory"),
-    )
+    ),
     )
     assertNotNull(manifest, "should be able to read manifest")
     assertTrue(manifest.isInitialized, "manifest should be initialized after reading")

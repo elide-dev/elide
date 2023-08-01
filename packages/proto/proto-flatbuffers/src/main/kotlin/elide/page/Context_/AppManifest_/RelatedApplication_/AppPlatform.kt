@@ -9,7 +9,7 @@ class AppPlatform private constructor() {
         const val APPSTORE: Int = 1
         const val PLAYSTORE: Int = 2
         const val WEB: Int = 3
-        val names : Array<String> = arrayOf("UNSPECIFIED_APP_PLATFORM", "APPSTORE", "PLAYSTORE", "WEB")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("UNSPECIFIED_APP_PLATFORM", "APPSTORE", "PLAYSTORE", "WEB")
+        fun name(e: Int): String = names[e]
     }
 }

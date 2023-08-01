@@ -1,16 +1,16 @@
 package elide.server
 
-import elide.server.annotations.Eager
-import elide.server.runtime.jvm.SecurityProviderConfigurator
-import elide.util.RuntimeFlag
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.Micronaut
 import io.micronaut.runtime.server.event.ServerStartupEvent
-import kotlinx.coroutines.runBlocking
 import java.util.LinkedList
 import java.util.ServiceLoader
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.runBlocking
+import elide.server.annotations.Eager
+import elide.server.runtime.jvm.SecurityProviderConfigurator
+import elide.util.RuntimeFlag
 
 /**
  * Static class interface which equips a Micronaut application with extra initialization features powered by Elide; to
@@ -110,15 +110,16 @@ public interface Application {
   }
 
   /** Application startup listener and callback trigger. */
-  @Context @Eager public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
+  @Context @Eager
+  public class AppStartupListener : ApplicationEventListener<ServerStartupEvent> {
     override fun onApplicationEvent(event: ServerStartupEvent): Unit = runBlocking {
       Initialization.trigger(
-        Initialization.CallbackStage.INIT
+        Initialization.CallbackStage.INIT,
       )
 
       if (RuntimeFlag.warmup) {
         Initialization.trigger(
-          Initialization.CallbackStage.WARMUP
+          Initialization.CallbackStage.WARMUP,
         )
       }
     }

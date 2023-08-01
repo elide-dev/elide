@@ -15,7 +15,7 @@ public external interface StaticRouterProps : PropsWithChildren {
 /**
  *
  */
-public external val StaticRouter : react.FC<StaticRouterProps>
+public external val StaticRouter: react.FC<StaticRouterProps>
 
 /**
  *
@@ -31,4 +31,4 @@ public external interface StaticRouterProviderProps : Props {
  *
  */
 @JsName("unstable_StaticRouterProvider")
-public external val StaticRouterProvider : react.FC<StaticRouterProviderProps>
+public external val StaticRouterProvider: react.FC<StaticRouterProviderProps>

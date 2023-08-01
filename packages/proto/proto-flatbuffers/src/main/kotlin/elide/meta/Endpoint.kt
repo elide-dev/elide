@@ -2,54 +2,53 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Endpoint : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Endpoint {
+    fun __assign(_i: Int, _bb: ByteBuffer): Endpoint {
         __init(_i, _bb)
         return this
     }
-    val tag : String?
+    val tag: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val tagAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun tagInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val name : String?
+    val tagAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun tagInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val name: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val type : Int
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val type: Int
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val base : String?
+    val base: String?
         get() {
             val o = __offset(10)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val baseAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun baseInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val tail : String?
+    val baseAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun baseInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val tail: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val tailAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun tailInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    fun consumes(j: Int) : String? {
+    val tailAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun tailInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    fun consumes(j: Int): String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -57,11 +56,12 @@ class Endpoint : Table() {
             null
         }
     }
-    val consumesLength : Int
+    val consumesLength: Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(14)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun produces(j: Int) : String? {
+    fun produces(j: Int): String? {
         val o = __offset(16)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -69,11 +69,12 @@ class Endpoint : Table() {
             null
         }
     }
-    val producesLength : Int
+    val producesLength: Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(16)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun method(j: Int) : Int {
+    fun method(j: Int): Int {
         val o = __offset(18)
         return if (o != 0) {
             bb.getInt(__vector(o) + j * 4)
@@ -81,14 +82,15 @@ class Endpoint : Table() {
             0
         }
     }
-    val methodLength : Int
+    val methodLength: Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val methodAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 4)
-    fun methodInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 4)
-    val options : elide.meta.EndpointOptions? get() = options(elide.meta.EndpointOptions())
-    fun options(obj: elide.meta.EndpointOptions) : elide.meta.EndpointOptions? {
+    val methodAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(18, 4)
+    fun methodInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 18, 4)
+    val options: elide.meta.EndpointOptions? get() = options(elide.meta.EndpointOptions())
+    fun options(obj: elide.meta.EndpointOptions): elide.meta.EndpointOptions? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -96,27 +98,27 @@ class Endpoint : Table() {
             null
         }
     }
-    val impl : String?
+    val impl: String?
         get() {
             val o = __offset(22)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val implAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun implInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val member : String?
+    val implAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun implInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val member: String?
         get() {
             val o = __offset(24)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val memberAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun memberInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val handler : String?
+    val memberAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun memberInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val handler: String?
         get() {
             val o = __offset(26)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val handlerAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun handlerInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val handlerAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun handlerInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsEndpoint(_bb: ByteBuffer): Endpoint = getRootAsEndpoint(_bb, Endpoint())
@@ -124,7 +126,21 @@ class Endpoint : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEndpoint(builder: FlatBufferBuilder, tagOffset: Int, nameOffset: Int, type: Int, baseOffset: Int, tailOffset: Int, consumesOffset: Int, producesOffset: Int, methodOffset: Int, optionsOffset: Int, implOffset: Int, memberOffset: Int, handlerOffset: Int) : Int {
+        fun createEndpoint(
+          builder: FlatBufferBuilder,
+          tagOffset: Int,
+          nameOffset: Int,
+          type: Int,
+          baseOffset: Int,
+          tailOffset: Int,
+          consumesOffset: Int,
+          producesOffset: Int,
+          methodOffset: Int,
+          optionsOffset: Int,
+          implOffset: Int,
+          memberOffset: Int,
+          handlerOffset: Int,
+        ): Int {
             builder.startTable(12)
             addHandler(builder, handlerOffset)
             addMember(builder, memberOffset)
@@ -147,7 +163,7 @@ class Endpoint : Table() {
         fun addBase(builder: FlatBufferBuilder, base: Int) = builder.addOffset(3, base, 0)
         fun addTail(builder: FlatBufferBuilder, tail: Int) = builder.addOffset(4, tail, 0)
         fun addConsumes(builder: FlatBufferBuilder, consumes: Int) = builder.addOffset(5, consumes, 0)
-        fun createConsumesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createConsumesVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -156,7 +172,7 @@ class Endpoint : Table() {
         }
         fun startConsumesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addProduces(builder: FlatBufferBuilder, produces: Int) = builder.addOffset(6, produces, 0)
-        fun createProducesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createProducesVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -165,7 +181,7 @@ class Endpoint : Table() {
         }
         fun startProducesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addMethod(builder: FlatBufferBuilder, method: Int) = builder.addOffset(7, method, 0)
-        fun createMethodVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createMethodVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addInt(data[i])
@@ -177,7 +193,7 @@ class Endpoint : Table() {
         fun addImpl(builder: FlatBufferBuilder, impl: Int) = builder.addOffset(9, impl, 0)
         fun addMember(builder: FlatBufferBuilder, member: Int) = builder.addOffset(10, member, 0)
         fun addHandler(builder: FlatBufferBuilder, handler: Int) = builder.addOffset(11, handler, 0)
-        fun endEndpoint(builder: FlatBufferBuilder) : Int {
+        fun endEndpoint(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

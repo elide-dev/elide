@@ -2,42 +2,43 @@
 
 package elide.base.LanguageSpec_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class LanguageModifier : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : LanguageModifier {
+    fun __assign(_i: Int, _bb: ByteBuffer): LanguageModifier {
         __init(_i, _bb)
         return this
     }
-    val isoCountry : String?
+    val isoCountry: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val isoCountryAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun isoCountryInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val dialect : String?
+    val isoCountryAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun isoCountryInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val dialect: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val dialectAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun dialectInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val dialectAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun dialectInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsLanguageModifier(_bb: ByteBuffer): LanguageModifier = getRootAsLanguageModifier(_bb, LanguageModifier())
+        fun getRootAsLanguageModifier(
+          _bb: ByteBuffer,
+        ): LanguageModifier = getRootAsLanguageModifier(_bb, LanguageModifier())
         fun getRootAsLanguageModifier(_bb: ByteBuffer, obj: LanguageModifier): LanguageModifier {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createLanguageModifier(builder: FlatBufferBuilder, isoCountryOffset: Int, dialectOffset: Int) : Int {
+        fun createLanguageModifier(builder: FlatBufferBuilder, isoCountryOffset: Int, dialectOffset: Int): Int {
             builder.startTable(2)
             addDialect(builder, dialectOffset)
             addIsoCountry(builder, isoCountryOffset)
@@ -46,7 +47,7 @@ class LanguageModifier : Table() {
         fun startLanguageModifier(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addIsoCountry(builder: FlatBufferBuilder, isoCountry: Int) = builder.addOffset(0, isoCountry, 0)
         fun addDialect(builder: FlatBufferBuilder, dialect: Int) = builder.addOffset(1, dialect, 0)
-        fun endLanguageModifier(builder: FlatBufferBuilder) : Int {
+        fun endLanguageModifier(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

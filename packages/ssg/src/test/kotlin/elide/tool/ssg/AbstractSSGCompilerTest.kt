@@ -13,19 +13,12 @@
 
 package elide.tool.ssg
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.micronaut.context.BeanContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.ssl.ClientSslConfiguration
 import io.micronaut.runtime.server.EmbeddedServer
-import jakarta.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,8 +26,15 @@ import tools.elide.meta.*
 import java.nio.file.Files
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Provides baseline logic for tests which invoke the SSG compiler. */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -85,7 +85,7 @@ abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
         .toPath()
         .resolveSibling(name)
         .toAbsolutePath()
-        .toString()
+        .toString(),
     )
 
     SiteCompilerParams.OutputMode.FILE -> SiteCompilerParams.Output.File(
@@ -127,7 +127,7 @@ abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
   protected fun embeddedApp(): EmbeddedServer = server
 
   // Run the provided `op` with the compiler under test, injecting the provided `config`.
-  protected fun <R: Any> withCompiler(config: SiteCompilerParams?, op: suspend (SiteCompiler) -> R): R = runBlocking {
+  protected fun <R : Any> withCompiler(config: SiteCompilerParams?, op: suspend (SiteCompiler) -> R): R = runBlocking {
     require(initialized.get()) { "Compiler not initialized" }
     val compiler = compiler.get()
     assertNotNull(compiler, "Compiler not initialized")
@@ -135,13 +135,13 @@ abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
   }
 
   // Run the provided `op` with the compiler under test.
-  protected fun <R: Any> withCompiler(op: suspend (SiteCompiler) -> R): R = withCompiler(
+  protected fun <R : Any> withCompiler(op: suspend (SiteCompiler) -> R): R = withCompiler(
     null,
     op,
   )
 
   // Run the provided `op` with the compiler under test, with a custom output location.
-  protected fun <R: Any> withCompiler(
+  protected fun <R : Any> withCompiler(
     output: SiteCompilerParams.Output,
     op: suspend (SiteCompiler, SiteCompilerParams.Output) -> R,
   ): R = withCompiler {
@@ -180,10 +180,10 @@ abstract class AbstractSSGCompilerTest : AbstractSSGTest() {
 
   @BeforeEach fun setup() {
     buildRoot.set(
-      System.getProperty("tests.buildDir") ?:
-      Files.createTempDirectory("elide-ssg-test")
+      System.getProperty("tests.buildDir")
+        ?: Files.createTempDirectory("elide-ssg-test")
         .toFile()
-        .absolutePath
+        .absolutePath,
     )
     compiler.set(
       beanContext.getBean(SiteCompiler::class.java),

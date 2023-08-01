@@ -10,7 +10,7 @@ class CompressionMode private constructor() {
         const val BROTLI: Int = 2
         const val SNAPPY: Int = 3
         const val DEFLATE: Int = 4
-        val names : Array<String> = arrayOf("IDENTITY", "GZIP", "BROTLI", "SNAPPY", "DEFLATE")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("IDENTITY", "GZIP", "BROTLI", "SNAPPY", "DEFLATE")
+        fun name(e: Int): String = names[e]
     }
 }

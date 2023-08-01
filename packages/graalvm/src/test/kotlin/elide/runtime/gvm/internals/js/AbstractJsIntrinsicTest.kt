@@ -2,13 +2,6 @@
 
 package elide.runtime.gvm.internals.js
 
-import elide.annotations.Inject
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.AbstractIntrinsicTest
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.junit.jupiter.api.Assertions.*
@@ -16,6 +9,13 @@ import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
+import kotlinx.coroutines.runBlocking
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.AbstractIntrinsicTest
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -48,7 +48,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   }
 
   // Run the provided `op` with an active (and exclusively owned) JS VM context.
-  override fun <V: Any> withContext(op: VMContext.() -> V): V = runBlocking {
+  override fun <V : Any> withContext(op: VMContext.() -> V): V = runBlocking {
     if (!initialized.get()) {
       contextManager.installContextFactory {
         jsvm.builder(it)
@@ -150,10 +150,10 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         is GuestValue -> if (value.isBoolean) {
           value.asBoolean()
         } else error(
-          "Guest value '$value' is not a boolean"
+          "Guest value '$value' is not a boolean",
         )
         else -> error(
-          "Value '$value' is not a boolean"
+          "Value '$value' is not a boolean",
         )
       }
       assertTrue(
@@ -169,10 +169,10 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         is GuestValue -> if (value.isBoolean) {
           value.asBoolean()
         } else error(
-          "Guest value '$value' is not a boolean"
+          "Guest value '$value' is not a boolean",
         )
         else -> error(
-          "Value '$value' is not a boolean"
+          "Value '$value' is not a boolean",
         )
       }
       assertFalse(
@@ -210,7 +210,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       assertEquals(
         other,
         assertion.value,
-        message ?: "expected guest value equality mismatch (got `${assertion.value}`, but expected `$other`)"
+        message ?: "expected guest value equality mismatch (got `${assertion.value}`, but expected `$other`)",
       )
     }
 
@@ -219,7 +219,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       assertNotEquals(
         assertion.value,
         other,
-        message ?: "expected guest value inequality mismatch (got `${assertion.value}``)"
+        message ?: "expected guest value inequality mismatch (got `${assertion.value}``)",
       )
     }
 
@@ -229,7 +229,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         is GuestValue -> if (value.canExecute()) {
           {  value.executeVoid() }
         } else error(
-          "Guest value is not executable, cannot execute failure test"
+          "Guest value is not executable, cannot execute failure test",
         )
         is Runnable -> {
           { value.run() }
@@ -262,6 +262,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   internal class CaptureAssertion : JsAssertion {
     private val heldValue: AtomicReference<Any?> = AtomicReference(null)
     override val value: Any? get() = heldValue.get()
+
     @Polyglot override fun apply(value: Any?): TestContext {
       heldValue.set(value)
       return TestResultContext(this)

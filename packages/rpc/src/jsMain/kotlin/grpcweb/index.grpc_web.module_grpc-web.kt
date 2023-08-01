@@ -16,20 +16,40 @@ import kotlin.js.*
 public external interface Metadata {
     @nativeGetter
     public operator fun get(s: String): String?
+
     @nativeSetter
     public operator fun set(s: String, value: String)
 }
 
 public open external class AbstractClientBase {
-  public open fun <REQ, RESP> thenableCall(method: String, request: REQ, metadata: Metadata, methodDescriptor: MethodDescriptor<REQ, RESP>): Promise<RESP>
-  public open fun <REQ, RESP> rpcCall(method: String, request: REQ, metadata: Metadata, methodDescriptor: MethodDescriptor<REQ, RESP>, callback: (err: RpcError, response: RESP) -> Unit): ClientReadableStream<RESP>
-  public open fun <REQ, RESP> serverStreaming(method: String, request: REQ, metadata: Metadata, methodDescriptor: MethodDescriptor<REQ, RESP>): ClientReadableStream<RESP>
+  public open fun <REQ, RESP> thenableCall(
+    method: String,
+    request: REQ,
+    metadata: Metadata,
+    methodDescriptor: MethodDescriptor<REQ, RESP>,
+  ): Promise<RESP>
+  public open fun <REQ, RESP> rpcCall(
+    method: String,
+    request: REQ,
+    metadata: Metadata,
+    methodDescriptor: MethodDescriptor<REQ, RESP>,
+    callback: (err: RpcError, response: RESP) -> Unit,
+  ): ClientReadableStream<RESP>
+  public open fun <REQ, RESP> serverStreaming(
+    method: String,
+    request: REQ,
+    metadata: Metadata,
+    methodDescriptor: MethodDescriptor<REQ, RESP>,
+  ): ClientReadableStream<RESP>
 }
 
 public open external class ClientReadableStream<RESP> {
   public open fun on(eventType: String /* "error" */, callback: (err: RpcError) -> Unit): ClientReadableStream<RESP>
   public open fun on(eventType: String /* "status" */, callback: (status: Status) -> Unit): ClientReadableStream<RESP>
-  public open fun on(eventType: String /* "metadata" */, callback: (status: Metadata) -> Unit): ClientReadableStream<RESP>
+  public open fun on(
+    eventType: String /* "metadata" */,
+    callback: (status: Metadata) -> Unit,
+  ): ClientReadableStream<RESP>
   public open fun on(eventType: String /* "data" */, callback: (response: RESP) -> Unit): ClientReadableStream<RESP>
   public open fun on(eventType: String /* "end" */, callback: () -> Unit): ClientReadableStream<RESP>
   public open fun removeListener(eventType: String /* "error" */, callback: (err: RpcError) -> Unit)
@@ -41,18 +61,32 @@ public open external class ClientReadableStream<RESP> {
 }
 
 public external interface StreamInterceptor<REQ, RESP> {
-  public fun intercept(request: Request<REQ, RESP>, invoker: (request: Request<REQ, RESP>) -> ClientReadableStream<RESP>): ClientReadableStream<RESP>
+  public fun intercept(
+    request: Request<REQ, RESP>,
+    invoker: (request: Request<REQ, RESP>) -> ClientReadableStream<RESP>,
+  ): ClientReadableStream<RESP>
 }
 
 public external interface UnaryInterceptor<REQ, RESP> {
-  public fun intercept(request: Request<REQ, RESP>, invoker: (request: Request<REQ, RESP>) -> Promise<UnaryResponse<REQ, RESP>>): Promise<UnaryResponse<REQ, RESP>>
+  public fun intercept(
+    request: Request<REQ, RESP>,
+    invoker: (request: Request<REQ, RESP>) -> Promise<UnaryResponse<REQ, RESP>>,
+  ): Promise<UnaryResponse<REQ, RESP>>
 }
 
 public open external class CallOptions(options: Json)
 
 public open external class MethodDescriptor<REQ, RESP>(name: String, methodType: String, requestType: Any, responseType: Any, requestSerializeFn: Any, responseDeserializeFn: Any) {
-  public open fun createRequest(requestMessage: REQ, metadata: Metadata = definedExternally, callOptions: CallOptions = definedExternally): Request<REQ, RESP>
-  public open fun createUnaryResponse(responseMessage: RESP, metadata: Metadata = definedExternally, status: Status = definedExternally): UnaryResponse<REQ, RESP>
+  public open fun createRequest(
+    requestMessage: REQ,
+    metadata: Metadata = definedExternally,
+    callOptions: CallOptions = definedExternally,
+  ): Request<REQ, RESP>
+  public open fun createUnaryResponse(
+    responseMessage: RESP,
+    metadata: Metadata = definedExternally,
+    status: Status = definedExternally,
+  ): UnaryResponse<REQ, RESP>
   public open fun getName(): String
   public open fun getMethodType(): String
   public open fun getRequestMessageCtor(): Any
@@ -120,5 +154,5 @@ public external enum class StatusCode {
     UNAUTHENTICATED,
     UNAVAILABLE,
     UNIMPLEMENTED,
-    UNKNOWN
+    UNKNOWN,
 }

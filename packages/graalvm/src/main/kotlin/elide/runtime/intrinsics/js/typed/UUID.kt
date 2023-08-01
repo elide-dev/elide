@@ -11,7 +11,7 @@ import java.util.UUID as JavaUUID
  * Describes the concept of a [StringLike] typed UUID, which is held in an optimized internal representation. UUIDs
  * behave as native strings just like URLs.
  */
-public interface UUID: StringLike {
+public interface UUID : StringLike {
   /**
    * ## UUID Types
    *
@@ -19,7 +19,7 @@ public interface UUID: StringLike {
    */
   public enum class UUIDType {
     /** UUIDv4 (random). */
-    V4
+    V4,
   }
 
   /**

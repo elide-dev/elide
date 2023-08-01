@@ -2,22 +2,21 @@
 
 package elide.cli
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class LocalAuthToken : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : LocalAuthToken {
+    fun __assign(_i: Int, _bb: ByteBuffer): LocalAuthToken {
         __init(_i, _bb)
         return this
     }
-    val authToken : elide.cli.LocalAuthToken_.Anonymous1? get() = authToken(elide.cli.LocalAuthToken_.Anonymous1())
-    fun authToken(obj: elide.cli.LocalAuthToken_.Anonymous1) : elide.cli.LocalAuthToken_.Anonymous1? {
+    val authToken: elide.cli.LocalAuthToken_.Anonymous1? get() = authToken(elide.cli.LocalAuthToken_.Anonymous1())
+    fun authToken(obj: elide.cli.LocalAuthToken_.Anonymous1): elide.cli.LocalAuthToken_.Anonymous1? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -32,14 +31,14 @@ class LocalAuthToken : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createLocalAuthToken(builder: FlatBufferBuilder, authTokenOffset: Int) : Int {
+        fun createLocalAuthToken(builder: FlatBufferBuilder, authTokenOffset: Int): Int {
             builder.startTable(1)
             addAuthToken(builder, authTokenOffset)
             return endLocalAuthToken(builder)
         }
         fun startLocalAuthToken(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addAuthToken(builder: FlatBufferBuilder, authToken: Int) = builder.addOffset(0, authToken, 0)
-        fun endLocalAuthToken(builder: FlatBufferBuilder) : Int {
+        fun endLocalAuthToken(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

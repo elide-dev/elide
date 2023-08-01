@@ -9,7 +9,7 @@ public object TestUtil {
    * @return File contents.
    */
   public fun loadFixture(name: String): String = TestUtil::class.java.getResourceAsStream(
-    name
+    name,
   ).bufferedReader().use {
     it.readText()
   }
@@ -21,7 +21,7 @@ public object TestUtil {
    * @return File contents.
    */
   public fun loadBinary(name: String): ByteArray = TestUtil::class.java.getResourceAsStream(
-    name
+    name,
   ).buffered().use {
     it.readAllBytes()
   }

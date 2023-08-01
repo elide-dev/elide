@@ -1,20 +1,7 @@
 package elide.tool.cli
 
-import elide.annotations.Inject
-import elide.runtime.Logger
-import elide.runtime.gvm.ContextFactory
-import elide.runtime.gvm.VMFacadeFactory
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.vfs.EmbeddedGuestVFS
-import elide.runtime.gvm.vfs.HostVFS
-import elide.tool.cli.err.AbstractToolError
-import elide.tool.cli.err.ShellError
-import elide.tool.cli.state.CommandState
-import kotlinx.coroutines.*
 import org.graalvm.polyglot.Language
 import java.io.BufferedReader
-import org.graalvm.polyglot.Context as VMContext
-import org.graalvm.polyglot.Engine as VMEngine
 import java.io.Closeable
 import java.io.File
 import java.io.IOException
@@ -28,14 +15,28 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import elide.annotations.Inject
+import elide.runtime.Logger
+import elide.runtime.gvm.ContextFactory
+import elide.runtime.gvm.VMFacadeFactory
+import elide.runtime.gvm.internals.VMProperty
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS
+import elide.runtime.gvm.vfs.HostVFS
+import elide.tool.cli.err.AbstractToolError
+import elide.tool.cli.err.ShellError
+import elide.tool.cli.state.CommandState
+import org.graalvm.polyglot.Context as VMContext
+import org.graalvm.polyglot.Engine as VMEngine
 
 /**
  * TBD.
  */
-@Suppress("MemberVisibilityCanBePrivate") internal abstract class AbstractSubcommand<
-  State: ToolState,
-  Context: CommandContext,
+@Suppress("MemberVisibilityCanBePrivate")
+internal abstract class AbstractSubcommand<
+  State : ToolState,
+  Context : CommandContext,
 > :
   CoroutineScope,
   Closeable,
@@ -128,7 +129,8 @@ import kotlin.coroutines.CoroutineContext
   }
 
   /** Input controller base surface. */
-  @Suppress("unused") internal sealed interface InputController {
+  @Suppress("unused")
+  internal sealed interface InputController {
     /** Direct access to standard-input. */
     val stdin: InputStream get() = _stdin
 
@@ -164,7 +166,7 @@ import kotlin.coroutines.CoroutineContext
   }
 
   /** Execution context for a run of the Elide tool. */
-  internal sealed interface ToolContext<State: ToolState> {
+  internal sealed interface ToolContext<State : ToolState> {
     /** Output settings and controls. */
     val output: OutputController
 
@@ -179,7 +181,7 @@ import kotlin.coroutines.CoroutineContext
   }
 
   /** Default input controller implementation. */
-  protected open class DefaultInputController (
+  protected open class DefaultInputController(
     private val inbuf: BufferedReader? = null,
   ) : InputController {
     /** @inheritDoc */
@@ -204,11 +206,11 @@ import kotlin.coroutines.CoroutineContext
   }
 
   /** Default output controller implementation. */
-  protected open class DefaultOutputController<State: ToolState> (
+  protected open class DefaultOutputController<State : ToolState> (
     private val _state: State,
 //    private val _session: OutputSession?,
     private val _logger: Logger,
-    private val _settings: ToolState.OutputSettings = _state.output
+    private val _settings: ToolState.OutputSettings = _state.output,
   ) : OutputController, Logger by _logger {
     /** @inheritDoc */
     override val settings: ToolState.OutputSettings get() = _settings
@@ -245,9 +247,11 @@ import kotlin.coroutines.CoroutineContext
   ) : ExecutionController
 
   /** Private implementation of tool execution context. */
-  protected abstract class ToolExecutionContextImpl<T: ToolState> constructor (private val _state: T) : ToolContext<T> {
+  protected abstract class ToolExecutionContextImpl<T : ToolState> constructor(
+    private val _state: T,
+  ) : ToolContext<T> {
     internal companion object {
-      @JvmStatic fun <T: ToolState> forSuite(
+      @JvmStatic fun <T : ToolState> forSuite(
         state: T,
         output: OutputController,
         input: InputController,
@@ -361,7 +365,8 @@ import kotlin.coroutines.CoroutineContext
 
   // Attach a VM shutdown hook which cleans up and emits a shutdown message.
   private fun attachShutdownHook() {
-    Runtime.getRuntime().addShutdownHook(Thread {
+    Runtime.getRuntime().addShutdownHook(
+      Thread {
       logging.debug("Cleaning up tool resources")
       close()
 
@@ -372,7 +377,8 @@ import kotlin.coroutines.CoroutineContext
           line("Exited session")
         })
       }
-    })
+    },
+    )
   }
 
   /**
@@ -475,14 +481,14 @@ import kotlin.coroutines.CoroutineContext
         it.fileSystem(
           EmbeddedGuestVFS.forBundle(
             *systemBundles.plus(bundles).toTypedArray(),
-          )
+          ),
         )
       } else if (systemBundles.isNotEmpty() && !hostIO) {
         logging.debug { "No user bundles, but ${systemBundles.size} system bundles present; mounting embedded" }
         it.fileSystem(
           EmbeddedGuestVFS.forBundle(
             *systemBundles.toTypedArray(),
-          )
+          ),
         )
       } else if (hostIO) {
         // if we're doing host I/O, mount that instead

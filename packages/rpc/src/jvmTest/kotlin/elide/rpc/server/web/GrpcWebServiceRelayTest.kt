@@ -1,15 +1,15 @@
 package elide.rpc.server.web
 
 import com.google.protobuf.Message
-import io.grpc.ServerServiceDefinition
 import io.grpc.Metadata
+import io.grpc.ServerServiceDefinition
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.health.v1.HealthCheckResponse
 import io.grpc.health.v1.HealthGrpc
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -23,14 +23,14 @@ class GrpcWebServiceRelayTest {
   @Test fun testInjectable() {
     assertNotNull(
       serviceRelay,
-      "should be able to inject a service relay instance"
+      "should be able to inject a service relay instance",
     )
   }
 
   @Test fun testLoadUnrecognizedClass() {
     assertThrows<StatusRuntimeException> {
       serviceRelay.reflectivelyLoadGrpcClass(
-        "class.that.does.not.Exist"
+        "class.that.does.not.Exist",
       )
     }
   }
@@ -38,7 +38,7 @@ class GrpcWebServiceRelayTest {
   @Test fun testLoadRestrictedClass() {
     assertThrows<StatusRuntimeException> {
       serviceRelay.reflectivelyLoadGrpcClass(
-        "java.lang.String"
+        "java.lang.String",
       )
     }
   }
@@ -47,7 +47,7 @@ class GrpcWebServiceRelayTest {
     assertThrows<StatusRuntimeException> {
       serviceRelay.reflectivelyLoadGrpcMethod(
         GrpcWebServiceRelay::class.java,
-        "unknownMethod"
+        "unknownMethod",
       )
     }
   }
@@ -56,26 +56,26 @@ class GrpcWebServiceRelayTest {
     val (path, name) = serviceRelay.resolveServiceJavaPackageAndName(
       ServerServiceDefinition.builder(HealthGrpc.getServiceDescriptor())
         .addMethod(
-          HealthGrpc.getCheckMethod()
+          HealthGrpc.getCheckMethod(),
         ) { _, _ ->
           throw IllegalStateException("not dispatchable")
         }
         .addMethod(
-          HealthGrpc.getWatchMethod()
+          HealthGrpc.getWatchMethod(),
         ) { _, _ ->
           throw IllegalStateException("not dispatchable")
         }
-        .build()
+        .build(),
     )
     assertEquals(
       "io.grpc.health.v1",
       path,
-      "path for health service should be expected value"
+      "path for health service should be expected value",
     )
     assertEquals(
       "Health",
       name,
-      "name for health service should be expected value"
+      "name for health service should be expected value",
     )
   }
 
@@ -83,38 +83,38 @@ class GrpcWebServiceRelayTest {
     val sampleTrailers = Metadata()
     sampleTrailers.put(
       GrpcWeb.Metadata.apiKey,
-      "here is an epi key"
+      "here is an epi key",
     )
 
     val throwable = Status.INTERNAL.withDescription(
-      "Error description"
+      "Error description",
     ).asRuntimeException(
-      sampleTrailers
+      sampleTrailers,
     )
     val trailers = serviceRelay.trailersFromThrowable(throwable)
     assertNotNull(
       trailers,
-      "should resolve non-null trailers from `StatusRuntimeException`"
+      "should resolve non-null trailers from `StatusRuntimeException`",
     )
 
     val throwable2 = Status.INTERNAL.withDescription(
-      "Error description"
+      "Error description",
     ).asException(
-      sampleTrailers
+      sampleTrailers,
     )
     val trailers2 = serviceRelay.trailersFromThrowable(throwable2)
     assertNotNull(
       trailers2,
-      "should resolve non-null trailers from `StatusException`"
+      "should resolve non-null trailers from `StatusException`",
     )
 
     val throwable3 = IllegalStateException(
-      "not a gRPC throwable"
+      "not a gRPC throwable",
     )
     val trailers3 = serviceRelay.trailersFromThrowable(throwable3)
     assertNull(
       trailers3,
-      "should resolve null trailers from non-gRPC exception"
+      "should resolve null trailers from non-gRPC exception",
     )
   }
 
@@ -123,13 +123,13 @@ class GrpcWebServiceRelayTest {
       HealthCheckResponse.newBuilder().setStatus(HealthCheckResponse.ServingStatus.SERVING).build(),
     )
     val serialized = serviceRelay.serializeResponses(
-      responses
+      responses,
     )
     val unary = HealthCheckResponse.parseFrom(serialized)
     assertEquals(
       HealthCheckResponse.ServingStatus.SERVING,
       unary.status,
-      "should properly serialize response"
+      "should properly serialize response",
     )
   }
 
@@ -139,13 +139,13 @@ class GrpcWebServiceRelayTest {
       HealthCheckResponse.newBuilder().setStatus(HealthCheckResponse.ServingStatus.NOT_SERVING).build(),
     )
     val serialized = serviceRelay.serializeResponses(
-      responses
+      responses,
     )
     val unary = HealthCheckResponse.parseFrom(serialized)
     assertEquals(
       HealthCheckResponse.ServingStatus.SERVING,
       unary.status,
-      "should pick first response"
+      "should pick first response",
     )
   }
 
@@ -155,14 +155,14 @@ class GrpcWebServiceRelayTest {
     assertEquals(
       0,
       serialized.size,
-      "should get back empty byte array for empty list of responses"
+      "should get back empty byte array for empty list of responses",
     )
   }
 
   @Test fun testSerializeNonMessages() {
     assertThrows<IllegalArgumentException> {
       val responses = listOf(
-        "sample bad type for response"
+        "sample bad type for response",
       )
       serviceRelay.serializeResponses(responses)
     }

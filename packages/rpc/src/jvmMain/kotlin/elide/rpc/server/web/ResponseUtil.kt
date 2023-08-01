@@ -91,7 +91,7 @@ internal object ResponseUtil {
   @JvmStatic fun writeHeaders(
     response: MutableHttpResponse<RawRpcPayload>,
     contentType: GrpcWebContentType,
-    headers: Metadata
+    headers: Metadata,
   ) {
     baseHeaders.forEach {
       response.headers.set(it.key, it.value)
@@ -101,7 +101,7 @@ internal object ResponseUtil {
       response.headers,
     )
     response.contentType(
-      contentType.mediaType()
+      contentType.mediaType(),
     )
   }
 
@@ -154,12 +154,14 @@ internal object ResponseUtil {
     }
 
     // collect the stream in the final response, wrapping the entire thing in Base64 if we're operating in `TEXT` mode.
-    response.body(if (contentType == GrpcWebContentType.TEXT) {
+    response.body(
+      if (contentType == GrpcWebContentType.TEXT) {
       Base64.getEncoder().encode(
-        responseStream.toByteArray()
+        responseStream.toByteArray(),
       )
     } else {
       responseStream.toByteArray()
-    })
+    },
+    )
   }
 }

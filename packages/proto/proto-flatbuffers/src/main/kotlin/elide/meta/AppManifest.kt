@@ -2,22 +2,21 @@
 
 package elide.meta
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AppManifest : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AppManifest {
+    fun __assign(_i: Int, _bb: ByteBuffer): AppManifest {
         __init(_i, _bb)
         return this
     }
-    val app : elide.meta.AppInfo? get() = app(elide.meta.AppInfo())
-    fun app(obj: elide.meta.AppInfo) : elide.meta.AppInfo? {
+    val app: elide.meta.AppInfo? get() = app(elide.meta.AppInfo())
+    fun app(obj: elide.meta.AppInfo): elide.meta.AppInfo? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class AppManifest : Table() {
             null
         }
     }
-    val build : elide.meta.BuildInfo? get() = build(elide.meta.BuildInfo())
-    fun build(obj: elide.meta.BuildInfo) : elide.meta.BuildInfo? {
+    val build: elide.meta.BuildInfo? get() = build(elide.meta.BuildInfo())
+    fun build(obj: elide.meta.BuildInfo): elide.meta.BuildInfo? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -34,8 +33,8 @@ class AppManifest : Table() {
             null
         }
     }
-    val guest : elide.meta.GuestVM? get() = guest(elide.meta.GuestVM())
-    fun guest(obj: elide.meta.GuestVM) : elide.meta.GuestVM? {
+    val guest: elide.meta.GuestVM? get() = guest(elide.meta.GuestVM())
+    fun guest(obj: elide.meta.GuestVM): elide.meta.GuestVM? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -50,7 +49,7 @@ class AppManifest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAppManifest(builder: FlatBufferBuilder, appOffset: Int, buildOffset: Int, guestOffset: Int) : Int {
+        fun createAppManifest(builder: FlatBufferBuilder, appOffset: Int, buildOffset: Int, guestOffset: Int): Int {
             builder.startTable(3)
             addGuest(builder, guestOffset)
             addBuild(builder, buildOffset)
@@ -61,7 +60,7 @@ class AppManifest : Table() {
         fun addApp(builder: FlatBufferBuilder, app: Int) = builder.addOffset(0, app, 0)
         fun addBuild(builder: FlatBufferBuilder, build: Int) = builder.addOffset(1, build, 0)
         fun addGuest(builder: FlatBufferBuilder, guest: Int) = builder.addOffset(2, guest, 0)
-        fun endAppManifest(builder: FlatBufferBuilder) : Int {
+        fun endAppManifest(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

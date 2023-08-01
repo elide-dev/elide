@@ -103,10 +103,10 @@ dependencies {
   implementation(libs.lz4)
 
   implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-aarch_64"
+    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-aarch_64",
   )
   implementation(
-    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-x86_64"
+    "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-x86_64",
   )
 
   runtimeOnly(libs.micronaut.runtime)
@@ -127,10 +127,12 @@ dependencies {
   if (buildSamples == "true") {
     testImplementation(project(testProject))
 
-    embeddedJars(project(
+    embeddedJars(
+      project(
       testProject,
       configuration = "shadowAppJar",
-    ))
+    ),
+    )
   }
 }
 
@@ -155,9 +157,11 @@ micronaut {
   runtime = io.micronaut.gradle.MicronautRuntime.NETTY
   processing {
     incremental = true
-    annotations.addAll(listOf(
+    annotations.addAll(
+      listOf(
       "elide.tool.ssg.*",
-    ))
+    ),
+    )
   }
 
   aot {
@@ -222,7 +226,8 @@ graalvmNative {
     named("main") {
       fallback = false
       sharedLibrary = false
-      buildArgs.addAll(listOf(
+      buildArgs.addAll(
+        listOf(
         "--language:regex",
         "--gc=epsilon",
         "--libc=glibc",
@@ -242,15 +247,18 @@ graalvmNative {
         "-Duser.language=en",
         "-H:IncludeLocales=en",
         "--enable-all-security-services",
-      ))
+      ),
+      )
       quickBuild = quickbuild
     }
 
     named("test") {
-      buildArgs.addAll(listOf(
+      buildArgs.addAll(
+        listOf(
         "--language:regex",
         "--enable-all-security-services",
-      ))
+      ),
+      )
       quickBuild = quickbuild
     }
   }

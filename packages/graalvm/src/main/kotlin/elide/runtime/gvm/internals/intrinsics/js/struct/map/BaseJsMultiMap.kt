@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.stream.Stream
+import kotlinx.collections.immutable.toImmutableList
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.MapLike
-import kotlinx.collections.immutable.toImmutableList
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Abstract implementation of a JS-compatible multi-map structure. */
-internal abstract class BaseJsMultiMap<K: Any, V>(
+internal abstract class BaseJsMultiMap<K : Any, V>(
   @Volatile protected var backingMap: Map<K, List<V>>,
   sorted: Boolean,
   mutable: Boolean,
@@ -24,7 +24,7 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
   override fun keysSequence(): Sequence<K> = backingMap.keys.asSequence()
 
   /** @inheritDoc */
-  override fun valuesStream(parallel: Boolean): Stream<V>  = BaseJsMap.toStream(
+  override fun valuesStream(parallel: Boolean): Stream<V> = BaseJsMap.toStream(
     backingMap.values.stream().flatMap {
       if (parallel) it.parallelStream()
       else it.stream()
@@ -48,7 +48,7 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
   /** @inheritDoc */
   override val entries: Set<Map.Entry<K, V>> get() = backingMap.entries.flatMap {
     it.value.map { valueEntry ->
-      object: Map.Entry<K, V> {
+      object : Map.Entry<K, V> {
         override val key: K = it.key
         override val value: V = valueEntry
       }
@@ -78,32 +78,34 @@ internal abstract class BaseJsMultiMap<K: Any, V>(
 
   /** @inheritDoc */
   override fun keys(): JsIterator<K> = JsIterator.JsIteratorFactory.forIterator(
-    backingMap.keys.iterator()
+    backingMap.keys.iterator(),
   )
 
   /** @inheritDoc */
   override fun values(): JsIterator<V> = JsIterator.JsIteratorFactory.forIterator(
-    backingMap.values.flatten().iterator()
+    backingMap.values.flatten().iterator(),
   )
 
   /** @inheritDoc */
   override fun entries(): JsIterator<MapLike.Entry<K, V>> = JsIterator.JsIteratorFactory.forIterator(
     backingMap.entries.flatMap {
       it.value.map { valueEntry ->
-        object: MapLike.Entry<K, V> {
+        object : MapLike.Entry<K, V> {
           override val key: K = it.key
           override val value: V = valueEntry
         }
       }
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */
   override fun forEach(op: (MapLike.Entry<K, V>) -> Unit) = entries.forEach {
-    op.invoke(BaseJsMap.entry(
+    op.invoke(
+      BaseJsMap.entry(
       it.key,
       it.value,
-    ))
+    ),
+    )
   }
 
   /**

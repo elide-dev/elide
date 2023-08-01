@@ -8,7 +8,7 @@ class FramingPolicy private constructor() {
         const val DEFAULTFRAMINGPOLICY: Int = 0
         const val SAMEORIGIN: Int = 1
         const val DENY: Int = 2
-        val names : Array<String> = arrayOf("DEFAULT_FRAMING_POLICY", "SAMEORIGIN", "DENY")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("DEFAULT_FRAMING_POLICY", "SAMEORIGIN", "DENY")
+        fun name(e: Int): String = names[e]
     }
 }

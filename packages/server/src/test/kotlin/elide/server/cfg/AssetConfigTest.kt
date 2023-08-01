@@ -22,7 +22,7 @@ class AssetConfigTest {
     assertFalse(disabled.isEnabled)
     assertEquals(
       disabled.prefix,
-      "/_/somethingelse"
+      "/_/somethingelse",
     )
     assertFalse(disabled.etags)
     assertTrue(disabled.preferWeakEtags)

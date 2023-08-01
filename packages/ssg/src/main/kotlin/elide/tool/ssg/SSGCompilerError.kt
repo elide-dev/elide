@@ -26,30 +26,29 @@ public sealed class SSGCompilerError(
   public val exitCode: Int = -1,
 ) : Throwable(message, cause) {
   /** Generic error case. */
-  public class Generic(cause: Throwable? = null): SSGCompilerError(
+  public class Generic(cause: Throwable? = null) : SSGCompilerError(
     "An unknown error occurred.",
     cause,
   )
 
   /** Invalid argument error. */
-  public class InvalidArgument(message: String, cause: Throwable? = null): SSGCompilerError(
+  public class InvalidArgument(message: String, cause: Throwable? = null) : SSGCompilerError(
     message,
     cause,
     -2,
   )
 
   /** I/O error. */
-  public class IOError(message: String, cause: Throwable? = null): SSGCompilerError(
+  public class IOError(message: String, cause: Throwable? = null) : SSGCompilerError(
     message,
     cause,
     -3,
   )
 
   /** Output error. */
-  public class OutputError(message: String, cause: Throwable? = null): SSGCompilerError(
+  public class OutputError(message: String, cause: Throwable? = null) : SSGCompilerError(
     message,
     cause,
     -4,
   )
 }
-

@@ -8,7 +8,7 @@ import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
 /** Test-side implementation of a health service. */
-@GrpcService class TestHealthService: HealthGrpc.HealthImplBase() {
+@GrpcService class TestHealthService : HealthGrpc.HealthImplBase() {
   companion object {
     const val SERVING_SIGNAL = "service.ShouldBeServing"
     const val NOT_SERVING_SIGNAL = "service.ShouldNotBeServing"
@@ -31,7 +31,7 @@ import io.micronaut.grpc.annotation.GrpcService
       responseObserver.onNext(
         HealthCheckResponse.newBuilder()
           .setStatus(status)
-          .build()
+          .build(),
       )
       responseObserver.onCompleted()
     }

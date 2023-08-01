@@ -2,8 +2,6 @@
 
 package elide.rpc.server
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.grpc.*
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
@@ -11,10 +9,12 @@ import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.reflection.v1alpha.ServerReflectionGrpc
 import io.grpc.stub.AbstractStub
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Manages access to gRPC services at runtime, primarily for the purpose of dispatching arbitrary gRPC methods from RPCs
@@ -29,7 +29,10 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @param healthManager Service health manager, which keeps track of each service's health state.
  */
-@Context @Singleton internal class RpcRuntime @Inject constructor (
+@Context @Singleton
+internal class RpcRuntime
+  @Inject
+  constructor(
   private val healthManager: ServiceHealthManager,
 ) {
   // Private logger.
@@ -74,15 +77,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 
     // add reflection service and indicate it is up
     builder.addService(
-      ProtoReflectionService.newInstance()
+      ProtoReflectionService.newInstance(),
     )
     healthManager.notifyServing(
-      ServerReflectionGrpc.getServiceDescriptor()
+      ServerReflectionGrpc.getServiceDescriptor(),
     )
 
     // indicate health service as up
     builder.addService(
-      healthManager.service
+      healthManager.service,
     )
     return builder
   }
@@ -95,7 +98,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   // Prepare a stub with settings that integrate execution, compression, etc., with Elide settings.
   internal fun prepareStub(stub: AbstractStub<*>, interceptors: List<ClientInterceptor>): AbstractStub<*> {
     return stub.withInterceptors(
-      *interceptors.toTypedArray()
+      *interceptors.toTypedArray(),
     )
   }
 
@@ -122,12 +125,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 
     // set up an internal channel to the new server
     internalChannel = InProcessChannelBuilder.forName(
-      serverName
+      serverName,
     ).build()
 
     initialized.compareAndExchange(
       false,
-      true
+      true,
     )
   }
 

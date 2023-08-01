@@ -13,8 +13,8 @@
 
 package elide.tool.ssg
 
-import kotlinx.coroutines.Deferred
 import java.io.Closeable
+import kotlinx.coroutines.Deferred
 import kotlin.jvm.Throws
 
 /**

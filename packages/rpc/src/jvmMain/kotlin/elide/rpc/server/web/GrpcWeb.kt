@@ -4,7 +4,8 @@ import io.grpc.Metadata.ASCII_STRING_MARSHALLER
 import io.grpc.Metadata.Key
 
 /** Provides constant values which are used internally by Elide's gRPC integration layer. */
-@Suppress("unused") public object GrpcWeb {
+@Suppress("unused")
+public object GrpcWeb {
   /** Special header names. */
   public object Headers {
     /** gRPC status header, used on a gRPC-Web response. */

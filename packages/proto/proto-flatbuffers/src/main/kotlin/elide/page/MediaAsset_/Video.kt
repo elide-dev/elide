@@ -2,46 +2,45 @@
 
 package elide.page.MediaAsset_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Video : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Video {
+    fun __assign(_i: Int, _bb: ByteBuffer): Video {
         __init(_i, _bb)
         return this
     }
-    val provider : Int
+    val provider: Int
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val title : String?
+    val title: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val titleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun titleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val description : String?
+    val titleAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun titleInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val description: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val descriptionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val runTime : ULong
+    val descriptionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val runTime: ULong
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    fun asset(j: Int) : elide.page.MediaAsset_.Video_.VideoAsset? = asset(elide.page.MediaAsset_.Video_.VideoAsset(), j)
-    fun asset(obj: elide.page.MediaAsset_.Video_.VideoAsset, j: Int) : elide.page.MediaAsset_.Video_.VideoAsset? {
+    fun asset(j: Int): elide.page.MediaAsset_.Video_.VideoAsset? = asset(elide.page.MediaAsset_.Video_.VideoAsset(), j)
+    fun asset(obj: elide.page.MediaAsset_.Video_.VideoAsset, j: Int): elide.page.MediaAsset_.Video_.VideoAsset? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -49,9 +48,10 @@ class Video : Table() {
             null
         }
     }
-    val assetLength : Int
+    val assetLength: Int
         get() {
-            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(12)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -60,7 +60,14 @@ class Video : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVideo(builder: FlatBufferBuilder, provider: Int, titleOffset: Int, descriptionOffset: Int, runTime: ULong, assetOffset: Int) : Int {
+        fun createVideo(
+          builder: FlatBufferBuilder,
+          provider: Int,
+          titleOffset: Int,
+          descriptionOffset: Int,
+          runTime: ULong,
+          assetOffset: Int,
+        ): Int {
             builder.startTable(5)
             addRunTime(builder, runTime)
             addAsset(builder, assetOffset)
@@ -75,7 +82,7 @@ class Video : Table() {
         fun addDescription(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
         fun addRunTime(builder: FlatBufferBuilder, runTime: ULong) = builder.addLong(3, runTime.toLong(), 0)
         fun addAsset(builder: FlatBufferBuilder, asset: Int) = builder.addOffset(4, asset, 0)
-        fun createAssetVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createAssetVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -83,7 +90,7 @@ class Video : Table() {
             return builder.endVector()
         }
         fun startAssetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endVideo(builder: FlatBufferBuilder) : Int {
+        fun endVideo(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

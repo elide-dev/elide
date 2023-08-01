@@ -3,4 +3,4 @@ package elide.runtime.intrinsics.js
 /**
  *
  */
-public interface StringLike: CharSequence
+public interface StringLike : CharSequence

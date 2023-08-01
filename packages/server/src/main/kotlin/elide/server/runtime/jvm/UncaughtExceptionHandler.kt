@@ -1,8 +1,8 @@
 package elide.server.runtime.jvm
 
+import jakarta.inject.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
-import jakarta.inject.Singleton
 
 /**
  * Default uncaught exception handler; logs the error to the root logger, along with a stacktrace and message from the
@@ -18,7 +18,7 @@ import jakarta.inject.Singleton
  * }
  * ```
  */
-@Singleton public open class UncaughtExceptionHandler: Thread.UncaughtExceptionHandler {
+@Singleton public open class UncaughtExceptionHandler : Thread.UncaughtExceptionHandler {
   // Root logger.
   private val logging: Logger = Logging.root()
 
@@ -26,7 +26,7 @@ import jakarta.inject.Singleton
     // not yet implemented
     logging.error(
       "Encountered critical uncaught error (thread: '${thread.name}'): '${err.message ?: "NO_MESSAGE"}'",
-      err
+      err,
     )
   }
 }

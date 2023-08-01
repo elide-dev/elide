@@ -14,20 +14,9 @@
 package elide.tool.ssg
 
 import com.google.common.annotations.VisibleForTesting
-import elide.tool.ssg.SiteCompilerParams as CompilerParams
-import elide.tool.ssg.SiteCompilerParams.Options
-import elide.tool.ssg.SiteCompileResult as CompileResult
 import com.google.errorprone.annotations.CanIgnoreReturnValue
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.SiteCompilerParams
-import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
-import jakarta.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -36,7 +25,17 @@ import tools.elide.data.CompressionMode
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.SiteCompilerParams.Options
+import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
+import elide.tool.ssg.SiteCompileResult as CompileResult
+import elide.tool.ssg.SiteCompilerParams as CompilerParams
 
 /** Entrypoint for the site compiler command-line tool. */
 @Command(
@@ -46,7 +45,7 @@ import kotlin.system.exitProcess
   version = [ELIDE_TOOL_VERSION],
 )
 @Suppress("MemberVisibilityCanBePrivate")
-public class SiteCompiler internal constructor () : Runnable {
+public class SiteCompiler internal constructor() : Runnable {
   public companion object {
     /** CLI entrypoint and [args]. */
     @JvmStatic public fun main(args: Array<String>): Unit = exitProcess(exec(args))
@@ -84,14 +83,17 @@ public class SiteCompiler internal constructor () : Runnable {
         compiler = DefaultAppStaticCompiler(ioDispatcher)
 
         // configure the compiler
-        configure(logging = logging, params = CompilerParams(
+        configure(
+          logging = logging,
+          params = CompilerParams(
           target = target,
           output = output,
           manifest = manifest,
           options = options.copy(
             httpMode = options.httpMode,
           ),
-        ))
+        ),
+        )
       }.compile()
     }
 
@@ -110,7 +112,8 @@ public class SiteCompiler internal constructor () : Runnable {
     }
 
     // Private execution entrypoint for customizing core Picocli settings.
-    @JvmStatic @VisibleForTesting internal fun exec(args: Array<String>): Int {
+    @JvmStatic @VisibleForTesting
+    internal fun exec(args: Array<String>): Int {
       return ApplicationContext.builder().start().use {
         CommandLine(SiteCompiler::class.java, MicronautFactory(it))
           .setUsageHelpAutoWidth(true)
@@ -220,7 +223,7 @@ public class SiteCompiler internal constructor () : Runnable {
   @Option(
     names = ["--precompress"],
     description = [
-      "Whether to pre-compress eligible outputs with GZIP or Brotli. Pass `GZIP` or `BROTLI`, zero or more times."
+      "Whether to pre-compress eligible outputs with GZIP or Brotli. Pass `GZIP` or `BROTLI`, zero or more times.",
     ],
   )
   internal var precompress: Set<CompressionMode> = emptySet()
@@ -381,7 +384,7 @@ public class SiteCompiler internal constructor () : Runnable {
           extraOrigins = extraOrigins.toSortedSet(),
           precompress = precompress,
           pretty = pretty,
-        )
+        ),
       )
       paramsAvailable.compareAndSet(false, true)
     }

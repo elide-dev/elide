@@ -1,9 +1,9 @@
 package elide.server.assets
 
-import elide.annotations.API
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.ManifestFormat
 import java.io.InputStream
+import elide.annotations.API
 
 /**
  * Defines the API surface of a loader which is capable of searching for an asset manifest at server startup, and then
@@ -58,7 +58,7 @@ import java.io.InputStream
    */
   public fun findLoadManifest(): AssetBundle? {
     return findLoadManifest(
-      assetManifestCandidates
+      assetManifestCandidates,
     )
   }
 
@@ -85,7 +85,7 @@ import java.io.InputStream
    */
   public fun findManifest(): Pair<ManifestFormat, InputStream>? {
     return findManifest(
-      assetManifestCandidates
+      assetManifestCandidates,
     )
   }
 }

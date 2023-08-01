@@ -13,27 +13,28 @@
 
 package elide.tool.ssg
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.DefaultHttpClientConfiguration
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.ssl.ClientSslConfiguration
-import jakarta.inject.Inject
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
-import kotlinx.coroutines.reactive.awaitFirst
 import tools.elide.meta.AppManifest
 import tools.elide.meta.Endpoint
 import java.io.Closeable
 import java.net.URI
-import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import kotlinx.coroutines.reactive.awaitFirst
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Default [AppLoader] implementation, which works based on an isolated class-loader. */
-@Singleton public class DefaultAppLoader @Inject internal constructor (
+@Singleton public class DefaultAppLoader
+  @Inject
+  internal constructor(
   private val contentReader: StaticContentReader,
   private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : AppLoader {
@@ -55,7 +56,7 @@ import java.util.concurrent.atomic.AtomicReference
   }
 
   /** Defines a local implementation of an HTTP app loader. */
-  private inner class HTTPAppLoader(private val client: HttpClient): AppLoaderImpl {
+  private inner class HTTPAppLoader(private val client: HttpClient) : AppLoaderImpl {
     // Whether we are currently connected to the server.
     private val connected: AtomicBoolean = AtomicBoolean(false)
 
@@ -149,7 +150,7 @@ import java.util.concurrent.atomic.AtomicReference
         " (endpoint: '${endpoint.impl}.${endpoint.member}')"
       } else {
         " (endpoint: dynamic)"
-      }
+      },
     )
   }
 
@@ -169,12 +170,14 @@ import java.util.concurrent.atomic.AtomicReference
     app: AppManifest,
   ): Deferred<LoadedAppInfo> = coroutineScope {
     // parse the `target` value
-    val url = URI.create(if (params.target.contains("://")) {
+    val url = URI.create(
+      if (params.target.contains("://")) {
       params.target
     } else {
       // if the target has no protocol, assume `file://`
       "jar:file://${params.target}!/"
-    }).toURL()
+    },
+    ).toURL()
     if (params.options.httpMode) {
       logging.debug("Detected HTTP mode is active; validating target as HTTP URL.")
       require(url.protocol == "http" || url.protocol == "https") {
@@ -197,12 +200,14 @@ import java.util.concurrent.atomic.AtomicReference
 
     async {
       // prep interpreted app info, then pre-warm/connect/load app
-      loadAppIfNeeded(LoadedAppInfo(
+      loadAppIfNeeded(
+        LoadedAppInfo(
         target = url,
         manifest = app,
         params = params,
         eligible = appEligibleForSSG(app),
-      ))
+      ),
+      )
     }
   }
 

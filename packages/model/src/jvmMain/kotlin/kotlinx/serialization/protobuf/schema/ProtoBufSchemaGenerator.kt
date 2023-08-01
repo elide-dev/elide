@@ -57,7 +57,7 @@ public object ProtoBufSchemaGenerator {
     public fun generateSchemaText(
         rootDescriptor: SerialDescriptor,
         packageName: String? = null,
-        options: Map<String, String> = emptyMap()
+        options: Map<String, String> = emptyMap(),
     ): String = generateSchemaText(listOf(rootDescriptor), packageName, options)
 
     /**
@@ -75,11 +75,14 @@ public object ProtoBufSchemaGenerator {
     public fun generateSchemaText(
         descriptors: List<SerialDescriptor>,
         packageName: String? = null,
-        options: Map<String, String> = emptyMap()
-    ): String = generateSchemaText(descriptors, ProtoBufGeneratorOptions.DEFAULTS.copy(
+        options: Map<String, String> = emptyMap(),
+    ): String = generateSchemaText(
+      descriptors,
+      ProtoBufGeneratorOptions.DEFAULTS.copy(
         packageName = packageName,
         packageOptions = options,
-    ))
+    ),
+    )
 
     /**
      * Generate text of protocol buffers schema for the given serializable [descriptors], and applying any provided

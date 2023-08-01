@@ -9,7 +9,7 @@ class DisplayMode private constructor() {
         const val FULLSCREEN: Int = 1
         const val STANDALONE: Int = 2
         const val MINIMALUI: Int = 3
-        val names : Array<String> = arrayOf("BROWSER", "FULLSCREEN", "STANDALONE", "MINIMAL_UI")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("BROWSER", "FULLSCREEN", "STANDALONE", "MINIMAL_UI")
+        fun name(e: Int): String = names[e]
     }
 }

@@ -18,9 +18,8 @@
   "UNUSED_VARIABLE",
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
 import kotlinx.benchmark.gradle.*
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   id("io.micronaut.library")
@@ -75,18 +74,22 @@ graalvmNative {
   binaries {
     create("shared") {
       sharedLibrary = true
-      buildArgs(initializeAtBuildTime.map {
+      buildArgs(
+        initializeAtBuildTime.map {
         "--initialize-at-build-time=$it"
-      }.plus(emptyList()))
+      }.plus(emptyList()),
+      )
     }
 
     named("test") {
       fallback = false
       sharedLibrary = false
       quickBuild = true
-      buildArgs(initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
+      buildArgs(
+        initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
         "--initialize-at-build-time=$it"
-      }.plus(emptyList()))
+      }.plus(emptyList()),
+      )
     }
   }
 }
@@ -111,12 +114,14 @@ micronaut {
   version = libs.versions.micronaut.lib.get()
   processing {
     incremental = true
-    annotations.addAll(listOf(
+    annotations.addAll(
+      listOf(
       "elide.runtime.*",
       "elide.runtime.gvm.*",
       "elide.runtime.gvm.internals.*",
       "elide.runtime.gvm.intrinsics.*",
-    ))
+    ),
+    )
   }
 }
 
@@ -127,7 +132,7 @@ configurations["benchmarksImplementation"].extendsFrom(
 )
 configurations["benchmarksRuntimeOnly"].extendsFrom(
   configurations.runtimeOnly.get(),
-  configurations.testRuntimeOnly.get()
+  configurations.testRuntimeOnly.get(),
 )
 
 dependencies {

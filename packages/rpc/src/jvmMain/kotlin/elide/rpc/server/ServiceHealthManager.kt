@@ -6,9 +6,9 @@ import io.grpc.ServiceDescriptor
 import io.grpc.health.v1.HealthCheckResponse.ServingStatus
 import io.grpc.protobuf.services.HealthStatusManager
 import io.micronaut.context.annotation.Context
-import jakarta.inject.Singleton
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
+import jakarta.inject.Singleton
 
 /**
  * Dedicated manager for service health signals; controls the central gRPC health checking service.
@@ -17,7 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean
  * layer govern whether health methods are exposed to callers.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-@Context @Singleton public class ServiceHealthManager {
+@Context
+@Singleton
+public class ServiceHealthManager {
   // Holds onto active service health and provides the service implementation.
   private val healthMonitor: HealthStatusManager = HealthStatusManager()
 
@@ -48,16 +50,16 @@ import java.util.concurrent.atomic.AtomicBoolean
     if (status == null) {
       currentStatus.remove(service)
       healthMonitor.clearStatus(
-        service
+        service,
       )
     } else {
       if (status == ServingStatus.SERVICE_UNKNOWN) throw IllegalArgumentException(
-        "Cannot set service status to `SERVICE_UNKNOWN`: it is output-only"
+        "Cannot set service status to `SERVICE_UNKNOWN`: it is output-only",
       )
       currentStatus[service] = status
       healthMonitor.setStatus(
         service,
-        status
+        status,
       )
     }
   }
@@ -72,7 +74,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   public fun notifyPending(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.UNKNOWN
+      ServingStatus.UNKNOWN,
     )
   }
 
@@ -86,7 +88,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   public fun notifyServing(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.SERVING
+      ServingStatus.SERVING,
     )
   }
 
@@ -100,7 +102,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   public fun notifyNotServing(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.NOT_SERVING
+      ServingStatus.NOT_SERVING,
     )
   }
 
@@ -114,7 +116,7 @@ import java.util.concurrent.atomic.AtomicBoolean
   public fun notifyUnknown(service: ServiceDescriptor) {
     notify(
       service.name,
-      ServingStatus.UNKNOWN
+      ServingStatus.UNKNOWN,
     )
   }
 

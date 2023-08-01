@@ -8,12 +8,12 @@ package elide.runtime.gvm.internals
  * @param defaultValue If no configured value is available, this value should be passed instead. If null, pass no
  *   value at all.
  */
-public data class VMRuntimeProperty internal constructor (
+public data class VMRuntimeProperty internal constructor(
   private val name: String,
   override val symbol: String,
   private val defaultValue: String? = null,
   private val getter: (() -> String?)? = null,
-): VMProperty {
+) : VMProperty {
   public companion object {
     private fun booleanToSymbol(boolean: Boolean?): String? = when (boolean) {
       null -> null
@@ -38,7 +38,7 @@ public data class VMRuntimeProperty internal constructor (
     ): VMRuntimeProperty = VMRuntimeProperty(
       name,
       symbol,
-      booleanToSymbol(defaultValue)
+      booleanToSymbol(defaultValue),
     ) {
       booleanToSymbol(getter?.invoke())
     }

@@ -6,7 +6,7 @@ package elide.vfs
 class KnownMimeType private constructor() {
     companion object {
         const val KNOWNMIMEUNSPECIFIED: Int = 0
-        val names : Array<String> = arrayOf("KNOWN_MIME_UNSPECIFIED")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("KNOWN_MIME_UNSPECIFIED")
+        fun name(e: Int): String = names[e]
     }
 }

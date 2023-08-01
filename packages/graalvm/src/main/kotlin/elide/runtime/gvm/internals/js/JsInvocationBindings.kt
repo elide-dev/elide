@@ -1,8 +1,8 @@
 package elide.runtime.gvm.internals.js
 
+import java.util.*
 import elide.runtime.gvm.internals.GVMInvocationBindings
 import elide.runtime.gvm.internals.InvocationBindings
-import java.util.*
 import org.graalvm.polyglot.Value as GuestValue
 
 /**
@@ -87,7 +87,7 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param mapped Resolved values for each binding.
  * @param types Entrypoint types expressed in [mapped].
  */
-internal sealed class JsInvocationBindings constructor (
+internal sealed class JsInvocationBindings constructor(
   internal val mapped: Map<EntrypointInfo, JsEntrypoint>,
   private val modes: EnumSet<DispatchStyle>,
   internal val types: EnumSet<JsEntrypointType>,
@@ -115,9 +115,10 @@ internal sealed class JsInvocationBindings constructor (
     types = EnumSet.of(type),
     mapped = EntrypointInfo(type, name).let { entrypointInfo ->
     mapOf(
-      entrypointInfo to JsEntrypoint(entrypointInfo, path, value)
+      entrypointInfo to JsEntrypoint(entrypointInfo, path, value),
     )
-  })
+  },
+  )
 
   /** Enumerates types of resolved JavaScript entrypoints; a [JsInvocationBindings] sub-class exists for each. */
   internal enum class JsEntrypointType {
@@ -189,7 +190,7 @@ internal sealed class JsInvocationBindings constructor (
           pathPrefix.plus(listOf(fnName))
         } else {
           pathPrefix
-        }
+        },
       )
     }
 
@@ -350,7 +351,7 @@ internal sealed class JsInvocationBindings constructor (
    * @param name Name of the function, if any (mostly used for logging).
    * @param path Full path to the function, according to ESM or CommonJS import rules, as applicable.
    */
-  internal class JsFunction (
+  internal class JsFunction(
     value: GuestValue,
     async: Boolean,
     name: String?,
@@ -375,7 +376,7 @@ internal sealed class JsInvocationBindings constructor (
    * @param value Guest value implementing this function.
    * @param async Whether the function operates asynchronously (returns a `Promise`).
    */
-  internal class JsServer (value: GuestValue, async: Boolean) : JsInvocationBindings(
+  internal class JsServer(value: GuestValue, async: Boolean) : JsInvocationBindings(
     value = value,
     name = "fetch",
     path = listOf("default", "fetch"),
@@ -397,7 +398,7 @@ internal sealed class JsInvocationBindings constructor (
    *
    * @param value Guest value implementing this function.
    */
-  internal class JsRender (value: GuestValue) : JsInvocationBindings(
+  internal class JsRender(value: GuestValue) : JsInvocationBindings(
     value = value,
     name = "render",
     path = listOf("default", "render"),
@@ -416,7 +417,7 @@ internal sealed class JsInvocationBindings constructor (
    * @param base Base object which includes these bindings. Expected to be a `default` export.
    * @param bindings Set of bindings to compose.
    */
-  internal class JsCompound (
+  internal class JsCompound(
     base: GuestValue,
     private val bindings: List<JsInvocationBindings>,
   ) : JsInvocationBindings(

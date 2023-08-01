@@ -14,17 +14,17 @@
 package elide.tool.ssg
 
 import com.google.protobuf.InvalidProtocolBufferException
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import jakarta.inject.Singleton
-import kotlinx.coroutines.*
 import tools.elide.meta.AppManifest
 import java.io.File
 import java.io.IOException
+import jakarta.inject.Singleton
+import kotlinx.coroutines.*
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /** Implementation of a [ManifestReader] which reads off disk. */
-@Singleton internal class FilesystemManifestReader (
+@Singleton internal class FilesystemManifestReader(
   private val dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ManifestReader {
   // Private logger.
@@ -43,14 +43,16 @@ import java.io.IOException
       async {
         val file = try {
           val target = if (path.startsWith("classpath:")) {
-            (this::class.java.getResource("/" + path.drop("classpath:".length)) ?: throw SSGCompilerError
-              .InvalidArgument("Failed to locate manifest as classpath resource at path '$path'")).let {
+            (
+              this::class.java.getResource("/" + path.drop("classpath:".length)) ?: throw SSGCompilerError
+              .InvalidArgument("Failed to locate manifest as classpath resource at path '$path'")
+            ).let {
               File(it.toURI())
             }
           } else {
             val f = File(path)
             if (!f.exists()) throw IOException(
-              "Manifest not found at path '$path'"
+              "Manifest not found at path '$path'",
             )
             f
           }

@@ -2,7 +2,6 @@ package elide.runtime.gvm.internals.vfs
 
 import java.nio.file.Path
 
-
 // -- Basic: Files, Directories, Trees -- //
 
 /**
@@ -32,7 +31,6 @@ internal typealias FileTreeEntry = tools.elide.vfs.TreeEntry
  * Maps to the top-level file-system type used to express VFS metadata at runtime.
  */
 internal typealias FilesystemInfo = tools.elide.vfs.Filesystem
-
 
 // -- Policy: Access Types, Domains, Scopes -- //
 
@@ -100,7 +98,7 @@ public enum class AccessResult {
 }
 
 /** Describes a full response to a virtual file-system [AccessRequest]. */
-public class AccessResponse private constructor (
+public class AccessResponse private constructor(
   /** Specifies the ultimate [AccessResult] for a given VFS [AccessRequest]. */
   public val policy: AccessResult,
 

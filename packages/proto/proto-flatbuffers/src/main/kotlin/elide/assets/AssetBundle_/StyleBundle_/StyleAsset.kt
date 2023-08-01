@@ -2,36 +2,35 @@
 
 package elide.assets.AssetBundle_.StyleBundle_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class StyleAsset : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : StyleAsset {
+    fun __assign(_i: Int, _bb: ByteBuffer): StyleAsset {
         __init(_i, _bb)
         return this
     }
-    val token : String?
+    val token: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val tokenAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun tokenInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val filename : String?
+    val tokenAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun tokenInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val filename: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val filenameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun filenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val stylesheet : elide.page.Context_.Styles_.Stylesheet? get() = stylesheet(elide.page.Context_.Styles_.Stylesheet())
-    fun stylesheet(obj: elide.page.Context_.Styles_.Stylesheet) : elide.page.Context_.Styles_.Stylesheet? {
+    val filenameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun filenameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val stylesheet: elide.page.Context_.Styles_.Stylesheet? get() = stylesheet(elide.page.Context_.Styles_.Stylesheet())
+    fun stylesheet(obj: elide.page.Context_.Styles_.Stylesheet): elide.page.Context_.Styles_.Stylesheet? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -39,10 +38,10 @@ class StyleAsset : Table() {
             null
         }
     }
-    val renaming : Boolean
+    val renaming: Boolean
         get() {
             val o = __offset(10)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -51,7 +50,13 @@ class StyleAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStyleAsset(builder: FlatBufferBuilder, tokenOffset: Int, filenameOffset: Int, stylesheetOffset: Int, renaming: Boolean) : Int {
+        fun createStyleAsset(
+          builder: FlatBufferBuilder,
+          tokenOffset: Int,
+          filenameOffset: Int,
+          stylesheetOffset: Int,
+          renaming: Boolean,
+        ): Int {
             builder.startTable(4)
             addStylesheet(builder, stylesheetOffset)
             addFilename(builder, filenameOffset)
@@ -64,7 +69,7 @@ class StyleAsset : Table() {
         fun addFilename(builder: FlatBufferBuilder, filename: Int) = builder.addOffset(1, filename, 0)
         fun addStylesheet(builder: FlatBufferBuilder, stylesheet: Int) = builder.addOffset(2, stylesheet, 0)
         fun addRenaming(builder: FlatBufferBuilder, renaming: Boolean) = builder.addBoolean(3, renaming, false)
-        fun endStyleAsset(builder: FlatBufferBuilder) : Int {
+        fun endStyleAsset(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

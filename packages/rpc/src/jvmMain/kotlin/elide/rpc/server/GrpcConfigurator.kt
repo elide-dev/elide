@@ -16,10 +16,12 @@ import jakarta.inject.Inject
  * @param healthManager Manager which keeps track of individual service state/health.
  */
 @Context
-internal class GrpcConfigurator @Inject constructor (
+internal class GrpcConfigurator
+  @Inject
+  constructor(
   private val runtime: RpcRuntime,
-  private val healthManager: ServiceHealthManager
-): BeanCreatedEventListener<ServerBuilder<*>> {
+  private val healthManager: ServiceHealthManager,
+) : BeanCreatedEventListener<ServerBuilder<*>> {
   init {
     // start health status monitor in boot mode, by indicating `NOT_SERVING` for the health service itself.
     healthManager.notifyPending(HealthGrpc.getServiceDescriptor())
@@ -29,7 +31,7 @@ internal class GrpcConfigurator @Inject constructor (
   override fun onCreated(event: BeanCreatedEvent<ServerBuilder<*>>): ServerBuilder<*> {
     // grab the server as it is being created
     val builder = runtime.configureServer(
-      event.bean
+      event.bean,
     )
 
     // notify the runtime of available services
@@ -38,7 +40,7 @@ internal class GrpcConfigurator @Inject constructor (
     runtime.registerServices(server.services)
 
     healthManager.notifyServing(
-      HealthGrpc.getServiceDescriptor()
+      HealthGrpc.getServiceDescriptor(),
     )
     runtime.notifyReady()
 

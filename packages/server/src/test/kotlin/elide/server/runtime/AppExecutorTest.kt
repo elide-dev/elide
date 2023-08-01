@@ -1,11 +1,10 @@
 package elide.server.runtime
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -21,22 +20,23 @@ import kotlin.test.assertNotNull
   @Test fun testAcquire() {
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire(),
-      "should be able to acquire default executor statically"
+      "should be able to acquire default executor statically",
     )
   }
 
   @Test fun testExecutorService() {
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire().service(),
-      "should be able to acquire default executor as `ExecutorService`"
+      "should be able to acquire default executor as `ExecutorService`",
     )
     assertNotNull(
       AppExecutor.DefaultExecutor.acquire().executor(),
-      "should be able to acquire default executor as `Executor`"
+      "should be able to acquire default executor as `Executor`",
     )
   }
 
-  @Test @Disabled fun testRunAsyncTask() {
+  @Test @Disabled
+  fun testRunAsyncTask() {
     val result = assertDoesNotThrow {
       runBlocking {
         AppExecutor.async {
@@ -47,7 +47,7 @@ import kotlin.test.assertNotNull
     assertEquals(
       5,
       result,
-      "should be able to run task on `async` scheduler and retrieve result"
+      "should be able to run task on `async` scheduler and retrieve result",
     )
   }
 
@@ -62,7 +62,7 @@ import kotlin.test.assertNotNull
     assertEquals(
       5,
       result,
-      "should be able to run task on `io` scheduler and retrieve result"
+      "should be able to run task on `io` scheduler and retrieve result",
     )
   }
 }

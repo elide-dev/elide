@@ -17,24 +17,24 @@ import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
 /** Describes an expected class which is able to produce [Logger] instances as a factory. */
-public actual class Logging private constructor () {
+public actual class Logging private constructor() {
   public companion object {
     // Singleton logging manager instance.
     private val singleton = Logging()
 
     /** @return Logger created, or resolved, for the [target] Kotlin class. */
     @JvmStatic public fun of(target: KClass<*>): elide.runtime.jvm.Logger = named(
-      target.qualifiedName ?: target.simpleName ?: ""
+      target.qualifiedName ?: target.simpleName ?: "",
     )
 
     /** @return Logger created, or resolved, for the [target] Java class. */
     @JvmStatic public fun of(target: Class<*>): elide.runtime.jvm.Logger = named(
-      target.canonicalName ?: target.name ?: target.simpleName ?: ""
+      target.canonicalName ?: target.name ?: target.simpleName ?: "",
     )
 
     /** @return Logger resolved at the root name. */
     @JvmStatic public fun root(): elide.runtime.jvm.Logger = named(
-      ""
+      "",
     )
 
     /** @return Logger created for the specified [name]. */
@@ -56,7 +56,7 @@ public actual class Logging private constructor () {
    */
   public actual fun logger(name: String): Logger {
     return elide.runtime.jvm.Logger(
-      LoggerFactory.getLogger(name)
+      LoggerFactory.getLogger(name),
     )
   }
 
@@ -67,7 +67,7 @@ public actual class Logging private constructor () {
    */
   public actual fun logger(): Logger {
     return elide.runtime.jvm.Logger(
-      LoggerFactory.getLogger("")
+      LoggerFactory.getLogger(""),
     )
   }
 }

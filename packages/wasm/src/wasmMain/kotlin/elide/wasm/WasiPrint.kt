@@ -11,8 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.wasm
-
 import elide.wasm.internal.fdWrite
 
 interface WasiPrint {
@@ -27,7 +25,7 @@ interface WasiPrint {
   fun println(message: Any)
 }
 
-object OutputWasiPrint: WasiPrint {
+object OutputWasiPrint : WasiPrint {
   override fun print(message: Any) {
     fdWrite(StandardDescriptor.STDOUT, listOf(message.toString().encodeToByteArray()))
   }
@@ -37,7 +35,7 @@ object OutputWasiPrint: WasiPrint {
   }
 }
 
-object ErrorWasiPrint: WasiPrint {
+object ErrorWasiPrint : WasiPrint {
   override fun print(message: Any) {
     fdWrite(StandardDescriptor.STDERR, listOf(message.toString().encodeToByteArray()))
   }

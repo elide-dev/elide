@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
-import elide.vm.annotations.Polyglot
 import elide.core.encoding.base64.DefaultBase64
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.JavaScriptBase64
+import elide.vm.annotations.Polyglot
 
 /** Implements [JavaScriptBase64] via [elide.core.encoding.DefaultBase64], by way of [NativeBase64Intrinsic]. */
 @Intrinsic(global = Base64Intrinsic.GLOBAL_BASE64)
@@ -30,11 +30,15 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
     if (websafe) DefaultBase64.encodeWebSafe(input) else DefaultBase64.encodeToString(input)
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_BTOA) override fun encode(input: String): String =
+  @Polyglot
+  @Intrinsic(global = GLOBAL_BTOA)
+  override fun encode(input: String): String =
     encode(input, false)
 
   /** @inheritDoc */
-  @Polyglot @Intrinsic(global = GLOBAL_ATOB) override fun decode(input: String): String =
+  @Polyglot
+  @Intrinsic(global = GLOBAL_ATOB)
+  override fun decode(input: String): String =
     DefaultBase64.decodeToString(input)
 
   /** @inheritDoc */

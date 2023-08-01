@@ -6,7 +6,7 @@
   "OPT_IN_USAGE",
 )
 
-//import Java9Modularity.configure as configureJava9ModuleInfo
+// import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   id("dev.elide.build.multiplatform")
@@ -50,13 +50,15 @@ kotlin {
 
   wasm {
     browser {
-      testTask(Action {
+      testTask(
+        Action {
         useKarma {
           this.webpackConfig.experiments.add("topLevelAwait")
           useChromeHeadless()
           useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
         }
-      })
+      },
+      )
     }
   }
 
@@ -174,7 +176,7 @@ kotlin {
   }
 }
 
-//configureJava9ModuleInfo(project)
+// configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

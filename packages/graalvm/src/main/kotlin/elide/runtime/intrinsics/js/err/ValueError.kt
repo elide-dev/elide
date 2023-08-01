@@ -31,7 +31,7 @@ public abstract class ValueError : AbstractJSException, Error() {
    * Public factory for [ValueError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJSException.ErrorFactory<ValueError> {
+  public companion object Factory : AbstractJSException.ErrorFactory<ValueError> {
     /** @inheritDoc */
     override fun create(error: Throwable): ValueError {
       return object : ValueError() {

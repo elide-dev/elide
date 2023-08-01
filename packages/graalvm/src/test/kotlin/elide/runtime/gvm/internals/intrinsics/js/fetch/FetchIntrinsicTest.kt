@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
+import org.junit.jupiter.api.Assertions.*
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions.*
 
 /** Tests for the Fetch API intrinsics provided by Elide. */
 @TestCase internal class FetchIntrinsicTest : AbstractJsIntrinsicTest<FetchIntrinsic>() {

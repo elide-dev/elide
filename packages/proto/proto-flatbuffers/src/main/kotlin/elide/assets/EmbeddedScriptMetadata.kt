@@ -2,22 +2,23 @@
 
 package elide.assets
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class EmbeddedScriptMetadata : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : EmbeddedScriptMetadata {
+    fun __assign(_i: Int, _bb: ByteBuffer): EmbeddedScriptMetadata {
         __init(_i, _bb)
         return this
     }
-    val metadata : elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata? get() = metadata(elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata())
-    fun metadata(obj: elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata) : elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata? {
+    val metadata: elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata? get() = metadata(elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata())
+    fun metadata(
+      obj: elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata,
+    ): elide.assets.EmbeddedScriptMetadata_.LanguageSpecificMetadata? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -27,19 +28,21 @@ class EmbeddedScriptMetadata : Table() {
     }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsEmbeddedScriptMetadata(_bb: ByteBuffer): EmbeddedScriptMetadata = getRootAsEmbeddedScriptMetadata(_bb, EmbeddedScriptMetadata())
+        fun getRootAsEmbeddedScriptMetadata(
+          _bb: ByteBuffer,
+        ): EmbeddedScriptMetadata = getRootAsEmbeddedScriptMetadata(_bb, EmbeddedScriptMetadata())
         fun getRootAsEmbeddedScriptMetadata(_bb: ByteBuffer, obj: EmbeddedScriptMetadata): EmbeddedScriptMetadata {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEmbeddedScriptMetadata(builder: FlatBufferBuilder, metadataOffset: Int) : Int {
+        fun createEmbeddedScriptMetadata(builder: FlatBufferBuilder, metadataOffset: Int): Int {
             builder.startTable(1)
             addMetadata(builder, metadataOffset)
             return endEmbeddedScriptMetadata(builder)
         }
         fun startEmbeddedScriptMetadata(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addMetadata(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(0, metadata, 0)
-        fun endEmbeddedScriptMetadata(builder: FlatBufferBuilder) : Int {
+        fun endEmbeddedScriptMetadata(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

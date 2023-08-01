@@ -1,7 +1,7 @@
 package elide.server.controller
 
-import elide.server.assets.AssetManager
 import io.micronaut.context.ApplicationContext
+import elide.server.assets.AssetManager
 
 /**
  * Describes the top-level expected interface for Elide-based controllers; any base class which inherits from this one

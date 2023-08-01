@@ -2,29 +2,28 @@
 
 package elide.assets.AssetBundle_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class StylesEntry : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : StylesEntry {
+    fun __assign(_i: Int, _bb: ByteBuffer): StylesEntry {
         __init(_i, _bb)
         return this
     }
-    val key : String?
+    val key: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val keyAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun keyInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val value : elide.assets.AssetBundle_.StyleBundle? get() = value(elide.assets.AssetBundle_.StyleBundle())
-    fun value(obj: elide.assets.AssetBundle_.StyleBundle) : elide.assets.AssetBundle_.StyleBundle? {
+    val keyAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun keyInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val value: elide.assets.AssetBundle_.StyleBundle? get() = value(elide.assets.AssetBundle_.StyleBundle())
+    fun value(obj: elide.assets.AssetBundle_.StyleBundle): elide.assets.AssetBundle_.StyleBundle? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -32,7 +31,7 @@ class StylesEntry : Table() {
             null
         }
     }
-    override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer) : Int {
+    override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer): Int {
          return compareStrings(__offset(4, o1, _bb), __offset(4, o2, _bb), _bb)
     }
     companion object {
@@ -42,24 +41,24 @@ class StylesEntry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStylesEntry(builder: FlatBufferBuilder, keyOffset: Int, valueOffset: Int) : Int {
+        fun createStylesEntry(builder: FlatBufferBuilder, keyOffset: Int, valueOffset: Int): Int {
             builder.startTable(2)
             addValue(builder, valueOffset)
             addKey(builder, keyOffset)
             return endStylesEntry(builder)
         }
         fun startStylesEntry(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addKey(builder: FlatBufferBuilder, key: Int)  {
+        fun addKey(builder: FlatBufferBuilder, key: Int) {
             builder.addOffset(key)
             builder.slot(0)
         }
         fun addValue(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
-        fun endStylesEntry(builder: FlatBufferBuilder) : Int {
+        fun endStylesEntry(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
                 builder.required(o, 4)
             return o
         }
-        fun __lookup_by_key(obj: StylesEntry?, vectorLocation: Int, key: String, bb: ByteBuffer) : StylesEntry? {
+        fun __lookup_by_key(obj: StylesEntry?, vectorLocation: Int, key: String, bb: ByteBuffer): StylesEntry? {
             val byteKey = key.toByteArray(java.nio.charset.StandardCharsets.UTF_8)
             var span = bb.getInt(vectorLocation - 4)
             var start = 0

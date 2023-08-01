@@ -2,22 +2,21 @@
 
 package elide.vfs
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class TreeEntry : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : TreeEntry {
+    fun __assign(_i: Int, _bb: ByteBuffer): TreeEntry {
         __init(_i, _bb)
         return this
     }
-    val parent : elide.vfs.TreeEntry? get() = parent(elide.vfs.TreeEntry())
-    fun parent(obj: elide.vfs.TreeEntry) : elide.vfs.TreeEntry? {
+    val parent: elide.vfs.TreeEntry? get() = parent(elide.vfs.TreeEntry())
+    fun parent(obj: elide.vfs.TreeEntry): elide.vfs.TreeEntry? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class TreeEntry : Table() {
             null
         }
     }
-    val entry : elide.vfs.TreeEntry_.TreeEntrySpec? get() = entry(elide.vfs.TreeEntry_.TreeEntrySpec())
-    fun entry(obj: elide.vfs.TreeEntry_.TreeEntrySpec) : elide.vfs.TreeEntry_.TreeEntrySpec? {
+    val entry: elide.vfs.TreeEntry_.TreeEntrySpec? get() = entry(elide.vfs.TreeEntry_.TreeEntrySpec())
+    fun entry(obj: elide.vfs.TreeEntry_.TreeEntrySpec): elide.vfs.TreeEntry_.TreeEntrySpec? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -41,7 +40,7 @@ class TreeEntry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTreeEntry(builder: FlatBufferBuilder, parentOffset: Int, entryOffset: Int) : Int {
+        fun createTreeEntry(builder: FlatBufferBuilder, parentOffset: Int, entryOffset: Int): Int {
             builder.startTable(2)
             addEntry(builder, entryOffset)
             addParent(builder, parentOffset)
@@ -50,7 +49,7 @@ class TreeEntry : Table() {
         fun startTreeEntry(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addParent(builder: FlatBufferBuilder, parent: Int) = builder.addOffset(0, parent, 0)
         fun addEntry(builder: FlatBufferBuilder, entry: Int) = builder.addOffset(1, entry, 0)
-        fun endTreeEntry(builder: FlatBufferBuilder) : Int {
+        fun endTreeEntry(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

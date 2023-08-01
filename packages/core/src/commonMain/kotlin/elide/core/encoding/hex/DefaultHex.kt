@@ -22,7 +22,8 @@ import elide.core.encoding.Encoding
  * Provides cross-platform utilities for encoding values into hex, or decoding values from hex. Available on any target
  * platform supported by Elide/Kotlin, including native platforms.
  */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public object DefaultHex : Codec<HexData> {
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+public object DefaultHex : Codec<HexData> {
   /** Array of hex-allowable characters.  */
   public val CHARACTER_SET: CharArray = "0123456789abcdef".toCharArray()
 

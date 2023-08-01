@@ -1,7 +1,7 @@
 package elide.server.assets
 
-import elide.server.AssetModuleId
 import java.util.SortedSet
+import elide.server.AssetModuleId
 
 /**
  * Reference to an application-embedded asset.

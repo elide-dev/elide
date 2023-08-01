@@ -16,13 +16,12 @@ import kotlinx.html.visitSuspend
  */
 @HtmlTagMarker
 public suspend inline fun HTML.body(
-  classes : String? = null,
-  crossinline block : suspend BODY.() -> Unit
-) : Unit = BODY(
+  classes: String? = null,
+  crossinline block: suspend BODY.() -> Unit,
+): Unit = BODY(
   attributesMapOf("class", classes),
-  consumer
+  consumer,
 ).visitSuspend(block)
-
 
 /**
  * Open a `<head>` tag with support for suspension calls.
@@ -31,7 +30,7 @@ public suspend inline fun HTML.body(
  */
 @HtmlTagMarker
 public suspend inline fun HTML.head(
-  crossinline block : suspend HEAD.() -> Unit
-) : Unit = HEAD(emptyMap, consumer).visitSuspend(
-  block
+  crossinline block: suspend HEAD.() -> Unit,
+): Unit = HEAD(emptyMap, consumer).visitSuspend(
+  block,
 )

@@ -19,13 +19,14 @@ import kotlinx.browser.window
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+public actual object Base64 : Encoder {
   /** Array of Base64-allowable characters in web-safe mode.  */
   public val CHARACTER_SET_WEBSAFE: CharArray = run {
     listOf(
       ('A'..'Z'),
       ('a'..'z'),
-      ('0'..'9')
+      ('0'..'9'),
     ).map { range ->
       range.toSet()
     }.reduce { a, b ->
@@ -41,9 +42,13 @@ import kotlin.io.encoding.ExperimentalEncodingApi
       ('0'..'9'),
     ).map { range ->
       range.toSet()
-    }.plus(listOf(setOf(
-      '+', '/', '='
-    ))).reduce { a, b ->
+    }.plus(
+      listOf(
+        setOf(
+      '+', '/', '=',
+    ),
+      ),
+    ).reduce { a, b ->
       a + b
     }.toCharArray()
   }

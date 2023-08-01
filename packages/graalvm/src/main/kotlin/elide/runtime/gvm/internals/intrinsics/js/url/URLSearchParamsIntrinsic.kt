@@ -1,12 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseJsMultiMap
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.BaseMutableJsMultiMap
+import elide.runtime.intrinsics.GuestIntrinsic
+import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.URLMutableSearchParams as IMutableSearchParams
 import elide.runtime.intrinsics.js.URLSearchParams as IURLSearchParams
 import org.graalvm.polyglot.Value as GuestValue
@@ -44,12 +44,14 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  internal sealed class AbstractURLSearchParams constructor (backingMap: URLParamsMap) : BaseJsMultiMap<String, String>(
+  internal sealed class AbstractURLSearchParams constructor(backingMap: URLParamsMap) :
+    BaseJsMultiMap<String, String>(
     backingMap,
     mutable = false,
     sorted = true,
     threadsafe = true,
-  ), ExtractableBackingMap {
+  ),
+    ExtractableBackingMap {
     /** @inheritDoc */
     @Suppress("UNCHECKED_CAST")
     override fun asMap(): URLParamsMap = backingMap as URLParamsMap
@@ -58,13 +60,14 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  internal sealed class AbstractMutableURLSearchParams constructor (
-    backingMap: URLParamsMap = URLParamsMap.empty()
-  ): BaseMutableJsMultiMap<String, String>(
+  internal sealed class AbstractMutableURLSearchParams constructor(
+    backingMap: URLParamsMap = URLParamsMap.empty(),
+  ) : BaseMutableJsMultiMap<String, String>(
     backingMap,
     threadsafe = true,
     sorted = true,
-  ), ExtractableBackingMap {
+  ),
+  ExtractableBackingMap {
     /** @inheritDoc */
     @Suppress("UNCHECKED_CAST")
     override fun asMap(): URLParamsMap = backingMap as URLParamsMap
@@ -73,24 +76,28 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  public class URLSearchParams private constructor (backingMap: URLParamsMap) :
+  public class URLSearchParams private constructor(backingMap: URLParamsMap) :
     AbstractURLSearchParams(backingMap),
     IURLSearchParams {
     /**
      * TBD.
      */
-    @Polyglot constructor() : this(URLParamsMap.empty())
+    @Polyglot
+    constructor() : this(URLParamsMap.empty())
 
     /**
      * TBD.
      */
-    @Polyglot constructor(other: Any?) : this(when (other) {
+    @Polyglot
+    constructor(other: Any?) : this(
+        when (other) {
       is GuestValue -> TODO("")
       is String -> TODO("")
       is AbstractURLSearchParams -> other.asMap()
       is AbstractMutableURLSearchParams -> other.asMap()
       else -> URLParamsMap.empty()
-    })
+    },
+      )
 
     /** @inheritDoc */
     @Polyglot override fun toString(): String = "URLSearchParams(immutable, count=$size)"
@@ -99,24 +106,28 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   /**
    * TBD.
    */
-  public class MutableURLSearchParams private constructor (backingMap: URLParamsMap) :
+  public class MutableURLSearchParams private constructor(backingMap: URLParamsMap) :
     AbstractMutableURLSearchParams(backingMap),
     IMutableSearchParams {
     /**
      * TBD.
      */
-    @Polyglot constructor() : this(URLParamsMap.empty())
+    @Polyglot
+    constructor() : this(URLParamsMap.empty())
 
     /**
      * TBD.
      */
-    @Polyglot constructor(other: Any?) : this(when (other) {
+    @Polyglot
+    constructor(other: Any?) : this(
+        when (other) {
       is GuestValue -> TODO("")
       is String -> TODO("")
       is AbstractURLSearchParams -> other.asMap()
       is AbstractMutableURLSearchParams -> other.asMap()
       else -> URLParamsMap.empty()
-    })
+    },
+      )
 
     /**
      * TBD.

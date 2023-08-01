@@ -21,10 +21,10 @@ import kotlin.random.Random
 object Wasi : WasiFileSystem by DefaultWasiFilesystem, WasiCli by DefaultWasiCli {
 
     /** The standard output. */
-    val out : WasiPrint = OutputWasiPrint
+    val out: WasiPrint = OutputWasiPrint
 
     /** The standard error. */
-    val err : WasiPrint = ErrorWasiPrint
+    val err: WasiPrint = ErrorWasiPrint
 
     /** Default monotonic clock, suitable for general-purpose application needs. */
     val monotonicClock: MonotonicClock = DefaultMonotonicClock

@@ -15,7 +15,6 @@ package elide.runtime.jvm
 
 import elide.runtime.LogLevel
 
-
 /** @return SLF4J (JVM) equivalent of the current log level. */
 public val LogLevel.jvmLevel: org.slf4j.event.Level get() = when (this) {
   LogLevel.TRACE -> org.slf4j.event.Level.TRACE

@@ -9,7 +9,7 @@ package elide.tool.cli.state
  *
  * Command options should not be created directly.
  */
-@JvmInline value class CommandOptions private constructor (private val info: CommandLineInvocation) {
+@JvmInline value class CommandOptions private constructor(private val info: CommandLineInvocation) {
   /**
    * ## Command Line Invocation
    *
@@ -46,7 +46,7 @@ package elide.tool.cli.state
       debug: Boolean,
       verbose: Boolean,
       quiet: Boolean,
-      pretty: Boolean
+      pretty: Boolean,
     ): CommandOptions = CommandOptions(
       CommandLineInvocation(
         args,
@@ -54,7 +54,7 @@ package elide.tool.cli.state
         verbose = verbose,
         quiet = quiet,
         pretty = pretty,
-      )
+      ),
     )
   }
 

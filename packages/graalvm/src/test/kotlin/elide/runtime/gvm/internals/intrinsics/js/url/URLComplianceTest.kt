@@ -1,24 +1,25 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.intrinsics.js.err.ValueError
-import elide.testing.annotations.TestCase
 import org.junit.jupiter.api.*
 import java.util.stream.Stream
 import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.intrinsics.js.err.ValueError
+import elide.testing.annotations.TestCase
 
 /** WPT compliance tests for the intrinsic `URL` implementation provided by Elide. */
-@Ignore @TestCase internal class URLComplianceTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
+@Ignore @TestCase
+internal class URLComplianceTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
   companion object {
     const val testExactHref = false
   }
 
   private inline fun <T> withURLCases(crossinline op: (URLParseTestCase) -> List<T>): Stream<T> {
     return withJSON<List<Any>, List<T>>(
-      "/wpt/url/resources/urltestdata.json"
+      "/wpt/url/resources/urltestdata.json",
     ) { list ->
       var i = 0
       list.mapNotNull {
@@ -46,7 +47,7 @@ import kotlin.test.assertNotNull
     val port: String? = null,
     val pathname: String? = null,
     val search: String? = null,
-    val hash: String? = null
+    val hash: String? = null,
   ) {
     fun label(prop: String?): String = if (prop != null) "URL($number).$prop" else "URL($number) sanity"
 
@@ -67,7 +68,7 @@ import kotlin.test.assertNotNull
           port = map["port"] as String?,
           pathname = map["pathname"] as String?,
           search = map["search"] as String?,
-          hash = map["hash"] as String?
+          hash = map["hash"] as String?,
         )
       }
     }
@@ -125,7 +126,7 @@ import kotlin.test.assertNotNull
     if (case.failure) listOfNotNull(
       urlTest(case) {
         // nothing at this time
-      }
+      },
     ) else listOfNotNull(
       urlTest(case) { parsed ->
         assertNotNull(parsed, "should not get `null` for expected-success URL parse")

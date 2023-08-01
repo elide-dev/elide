@@ -1,14 +1,14 @@
 package elide.rpc.server.web
 
 import com.google.common.annotations.VisibleForTesting
-import elide.runtime.Logger
-import elide.runtime.Logging
 import io.grpc.*
 import io.grpc.ClientCall.Listener
 import io.grpc.ForwardingClientCall.SimpleForwardingClientCall
 import io.grpc.ForwardingClientCallListener.SimpleForwardingClientCallListener
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Client-facing interceptor which is responsible for mediating traffic between Elide's gRPC Web integration layer and
@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicReference
  * Outgoing headers to the backing server are affixed by this interceptor, and trailers/headers are captured on the
  * response side of the cycle.
  */
-internal class GrpcWebClientInterceptor (
+internal class GrpcWebClientInterceptor(
   internal val latch: CountDownLatch,
-): ClientInterceptor {
+) : ClientInterceptor {
   // Private logger.
   private val logging: Logger = Logging.of(GrpcWebClientInterceptor::class)
 
@@ -83,7 +83,7 @@ internal class GrpcWebClientInterceptor (
    * Listener which is installed by this interceptor to (1) emit request headers in merged form, and (2) capture headers
    * and trailers from the response.
    */
-  inner class MetadataResponseListener<T>(listener: Listener<T>): SimpleForwardingClientCallListener<T>(listener) {
+  inner class MetadataResponseListener<T>(listener: Listener<T>) : SimpleForwardingClientCallListener<T>(listener) {
     /** @inheritDoc */
     override fun onHeaders(headers: Metadata) {
       headersReceived(headers)
@@ -98,19 +98,21 @@ internal class GrpcWebClientInterceptor (
   }
 
   /** @inheritDoc */
-  override fun <Req: Any, Resp: Any> interceptCall(
+  override fun <Req : Any, Resp : Any> interceptCall(
     method: MethodDescriptor<Req, Resp>,
     callOptions: CallOptions,
-    next: Channel
+    next: Channel,
   ): ClientCall<Req, Resp> {
-    return object: SimpleForwardingClientCall<Req, Resp>(next.newCall(
-      method, callOptions
-    )) {
+    return object : SimpleForwardingClientCall<Req, Resp>(
+      next.newCall(
+      method, callOptions,
+    ),
+    ) {
       /** @inheritDoc */
       override fun start(responseListener: Listener<Resp>, headers: Metadata) {
         super.start(
           MetadataResponseListener(responseListener),
-          affixHeaders(headers)
+          affixHeaders(headers),
         )
       }
     }

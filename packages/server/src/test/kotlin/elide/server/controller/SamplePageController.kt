@@ -1,8 +1,5 @@
 package elide.server.controller
 
-import elide.server.*
-import elide.server.annotations.Page
-import elide.server.assets.AssetType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.annotation.Get
 import kotlinx.css.*
@@ -10,10 +7,14 @@ import kotlinx.html.strong
 import kotlinx.html.tagext.body
 import kotlinx.html.tagext.head
 import kotlinx.html.title
+import elide.server.*
+import elide.server.annotations.Page
+import elide.server.assets.AssetType
 
 /** Sample page controller for testing. */
 @Page class SamplePageController : PageController() {
-  @Get("/") suspend fun indexPage() = html {
+  @Get("/")
+  suspend fun indexPage() = html {
     head {
       title { +"Hello, Elide!" }
       stylesheet(asset("styles.base"), media = "screen", attrs = sortedMapOf("hello" to "cool"))
@@ -25,7 +26,7 @@ import kotlinx.html.title
         nomodule = true,
         attrs = sortedMapOf(
           "extra" to "attr",
-        )
+        ),
       )
       script(asset("scripts.ui"))
       stylesheet("/styles/base.css")
@@ -40,7 +41,8 @@ import kotlinx.html.title
     }
   }
 
-  @Get("/some-styles.css") fun styles() = css {
+  @Get("/some-styles.css")
+  fun styles() = css {
     rule("main") {
       backgroundColor = Color.white
       maxWidth = 600.px
@@ -53,32 +55,39 @@ import kotlinx.html.title
     }
   }
 
-  @Get("/styles/base.css") suspend fun assetStyle(request: HttpRequest<Any>) = stylesheet(request) {
+  @Get("/styles/base.css")
+  suspend fun assetStyle(request: HttpRequest<Any>) = stylesheet(request) {
     module("styles.base")
     assetType(AssetType.STYLESHEET)
   }
 
-  @Get("/styles/base.another.css") suspend fun assetGeneric(request: HttpRequest<Any>) = asset(request) {
+  @Get("/styles/base.another.css")
+  suspend fun assetGeneric(request: HttpRequest<Any>) = asset(request) {
     module("styles.base")
     assetType(AssetType.STYLESHEET)
   }
 
-  @Get("/styles/base.other.css") suspend fun assetStyleExplicit(request: HttpRequest<Any>) =
+  @Get("/styles/base.other.css")
+  suspend fun assetStyleExplicit(request: HttpRequest<Any>) =
     stylesheet(request, "styles.base")
 
-  @Get("/scripts/ui.js") suspend fun assetScript(request: HttpRequest<Any>) = script(request) {
+  @Get("/scripts/ui.js")
+  suspend fun assetScript(request: HttpRequest<Any>) = script(request) {
     module("scripts.ui")
   }
 
-  @Get("/scripts/ui.other.js") suspend fun assetScriptExplicit(request: HttpRequest<Any>) =
+  @Get("/scripts/ui.other.js")
+  suspend fun assetScriptExplicit(request: HttpRequest<Any>) =
     script(request, "scripts.ui")
 
-  @Get("/something.txt") suspend fun somethingText() = staticFile(
+  @Get("/something.txt")
+  suspend fun somethingText() = staticFile(
     "something.txt",
     "text/plain",
   )
 
-  @Get("/something-not-found.txt") suspend fun somethingMissing() = staticFile(
+  @Get("/something-not-found.txt")
+  suspend fun somethingMissing() = staticFile(
     "something-not-found.txt",
     "text/plain",
   )

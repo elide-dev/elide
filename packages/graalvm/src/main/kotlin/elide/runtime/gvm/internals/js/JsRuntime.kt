@@ -2,6 +2,19 @@
 
 package elide.runtime.gvm.internals.js
 
+import io.micronaut.context.annotation.Requires
+import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.Source
+import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
+import java.net.URI
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.stream.Collectors
+import java.util.stream.Stream
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -15,19 +28,6 @@ import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.context.ContextManager
-import io.micronaut.context.annotation.Requires
-import kotlinx.serialization.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import org.graalvm.polyglot.Engine
-import org.graalvm.polyglot.Source
-import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
-import java.net.URI
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import java.util.stream.Collectors
-import java.util.stream.Stream
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
@@ -107,9 +107,11 @@ import org.graalvm.polyglot.Value as GuestValue
 @Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
 @Requires(property = "elide.gvm.js.enabled", value = "true", defaultValue = "true")
 @GuestRuntime
-internal class JsRuntime @Inject constructor (
+internal class JsRuntime
+  @Inject
+  constructor(
   contextManager: ContextManager<VMContext, VMContext.Builder>,
-  config: JsRuntimeConfig
+  config: JsRuntimeConfig,
 ) : AbstractVMEngine<
   JsRuntimeConfig,
   JsExecutableScript,
@@ -128,7 +130,7 @@ internal class JsRuntime @Inject constructor (
     private const val WASI_STD: String = "wasi_snapshot_preview1"
 
     // Hard-coded JS VM options.
-    val baseOptions : List<VMProperty> = listOf(
+    val baseOptions: List<VMProperty> = listOf(
       StaticProperty.active("js.async-stack-traces"),
       StaticProperty.active("js.atomics"),
       StaticProperty.active("js.bind-member-functions"),
@@ -169,7 +171,7 @@ internal class JsRuntime @Inject constructor (
     )
 
     // Hard-coded WASM VM options.
-    val wasmOptions : List<VMProperty> = listOf(
+    val wasmOptions: List<VMProperty> = listOf(
       StaticProperty.active("wasm.Memory64"),
       StaticProperty.active("wasm.MultiValue"),
       StaticProperty.active("wasm.UseUnsafeMemory"),
@@ -203,9 +205,11 @@ internal class JsRuntime @Inject constructor (
       }
 
       try {
-        (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$RUNTIME_MANIFEST") ?: error(
-          "Failed to locate embedded JS runtime manifest"
-        )).let { manifestFile ->
+        (
+          JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$RUNTIME_MANIFEST") ?: error(
+          "Failed to locate embedded JS runtime manifest",
+        )
+        ).let { manifestFile ->
           // decode manifest from JSON to discover injected artifacts
           Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile).also {
             runtimeInfo.set(it)
@@ -213,21 +217,25 @@ internal class JsRuntime @Inject constructor (
 
           // collect JS runtime internal sources as a string
           val collectedRuntimeSource = runtimeInfo.get().artifacts.stream().flatMap {
-            (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/${it.name}") ?: error(
-              "Failed to locate embedded JS runtime artifact: ${it.name}"
-            )).bufferedReader(StandardCharsets.UTF_8).lines()
+            (
+              JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/${it.name}") ?: error(
+              "Failed to locate embedded JS runtime artifact: ${it.name}",
+            )
+            ).bufferedReader(StandardCharsets.UTF_8).lines()
           }.filter {
             it.isNotBlank() && !it.startsWith("//")
           }.collect(Collectors.joining("\n"))
 
           // load each file into a giant blob which can be used to preload contexts
-          runtimeInit.set(Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
+          runtimeInit.set(
+            Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
             .encoding(StandardCharsets.UTF_8)
             .cached(true)
             .internal(true)
             .interactive(false)
             .mimeType("application/javascript")
-            .build())
+            .build(),
+          )
 
           runtimeReady.compareAndSet(
             false,
@@ -241,13 +249,16 @@ internal class JsRuntime @Inject constructor (
     }
 
     /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-    @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFS.VFSConfigurator {
+    @Singleton @Context
+    class JsRuntimeVFSConfigurator : GuestVFS.VFSConfigurator {
       /** @inheritDoc */
-      override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
-        "Failed to resolve runtime info: cannot prepare VFS."
-      )).vfs.map {
+      override fun bundles(): List<URI> = (
+        runtimeInfo.get() ?: error(
+        "Failed to resolve runtime info: cannot prepare VFS.",
+      )
+      ).vfs.map {
         JsRuntime::class.java.getResource("$EMBEDDED_ROOT/${it.name}")?.toURI() ?: error(
-          "Failed to locate embedded JS runtime asset: $it"
+          "Failed to locate embedded JS runtime asset: $it",
         )
       }
     }
@@ -262,18 +273,21 @@ internal class JsRuntime @Inject constructor (
     JsLanguageLevel.ES2019,
     JsLanguageLevel.ES2020,
     JsLanguageLevel.ES2021,
-    JsLanguageLevel.ES2022 -> this.name.drop(2)
+    JsLanguageLevel.ES2022,
+    -> this.name.drop(2)
     JsLanguageLevel.STABLE -> JS_LANGUAGE_LEVEL_STABLE
     JsLanguageLevel.LATEST -> JS_LANGUAGE_LEVEL_LATEST
     JsLanguageLevel.UNRECOGNIZED,
-    JsLanguageLevel.JS_LANGUAGE_LEVEL_DEFAULT -> DEFAULT_JS_LANGUAGE_LEVEL
+    JsLanguageLevel.JS_LANGUAGE_LEVEL_DEFAULT,
+    -> DEFAULT_JS_LANGUAGE_LEVEL
   }
 
   // JS runtime logger.
   private val logger: Logger = Logging.of(JsRuntime::class)
 
   /** @inheritDoc */
-  override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(listOf(
+  override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(
+    listOf(
     // `vm.locale`: maps to `js.locale` and controls various locale settings in the JS VM
     VMRuntimeProperty.ofConfigurable("vm.locale", "js.locale", DEFAULT_JS_LOCALE) {
       (config.locale ?: guestConfig.locale)?.toString() ?: DEFAULT_JS_LOCALE
@@ -310,13 +324,16 @@ internal class JsRuntime @Inject constructor (
     },
 
     // static: configure module replacements.
-    VMStaticProperty.of("js.commonjs-core-modules-replacements", if (config.npm.isEnabled) {
+    VMStaticProperty.of(
+      "js.commonjs-core-modules-replacements",
+      if (config.npm.isEnabled) {
       coreModules.entries.joinToString(",") {
         "${it.key}:${it.value}"
       }
     } else {
       ""  // disabled if NPM support is turned off
-    }),
+    },
+    ),
 
     // `vm.js.nodeModules`: maps to `js.commonjs-require` to enable/disable NPM require support.
     VMRuntimeProperty.ofConfigurable("vm.js.nodeModules", "js.commonjs-require-cwd") {
@@ -332,12 +349,13 @@ internal class JsRuntime @Inject constructor (
     VMRuntimeProperty.ofBoolean("vm.js.v8-compat", "js.v8-compat") {
       config.v8 ?: false
     },
-  )).plus(
+  ),
+  ).plus(
     if (config.wasm == true) {
       wasmOptions
     } else {
       emptyList()
-    }
+    },
   ).stream()
 
   /** @inheritDoc */
@@ -382,7 +400,7 @@ internal class JsRuntime @Inject constructor (
       }.bind(
         script,
         bindings,
-        inputs
+        inputs,
       ).execute().let { _ ->
         TODO("not yet implemented")
       }

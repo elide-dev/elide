@@ -18,7 +18,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 /** Tests for built in [Base64] tools. */
-class Base64Test: AbstractEncoderTest<Base64>() {
+class Base64Test : AbstractEncoderTest<Base64>() {
   override fun encoding(): Encoding = Encoding.BASE64
   override fun encoder(): Base64 = Base64
 
@@ -27,18 +27,18 @@ class Base64Test: AbstractEncoderTest<Base64>() {
     assertEquals(
       "YWJjMTIzMTIz",
       Base64.encodeToString(input),
-      "should get expected output from Base64 encode"
+      "should get expected output from Base64 encode",
     )
     val inputPadded = "abc1231231"
     assertEquals(
       "YWJjMTIzMTIzMQ==",
       Base64.encodeToString(inputPadded),
-      "should get expected output from non-websafe Base64 encode"
+      "should get expected output from non-websafe Base64 encode",
     )
     assertEquals(
       "YWJjMTIzMTIzMQ==",
       Base64.encodeWebSafe(inputPadded),
-      "should get expected output from websafe Base64 encode"
+      "should get expected output from websafe Base64 encode",
     )
   }
 
@@ -47,7 +47,7 @@ class Base64Test: AbstractEncoderTest<Base64>() {
     assertEquals(
       "YWJjMTIzMTIz",
       input.toBase64String(),
-      "should get expected output from Base64 encode"
+      "should get expected output from Base64 encode",
     )
   }
 
@@ -56,7 +56,7 @@ class Base64Test: AbstractEncoderTest<Base64>() {
     assertEquals(
       "abc123123",
       Base64.decodeToString(input),
-      "should get expected output from Base64 decode"
+      "should get expected output from Base64 decode",
     )
   }
 
@@ -67,19 +67,19 @@ class Base64Test: AbstractEncoderTest<Base64>() {
     )
     subjects.forEach { sample ->
       val encoded = Base64.encodeToString(
-        sample
+        sample,
       )
       assertNotNull(
         encoded,
-        "should get non-null output from base64 encoder"
+        "should get non-null output from base64 encoder",
       )
       val decoded = Base64.decodeToString(
-        encoded
+        encoded,
       )
       assertEquals(
         sample,
         decoded,
-        "sample should decode properly from encoded base64 string"
+        "sample should decode properly from encoded base64 string",
       )
     }
   }

@@ -10,7 +10,7 @@ public object JsProxy {
   public fun wrap(delegate: Any): PropertyProxy = PropertyProxy(delegate)
 
   /** Property wrapping proxy for a given delegate. */
-  public class PropertyProxy internal constructor (delegate: Any? = null) : ProxyObject {
+  public class PropertyProxy internal constructor(delegate: Any? = null) : ProxyObject {
     // Host-delegate object.
     private val hostDelegate: Value = Context.getCurrent().asValue(delegate)
 

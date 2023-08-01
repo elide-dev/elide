@@ -9,7 +9,7 @@ public object RequestContext {
    *
    * @param name Name associated with this key.
    */
-  public data class Key (
+  public data class Key(
     public val name: String,
   ) {
     /** Keys where request context may be accessed. */

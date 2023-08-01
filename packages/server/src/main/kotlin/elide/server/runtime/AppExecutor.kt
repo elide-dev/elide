@@ -6,16 +6,15 @@ import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.ListeningScheduledExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import elide.server.runtime.jvm.UncaughtExceptionHandler
 import io.micronaut.context.annotation.Context
+import java.util.concurrent.Executor
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.concurrent.Executor
-import java.util.concurrent.ScheduledThreadPoolExecutor
-
+import elide.server.runtime.jvm.UncaughtExceptionHandler
 
 /**
  * Defines the interface expected for an application-level executor; there is a default implementation provided by the
@@ -84,9 +83,11 @@ public interface AppExecutor {
   @Context
   @Singleton
   @Suppress("unused")
-  public class DefaultExecutor @Inject constructor (
-    uncaughtHandler: Thread.UncaughtExceptionHandler
-  ): AppExecutor {
+  public class DefaultExecutor
+    @Inject
+    constructor(
+    uncaughtHandler: Thread.UncaughtExceptionHandler,
+  ) : AppExecutor {
     public companion object {
       /** Uncaught exception handler (global). */
       private val errHandler = UncaughtExceptionHandler()
@@ -122,9 +123,9 @@ public interface AppExecutor {
       MoreExecutors.getExitingScheduledExecutorService(
         ScheduledThreadPoolExecutor(
           DefaultSettings.poolSize,
-          threadFactory
-        )
-      )
+          threadFactory,
+        ),
+      ),
     )
 
     /**

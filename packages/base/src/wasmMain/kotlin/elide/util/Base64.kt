@@ -18,7 +18,8 @@ package elide.util
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public actual object Base64: Encoder {
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+public actual object Base64 : Encoder {
   override fun encoding(): Encoding = Encoding.BASE64
 
   // -- Base64: Encoding -- //

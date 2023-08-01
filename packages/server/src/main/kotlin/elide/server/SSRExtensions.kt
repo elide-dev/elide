@@ -2,21 +2,21 @@
 
 package elide.server
 
-import elide.runtime.gvm.js.JavaScript
-import elide.server.controller.ElideController
-import elide.server.ssr.ServerSSRRenderer
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
+import org.reactivestreams.Publisher
+import reactor.core.publisher.Mono
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.*
 import kotlinx.coroutines.reactive.publish
 import kotlinx.coroutines.reactor.mono
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
-import org.reactivestreams.Publisher
-import reactor.core.publisher.Mono
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
+import elide.runtime.gvm.js.JavaScript
+import elide.server.controller.ElideController
+import elide.server.ssr.ServerSSRRenderer
 
 // Path within app JARs for embedded script assets.
 public const val EMBEDDED_ROOT: String = "embedded"
@@ -68,11 +68,11 @@ public suspend fun BODY.injectSSR(
       "class",
       classes.joinToString(" "),
       "data-serving-mode",
-      "ssr"
+      "ssr",
     ).plus(
-      attrs
+      attrs,
     ),
-    consumer
+    consumer,
   ).visitSuspend {
     val content = rendered.await()
 
@@ -81,7 +81,6 @@ public suspend fun BODY.injectSSR(
     }
   }
 }
-
 
 /**
  * Stream and inject SSR content into a larger HTML page, using a `<main>` tag as the root element in the dom; apply
@@ -136,28 +135,30 @@ public suspend fun ssr(
   request: HttpRequest<*>,
   path: String = SSR_SCRIPT_DEFAULT,
   response: MutableHttpResponse<ByteArrayOutputStream> = HttpResponse.ok(),
-  block: suspend HTML.() -> Unit
+  block: suspend HTML.() -> Unit,
 ): Mono<HttpResponse<Publisher<ByteArrayOutputStream>>> {
   // prepare a render job
   return mono {
     if (path.isBlank()) {
       HttpResponse.notFound()
     } else {
-      response.body(publish {
+      response.body(
+        publish {
         val outputStream = ByteArrayOutputStream()
         outputStream.bufferedWriter(StandardCharsets.UTF_8).apply {
           append("<!doctype html>")
           appendHTML(prettyPrint = false).htmlSuspend(
-            block = block
+            block = block,
           )
           flush()
         }
 
         send(outputStream)
-      }).characterEncoding(
-        StandardCharsets.UTF_8
+      },
+      ).characterEncoding(
+        StandardCharsets.UTF_8,
       ).contentType(
-        "text/html;charset=utf-8"
+        "text/html;charset=utf-8",
       )
     }
   }

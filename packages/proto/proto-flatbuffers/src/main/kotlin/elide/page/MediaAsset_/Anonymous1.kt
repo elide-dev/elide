@@ -2,22 +2,21 @@
 
 package elide.page.MediaAsset_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Anonymous1 : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Anonymous1 {
+    fun __assign(_i: Int, _bb: ByteBuffer): Anonymous1 {
         __init(_i, _bb)
         return this
     }
-    val link : elide.page.MediaAsset_.Link? get() = link(elide.page.MediaAsset_.Link())
-    fun link(obj: elide.page.MediaAsset_.Link) : elide.page.MediaAsset_.Link? {
+    val link: elide.page.MediaAsset_.Link? get() = link(elide.page.MediaAsset_.Link())
+    fun link(obj: elide.page.MediaAsset_.Link): elide.page.MediaAsset_.Link? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class Anonymous1 : Table() {
             null
         }
     }
-    val image : elide.page.MediaAsset_.Image? get() = image(elide.page.MediaAsset_.Image())
-    fun image(obj: elide.page.MediaAsset_.Image) : elide.page.MediaAsset_.Image? {
+    val image: elide.page.MediaAsset_.Image? get() = image(elide.page.MediaAsset_.Image())
+    fun image(obj: elide.page.MediaAsset_.Image): elide.page.MediaAsset_.Image? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -34,8 +33,8 @@ class Anonymous1 : Table() {
             null
         }
     }
-    val video : elide.page.MediaAsset_.Video? get() = video(elide.page.MediaAsset_.Video())
-    fun video(obj: elide.page.MediaAsset_.Video) : elide.page.MediaAsset_.Video? {
+    val video: elide.page.MediaAsset_.Video? get() = video(elide.page.MediaAsset_.Video())
+    fun video(obj: elide.page.MediaAsset_.Video): elide.page.MediaAsset_.Video? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -50,7 +49,7 @@ class Anonymous1 : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAnonymous1(builder: FlatBufferBuilder, linkOffset: Int, imageOffset: Int, videoOffset: Int) : Int {
+        fun createAnonymous1(builder: FlatBufferBuilder, linkOffset: Int, imageOffset: Int, videoOffset: Int): Int {
             builder.startTable(3)
             addVideo(builder, videoOffset)
             addImage(builder, imageOffset)
@@ -61,7 +60,7 @@ class Anonymous1 : Table() {
         fun addLink(builder: FlatBufferBuilder, link: Int) = builder.addOffset(0, link, 0)
         fun addImage(builder: FlatBufferBuilder, image: Int) = builder.addOffset(1, image, 0)
         fun addVideo(builder: FlatBufferBuilder, video: Int) = builder.addOffset(2, video, 0)
-        fun endAnonymous1(builder: FlatBufferBuilder) : Int {
+        fun endAnonymous1(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

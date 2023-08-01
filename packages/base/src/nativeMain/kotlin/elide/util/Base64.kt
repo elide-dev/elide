@@ -18,7 +18,7 @@ package elide.util
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-public actual object Base64: Encoder {
+public actual object Base64 : Encoder {
   /** @inheritDoc */
   override fun encoding(): Encoding {
     return Encoding.BASE64
@@ -34,7 +34,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(string: String): ByteArray {
     return Base64Kt.Encoder.DEFAULT.encode(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 
@@ -46,7 +46,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(data: ByteArray): ByteArray {
     return Base64Kt.Encoder.DEFAULT.encode(
-      data
+      data,
     )
   }
 
@@ -58,7 +58,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(data: ByteArray): String {
     return encode(
-      data
+      data,
     ).decodeToString()
   }
 
@@ -70,7 +70,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(string: String): String {
     return encode(
-      string
+      string,
     ).decodeToString()
   }
 
@@ -108,7 +108,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(data: ByteArray): ByteArray {
     return Base64Kt.Decoder.DEFAULT.decode(
-      data
+      data,
     )
   }
 
@@ -120,7 +120,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(string: String): ByteArray {
     return Base64Kt.Decoder.DEFAULT.decode(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 
@@ -132,7 +132,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decodeToString(data: ByteArray): String {
     return Base64Kt.Decoder.DEFAULT.decode(
-      data
+      data,
     ).decodeToString()
   }
 
@@ -144,7 +144,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decodeToString(string: String): String {
     return decodeToString(
-      string.encodeToByteArray()
+      string.encodeToByteArray(),
     )
   }
 }

@@ -20,7 +20,7 @@ import kotlinx.serialization.protobuf.schema.ProtoBufSyntaxVersion.*
 
 /** Implementation of a protocol buffer syntax generator, from Kotlin models; supports proto syntax 2 and 3. */
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
-internal open class ProtoBufSchemaGeneratorImpl (
+internal open class ProtoBufSchemaGeneratorImpl(
   protected val options: ProtoBufGeneratorOptions,
 ) : ProtoBufSchemaBuilder {
   internal companion object {
@@ -110,9 +110,9 @@ internal open class ProtoBufSchemaGeneratorImpl (
     get() = isProtobufMessageOrEnum || isProtobufScalar
 
   private val SerialDescriptor.isProtobufScalar: Boolean
-    get() = (kind is PrimitiveKind)
-        || (kind is StructureKind.LIST && getElementDescriptor(0).kind === PrimitiveKind.BYTE)
-        || kind == SerialKind.CONTEXTUAL
+    get() = (kind is PrimitiveKind) ||
+        (kind is StructureKind.LIST && getElementDescriptor(0).kind === PrimitiveKind.BYTE) ||
+        kind == SerialKind.CONTEXTUAL
 
   private val SerialDescriptor.isProtobufMessageOrEnum: Boolean
     get() = isProtobufMessage || isProtobufEnum
@@ -124,8 +124,8 @@ internal open class ProtoBufSchemaGeneratorImpl (
     get() = isProtobufRepeated || isProtobufMap
 
   private val SerialDescriptor.isProtobufRepeated: Boolean
-    get() = (kind == StructureKind.LIST && getElementDescriptor(0).kind != PrimitiveKind.BYTE)
-        || (kind == StructureKind.MAP && !getElementDescriptor(0).isValidMapKey)
+    get() = (kind == StructureKind.LIST && getElementDescriptor(0).kind != PrimitiveKind.BYTE) ||
+        (kind == StructureKind.MAP && !getElementDescriptor(0).isValidMapKey)
 
   private val SerialDescriptor.isProtobufMap: Boolean
     get() = kind == StructureKind.MAP && getElementDescriptor(0).isValidMapKey
@@ -196,12 +196,15 @@ internal open class ProtoBufSchemaGeneratorImpl (
   private val SyntheticPolymorphicType = TypeDefinition(
     buildClassSerialDescriptor("KotlinxSerializationPolymorphic") {
       element("type", PrimitiveSerialDescriptor("typeDescriptor", PrimitiveKind.STRING))
-      element("value", buildSerialDescriptor("valueDescriptor", StructureKind.LIST) {
+      element(
+        "value",
+        buildSerialDescriptor("valueDescriptor", StructureKind.LIST) {
         element("0", Byte.serializer().descriptor)
-      })
+      },
+      )
     },
     true,
-    "polymorphic types"
+    "polymorphic types",
   )
 
   internal class NotNullSerialDescriptor(private val original: SerialDescriptor) : SerialDescriptor by original {
@@ -255,7 +258,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
         fieldDescriptor.isProtobufMap -> generateMapType(messageType, index)
         else -> throw IllegalStateException(
           "Unprocessed message field type with serial name " +
-              "'${fieldDescriptor.serialName}' and kind '${fieldDescriptor.kind}'"
+              "'${fieldDescriptor.serialName}' and kind '${fieldDescriptor.kind}'",
         )
       }
 
@@ -327,14 +330,16 @@ internal open class ProtoBufSchemaGeneratorImpl (
     }
     val optional = fieldDescriptor.isNullable || messageDescriptor.isElementOptional(index)
 
-    append("  ").append(when (options.syntaxVersion) {
+    append("  ").append(
+      when (options.syntaxVersion) {
       // `proto2` allows both `optional` and `required` fields
       PROTO2 -> if (optional) "optional " else "required "
 
       // `proto3` allows marking fields as `optional` but has no support for `required` fields. `optional` fields in
       // proto3 behave differently with regard to default values.
       PROTO3 -> if (optional) "optional " else ""
-    }).append(typeName)
+    },
+    ).append(typeName)
 
     return nestedTypes
   }
@@ -363,8 +368,8 @@ internal open class ProtoBufSchemaGeneratorImpl (
       listOf(
         TypeDefinition(
         originalMapValueDescriptor,
-        builtinType = valueTypeName
-      )
+        builtinType = valueTypeName,
+      ),
       )  // type is builtin, so does not need to be generated.
     } else if (valueDescriptor.isProtobufMessageOrEnum) {
       listOf(valueType)
@@ -500,7 +505,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
         append(" [")
         flags.forEachIndexed { flagIndex, pair ->
           val (flag, value) = pair
-          append("$flag=${value}")
+          append("$flag=$value")
           if (flagIndex != flags.lastIndex) {
             append(", ")
           }
@@ -513,7 +518,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
     if (duplicatedNumbers.isNotEmpty()) {
       throw IllegalArgumentException(
         "The class with serial name ${enumDescriptor.serialName} has duplicate " +
-            "elements with numbers $duplicatedNumbers"
+            "elements with numbers $duplicatedNumbers",
       )
     }
 
@@ -523,7 +528,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
   private fun StringBuilder.generateCollectionAbsenceComment(
     messageDescriptor: SerialDescriptor,
     collectionDescriptor: SerialDescriptor,
-    index: Int
+    index: Int,
   ) {
     if (!options.emitWarningComments)
       return
@@ -546,7 +551,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
     val fieldName = messageDescriptor.getElementName(index)
     val messageName = messageDescriptor.messageOrEnumName
 
-    val wrapperName = "${messageName}_${fieldName}"
+    val wrapperName = "${messageName}_$fieldName"
     val wrapperDescriptor = buildClassSerialDescriptor(wrapperName) {
       element("key", fieldDescriptor.getElementDescriptor(0).notNull)
       element("value", fieldDescriptor.getElementDescriptor(1).notNull)
@@ -557,7 +562,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
       true,
       description,
       messageType.containingMessageName ?: messageName,
-      messageType.fieldName ?: fieldName
+      messageType.fieldName ?: fieldName,
     )
   }
 
@@ -565,13 +570,13 @@ internal open class ProtoBufSchemaGeneratorImpl (
     messageType: TypeDefinition,
     index: Int,
     elementDescriptor: SerialDescriptor,
-    description: String
+    description: String,
   ): TypeDefinition {
     val messageDescriptor = messageType.descriptor
     val fieldName = messageDescriptor.getElementName(index)
     val messageName = messageDescriptor.messageOrEnumName
 
-    val wrapperName = "${messageName}_${fieldName}"
+    val wrapperName = "${messageName}_$fieldName"
     val wrapperDescriptor = buildClassSerialDescriptor(wrapperName) {
       element("value", elementDescriptor.notNull)
     }
@@ -581,7 +586,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
       true,
       description,
       messageType.containingMessageName ?: messageName,
-      messageType.fieldName ?: fieldName
+      messageType.fieldName ?: fieldName,
     )
   }
 
@@ -609,7 +614,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
       if (builtinType != null) {
         // map builtin type to injected import
         imports.add(
-          PROTO_BASE_IMPORT_MAP[builtinType] ?: error("Unknown/unmapped builtin type: '$builtinType'")
+          PROTO_BASE_IMPORT_MAP[builtinType] ?: error("Unknown/unmapped builtin type: '$builtinType'"),
         )
         continue
       }
@@ -619,8 +624,8 @@ internal open class ProtoBufSchemaGeneratorImpl (
         descriptor.isProtobufMessage -> queue.addAll(content.generateMessage(type))
         descriptor.isProtobufEnum -> content.generateEnum(type)
         else -> throw IllegalStateException(
-          "Unrecognized custom type with serial name "
-              + "'${descriptor.serialName}' and kind '${descriptor.kind}'"
+          "Unrecognized custom type with serial name " +
+              "'${descriptor.serialName}' and kind '${descriptor.kind}'",
         )
       }
     }
@@ -631,7 +636,7 @@ internal open class ProtoBufSchemaGeneratorImpl (
     append(content)
   }
 
-  override fun generateSchemaText(descriptors: List<SerialDescriptor>, options: ProtoBufGeneratorOptions): String  {
+  override fun generateSchemaText(descriptors: List<SerialDescriptor>, options: ProtoBufGeneratorOptions): String {
     val packageName = options.packageName
     packageName?.let { p -> p.checkIsValidFullIdentifier { "Incorrect protobuf package name '$it'" } }
     checkDoubles(descriptors)

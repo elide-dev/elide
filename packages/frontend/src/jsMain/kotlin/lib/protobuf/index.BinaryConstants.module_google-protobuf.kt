@@ -6,6 +6,7 @@
   "CONFLICTING_OVERLOADS",
   "unused",
 )
+
 package lib.protobuf
 
 import kotlin.js.*
@@ -31,7 +32,7 @@ public external enum class FieldType {
   SINT32 /* = 17 */,
   SINT64 /* = 18 */,
   FHASH64 /* = 30 */,
-  VHASH64 /* = 31 */
+  VHASH64, /* = 31 */
 }
 
 public external enum class WireType {
@@ -41,7 +42,7 @@ public external enum class WireType {
   DELIMITED /* = 2 */,
   START_GROUP /* = 3 */,
   END_GROUP /* = 4 */,
-  FIXED32 /* = 5 */
+  FIXED32, /* = 5 */
 }
 
 public external var FieldTypeToWireType: (fieldType: FieldType) -> WireType

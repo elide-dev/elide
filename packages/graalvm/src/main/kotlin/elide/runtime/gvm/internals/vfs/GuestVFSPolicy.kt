@@ -21,7 +21,8 @@ public interface GuestVFSPolicy {
   public val readOnly: Boolean? get() = DEFAULT_READ_ONLY
 
   /** @return Response for an access check against the provided [request]. */
-  @Suppress("UNUSED_PARAMETER") public fun evaluateForPath(request: AccessRequest): AccessResponse {
+  @Suppress("UNUSED_PARAMETER")
+  public fun evaluateForPath(request: AccessRequest): AccessResponse {
     // TODO(sgammon): temporarily allow all
     return AccessResponse.allow()
   }

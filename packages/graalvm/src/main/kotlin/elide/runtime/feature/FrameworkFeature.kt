@@ -1,13 +1,13 @@
 package elide.runtime.feature
 
-import elide.runtime.Logger
-import elide.runtime.Logging
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.RuntimeReflection
 import java.io.IOException
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.net.JarURLConnection
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * # Framework: Feature
@@ -36,13 +36,15 @@ public interface FrameworkFeature : Feature {
    * Returns the method of a class or fails if it is not present.
    */
   public fun getMethodOrFail(
-    clazz: Class<*>, methodName: String, vararg params: Class<*>?
+    clazz: Class<*>,
+    methodName: String,
+    vararg params: Class<*>?,
   ): Method {
     try {
       return clazz.getDeclaredMethod(methodName, *params)
     } catch (e: NoSuchMethodException) {
       throw RuntimeException(
-        "Failed to find method " + methodName + " for class " + clazz.name, e
+        "Failed to find method " + methodName + " for class " + clazz.name, e,
       )
     }
   }
@@ -57,7 +59,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.registerForReflectiveInstantiation(clazz)
     } else {
       logging().warning(
-        "Failed to find $className on the classpath for reflective instantiation."
+        "Failed to find $className on the classpath for reflective instantiation.",
       )
     }
   }
@@ -72,7 +74,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.register(*clazz.declaredConstructors)
     } else {
       logging().warning(
-        "Failed to find $name on the classpath for reflection."
+        "Failed to find $name on the classpath for reflection.",
       )
     }
   }
@@ -89,7 +91,7 @@ public interface FrameworkFeature : Feature {
       RuntimeReflection.register(*clazz.declaredMethods)
     } else {
       logging().warning(
-        "Failed to find $name on the classpath for reflection."
+        "Failed to find $name on the classpath for reflection.",
       )
     }
   }
@@ -112,7 +114,7 @@ public interface FrameworkFeature : Feature {
       }
     } else {
       logging().warning(
-        "Failed to find $className on the classpath for reflection."
+        "Failed to find $className on the classpath for reflection.",
       )
     }
   }
@@ -121,7 +123,9 @@ public interface FrameworkFeature : Feature {
    * Registers a class for unsafe reflective field access.
    */
   public fun registerForUnsafeFieldAccess(
-    access: Feature.FeatureAccess, className: String, vararg fields: String
+    access: Feature.FeatureAccess,
+    className: String,
+    vararg fields: String,
   ) {
     val clazz = access.findClassByName(className)
     if (clazz != null) {
@@ -135,8 +139,8 @@ public interface FrameworkFeature : Feature {
       }
     } else {
       logging().warning(
-        "Failed to find " + className
-          + " on the classpath for unsafe fields access registration."
+        "Failed to find " + className +
+          " on the classpath for unsafe fields access registration.",
       )
     }
   }

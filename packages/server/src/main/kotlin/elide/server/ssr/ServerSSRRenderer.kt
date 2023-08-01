@@ -2,7 +2,16 @@
 
 package elide.server.ssr
 
-import elide.vm.annotations.Polyglot
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.MutableHttpResponse
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.*
+import kotlinx.html.BODY
+import kotlinx.html.script
+import kotlinx.html.stream.appendHTML
+import kotlinx.html.unsafe
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutableScript
@@ -10,25 +19,16 @@ import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.VMFacadeFactory
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.js.JavaScript
-import elide.ssr.ServerResponse
-import elide.ssr.type.RequestState
 import elide.server.SuspensionRenderer
 import elide.server.controller.ElideController
 import elide.server.controller.PageWithProps
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.MutableHttpResponse
-import kotlinx.coroutines.*
-import kotlinx.html.BODY
-import kotlinx.html.script
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.unsafe
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
-import java.util.concurrent.atomic.AtomicReference
+import elide.ssr.ServerResponse
+import elide.ssr.type.RequestState
+import elide.vm.annotations.Polyglot
 
 /** Renderer class which executes JavaScript via SSR and provides the resulting response to Micronaut. */
 @Suppress("MemberVisibilityCanBePrivate", "unused", "SpreadOperator")
-public class ServerSSRRenderer (
+public class ServerSSRRenderer(
   private val body: BODY,
   private val handler: ElideController,
   private val request: HttpRequest<*>,
@@ -63,7 +63,7 @@ public class ServerSSRRenderer (
       if (props != null && serialized != null) {
         val subBuffer = StringBuilder()
         subBuffer.appendHTML().script(
-          type = "application/json"
+          type = "application/json",
         ) {
           attributes["id"] = ssrId
           unsafe {
@@ -75,7 +75,7 @@ public class ServerSSRRenderer (
       buf.toString()
     } else {
       StringBuilder("<!doctype html>").append(
-        op.invoke(JavaScript.Inputs.EMPTY, null)
+        op.invoke(JavaScript.Inputs.EMPTY, null),
       ).toString()
     }
   }
@@ -104,7 +104,7 @@ public class ServerSSRRenderer (
         val js = handler.context().findBean(VMFacadeFactory::class.java).orElseThrow {
           error("Failed to resolve JavaScript runtime provider")
         }.acquireVM(
-          GraalVMGuest.JAVASCRIPT  // @TODO(sgammon): don't hard-code this
+          GraalVMGuest.JAVASCRIPT,  // @TODO(sgammon): don't hard-code this
         )
 
         buffer.apply {
@@ -132,7 +132,7 @@ public class ServerSSRRenderer (
     val byteStream = ByteArrayOutputStream()
     byteStream.bufferedWriter(StandardCharsets.UTF_8).use {
       it.write(
-        renderSuspendAsync().await()
+        renderSuspendAsync().await(),
       )
     }
     return byteStream
@@ -149,7 +149,7 @@ public class ServerSSRRenderer (
     response: MutableHttpResponse<ByteArrayOutputStream>,
   ): MutableHttpResponse<ByteArrayOutputStream> {
     return response.body(
-      render()
+      render(),
     )
   }
 }

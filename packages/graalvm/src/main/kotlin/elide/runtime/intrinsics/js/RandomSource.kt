@@ -1,10 +1,9 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.QuotaExceededError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
-import org.graalvm.polyglot.Value as GuestValue
+import elide.vm.annotations.Polyglot
 
 /**
  * # JavaScript: `RandomSource`
@@ -50,7 +49,8 @@ public interface RandomSource {
    *  Note that typedArray is modified in-place, and no copy is made.
    */
   @Throws(ValueError::class, QuotaExceededError::class)
-  @Polyglot public fun getRandomValues(typedArray: Any)
+  @Polyglot
+  public fun getRandomValues(typedArray: Any)
 
   /**
    * ## Crypto: `randomUUID`
@@ -62,5 +62,6 @@ public interface RandomSource {
    * @return String-like value containing a randomly generated, 36-character long v4 UUID.
    */
   @Throws(ValueError::class)
-  @Polyglot public fun randomUUID(): UUID
+  @Polyglot
+  public fun randomUUID(): UUID
 }

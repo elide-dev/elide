@@ -1,26 +1,26 @@
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.intrinsics.GuestIntrinsic
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import java.io.Serializable
+import java.net.URI
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsError.jsErrors
 import elide.runtime.gvm.internals.intrinsics.js.JsError.typeError
 import elide.runtime.gvm.internals.intrinsics.js.JsError.valueError
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Blob
 import elide.runtime.intrinsics.js.File
 import elide.runtime.intrinsics.js.URL
 import elide.runtime.intrinsics.js.URLSearchParams
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
-import org.graalvm.polyglot.proxy.ProxyInstantiable
-import java.io.Serializable
-import java.net.URI
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import org.graalvm.polyglot.Value as GuestValue
+import elide.vm.annotations.Polyglot
 import java.net.URI as NativeURL
+import org.graalvm.polyglot.Value as GuestValue
 
 /** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
 @Intrinsic internal class URLIntrinsic : AbstractJsIntrinsic() {
@@ -44,8 +44,10 @@ import java.net.URI as NativeURL
     }
 
     // Wrap the provided [initialValue] (if any) and deferred [processor] with a cached parse-able value.
-    @JvmStatic private fun <T: Serializable> cachedParse(initialValue: T? = null, processor: () -> T): CachedURLValue<T>
-      = CachedURLValue(initialValue, processor)
+    @JvmStatic private fun <T : Serializable> cachedParse(
+      initialValue: T? = null,
+      processor: () -> T,
+    ): CachedURLValue<T> = CachedURLValue(initialValue, processor)
 
     // Check whether a port is in the valid range of all ports.
     @JvmStatic private fun validPort(port: Int) = port in 1..65535
@@ -73,7 +75,7 @@ import java.net.URI as NativeURL
    * @param port Standard port for this protocol, or `-1` if ports are not relevant. Defaults to `-1`.
    * @param hasHost Set to `true` if hosts are relevant to this protocol. Defaults to `true` if `port` is not `-1`.
    */
-  internal enum class KnownProtocol (
+  internal enum class KnownProtocol(
     val scheme: String = "",
     val port: Int = -1,
     val hasHost: Boolean = port != -1,
@@ -98,7 +100,7 @@ import java.net.URI as NativeURL
   }
 
   /** Wrapper class which enables lazy processing of parsed URL values. */
-  internal class CachedURLValue<T: Serializable> (
+  internal class CachedURLValue<T : Serializable> (
     initialValue: T?,
     private val processor: (() -> T)? = null,
   ) {
@@ -118,7 +120,7 @@ import java.net.URI as NativeURL
 
     companion object {
       /** @return Wrapped [value] [T], which we happen to have on-hand (skipping the lazy call). */
-      @JvmStatic fun <T: Serializable> of(value: T): CachedURLValue<T> = CachedURLValue(value)
+      @JvmStatic fun <T : Serializable> of(value: T): CachedURLValue<T> = CachedURLValue(value)
     }
   }
 
@@ -163,7 +165,7 @@ import java.net.URI as NativeURL
       protocol,
       port,
       host,
-    )
+    ),
   ) {
     companion object {
       // Check input before parsing a URL.
@@ -176,7 +178,7 @@ import java.net.URI as NativeURL
       // Sanitize a URL string, removing any invalid characters, before parsing.
       private fun sanitize(url: String): String = checkParseInput(url).replace(
         Regex("[\t\n\r]"),
-        ""
+        "",
       )
 
       // Parse the provided URL, translating any errors into the expected error types.
@@ -210,10 +212,12 @@ import java.net.URI as NativeURL
       // Calculate a spec-compliant value for the `port` property.
       @JvmStatic private fun computePort(uri: NativeURL): Int? {
         val uriPort = uri.port
-        return (if (uriPort == -1) {
+        return (
+          if (uriPort == -1) {
           // ports are not applicable to this type of URL
           null
-        } else uriPort)
+        } else uriPort
+        )
       }
 
       // Calculate a spec-compliant value for the `host` property.
@@ -323,7 +327,8 @@ import java.net.URI as NativeURL
 
       // Calculate a spec-compliant value for the `searchParams` property.
       @Suppress("UNUSED_PARAMETER")
-      @JvmStatic private fun computeSearchParams(uri: NativeURL, proto: KnownProtocol?) = cachedParse<URLSearchParams> {
+      @JvmStatic
+      private fun computeSearchParams(uri: NativeURL, proto: KnownProtocol?) = cachedParse<URLSearchParams> {
         TODO("not yet implemented")
       }
 
@@ -459,9 +464,9 @@ import java.net.URI as NativeURL
             }
             val spliced = if (absolute.startsWith("//")) {
               // special case: protocol-relative URLs, transitioning to protocol-absolute URLs
-              "${cleanedProtocol}:$absolute"
+              "$cleanedProtocol:$absolute"
             } else {
-              "${cleanedProtocol}://${absolute.substringAfter("://")}"
+              "$cleanedProtocol://${absolute.substringAfter("://")}"
             }
             val reparsed = parseUrl(spliced)
             val knownProto = knownProtocol(reparsed)
@@ -530,7 +535,7 @@ import java.net.URI as NativeURL
       }
     } else throw valueError(
       // port number was not in allowed range
-      "Invalid port number: $port (not between 1 and 65535)"
+      "Invalid port number: $port (not between 1 and 65535)",
     )
 
     // Splice a new host into the current URL, and return it re-wrapped as a parsed URL.
@@ -547,8 +552,8 @@ import java.net.URI as NativeURL
           // potentially includes a port
           if (host.endsWith(":"))
             throw valueError("Host port cannot be empty if specified: '$host'")
-          val hostPort = host.substringAfterLast(":").toIntOrNull() ?:
-            throw valueError("Failed to parse port value: '$host'")
+          val hostPort = host.substringAfterLast(":").toIntOrNull()
+            ?: throw valueError("Failed to parse port value: '$host'")
           if (!validPort(hostPort))
             throw valueError("Invalid port number: $hostPort (not between 1 and 65535)")
           val hostName = host.substringBefore(":")
@@ -563,7 +568,6 @@ import java.net.URI as NativeURL
             uri.query,
             uri.fragment,
           )
-
         } else {
           // no port: just splice in the host as a name
           NativeURL(
@@ -838,7 +842,7 @@ import java.net.URI as NativeURL
             CachedURLValue.of("")
           } else {
             this.password
-          }
+          },
         )
       }
     }
@@ -923,7 +927,7 @@ import java.net.URI as NativeURL
       hash: String? = null,
       username: String? = null,
       password: String? = null,
-    ) : ParsedURL = jsErrors {
+    ): ParsedURL = jsErrors {
       when {
         // mutable field update: `protocol`
         protocol != null -> copySpliceProtocol(protocol)
@@ -958,7 +962,7 @@ import java.net.URI as NativeURL
   }
 
   /** URL value class implementation. */
-  internal class URLValue private constructor (private val target: AtomicReference<ParsedURL>) :
+  internal class URLValue private constructor(private val target: AtomicReference<ParsedURL>) :
     Comparable<URLValue>,
     BaseURLType {
     /** `URL` value factory. */
@@ -977,27 +981,33 @@ import java.net.URI as NativeURL
       // -- Factories: JS -- //
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun create(url: URL): URL =
+      @JvmStatic @Polyglot
+      override fun create(url: URL): URL =
         fromURL(url as URLValue)
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun create(url: String): URL =
+      @JvmStatic @Polyglot
+      override fun create(url: String): URL =
         fromString(url)
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun create(url: String, base: String): URL =
+      @JvmStatic @Polyglot
+      override fun create(url: String, base: String): URL =
         fromString(url)  // @TODO(sgammon): relative URLs
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun createObjectURL(file: File): URL =
+      @JvmStatic @Polyglot
+      override fun createObjectURL(file: File): URL =
         error("Not implemented: createObjectURL")
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun createObjectURL(blob: Blob): URL =
+      @JvmStatic @Polyglot
+      override fun createObjectURL(blob: Blob): URL =
         error("Not implemented: createObjectURL")
 
       /** @inheritDoc */
-      @JvmStatic @Polyglot override fun revokeObjectURL(url: URL) =
+      @JvmStatic @Polyglot
+      override fun revokeObjectURL(url: URL) =
         error("Not implemented: createObjectURL")
 
       // -- Internals -- //
@@ -1009,12 +1019,13 @@ import java.net.URI as NativeURL
             throw valueError("Invalid URL: Relative URLs are not supported")
           AtomicReference(ParsedURL.fromString(url))
         } else throw valueError(
-          "Cannot construct URL from empty string value"
+          "Cannot construct URL from empty string value",
         )
 
       // Relative entrypoint for string parsing (with base URL).
       @Suppress("UNUSED_PARAMETER")
-      @JvmStatic private fun parseString(url: GuestValue, base: Any?): AtomicReference<ParsedURL> =
+      @JvmStatic
+      private fun parseString(url: GuestValue, base: Any?): AtomicReference<ParsedURL> =
         parseString(url.asString())  // @TODO(sgammon): base URL support during parsing
 
       // Shortcut for parsing a constructor guest value.
@@ -1043,7 +1054,9 @@ import java.net.URI as NativeURL
      * @throws ValueError if the provided [target] is not a valid URL.
      * @throws TypeError if the provided [target] is not a valid type from which a URL can be constructed.
      */
-    @Polyglot constructor (target: Any?) : this(when (target) {
+    @Polyglot
+    constructor (target: Any?) : this(
+        when (target) {
       null -> throw typeError("Cannot construct URL from: `null`")
       is GuestValue -> constructFromGuestValue(target)
       is String -> parseString(target)
@@ -1051,7 +1064,8 @@ import java.net.URI as NativeURL
       is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))
       is URLValue -> AtomicReference(target.target.get())
       else -> throw typeError("Cannot construct URL from: $target")
-    })
+    },
+      )
 
     /**
      * Constructor: relative-capable. Accepts a [String], another [URLValue] intrinsic, or a guest value which evaluates
@@ -1065,7 +1079,9 @@ import java.net.URI as NativeURL
      * @throws ValueError if the provided [target] is not a valid URL.
      * @throws TypeError if the provided [target] is not a valid type from which a URL can be constructed.
      */
-    @Polyglot constructor (target: Any?, base: Any?) : this(when (target) {
+    @Polyglot
+    constructor (target: Any?, base: Any?) : this(
+        when (target) {
       null -> throw typeError("Cannot construct URL from: `null`")
       is GuestValue -> constructFromGuestValue(target, base)
       is String -> parseString(target)
@@ -1073,7 +1089,8 @@ import java.net.URI as NativeURL
       is java.net.URL -> AtomicReference(ParsedURL.fromURL(target.toURI()))
       is URLValue -> AtomicReference(target.target.get())
       else -> throw typeError("Cannot construct URL from: $target")
-    })
+    },
+      )
 
     // Run the provided `op` to mutate the current URL, which returns a new URL value; after the transformation is done,
     // replace the current atomic URL reference with the updated reference.
@@ -1132,27 +1149,32 @@ import java.net.URI as NativeURL
     @Polyglot override fun toString(): String = target.get().absoluteString()
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var hash: String
+    @get:Polyglot @set:Polyglot
+    override var hash: String
       get() = target.get().hash.resolve()
       set(value) = mutateURL { copySplice(hash = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var host: String
+    @get:Polyglot @set:Polyglot
+    override var host: String
       get() = target.get().host
       set(value) = mutateURL { copySplice(host = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var hostname: String
+    @get:Polyglot @set:Polyglot
+    override var hostname: String
       get() = target.get().hostname.resolve()
       set(value) = mutateURL { copySplice(hostname = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var href: String
+    @get:Polyglot @set:Polyglot
+    override var href: String
       get() = target.get().absoluteString()
       set(value) = mutateURL { ParsedURL.fromString(value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var password: String
+    @get:Polyglot @set:Polyglot
+    override var password: String
       get() = target.get().password.resolve()
       set(value) = mutateURL {
         val user = this.username.resolve()
@@ -1164,33 +1186,38 @@ import java.net.URI as NativeURL
       }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var pathname: String
+    @get:Polyglot @set:Polyglot
+    override var pathname: String
       get() = target.get().pathname.resolve()
       set(value) = mutateURL { copySplice(pathname = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var port: Int?
+    @get:Polyglot @set:Polyglot
+    override var port: Int?
       get() = target.get().port
       set(value) = mutateURL { copySplice(port = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var protocol: String
+    @get:Polyglot @set:Polyglot
+    override var protocol: String
       get() = target.get().protocol
       set(value) = mutateURL { copySplice(protocol = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var search: String
+    @get:Polyglot @set:Polyglot
+    override var search: String
       get() = target.get().search.resolve()
       set(value) = mutateURL { copySplice(search = value) }
 
     /** @inheritDoc */
-    @get:Polyglot @set:Polyglot override var username: String
+    @get:Polyglot @set:Polyglot
+    override var username: String
       get() = target.get().username.resolve()
       set(value) = mutateURL { copySplice(username = value) }
 
     /** @inheritDoc */
     @get:Polyglot override val origin: String get() = throw typeError(
-      "Property `URL.origin` is not supported in server-side environments"
+      "Property `URL.origin` is not supported in server-side environments",
     )
 
     /** @inheritDoc */

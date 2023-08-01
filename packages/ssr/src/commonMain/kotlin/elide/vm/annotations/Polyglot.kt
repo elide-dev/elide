@@ -21,4 +21,4 @@ package elide.vm.annotations
   AnnotationTarget.FIELD,
   AnnotationTarget.FUNCTION,
 )
-public expect annotation class Polyglot ()
+public expect annotation class Polyglot()

@@ -13,19 +13,19 @@
 
 package elide.tool.ssg
 
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.tool.ssg.StaticContentReader.ArtifactType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
-import jakarta.inject.Singleton
 import org.jsoup.Jsoup
 import java.net.URI
 import java.net.URL
 import java.nio.ByteBuffer
+import jakarta.inject.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.tool.ssg.StaticContentReader.ArtifactType
 
 /** Default content transformation and parsing logic. */
 @Singleton internal class DefaultAppStaticReader : StaticContentReader {
@@ -73,7 +73,7 @@ import java.nio.ByteBuffer
       "Cannot parse content from a non-HTML HTTP response body"
     }
     val bodyBytes = response.body.orElse(null) ?: error(
-      "Failed to parse HTML HTTP response body as a string"
+      "Failed to parse HTML HTTP response body as a string",
     )
 
     // parse string into HTML
@@ -106,7 +106,7 @@ import java.nio.ByteBuffer
         else -> null
       }
       if ((artifactType == null || src.isBlank()) && logging.isEnabled(LogLevel.TRACE)) logging.trace(
-        "Skipping ineligible artifact '${it}'"
+        "Skipping ineligible artifact '$it'",
       )
       if (src.isBlank() || src == "/" || src == "." || src == "./" || src == request.uri.toString()) {
         // special case: don't allow detection of the root page as an artifact, which can happen with standards-breaking

@@ -18,7 +18,9 @@ import elide.vm.annotations.Polyglot
 /**
  * TBD.
  */
-public sealed class StreamResponse @Polyglot constructor (
+public sealed class StreamResponse
+  @Polyglot
+  constructor(
   override val status: Int = 200,
   override val headers: Map<String, String> = emptyMap(),
   override val content: String = "",
@@ -44,7 +46,8 @@ public sealed class StreamResponse @Polyglot constructor (
         headers = headers,
         criticalCss = criticalCss,
         styleChunks = styleChunks,
-      ))
+      ),
+      )
     }
 
     /**
@@ -52,7 +55,7 @@ public sealed class StreamResponse @Polyglot constructor (
      */
     @Polyglot
     public fun error(
-      thr: Throwable
+      thr: Throwable,
     ): StreamResponse {
       return Error(thr)
     }

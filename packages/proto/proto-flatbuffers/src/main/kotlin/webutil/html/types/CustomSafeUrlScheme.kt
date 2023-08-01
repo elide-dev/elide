@@ -15,7 +15,8 @@ class CustomSafeUrlScheme private constructor() {
         const val SKYPE: Int = 7
         const val WHATSAPP: Int = 8
         const val ITMSBOOKS: Int = 9
-        val names : Array<String> = arrayOf("TEL", "SMS", "CALLTO", "WTAI", "RTSP", "MARKET", "GEO", "SKYPE", "WHATSAPP", "ITMS_BOOKS")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("TEL", "SMS", "CALLTO", "WTAI", "RTSP", "MARKET", "GEO", "SKYPE", "WHATSAPP", "ITMS_BOOKS")
+        fun name(e: Int): String = names[e]
     }
 }

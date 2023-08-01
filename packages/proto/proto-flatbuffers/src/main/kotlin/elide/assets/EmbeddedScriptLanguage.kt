@@ -7,7 +7,7 @@ class EmbeddedScriptLanguage private constructor() {
     companion object {
         const val LANGUAGEUNSPECIFIED: Int = 0
         const val JS: Int = 1
-        val names : Array<String> = arrayOf("LANGUAGE_UNSPECIFIED", "JS")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("LANGUAGE_UNSPECIFIED", "JS")
+        fun name(e: Int): String = names[e]
     }
 }

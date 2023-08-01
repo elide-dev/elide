@@ -11,7 +11,7 @@ class UncaughtExceptionHandlerTest {
     assertDoesNotThrow {
       handler.uncaughtException(
         Thread.currentThread(),
-        IllegalStateException("sample exception (not real)")
+        IllegalStateException("sample exception (not real)"),
       )
     }
   }

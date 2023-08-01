@@ -12,7 +12,8 @@ class FontFormat private constructor() {
         const val WEBFONT: Int = 4
         const val WEBFONT2: Int = 5
         const val EMBEDDEDOPENTYPE: Int = 6
-        val names : Array<String> = arrayOf("UNSPECIFIED_FORMAT", "OPENTYPE", "TRUETYPE", "VECTOR", "WEBFONT", "WEBFONT2", "EMBEDDED_OPENTYPE")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("UNSPECIFIED_FORMAT", "OPENTYPE", "TRUETYPE", "VECTOR", "WEBFONT", "WEBFONT2", "EMBEDDED_OPENTYPE")
+        fun name(e: Int): String = names[e]
     }
 }

@@ -5,13 +5,6 @@ import com.google.common.jimfs.Feature
 import com.google.common.jimfs.Jimfs
 import com.google.protobuf.ByteString
 import com.google.protobuf.Timestamp
-import elide.annotations.Factory
-import elide.annotations.Singleton
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.runtime.gvm.internals.GuestVFS
-import elide.util.UUID
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
@@ -28,6 +21,13 @@ import java.nio.file.StandardOpenOption
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import kotlin.io.path.toPath
+import elide.annotations.Factory
+import elide.annotations.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.cfg.GuestIOConfiguration
+import elide.runtime.gvm.internals.GuestVFS
+import elide.util.UUID
 
 /**
  * # VFS: Embedded.
@@ -69,7 +69,7 @@ import kotlin.io.path.toPath
  */
 @Requires(property = "elide.gvm.vfs.enabled", notEquals = "false")
 @Requires(property = "elide.gvm.vfs.mode", notEquals = "HOST")
-internal class EmbeddedGuestVFSImpl private constructor (
+internal class EmbeddedGuestVFSImpl private constructor(
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
   private val tree: FilesystemInfo,
@@ -155,7 +155,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
    *   resources which should be fetched from the host app class-path.
    * @param files Files to load as file-system bundles.
    */
-  @Suppress("unused") internal data class Builder (
+  @Suppress("unused")
+  internal data class Builder(
     override var readOnly: Boolean = true,
     override var caseSensitive: Boolean = true,
     override var enableSymlinks: Boolean = false,
@@ -262,11 +263,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
       if (this.supportsSymbolicLinks) {
         listOf(
           Feature.LINKS,
-          Feature.SYMBOLIC_LINKS
+          Feature.SYMBOLIC_LINKS,
         )
       } else {
         emptyList()
-      }
+      },
     ).toTypedArray()
 
     /** Calculate a set of supported attribute view names for a new in-memory filesystem instance. */
@@ -297,7 +298,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return Compression-wrapped [file] input stream for a given bundle entry, in the provided [format]. */
     @Suppress("unused", "UNUSED_PARAMETER")
-    @JvmStatic private fun fileCompression(file: InputStream, format: BundleFormat? = null): InputStream {
+    @JvmStatic
+    private fun fileCompression(file: InputStream, format: BundleFormat? = null): InputStream {
       return file  // @TODO(sgammon): inner entry compression
     }
 
@@ -325,10 +327,14 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }
 
       val fingerprint = md.digest()
-      builder.setFingerprint(tools.elide.vfs.File.FileFingerprint.newBuilder()
-        .setUncompressed(tools.elide.vfs.File.Fingerprint.newBuilder()
+      builder.setFingerprint(
+        tools.elide.vfs.File.FileFingerprint.newBuilder()
+        .setUncompressed(
+          tools.elide.vfs.File.Fingerprint.newBuilder()
           .setAlgorithm(Settings.fileDigest)
-          .setHash(ByteString.copyFrom(fingerprint))))
+          .setHash(ByteString.copyFrom(fingerprint)),
+        ),
+      )
     }
 
     /** @return [FilesystemInfo] metadata generated from a regular tarball. */
@@ -433,9 +439,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
             val lastmod = entry.lastModifiedDate
             if (lastmod != null) {
               val instant = lastmod.toInstant()
-              file.setModified(Timestamp.newBuilder()
+              file.setModified(
+                Timestamp.newBuilder()
                 .setSeconds(instant.epochSecond)
-                .setNanos(instant.nano))
+                .setNanos(instant.nano),
+              )
             }
             fsEntry.setFile(file)
             rootDir.addChildren(fsEntry)
@@ -480,7 +488,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
       return streams.parallelStream().map { input ->
         when (input.second) {
           BundleFormat.ELIDE_INTERNAL,
-          BundleFormat.TARBALL -> TarArchiveInputStream(input.first) to input.second
+          BundleFormat.TARBALL,
+          -> TarArchiveInputStream(input.first) to input.second
           BundleFormat.TARBALL_COMPRESSED -> TarArchiveInputStream(GZIPInputStream(input.first)) to input.second
         }
       }.map { input ->
@@ -493,7 +502,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
       }.reduce { left, right ->
         left.toBuilder().mergeFrom(right).build()
       }.orElse(
-        FilesystemInfo.getDefaultInstance()
+        FilesystemInfo.getDefaultInstance(),
       ) to inMemoryFS  // <-- map the return filesystem to the in-memory FS we built
     }
 
@@ -503,17 +512,20 @@ internal class EmbeddedGuestVFSImpl private constructor (
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
-      return loadBundlesToMemoryFS(streams.map { (name, stream) ->
+      return loadBundlesToMemoryFS(
+        streams.map { (name, stream) ->
         stream to when {
           name.endsWith(".tar") -> BundleFormat.TARBALL
           name.endsWith(".tar.gz") -> BundleFormat.TARBALL_COMPRESSED
           name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
           else -> error(
             "Failed to load bundle from file '$name': unknown format. " +
-            "Please provide `.tar`, `.tar.gz`, or `.evfs`."
+            "Please provide `.tar`, `.tar.gz`, or `.evfs`.",
           )
         }
-      }, fsConfig)
+      },
+        fsConfig,
+      )
     }
 
     /** @return Bundle pair loaded from the provided [files]. */
@@ -558,7 +570,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
               else -> path.path
             }
             val target = EmbeddedGuestVFSImpl::class.java.getResourceAsStream(filename) ?: error(
-              "Failed to load bundle from path '$path': Not found"
+              "Failed to load bundle from path '$path': Not found",
             )
             filename to target
           }
@@ -623,7 +635,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
      * @param ioConfig Guest I/O configuration to use for creating the VFS.
      * @return Embedded VFS implementation built according to the provided [config].
      */
-    @Bean @Singleton internal fun spawn(
+    @Bean @Singleton
+    internal fun spawn(
       ioConfig: GuestIOConfiguration,
       configurators: List<GuestVFS.VFSConfigurator>,
     ): EmbeddedGuestVFSImpl {
@@ -639,9 +652,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
         root = config.root
         workingDirectory = config.workingDirectory
         if (config.bundle.isNotEmpty()) {
-          paths = config.bundle.plus(configurators.flatMap {
+          paths = config.bundle.plus(
+            configurators.flatMap {
             it.bundles()
-          })
+          },
+          )
         } else if (configurators.isNotEmpty()) {
           paths = configurators.flatMap {
             it.bundles()

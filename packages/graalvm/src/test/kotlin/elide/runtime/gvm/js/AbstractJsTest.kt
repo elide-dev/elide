@@ -2,16 +2,6 @@
 
 package elide.runtime.gvm.js
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.AbstractDualTest
-import elide.runtime.gvm.internals.GraalVMGuest
-import elide.runtime.gvm.internals.IntrinsicsManager
-import elide.runtime.gvm.internals.context.ContextManager
-import elide.runtime.intrinsics.GuestIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.gvm.internals.js.JsRuntime
-import kotlinx.coroutines.runBlocking
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
@@ -20,6 +10,16 @@ import org.graalvm.polyglot.io.FileSystem
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.coroutines.runBlocking
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.AbstractDualTest
+import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.internals.IntrinsicsManager
+import elide.runtime.gvm.internals.context.ContextManager
+import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.gvm.internals.js.JsRuntime
+import elide.runtime.intrinsics.GuestIntrinsic
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @Suppress("unused")
@@ -82,15 +82,15 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
       script,
       if (esm) "test.mjs" else "test.js",
     ).interactive(
-      false
+      false,
     ).cached(
-      false
+      false,
     ).internal(
-      false
+      false,
     ).mimeType(
-      if (esm) "application/javascript+module" else "application/javascript"
+      if (esm) "application/javascript+module" else "application/javascript",
     ).encoding(
-      StandardCharsets.UTF_8
+      StandardCharsets.UTF_8,
     ).build()
 
     // execute script
@@ -115,7 +115,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   // Run the provided `op` with an active (and exclusively owned) JS VM context.
-  override fun <V: Any> withContext(op: Context.() -> V): V = runBlocking {
+  override fun <V : Any> withContext(op: Context.() -> V): V = runBlocking {
     if (!initialized.get()) {
       contextManager.installContextFactory {
         buildContext(it, null)
@@ -171,7 +171,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   // Configure a context and then return a guest test execution bound to it.
   protected fun configureContext(
     conf: Context.Builder.() -> Unit,
-    op: Context.() -> String
+    op: Context.() -> String,
   ) = GuestTestExecution(conf, { withContext(op, conf) }) {
     executeGuestInternal(
       this,

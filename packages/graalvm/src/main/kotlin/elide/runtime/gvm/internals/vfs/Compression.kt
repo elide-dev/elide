@@ -12,7 +12,7 @@ import elide.proto.api.Symbolic
  *
  * @see CompressionMode for an enumeration of supported algorithms.
  */
-@JvmInline internal value class Compression private constructor (private val mode: Pair<Int, String>) :
+@JvmInline internal value class Compression private constructor(private val mode: Pair<Int, String>) :
   Symbolic<Int>,
   Named {
   /** @return Integer symbol for this compression mode. */

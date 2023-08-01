@@ -1,7 +1,7 @@
 package elide.runtime.intrinsics.js
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.err.TypeError
+import elide.vm.annotations.Polyglot
 
 /**
  * # JavaScript: `URL`
@@ -90,7 +90,8 @@ public interface URL : java.io.Serializable {
      * @throws TypeError If the provided `string` is not a valid URL.
      */
     @Throws(TypeError::class)
-    @Polyglot public fun create(url: String): URL
+    @Polyglot
+    public fun create(url: String): URL
 
     /**
      * ### Constructor: From String, with Base URL as String
@@ -107,7 +108,8 @@ public interface URL : java.io.Serializable {
      * @throws TypeError If the provided `string` is not a valid URL.
      */
     @Throws(TypeError::class)
-    @Polyglot public fun create(url: String, base: String): URL
+    @Polyglot
+    public fun create(url: String, base: String): URL
   }
 
   /**

@@ -2,23 +2,23 @@
 
 package elide.server
 
-import elide.ssr.ResponseRenderer
-import elide.server.assets.AssetType
-import elide.server.controller.ElideController
-import elide.server.controller.PageController
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
-import kotlinx.css.CssBuilder
-import kotlinx.html.*
-import kotlinx.html.stream.appendHTML
 import org.reactivestreams.Publisher
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.css.CssBuilder
+import kotlinx.html.*
+import kotlinx.html.stream.appendHTML
+import elide.server.assets.AssetType
+import elide.server.controller.ElideController
+import elide.server.controller.PageController
+import elide.ssr.ResponseRenderer
 
 /**
  * Raw bytes body type used internally by Elide.
@@ -99,9 +99,9 @@ public fun staticFile(file: String, contentType: String): HttpResponse<*> {
   val target = HtmlRenderer::class.java.getResourceAsStream("/static/$cleanedPath")
   return if (target != null) {
     HttpResponse.ok(
-      target
+      target,
     ).contentType(
-      contentType
+      contentType,
     )
   } else {
     HttpResponse.notFound<Any>()
@@ -133,7 +133,7 @@ public typealias AssetTag = String
 public suspend fun PageController.asset(
   request: HttpRequest<*>,
   moduleId: AssetModuleId,
-  type: AssetType? = null
+  type: AssetType? = null,
 ): StreamedAssetResponse {
   val handler = AssetHandler(type, this, request)
   handler.module(moduleId)
@@ -166,7 +166,7 @@ public suspend fun PageController.script(request: HttpRequest<*>, moduleId: Asse
  */
 public suspend fun PageController.script(
   request: HttpRequest<*>,
-  block: AssetHandler.() -> Unit
+  block: AssetHandler.() -> Unit,
 ): StreamedAssetResponse {
   return asset(
     request,
@@ -201,7 +201,7 @@ public suspend fun PageController.stylesheet(request: HttpRequest<*>, moduleId: 
  */
 public suspend fun PageController.stylesheet(
   request: HttpRequest<*>,
-  block: AssetHandler.() -> Unit
+  block: AssetHandler.() -> Unit,
 ): StreamedAssetResponse {
   return asset(
     request,
@@ -222,7 +222,7 @@ public suspend fun PageController.stylesheet(
 public suspend fun PageController.asset(
   request: HttpRequest<*>,
   type: AssetType? = null,
-  block: suspend AssetHandler.() -> Unit
+  block: suspend AssetHandler.() -> Unit,
 ): StreamedAssetResponse {
   val handler = AssetHandler(type, this, request)
   block.invoke(handler)
@@ -254,7 +254,7 @@ public class AssetHandler(
       handler.assets().serveAsync(
         request,
         moduleId.get(),
-      ).await()
+      ).await(),
     )
   }
 }
@@ -270,9 +270,9 @@ public suspend fun PageController.html(block: suspend HTML.() -> Unit): RawRespo
     HtmlRenderer(
       builder = block,
       handler = this,
-    ).render()
+    ).render(),
   ).characterEncoding(StandardCharsets.UTF_8).contentType(
-    "text/html; charset=utf-8"
+    "text/html; charset=utf-8",
   )
 }
 
@@ -289,7 +289,7 @@ public class HtmlRenderer(
       it.appendHTML(
         prettyPrint = prettyhtml,
       ).htmlSuspend(
-        block = builder
+        block = builder,
       )
     }
     return baos
@@ -304,21 +304,21 @@ public class HtmlRenderer(
  */
 public fun css(block: CssBuilder.() -> Unit): StreamedAssetResponse {
   return HttpResponse.ok(
-    CssContent(block).render()
+    CssContent(block).render(),
   ).characterEncoding(
-    StandardCharsets.UTF_8
+    StandardCharsets.UTF_8,
   ).contentType(
-    "text/css; chartset=utf-8"
+    "text/css; chartset=utf-8",
   )
 }
 
 // HTML content rendering and container utility.
 internal class CssContent(
-  private val builder: CssBuilder.() -> Unit
+  private val builder: CssBuilder.() -> Unit,
 ) : ResponseRenderer<StreamedAsset> {
   override fun render(): StreamedAsset {
     val contentBytes = CssBuilder().apply(builder).toString().toByteArray(
-      StandardCharsets.UTF_8
+      StandardCharsets.UTF_8,
     )
     return NettyStreamedFileCustomizableResponseType(
       ByteArrayInputStream(contentBytes),
@@ -329,21 +329,20 @@ internal class CssContent(
 
 @HtmlTagMarker
 public suspend inline fun <T, C : TagConsumer<T>> C.htmlSuspend(
-  namespace : String? = null,
-  crossinline block : suspend HTML.() -> Unit
-) : T = HTML(
+  namespace: String? = null,
+  crossinline block: suspend HTML.() -> Unit,
+): T = HTML(
   emptyMap,
   this,
-  namespace
+  namespace,
 ).visitAndFinalizeSuspend(
   this,
   block,
 )
 
-
 public suspend inline fun <T : Tag, R> T.visitAndFinalizeSuspend(
   consumer: TagConsumer<R>,
-  crossinline block: suspend T.() -> Unit
+  crossinline block: suspend T.() -> Unit,
 ): R = visitTagAndFinalize(consumer) {
   block()
 }

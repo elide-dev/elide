@@ -11,7 +11,8 @@ public object SecurityProviderConfigurator {
   private val ready = AtomicBoolean(false)
 
   // Register security providers at JVM startup time.
-  @JvmStatic @Synchronized private fun registerProviders() {
+  @JvmStatic @Synchronized
+  private fun registerProviders() {
     var bcposition = 0
     if (Conscrypt.isAvailable()) {
       Security.insertProviderAt(Conscrypt.newProvider(), 0)
@@ -20,7 +21,7 @@ public object SecurityProviderConfigurator {
 
     Security.insertProviderAt(
       BouncyCastleProvider(),
-      bcposition
+      bcposition,
     )
   }
 

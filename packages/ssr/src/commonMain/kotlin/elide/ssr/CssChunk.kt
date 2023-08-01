@@ -25,7 +25,9 @@ import elide.vm.annotations.Polyglot
  * @param key Unique key identifying this chunk.
  * @param css CSS code held by this chunk.
  */
-public data class CssChunk @Polyglot constructor (
+public data class CssChunk
+  @Polyglot
+  constructor(
   @field:Polyglot public val ids: Array<String>,
   @field:Polyglot public val key: String,
   @field:Polyglot public val css: String,

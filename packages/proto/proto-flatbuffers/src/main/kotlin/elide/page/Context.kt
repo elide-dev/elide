@@ -2,22 +2,21 @@
 
 package elide.page
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Context : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Context {
+    fun __assign(_i: Int, _bb: ByteBuffer): Context {
         __init(_i, _bb)
         return this
     }
-    val meta : elide.page.Context_.Metadata? get() = meta(elide.page.Context_.Metadata())
-    fun meta(obj: elide.page.Context_.Metadata) : elide.page.Context_.Metadata? {
+    val meta: elide.page.Context_.Metadata? get() = meta(elide.page.Context_.Metadata())
+    fun meta(obj: elide.page.Context_.Metadata): elide.page.Context_.Metadata? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class Context : Table() {
             null
         }
     }
-    val styles : elide.page.Context_.Styles? get() = styles(elide.page.Context_.Styles())
-    fun styles(obj: elide.page.Context_.Styles) : elide.page.Context_.Styles? {
+    val styles: elide.page.Context_.Styles? get() = styles(elide.page.Context_.Styles())
+    fun styles(obj: elide.page.Context_.Styles): elide.page.Context_.Styles? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -34,8 +33,8 @@ class Context : Table() {
             null
         }
     }
-    val fonts : elide.page.Context_.Fonts? get() = fonts(elide.page.Context_.Fonts())
-    fun fonts(obj: elide.page.Context_.Fonts) : elide.page.Context_.Fonts? {
+    val fonts: elide.page.Context_.Fonts? get() = fonts(elide.page.Context_.Fonts())
+    fun fonts(obj: elide.page.Context_.Fonts): elide.page.Context_.Fonts? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -43,8 +42,8 @@ class Context : Table() {
             null
         }
     }
-    val scripts : elide.page.Context_.Scripts? get() = scripts(elide.page.Context_.Scripts())
-    fun scripts(obj: elide.page.Context_.Scripts) : elide.page.Context_.Scripts? {
+    val scripts: elide.page.Context_.Scripts? get() = scripts(elide.page.Context_.Scripts())
+    fun scripts(obj: elide.page.Context_.Scripts): elide.page.Context_.Scripts? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -52,8 +51,8 @@ class Context : Table() {
             null
         }
     }
-    val manifest : elide.page.Context_.AppManifest? get() = manifest(elide.page.Context_.AppManifest())
-    fun manifest(obj: elide.page.Context_.AppManifest) : elide.page.Context_.AppManifest? {
+    val manifest: elide.page.Context_.AppManifest? get() = manifest(elide.page.Context_.AppManifest())
+    fun manifest(obj: elide.page.Context_.AppManifest): elide.page.Context_.AppManifest? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -61,8 +60,8 @@ class Context : Table() {
             null
         }
     }
-    val etag : elide.page.Context_.DynamicETag? get() = etag(elide.page.Context_.DynamicETag())
-    fun etag(obj: elide.page.Context_.DynamicETag) : elide.page.Context_.DynamicETag? {
+    val etag: elide.page.Context_.DynamicETag? get() = etag(elide.page.Context_.DynamicETag())
+    fun etag(obj: elide.page.Context_.DynamicETag): elide.page.Context_.DynamicETag? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -70,8 +69,8 @@ class Context : Table() {
             null
         }
     }
-    fun cookie(j: Int) : elide.page.Context_.Cookie? = cookie(elide.page.Context_.Cookie(), j)
-    fun cookie(obj: elide.page.Context_.Cookie, j: Int) : elide.page.Context_.Cookie? {
+    fun cookie(j: Int): elide.page.Context_.Cookie? = cookie(elide.page.Context_.Cookie(), j)
+    fun cookie(obj: elide.page.Context_.Cookie, j: Int): elide.page.Context_.Cookie? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -79,12 +78,13 @@ class Context : Table() {
             null
         }
     }
-    val cookieLength : Int
+    val cookieLength: Int
         get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(16)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun header(j: Int) : elide.page.Context_.ResponseHeader? = header(elide.page.Context_.ResponseHeader(), j)
-    fun header(obj: elide.page.Context_.ResponseHeader, j: Int) : elide.page.Context_.ResponseHeader? {
+    fun header(j: Int): elide.page.Context_.ResponseHeader? = header(elide.page.Context_.ResponseHeader(), j)
+    fun header(obj: elide.page.Context_.ResponseHeader, j: Int): elide.page.Context_.ResponseHeader? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -92,11 +92,12 @@ class Context : Table() {
             null
         }
     }
-    val headerLength : Int
+    val headerLength: Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun vary(j: Int) : String? {
+    fun vary(j: Int): String? {
         val o = __offset(20)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -104,19 +105,20 @@ class Context : Table() {
             null
         }
     }
-    val varyLength : Int
+    val varyLength: Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val language : String?
+    val language: String?
         get() {
             val o = __offset(22)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val languageAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun languageInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val hints : elide.page.Context_.ClientHints? get() = hints(elide.page.Context_.ClientHints())
-    fun hints(obj: elide.page.Context_.ClientHints) : elide.page.Context_.ClientHints? {
+    val languageAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun languageInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val hints: elide.page.Context_.ClientHints? get() = hints(elide.page.Context_.ClientHints())
+    fun hints(obj: elide.page.Context_.ClientHints): elide.page.Context_.ClientHints? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -124,7 +126,7 @@ class Context : Table() {
             null
         }
     }
-    fun featurePolicy(j: Int) : String? {
+    fun featurePolicy(j: Int): String? {
         val o = __offset(26)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -132,22 +134,23 @@ class Context : Table() {
             null
         }
     }
-    val featurePolicyLength : Int
+    val featurePolicyLength: Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val framingPolicy : Int
+    val framingPolicy: Int
         get() {
             val o = __offset(28)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val contentTypeNosniff : Boolean
+    val contentTypeNosniff: Boolean
         get() {
             val o = __offset(30)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val cdnPrefix : webutil.html.types.TrustedResourceUrlProto? get() = cdnPrefix(webutil.html.types.TrustedResourceUrlProto())
-    fun cdnPrefix(obj: webutil.html.types.TrustedResourceUrlProto) : webutil.html.types.TrustedResourceUrlProto? {
+    val cdnPrefix: webutil.html.types.TrustedResourceUrlProto? get() = cdnPrefix(webutil.html.types.TrustedResourceUrlProto())
+    fun cdnPrefix(obj: webutil.html.types.TrustedResourceUrlProto): webutil.html.types.TrustedResourceUrlProto? {
         val o = __offset(32)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -155,7 +158,7 @@ class Context : Table() {
             null
         }
     }
-    fun dnsPrefetch(j: Int) : String? {
+    fun dnsPrefetch(j: Int): String? {
         val o = __offset(34)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -163,11 +166,12 @@ class Context : Table() {
             null
         }
     }
-    val dnsPrefetchLength : Int
+    val dnsPrefetchLength: Int
         get() {
-            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(34)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun preconnect(j: Int) : String? {
+    fun preconnect(j: Int): String? {
         val o = __offset(36)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -175,21 +179,22 @@ class Context : Table() {
             null
         }
     }
-    val preconnectLength : Int
+    val preconnectLength: Int
         get() {
-            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(36)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val xssProtection : String?
+    val xssProtection: String?
         get() {
             val o = __offset(38)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val xssProtectionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun xssProtectionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val referrerPolicy : Int
+    val xssProtectionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun xssProtectionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val referrerPolicy: Int
         get() {
             val o = __offset(40)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -198,7 +203,28 @@ class Context : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContext(builder: FlatBufferBuilder, metaOffset: Int, stylesOffset: Int, fontsOffset: Int, scriptsOffset: Int, manifestOffset: Int, etagOffset: Int, cookieOffset: Int, headerOffset: Int, varyOffset: Int, languageOffset: Int, hintsOffset: Int, featurePolicyOffset: Int, framingPolicy: Int, contentTypeNosniff: Boolean, cdnPrefixOffset: Int, dnsPrefetchOffset: Int, preconnectOffset: Int, xssProtectionOffset: Int, referrerPolicy: Int) : Int {
+        fun createContext(
+          builder: FlatBufferBuilder,
+          metaOffset: Int,
+          stylesOffset: Int,
+          fontsOffset: Int,
+          scriptsOffset: Int,
+          manifestOffset: Int,
+          etagOffset: Int,
+          cookieOffset: Int,
+          headerOffset: Int,
+          varyOffset: Int,
+          languageOffset: Int,
+          hintsOffset: Int,
+          featurePolicyOffset: Int,
+          framingPolicy: Int,
+          contentTypeNosniff: Boolean,
+          cdnPrefixOffset: Int,
+          dnsPrefetchOffset: Int,
+          preconnectOffset: Int,
+          xssProtectionOffset: Int,
+          referrerPolicy: Int,
+        ): Int {
             builder.startTable(19)
             addReferrerPolicy(builder, referrerPolicy)
             addXssProtection(builder, xssProtectionOffset)
@@ -229,7 +255,7 @@ class Context : Table() {
         fun addManifest(builder: FlatBufferBuilder, manifest: Int) = builder.addOffset(4, manifest, 0)
         fun addEtag(builder: FlatBufferBuilder, etag: Int) = builder.addOffset(5, etag, 0)
         fun addCookie(builder: FlatBufferBuilder, cookie: Int) = builder.addOffset(6, cookie, 0)
-        fun createCookieVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createCookieVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -238,7 +264,7 @@ class Context : Table() {
         }
         fun startCookieVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addHeader(builder: FlatBufferBuilder, header: Int) = builder.addOffset(7, header, 0)
-        fun createHeaderVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createHeaderVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -247,7 +273,7 @@ class Context : Table() {
         }
         fun startHeaderVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addVary(builder: FlatBufferBuilder, vary: Int) = builder.addOffset(8, vary, 0)
-        fun createVaryVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createVaryVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -258,7 +284,7 @@ class Context : Table() {
         fun addLanguage(builder: FlatBufferBuilder, language: Int) = builder.addOffset(9, language, 0)
         fun addHints(builder: FlatBufferBuilder, hints: Int) = builder.addOffset(10, hints, 0)
         fun addFeaturePolicy(builder: FlatBufferBuilder, featurePolicy: Int) = builder.addOffset(11, featurePolicy, 0)
-        fun createFeaturePolicyVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createFeaturePolicyVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -267,10 +293,13 @@ class Context : Table() {
         }
         fun startFeaturePolicyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addFramingPolicy(builder: FlatBufferBuilder, framingPolicy: Int) = builder.addInt(12, framingPolicy, 0)
-        fun addContentTypeNosniff(builder: FlatBufferBuilder, contentTypeNosniff: Boolean) = builder.addBoolean(13, contentTypeNosniff, false)
+        fun addContentTypeNosniff(
+          builder: FlatBufferBuilder,
+          contentTypeNosniff: Boolean,
+        ) = builder.addBoolean(13, contentTypeNosniff, false)
         fun addCdnPrefix(builder: FlatBufferBuilder, cdnPrefix: Int) = builder.addOffset(14, cdnPrefix, 0)
         fun addDnsPrefetch(builder: FlatBufferBuilder, dnsPrefetch: Int) = builder.addOffset(15, dnsPrefetch, 0)
-        fun createDnsPrefetchVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createDnsPrefetchVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -279,7 +308,7 @@ class Context : Table() {
         }
         fun startDnsPrefetchVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPreconnect(builder: FlatBufferBuilder, preconnect: Int) = builder.addOffset(16, preconnect, 0)
-        fun createPreconnectVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createPreconnectVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -289,7 +318,7 @@ class Context : Table() {
         fun startPreconnectVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addXssProtection(builder: FlatBufferBuilder, xssProtection: Int) = builder.addOffset(17, xssProtection, 0)
         fun addReferrerPolicy(builder: FlatBufferBuilder, referrerPolicy: Int) = builder.addInt(18, referrerPolicy, 0)
-        fun endContext(builder: FlatBufferBuilder) : Int {
+        fun endContext(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

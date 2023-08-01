@@ -2,12 +2,12 @@
 
 package elide.runtime.gvm.internals
 
-import elide.runtime.gvm.ExecutableScript
-import elide.runtime.gvm.ExecutionInputs
 import org.reactivestreams.Publisher
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.concurrent.Future
+import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.ExecutionInputs
 
 /**
  * # VM: Adapter.
@@ -43,9 +43,9 @@ import java.util.concurrent.Future
  */
 internal abstract class AbstractVMAdapter<
   Output,
-  Bindings: InvocationBindings,
-  Script: ExecutableScript,
-  Inputs: ExecutionInputs,
+  Bindings : InvocationBindings,
+  Script : ExecutableScript,
+  Inputs : ExecutionInputs,
 > {
   /**
    * ## Execution: Promise-like.
@@ -88,7 +88,7 @@ internal abstract class AbstractVMAdapter<
    *
    * @param op Operation which is wrapped by this execution, and expected to produce a result of type [Output].
    */
-  internal abstract inner class VMUnaryExecution (
+  internal abstract inner class VMUnaryExecution(
     protected val op: CompletableFuture<Output>,
   ) : AbstractVMExecution<Output>(), PromiseLike<Output>, Future<Output> by op, CompletionStage<Output> by op
 
@@ -104,7 +104,7 @@ internal abstract class AbstractVMAdapter<
    *
    * @param op Publisher which is wrapped by this execution, and expected to produce one or more [Output] results.
    */
-  internal abstract inner class VMStreamingExecution (
+  internal abstract inner class VMStreamingExecution(
     protected val op: CompletableFuture<Output>,
   ) : AbstractVMExecution<Output>(), PromiseLike<Output>, Future<Output> by op, CompletionStage<Output> by op
 

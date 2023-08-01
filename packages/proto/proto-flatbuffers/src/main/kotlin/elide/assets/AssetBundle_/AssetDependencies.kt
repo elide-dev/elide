@@ -2,21 +2,20 @@
 
 package elide.assets.AssetBundle_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class AssetDependencies : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : AssetDependencies {
+    fun __assign(_i: Int, _bb: ByteBuffer): AssetDependencies {
         __init(_i, _bb)
         return this
     }
-    fun direct(j: Int) : String? {
+    fun direct(j: Int): String? {
         val o = __offset(4)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -24,11 +23,12 @@ class AssetDependencies : Table() {
             null
         }
     }
-    val directLength : Int
+    val directLength: Int
         get() {
-            val o = __offset(4); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(4)
+            return if (o != 0) __vector_len(o) else 0
         }
-    fun transitive(j: Int) : String? {
+    fun transitive(j: Int): String? {
         val o = __offset(6)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -36,12 +36,13 @@ class AssetDependencies : Table() {
             null
         }
     }
-    val transitiveLength : Int
+    val transitiveLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val mask : elide.structs.BloomFilter? get() = mask(elide.structs.BloomFilter())
-    fun mask(obj: elide.structs.BloomFilter) : elide.structs.BloomFilter? {
+    val mask: elide.structs.BloomFilter? get() = mask(elide.structs.BloomFilter())
+    fun mask(obj: elide.structs.BloomFilter): elide.structs.BloomFilter? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -51,12 +52,19 @@ class AssetDependencies : Table() {
     }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
-        fun getRootAsAssetDependencies(_bb: ByteBuffer): AssetDependencies = getRootAsAssetDependencies(_bb, AssetDependencies())
+        fun getRootAsAssetDependencies(
+          _bb: ByteBuffer,
+        ): AssetDependencies = getRootAsAssetDependencies(_bb, AssetDependencies())
         fun getRootAsAssetDependencies(_bb: ByteBuffer, obj: AssetDependencies): AssetDependencies {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAssetDependencies(builder: FlatBufferBuilder, directOffset: Int, transitiveOffset: Int, maskOffset: Int) : Int {
+        fun createAssetDependencies(
+          builder: FlatBufferBuilder,
+          directOffset: Int,
+          transitiveOffset: Int,
+          maskOffset: Int,
+        ): Int {
             builder.startTable(3)
             addMask(builder, maskOffset)
             addTransitive(builder, transitiveOffset)
@@ -65,7 +73,7 @@ class AssetDependencies : Table() {
         }
         fun startAssetDependencies(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addDirect(builder: FlatBufferBuilder, direct: Int) = builder.addOffset(0, direct, 0)
-        fun createDirectVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createDirectVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -74,7 +82,7 @@ class AssetDependencies : Table() {
         }
         fun startDirectVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addTransitive(builder: FlatBufferBuilder, transitive: Int) = builder.addOffset(1, transitive, 0)
-        fun createTransitiveVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createTransitiveVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -83,7 +91,7 @@ class AssetDependencies : Table() {
         }
         fun startTransitiveVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addMask(builder: FlatBufferBuilder, mask: Int) = builder.addOffset(2, mask, 0)
-        fun endAssetDependencies(builder: FlatBufferBuilder) : Int {
+        fun endAssetDependencies(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -1,11 +1,11 @@
 package elide.tool.cli.info
 
+import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.info.ToolInfoCommand
-import kotlin.test.assertNotNull
 
 /** Tests for the main CLI tool entrypoint. */
 @TestCase class ToolInfoSubcommandTest : AbstractSubtoolTest() {

@@ -2,24 +2,24 @@ package elide.rpc.server.web
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.protobuf.InvalidProtocolBufferException
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.server.controller.StatusEnabledController
-import elide.rpc.server.RpcRuntime
-import elide.rpc.server.web.GrpcWeb.Headers
-import elide.rpc.server.web.GrpcWebCall.Companion.newCall
-import elide.rpc.server.web.GrpcWebContentType.Companion.allValidContentTypes
 import io.grpc.*
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Post
-import jakarta.inject.Inject
-import kotlinx.coroutines.Deferred
 import java.nio.charset.StandardCharsets
 import java.security.Principal
 import java.util.concurrent.CountDownLatch
+import jakarta.inject.Inject
+import kotlinx.coroutines.Deferred
+import elide.rpc.server.RpcRuntime
+import elide.rpc.server.web.GrpcWeb.Headers
+import elide.rpc.server.web.GrpcWebCall.Companion.newCall
+import elide.rpc.server.web.GrpcWebContentType.Companion.allValidContentTypes
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.server.controller.StatusEnabledController
 
 /**
  * Entrypoint controller for gRPC Web traffic handled on behalf of the user's application by Elide's RPC framework.
@@ -32,7 +32,8 @@ import java.util.concurrent.CountDownLatch
  * up (managed by Micronaut).
  */
 @Requires(property = "elide.grpc.web.isEnabled", value = "true")
-@Controller("\${elide.grpc.web.endpoint:/_/rpc}") public class GrpcWebController: StatusEnabledController {
+@Controller("\${elide.grpc.web.endpoint:/_/rpc}")
+public class GrpcWebController : StatusEnabledController {
   /**
    * Describes an error encountered early during this controller's processing cycle, before the request has been
    * resolved to a service and method.
@@ -41,11 +42,11 @@ import java.util.concurrent.CountDownLatch
    * @param message Message to include with the error, if desired.
    * @param cause Cause of the error, if applicable.
    */
-  private class GrpcWebControllerError (
+  private class GrpcWebControllerError(
     internal val status: Status,
     message: String?,
     cause: Throwable?,
-  ): RuntimeException(
+  ) : RuntimeException(
     message,
     cause,
   ) {
@@ -90,7 +91,7 @@ import java.util.concurrent.CountDownLatch
   private fun synthesizeGrpcError(
     status: Status,
     errMessage: String?,
-    cause: Throwable?
+    cause: Throwable?,
   ): GrpcWebControllerError {
     return GrpcWebControllerError(
       status,
@@ -157,7 +158,7 @@ import java.util.concurrent.CountDownLatch
   @VisibleForTesting
   internal fun resolveService(
     service: String,
-    method: String
+    method: String,
   ): Pair<ServerServiceDefinition, ServerMethodDefinition<*, *>> {
     val svc = runtime.resolveService(service)
     if (svc != null) {
@@ -252,11 +253,12 @@ import java.util.concurrent.CountDownLatch
    * @param principal Logged-in security principal, if any.
    * @return HTTP response to be sent back to the invoking client.
    */
-  @Post("/{servicePath}/{methodName}") public suspend fun handleRequest(
+  @Post("/{servicePath}/{methodName}")
+  public suspend fun handleRequest(
     servicePath: String,
     methodName: String,
     request: HttpRequest<RawRpcPayload>,
-    principal: Principal?
+    principal: Principal?,
   ): HttpResponse<RawRpcPayload> {
     // make sure gRPC-web integration is enabled
     return if (!settings.isEnabled) {
@@ -268,14 +270,14 @@ import java.util.concurrent.CountDownLatch
           "gRPC-web service path was blank or empty; rejecting request with `SERVICE_PATH_INVALID`."
         }
         return HttpResponse.badRequest<RawRpcPayload?>().body(
-          "SERVICE_PATH_INVALID".toByteArray(StandardCharsets.UTF_8)
+          "SERVICE_PATH_INVALID".toByteArray(StandardCharsets.UTF_8),
         )
       } else if (methodName.isEmpty() || methodName.isBlank()) {
         logging.warn {
           "gRPC-web service method was blank or empty; rejecting request with `METHOD_NAME_INVALID`."
         }
         return HttpResponse.badRequest<RawRpcPayload?>().body(
-          "METHOD_NAME_INVALID".toByteArray(StandardCharsets.UTF_8)
+          "METHOD_NAME_INVALID".toByteArray(StandardCharsets.UTF_8),
         )
       }
 
@@ -285,7 +287,7 @@ import java.util.concurrent.CountDownLatch
           "gRPC-web content type was not allowed or missing; rejecting request with `INVALID_CONTENT_TYPE`."
         }
         return HttpResponse.badRequest<RawRpcPayload?>().body(
-          "INVALID_CONTENT_TYPE".toByteArray(StandardCharsets.UTF_8)
+          "INVALID_CONTENT_TYPE".toByteArray(StandardCharsets.UTF_8),
         )
       }
 
@@ -298,7 +300,7 @@ import java.util.concurrent.CountDownLatch
           "gRPC-web request was missing sentinel header; rejecting request with `BAD_REQUEST`."
         }
         return HttpResponse.badRequest<RawRpcPayload?>().body(
-          "BAD_REQUEST".toByteArray(StandardCharsets.UTF_8)
+          "BAD_REQUEST".toByteArray(StandardCharsets.UTF_8),
         )
       }
 
@@ -314,12 +316,12 @@ import java.util.concurrent.CountDownLatch
             servicePath,
             methodName,
             request,
-            principal
-          ).await()
+            principal,
+          ).await(),
         )
       } catch (sre: StatusRuntimeException) {
         logging.warn(
-          "The gRPC Web request threw a gRPC-compatible exception of status '${sre.status}'"
+          "The gRPC Web request threw a gRPC-compatible exception of status '${sre.status}'",
         )
         synthesizeGrpcResponse(
           sre.status,
@@ -331,13 +333,13 @@ import java.util.concurrent.CountDownLatch
       } catch (cre: GrpcWebControllerError) {
         // an error occurred before method processing began
         logging.warn(
-          "Relaying pre-fulfillment gRPC-Web error: '${cre.status}'"
+          "Relaying pre-fulfillment gRPC-Web error: '${cre.status}'",
         )
         synthesizeGrpcResponse(
           cre.status.withCause(
-            cre.cause
+            cre.cause,
           ).withDescription(
-            cre.message ?: ""
+            cre.message ?: "",
           ),
           Metadata(),
           cre.trailers(),
@@ -351,14 +353,14 @@ import java.util.concurrent.CountDownLatch
         "Request was reported as invalid protocol buffer; rejecting with `MALFORMED_PAYLOAD` (Bad Request HTTP 400).",
       )
       return HttpResponse.badRequest<RawRpcPayload?>().body(
-        "MALFORMED_PAYLOAD".toByteArray(StandardCharsets.UTF_8)
+        "MALFORMED_PAYLOAD".toByteArray(StandardCharsets.UTF_8),
       )
     } catch (iae: IllegalArgumentException) {
       logging.warn(
-        "The gRPC Web request was malformed; rejecting with 'MALFORMED_STREAM'."
+        "The gRPC Web request was malformed; rejecting with 'MALFORMED_STREAM'.",
       )
       return HttpResponse.badRequest<RawRpcPayload?>().body(
-        "MALFORMED_STREAM".toByteArray(StandardCharsets.UTF_8)
+        "MALFORMED_STREAM".toByteArray(StandardCharsets.UTF_8),
       )
     }
   }

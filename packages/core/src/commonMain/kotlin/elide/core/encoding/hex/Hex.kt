@@ -22,7 +22,8 @@ import elide.core.encoding.Encoding
  * Provides cross-platform utilities for encoding values into hex, or decoding values from hex. Available on any target
  * platform supported by Elide/Kotlin, including native platforms.
  */
-@Suppress("unused", "MemberVisibilityCanBePrivate") public expect object Hex : Codec<HexData> {
+@Suppress("unused", "MemberVisibilityCanBePrivate")
+public expect object Hex : Codec<HexData> {
   /** @inheritDoc */
   override fun encoding(): Encoding
 

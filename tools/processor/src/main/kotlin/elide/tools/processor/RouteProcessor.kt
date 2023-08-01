@@ -19,15 +19,15 @@ import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.protobuf.Timestamp
-import elide.runtime.Runtime
-import elide.tools.processor.util.annotationArgument
-import elide.tools.processor.util.annotationArgumentWithDefault
-import elide.util.Hex
-import kotlinx.datetime.Clock
 import tools.elide.meta.*
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.datetime.Clock
+import elide.runtime.Runtime
+import elide.tools.processor.util.annotationArgument
+import elide.tools.processor.util.annotationArgumentWithDefault
+import elide.util.Hex
 
 /**
  * # Route Processor
@@ -62,7 +62,7 @@ public class RouteProcessor(
   }
 
   // Page annotation to scan for (handler-level).
-  private val pageAnnoName = object: KSName {
+  private val pageAnnoName = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = defaultPageAnnotation
       .split(".").dropLast(1).joinToString(".")
@@ -71,7 +71,7 @@ public class RouteProcessor(
   }
 
   // Micronaut `GET` annotation.
-  private val micronautGet = object: KSName {
+  private val micronautGet = object : KSName {
     override fun asString(): String = "${getQualifier()}.${getShortName()}"
     override fun getQualifier(): String = "io.micronaut.http.annotation"
     override fun getShortName(): String = "Get"
@@ -204,7 +204,7 @@ public class RouteProcessor(
 
     // resolve "name" if available
     val className = page.qualifiedName ?: error(
-      "Failed to resolve qualified name for page class ${page.simpleName.asString()}"
+      "Failed to resolve qualified name for page class ${page.simpleName.asString()}",
     )
     logger.info("Assigning implementation class name '${className.asString()}'")
     val name: String? = annotationArgument("name", anno)
@@ -236,7 +236,8 @@ public class RouteProcessor(
     }
 
     // generate route tag
-    return endpointTag to check.invoke(endpoint {
+    return endpointTag to check.invoke(
+      endpoint {
       base = route
       type = endpointType
       tail = tailUrl
@@ -252,7 +253,8 @@ public class RouteProcessor(
       options = endpointOptions {
         precompilable = precompiled
       }
-    })
+    },
+    )
   }
 
   /**
@@ -355,7 +357,7 @@ public class RouteProcessor(
   override fun process(resolver: Resolver): List<KSAnnotated> {
     // scan for all `Page`-annotated classes. for each matching class, generate a pair of `String`, `Endpoint`.
     val pageAnno = resolver.getClassDeclarationByName(
-      pageAnnoName
+      pageAnnoName,
     )
     if (pageAnno == null) {
       logger.warn("Page annotation is not present in classpath; no pages will be generated.")
@@ -379,10 +381,12 @@ public class RouteProcessor(
     }.flatten()
 
     // use discovered routes and `buildInfo` to build an `AppManifest`.
-    manifest.set(appManifest(
+    manifest.set(
+      appManifest(
       fragments.toMap(),
       buildInfo(),
-    ))
+    ),
+    )
     return emptyList()
   }
 
@@ -395,7 +399,7 @@ public class RouteProcessor(
         Dependencies(false),
         Runtime.generatedPackage,
         "app.manifest",
-        "pb"
+        "pb",
       )
 
       // serialize the `AppManifest` into a binary proto-payload.

@@ -13,13 +13,13 @@
 
 package elide.core.encoding
 
-import elide.core.encoding.base64.DefaultBase64
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.core.encoding.base64.DefaultBase64
 
 /** Tests for built in [DefaultBase64] tools. */
-class Base64Test: AbstractEncoderTest<DefaultBase64>() {
+class Base64Test : AbstractEncoderTest<DefaultBase64>() {
   override fun encoding(): Encoding = Encoding.BASE64
   override fun encoder(): DefaultBase64 = DefaultBase64
 
@@ -28,18 +28,18 @@ class Base64Test: AbstractEncoderTest<DefaultBase64>() {
     assertEquals(
       "YWJjMTIzMTIz",
       DefaultBase64.encodeToString(input),
-      "should get expected output from Base64 encode"
+      "should get expected output from Base64 encode",
     )
     val inputPadded = "abc1231231"
     assertEquals(
       "YWJjMTIzMTIzMQ==",
       DefaultBase64.encodeToString(inputPadded),
-      "should get expected output from non-websafe Base64 encode"
+      "should get expected output from non-websafe Base64 encode",
     )
     assertEquals(
       "YWJjMTIzMTIzMQ",
       DefaultBase64.encodeWebSafe(inputPadded),
-      "should get expected output from websafe Base64 encode"
+      "should get expected output from websafe Base64 encode",
     )
   }
 
@@ -48,7 +48,7 @@ class Base64Test: AbstractEncoderTest<DefaultBase64>() {
     assertEquals(
       "YWJjMTIzMTIz",
       input.toBase64String(),
-      "should get expected output from Base64 encode"
+      "should get expected output from Base64 encode",
     )
   }
 
@@ -57,7 +57,7 @@ class Base64Test: AbstractEncoderTest<DefaultBase64>() {
     assertEquals(
       "abc123123",
       DefaultBase64.decodeToString(input),
-      "should get expected output from Base64 decode"
+      "should get expected output from Base64 decode",
     )
   }
 
@@ -68,19 +68,19 @@ class Base64Test: AbstractEncoderTest<DefaultBase64>() {
     )
     subjects.forEach { sample ->
       val encoded = DefaultBase64.encodeToString(
-        sample
+        sample,
       )
       assertNotNull(
         encoded,
-        "should get non-null output from base64 encoder"
+        "should get non-null output from base64 encoder",
       )
       val decoded = DefaultBase64.decodeToString(
-        encoded
+        encoded,
       )
       assertEquals(
         sample,
         decoded,
-        "sample should decode properly from encoded base64 string"
+        "sample should decode properly from encoded base64 string",
       )
     }
   }

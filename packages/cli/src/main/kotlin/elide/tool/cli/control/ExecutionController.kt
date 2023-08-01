@@ -44,7 +44,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
   @Throws(
     ClassInstallException::class,
     NotImplementedException::class,
-    EngineTerminationException::class
+    EngineTerminationException::class,
   )
   override fun load(classBytecodes: Array<ClassBytecodes>) {
     try {
@@ -57,7 +57,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
   @Throws(
     ClassInstallException::class,
     NotImplementedException::class,
-    EngineTerminationException::class
+    EngineTerminationException::class,
   )
   override fun redefine(classBytecodes: Array<ClassBytecodes>) {
     try {
@@ -164,7 +164,7 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
 
   protected fun toGuest(classBytecodes: Array<ClassBytecodes>): Value {
     val values: Value = requireNotNull(
-      this.tClassBytecodes.get()
+      this.tClassBytecodes.get(),
     ).getMember("array").newInstance(classBytecodes.size)
     for (i in classBytecodes.indices) {
       val bytecodes = classBytecodes[i].bytecodes()
@@ -194,7 +194,9 @@ abstract class ExecutionController protected constructor(delegate: Lazy<Value>) 
     }
 
     @Suppress("unused_parameter")
-    protected fun getStackTrace(@Suppress("unused") guestException: Value?): Array<StackTraceElement?> {
+    protected fun getStackTrace(
+      @Suppress("unused") guestException: Value?,
+    ): Array<StackTraceElement?> {
       // TODO(peterssen): Create host stack trace.
       return arrayOfNulls(0)
     }

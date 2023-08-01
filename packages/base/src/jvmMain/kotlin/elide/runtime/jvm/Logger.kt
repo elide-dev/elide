@@ -16,7 +16,7 @@ package elide.runtime.jvm
 import elide.runtime.LogLevel
 
 /** JVM implementation of a cross-platform Elide [elide.runtime.Logger] which wraps an [org.slf4j.Logger]. */
-public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger {
+public class Logger(private val logger: org.slf4j.Logger) : elide.runtime.Logger {
   // Format a list of values for emission as part of a log message.
   private fun formatLogLine(message: List<Any>): String {
     val builder = StringBuilder()
@@ -41,7 +41,7 @@ public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger
     val enabled = levelChecked || isEnabled(level)
     if (enabled) {
       level.resolve(logger).invoke(
-        formatLogLine(message)
+        formatLogLine(message),
       )
     }
   }

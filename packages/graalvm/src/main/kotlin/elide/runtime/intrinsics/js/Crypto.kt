@@ -24,7 +24,7 @@ import elide.vm.annotations.Polyglot
  * data uses [java.security.SecureRandom], and UUIDs are generated using [java.util.UUID.randomUUID]. [SubtleCrypto] is
  * provided via the [subtle] property.
  */
-public interface Crypto: RandomSource {
+public interface Crypto : RandomSource {
   public companion object {
     /** Maximum number of bytes that can be requested from [getRandomValues]; above this size, an error is thrown. */
     public const val MAX_RANDOM_BYTES_SIZE: Int = 65_535

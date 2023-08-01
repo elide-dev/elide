@@ -10,7 +10,7 @@ class MediaType private constructor() {
         const val AUDIO: Int = 2
         const val LINK: Int = 3
         const val DOCUMENT: Int = 4
-        val names : Array<String> = arrayOf("IMAGE", "VIDEO", "AUDIO", "LINK", "DOCUMENT")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("IMAGE", "VIDEO", "AUDIO", "LINK", "DOCUMENT")
+        fun name(e: Int): String = names[e]
     }
 }

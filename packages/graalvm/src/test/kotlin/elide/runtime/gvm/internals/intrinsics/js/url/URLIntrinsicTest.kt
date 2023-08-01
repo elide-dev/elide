@@ -2,22 +2,23 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.url
 
-import elide.annotations.Inject
-import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue
-import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.err.ValueError
-import elide.testing.annotations.Test
-import elide.testing.annotations.TestCase
-import kotlin.test.assertFailsWith
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.net.URI
+import kotlin.test.assertFailsWith
+import elide.annotations.Inject
+import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue
+import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
+import elide.runtime.intrinsics.js.err.TypeError
+import elide.runtime.intrinsics.js.err.ValueError
+import elide.testing.annotations.Test
+import elide.testing.annotations.TestCase
 
 /** Tests for the intrinsic `URL` implementation provided by Elide. */
 @Suppress("HttpUrlsUsage")
-@TestCase internal class URLIntrinsicTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
+@TestCase
+internal class URLIntrinsicTest : AbstractJsIntrinsicTest<URLIntrinsic>() {
   @Inject lateinit var urlIntrinsic: URLIntrinsic
   private val sampleUrl = URLValue.fromString("https://google.com")
 
@@ -189,7 +190,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     // Basic Cases: Normal
     "equal,https://google.com,https://google.com,true,URLs should be equal",
     "equal,https://github.com/elide-dev/v3,https://github.com/elide-dev/v3,true,URLs should be equal",
@@ -217,23 +219,25 @@ import java.net.URI
     "not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal",
     "not-equal,https://github.com,https://google.com?hello=hi,false,two URLs which differ in query should not be equal",
     "not-equal,https://github.com,https://google.com?hello,false,two URLs which differ in query should not be equal",
-  ])
+  ],
+  )
   @Suppress("AssertBetweenInconvertibleTypes")
   @ParameterizedTest(
     name = "[{index}:dual]: {0}: {4}",
-  ) fun testURLEquals(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) = dual {
+  )
+  fun testURLEquals(label: String, base: String, comparison: String, expectEquals: Boolean, msg: String) = dual {
     val shouldEqual: (URLValue, URLValue) -> Unit = { left, right ->
       assertEquals(
         left,
         right,
-        "case($label): $msg ($left != $right)"
+        "case($label): $msg ($left != $right)",
       )
     }
     val shouldNotEqual: (URLValue, URLValue) -> Unit = { left, right ->
       assertNotEquals(
         left,
         right,
-        "case($label): $msg ($left == $right)"
+        "case($label): $msg ($left == $right)",
       )
     }
     val op = if (expectEquals) {
@@ -272,7 +276,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,https://google.com",
     "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
     "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
@@ -284,8 +289,10 @@ import java.net.URI
     "blob://some-blob-id,blob://some-blob-id",
     "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLStrings(testString: String, expected: String) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLStrings(testString: String, expected: String) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected, url.toString())
@@ -303,7 +310,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,",
     "https://github.com/elide-dev/v3,",
     "https://dl.elide.dev/test?abc=123&def=456,",
@@ -315,8 +323,10 @@ import java.net.URI
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLHash(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLHash(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.hash, "hash value mismatch")
@@ -384,7 +394,8 @@ import java.net.URI
     }
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,google.com",
     "https://github.com/elide-dev/v3,github.com",
     "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
@@ -396,8 +407,10 @@ import java.net.URI
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLHost(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLHost(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.host, "host value mismatch")
@@ -467,7 +480,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,https:",
     "https://github.com/elide-dev/v3,https:",
     "https://dl.elide.dev/test?abc=123&def=456,https:",
@@ -479,8 +493,10 @@ import java.net.URI
     "blob://some-blob-id,blob:",
     "blob://some-blob-id?neat=cool,blob:",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,https:",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLProtocol(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLProtocol(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.protocol, "protocol value mismatch")
@@ -531,7 +547,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,",
     "https://github.com/elide-dev/v3,",
     "https://dl.elide.dev/test?abc=123&def=456,",
@@ -543,8 +560,10 @@ import java.net.URI
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLPort(testString: String, expectedPort: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLPort(testString: String, expectedPort: String?) = dual {
     val expected = expectedPort?.toIntOrNull()
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
@@ -589,7 +608,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,google.com",
     "https://github.com/elide-dev/v3,github.com",
     "https://dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
@@ -601,8 +621,10 @@ import java.net.URI
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,dl.elide.dev",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLHostname(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLHostname(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.hostname, "hostname value mismatch")
@@ -669,7 +691,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,https://google.com",
     "https://github.com/elide-dev/v3,https://github.com/elide-dev/v3",
     "https://dl.elide.dev/test?abc=123&def=456,https://dl.elide.dev/test?abc=123&def=456",
@@ -681,8 +704,10 @@ import java.net.URI
     "blob://some-blob-id,blob://some-blob-id",
     "blob://some-blob-id?neat=cool,blob://some-blob-id?neat=cool",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,https://user:pass@dl.elide.dev/test?abc=123&def=456",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLHref(testString: String, expected: String) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLHref(testString: String, expected: String) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected, url.href)
@@ -724,7 +749,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,",
     "https://github.com/elide-dev/v3,",
     "https://dl.elide.dev/test?abc=123&def=456,",
@@ -742,8 +768,10 @@ import java.net.URI
     "https://user:@dl.elide.dev/test?abc=123&def=456,",
     "https://user@dl.elide.dev/test?abc=123&def=456,",
     "https://:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLUserPassword(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLUserPassword(testString: String, expected: String?) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.password, "password value mismatch")
@@ -755,7 +783,8 @@ import java.net.URI
     """
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,",
     "https://github.com/elide-dev/v3,",
     "https://dl.elide.dev/test?abc=123&def=456,",
@@ -773,8 +802,10 @@ import java.net.URI
     "https://user:@dl.elide.dev/test?abc=123&def=456,user",
     "https://user@dl.elide.dev/test?abc=123&def=456,user",
     "https://:pass@dl.elide.dev/test?abc=123&def=456,",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLUsername(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLUsername(testString: String, expected: String?) = dual {
     val url = URLValue(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.username, "username value mismatch")
@@ -886,7 +917,8 @@ import java.net.URI
     }
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,/",
     "https://github.com/elide-dev/v3,/elide-dev/v3",
     "https://dl.elide.dev/test?abc=123&def=456,/test",
@@ -898,8 +930,10 @@ import java.net.URI
     "blob://some-blob-id,some-blob-id",
     "blob://some-blob-id?neat=cool,some-blob-id",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,/test",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLPathname(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLPathname(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.pathname, "pathname value mismatch")
@@ -943,7 +977,8 @@ import java.net.URI
     }
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "https://google.com,",
     "https://github.com/elide-dev/v3,",
     "https://dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
@@ -955,8 +990,10 @@ import java.net.URI
     "blob://some-blob-id,",
     "blob://some-blob-id?neat=cool,?neat=cool",
     "https://user:pass@dl.elide.dev/test?abc=123&def=456,?abc=123&def=456",
-  ])
-  @ParameterizedTest(name = "[{index}:dual]") fun testURLQuery(testString: String, expected: String?) = dual {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}:dual]")
+  fun testURLQuery(testString: String, expected: String?) = dual {
     val url = URLValue.fromString(testString)
     assertNotNull(url, "should be able to convert a string to a wrapped intrinsic `URL`")
     assertEquals(expected ?: "", url.search, "search value mismatch")

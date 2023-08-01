@@ -20,7 +20,7 @@ import java.util.*
   internal fun deserializeLoadManifest(subject: Pair<ManifestFormat, InputStream>): AssetBundle? {
     val (format, stream) = subject
     logging.debug(
-      "Decoding manifest from detected format '${format.name}'"
+      "Decoding manifest from detected format '${format.name}'",
     )
     val result = try {
       when (format) {
@@ -39,7 +39,7 @@ import java.util.*
 
         else -> {
           logging.warn(
-            "Cannot de-serialize asset manifest with format: '${format.name}'. Asset loading disabled."
+            "Cannot de-serialize asset manifest with format: '${format.name}'. Asset loading disabled.",
           )
           null
         }
@@ -55,7 +55,7 @@ import java.util.*
       val encoded = Base64.getEncoder().withoutPadding()
         .encodeToString(result.digest.toByteArray())
       logging.debug(
-        "Resolved asset manifest with fingerprint ${algo.name}($encoded)"
+        "Resolved asset manifest with fingerprint ${algo.name}($encoded)",
       )
       result
     }
@@ -69,13 +69,13 @@ import java.util.*
         "Located asset manifest: loading"
       } else {
         "No asset manifest located. Asset loading will be disabled."
-      }
+      },
     )
     return if (found == null) {
       // we couldn't locate a manifest.
       null
     } else deserializeLoadManifest(
-      found
+      found,
     )
   }
 
@@ -85,7 +85,7 @@ import java.util.*
     return candidates.firstNotNullOfOrNull {
       val (format, path) = it
       logging.trace(
-        "Checking for manifest at resource location '$path'"
+        "Checking for manifest at resource location '$path'",
       )
       val result = ServerAssetManager::class.java.getResourceAsStream(path)
       logging.trace(
@@ -93,7 +93,7 @@ import java.util.*
           "Found manifest at resource location '$path'"
         } else {
           "No manifest found at resource location '$path'"
-        }
+        },
       )
       if (result == null) {
         null

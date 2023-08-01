@@ -13,10 +13,10 @@
 
 package elide.wasm.internal
 
-import elide.wasm.WasiException
 import kotlin.wasm.WasmImport
 import kotlin.wasm.unsafe.Pointer
 import kotlin.wasm.unsafe.withScopedMemoryAllocator
+import elide.wasm.WasiException
 
 /**
  * Read environment variable data.
@@ -52,7 +52,8 @@ private fun environSizesGet(): Pair<Size, Size> {
         return if (ret == 0) {
             Pair(
                 (Pointer(rp0.address.toInt().toUInt())).loadInt(),
-                (Pointer(rp1.address.toInt().toUInt())).loadInt())
+                (Pointer(rp1.address.toInt().toUInt())).loadInt(),
+            )
         } else {
             throw WasiException(Errno.values()[ret].ordinal)
         }

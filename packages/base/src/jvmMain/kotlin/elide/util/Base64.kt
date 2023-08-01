@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
-public actual object Base64: Encoder {
+public actual object Base64 : Encoder {
   /** @inheritDoc */
   override fun encoding(): Encoding {
     return Encoding.BASE64
@@ -35,7 +35,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(string: String): ByteArray {
     return java.util.Base64.getEncoder().encode(
-      string.toByteArray(StandardCharsets.UTF_8)
+      string.toByteArray(StandardCharsets.UTF_8),
     )
   }
 
@@ -47,7 +47,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encode(data: ByteArray): ByteArray {
     return java.util.Base64.getEncoder().encode(
-      data
+      data,
     )
   }
 
@@ -59,7 +59,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(string: String): String {
     return java.util.Base64.getEncoder().encodeToString(
-      string.toByteArray(StandardCharsets.UTF_8)
+      string.toByteArray(StandardCharsets.UTF_8),
     )
   }
 
@@ -71,7 +71,7 @@ public actual object Base64: Encoder {
    */
   actual override fun encodeToString(data: ByteArray): String {
     return java.util.Base64.getEncoder().encodeToString(
-      data
+      data,
     )
   }
 
@@ -109,7 +109,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(data: ByteArray): ByteArray {
     return java.util.Base64.getDecoder().decode(
-      data
+      data,
     )
   }
 
@@ -121,7 +121,7 @@ public actual object Base64: Encoder {
    */
   actual override fun decode(string: String): ByteArray {
     return java.util.Base64.getDecoder().decode(
-      string
+      string,
     )
   }
 
@@ -132,9 +132,11 @@ public actual object Base64: Encoder {
    * @return Decoded string value.
    */
   actual override fun decodeToString(data: ByteArray): String {
-    return String(java.util.Base64.getDecoder().decode(
-      data
-    ))
+    return String(
+      java.util.Base64.getDecoder().decode(
+      data,
+    ),
+    )
   }
 
   /**
@@ -144,8 +146,10 @@ public actual object Base64: Encoder {
    * @return Decoded string value.
    */
   actual override fun decodeToString(string: String): String {
-    return String(java.util.Base64.getDecoder().decode(
-      string
-    ))
+    return String(
+      java.util.Base64.getDecoder().decode(
+      string,
+    ),
+    )
   }
 }

@@ -27,7 +27,9 @@ import elide.vm.annotations.Polyglot
  * @param criticalCss Critical CSS to be emitted as front-matter.
  * @param styleChunks Additional style chunks to emit.
  */
-public data class RenderedStream @Polyglot constructor (
+public data class RenderedStream
+  @Polyglot
+  constructor(
   public val status: Int,
   public val html: String,
   public val headers: Map<String, String>,

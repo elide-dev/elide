@@ -2,21 +2,20 @@
 
 package elide.data
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class DataContainer : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : DataContainer {
+    fun __assign(_i: Int, _bb: ByteBuffer): DataContainer {
         __init(_i, _bb)
         return this
     }
-    fun raw(j: Int) : UByte {
+    fun raw(j: Int): UByte {
         val o = __offset(4)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -24,14 +23,15 @@ class DataContainer : Table() {
             0u
         }
     }
-    val rawLength : Int
+    val rawLength: Int
         get() {
-            val o = __offset(4); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(4)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val rawAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun rawInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    fun integrity(j: Int) : elide.data.DataFingerprint? = integrity(elide.data.DataFingerprint(), j)
-    fun integrity(obj: elide.data.DataFingerprint, j: Int) : elide.data.DataFingerprint? {
+    val rawAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun rawInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    fun integrity(j: Int): elide.data.DataFingerprint? = integrity(elide.data.DataFingerprint(), j)
+    fun integrity(obj: elide.data.DataFingerprint, j: Int): elide.data.DataFingerprint? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -39,14 +39,15 @@ class DataContainer : Table() {
             null
         }
     }
-    val integrityLength : Int
+    val integrityLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val encoding : Int
+    val encoding: Int
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -55,7 +56,7 @@ class DataContainer : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDataContainer(builder: FlatBufferBuilder, rawOffset: Int, integrityOffset: Int, encoding: Int) : Int {
+        fun createDataContainer(builder: FlatBufferBuilder, rawOffset: Int, integrityOffset: Int, encoding: Int): Int {
             builder.startTable(3)
             addEncoding(builder, encoding)
             addIntegrity(builder, integrityOffset)
@@ -64,7 +65,7 @@ class DataContainer : Table() {
         }
         fun startDataContainer(builder: FlatBufferBuilder) = builder.startTable(3)
         fun addRaw(builder: FlatBufferBuilder, raw: Int) = builder.addOffset(0, raw, 0)
-        fun createRawVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+        fun createRawVector(builder: FlatBufferBuilder, data: UByteArray): Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
                 builder.addByte(data[i].toByte())
@@ -73,7 +74,7 @@ class DataContainer : Table() {
         }
         fun startRawVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addIntegrity(builder: FlatBufferBuilder, integrity: Int) = builder.addOffset(1, integrity, 0)
-        fun createIntegrityVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createIntegrityVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -82,7 +83,7 @@ class DataContainer : Table() {
         }
         fun startIntegrityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addEncoding(builder: FlatBufferBuilder, encoding: Int) = builder.addInt(2, encoding, 0)
-        fun endDataContainer(builder: FlatBufferBuilder) : Int {
+        fun endDataContainer(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

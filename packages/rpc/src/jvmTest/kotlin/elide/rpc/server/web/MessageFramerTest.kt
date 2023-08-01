@@ -3,7 +3,6 @@ package elide.rpc.server.web
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
 /** Tests for [MessageFramer]. */
 class MessageFramerTest {
   @Test fun testProcessSingleFrame() {

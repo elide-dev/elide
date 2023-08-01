@@ -1,14 +1,14 @@
 package elide.runtime.gvm.internals.vfs
 
-import elide.annotations.Singleton
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.cfg.GuestIOConfiguration
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.context.annotation.Requires
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
+import elide.annotations.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.cfg.GuestIOConfiguration
 
 /**
  * # VFS: Host.
@@ -17,7 +17,7 @@ import java.nio.file.FileSystems
  */
 @Requires(property = "elide.gvm.vfs.enabled", value = "true")
 @Requires(property = "elide.gvm.vfs.mode", value = "HOST")
-internal class HostVFSImpl private constructor (
+internal class HostVFSImpl private constructor(
   config: EffectiveGuestVFSConfig,
   backing: FileSystem,
 ) : AbstractDelegateVFS<HostVFSImpl>(config, backing) {
@@ -38,7 +38,8 @@ internal class HostVFSImpl private constructor (
    *
    * Coming soon.
    */
-  @Suppress("unused") internal data class Builder (
+  @Suppress("unused")
+  internal data class Builder(
     override var readOnly: Boolean = GuestVFSPolicy.DEFAULT_READ_ONLY,
     override var root: String = ROOT_SYSTEM_DEFAULT,
     override var policy: GuestVFSPolicy = GuestVFSPolicy.DEFAULTS,
@@ -67,7 +68,8 @@ internal class HostVFSImpl private constructor (
 
     /** @inheritDoc */
     override fun build(): HostVFSImpl {
-      return HostVFSImpl(EffectiveGuestVFSConfig(
+      return HostVFSImpl(
+        EffectiveGuestVFSConfig(
         readOnly = readOnly,
         root = root,
         policy = policy,
@@ -75,7 +77,8 @@ internal class HostVFSImpl private constructor (
         caseSensitive = caseSensitive,
         supportsSymbolicLinks = enableSymlinks,
         bundle = emptyList(),
-      ))
+      ),
+      )
     }
   }
 
@@ -105,7 +108,8 @@ internal class HostVFSImpl private constructor (
     /**
      * TBD.
      */
-    @Bean @Singleton internal fun spawn(ioConfig: GuestIOConfiguration): HostVFSImpl {
+    @Bean @Singleton
+    internal fun spawn(ioConfig: GuestIOConfiguration): HostVFSImpl {
       // convert to effective VFS config
       val config = withConfig(ioConfig)
 

@@ -2,43 +2,42 @@
 
 package elide.page.Context_.Metadata_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Twitter : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Twitter {
+    fun __assign(_i: Int, _bb: ByteBuffer): Twitter {
         __init(_i, _bb)
         return this
     }
-    val siteName : String?
+    val siteName: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val siteNameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun siteNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val title : String?
+    val siteNameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun siteNameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val title: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val titleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun titleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val description : String?
+    val titleAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun titleInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val description: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val descriptionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val locale : elide.base.LanguageSpec? get() = locale(elide.base.LanguageSpec())
-    fun locale(obj: elide.base.LanguageSpec) : elide.base.LanguageSpec? {
+    val descriptionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val locale: elide.base.LanguageSpec? get() = locale(elide.base.LanguageSpec())
+    fun locale(obj: elide.base.LanguageSpec): elide.base.LanguageSpec? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -46,34 +45,34 @@ class Twitter : Table() {
             null
         }
     }
-    val card : String?
+    val card: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val cardAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun cardInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val image : String?
+    val cardAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun cardInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val image: String?
         get() {
             val o = __offset(14)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val imageAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun imageInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val url : String?
+    val imageAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun imageInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val url: String?
         get() {
             val o = __offset(16)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val urlAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun urlInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val creator : String?
+    val urlAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun urlInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val creator: String?
         get() {
             val o = __offset(18)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val creatorAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun creatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val creatorAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun creatorInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsTwitter(_bb: ByteBuffer): Twitter = getRootAsTwitter(_bb, Twitter())
@@ -81,7 +80,17 @@ class Twitter : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTwitter(builder: FlatBufferBuilder, siteNameOffset: Int, titleOffset: Int, descriptionOffset: Int, localeOffset: Int, cardOffset: Int, imageOffset: Int, urlOffset: Int, creatorOffset: Int) : Int {
+        fun createTwitter(
+          builder: FlatBufferBuilder,
+          siteNameOffset: Int,
+          titleOffset: Int,
+          descriptionOffset: Int,
+          localeOffset: Int,
+          cardOffset: Int,
+          imageOffset: Int,
+          urlOffset: Int,
+          creatorOffset: Int,
+        ): Int {
             builder.startTable(8)
             addCreator(builder, creatorOffset)
             addUrl(builder, urlOffset)
@@ -102,7 +111,7 @@ class Twitter : Table() {
         fun addImage(builder: FlatBufferBuilder, image: Int) = builder.addOffset(5, image, 0)
         fun addUrl(builder: FlatBufferBuilder, url: Int) = builder.addOffset(6, url, 0)
         fun addCreator(builder: FlatBufferBuilder, creator: Int) = builder.addOffset(7, creator, 0)
-        fun endTwitter(builder: FlatBufferBuilder) : Int {
+        fun endTwitter(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

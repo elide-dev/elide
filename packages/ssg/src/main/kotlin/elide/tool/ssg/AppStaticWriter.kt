@@ -13,8 +13,8 @@
 
 package elide.tool.ssg
 
-import kotlinx.coroutines.Deferred
 import java.io.Closeable
+import kotlinx.coroutines.Deferred
 import kotlin.jvm.Throws
 
 /**
@@ -34,7 +34,7 @@ public interface AppStaticWriter : Closeable, AutoCloseable {
    * @param path Output base path on the filesystem.
    * @param fragments Set of fragments to encapsulate.
    */
-  public class FragmentOutputs private constructor (
+  public class FragmentOutputs private constructor(
     public val path: String,
     public val fragments: List<StaticFragment>,
   ) {
@@ -56,7 +56,7 @@ public interface AppStaticWriter : Closeable, AutoCloseable {
    * @param compressed Compressed size of the written file, in bytes.
    * @param err Throwable caught while writing, if failed.
    */
-  public class FragmentWrite private constructor (
+  public class FragmentWrite private constructor(
     public val fragment: StaticFragment,
     public val writeResult: Boolean,
     public val path: String,
@@ -104,8 +104,6 @@ public interface AppStaticWriter : Closeable, AutoCloseable {
       result = 31 * result + (compressed?.hashCode() ?: 0)
       return result
     }
-
-
   }
 
   /**

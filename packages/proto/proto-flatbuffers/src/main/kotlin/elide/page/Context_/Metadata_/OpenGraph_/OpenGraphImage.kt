@@ -2,44 +2,43 @@
 
 package elide.page.Context_.Metadata_.OpenGraph_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class OpenGraphImage : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : OpenGraphImage {
+    fun __assign(_i: Int, _bb: ByteBuffer): OpenGraphImage {
         __init(_i, _bb)
         return this
     }
-    val uri : String?
+    val uri: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val uriAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun uriInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val width : UInt
+    val uriAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun uriInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val width: UInt
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val height : UInt
+    val height: UInt
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+            return if (o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val type : String?
+    val type: String?
         get() {
             val o = __offset(10)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val typeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val typeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsOpenGraphImage(_bb: ByteBuffer): OpenGraphImage = getRootAsOpenGraphImage(_bb, OpenGraphImage())
@@ -47,7 +46,13 @@ class OpenGraphImage : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOpenGraphImage(builder: FlatBufferBuilder, uriOffset: Int, width: UInt, height: UInt, typeOffset: Int) : Int {
+        fun createOpenGraphImage(
+          builder: FlatBufferBuilder,
+          uriOffset: Int,
+          width: UInt,
+          height: UInt,
+          typeOffset: Int,
+        ): Int {
             builder.startTable(4)
             addType(builder, typeOffset)
             addHeight(builder, height)
@@ -60,7 +65,7 @@ class OpenGraphImage : Table() {
         fun addWidth(builder: FlatBufferBuilder, width: UInt) = builder.addInt(1, width.toInt(), 0)
         fun addHeight(builder: FlatBufferBuilder, height: UInt) = builder.addInt(2, height.toInt(), 0)
         fun addType(builder: FlatBufferBuilder, type: Int) = builder.addOffset(3, type, 0)
-        fun endOpenGraphImage(builder: FlatBufferBuilder) : Int {
+        fun endOpenGraphImage(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

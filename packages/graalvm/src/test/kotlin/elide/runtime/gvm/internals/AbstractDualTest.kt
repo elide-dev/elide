@@ -3,14 +3,13 @@
 package elide.runtime.gvm.internals
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.reflect.KClass
+import kotlinx.coroutines.test.runTest
 import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
@@ -20,7 +19,7 @@ internal abstract class AbstractDualTest {
       return requireNotNull(AbstractDualTest::class.java.getResource(path)) {
         "failed to locate resource at $path"
       }.readText(
-        StandardCharsets.UTF_8
+        StandardCharsets.UTF_8,
       )
     }
 
@@ -44,27 +43,27 @@ internal abstract class AbstractDualTest {
   protected abstract fun buildContext(engine: Engine, conf: (VMContext.Builder.() -> Unit)?): VMContext.Builder
 
   /** @return Initialized and exclusively-owned context for use with this test. */
-  protected abstract fun <V: Any> withContext(op: VMContext.() -> V): V
+  protected abstract fun <V : Any> withContext(op: VMContext.() -> V): V
 
   /** @return Initialized and exclusively-owned context for use with this test. */
-  protected abstract fun <V: Any> withContext(op: VMContext.() -> V, conf: (VMContext.Builder.() -> Unit)?): V
+  protected abstract fun <V : Any> withContext(op: VMContext.() -> V, conf: (VMContext.Builder.() -> Unit)?): V
 
   /** @return Execute a guest script with the subject intrinsics bound. */
   protected abstract fun executeGuest(bind: Boolean = true, op: VMContext.() -> String): GuestTestExecution
 
   /** Single test execution within the scope of a guest VM. */
-  internal inner class GuestTestExecution (
+  internal inner class GuestTestExecution(
     private val builder: (VMContext.Builder.() -> Unit)?,
     private val factory: (VMContext.() -> Unit) -> Unit,
-    private val test: VMContext.() -> Value?
+    private val test: VMContext.() -> Value?,
   ) {
     constructor (
       factory: (VMContext.() -> Unit) -> Unit,
-      test: VMContext.() -> Value?
+      test: VMContext.() -> Value?,
     ) : this (
       null,
       factory,
-      test = test
+      test = test,
     )
 
     // Return value, if any.
@@ -100,8 +99,8 @@ internal abstract class AbstractDualTest {
     }
 
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
-    inline fun <reified X: Throwable> failsWith(
-      noinline assertions: (VMContext.(GuestTestExecution) -> Unit)? = null
+    inline fun <reified X : Throwable> failsWith(
+      noinline assertions: (VMContext.(GuestTestExecution) -> Unit)? = null,
     ) = factory {
       val exc = assertThrows<Throwable> {
         val result = test.invoke(this)
@@ -122,7 +121,7 @@ internal abstract class AbstractDualTest {
 
         else -> throw AssertionError(
           "Invalid exception type '${exc::class.simpleName}' raised " +
-            "(expected '${X::class.java.simpleName}')"
+            "(expected '${X::class.java.simpleName}')",
         )
       }
     }

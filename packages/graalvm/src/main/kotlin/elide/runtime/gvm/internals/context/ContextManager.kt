@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.context
 
-import elide.runtime.gvm.ContextFactory
-import elide.runtime.gvm.ExecutionInputs
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.future.asDeferred
 import org.graalvm.polyglot.Engine
 import java.util.concurrent.CompletableFuture
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.future.asDeferred
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import elide.runtime.gvm.ContextFactory
+import elide.runtime.gvm.ExecutionInputs
 
 /**
  * TBD.
@@ -21,7 +21,7 @@ internal interface ContextManager<Context, Builder> : ContextFactory<Context, Bu
   /**
    * TBD.
    */
-  interface VMInvocation<T: ExecutionInputs>
+  interface VMInvocation<T : ExecutionInputs>
 
   /**
    * TBD.
@@ -37,7 +37,7 @@ internal interface ContextManager<Context, Builder> : ContextFactory<Context, Bu
    * TBD.
    */
   suspend fun <R> acquireSuspendAsync(operation: Context.() -> R): Deferred<R> = executeAsync(
-    operation
+    operation,
   ).asDeferred()
 
   /**
@@ -49,6 +49,6 @@ internal interface ContextManager<Context, Builder> : ContextFactory<Context, Bu
    *
    */
   fun <R> executeBlocking(timeout: Duration = DEFAULT_TIMEOUT, operation: Context.() -> R): R = executeAsync(
-    operation
+    operation,
   ).get()
 }

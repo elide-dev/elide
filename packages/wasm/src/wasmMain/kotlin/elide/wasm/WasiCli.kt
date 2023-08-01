@@ -30,7 +30,6 @@ interface WasiCli {
      * The environment variables.
      */
     val envVars: List<Pair<String, String>>
-
 }
 
 /**

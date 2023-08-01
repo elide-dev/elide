@@ -1,22 +1,22 @@
 package elide.server.assets
 
 import com.google.common.util.concurrent.Futures
-import elide.server.AssetModuleId
-import elide.server.StreamedAsset
-import elide.server.StreamedAssetResponse
-import elide.server.cfg.AssetConfig
 import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
-import jakarta.inject.Inject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.guava.asDeferred
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import jakarta.inject.Inject
+import kotlinx.coroutines.*
+import kotlinx.coroutines.guava.asDeferred
+import elide.server.AssetModuleId
+import elide.server.StreamedAsset
+import elide.server.StreamedAssetResponse
+import elide.server.cfg.AssetConfig
 
 /**
  * Built-in asset manager implementation for use with Elide applications.
@@ -29,7 +29,9 @@ import java.nio.charset.StandardCharsets
  * @param reader Active asset reader implementation for this server run.
  */
 @Context
-public class ServerAssetManager @Inject internal constructor(
+public class ServerAssetManager
+  @Inject
+  internal constructor(
   private val assetConfig: AssetConfig,
   private val assetIndex: ServerAssetIndex,
   override val reader: AssetReader,
@@ -51,16 +53,16 @@ public class ServerAssetManager @Inject internal constructor(
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
     val responseData = NettyStreamedFileCustomizableResponseType(
       ByteArrayInputStream(asset.producer.invoke().toByteArray()),
-      asset.type.mediaType
+      asset.type.mediaType,
     )
     val response = HttpResponse.ok(
-      responseData
+      responseData,
     ).characterEncoding(
-      StandardCharsets.UTF_8
+      StandardCharsets.UTF_8,
     ).contentType(
-      asset.type.mediaType
+      asset.type.mediaType,
     ).contentLength(
-      asset.size
+      asset.size,
     )
     asset.headers.entries.forEach {
       val (header, value) = it
@@ -90,7 +92,7 @@ public class ServerAssetManager @Inject internal constructor(
   @Suppress("NestedBlockDepth", "ReturnCount")
   override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
     logging.debug(
-      "Serving asset with module ID '${asset.module}'"
+      "Serving asset with module ID '${asset.module}'",
     )
 
     // before serving the asset, check if the request is conditional. if it has an ETag specified that matches, or a
@@ -105,7 +107,7 @@ public class ServerAssetManager @Inject internal constructor(
           if (etag == reference) {
             // we have a match against a strong ETag.
             return Futures.immediateFuture(
-              HttpResponse.notModified<StreamedAsset>()
+              HttpResponse.notModified<StreamedAsset>(),
             ).asDeferred()
           }
         }
@@ -117,7 +119,7 @@ public class ServerAssetManager @Inject internal constructor(
           if (etagTime == generatedTime.toString()) {
             // we have a match against a weak ETag.
             return Futures.immediateFuture(
-              HttpResponse.notModified<StreamedAsset>()
+              HttpResponse.notModified<StreamedAsset>(),
             ).asDeferred()
           }
         }
@@ -132,7 +134,7 @@ public class ServerAssetManager @Inject internal constructor(
           reader.readAsync(
             asset,
             request = request,
-          ).await()
+          ).await(),
         )
       }
     }

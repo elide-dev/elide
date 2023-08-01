@@ -2,53 +2,52 @@
 
 package elide.page.Context_.Fonts_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class FontReference : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : FontReference {
+    fun __assign(_i: Int, _bb: ByteBuffer): FontReference {
         __init(_i, _bb)
         return this
     }
-    val type : Int
+    val type: Int
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val format : Int
+    val format: Int
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val name : String?
+    val name: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val weight : String?
+    val nameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val weight: String?
         get() {
             val o = __offset(10)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val weightAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun weightInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val variant : String?
+    val weightAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun weightInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val variant: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val variantAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun variantInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val uri : webutil.html.types.TrustedResourceUrlProto? get() = uri(webutil.html.types.TrustedResourceUrlProto())
-    fun uri(obj: webutil.html.types.TrustedResourceUrlProto) : webutil.html.types.TrustedResourceUrlProto? {
+    val variantAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun variantInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val uri: webutil.html.types.TrustedResourceUrlProto? get() = uri(webutil.html.types.TrustedResourceUrlProto())
+    fun uri(obj: webutil.html.types.TrustedResourceUrlProto): webutil.html.types.TrustedResourceUrlProto? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,20 +55,20 @@ class FontReference : Table() {
             null
         }
     }
-    val prefetch : Boolean
+    val prefetch: Boolean
         get() {
             val o = __offset(16)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val preload : Boolean
+    val preload: Boolean
         get() {
             val o = __offset(18)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val push : Boolean
+    val push: Boolean
         get() {
             val o = __offset(20)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -78,7 +77,18 @@ class FontReference : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFontReference(builder: FlatBufferBuilder, type: Int, format: Int, nameOffset: Int, weightOffset: Int, variantOffset: Int, uriOffset: Int, prefetch: Boolean, preload: Boolean, push: Boolean) : Int {
+        fun createFontReference(
+          builder: FlatBufferBuilder,
+          type: Int,
+          format: Int,
+          nameOffset: Int,
+          weightOffset: Int,
+          variantOffset: Int,
+          uriOffset: Int,
+          prefetch: Boolean,
+          preload: Boolean,
+          push: Boolean,
+        ): Int {
             builder.startTable(9)
             addUri(builder, uriOffset)
             addVariant(builder, variantOffset)
@@ -101,7 +111,7 @@ class FontReference : Table() {
         fun addPrefetch(builder: FlatBufferBuilder, prefetch: Boolean) = builder.addBoolean(6, prefetch, false)
         fun addPreload(builder: FlatBufferBuilder, preload: Boolean) = builder.addBoolean(7, preload, false)
         fun addPush(builder: FlatBufferBuilder, push: Boolean) = builder.addBoolean(8, push, false)
-        fun endFontReference(builder: FlatBufferBuilder) : Int {
+        fun endFontReference(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

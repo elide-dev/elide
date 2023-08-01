@@ -22,7 +22,7 @@ internal object MessageFramer {
       (len shr 24 and 0xff).toByte(),
       (len shr 16 and 0xff).toByte(),
       (len shr 8 and 0xff).toByte(),
-      (len shr 0 and 0xff).toByte()
+      (len shr 0 and 0xff).toByte(),
     )
   }
 }

@@ -3,7 +3,7 @@ package elide.tool.cli.err
 /**
  * TBD.
  */
-internal sealed interface ToolErrorCase<T> : ToolError where T: Enum<T> {
+internal sealed interface ToolErrorCase<T> : ToolError where T : Enum<T> {
   /** @return The error case itself. */
   @Suppress("UNCHECKED_CAST")
   val self: T get() = this as T

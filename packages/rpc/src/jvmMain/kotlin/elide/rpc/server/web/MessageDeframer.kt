@@ -1,15 +1,14 @@
 package elide.rpc.server.web
 
 import com.google.common.annotations.VisibleForTesting
-import elide.runtime.Logger
-import elide.runtime.Logging
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.or
-
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Responsible for de-framing gRPC-Web messages which have been joined to account for HTTP/2 trailers and the potential
@@ -95,11 +94,13 @@ internal class MessageDeframer {
   fun processInput(stream: InputStream, format: GrpcWebContentType): Boolean {
     // read stream into an array of bytes
     val messageBytes: ByteArray = try {
-      (if (format == GrpcWebContentType.TEXT) {
+      (
+        if (format == GrpcWebContentType.TEXT) {
         Base64.getDecoder().wrap(stream)
       } else {
         stream
-      }).readAllBytes()
+      }
+      ).readAllBytes()
     } catch (ioe: IOException) {
       ioe.printStackTrace()
       logging.warning("Invalid input gRPC-Web message input", ioe)

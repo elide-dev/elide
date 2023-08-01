@@ -1,9 +1,9 @@
 package elide.runtime.gvm.vfs
 
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 import java.io.File
 import java.net.URI
+import elide.runtime.gvm.internals.GuestVFS
+import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
 
 /** Public access to the factory for embedded guest virtual file-systems. */
 public object EmbeddedGuestVFS {

@@ -8,7 +8,7 @@ class Kind private constructor() {
         const val WEBPAGE: Int = 0
         const val MASTER: Int = 1
         const val DETAIL: Int = 2
-        val names : Array<String> = arrayOf("WEB_PAGE", "MASTER", "DETAIL")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("WEB_PAGE", "MASTER", "DETAIL")
+        fun name(e: Int): String = names[e]
     }
 }

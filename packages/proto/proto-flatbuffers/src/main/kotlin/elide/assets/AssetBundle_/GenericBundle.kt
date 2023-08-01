@@ -2,43 +2,42 @@
 
 package elide.assets.AssetBundle_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class GenericBundle : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : GenericBundle {
+    fun __assign(_i: Int, _bb: ByteBuffer): GenericBundle {
         __init(_i, _bb)
         return this
     }
-    val module : String?
+    val module: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val moduleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun moduleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val filename : String?
+    val moduleAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun moduleInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val filename: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val filenameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun filenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val token : String?
+    val filenameAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun filenameInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val token: String?
         get() {
             val o = __offset(8)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val tokenAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun tokenInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    fun variant(j: Int) : elide.data.CompressedData? = variant(elide.data.CompressedData(), j)
-    fun variant(obj: elide.data.CompressedData, j: Int) : elide.data.CompressedData? {
+    val tokenAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun tokenInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    fun variant(j: Int): elide.data.CompressedData? = variant(elide.data.CompressedData(), j)
+    fun variant(obj: elide.data.CompressedData, j: Int): elide.data.CompressedData? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -46,24 +45,25 @@ class GenericBundle : Table() {
             null
         }
     }
-    val variantLength : Int
+    val variantLength: Int
         get() {
-            val o = __offset(10); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(10)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val compressable : Boolean
+    val compressable: Boolean
         get() {
             val o = __offset(12)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val cacheable : Boolean
+    val cacheable: Boolean
         get() {
             val o = __offset(14)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val external : Boolean
+    val external: Boolean
         get() {
             val o = __offset(16)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -72,7 +72,16 @@ class GenericBundle : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGenericBundle(builder: FlatBufferBuilder, moduleOffset: Int, filenameOffset: Int, tokenOffset: Int, variantOffset: Int, compressable: Boolean, cacheable: Boolean, external: Boolean) : Int {
+        fun createGenericBundle(
+          builder: FlatBufferBuilder,
+          moduleOffset: Int,
+          filenameOffset: Int,
+          tokenOffset: Int,
+          variantOffset: Int,
+          compressable: Boolean,
+          cacheable: Boolean,
+          external: Boolean,
+        ): Int {
             builder.startTable(7)
             addVariant(builder, variantOffset)
             addToken(builder, tokenOffset)
@@ -88,7 +97,7 @@ class GenericBundle : Table() {
         fun addFilename(builder: FlatBufferBuilder, filename: Int) = builder.addOffset(1, filename, 0)
         fun addToken(builder: FlatBufferBuilder, token: Int) = builder.addOffset(2, token, 0)
         fun addVariant(builder: FlatBufferBuilder, variant: Int) = builder.addOffset(3, variant, 0)
-        fun createVariantVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createVariantVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -96,10 +105,13 @@ class GenericBundle : Table() {
             return builder.endVector()
         }
         fun startVariantVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCompressable(builder: FlatBufferBuilder, compressable: Boolean) = builder.addBoolean(4, compressable, false)
+        fun addCompressable(
+          builder: FlatBufferBuilder,
+          compressable: Boolean,
+        ) = builder.addBoolean(4, compressable, false)
         fun addCacheable(builder: FlatBufferBuilder, cacheable: Boolean) = builder.addBoolean(5, cacheable, false)
         fun addExternal(builder: FlatBufferBuilder, external: Boolean) = builder.addBoolean(6, external, false)
-        fun endGenericBundle(builder: FlatBufferBuilder) : Int {
+        fun endGenericBundle(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

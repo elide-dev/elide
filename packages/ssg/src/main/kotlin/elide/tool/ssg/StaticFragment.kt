@@ -56,7 +56,7 @@ public sealed class StaticFragment(
   public abstract fun endpointType(): EndpointType
 
   /** [StaticFragment] which originates from an endpoint. */
-  public class EndpointFragment (
+  public class EndpointFragment(
     request: HttpRequest<*>,
     override val endpoint: Endpoint,
     response: HttpResponse<*>,
@@ -79,7 +79,7 @@ public sealed class StaticFragment(
   }
 
   /** [StaticFragment] which originates from asset detection. */
-  public class SynthesizedFragment (
+  public class SynthesizedFragment(
     override val explicitUrl: URL,
     expectedType: EndpointType,
     request: HttpRequest<*>,
@@ -147,7 +147,8 @@ public sealed class StaticFragment(
         StaticContentReader.ArtifactType.SCRIPT,
         StaticContentReader.ArtifactType.TEXT,
         StaticContentReader.ArtifactType.FONT,
-        StaticContentReader.ArtifactType.STYLE -> EndpointType.ASSET
+        StaticContentReader.ArtifactType.STYLE,
+        -> EndpointType.ASSET
       },
     )
   }

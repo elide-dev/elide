@@ -15,7 +15,7 @@ import elide.runtime.intrinsics.js.MultiMapLike
  * @param mutable Whether the map implementation is mutable.
  * @param threadsafe Whether the map implementation is thread-safe.
  */
-internal sealed class AbstractJsMultiMap<K: Any, V> constructor (
+internal sealed class AbstractJsMultiMap<K : Any, V> constructor(
   sorted: Boolean,
   mutable: Boolean,
   threadsafe: Boolean,
@@ -24,4 +24,5 @@ internal sealed class AbstractJsMultiMap<K: Any, V> constructor (
   mutable = mutable,
   sorted = sorted,
   threadsafe = threadsafe,
-), MultiMapLike<K, V>
+),
+MultiMapLike<K, V>

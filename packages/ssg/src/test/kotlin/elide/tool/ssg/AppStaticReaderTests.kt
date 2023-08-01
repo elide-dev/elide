@@ -18,19 +18,20 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.net.URL
 import java.nio.charset.StandardCharsets
+import jakarta.inject.Inject
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /** Tests for the [StaticContentReader] interface and [DefaultAppStaticReader] implementation. */
-@MicronautTest(startApplication = false) class AppStaticReaderTests {
+@MicronautTest(startApplication = false)
+class AppStaticReaderTests {
   companion object {
     private const val validHtml = "<html><head><title>Test</title></head><body><p>Test</p></body></html>"
     private const val baseServerOrigin = "https://localhost:8443"
@@ -53,11 +54,11 @@ import kotlin.test.assertTrue
   ): MutableHttpResponse<ByteArray> {
     val testResponseBytes = content.toByteArray(StandardCharsets.UTF_8)
     return HttpResponse.status<ByteArray>(
-      status
+      status,
     ).body(
-      testResponseBytes
+      testResponseBytes,
     ).contentLength(
-      testResponseBytes.size.toLong()
+      testResponseBytes.size.toLong(),
     ).headers {
       if (!contentType.isNullOrBlank()) {
         it["Content-Type"] = contentType
@@ -71,7 +72,7 @@ import kotlin.test.assertTrue
 
   @Test fun testReadEmptyResponse() {
     val response: MutableHttpResponse<ByteArray> = HttpResponse.ok<ByteArray>().contentLength(
-      0
+      0,
     )
     val (shouldParse, content) = reader.consume(response)
     assertNotNull(shouldParse, "should not get null for `shouldParse` from reader consume")
@@ -172,12 +173,14 @@ import kotlin.test.assertTrue
   }
 
   @Test fun testScriptsDetected() {
-    val response = htmlResponse(content = buildString {
+    val response = htmlResponse(
+      content = buildString {
       append("<html><head>")
       append("<script src=\"https://example.com/script.js\"></script>")
       append("<script src=\"/script2.js\"></script>")
       append("</head><body></body></html>")
-    })
+    },
+    )
     val (shouldParse, content) = reader.consume(response)
     assertTrue(shouldParse, "HTML body should be parsed")
     assertFalse(content.array().isEmpty(), "response content should not be empty for non-empty response")
@@ -212,13 +215,15 @@ import kotlin.test.assertTrue
   }
 
   @Test fun testStylesheetsDetected() {
-    val response = htmlResponse(content = buildString {
+    val response = htmlResponse(
+      content = buildString {
       append("<html><head>")
       append("<link rel=\"stylesheet\" href=\"https://example.com/style.css\" />")
       append("<link rel=\"inert\" href=\"/style2.css\" />")
       append("<link rel=\"stylesheet\" href=\"/style3.css\" />")
       append("</head><body></body></html>")
-    })
+    },
+    )
     val (shouldParse, content) = reader.consume(response)
     assertTrue(shouldParse, "HTML body should be parsed")
     assertFalse(content.array().isEmpty(), "response content should not be empty for non-empty response")
@@ -253,12 +258,14 @@ import kotlin.test.assertTrue
   }
 
   @Test fun testImagesDetected() {
-    val response = htmlResponse(content = buildString {
+    val response = htmlResponse(
+      content = buildString {
       append("<html><head></head><body>")
       append("<img src=\"https://example.com/hello.gif\" />")
       append("<img src=\"/hello2.gif\" />")
       append("</body></html>")
-    })
+    },
+    )
     val (shouldParse, content) = reader.consume(response)
     assertTrue(shouldParse, "HTML body should be parsed")
     assertFalse(content.array().isEmpty(), "response content should not be empty for non-empty response")
@@ -293,7 +300,8 @@ import kotlin.test.assertTrue
   }
 
   @Test fun testSkipIneligibleTags() {
-    val response = htmlResponse(content = buildString {
+    val response = htmlResponse(
+      content = buildString {
       append("<html><head>")
       append("<link rel=\"stylesheet\" href=\"\" />")
       append("<link rel=\"stylesheet\" />")
@@ -311,7 +319,8 @@ import kotlin.test.assertTrue
       append("<img />")
       append("<something src=\"script.js\" />")
       append("</body></html>")
-    })
+    },
+    )
     val (shouldParse, content) = reader.consume(response)
     assertTrue(shouldParse, "HTML body should be parsed")
     assertFalse(content.array().isEmpty(), "response content should not be empty for non-empty response")
@@ -325,7 +334,8 @@ import kotlin.test.assertTrue
   }
 
   @Test fun testUrlRelativity() {
-    val response = htmlResponse(content = buildString {
+    val response = htmlResponse(
+      content = buildString {
       append("<html><head>")
       append("<link rel=\"stylesheet\" href=\"$baseServerOrigin/style.css\"></script>")
       append("<link rel=\"stylesheet\" href=\"://example.com/style.css\"></script>")
@@ -352,7 +362,8 @@ import kotlin.test.assertTrue
       append("<img src=\"neat/several/nested/hello.gif\">")
       append("<img src=\"/neat/several/nested/hello.gif\">")
       append("</body></html>")
-    })
+    },
+    )
     val (shouldParse, content) = reader.consume(response)
     assertTrue(shouldParse, "HTML body should be parsed")
     assertFalse(content.array().isEmpty(), "response content should not be empty for non-empty response")
@@ -377,13 +388,13 @@ import kotlin.test.assertTrue
         assertEquals(
           "example.com",
           detected.url.host,
-          "host should be expected value"
+          "host should be expected value",
         )
       } else {
         assertEquals(
           "localhost",
           detected.url.host,
-          "host should be expected value"
+          "host should be expected value",
         )
       }
 

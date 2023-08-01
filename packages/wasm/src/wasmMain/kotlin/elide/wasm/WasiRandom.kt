@@ -11,11 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.wasm
-
+import kotlin.random.Random
 import elide.wasm.internal.randomGetInt
 import elide.wasm.internal.randomGetLong
-import kotlin.random.Random
 
 /**
  * Provide a pseudo random generator seeded by a `Long` value generated via WASI.

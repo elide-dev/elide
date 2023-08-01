@@ -1,13 +1,11 @@
 package remix.run.router
 
-
 /**
  *
  */
 public external interface StaticHandlerContext {
   // Nothing at this time.
 }
-
 
 /**
  *

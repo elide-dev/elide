@@ -7,7 +7,7 @@ class GuestLanguage private constructor() {
     companion object {
         const val NOGUESTENABLED: Int = 0
         const val JAVASCRIPT: Int = 1
-        val names : Array<String> = arrayOf("NO_GUEST_ENABLED", "JAVASCRIPT")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("NO_GUEST_ENABLED", "JAVASCRIPT")
+        fun name(e: Int): String = names[e]
     }
 }

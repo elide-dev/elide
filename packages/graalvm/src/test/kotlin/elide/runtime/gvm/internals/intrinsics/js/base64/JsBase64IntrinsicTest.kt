@@ -2,13 +2,13 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import elide.annotations.Inject
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 
 /** Tests for intrinsic JS Base64 implementation. */
 @TestCase internal class JsBase64IntrinsicTest : AbstractJsIntrinsicTest<Base64Intrinsic>() {
@@ -59,7 +59,7 @@ import org.junit.jupiter.params.provider.CsvSource
     assertEquals(
       "SGVsbG8sIHdvcmxkIQ==",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 encode"
+      "should get a return value for guest base64 encode",
     )
   }
 
@@ -76,7 +76,7 @@ import org.junit.jupiter.params.provider.CsvSource
     assertEquals(
       "Hello, world!",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 decode"
+      "should get a return value for guest base64 decode",
     )
   }
 
@@ -93,7 +93,7 @@ import org.junit.jupiter.params.provider.CsvSource
     assertEquals(
       "SGVsbG8sIHdvcmxkIQ==",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 encode (`btoa`)"
+      "should get a return value for guest base64 encode (`btoa`)",
     )
   }
 
@@ -110,11 +110,12 @@ import org.junit.jupiter.params.provider.CsvSource
     assertEquals(
       "Hello, world!",
       it.returnValue()?.asString(),
-      "should get a return value for guest base64 decode (`atob`)"
+      "should get a return value for guest base64 decode (`atob`)",
     )
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     "Hello world!,SGVsbG8gd29ybGQh,SGVsbG8gd29ybGQh",
     "12346789,MTIzNDY3ODk=,MTIzNDY3ODk",
     "f,Zg==,Zg",
@@ -123,8 +124,10 @@ import org.junit.jupiter.params.provider.CsvSource
     "foob,Zm9vYg==,Zm9vYg",
     "fooba,Zm9vYmE=,Zm9vYmE",
     "foobar,Zm9vYmFy,Zm9vYmFy",
-  ])
-  @ParameterizedTest(name = "[{index}]") fun testCodec(source: String, expected: String, websafeExpected: String) {
+  ],
+  )
+  @ParameterizedTest(name = "[{index}]")
+  fun testCodec(source: String, expected: String, websafeExpected: String) {
     // first, encode and decode directly
     val encoded = base64.encode(source)
     assertNotNull(encoded, "should be able to encode string as base64")
@@ -178,7 +181,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         encoded,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 encode"
+        "should get a return value for guest base64 encode",
       )
     }
 
@@ -196,7 +199,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         websafeExpected,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 encode"
+        "should get a return value for guest base64 encode",
       )
     }
 
@@ -214,7 +217,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 decode"
+        "should get a return value for guest base64 decode",
       )
     }
 
@@ -232,7 +235,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 decode (websafe)"
+        "should get a return value for guest base64 decode (websafe)",
       )
     }
 
@@ -250,7 +253,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 round-trip"
+        "should get a return value for guest base64 round-trip",
       )
     }
 
@@ -268,7 +271,7 @@ import org.junit.jupiter.params.provider.CsvSource
       assertEquals(
         source,
         it.returnValue()?.asString(),
-        "should get a return value for guest base64 round-trip (`atob`/`btoa`)"
+        "should get a return value for guest base64 round-trip (`atob`/`btoa`)",
       )
     }
   }

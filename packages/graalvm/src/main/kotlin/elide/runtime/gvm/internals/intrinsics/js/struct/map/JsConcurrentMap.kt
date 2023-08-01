@@ -1,11 +1,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.runtime.intrinsics.js.MapLike
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
+import elide.runtime.intrinsics.js.MapLike
 
 /** Implements a thread-safe map for use with JavaScript; backed by a [ConcurrentMap]. */
-@Suppress("unused") internal class JsConcurrentMap<K: Any, V> constructor (backingMap: ConcurrentMap<K, V>) :
+@Suppress("unused")
+internal class JsConcurrentMap<K : Any, V> constructor(backingMap: ConcurrentMap<K, V>) :
   BaseMutableJsMap<K, V>(backingMap, threadsafe = true),
   ConcurrentMap<K, V> {
   /**
@@ -25,12 +26,13 @@ import java.util.concurrent.ConcurrentMap
   constructor(size: Int) : this(mapImpl(size))
 
   /** Concurrent map factory. */
-  @Suppress("unused") internal companion object Factory : MapFactory<JsConcurrentMap<*, *>> {
+  @Suppress("unused")
+  internal companion object Factory : MapFactory<JsConcurrentMap<*, *>> {
     // Singleton empty map instance.
     private val EMPTY_MAP = JsConcurrentMap<Any, Any>(mapImpl())
 
     // Internal function to create a backing-map implementation.
-    @JvmStatic private fun <K: Any, V> mapImpl(size: Int? = null): ConcurrentMap<K, V> = if (size != null) {
+    @JvmStatic private fun <K : Any, V> mapImpl(size: Int? = null): ConcurrentMap<K, V> = if (size != null) {
       ConcurrentHashMap(size)
     } else {
       ConcurrentHashMap()
@@ -42,8 +44,8 @@ import java.util.concurrent.ConcurrentMap
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> of(map: MutableMap<K, V>): JsConcurrentMap<K, V> = JsConcurrentMap(
-      ConcurrentHashMap(map)
+    @JvmStatic override fun <K : Any, V> of(map: MutableMap<K, V>): JsConcurrentMap<K, V> = JsConcurrentMap(
+      ConcurrentHashMap(map),
     )
 
     /**
@@ -53,9 +55,11 @@ import java.util.concurrent.ConcurrentMap
      * @return Copied JS map instance.
      */
     @JvmStatic override fun <K : Any, V> copyOf(map: Map<K, V>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>(map.size).apply {
+      return JsConcurrentMap(
+        mapImpl<K, V>(map.size).apply {
         putAll(map)
-      })
+      },
+      )
     }
 
     /**
@@ -65,12 +69,14 @@ import java.util.concurrent.ConcurrentMap
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> fromPairs(pairs: Collection<Pair<K, V>>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>(pairs.size).apply {
+    @JvmStatic override fun <K : Any, V> fromPairs(pairs: Collection<Pair<K, V>>): JsConcurrentMap<K, V> {
+      return JsConcurrentMap(
+        mapImpl<K, V>(pairs.size).apply {
         pairs.forEach {
           put(it.first, it.second)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -80,12 +86,14 @@ import java.util.concurrent.ConcurrentMap
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>(entries.size).apply {
+    @JvmStatic override fun <K : Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>): JsConcurrentMap<K, V> {
+      return JsConcurrentMap(
+        mapImpl<K, V>(entries.size).apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -95,12 +103,14 @@ import java.util.concurrent.ConcurrentMap
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> from(entries: Collection<MapLike.Entry<K, V>>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>(entries.size).apply {
+    @JvmStatic override fun <K : Any, V> from(entries: Collection<MapLike.Entry<K, V>>): JsConcurrentMap<K, V> {
+      return JsConcurrentMap(
+        mapImpl<K, V>(entries.size).apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -114,9 +124,11 @@ import java.util.concurrent.ConcurrentMap
      * @return Created JS map instance.
      */
     @JvmStatic override fun <K : Any, V> unboundedPairs(pairs: Iterable<Pair<K, V>>): JsConcurrentMap<K, V> =
-      JsConcurrentMap(mapImpl<K, V>().apply {
+      JsConcurrentMap(
+        mapImpl<K, V>().apply {
         pairs.forEach { put(it.first, it.second) }
-      })
+      },
+      )
 
     /**
      * Return a generic threadsafe [JsConcurrentMap] instance, created from the provided set of [entries], each an
@@ -128,12 +140,14 @@ import java.util.concurrent.ConcurrentMap
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>().apply {
+    @JvmStatic override fun <K : Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>): JsConcurrentMap<K, V> {
+      return JsConcurrentMap(
+        mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -146,12 +160,14 @@ import java.util.concurrent.ConcurrentMap
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): JsConcurrentMap<K, V> {
-      return JsConcurrentMap(mapImpl<K, V>().apply {
+    @JvmStatic override fun <K : Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>): JsConcurrentMap<K, V> {
+      return JsConcurrentMap(
+        mapImpl<K, V>().apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -161,7 +177,8 @@ import java.util.concurrent.ConcurrentMap
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic fun <K: Any, V> empty(size: Int): JsConcurrentMap<K, V> = JsConcurrentMap(size)
+    @JvmStatic
+    fun <K : Any, V> empty(size: Int): JsConcurrentMap<K, V> = JsConcurrentMap(size)
 
     /**
      * Return an empty and threadsafe JS map instance.
@@ -169,7 +186,8 @@ import java.util.concurrent.ConcurrentMap
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic override fun <K: Any, V> empty(): JsConcurrentMap<K, V> = EMPTY_MAP as JsConcurrentMap<K, V>
+    @JvmStatic
+    override fun <K : Any, V> empty(): JsConcurrentMap<K, V> = EMPTY_MAP as JsConcurrentMap<K, V>
   }
 
   // Cast the backing map as mutable.

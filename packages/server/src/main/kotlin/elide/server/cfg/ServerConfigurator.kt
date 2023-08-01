@@ -1,7 +1,5 @@
 package elide.server.cfg
 
-import elide.annotations.Logic
-import elide.server.annotations.Eager
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.annotation.ContextConfigurer
@@ -10,6 +8,8 @@ import io.micronaut.context.env.PropertySource
 import io.micronaut.context.env.PropertySourcePropertyResolver
 import java.util.SortedMap
 import java.util.SortedSet
+import elide.annotations.Logic
+import elide.server.annotations.Eager
 
 /**
  * Configures Micronaut on behalf of an Elide application with default configuration state.
@@ -29,7 +29,8 @@ import java.util.SortedSet
  * automatically at application startup.
  */
 @Requires(notEnv = ["test"])
-@ContextConfigurer public class ServerConfigurator : ApplicationContextConfigurer {
+@ContextConfigurer
+public class ServerConfigurator : ApplicationContextConfigurer {
   public companion object {
     // Properties which cause errors.
     public val bannedConfig: SortedSet<String> = sortedSetOf(
@@ -150,9 +151,11 @@ import java.util.SortedSet
     // inject configuration unless disabled
     if (System.getProperty("elide.config.noInject") != "true") {
       builder.propertySources(
-        PropertySource.of(baseMap.plus(nonTestMap).filter {
+        PropertySource.of(
+          baseMap.plus(nonTestMap).filter {
           !bannedConfig.contains(it.key)
-        }),
+        },
+        ),
       )
     }
   }

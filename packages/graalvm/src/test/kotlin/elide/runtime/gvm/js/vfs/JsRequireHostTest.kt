@@ -2,15 +2,15 @@
 
 package elide.runtime.gvm.js.vfs
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import kotlin.test.assertEquals
 import elide.runtime.gvm.internals.vfs.HostVFSImpl
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.runtime.gvm.vfs.HostVFS
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import elide.util.UUID
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import kotlin.test.assertEquals
 
 /** Tests for CJS and NPM-style require calls that resolve via host-backed I/O. */
 @TestCase internal class JsRequireHostTest : AbstractJsTest() {
@@ -80,13 +80,15 @@ import kotlin.test.assertEquals
       stream.write("module.exports = {sample: 'Hello, CJS!'};".toByteArray())
     }
     fs.writeStream(configPath).use { stream ->
-      stream.write("""
+      stream.write(
+        """
         {
           "name": "testing",
           "version": "1.0.0",
           "main": "./test.js"
         }
-      """.trimIndent().toByteArray())
+      """.trimIndent().toByteArray(),
+      )
     }
 
     // read the file back to make sure it's there

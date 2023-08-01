@@ -3,17 +3,8 @@ package elide.runtime.gvm.internals.context
 import com.lmax.disruptor.*
 import com.lmax.disruptor.dsl.Disruptor
 import com.lmax.disruptor.dsl.ProducerType
-import elide.annotations.Inject
-import elide.annotations.Singleton
-import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.cfg.GuestVMConfiguration
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
-import elide.util.RuntimeFlag
 import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
@@ -26,12 +17,22 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import java.util.stream.Stream
 import kotlin.io.path.Path
+import elide.annotations.Inject
+import elide.annotations.Singleton
+import elide.runtime.LogLevel
+import elide.runtime.Logger
+import elide.runtime.Logging
+import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.cfg.GuestVMConfiguration
+import elide.runtime.gvm.internals.VMProperty
+import elide.util.RuntimeFlag
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
-import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.Context as VMContext
 
 /** TBD. */
-@Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
+@Singleton internal class NativeContextManagerImpl
+  @Inject
+  constructor(config: GuestVMConfiguration) :
   ContextManager<VMContext, VMContext.Builder> {
   private companion object {
     // Whether to enable Isolates.
@@ -71,8 +72,9 @@ import org.graalvm.polyglot.Context as VMContext
       if (!auxCache) null else StaticProperty.of("engine.PreinitializeContexts", "js"),
       if (!auxCache) null else StaticProperty.active("engine.CachePreinitializeContext"),
       if (!auxCache) null else StaticProperty.of("engine.CacheCompile", "hot"),
-      if (!auxCache) null else StaticProperty.of("engine.Cache",
-        Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
+      if (!auxCache) null else StaticProperty.of(
+        "engine.Cache",
+        Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString(),
       ),
 
       // enable debug features if so instructed
@@ -112,7 +114,7 @@ import org.graalvm.polyglot.Context as VMContext
     }
 
     override fun write(b: Int): Unit = error(
-      "Cannot write to stubbed stream from inside the JS VM."
+      "Cannot write to stubbed stream from inside the JS VM.",
     )
   }
 
@@ -124,7 +126,7 @@ import org.graalvm.polyglot.Context as VMContext
     }
 
     override fun read(): Int = error(
-      "Cannot read from stubbed stream from inside the JS VM."
+      "Cannot read from stubbed stream from inside the JS VM.",
     )
   }
 
@@ -182,14 +184,14 @@ import org.graalvm.polyglot.Context as VMContext
   /**
    * TBD.
    */
-  internal inner class NativeVMInvocation<Inputs: ExecutionInputs> : ContextManager.VMInvocation<Inputs> {
+  internal inner class NativeVMInvocation<Inputs : ExecutionInputs> : ContextManager.VMInvocation<Inputs> {
     // Nothing at this time.
   }
 
   /**
    * TBD.
    */
-  private inner class VMInvocationFactory<Inputs: ExecutionInputs> : EventFactory<NativeVMInvocation<Inputs>> {
+  private inner class VMInvocationFactory<Inputs : ExecutionInputs> : EventFactory<NativeVMInvocation<Inputs>> {
     /** @inheritDoc */
     override fun newInstance(): NativeVMInvocation<Inputs> = NativeVMInvocation()
   }
@@ -197,7 +199,7 @@ import org.graalvm.polyglot.Context as VMContext
   /**
    * TBD.
    */
-  private inner class NativeVMExecutor<I: ExecutionInputs> :
+  private inner class NativeVMExecutor<I : ExecutionInputs> :
     EventHandler<NativeVMInvocation<I>>,
     LifecycleAware,
     AutoCloseable {
@@ -214,7 +216,8 @@ import org.graalvm.polyglot.Context as VMContext
     private val lastException: AtomicReference<Throwable?> = AtomicReference(null)
 
     // Initialize VM context for this executor.
-    @Suppress("DEPRECATION") private fun initializeVMContext() {
+    @Suppress("DEPRECATION")
+    private fun initializeVMContext() {
       val thread = Thread.currentThread()
       logging.debug { "Allocating VM context for thread '${thread.name}'" }
       val ctx = allocateContext()
@@ -358,7 +361,7 @@ import org.graalvm.polyglot.Context as VMContext
             builder.option(property.symbol, property.value())
           }
         }
-      }.build()
+      }.build(),
     )
   }
 
@@ -368,7 +371,7 @@ import org.graalvm.polyglot.Context as VMContext
       "Cannot allocate VM context: Engine is not initialized"
     }
     val fresh = contextFactory.get().invoke(
-      engine()
+      engine(),
     )
 
     // apply properties installed via `configureVM`

@@ -1,9 +1,9 @@
 package elide.runtime.gvm.internals.intrinsics.js.crypto
 
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.CryptoKey
 
 /** Intrinsic implementation of the [CryptoKey] class, part of the Web Crypto API. */
@@ -18,7 +18,7 @@ internal class WebCryptoKey : AbstractJsIntrinsic() {
   }
 
   /** Internal container structure for a crypto key. */
-  internal class CryptoKeyContainer internal constructor (private val wrapped: CryptoKeyImpl): CryptoKey by wrapped
+  internal class CryptoKeyContainer internal constructor(private val wrapped: CryptoKeyImpl) : CryptoKey by wrapped
 
   /** [CryptoKey] factory facade. */
   internal class CryptoKeyFactory : CryptoKey.Constructors
@@ -33,5 +33,5 @@ internal class WebCryptoKey : AbstractJsIntrinsic() {
    * Describes implementations of crypto keys, as part of the Web Crypto API. These are accessed through a proxied
    * [CryptoKeyContainer] object, and via the [CryptoKey] interface within a guest VM.
    */
-  internal sealed class CryptoKeyImpl: CryptoKey
+  internal sealed class CryptoKeyImpl : CryptoKey
 }

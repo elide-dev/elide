@@ -13,65 +13,65 @@ class GrpcWebContentTypeTest {
     assertEquals(
       "application/grpc-web",
       GrpcWebContentType.BINARY.symbol,
-      "raw gRPC web binary content-type symbol should be correct"
+      "raw gRPC web binary content-type symbol should be correct",
     )
     assertEquals(
       "application/grpc-web-text",
       GrpcWebContentType.TEXT.symbol,
-      "raw gRPC web text content-type symbol should be correct"
+      "raw gRPC web text content-type symbol should be correct",
     )
     assertEquals(
       "application/grpc-web",
       GrpcWebContentType.BINARY.contentType(proto = false),
-      "raw gRPC web binary content-type symbol should be correct (non-proto)"
+      "raw gRPC web binary content-type symbol should be correct (non-proto)",
     )
     assertEquals(
       "application/grpc-web+proto",
       GrpcWebContentType.BINARY.contentType(),
-      "raw gRPC web binary content-type symbol should be correct (proto)"
+      "raw gRPC web binary content-type symbol should be correct (proto)",
     )
     assertEquals(
       "application/grpc-web-text",
       GrpcWebContentType.TEXT.contentType(proto = false),
-      "raw gRPC web text content-type symbol should be correct (non-proto)"
+      "raw gRPC web text content-type symbol should be correct (non-proto)",
     )
     assertEquals(
       "application/grpc-web-text+proto",
       GrpcWebContentType.TEXT.contentType(),
-      "raw gRPC web text content-type symbol should be correct (proto)"
+      "raw gRPC web text content-type symbol should be correct (proto)",
     )
   }
 
   @Test fun testAllValidContentTypes() {
     assertTrue(
       GrpcWebContentType.allValidContentTypes.contains(
-        "application/grpc-web"
+        "application/grpc-web",
       ),
-      "`application/grpc-web` should be considered a valid gRPC-web content type"
+      "`application/grpc-web` should be considered a valid gRPC-web content type",
     )
     assertTrue(
       GrpcWebContentType.allValidContentTypes.contains(
-        "application/grpc-web-text"
+        "application/grpc-web-text",
       ),
-      "`application/grpc-web-text` should be considered a valid gRPC-web content type"
+      "`application/grpc-web-text` should be considered a valid gRPC-web content type",
     )
     assertTrue(
       GrpcWebContentType.allValidContentTypes.contains(
-        "application/grpc-web+proto"
+        "application/grpc-web+proto",
       ),
-      "`application/grpc-web+proto` should be considered a valid gRPC-web content type"
+      "`application/grpc-web+proto` should be considered a valid gRPC-web content type",
     )
     assertTrue(
       GrpcWebContentType.allValidContentTypes.contains(
-        "application/grpc-web-text+proto"
+        "application/grpc-web-text+proto",
       ),
-      "`application/grpc-web-text+proto` should be considered a valid gRPC-web content type"
+      "`application/grpc-web-text+proto` should be considered a valid gRPC-web content type",
     )
     assertFalse(
       GrpcWebContentType.allValidContentTypes.contains(
-        "application/grpc"
+        "application/grpc",
       ),
-      "`application/grpc` should NOT be considered a valid gRPC-web content type"
+      "`application/grpc` should NOT be considered a valid gRPC-web content type",
     )
   }
 
@@ -79,22 +79,22 @@ class GrpcWebContentTypeTest {
     assertEquals(
       "application/grpc-web",
       GrpcWebContentType.BINARY.mediaType(proto = false).toString(),
-      "gRPC web binary media-type should be correct (non-proto)"
+      "gRPC web binary media-type should be correct (non-proto)",
     )
     assertEquals(
       "application/grpc-web+proto",
       GrpcWebContentType.BINARY.mediaType().toString(),
-      "gRPC web binary media-type should be correct (proto)"
+      "gRPC web binary media-type should be correct (proto)",
     )
     assertEquals(
       "application/grpc-web-text",
       GrpcWebContentType.TEXT.mediaType(proto = false).toString(),
-      "gRPC web text media-type should be correct (non-proto)"
+      "gRPC web text media-type should be correct (non-proto)",
     )
     assertEquals(
       "application/grpc-web-text+proto",
       GrpcWebContentType.TEXT.mediaType().toString(),
-      "gRPC web text media-type should be correct (proto)"
+      "gRPC web text media-type should be correct (proto)",
     )
   }
 
@@ -102,39 +102,39 @@ class GrpcWebContentTypeTest {
     assertEquals(
       GrpcWebContentType.BINARY,
       GrpcWebContentType.resolve(GrpcWebContentType.BINARY.mediaType(proto = false)),
-      "resolving a non-proto BINARY content type should work"
+      "resolving a non-proto BINARY content type should work",
     )
     assertEquals(
       GrpcWebContentType.BINARY,
       GrpcWebContentType.resolve(GrpcWebContentType.BINARY.mediaType(proto = true)),
-      "resolving a proto BINARY content type should work"
+      "resolving a proto BINARY content type should work",
     )
     assertEquals(
       GrpcWebContentType.TEXT,
       GrpcWebContentType.resolve(GrpcWebContentType.TEXT.mediaType(proto = false)),
-      "resolving a non-proto TEXT content type should work"
+      "resolving a non-proto TEXT content type should work",
     )
     assertEquals(
       GrpcWebContentType.TEXT,
       GrpcWebContentType.resolve(GrpcWebContentType.TEXT.mediaType(proto = true)),
-      "resolving a proto TEXT content type should work"
+      "resolving a proto TEXT content type should work",
     )
   }
 
   @Test fun testResolveInvalidMediaType() {
     assertThrows<IllegalArgumentException> {
       GrpcWebContentType.resolve(
-        MediaType("application/grpc")
+        MediaType("application/grpc"),
       )
     }
     assertThrows<IllegalArgumentException> {
       GrpcWebContentType.resolve(
-        MediaType("text/plain")
+        MediaType("text/plain"),
       )
     }
     assertThrows<IllegalArgumentException> {
       GrpcWebContentType.resolve(
-        MediaType("application/json")
+        MediaType("application/json"),
       )
     }
   }

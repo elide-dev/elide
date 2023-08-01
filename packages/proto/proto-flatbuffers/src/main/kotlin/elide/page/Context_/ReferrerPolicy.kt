@@ -14,7 +14,8 @@ class ReferrerPolicy private constructor() {
         const val STRICTORIGIN: Int = 7
         const val STRICTORIGINWHENCROSSORIGIN: Int = 8
         const val UNSAFEURL: Int = 9
-        val names : Array<String> = arrayOf("DEFAULT_REFERRER_POLICY", "NO_REFERRER", "NO_REFERRER_WHEN_DOWNGRADE", "ORIGIN", "ORIGIN_WHEN_CROSS_ORIGIN", "SAME", "", "STRICT_ORIGIN", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN", "UNSAFE_URL")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("DEFAULT_REFERRER_POLICY", "NO_REFERRER", "NO_REFERRER_WHEN_DOWNGRADE", "ORIGIN", "ORIGIN_WHEN_CROSS_ORIGIN", "SAME", "", "STRICT_ORIGIN", "STRICT_ORIGIN_WHEN_CROSS_ORIGIN", "UNSAFE_URL")
+        fun name(e: Int): String = names[e]
     }
 }

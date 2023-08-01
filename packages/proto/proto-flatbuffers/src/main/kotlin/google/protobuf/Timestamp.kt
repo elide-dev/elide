@@ -2,29 +2,28 @@
 
 package google.protobuf
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Timestamp : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Timestamp {
+    fun __assign(_i: Int, _bb: ByteBuffer): Timestamp {
         __init(_i, _bb)
         return this
     }
-    val seconds : Long
+    val seconds: Long
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+            return if (o != 0) bb.getLong(o + bb_pos) else 0L
         }
-    val nanos : Int
+    val nanos: Int
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -33,7 +32,7 @@ class Timestamp : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTimestamp(builder: FlatBufferBuilder, seconds: Long, nanos: Int) : Int {
+        fun createTimestamp(builder: FlatBufferBuilder, seconds: Long, nanos: Int): Int {
             builder.startTable(2)
             addSeconds(builder, seconds)
             addNanos(builder, nanos)
@@ -42,7 +41,7 @@ class Timestamp : Table() {
         fun startTimestamp(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addSeconds(builder: FlatBufferBuilder, seconds: Long) = builder.addLong(0, seconds, 0L)
         fun addNanos(builder: FlatBufferBuilder, nanos: Int) = builder.addInt(1, nanos, 0)
-        fun endTimestamp(builder: FlatBufferBuilder) : Int {
+        fun endTimestamp(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

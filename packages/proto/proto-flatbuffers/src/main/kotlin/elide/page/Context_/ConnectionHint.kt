@@ -10,7 +10,7 @@ class ConnectionHint private constructor() {
         const val SLOW: Int = 2
         const val TYPICAL: Int = 3
         const val FAST: Int = 4
-        val names : Array<String> = arrayOf("UNKNOWN_CONNECTION_HINT", "SLOW_TWO", "SLOW", "TYPICAL", "FAST")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> = arrayOf("UNKNOWN_CONNECTION_HINT", "SLOW_TWO", "SLOW", "TYPICAL", "FAST")
+        fun name(e: Int): String = names[e]
     }
 }

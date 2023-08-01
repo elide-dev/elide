@@ -1,18 +1,18 @@
 package elide.server.controller
 
-import elide.server.assets.AssetReference
-import elide.server.assets.AssetType
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.server.assets.AssetReference
+import elide.server.assets.AssetType
 
 /** Tests for the top-level [PageController] extension point. */
 @MicronautTest class PageControllerTest {
@@ -43,7 +43,7 @@ import kotlin.test.assertTrue
       assertDoesNotThrow {
         sample.asset("styles.base")
       },
-      "acquiring a known-good asset reference should not produce `null` or throw"
+      "acquiring a known-good asset reference should not produce `null` or throw",
     )
   }
 
@@ -98,21 +98,21 @@ import kotlin.test.assertTrue
         preload = true,
       ),
       ref,
-      "should be able to customize an asset reference with a handler"
+      "should be able to customize an asset reference with a handler",
     )
   }
 
   @Test fun testCanAcquireAssetManager() {
     assertNotNull(
       sample.assets(),
-      "`PageController` inheritors should be able to acquire the asset runtime"
+      "`PageController` inheritors should be able to acquire the asset runtime",
     )
   }
 
   @Test fun testCanAcquireAppContext() {
     assertNotNull(
       sample.context(),
-      "`PageController` inheritors should be able to acquire the app context"
+      "`PageController` inheritors should be able to acquire the app context",
     )
   }
 
@@ -122,7 +122,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.indexPage()
         }
-      }
+      },
     )
   }
 
@@ -132,7 +132,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.styles()
         }
-      }
+      },
     )
   }
 
@@ -142,7 +142,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.assetStyle(HttpRequest.GET("/styles/base.css"))
         }
-      }
+      },
     )
   }
 
@@ -152,7 +152,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.assetStyleExplicit(HttpRequest.GET("/styles/base.other.css"))
         }
-      }
+      },
     )
   }
 
@@ -162,7 +162,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.assetGeneric(HttpRequest.GET("/styles/base.another.css"))
         }
-      }
+      },
     )
   }
 
@@ -172,7 +172,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.assetScript(HttpRequest.GET("/scripts/ui.js"))
         }
-      }
+      },
     )
   }
 
@@ -182,7 +182,7 @@ import kotlin.test.assertTrue
         runBlocking {
           sample.assetScriptExplicit(HttpRequest.GET("/scripts/ui.other.js"))
         }
-      }
+      },
     )
   }
 
@@ -193,7 +193,7 @@ import kotlin.test.assertTrue
           sample.somethingText()
         }
       },
-      "text/plain"
+      "text/plain",
     )
   }
 
@@ -204,11 +204,11 @@ import kotlin.test.assertTrue
       }
     }
     assertNotNull(
-      response
+      response,
     )
     assertEquals(
       404,
-      response.status.code
+      response.status.code,
     )
   }
 }

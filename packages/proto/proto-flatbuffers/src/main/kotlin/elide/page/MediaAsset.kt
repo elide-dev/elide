@@ -2,27 +2,26 @@
 
 package elide.page
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class MediaAsset : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : MediaAsset {
+    fun __assign(_i: Int, _bb: ByteBuffer): MediaAsset {
         __init(_i, _bb)
         return this
     }
-    val kind : Int
+    val kind: Int
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val media : elide.page.MediaAsset_.Anonymous1? get() = media(elide.page.MediaAsset_.Anonymous1())
-    fun media(obj: elide.page.MediaAsset_.Anonymous1) : elide.page.MediaAsset_.Anonymous1? {
+    val media: elide.page.MediaAsset_.Anonymous1? get() = media(elide.page.MediaAsset_.Anonymous1())
+    fun media(obj: elide.page.MediaAsset_.Anonymous1): elide.page.MediaAsset_.Anonymous1? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -37,7 +36,7 @@ class MediaAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMediaAsset(builder: FlatBufferBuilder, kind: Int, mediaOffset: Int) : Int {
+        fun createMediaAsset(builder: FlatBufferBuilder, kind: Int, mediaOffset: Int): Int {
             builder.startTable(2)
             addMedia(builder, mediaOffset)
             addKind(builder, kind)
@@ -46,7 +45,7 @@ class MediaAsset : Table() {
         fun startMediaAsset(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addKind(builder: FlatBufferBuilder, kind: Int) = builder.addInt(0, kind, 0)
         fun addMedia(builder: FlatBufferBuilder, media: Int) = builder.addOffset(1, media, 0)
-        fun endMediaAsset(builder: FlatBufferBuilder) : Int {
+        fun endMediaAsset(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

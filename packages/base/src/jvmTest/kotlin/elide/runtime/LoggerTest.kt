@@ -15,7 +15,6 @@ package elide.runtime
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
-import kotlin.test.assertNotNull
 
 /** Tests for acquiring [Logger] instances on the JVM. */
 class LoggerTest {
@@ -25,19 +24,19 @@ class LoggerTest {
       logger.log(
         LogLevel.TRACE,
         listOf(
-          "Here is a low-level trace log"
-        )
+          "Here is a low-level trace log",
+        ),
       )
     }
     assertDoesNotThrow {
       logger.trace(
-        "Here is a string trace log"
+        "Here is a string trace log",
       )
     }
     assertDoesNotThrow {
       logger.trace(
         "Here is a string trace log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {
@@ -53,19 +52,19 @@ class LoggerTest {
       logger.log(
         LogLevel.DEBUG,
         listOf(
-          "Here is a low-level debug log"
-        )
+          "Here is a low-level debug log",
+        ),
       )
     }
     assertDoesNotThrow {
       logger.debug(
-        "Here is a string debug log"
+        "Here is a string debug log",
       )
     }
     assertDoesNotThrow {
       logger.debug(
         "Here is a string debug log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {
@@ -81,19 +80,19 @@ class LoggerTest {
       logger.log(
         LogLevel.INFO,
         listOf(
-          "Here is an low-level info log"
-        )
+          "Here is an low-level info log",
+        ),
       )
     }
     assertDoesNotThrow {
       logger.info(
-        "Here is a string info log"
+        "Here is a string info log",
       )
     }
     assertDoesNotThrow {
       logger.info(
         "Here is a string info log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {
@@ -109,19 +108,19 @@ class LoggerTest {
       logger.log(
         LogLevel.WARN,
         listOf(
-          "Here is a low-level warn log"
-        )
+          "Here is a low-level warn log",
+        ),
       )
     }
     assertDoesNotThrow {
       logger.warn(
-        "Here is a string warn log"
+        "Here is a string warn log",
       )
     }
     assertDoesNotThrow {
       logger.warn(
         "Here is a string warn log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {
@@ -131,13 +130,13 @@ class LoggerTest {
     }
     assertDoesNotThrow {
       logger.warning(
-        "Here is a string warning (alias) log"
+        "Here is a string warning (alias) log",
       )
     }
     assertDoesNotThrow {
       logger.warning(
         "Here is a string warning (alias) log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {
@@ -153,19 +152,19 @@ class LoggerTest {
       logger.log(
         LogLevel.ERROR,
         listOf(
-          "Here is an low-level error log"
-        )
+          "Here is an low-level error log",
+        ),
       )
     }
     assertDoesNotThrow {
       logger.error(
-        "Here is a string error log"
+        "Here is a string error log",
       )
     }
     assertDoesNotThrow {
       logger.error(
         "Here is a string error log with context",
-        5
+        5,
       )
     }
     assertDoesNotThrow {

@@ -13,10 +13,9 @@
 
 package elide.runtime.feature.js
 
+import org.graalvm.nativeimage.hosted.Feature
 import elide.annotations.internal.VMFeature
 import elide.runtime.feature.FrameworkFeature
-import org.graalvm.nativeimage.hosted.Feature
-
 
 /** GraalVM feature which enables reflection required for the Elide JavaScript guest runtime. */
 @VMFeature
@@ -72,7 +71,7 @@ internal class JsRuntimeFeature : FrameworkFeature {
     registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorResult")
     registerClassForReflection(access, "elide.runtime.intrinsics.js.JsIterator${'$'}JsIteratorImpl")
     registeredIntrinsics.forEach {
-      registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.${it}")
+      registerClassForReflection(access, "elide.runtime.gvm.internals.intrinsics.js.$it")
     }
     registeredPackages.forEach {
       registerPackageForReflection(access, "elide.runtime.intrinsics.js.$it")

@@ -27,7 +27,7 @@ public abstract class TypeError : AbstractJSException, Error() {
    * Public factory for [TypeError] types. Java-style exceptions can be wrapped using the [create] method, or a string
    * message and cause can be provided, a-la Java exceptions.
    */
-  public companion object Factory: AbstractJSException.ErrorFactory<TypeError> {
+  public companion object Factory : AbstractJSException.ErrorFactory<TypeError> {
     /** @inheritDoc */
     override fun create(error: Throwable): TypeError {
       return object : TypeError() {

@@ -2,22 +2,21 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Scripts : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Scripts {
+    fun __assign(_i: Int, _bb: ByteBuffer): Scripts {
         __init(_i, _bb)
         return this
     }
-    val lifted : webutil.html.types.SafeScriptProto? get() = lifted(webutil.html.types.SafeScriptProto())
-    fun lifted(obj: webutil.html.types.SafeScriptProto) : webutil.html.types.SafeScriptProto? {
+    val lifted: webutil.html.types.SafeScriptProto? get() = lifted(webutil.html.types.SafeScriptProto())
+    fun lifted(obj: webutil.html.types.SafeScriptProto): webutil.html.types.SafeScriptProto? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,8 +24,8 @@ class Scripts : Table() {
             null
         }
     }
-    fun link(j: Int) : elide.page.Context_.Scripts_.JavaScript? = link(elide.page.Context_.Scripts_.JavaScript(), j)
-    fun link(obj: elide.page.Context_.Scripts_.JavaScript, j: Int) : elide.page.Context_.Scripts_.JavaScript? {
+    fun link(j: Int): elide.page.Context_.Scripts_.JavaScript? = link(elide.page.Context_.Scripts_.JavaScript(), j)
+    fun link(obj: elide.page.Context_.Scripts_.JavaScript, j: Int): elide.page.Context_.Scripts_.JavaScript? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -34,9 +33,10 @@ class Scripts : Table() {
             null
         }
     }
-    val linkLength : Int
+    val linkLength: Int
         get() {
-            val o = __offset(6); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(6)
+            return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -45,7 +45,7 @@ class Scripts : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createScripts(builder: FlatBufferBuilder, liftedOffset: Int, linkOffset: Int) : Int {
+        fun createScripts(builder: FlatBufferBuilder, liftedOffset: Int, linkOffset: Int): Int {
             builder.startTable(2)
             addLink(builder, linkOffset)
             addLifted(builder, liftedOffset)
@@ -54,7 +54,7 @@ class Scripts : Table() {
         fun startScripts(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addLifted(builder: FlatBufferBuilder, lifted: Int) = builder.addOffset(0, lifted, 0)
         fun addLink(builder: FlatBufferBuilder, link: Int) = builder.addOffset(1, link, 0)
-        fun createLinkVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createLinkVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -62,7 +62,7 @@ class Scripts : Table() {
             return builder.endVector()
         }
         fun startLinkVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun endScripts(builder: FlatBufferBuilder) : Int {
+        fun endScripts(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

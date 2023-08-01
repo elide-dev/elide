@@ -1,13 +1,13 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
+import java.util.stream.Stream
 import elide.runtime.intrinsics.js.JsIterator
 import elide.runtime.intrinsics.js.JsIterator.JsIteratorFactory
 import elide.runtime.intrinsics.js.MapLike
-import java.util.stream.Stream
+import elide.vm.annotations.Polyglot
 
 /** Base implementation of a regular (non-mutable) JS map which is backed by a Java map. */
-internal sealed class BaseJsMap<K: Any, V> constructor (
+internal sealed class BaseJsMap<K : Any, V> constructor(
   protected var backingMap: Map<K, V>,
   threadsafe: Boolean = false,
   multi: Boolean = false,
@@ -18,10 +18,11 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
   multi = multi,
   mutable = mutable,
   sorted = sorted,
-), Map<K, V> {
+),
+Map<K, V> {
   internal companion object {
     // Wrap the provided key and value in a `MapLike.Entry`.
-    internal fun <K: Any, V> entry(k: K, v: V): MapLike.Entry<K, V> = object : MapLike.Entry<K, V> {
+    internal fun <K : Any, V> entry(k: K, v: V): MapLike.Entry<K, V> = object : MapLike.Entry<K, V> {
       override val key: K = k
       override val value: V = v
     }
@@ -86,7 +87,7 @@ internal sealed class BaseJsMap<K: Any, V> constructor (
   @Polyglot override fun entries(): JsIterator<MapLike.Entry<K, V>> = JsIteratorFactory.forIterator(
     backingMap.entries.stream().map {
       entry(it.key, it.value)
-    }.iterator()
+    }.iterator(),
   )
 
   /** @inheritDoc */

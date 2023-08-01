@@ -2,16 +2,16 @@ package elide.rpc.server.web
 
 import com.google.protobuf.InvalidProtocolBufferException
 import com.google.protobuf.Message
-import elide.runtime.Logger
-import elide.runtime.Logging
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * Deserializer which is responsible for (1) resolving a protocol buffer object from a given reflective [Method], then
  * (2) de-serializing a set of raw bytes into a resolved [Message].
  */
-internal class ReflectiveMessageDeserializer: MessageDeserializer {
+internal class ReflectiveMessageDeserializer : MessageDeserializer {
   // Private logger.
   private val logging: Logger = Logging.of(ReflectiveMessageDeserializer::class)
 
@@ -28,7 +28,7 @@ internal class ReflectiveMessageDeserializer: MessageDeserializer {
       val msg = "Failed to resolve `parseFrom` method from protocol buffer type '${firstArgType.name}'"
       logging.error(
         msg,
-        noSuch
+        noSuch,
       )
       throw IllegalStateException(
         msg,
@@ -44,7 +44,7 @@ internal class ReflectiveMessageDeserializer: MessageDeserializer {
             "Invalid data: failed to decode protocol buffer message for request type '${firstArgType.name}'"
           }
           throw IllegalStateException(
-            "Failed to decode protocol buffer request of type '${firstArgType.name}'"
+            "Failed to decode protocol buffer request of type '${firstArgType.name}'",
           )
         }
         !is Message -> {
@@ -53,7 +53,7 @@ internal class ReflectiveMessageDeserializer: MessageDeserializer {
                 "of type '${message.javaClass.name}'"
           }
           throw IllegalStateException(
-            "Failed to resolve request type '${firstArgType.name}': object is of type '${message.javaClass.name}'"
+            "Failed to resolve request type '${firstArgType.name}': object is of type '${message.javaClass.name}'",
           )
         }
         else -> {
@@ -68,18 +68,18 @@ internal class ReflectiveMessageDeserializer: MessageDeserializer {
       if (cause is InvalidProtocolBufferException) {
         logging.warn(
           "Failed to decode request message of type '${firstArgType.name}': invalid proto data",
-          cause
+          cause,
         )
         // throw this one directly, because it is handled specifically by `GrpcWebController`.
         throw cause
       } else {
         logging.warn(
           "Failed to dispatch parser method",
-          ite
+          ite,
         )
         throw IllegalStateException(
           "Method dispatch failed",
-          ite
+          ite,
         )
       }
     }

@@ -1,7 +1,5 @@
 package elide.tool.cli.state
 
-import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.runMosaic
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -12,8 +10,8 @@ import java.util.concurrent.atomic.AtomicReference
  * across implementations. State which is carried in the [CommandState.CommandInfo] record is parsed at the first
  * opportunity of all command executions.
  */
-@JvmInline value class CommandState private constructor (
-  private val commandInfo: CommandInfo
+@JvmInline value class CommandState private constructor(
+  private val commandInfo: CommandInfo,
 ) {
   /**
    * ## Command Info
@@ -35,9 +33,11 @@ import java.util.concurrent.atomic.AtomicReference
     private val initialized = AtomicBoolean(false)
 
     /** @return Root command state. */
-    @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(CommandInfo(
+    @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(
+      CommandInfo(
       options = options,
-    ))
+    ),
+    )
 
     /** @return Statically-available command state. */
     @JvmStatic fun resolve(): CommandState? = singleton.get()
@@ -49,7 +49,8 @@ import java.util.concurrent.atomic.AtomicReference
     }
 
     /** Register a [CommandState] instance as the canonical global instance, so it may be resolved statically. */
-    @Synchronized @JvmStatic private fun registerGlobally(target: CommandState) {
+    @Synchronized @JvmStatic
+    private fun registerGlobally(target: CommandState) {
       require(!initialized.get()) {
         "Cannot initialize `CommandState` singleton twice"
       }

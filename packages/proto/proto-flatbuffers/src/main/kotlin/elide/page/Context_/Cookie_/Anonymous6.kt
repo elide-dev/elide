@@ -2,27 +2,26 @@
 
 package elide.page.Context_.Cookie_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Anonymous6 : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Anonymous6 {
+    fun __assign(_i: Int, _bb: ByteBuffer): Anonymous6 {
         __init(_i, _bb)
         return this
     }
-    val immediateExpire : Boolean
+    val immediateExpire: Boolean
         get() {
             val o = __offset(4)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val absoluteExpire : google.protobuf.Timestamp? get() = absoluteExpire(google.protobuf.Timestamp())
-    fun absoluteExpire(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
+    val absoluteExpire: google.protobuf.Timestamp? get() = absoluteExpire(google.protobuf.Timestamp())
+    fun absoluteExpire(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -30,8 +29,8 @@ class Anonymous6 : Table() {
             null
         }
     }
-    val relativeExpire : google.protobuf.Duration? get() = relativeExpire(google.protobuf.Duration())
-    fun relativeExpire(obj: google.protobuf.Duration) : google.protobuf.Duration? {
+    val relativeExpire: google.protobuf.Duration? get() = relativeExpire(google.protobuf.Duration())
+    fun relativeExpire(obj: google.protobuf.Duration): google.protobuf.Duration? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -39,10 +38,10 @@ class Anonymous6 : Table() {
             null
         }
     }
-    val noExpire : Boolean
+    val noExpire: Boolean
         get() {
             val o = __offset(10)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -51,7 +50,13 @@ class Anonymous6 : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAnonymous6(builder: FlatBufferBuilder, immediateExpire: Boolean, absoluteExpireOffset: Int, relativeExpireOffset: Int, noExpire: Boolean) : Int {
+        fun createAnonymous6(
+          builder: FlatBufferBuilder,
+          immediateExpire: Boolean,
+          absoluteExpireOffset: Int,
+          relativeExpireOffset: Int,
+          noExpire: Boolean,
+        ): Int {
             builder.startTable(4)
             addRelativeExpire(builder, relativeExpireOffset)
             addAbsoluteExpire(builder, absoluteExpireOffset)
@@ -60,11 +65,14 @@ class Anonymous6 : Table() {
             return endAnonymous6(builder)
         }
         fun startAnonymous6(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addImmediateExpire(builder: FlatBufferBuilder, immediateExpire: Boolean) = builder.addBoolean(0, immediateExpire, false)
+        fun addImmediateExpire(
+          builder: FlatBufferBuilder,
+          immediateExpire: Boolean,
+        ) = builder.addBoolean(0, immediateExpire, false)
         fun addAbsoluteExpire(builder: FlatBufferBuilder, absoluteExpire: Int) = builder.addOffset(1, absoluteExpire, 0)
         fun addRelativeExpire(builder: FlatBufferBuilder, relativeExpire: Int) = builder.addOffset(2, relativeExpire, 0)
         fun addNoExpire(builder: FlatBufferBuilder, noExpire: Boolean) = builder.addBoolean(3, noExpire, false)
-        fun endAnonymous6(builder: FlatBufferBuilder) : Int {
+        fun endAnonymous6(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

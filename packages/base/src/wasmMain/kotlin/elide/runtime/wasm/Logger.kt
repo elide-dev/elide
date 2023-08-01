@@ -18,7 +18,7 @@ import elide.runtime.LogLevel
 /** Specifies a lightweight [elide.runtime.Logger] implementation for use in pure WASM. */
 public data class Logger(
   public val name: String? = null,
-): elide.runtime.Logger {
+) : elide.runtime.Logger {
   /** @inheritDoc */
   override fun isEnabled(level: LogLevel): Boolean = true  // @TODO(sgammon): conditional logging in WASM
 
@@ -28,6 +28,7 @@ public data class Logger(
     LogLevel.DEBUG,
     LogLevel.INFO,
     LogLevel.WARN,
-    LogLevel.ERROR -> println(message.toTypedArray())
+    LogLevel.ERROR,
+    -> println(message.toTypedArray())
   }
 }

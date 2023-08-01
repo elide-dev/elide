@@ -34,7 +34,7 @@ public interface FetchHeaders : MultiMapLike<String, String> {
    * constructors include JavaScript-spec constructors as well as regular host-side `wrap` or `create` constructors. In
    * all cases, these constructors are expected to return a copy of the provided data, as applicable.
    */
-  public interface Factory<Impl> where Impl: FetchHeaders {
+  public interface Factory<Impl> where Impl : FetchHeaders {
     /**
      * Create an empty set of immutable fetch headers.
      *

@@ -2,37 +2,36 @@
 
 package elide.vfs
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class GuestVFSConfig : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : GuestVFSConfig {
+    fun __assign(_i: Int, _bb: ByteBuffer): GuestVFSConfig {
         __init(_i, _bb)
         return this
     }
-    val readOnly : Boolean
+    val readOnly: Boolean
         get() {
             val o = __offset(4)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val symbolicLinks : Boolean
+    val symbolicLinks: Boolean
         get() {
             val o = __offset(6)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val caseSensitive : Boolean
+    val caseSensitive: Boolean
         get() {
             val o = __offset(8)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val policy : elide.vfs.GuestVFSPolicy? get() = policy(elide.vfs.GuestVFSPolicy())
-    fun policy(obj: elide.vfs.GuestVFSPolicy) : elide.vfs.GuestVFSPolicy? {
+    val policy: elide.vfs.GuestVFSPolicy? get() = policy(elide.vfs.GuestVFSPolicy())
+    fun policy(obj: elide.vfs.GuestVFSPolicy): elide.vfs.GuestVFSPolicy? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -40,20 +39,20 @@ class GuestVFSConfig : Table() {
             null
         }
     }
-    val root : String?
+    val root: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val rootAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun rootInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val workingDirectory : String?
+    val rootAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun rootInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val workingDirectory: String?
         get() {
             val o = __offset(14)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val workingDirectoryAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun workingDirectoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val workingDirectoryAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun workingDirectoryInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsGuestVFSConfig(_bb: ByteBuffer): GuestVFSConfig = getRootAsGuestVFSConfig(_bb, GuestVFSConfig())
@@ -61,7 +60,15 @@ class GuestVFSConfig : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGuestVFSConfig(builder: FlatBufferBuilder, readOnly: Boolean, symbolicLinks: Boolean, caseSensitive: Boolean, policyOffset: Int, rootOffset: Int, workingDirectoryOffset: Int) : Int {
+        fun createGuestVFSConfig(
+          builder: FlatBufferBuilder,
+          readOnly: Boolean,
+          symbolicLinks: Boolean,
+          caseSensitive: Boolean,
+          policyOffset: Int,
+          rootOffset: Int,
+          workingDirectoryOffset: Int,
+        ): Int {
             builder.startTable(6)
             addWorkingDirectory(builder, workingDirectoryOffset)
             addRoot(builder, rootOffset)
@@ -73,12 +80,21 @@ class GuestVFSConfig : Table() {
         }
         fun startGuestVFSConfig(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addReadOnly(builder: FlatBufferBuilder, readOnly: Boolean) = builder.addBoolean(0, readOnly, false)
-        fun addSymbolicLinks(builder: FlatBufferBuilder, symbolicLinks: Boolean) = builder.addBoolean(1, symbolicLinks, false)
-        fun addCaseSensitive(builder: FlatBufferBuilder, caseSensitive: Boolean) = builder.addBoolean(2, caseSensitive, false)
+        fun addSymbolicLinks(
+          builder: FlatBufferBuilder,
+          symbolicLinks: Boolean,
+        ) = builder.addBoolean(1, symbolicLinks, false)
+        fun addCaseSensitive(
+          builder: FlatBufferBuilder,
+          caseSensitive: Boolean,
+        ) = builder.addBoolean(2, caseSensitive, false)
         fun addPolicy(builder: FlatBufferBuilder, policy: Int) = builder.addOffset(3, policy, 0)
         fun addRoot(builder: FlatBufferBuilder, root: Int) = builder.addOffset(4, root, 0)
-        fun addWorkingDirectory(builder: FlatBufferBuilder, workingDirectory: Int) = builder.addOffset(5, workingDirectory, 0)
-        fun endGuestVFSConfig(builder: FlatBufferBuilder) : Int {
+        fun addWorkingDirectory(
+          builder: FlatBufferBuilder,
+          workingDirectory: Int,
+        ) = builder.addOffset(5, workingDirectory, 0)
+        fun endGuestVFSConfig(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

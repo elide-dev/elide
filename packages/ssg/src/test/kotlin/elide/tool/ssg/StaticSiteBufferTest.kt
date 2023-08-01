@@ -16,10 +16,10 @@
 package elide.tool.ssg
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -49,61 +49,75 @@ import kotlin.test.assertTrue
   @Test fun testStaticSiteBufferImmutable() = runTest {
     val buf = StaticSiteBuffer()
     assertEquals(0, buf.size(), "size should be 0 for fresh site buffer")
-    buf.add(staticFragment(
+    buf.add(
+      staticFragment(
       endpoint(),
       "some content here",
-    ))
+    ),
+    )
     assertEquals(1, buf.size(), "size should be 1 after adding a fragment")
     buf.seal()
     assertThrows<IllegalStateException> {
-      buf.add(staticFragment(
+      buf.add(
+        staticFragment(
         endpoint(),
         "some content here",
-      ))
+      ),
+      )
     }
   }
 
   @Test fun testStaticSiteBufferClosed() = runTest {
     val buf = StaticSiteBuffer()
     assertEquals(0, buf.size(), "size should be 0 for fresh site buffer")
-    buf.add(staticFragment(
+    buf.add(
+      staticFragment(
       endpoint(),
       "some content here",
-    ))
+    ),
+    )
     assertEquals(1, buf.size(), "size should be 1 after adding a fragment")
     buf.close()
     assertThrows<IllegalStateException> {
-      buf.add(staticFragment(
+      buf.add(
+        staticFragment(
         endpoint(),
         "some content here",
-      ))
+      ),
+      )
     }
   }
 
   @Test fun testStaticSiteBufferFragmentCount() = runTest {
     val buf = StaticSiteBuffer()
     assertEquals(0, buf.size(), "size should be 0 for fresh site buffer")
-    buf.add(staticFragment(
+    buf.add(
+      staticFragment(
       endpoint(),
       "some content here",
-    ))
+    ),
+    )
     assertEquals(1, buf.size(), "size should be 1 after adding a fragment")
   }
 
   @Test fun testStaticSiteBufferReset() = runTest {
     val buf = StaticSiteBuffer()
     assertEquals(0, buf.size(), "size should be 0 for fresh site buffer")
-    buf.add(staticFragment(
+    buf.add(
+      staticFragment(
       endpoint(),
       "some content here",
-    ))
+    ),
+    )
     assertEquals(1, buf.size(), "size should be 1 after adding a fragment")
     buf.close()
     assertThrows<IllegalStateException> {
-      buf.add(staticFragment(
+      buf.add(
+        staticFragment(
         endpoint(),
         "some content here",
-      ))
+      ),
+      )
     }
     buf.reset()
     assertEquals(0, buf.size(), "after resetting buffer, size should be 0")

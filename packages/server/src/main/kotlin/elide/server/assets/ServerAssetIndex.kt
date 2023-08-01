@@ -5,15 +5,10 @@ import com.google.common.graph.ElementOrder
 import com.google.common.graph.ImmutableNetwork
 import com.google.common.graph.Network
 import com.google.common.graph.NetworkBuilder
-import elide.server.AssetModuleId
-import elide.server.AssetTag
-import elide.server.cfg.AssetConfig
-import elide.util.Base64
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.event.ApplicationEventListener
 import io.micronaut.runtime.server.event.ServerStartupEvent
-import jakarta.inject.Inject
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.AssetBundle.AssetContent
 import java.nio.charset.StandardCharsets
@@ -25,7 +20,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Collectors
 import java.util.stream.IntStream
+import jakarta.inject.Inject
 import kotlin.math.max
+import elide.server.AssetModuleId
+import elide.server.AssetTag
+import elide.server.cfg.AssetConfig
+import elide.util.Base64
 
 /**
  * Server-side utility which, at server startup, consumes the embedded asset bundle (if any), and generates a set of
@@ -57,7 +57,9 @@ import kotlin.math.max
  */
 @Context
 @Suppress("UnstableApiUsage", "TooManyFunctions")
-internal class ServerAssetIndex @Inject constructor(
+internal class ServerAssetIndex
+  @Inject
+  constructor(
   private val assetConfig: AssetConfig,
   private val manifestProvider: AssetManifestLoader,
 ) {
@@ -100,7 +102,7 @@ internal class ServerAssetIndex @Inject constructor(
         val tailCount = bundle.settings.digestSettings.tail
         val encoded = String(
           Base64.encodeWebSafe(integrityValue.fingerprint.toByteArray().takeLast(tailCount).toByteArray()),
-          StandardCharsets.UTF_8
+          StandardCharsets.UTF_8,
         )
         "\"$encoded\""
       } else {
@@ -142,7 +144,7 @@ internal class ServerAssetIndex @Inject constructor(
         AssetDependency(
           depender = moduleId,
           dependee = it,
-          optional = false
+          optional = false,
         ),
       )
     }
@@ -150,7 +152,7 @@ internal class ServerAssetIndex @Inject constructor(
 
   @VisibleForTesting
   internal fun buildAssetIndexes(
-    bundle: AssetBundle
+    bundle: AssetBundle,
   ): Pair<Network<AssetModuleId, AssetDependency>, ServerAssetManifest> {
     // create a builder for the asset graph
     val builder: ImmutableNetwork.Builder<AssetModuleId, AssetDependency> = NetworkBuilder
@@ -199,8 +201,8 @@ internal class ServerAssetIndex @Inject constructor(
         { it.first },
         { sortedSetOf(it.second) },
         { _, _ -> error("Assets must hold a maximum of one source file.") },
-        { TreeMap() }
-      )
+        { TreeMap() },
+      ),
     )
 
     // build an index of each module ID => a module record. we can typically get to the module ID from everything else.
@@ -236,8 +238,8 @@ internal class ServerAssetIndex @Inject constructor(
         { it.first }, // module ID
         { it.second }, // pointer
         { value, _ -> error("Two assets cannot have the same module ID: '$value'") },
-        { ConcurrentSkipListMap() }
-      )
+        { ConcurrentSkipListMap() },
+      ),
     )
     return builder.build() to ServerAssetManifest(
       bundle = bundle,
@@ -285,7 +287,7 @@ internal class ServerAssetIndex @Inject constructor(
       // generic assets
       AssetType.TEXT -> {
         bundle.getGenericOrThrow(
-          key
+          key,
         )
       }
 
@@ -324,7 +326,7 @@ internal class ServerAssetIndex @Inject constructor(
     type: AssetType,
     moduleId: String,
     bundle: AssetBundle,
-    idx: SortedSet<Int>?
+    idx: SortedSet<Int>?,
   ): ServerAsset {
     return when (type) {
       // if it's a script, wrap it as a script

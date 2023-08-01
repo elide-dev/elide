@@ -1,10 +1,10 @@
 package elide.js.ssr
 
-import web.dom.document
 import react.Props
 import react.ReactElement
 import react.dom.client.createRoot
 import react.dom.client.hydrateRoot
+import web.dom.document
 
 const val SSR_FLAG = "data-serving-mode"
 const val SERVING_MODE_SSR = "ssr"
@@ -31,14 +31,14 @@ private fun <AppProps : Props> renderApp(fragment: ReactElement<*>, props: AppPr
     console.log("Hydrating DOM (SSR active)", props)
     hydrateRoot(
       container,
-      fragment
+      fragment,
     )
   } else {
     console.log("Rendering client-side", props)
     createRoot(
-      container
+      container,
     ).render(
-      fragment
+      fragment,
     )
   }
 }

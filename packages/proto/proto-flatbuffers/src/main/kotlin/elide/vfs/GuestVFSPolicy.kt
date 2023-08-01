@@ -2,22 +2,21 @@
 
 package elide.vfs
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class GuestVFSPolicy : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : GuestVFSPolicy {
+    fun __assign(_i: Int, _bb: ByteBuffer): GuestVFSPolicy {
         __init(_i, _bb)
         return this
     }
-    val policy : elide.vfs.GuestVFSPolicy_.PolicySetting? get() = policy(elide.vfs.GuestVFSPolicy_.PolicySetting())
-    fun policy(obj: elide.vfs.GuestVFSPolicy_.PolicySetting) : elide.vfs.GuestVFSPolicy_.PolicySetting? {
+    val policy: elide.vfs.GuestVFSPolicy_.PolicySetting? get() = policy(elide.vfs.GuestVFSPolicy_.PolicySetting())
+    fun policy(obj: elide.vfs.GuestVFSPolicy_.PolicySetting): elide.vfs.GuestVFSPolicy_.PolicySetting? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -32,14 +31,14 @@ class GuestVFSPolicy : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGuestVFSPolicy(builder: FlatBufferBuilder, policyOffset: Int) : Int {
+        fun createGuestVFSPolicy(builder: FlatBufferBuilder, policyOffset: Int): Int {
             builder.startTable(1)
             addPolicy(builder, policyOffset)
             return endGuestVFSPolicy(builder)
         }
         fun startGuestVFSPolicy(builder: FlatBufferBuilder) = builder.startTable(1)
         fun addPolicy(builder: FlatBufferBuilder, policy: Int) = builder.addOffset(0, policy, 0)
-        fun endGuestVFSPolicy(builder: FlatBufferBuilder) : Int {
+        fun endGuestVFSPolicy(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

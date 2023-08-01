@@ -3,8 +3,8 @@ package elide.rpc.server
 import io.grpc.ServerServiceDefinition
 import io.grpc.health.v1.HealthGrpc
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import jakarta.inject.Inject
 import org.junit.jupiter.api.assertThrows
+import jakarta.inject.Inject
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
@@ -16,17 +16,19 @@ class RpcRuntimeTest {
   @Test fun testInjectable() {
     assertNotNull(
       runtime,
-      "should be able to initialize and inject RPC runtime"
+      "should be able to initialize and inject RPC runtime",
     )
   }
 
   @Test fun testReinitializeRuntimeFail() {
     assertThrows<IllegalStateException> {
-      runtime.registerServices(listOf(
+      runtime.registerServices(
+        listOf(
         ServerServiceDefinition.builder(
-          HealthGrpc.getServiceDescriptor()
-        ).build()
-      ))
+          HealthGrpc.getServiceDescriptor(),
+        ).build(),
+      ),
+      )
     }
   }
 }

@@ -14,10 +14,10 @@
 package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
-import elide.runtime.Logger
-import elide.tool.cli.state.CommandState
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
+import elide.runtime.Logger
+import elide.tool.cli.state.CommandState
 
 /**
  * # Command Context
@@ -53,7 +53,8 @@ import kotlin.coroutines.CoroutineContext
 sealed interface CommandContext : CoroutineScope {
   companion object {
     /** @return Default command context implementation. */
-    @JvmStatic @Suppress("unused_parameter")
+    @JvmStatic
+    @Suppress("unused_parameter")
     fun default(state: CommandState): CommandContext = object : DefaultCommandContext {
       override val coroutineContext: CoroutineContext get() = TODO("Not yet implemented")
       override val logging: Logger get() = Statics.logging
@@ -124,8 +125,10 @@ sealed interface CommandContext : CoroutineScope {
    * @param out String builder to emit.
    */
   suspend fun output(out: suspend StringBuilder.() -> Unit) {
-    output(StringBuilder().apply {
+    output(
+      StringBuilder().apply {
       out.invoke(this)
-    })
+    },
+    )
   }
 }

@@ -3,10 +3,10 @@
 
 package elide.data
 
-import elide.core.encoding.Encoding
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
+import elide.core.encoding.Encoding
 
 /** Pure-Kotlin implementation of a data fingerprint container. */
 @Serializable internal data class DataFingerprint constructor(

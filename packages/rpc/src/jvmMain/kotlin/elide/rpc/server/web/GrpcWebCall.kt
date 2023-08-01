@@ -1,7 +1,5 @@
 package elide.rpc.server.web
 
-import elide.rpc.server.web.GrpcWebCall.Binary
-import elide.rpc.server.web.GrpcWebCall.Text
 import io.grpc.ManagedChannel
 import io.grpc.ServerMethodDefinition
 import io.grpc.ServerServiceDefinition
@@ -9,6 +7,8 @@ import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import java.security.Principal
+import elide.rpc.server.web.GrpcWebCall.Binary
+import elide.rpc.server.web.GrpcWebCall.Text
 
 /**
  * Sealed class which represents all format cases for a gRPC Web call, namely [Text] and [Binary] cases; objects are
@@ -23,7 +23,7 @@ import java.security.Principal
  * @param httpRequest Original HTTP request which produced this gRPC Web call.
  * @param httpResponse HTTP response that will ultimately be filled and returned if the request succeeds.
  */
-internal sealed class GrpcWebCall private constructor (
+internal sealed class GrpcWebCall private constructor(
   val contentType: GrpcWebContentType,
   val config: GrpcWebConfig,
   val service: ServerServiceDefinition,
@@ -49,7 +49,7 @@ internal sealed class GrpcWebCall private constructor (
     channel: ManagedChannel,
     httpRequest: HttpRequest<RawRpcPayload>,
     principal: Principal?,
-  ): GrpcWebCall(
+  ) : GrpcWebCall(
     contentType = GrpcWebContentType.TEXT,
     config = config,
     service = service,
@@ -72,7 +72,7 @@ internal sealed class GrpcWebCall private constructor (
     channel: ManagedChannel,
     httpRequest: HttpRequest<RawRpcPayload>,
     principal: Principal?,
-  ): GrpcWebCall(
+  ) : GrpcWebCall(
     contentType = GrpcWebContentType.BINARY,
     config = config,
     service = service,
@@ -129,7 +129,7 @@ internal sealed class GrpcWebCall private constructor (
   @Synchronized internal fun notifyResponse(response: GrpcWebCallResponse): GrpcWebCall {
     if (finished()) {
       throw IllegalStateException(
-        "Cannot provide more than one response to a given `GrpcWebCall` structure"
+        "Cannot provide more than one response to a given `GrpcWebCall` structure",
       )
     }
     this.response = response

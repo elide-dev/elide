@@ -14,7 +14,8 @@ class ClientHint private constructor() {
         const val SAVEDATA: Int = 6
         const val WIDTH: Int = 7
         const val VIEWPORTWIDTH: Int = 8
-        val names : Array<String> = arrayOf("UNKNOWN_CLIENT_HINT", "DPR", "ECT", "RTT", "DOWNLINK", "DEVICE_MEMORY", "SAVE_DATA", "WIDTH", "VIEWPORT_WIDTH")
-        fun name(e: Int) : String = names[e]
+        val names: Array<String> =
+          arrayOf("UNKNOWN_CLIENT_HINT", "DPR", "ECT", "RTT", "DOWNLINK", "DEVICE_MEMORY", "SAVE_DATA", "WIDTH", "VIEWPORT_WIDTH")
+        fun name(e: Int): String = names[e]
     }
 }

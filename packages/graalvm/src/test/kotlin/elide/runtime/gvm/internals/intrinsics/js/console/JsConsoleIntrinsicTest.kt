@@ -1,22 +1,21 @@
- @file:Suppress("JSUnresolvedVariable")
+
+@file:Suppress("JSUnresolvedVariable")
 
 package elide.runtime.gvm.internals.intrinsics.js.console
 
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import java.time.Instant
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import java.time.Instant
-import java.util.Date
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.test.assertEquals
 
 /** Tests for intrinsic JS console implementation, which pipes to logging. */
 @TestCase internal class JsConsoleIntrinsicTest : AbstractJsIntrinsicTest<ConsoleIntrinsic>() {
@@ -114,7 +113,6 @@ import kotlin.test.assertEquals
     console.log("hello log", "with", "args", 1, 2, 3)
     console.log("hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false)
     checkTestLogs(LogLevel.DEBUG)
-
   }
 
   @Test fun testConsoleInfo() {
@@ -141,7 +139,8 @@ import kotlin.test.assertEquals
     checkTestLogs(LogLevel.ERROR)
   }
 
-  @CsvSource(value = [
+  @CsvSource(
+    value = [
     // Guest Logging: Direct
     "DEBUG,direct",
     "INFO,direct",
@@ -153,9 +152,11 @@ import kotlin.test.assertEquals
     "INFO,facade",
     "WARN,facade",
     "ERROR,facade",
-  ])
+  ],
+  )
   @Suppress("UNUSED_PARAMETER")
-  @ParameterizedTest fun testConsole(level: LogLevel, mode: String) = dual {
+  @ParameterizedTest
+  fun testConsole(level: LogLevel, mode: String) = dual {
     // host-side test
     val hostMethod = when (level) {
       LogLevel.INFO -> console::info
@@ -168,7 +169,6 @@ import kotlin.test.assertEquals
     hostMethod.invoke(arrayOf("hello log", "with", "args", 1, 2, 3))
     hostMethod.invoke(arrayOf("hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false))
     checkTestLogs(level)
-
   }.thenRun {
     // guest-side test
     val modeBase = if (mode == "direct") {
@@ -189,15 +189,15 @@ import kotlin.test.assertEquals
     // language=javascript
     """
       if ("$mode" === "direct") {
-        ${method}(["hello log"]);
-        ${method}(["hello log", "with", "args"]);
-        ${method}(["hello log", "with", "args", 1, 2, 3]);
-        ${method}(["hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false]);      
+        $method(["hello log"]);
+        $method(["hello log", "with", "args"]);
+        $method(["hello log", "with", "args", 1, 2, 3]);
+        $method(["hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false]);      
       } else {
-        ${method}("hello log");
-        ${method}("hello log", "with", "args");
-        ${method}("hello log", "with", "args", 1, 2, 3);
-        ${method}("hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false);
+        $method("hello log");
+        $method("hello log", "with", "args");
+        $method("hello log", "with", "args", 1, 2, 3);
+        $method("hello log", "with", "args", 1, 2, 3, "and", "more", "args", true, false);
       }
     """
   }.thenAssert {

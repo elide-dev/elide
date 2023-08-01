@@ -1,15 +1,15 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import elide.vm.annotations.Polyglot
-import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
-import elide.runtime.intrinsics.js.*
 import io.micronaut.http.HttpRequest
 import java.io.InputStream
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
+import elide.runtime.intrinsics.js.*
+import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
-internal class FetchRequestIntrinsic internal constructor (
+internal class FetchRequestIntrinsic internal constructor(
   targetUrl: URLIntrinsic.URLValue,
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
@@ -24,27 +24,32 @@ internal class FetchRequestIntrinsic internal constructor (
       return FetchRequestIntrinsic(
         targetUrl = URLIntrinsic.URLValue.fromURL(request.uri),
         targetMethod = request.method.name,
-        requestHeaders = FetchHeaders.fromPairs(request.headers.asMap().entries.flatMap {
+        requestHeaders = FetchHeaders.fromPairs(
+          request.headers.asMap().entries.flatMap {
           it.value.map { value ->
             it.key to value
           }
-        }),
+        },
+        ),
         bodyData = request.getBody(InputStream::class.java).orElse(null),
       )
     }
   }
 
   /** Construct a new `Request` from a plain string URL. */
-  @Polyglot constructor (url: String) : this(targetUrl = URLIntrinsic.URLValue.fromString(url))
+  @Polyglot
+  constructor (url: String) : this(targetUrl = URLIntrinsic.URLValue.fromString(url))
 
   /** Construct a new `Request` from a Fetch API spec `URL` object. */
-  @Polyglot constructor (url: URLIntrinsic.URLValue) : this(targetUrl = url)
+  @Polyglot
+  constructor (url: URLIntrinsic.URLValue) : this(targetUrl = url)
 
   /** Construct a new `Request` from a Java Fetch API spec `URL` object. */
   constructor (url: URL) : this(targetUrl = URLIntrinsic.URLValue.fromString(url.toString()))
 
   /** Construct a new `Request` from another request (i.e. make a mutable or non-mutable copy). */
-  @Polyglot constructor (request: FetchRequest) : this (
+  @Polyglot
+  constructor (request: FetchRequest) : this (
     targetUrl = URLIntrinsic.URLValue.fromString(request.url),
     targetMethod = request.method,
     requestHeaders = request.headers,
@@ -65,17 +70,20 @@ internal class FetchRequestIntrinsic internal constructor (
   // -- Interface: Mutable HTTP Request -- //
 
   /** @inheritDoc */
-  @get:Polyglot @set:Polyglot override var headers: FetchHeaders
+  @get:Polyglot @set:Polyglot
+  override var headers: FetchHeaders
     get() = requestHeaders.get()
     set(subject) = requestHeaders.set(subject)
 
   /** @inheritDoc */
-  @get:Polyglot @set:Polyglot override var url: String
+  @get:Polyglot @set:Polyglot
+  override var url: String
     get() = targetUrl.get().toString()
     set(newTarget) = targetUrl.set(URLIntrinsic.URLValue.fromString(newTarget))
 
   /** @inheritDoc */
-  @get:Polyglot @set:Polyglot override var method: String
+  @get:Polyglot @set:Polyglot
+  override var method: String
     get() = targetMethod.get()
     set(value) = targetMethod.set(value)
 

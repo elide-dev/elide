@@ -2,22 +2,21 @@
 
 package elide.page.Context_.Scripts_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class JavaScript : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : JavaScript {
+    fun __assign(_i: Int, _bb: ByteBuffer): JavaScript {
         __init(_i, _bb)
         return this
     }
-    val uri : webutil.html.types.TrustedResourceUrlProto? get() = uri(webutil.html.types.TrustedResourceUrlProto())
-    fun uri(obj: webutil.html.types.TrustedResourceUrlProto) : webutil.html.types.TrustedResourceUrlProto? {
+    val uri: webutil.html.types.TrustedResourceUrlProto? get() = uri(webutil.html.types.TrustedResourceUrlProto())
+    fun uri(obj: webutil.html.types.TrustedResourceUrlProto): webutil.html.types.TrustedResourceUrlProto? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -25,47 +24,47 @@ class JavaScript : Table() {
             null
         }
     }
-    val id : String?
+    val id: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val idAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val defer : Boolean
+    val idAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun idInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val defer: Boolean
         get() {
             val o = __offset(8)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val async : Boolean
+    val async: Boolean
         get() {
             val o = __offset(10)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val module : Boolean
+    val module: Boolean
         get() {
             val o = __offset(12)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val noModule : Boolean
+    val noModule: Boolean
         get() {
             val o = __offset(14)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val prefetch : Boolean
+    val prefetch: Boolean
         get() {
             val o = __offset(16)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val preload : Boolean
+    val preload: Boolean
         get() {
             val o = __offset(18)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val push : Boolean
+    val push: Boolean
         get() {
             val o = __offset(20)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
@@ -74,7 +73,18 @@ class JavaScript : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createJavaScript(builder: FlatBufferBuilder, uriOffset: Int, idOffset: Int, defer: Boolean, async: Boolean, module: Boolean, noModule: Boolean, prefetch: Boolean, preload: Boolean, push: Boolean) : Int {
+        fun createJavaScript(
+          builder: FlatBufferBuilder,
+          uriOffset: Int,
+          idOffset: Int,
+          defer: Boolean,
+          async: Boolean,
+          module: Boolean,
+          noModule: Boolean,
+          prefetch: Boolean,
+          preload: Boolean,
+          push: Boolean,
+        ): Int {
             builder.startTable(9)
             addId(builder, idOffset)
             addUri(builder, uriOffset)
@@ -97,7 +107,7 @@ class JavaScript : Table() {
         fun addPrefetch(builder: FlatBufferBuilder, prefetch: Boolean) = builder.addBoolean(6, prefetch, false)
         fun addPreload(builder: FlatBufferBuilder, preload: Boolean) = builder.addBoolean(7, preload, false)
         fun addPush(builder: FlatBufferBuilder, push: Boolean) = builder.addBoolean(8, push, false)
-        fun endJavaScript(builder: FlatBufferBuilder) : Int {
+        fun endJavaScript(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

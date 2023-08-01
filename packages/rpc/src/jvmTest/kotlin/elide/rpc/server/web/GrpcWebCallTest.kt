@@ -1,6 +1,5 @@
 package elide.rpc.server.web
 
-import elide.rpc.server.web.GrpcWebCall.Companion.newCall
 import io.grpc.Metadata
 import io.grpc.ServerCall
 import io.grpc.ServerMethodDefinition
@@ -15,27 +14,28 @@ import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.security.Principal
 import kotlin.test.*
+import elide.rpc.server.web.GrpcWebCall.Companion.newCall
 
 /** Tests for the [GrpcWebCall] container. */
 class GrpcWebCallTest {
   @Test fun testCreateWebCallText() {
     val settings = GrpcWebConfig.DEFAULTS
     val serviceBuilder = ServerServiceDefinition.builder(
-      HealthGrpc.getServiceDescriptor()
+      HealthGrpc.getServiceDescriptor(),
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getCheckMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getWatchMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     val svc = serviceBuilder.build()
     val method = svc.methods.first()
@@ -53,12 +53,12 @@ class GrpcWebCallTest {
     )
     assertNotNull(
       call,
-      "should not get `null` from call factory based on content type"
+      "should not get `null` from call factory based on content type",
     )
     assertEquals(
       GrpcWebContentType.TEXT,
       call.contentType,
-      "text type for call should be preserved"
+      "text type for call should be preserved",
     )
     assertNotNull(call.config)
     assertNotNull(call.channel)
@@ -73,21 +73,21 @@ class GrpcWebCallTest {
   @Test fun testCreateWebCallBinary() {
     val settings = GrpcWebConfig.DEFAULTS
     val serviceBuilder = ServerServiceDefinition.builder(
-      HealthGrpc.getServiceDescriptor()
+      HealthGrpc.getServiceDescriptor(),
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getCheckMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getWatchMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     val svc = serviceBuilder.build()
 
@@ -106,12 +106,12 @@ class GrpcWebCallTest {
     )
     assertNotNull(
       call,
-      "should not get `null` from call factory based on content type"
+      "should not get `null` from call factory based on content type",
     )
     assertEquals(
       GrpcWebContentType.BINARY,
       call.contentType,
-      "text type for call should be preserved"
+      "text type for call should be preserved",
     )
     assertNotNull(call.config)
     assertNotNull(call.channel)
@@ -126,21 +126,21 @@ class GrpcWebCallTest {
   @Test fun testFinalizedGrpcWebCall() {
     val settings = GrpcWebConfig.DEFAULTS
     val serviceBuilder = ServerServiceDefinition.builder(
-      HealthGrpc.getServiceDescriptor()
+      HealthGrpc.getServiceDescriptor(),
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getCheckMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     serviceBuilder.addMethod(
       ServerMethodDefinition.create(HealthGrpc.getWatchMethod()) { _, _ ->
         object : ServerCall.Listener<HealthCheckRequest>() {
           // nothing
         }
-      }
+      },
     )
     val svc = serviceBuilder.build()
 
@@ -167,14 +167,14 @@ class GrpcWebCallTest {
           cause = null,
           headers = Metadata(),
           trailers = Metadata(),
-        )
+        ),
       )
     }
 
     // finalized should now report as `true`
     assertTrue(
       call.finished(),
-      "call should report `finished()` as `true` when finished"
+      "call should report `finished()` as `true` when finished",
     )
 
     // finalizing again should throw
@@ -186,7 +186,7 @@ class GrpcWebCallTest {
           cause = null,
           headers = Metadata(),
           trailers = Metadata(),
-        )
+        ),
       )
     }
   }
@@ -202,28 +202,28 @@ class GrpcWebCallTest {
     assertEquals(
       GrpcWebContentType.BINARY,
       errorResponse.contentType,
-      "error response should preserve gRPC content type"
+      "error response should preserve gRPC content type",
     )
     assertEquals(
       Status.INTERNAL,
       errorResponse.status,
-      "error response should preserve gRPC status"
+      "error response should preserve gRPC status",
     )
     assertNotNull(
       errorResponse.headers,
-      "error response should preserve gRPC headers"
+      "error response should preserve gRPC headers",
     )
     assertNotNull(
       errorResponse.trailers,
-      "error response should preserve gRPC trailers"
+      "error response should preserve gRPC trailers",
     )
     assertNull(
       errorResponse.cause,
-      "error response should preserve `null` cause"
+      "error response should preserve `null` cause",
     )
     assertFalse(
       errorResponse.success,
-      "success should report as `false` for error response"
+      "success should report as `false` for error response",
     )
     val errorResponse2 = GrpcWebCallResponse.Error(
       contentType = GrpcWebContentType.BINARY,
@@ -234,11 +234,11 @@ class GrpcWebCallTest {
     )
     assertNotNull(
       errorResponse2.cause,
-      "error response should preserve cause if provided"
+      "error response should preserve cause if provided",
     )
     assertFalse(
       errorResponse2.success,
-      "success should report as `false` for error response"
+      "success should report as `false` for error response",
     )
   }
 
@@ -252,24 +252,24 @@ class GrpcWebCallTest {
     assertEquals(
       GrpcWebContentType.BINARY,
       unaryResponse.contentType,
-      "unary response should preserve gRPC content type"
+      "unary response should preserve gRPC content type",
     )
     assertNotNull(
       unaryResponse.headers,
-      "unary response should preserve gRPC headers"
+      "unary response should preserve gRPC headers",
     )
     assertNotNull(
       unaryResponse.trailers,
-      "unary response should preserve gRPC trailers"
+      "unary response should preserve gRPC trailers",
     )
     assertTrue(
       unaryResponse.success,
-      "success should report as `true` for unary response"
+      "success should report as `true` for unary response",
     )
     assertEquals(
       0,
       unaryResponse.payload.size,
-      "response payload on unary response structure should not mutate or error when given empty data"
+      "response payload on unary response structure should not mutate or error when given empty data",
     )
     val unaryResponse2 = GrpcWebCallResponse.UnaryResponse(
       contentType = GrpcWebContentType.BINARY,
@@ -280,24 +280,24 @@ class GrpcWebCallTest {
     assertEquals(
       GrpcWebContentType.BINARY,
       unaryResponse2.contentType,
-      "unary response should preserve gRPC content type"
+      "unary response should preserve gRPC content type",
     )
     assertNotNull(
       unaryResponse2.headers,
-      "unary response should preserve gRPC headers"
+      "unary response should preserve gRPC headers",
     )
     assertNotNull(
       unaryResponse2.trailers,
-      "unary response should preserve gRPC trailers"
+      "unary response should preserve gRPC trailers",
     )
     assertTrue(
       unaryResponse2.success,
-      "success should report as `true` for unary response"
+      "success should report as `true` for unary response",
     )
     assertEquals(
       "hello".toByteArray(StandardCharsets.UTF_8).size,
       unaryResponse2.payload.size,
-      "response payload size should correspond to given data"
+      "response payload size should correspond to given data",
     )
   }
 }

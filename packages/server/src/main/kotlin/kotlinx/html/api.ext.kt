@@ -1,6 +1,5 @@
 package kotlinx.html
 
-
 // Visitor with suspension support.
 public suspend inline fun <T : Tag> T.visitSuspend(crossinline block: suspend T.() -> Unit): Unit = visitTagSuspend {
   block()

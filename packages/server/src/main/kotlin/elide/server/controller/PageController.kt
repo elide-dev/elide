@@ -1,12 +1,12 @@
 package elide.server.controller
 
+import io.micronaut.context.ApplicationContext
+import jakarta.inject.Inject
 import elide.server.AssetModuleId
 import elide.server.annotations.Page
 import elide.server.assets.AssetManager
 import elide.server.assets.AssetPointer
 import elide.server.assets.AssetReference
-import io.micronaut.context.ApplicationContext
-import jakarta.inject.Inject
 
 /**
  * Defines the built-in concept of a `Page`-type handler, which is capable of performing SSR, serving static assets, and

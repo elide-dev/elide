@@ -1,10 +1,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.js.MapLike
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 /** Tests for the [JsMutableMultiMap] implementation. */
 @TestCase internal class JsMutableMultiMapTest : AbstractJsMapTest<JsMutableMultiMap<String, Any?>>() {
@@ -36,8 +36,9 @@ import kotlin.test.assertNotNull
     JsMutableMultiMap.unboundedEntries(entries)
 
   /** @inheritDoc */
-  override fun spawnUnboundedJsEntries(entries: Iterable<MapLike.Entry<String, Any?>>): JsMutableMultiMap<String, Any?>
-    = JsMutableMultiMap.unbounded(entries)
+  override fun spawnUnboundedJsEntries(
+    entries: Iterable<MapLike.Entry<String, Any?>>,
+  ): JsMutableMultiMap<String, Any?> = JsMutableMultiMap.unbounded(entries)
 
   /** @inheritDoc */
   override fun implName(): String = "JsMutableMultiMap"

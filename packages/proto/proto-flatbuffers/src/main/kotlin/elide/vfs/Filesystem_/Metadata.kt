@@ -2,37 +2,36 @@
 
 package elide.vfs.Filesystem_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Metadata : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Metadata {
+    fun __assign(_i: Int, _bb: ByteBuffer): Metadata {
         __init(_i, _bb)
         return this
     }
-    val size : ULong
+    val size: ULong
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val compressed : ULong
+    val compressed: ULong
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+            return if (o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val compression : Int
+    val compression: Int
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val modified : google.protobuf.Timestamp? get() = modified(google.protobuf.Timestamp())
-    fun modified(obj: google.protobuf.Timestamp) : google.protobuf.Timestamp? {
+    val modified: google.protobuf.Timestamp? get() = modified(google.protobuf.Timestamp())
+    fun modified(obj: google.protobuf.Timestamp): google.protobuf.Timestamp? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -47,7 +46,13 @@ class Metadata : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetadata(builder: FlatBufferBuilder, size: ULong, compressed: ULong, compression: Int, modifiedOffset: Int) : Int {
+        fun createMetadata(
+          builder: FlatBufferBuilder,
+          size: ULong,
+          compressed: ULong,
+          compression: Int,
+          modifiedOffset: Int,
+        ): Int {
             builder.startTable(4)
             addCompressed(builder, compressed)
             addSize(builder, size)
@@ -60,7 +65,7 @@ class Metadata : Table() {
         fun addCompressed(builder: FlatBufferBuilder, compressed: ULong) = builder.addLong(1, compressed.toLong(), 0)
         fun addCompression(builder: FlatBufferBuilder, compression: Int) = builder.addInt(2, compression, 0)
         fun addModified(builder: FlatBufferBuilder, modified: Int) = builder.addOffset(3, modified, 0)
-        fun endMetadata(builder: FlatBufferBuilder) : Int {
+        fun endMetadata(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

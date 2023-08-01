@@ -1,11 +1,11 @@
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
-import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.MapLike
+import elide.vm.annotations.Polyglot
 
 /** Implements a JavaScript map with mutability support. */
 @Suppress("unused")
-internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>) :
+internal class JsMutableMap<K : Any, V> constructor(backingMap: MutableMap<K, V>) :
   BaseMutableJsMap<K, V>(backingMap) {
   /**
    * Constructor: Empty.
@@ -24,9 +24,10 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
   constructor(size: Int) : this(mapImpl(size))
 
   /** Mutable map factory. */
-  @Suppress("unused") internal companion object Factory : MapFactory<JsMutableMap<*, *>> {
+  @Suppress("unused")
+  internal companion object Factory : MapFactory<JsMutableMap<*, *>> {
     // Internal function to create a backing-map implementation.
-    @JvmStatic private fun <K: Any, V> mapImpl(size: Int? = null): MutableMap<K, V> = if (size != null) {
+    @JvmStatic private fun <K : Any, V> mapImpl(size: Int? = null): MutableMap<K, V> = if (size != null) {
       HashMap(size)
     } else {
       HashMap()
@@ -38,7 +39,7 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @param map Existing map instance to wrap.
      * @return Wrapped JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> of(map: MutableMap<K, V>): JsMutableMap<K, V> = JsMutableMap(map)
+    @JvmStatic override fun <K : Any, V> of(map: MutableMap<K, V>): JsMutableMap<K, V> = JsMutableMap(map)
 
     /**
      * Return a generic mutable [JsMutableMap] instance, which is a copy of the provided [map].
@@ -46,10 +47,10 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @param map Existing map instance to wrap.
      * @return Copied JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> copyOf(map: Map<K, V>): JsMutableMap<K, V> = JsMutableMap(
+    @JvmStatic override fun <K : Any, V> copyOf(map: Map<K, V>): JsMutableMap<K, V> = JsMutableMap(
       mapImpl<K, V>(map.size).apply {
         putAll(map)
-      }
+      },
     )
 
     /**
@@ -60,11 +61,13 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Created JS map instance.
      */
     @JvmStatic override fun <K : Any, V> from(entries: Collection<MapLike.Entry<K, V>>): JsMutableMap<K, V> {
-      return JsMutableMap(mapImpl<K, V>(entries.size).apply {
+      return JsMutableMap(
+        mapImpl<K, V>(entries.size).apply {
         entries.forEach {
           put(it.key, it.value)
         }
-      })
+      },
+      )
     }
 
     /**
@@ -74,7 +77,7 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @param pairs Pairs from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> fromPairs(pairs: Collection<Pair<K, V>>) = empty<K, V>(pairs.size).apply {
+    @JvmStatic override fun <K : Any, V> fromPairs(pairs: Collection<Pair<K, V>>) = empty<K, V>(pairs.size).apply {
       pairs.forEach {
         put(it.first, it.second)
       }
@@ -88,7 +91,7 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Created JS map instance.
      */
     @JvmStatic
-    override fun <K: Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>) = empty<K, V>(entries.size).apply {
+    override fun <K : Any, V> fromEntries(entries: Collection<Map.Entry<K, V>>) = empty<K, V>(entries.size).apply {
       entries.forEach {
         put(it.key, it.value)
       }
@@ -105,9 +108,11 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Created JS map instance.
      */
     @JvmStatic
-    override fun <K: Any, V> unboundedPairs(pairs: Iterable<Pair<K, V>>) = JsMutableMap(mapImpl<K, V>().apply {
+    override fun <K : Any, V> unboundedPairs(pairs: Iterable<Pair<K, V>>) = JsMutableMap(
+      mapImpl<K, V>().apply {
       pairs.forEach { put(it.first, it.second) }
-    })
+    },
+    )
 
     /**
      * Return a generic mutable [JsMutableMap] instance, created from the provided set of [entries], each an instance of
@@ -120,10 +125,10 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Created JS map instance.
      */
     @JvmStatic
-    override fun <K: Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>) = JsMutableMap(
+    override fun <K : Any, V> unboundedEntries(entries: Iterable<Map.Entry<K, V>>) = JsMutableMap(
       mapImpl<K, V>().apply {
         entries.forEach { put(it.key, it.value) }
-      }
+      },
     )
 
     /**
@@ -133,12 +138,12 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @param entries Map entries from which to create a JS map.
      * @return Created JS map instance.
      */
-    @JvmStatic override fun <K: Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>) = JsMutableMap(
+    @JvmStatic override fun <K : Any, V> unbounded(entries: Iterable<MapLike.Entry<K, V>>) = JsMutableMap(
       mapImpl<K, V?>().apply {
         entries.forEach {
           set(it.key, it.value)
         }
-      }
+      },
     )
 
     /**
@@ -148,7 +153,8 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic fun <K: Any, V> empty(size: Int): JsMutableMap<K, V> = JsMutableMap(mapImpl(size))
+    @JvmStatic
+    fun <K : Any, V> empty(size: Int): JsMutableMap<K, V> = JsMutableMap(mapImpl(size))
 
     /**
      * Return an empty and mutable JS map instance.
@@ -156,7 +162,8 @@ internal class JsMutableMap<K: Any, V> constructor (backingMap: MutableMap<K, V>
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic override fun <K: Any, V> empty(): JsMutableMap<K, V> = JsMutableMap(mapImpl())
+    @JvmStatic
+    override fun <K : Any, V> empty(): JsMutableMap<K, V> = JsMutableMap(mapImpl())
   }
 
   /** @inheritDoc */

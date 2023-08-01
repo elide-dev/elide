@@ -21,7 +21,8 @@ import kotlinx.coroutines.Dispatchers
 
 /** Provides a [CoroutineDispatcher] for use in test environments. */
 @Requires(env = ["test"])
-@Factory internal class TestDispatcherProvider {
+@Factory
+internal class TestDispatcherProvider {
   /** @return I/O dispatcher. */
   @Singleton fun acquireDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }

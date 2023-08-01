@@ -2,35 +2,34 @@
 
 package elide.page.Context_
 
-import java.nio.*
-import kotlin.math.sign
 import com.google.flatbuffers.*
+import java.nio.*
 
 @Suppress("unused")
 class Metadata : Table() {
 
-    fun __init(_i: Int, _bb: ByteBuffer)  {
+    fun __init(_i: Int, _bb: ByteBuffer) {
         __reset(_i, _bb)
     }
-    fun __assign(_i: Int, _bb: ByteBuffer) : Metadata {
+    fun __assign(_i: Int, _bb: ByteBuffer): Metadata {
         __init(_i, _bb)
         return this
     }
-    val title : String?
+    val title: String?
         get() {
             val o = __offset(4)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val titleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun titleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val description : String?
+    val titleAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun titleInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val description: String?
         get() {
             val o = __offset(6)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val descriptionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    fun keyword(j: Int) : String? {
+    val descriptionAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    fun keyword(j: Int): String? {
         val o = __offset(8)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -38,12 +37,13 @@ class Metadata : Table() {
             null
         }
     }
-    val keywordLength : Int
+    val keywordLength: Int
         get() {
-            val o = __offset(8); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(8)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val semantic : elide.page.SemanticMetadata? get() = semantic(elide.page.SemanticMetadata())
-    fun semantic(obj: elide.page.SemanticMetadata) : elide.page.SemanticMetadata? {
+    val semantic: elide.page.SemanticMetadata? get() = semantic(elide.page.SemanticMetadata())
+    fun semantic(obj: elide.page.SemanticMetadata): elide.page.SemanticMetadata? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -51,15 +51,15 @@ class Metadata : Table() {
             null
         }
     }
-    val viewport : String?
+    val viewport: String?
         get() {
             val o = __offset(12)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val viewportAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun viewportInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val manifest : webutil.html.types.TrustedResourceUrlProto? get() = manifest(webutil.html.types.TrustedResourceUrlProto())
-    fun manifest(obj: webutil.html.types.TrustedResourceUrlProto) : webutil.html.types.TrustedResourceUrlProto? {
+    val viewportAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun viewportInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val manifest: webutil.html.types.TrustedResourceUrlProto? get() = manifest(webutil.html.types.TrustedResourceUrlProto())
+    fun manifest(obj: webutil.html.types.TrustedResourceUrlProto): webutil.html.types.TrustedResourceUrlProto? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -67,29 +67,29 @@ class Metadata : Table() {
             null
         }
     }
-    val theme : String?
+    val theme: String?
         get() {
             val o = __offset(16)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val themeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun themeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val touchIcon : String?
+    val themeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun themeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val touchIcon: String?
         get() {
             val o = __offset(18)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val touchIconAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun touchIconInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val startupImage : String?
+    val touchIconAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun touchIconInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val startupImage: String?
         get() {
             val o = __offset(20)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val startupImageAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun startupImageInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    fun link(j: Int) : elide.page.Context_.PageLink? = link(elide.page.Context_.PageLink(), j)
-    fun link(obj: elide.page.Context_.PageLink, j: Int) : elide.page.Context_.PageLink? {
+    val startupImageAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun startupImageInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    fun link(j: Int): elide.page.Context_.PageLink? = link(elide.page.Context_.PageLink(), j)
+    fun link(obj: elide.page.Context_.PageLink, j: Int): elide.page.Context_.PageLink? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -97,12 +97,13 @@ class Metadata : Table() {
             null
         }
     }
-    val linkLength : Int
+    val linkLength: Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(22)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val language : elide.base.LanguageSpec? get() = language(elide.base.LanguageSpec())
-    fun language(obj: elide.base.LanguageSpec) : elide.base.LanguageSpec? {
+    val language: elide.base.LanguageSpec? get() = language(elide.base.LanguageSpec())
+    fun language(obj: elide.base.LanguageSpec): elide.base.LanguageSpec? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -110,22 +111,22 @@ class Metadata : Table() {
             null
         }
     }
-    val gtmId : String?
+    val gtmId: String?
         get() {
             val o = __offset(26)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val gtmIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun gtmIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val fbAppId : String?
+    val gtmIdAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun gtmIdInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val fbAppId: String?
         get() {
             val o = __offset(28)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val fbAppIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun fbAppIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val openGraph : elide.page.Context_.Metadata_.OpenGraph? get() = openGraph(elide.page.Context_.Metadata_.OpenGraph())
-    fun openGraph(obj: elide.page.Context_.Metadata_.OpenGraph) : elide.page.Context_.Metadata_.OpenGraph? {
+    val fbAppIdAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun fbAppIdInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val openGraph: elide.page.Context_.Metadata_.OpenGraph? get() = openGraph(elide.page.Context_.Metadata_.OpenGraph())
+    fun openGraph(obj: elide.page.Context_.Metadata_.OpenGraph): elide.page.Context_.Metadata_.OpenGraph? {
         val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -133,22 +134,22 @@ class Metadata : Table() {
             null
         }
     }
-    val robots : String?
+    val robots: String?
         get() {
             val o = __offset(32)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val robotsAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun robotsInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val colorScheme : String?
+    val robotsAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun robotsInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val colorScheme: String?
         get() {
             val o = __offset(34)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val colorSchemeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun colorSchemeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    fun prefix(j: Int) : elide.page.Context_.RDFPrefix? = prefix(elide.page.Context_.RDFPrefix(), j)
-    fun prefix(obj: elide.page.Context_.RDFPrefix, j: Int) : elide.page.Context_.RDFPrefix? {
+    val colorSchemeAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun colorSchemeInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    fun prefix(j: Int): elide.page.Context_.RDFPrefix? = prefix(elide.page.Context_.RDFPrefix(), j)
+    fun prefix(obj: elide.page.Context_.RDFPrefix, j: Int): elide.page.Context_.RDFPrefix? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -156,31 +157,32 @@ class Metadata : Table() {
             null
         }
     }
-    val prefixLength : Int
+    val prefixLength: Int
         get() {
-            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(36)
+            return if (o != 0) __vector_len(o) else 0
         }
-    val googlebot : String?
+    val googlebot: String?
         get() {
             val o = __offset(38)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val googlebotAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun googlebotInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val rating : String?
+    val googlebotAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun googlebotInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val rating: String?
         get() {
             val o = __offset(40)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val ratingAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun ratingInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
-    val delegatePackage : String?
+    val ratingAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun ratingInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val delegatePackage: String?
         get() {
             val o = __offset(42)
             return if (o != 0) __string(o + bb_pos) else null
         }
-    val delegatePackageAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun delegatePackageInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val delegatePackageAsByteBuffer: ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun delegatePackageInByteBuffer(_bb: ByteBuffer): ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_22_12_06()
         fun getRootAsMetadata(_bb: ByteBuffer): Metadata = getRootAsMetadata(_bb, Metadata())
@@ -188,7 +190,29 @@ class Metadata : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetadata(builder: FlatBufferBuilder, titleOffset: Int, descriptionOffset: Int, keywordOffset: Int, semanticOffset: Int, viewportOffset: Int, manifestOffset: Int, themeOffset: Int, touchIconOffset: Int, startupImageOffset: Int, linkOffset: Int, languageOffset: Int, gtmIdOffset: Int, fbAppIdOffset: Int, openGraphOffset: Int, robotsOffset: Int, colorSchemeOffset: Int, prefixOffset: Int, googlebotOffset: Int, ratingOffset: Int, delegatePackageOffset: Int) : Int {
+        fun createMetadata(
+          builder: FlatBufferBuilder,
+          titleOffset: Int,
+          descriptionOffset: Int,
+          keywordOffset: Int,
+          semanticOffset: Int,
+          viewportOffset: Int,
+          manifestOffset: Int,
+          themeOffset: Int,
+          touchIconOffset: Int,
+          startupImageOffset: Int,
+          linkOffset: Int,
+          languageOffset: Int,
+          gtmIdOffset: Int,
+          fbAppIdOffset: Int,
+          openGraphOffset: Int,
+          robotsOffset: Int,
+          colorSchemeOffset: Int,
+          prefixOffset: Int,
+          googlebotOffset: Int,
+          ratingOffset: Int,
+          delegatePackageOffset: Int,
+        ): Int {
             builder.startTable(20)
             addDelegatePackage(builder, delegatePackageOffset)
             addRating(builder, ratingOffset)
@@ -216,7 +240,7 @@ class Metadata : Table() {
         fun addTitle(builder: FlatBufferBuilder, title: Int) = builder.addOffset(0, title, 0)
         fun addDescription(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
         fun addKeyword(builder: FlatBufferBuilder, keyword: Int) = builder.addOffset(2, keyword, 0)
-        fun createKeywordVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createKeywordVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -231,7 +255,7 @@ class Metadata : Table() {
         fun addTouchIcon(builder: FlatBufferBuilder, touchIcon: Int) = builder.addOffset(7, touchIcon, 0)
         fun addStartupImage(builder: FlatBufferBuilder, startupImage: Int) = builder.addOffset(8, startupImage, 0)
         fun addLink(builder: FlatBufferBuilder, link: Int) = builder.addOffset(9, link, 0)
-        fun createLinkVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createLinkVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -246,7 +270,7 @@ class Metadata : Table() {
         fun addRobots(builder: FlatBufferBuilder, robots: Int) = builder.addOffset(14, robots, 0)
         fun addColorScheme(builder: FlatBufferBuilder, colorScheme: Int) = builder.addOffset(15, colorScheme, 0)
         fun addPrefix(builder: FlatBufferBuilder, prefix: Int) = builder.addOffset(16, prefix, 0)
-        fun createPrefixVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun createPrefixVector(builder: FlatBufferBuilder, data: IntArray): Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
@@ -256,8 +280,11 @@ class Metadata : Table() {
         fun startPrefixVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addGooglebot(builder: FlatBufferBuilder, googlebot: Int) = builder.addOffset(17, googlebot, 0)
         fun addRating(builder: FlatBufferBuilder, rating: Int) = builder.addOffset(18, rating, 0)
-        fun addDelegatePackage(builder: FlatBufferBuilder, delegatePackage: Int) = builder.addOffset(19, delegatePackage, 0)
-        fun endMetadata(builder: FlatBufferBuilder) : Int {
+        fun addDelegatePackage(
+          builder: FlatBufferBuilder,
+          delegatePackage: Int,
+        ) = builder.addOffset(19, delegatePackage, 0)
+        fun endMetadata(builder: FlatBufferBuilder): Int {
             val o = builder.endTable()
             return o
         }

@@ -41,10 +41,12 @@ kotlin {
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
       allWarningsAsErrors = true
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
+      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(
+        listOf(
         // do not warn for generated code
-        "-nowarn"
-      ))
+        "-nowarn",
+      ),
+      )
     }
   }
 

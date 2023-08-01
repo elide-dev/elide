@@ -9,7 +9,7 @@ import jdk.jshell.spi.ExecutionEnv
  *
  * Installed as the execution control provider for an Espresso-based JShell.
  */
-class EspressoExecutionControlProvider: ExecutionControlProvider {
+class EspressoExecutionControlProvider : ExecutionControlProvider {
   override fun name(): String {
     TODO("Not yet implemented")
   }

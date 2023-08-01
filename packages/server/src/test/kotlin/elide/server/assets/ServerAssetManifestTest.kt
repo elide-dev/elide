@@ -1,13 +1,13 @@
 package elide.server.assets
 
 import com.google.common.truth.extensions.proto.ProtoTruth.assertThat
-import elide.server.TestUtil
 import org.junit.jupiter.api.assertDoesNotThrow
 import tools.elide.assets.AssetBundle
 import tools.elide.assets.ManifestFormat
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 import kotlin.test.*
+import elide.server.TestUtil
 
 /** Tests for [ServerAssetManifest] and [ServerAssetManifestProvider]. */
 class ServerAssetManifestTest {
@@ -22,19 +22,19 @@ class ServerAssetManifestTest {
     }
     assertNotNull(
       manifest,
-      "loaded asset manifest should not be `null`"
+      "loaded asset manifest should not be `null`",
     )
     assertTrue(
       manifest.isInitialized,
-      "manifest proto should be initialized after loading"
+      "manifest proto should be initialized after loading",
     )
     assertTrue(
       manifest.hasSettings(),
-      "manifest should have settings data present"
+      "manifest should have settings data present",
     )
     assertTrue(
       manifest.hasGenerated(),
-      "manifest should have a generated-at timestamp"
+      "manifest should have a generated-at timestamp",
     )
   }
 
@@ -52,7 +52,7 @@ class ServerAssetManifestTest {
       )
     }
     assertThat(manifest).isEqualTo(
-      reparsed
+      reparsed,
     )
   }
 
@@ -70,7 +70,7 @@ class ServerAssetManifestTest {
       )
     }
     assertThat(manifest).isEqualTo(
-      reparsed
+      reparsed,
     )
   }
 
@@ -106,19 +106,19 @@ class ServerAssetManifestTest {
     }
     assertNotNull(
       manifest,
-      "loaded asset manifest should not be `null`"
+      "loaded asset manifest should not be `null`",
     )
     assertTrue(
       manifest.isInitialized,
-      "manifest proto should be initialized after loading"
+      "manifest proto should be initialized after loading",
     )
     assertTrue(
       manifest.hasSettings(),
-      "manifest should have settings data present"
+      "manifest should have settings data present",
     )
     assertTrue(
       manifest.hasGenerated(),
-      "manifest should have a generated-at timestamp"
+      "manifest should have a generated-at timestamp",
     )
   }
 
@@ -128,7 +128,7 @@ class ServerAssetManifestTest {
         ServerAssetManifestProvider().deserializeLoadManifest(
           ManifestFormat.TEXT to ByteArrayInputStream(ByteArray(0)),
         )
-      }
+      },
     )
   }
 
@@ -141,14 +141,14 @@ class ServerAssetManifestTest {
         provider.deserializeLoadManifest(
           ManifestFormat.BINARY to baos,
         )
-      }
+      },
     )
     assertNull(
       assertDoesNotThrow {
         provider.deserializeLoadManifest(
           ManifestFormat.JSON to baos,
         )
-      }
+      },
     )
   }
 
@@ -161,13 +161,13 @@ class ServerAssetManifestTest {
           ManifestFormat.BINARY to "/manifest/some-bad-path.pb",
           ManifestFormat.JSON to "/manifest/some-bad-path.pb.json",
           ManifestFormat.BINARY to path,
-          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt"
-        )
+          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt",
+        ),
       )
     }
     assertNotNull(
       manifest,
-      "should be able to find present manifest"
+      "should be able to find present manifest",
     )
   }
 
@@ -180,13 +180,13 @@ class ServerAssetManifestTest {
           ManifestFormat.BINARY to "/manifest/some-bad-path.pb",
           ManifestFormat.JSON to "/manifest/some-bad-path.pb.json",
           ManifestFormat.BINARY to path,
-          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt"
-        )
+          ManifestFormat.TEXT to "/manifest/some-bad-path.pb.txt",
+        ),
       )
     }
     assertNull(
       manifest,
-      "should not be able to find missing manifest"
+      "should not be able to find missing manifest",
     )
   }
 
@@ -206,7 +206,7 @@ class ServerAssetManifestTest {
     }
     assertNotNull(
       manifest,
-      "should be able to find present manifest"
+      "should be able to find present manifest",
     )
     val manifest2 = assertDoesNotThrow {
       provider.findLoadManifest(
@@ -214,7 +214,7 @@ class ServerAssetManifestTest {
       )
     }
     assertThat(manifest).isEqualTo(
-      manifest2
+      manifest2,
     )
   }
 
@@ -228,7 +228,7 @@ class ServerAssetManifestTest {
     }
     assertNull(
       manifest,
-      "not finding a manifest should result in `null`"
+      "not finding a manifest should result in `null`",
     )
   }
 

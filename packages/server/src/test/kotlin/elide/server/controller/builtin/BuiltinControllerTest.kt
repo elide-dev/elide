@@ -1,15 +1,15 @@
 package elide.server.controller.builtin
 
-import elide.server.RawResponse
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpRequest
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import kotlinx.coroutines.runBlocking
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import elide.server.RawResponse
 
 /** Tests for built-in controllers, which handle HTML, text, and JSON. */
 abstract class BuiltinControllerTest<C : BuiltinController> {
@@ -44,7 +44,8 @@ abstract class BuiltinControllerTest<C : BuiltinController> {
   }
 
   @CsvSource(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML, MediaType.TEXT_PLAIN)
-  @ParameterizedTest fun testRespondsToContentTypes(accept: MediaType) {
+  @ParameterizedTest
+  fun testRespondsToContentTypes(accept: MediaType) {
     val controller = controller()
     assertNotNull(controller)
     val request = getRequestTemplate()
@@ -53,12 +54,13 @@ abstract class BuiltinControllerTest<C : BuiltinController> {
     }
     builtinResponseAssertions(
       response,
-      accept
+      accept,
     )
   }
 
   @CsvSource("GET", "PUT", "POST", "DELETE", "OPTIONS")
-  @ParameterizedTest fun testRespondsToMethods(method: String) {
+  @ParameterizedTest
+  fun testRespondsToMethods(method: String) {
     val methodTarget = HttpMethod.valueOf(method)
     val controller = controller()
     assertNotNull(controller)

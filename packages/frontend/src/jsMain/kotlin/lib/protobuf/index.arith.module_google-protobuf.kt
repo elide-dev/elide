@@ -6,6 +6,7 @@
   "CONFLICTING_OVERLOADS",
   "unused",
 )
+
 package lib.protobuf
 
 import kotlin.js.*

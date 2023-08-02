@@ -9,7 +9,7 @@ plugins {
   `maven-publish`
   distribution
   signing
-  id("dev.elide.build.multiplatform")
+  id("dev.elide.build.multiplatform.jvm")
 }
 
 group = "dev.elide"

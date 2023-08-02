@@ -16,6 +16,12 @@
   "UnstableApiUsage",
 )
 
+import gradle.kotlin.dsl.accessors._66aa2ba983871d8ee71a004677014469.kotlin
+import gradle.kotlin.dsl.accessors._66aa2ba983871d8ee71a004677014469.publishing
+import org.gradle.api.GradleException
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 
@@ -52,16 +58,6 @@ kotlin {
     }
   }
 
-  js(IR) {
-    browser {
-      commonWebpackConfig(Action {
-        cssSupport {
-          enabled = true
-        }
-      })
-    }
-  }
-
   if (project.hasProperty("publishMainHostLock") && project.properties["publishMainHostLock"] == "true") {
     val publicationsFromMainHost =
       listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
@@ -76,15 +72,6 @@ kotlin {
         }
       }
     }
-  }
-
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
   }
 
   sourceSets.all {

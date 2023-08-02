@@ -61,7 +61,6 @@ dependencies {
     Elide.multiplatformModules
   ).forEach {
     testReportAggregation(project(":packages:$it"))
-    jacocoAggregation(project(":packages:$it"))
   }
 
   antJUnit("org.apache.ant", "ant-junit", Versions.antJUnit)
@@ -130,5 +129,4 @@ task("mergeJUnitReports") {
 tasks.create("reports") {
   dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
   dependsOn(tasks.named("mergeJUnitReports"))
-  dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
 }

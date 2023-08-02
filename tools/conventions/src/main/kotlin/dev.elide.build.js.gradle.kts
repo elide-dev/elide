@@ -33,18 +33,6 @@ kotlin {
   js(IR) {
     browser()
   }
-
-  publishing {
-    publications {
-      create<MavenPublication>("main") {
-        groupId = "dev.elide"
-        artifactId = project.name
-        version = rootProject.version as String
-
-        from(components["kotlin"])
-      }
-    }
-  }
 }
 
 // Tool: Kover

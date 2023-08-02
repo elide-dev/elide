@@ -607,6 +607,7 @@ jobs:
           cache-read-only: false
           arguments: |
             :packages:cli:nativeOptimizedCompile
+            :packages:cli:dist
             -Prelease=true
             -PbuildMode=release
             --scan
@@ -617,27 +618,13 @@ jobs:
             -PbuildSamples=false
             -PbuildDocsSite=false
             -PbuildDocs=false
-      - name: "Post-process: Compress (xz)"
-        if: success() && !contains(matrix.runner, 'windows')
-        run: |
-          pushd packages/cli/build/native/nativeOptimizedCompile;
-          xz -9kv elide.debug;
-          popd;
-          echo "Binary compressed.";
-      - name: "Artifacts: Release Binary (Unix)"
+      - name: "Artifacts: Release Binary"
         uses: actions/upload-artifact@v3
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-release-${{ matrix.tag }}
           path: |
-            ./packages/cli/build/native/nativeOptimizedCompile/elide.xz
-      - name: "Artifacts: Release Binary (Windows)"
-        uses: actions/upload-artifact@v3
-        if: success() && contains(matrix.runner, 'windows')
-        with:
-          name: cli-release-${{ matrix.tag }}
-          path: |
-            ./packages/cli/build/native/nativeOptimizedCompile/elide.exe
+            ./packages/cli/build/distributions/*
 
   ##
   ## Job: Docker Samples (JVM)

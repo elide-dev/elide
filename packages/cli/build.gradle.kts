@@ -19,6 +19,7 @@
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import Java9Modularity.configure as configureJava9ModuleInfo
@@ -35,12 +36,13 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
-  id("org.jetbrains.kotlinx.kover")
-  id("com.github.gmazzo.buildconfig")
-  id("io.micronaut.application")
-  id("io.micronaut.graalvm")
-  id("io.micronaut.aot")
-  id("com.github.johnrengelman.shadow")
+  id(libs.plugins.kover.get().pluginId)
+  id(libs.plugins.buildConfig.get().pluginId)
+  id(libs.plugins.micronaut.application.get().pluginId)
+  id(libs.plugins.micronaut.graalvm.get().pluginId)
+  id(libs.plugins.micronaut.aot.get().pluginId)
+  id(libs.plugins.shadow.get().pluginId)
+  id(libs.plugins.gradle.checksum.get().pluginId)
   id("dev.elide.build.docker")
   id("dev.elide.build")
 }
@@ -162,8 +164,8 @@ dependencies {
   kapt(libs.micronaut.inject.java)
   kapt(libs.picocli.codegen)
 
-  api(project(":packages:base"))
-  implementation(project(":packages:graalvm"))
+  api(projects.packages.base)
+  implementation(projects.packages.graalvm)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.kotlin.scripting.common)
   implementation(libs.kotlin.scripting.dependencies)
@@ -196,8 +198,9 @@ dependencies {
   runtimeOnly(libs.micronaut.context)
   runtimeOnly(libs.micronaut.kotlin.runtime)
 
-  implementation(project(":packages:proto:proto-protobuf"))
-  runtimeOnly(project(":packages:proto:proto-kotlinx"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoProtobuf)
+  runtimeOnly(projects.packages.proto.protoKotlinx)
 
   runtimeOnly(libs.micronaut.graal)
 
@@ -272,6 +275,83 @@ val targetOs = when {
   Os.isFamily(Os.FAMILY_MAC) -> "darwin"
   Os.isFamily(Os.FAMILY_UNIX) -> "linux"
   else -> "generic"
+}
+
+val targetArch: String = System.getProperty("os.arch", "unknown")
+val targetTag = "$targetOs-$targetArch"
+
+distributions {
+  create("bin") {
+    distributionBaseName = "elide"
+    distributionClassifier = targetTag
+
+    contents {
+      from(
+        tasks.nativeOptimizedCompile,
+        layout.projectDirectory.dir("packaging/content"),
+      )
+    }
+  }
+}
+
+val binDistZip by tasks.getting(Zip::class)
+val binDistTar by tasks.getting(Tar::class) {
+  compression = Compression.GZIP
+}
+
+signing {
+  isRequired = properties["enableSigning"] == "true"
+  sign(binDistZip, binDistTar)
+}
+
+tasks {
+  val distributionChecksums by registering(Checksum::class) {
+    group = "distribution"
+    description = "Generates checksums for the distribution archives"
+
+    dependsOn(
+      binDistZip,
+      binDistTar,
+    )
+    inputFiles.setFrom(
+      layout.buildDirectory.file("distributions/elide-$version-$targetTag.zip"),
+      layout.buildDirectory.file("distributions/elide-$version-$targetTag.tgz"),
+    )
+    outputDirectory = layout.buildDirectory.dir("distributions")
+    appendFileNameToChecksum = true
+    checksumAlgorithm = Checksum.Algorithm.SHA256
+    outputs.cacheIf { true }
+  }
+
+  val signBinDistZip by getting(Sign::class) {
+    dependsOn(distributionChecksums)
+  }
+  val signBinDistTar by getting(Sign::class) {
+    dependsOn(distributionChecksums)
+  }
+
+  val dist by registering {
+    group = "distribution"
+    description = "Builds CLI distributions"
+
+    dependsOn(
+      // Distribution: Shadow JAR
+      shadowJar,
+
+      // Distribution: Optimized Binary
+      nativeOptimizedCompile,
+
+      // Distribution: Archives
+      assembleDist,
+      binDistTar,
+      binDistZip,
+
+      // Distribution: Archive Checksums & Signatures
+      distributionChecksums,
+      signBinDistZip,
+      signBinDistTar,
+    )
+  }
 }
 
 /**

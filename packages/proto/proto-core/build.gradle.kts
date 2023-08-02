@@ -109,37 +109,32 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 } else null
 
 publishing {
-  publications {
-    /** Publication: Core */
-    create<MavenPublication>("maven") {
-      from(components["kotlin"])
-      artifact(tasks["sourcesJar"])
-      if (buildDocs) {
-        artifact(javadocJar)
+  publications.withType<MavenPublication> {
+    if (buildDocs) {
+      artifact(javadocJar)
+    }
+
+    artifactId = artifactId.replace("proto-core", "elide-proto-core")
+
+    pom {
+      name = "Elide Protocol: API"
+      description = "API headers and services for the Elide Protocol"
+      url = "https://elide.dev"
+      licenses {
+        license {
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
+        }
       }
-
-      artifactId = artifactId.replace("proto-core", "elide-proto-core")
-
-      pom {
-        name = "Elide Protocol: API"
-        description = "API headers and services for the Elide Protocol"
-        url = "https://elide.dev"
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
+      developers {
+        developer {
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
+      }
+      scm {
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

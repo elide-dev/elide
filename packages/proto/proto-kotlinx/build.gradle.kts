@@ -125,36 +125,31 @@ val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
 } else null
 
 publishing {
-  publications {
-    /** Publication: KotlinX */
-    create<MavenPublication>("maven") {
-      artifactId = artifactId.replace("proto-kotlinx", "elide-proto-kotlinx")
-      from(components["kotlin"])
-      artifact(tasks["sourcesJar"])
-      if (buildDocs) {
-        artifact(javadocJar)
-      }
+  publications.withType<MavenPublication> {
+    if (buildDocs) {
+      artifact(javadocJar)
+    }
+    artifactId = artifactId.replace("proto-kotlinx", "elide-proto-kotlinx")
 
-      pom {
-        name = "Elide Protocol: KotlinX"
-        description = "Elide protocol implementation for KotlinX Serialization"
-        url = "https://elide.dev"
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
+    pom {
+      name = "Elide Protocol: KotlinX"
+      description = "Elide protocol implementation for KotlinX Serialization"
+      url = "https://elide.dev"
+      licenses {
+        license {
+          name = "MIT License"
+          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
         }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
+      }
+      developers {
+        developer {
+          id = "sgammon"
+          name = "Sam Gammon"
+          email = "samuel.gammon@gmail.com"
         }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
+      }
+      scm {
+        url = "https://github.com/elide-dev/elide"
       }
     }
   }

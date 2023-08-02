@@ -5,7 +5,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.3
+# Version: 0.9
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -28,6 +28,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.9  2023-08-01  Sam Gammon  Version bump for release
 #   0.8  2022-12-28  Sam Gammon  Add --no-banner flag to skip banner
 #   0.7  2022-12-28  Sam Gammon  Fix tool revision message with custom version
 #   0.6  2022-12-28  Sam Gammon  Add latest version message to install script
@@ -40,8 +41,8 @@
 set -e;
 set +x;
 
-TOOL_REVISION="1.0-v3-alpha3-b6";
-INSTALLER_VERSION="v0.8";
+TOOL_REVISION="1.0-v3-alpha4-b9";
+INSTALLER_VERSION="v0.9";
 
 TOOL="cli";
 VERSION="v1";
@@ -122,7 +123,7 @@ if [[ "$@" == *"help"* ]]; then
     echo -e "  ${YELLOW}--version${NC}                Show version information";
     echo -e "  ${YELLOW}--help${NC}                   Show this help message";
     echo -e "";
-    echo -e "Copyright 2022, Sam Gammon and the Elide Project Authors.";
+    echo -e "Copyright 2023, Sam Gammon and the Elide Project Authors.";
     exit 0;
 fi
 

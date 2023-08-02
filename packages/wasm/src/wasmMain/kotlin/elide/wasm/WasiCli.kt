@@ -13,8 +13,8 @@
 
 package elide.wasm
 
-import org.kowasm.wasi.internal.argsGet
-import org.kowasm.wasi.internal.environGet
+import elide.wasm.internal.argsGet
+import elide.wasm.internal.environGet
 
 /**
  * Provides access to the command line arguments and environment variables.

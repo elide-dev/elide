@@ -64,7 +64,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                api(project(":packages:core"))
+                api(projects.packages.core)
                 implementation(libs.elide.uuid)
                 api(libs.kotlinx.collections.immutable)
                 api(libs.kotlinx.datetime)

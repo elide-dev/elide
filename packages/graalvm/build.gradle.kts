@@ -15,7 +15,7 @@
   "UnstableApiUsage",
   "unused",
   "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
+  "UNUSED_VARIABLE", "COMPATIBILITY_WARNING",
 )
 
 import kotlinx.benchmark.gradle.*
@@ -200,6 +200,11 @@ tasks {
   test {
     maxHeapSize = "2G"
     maxParallelForks = 4
+    environment("ELIDE_TEST", "true")
+    systemProperty("elide.test", "true")
+  }
+  nativeTest {
+    environment.put("ELIDE_TEST", "test")
   }
 }
 

@@ -49,7 +49,10 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     private val auxCache = (
       enableAuxiliaryCache &&
       isNativeImage &&
+      System.getProperty("elide.test") != "true" &&
+      System.getProperty("ELIDE_TEST") != "true" &&
       System.getProperty("elide.vm.engine.preinitialize") != "false" &&  // manual killswitch
+      !ImageInfo.isSharedLibrary() &&
       !Platform.includedIn(Platform.LINUX_AMD64::class.java) &&  // disabled to prefer G1GC on linux AMD64
       !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
     )

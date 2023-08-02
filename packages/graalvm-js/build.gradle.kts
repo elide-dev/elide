@@ -31,7 +31,7 @@ kotlin {
   sourceSets {
     val jsMain by getting {
       dependencies {
-        api(project(":packages:ssr"))
+        api(projects.packages.ssr)
         api(npm("esbuild", libs.versions.npm.esbuild.get()))
         api(npm("prepack", libs.versions.npm.prepack.get()))
         api(npm("buffer", libs.versions.npm.buffer.get()))

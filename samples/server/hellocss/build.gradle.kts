@@ -39,8 +39,8 @@ micronaut {
 dependencies {
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.runtime)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.wrappers.css)
   runtimeOnly(libs.logback)

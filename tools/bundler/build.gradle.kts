@@ -28,7 +28,6 @@ plugins {
   id("com.github.gmazzo.buildconfig")
   id("com.github.johnrengelman.shadow")
   id("io.micronaut.application")
-  id("io.micronaut.graalvm")
   id("io.micronaut.aot")
   id("dev.elide.build.jvm")
   id("org.jetbrains.dokka")
@@ -104,7 +103,7 @@ kotlin {
 dependencies {
   api(libs.slf4j)
 
-  annotationProcessor(libs.micronaut.inject.java)
+  annotationProcessor(mn.micronaut.inject.java)
   annotationProcessor(libs.picocli.codegen)
 
   implementation(project(":packages:core"))
@@ -118,11 +117,11 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.jdk9)
 
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.graal)
-  implementation(libs.micronaut.kotlin.extension.functions)
-  implementation(libs.micronaut.kotlin.runtime)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.graal)
+  implementation(mn.micronaut.kotlin.extension.functions)
+  implementation(mn.micronaut.kotlin.runtime)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-flatbuffers"))
@@ -134,7 +133,7 @@ dependencies {
   implementation(libs.larray.buffer)
   implementation(libs.larray.mmap)
   implementation(libs.logback)
-  runtimeOnly(libs.micronaut.runtime)
+  runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -143,7 +142,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 application {
@@ -224,13 +223,6 @@ val quickbuild = (
   project.properties["elide.release"] != "true" ||
   project.properties["elide.buildMode"] == "dev"
 )
-
-afterEvaluate {
-  tasks.named("testNativeImage") {
-    enabled = false
-  }
-}
-
 
 /**
  * Build: Bundler Native Image
@@ -317,63 +309,6 @@ fun nativeImageArgs(
   ).plus(
     if (enterprise) enterpriseOnlyFlags else emptyList()
   ).toList()
-
-graalvmNative {
-  toolchainDetection = false
-  testSupport = true
-
-  metadataRepository {
-    enabled = true
-    version = GraalVMVersions.graalvmMetadata
-  }
-
-  agent {
-    defaultMode = "standard"
-    builtinCallerFilter = true
-    builtinHeuristicFilter = true
-    enableExperimentalPredefinedClasses = false
-    enableExperimentalUnsafeAllocationTracing = false
-    trackReflectionMetadata = true
-    enabled = System.getenv("GRAALVM_AGENT") == "true"
-
-    modes {
-      standard {}
-    }
-    metadataCopy {
-      inputTaskNames.add("test")
-      outputDirectories.add("src/main/resources/META-INF/native-image")
-      mergeWithExisting = true
-    }
-  }
-
-  binaries {
-    named("main") {
-      imageName = "bundler"
-      fallback = false
-      buildArgs.addAll(nativeImageArgs())
-      quickBuild = quickbuild
-      sharedLibrary = false
-      systemProperty("picocli.ansi", "tty")
-    }
-
-    named("optimized") {
-      imageName = "bundler"
-      fallback = false
-      buildArgs.addAll(nativeImageArgs())
-      quickBuild = quickbuild
-      sharedLibrary = false
-      systemProperty("picocli.ansi", "tty")
-    }
-
-    named("test") {
-      imageName = "bundler-test"
-      fallback = false
-      buildArgs.addAll(nativeImageArgs().plus(testOnlyArgs))
-      quickBuild = quickbuild
-    }
-  }
-}
-
 
 /**
  * Build: Bundler Docker Images

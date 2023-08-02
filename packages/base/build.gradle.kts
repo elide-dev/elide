@@ -83,7 +83,7 @@ kotlin {
                 implementation(kotlin("stdlib-jdk8"))
                 api(libs.slf4j)
                 api(libs.jakarta.inject)
-                api(libs.micronaut.inject.java)
+                api(mn.micronaut.inject.java)
                 api(libs.kotlinx.collections.immutable)
                 api(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.core)
@@ -148,7 +148,7 @@ kotlin {
     }
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

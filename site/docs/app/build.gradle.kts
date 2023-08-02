@@ -221,7 +221,7 @@ application {
 }
 
 dependencies {
-  annotationProcessor(libs.micronaut.serde.processor)
+  annotationProcessor(mn.micronaut.serde.processor)
   compileOnly(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
@@ -237,13 +237,13 @@ dependencies {
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.jsr310)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.runtime)
-  implementation(libs.micronaut.cache.core)
-  implementation(libs.micronaut.cache.caffeine)
-  implementation(libs.micronaut.views.core)
-  implementation(libs.micronaut.serde.api)
-  implementation(libs.micronaut.jackson.databind)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
+  implementation(mn.micronaut.cache.core)
+  implementation(mn.micronaut.cache.caffeine)
+  implementation(mn.micronaut.views.core)
+  implementation(mn.micronaut.serde.api)
+  implementation(mn.micronaut.jackson.databind)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -280,7 +280,7 @@ dependencies {
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
   testImplementation(project(":packages:test"))
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 val shadowAppJar by configurations.creating {

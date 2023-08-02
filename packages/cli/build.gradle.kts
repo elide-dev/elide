@@ -34,8 +34,8 @@ plugins {
   `maven-publish`
 
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
+  id(libs.plugins.ksp.get().pluginId)
   id(libs.plugins.kover.get().pluginId)
   id(libs.plugins.buildConfig.get().pluginId)
   id(libs.plugins.micronaut.application.get().pluginId)
@@ -52,7 +52,7 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = true
+val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false
@@ -91,8 +91,16 @@ val nativeCompileJvmArgs = jvmCompileArgs.map {
 }
 
 val jvmModuleArgs = listOf(
+  "--add-modules=java.se",
+  "--add-exports=java.base/jdk.internal.ref=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+  "--add-opens=java.base/java.text=ALL-UNNAMED",
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=java.base/java.util=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "--add-opens=java.management/sun.management=ALL-UNNAMED",
+  "--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED",
 ).plus(jvmCompileArgs)
 
 val ktCompilerArgs = listOf(
@@ -142,13 +150,13 @@ kotlin {
 //the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
 //  libs.versions.compose.get()
 
-kapt {
-  useBuildCache = true
-  includeCompileClasspath = false
-  strictMode = true
-  correctErrorTypes = true
-  keepJavacAnnotationProcessors = true
-}
+//kapt {
+//  useBuildCache = true
+//  includeCompileClasspath = false
+//  strictMode = true
+//  correctErrorTypes = true
+//  keepJavacAnnotationProcessors = true
+//}
 
 buildConfig {
   className("ElideCLITool")
@@ -161,21 +169,23 @@ buildConfig {
 dependencies {
   implementation(platform(libs.netty.bom))
 
-  kapt(libs.micronaut.inject.java)
-  kapt(libs.picocli.codegen)
+  ksp(mn.micronaut.inject.kotlin)
+  ksp(mn.picocli.codegen)
+
+  implementation(mn.micronaut.inject.kotlin)
 
   api(projects.packages.base)
   implementation(projects.packages.graalvm)
   implementation(kotlin("stdlib-jdk8"))
-  implementation(libs.kotlin.scripting.common)
-  implementation(libs.kotlin.scripting.dependencies)
-  implementation(libs.kotlin.scripting.dependencies.maven)
-  implementation(libs.kotlin.scripting.jvm)
-  implementation(libs.kotlin.scripting.jvm.host)
-  implementation(libs.kotlin.scripting.jvm.engine)
+//  implementation(libs.kotlin.scripting.common)
+//  implementation(libs.kotlin.scripting.dependencies)
+//  implementation(libs.kotlin.scripting.dependencies.maven)
+//  implementation(libs.kotlin.scripting.jvm)
+//  implementation(libs.kotlin.scripting.jvm.host)
+//  implementation(libs.kotlin.scripting.jvm.engine)
   implementation(libs.logback)
-  implementation(libs.conscrypt)
-  implementation(libs.tink)
+//  implementation(libs.conscrypt)
+//  implementation(libs.tink)
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
   api(libs.picocli)
@@ -193,16 +203,22 @@ dependencies {
 
   implementation(libs.kotlinx.coroutines.core)
 
-  api(libs.micronaut.inject)
-  implementation(libs.micronaut.picocli)
-  runtimeOnly(libs.micronaut.context)
-  runtimeOnly(libs.micronaut.kotlin.runtime)
+  api(mn.micronaut.inject)
+//  implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.kotlin.runtime)
+
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.module.kotlin)
+  implementation(mn.micronaut.jackson.databind)
 
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
-  runtimeOnly(projects.packages.proto.protoKotlinx)
+  implementation(projects.packages.proto.protoKotlinx)
+  implementation(libs.snakeyaml)
 
-  runtimeOnly(libs.micronaut.graal)
+  implementation(mn.micronaut.graal)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -246,7 +262,7 @@ dependencies {
   compileOnly(libs.graalvm.truffle.nfi)
   compileOnly(libs.graalvm.truffle.nfi.libffi)
 
-  runtimeOnly(libs.micronaut.runtime)
+  implementation(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -255,7 +271,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 application {
@@ -360,7 +376,7 @@ tasks {
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
-  runtime = MicronautRuntime.NETTY
+  runtime = MicronautRuntime.NONE
   enableNativeImage(true)
 
   processing {
@@ -416,23 +432,24 @@ val quickbuild = (
 
 val commonNativeArgs = listOf(
   "--language:js",
-  "--language:nfi",
-  "--language:icu4j",
-  "--language:regex",
+//  "--language:nfi",
+//  "--language:icu4j",
+//  "--language:regex",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "-H:+BuildReport",
-  "-H:CStandard=C11",
-  "-H:DefaultCharset=UTF-8",
-  "-H:+UseContainerSupport",
-  "-H:+UseCompressedReferences",
-  "-H:+ReportExceptionStackTraces",
-  "-H:-EnableAllSecurityServices",
-  "-R:MaxDirectMemorySize=256M",
-  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+//  "-H:+ParseOnceJIT",
+//  "-H:+BuildReport",
+//  "-H:CStandard=C11",
+//  "-H:DefaultCharset=UTF-8",
+//  "-H:+UseContainerSupport",
+//  "-H:+UseCompressedReferences",
+//  "-H:+ReportExceptionStackTraces",
+//  "-H:-EnableAllSecurityServices",
+//  "-R:MaxDirectMemorySize=256M",
+//  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
@@ -603,13 +620,13 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else emptyList()))
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "-march=native",
   "--gc=serial",
-  "-Delide.vm.engine.preinitialize=true",
-  "-H:+AuxiliaryEngineCache",
-  "-H:+AllowJRTFileSystem",
-  "-H:InitialCollectionPolicy=Adaptive",
-  "-R:MaximumHeapSizePercent=80",
+//  "-march=native",
+//  "-Delide.vm.engine.preinitialize=true",
+//  "-H:+AuxiliaryEngineCache",
+//  "-H:+AllowJRTFileSystem",
+//  "-H:InitialCollectionPolicy=Adaptive",
+//  "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else emptyList()))
@@ -660,7 +677,7 @@ val isEnterprise: Boolean = properties["elide.graalvm.variant"] == "ENTERPRISE"
 fun nativeCliImageArgs(
   platform: String = "generic",
   target: String = "glibc",
-  debug: Boolean = quickbuild,
+  debug: Boolean = false,
   test: Boolean = false,
   release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
 ): List<String> =
@@ -727,8 +744,8 @@ graalvmNative {
     named("main") {
       imageName = "elide.debug"
       fallback = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
-      quickBuild = quickbuild
+      buildArgs.addAll(nativeCliImageArgs(platform = targetOs))
+      quickBuild = true
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
     }
@@ -765,12 +782,12 @@ val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
  */
 
 tasks {
-  jar {
-    from(collectReachabilityMetadata)
-  }
+//  jar {
+//    from(collectReachabilityMetadata)
+//  }
 
   shadowJar {
-    from(collectReachabilityMetadata)
+//    from(collectReachabilityMetadata)
 
     exclude(
       "java-header-style.xml",
@@ -831,7 +848,7 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   enabled = false
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {

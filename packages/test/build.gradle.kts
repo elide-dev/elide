@@ -104,10 +104,10 @@ kotlin {
         api(libs.jakarta.inject)
         api(libs.kotlinx.coroutines.test)
         api(libs.kotlinx.coroutines.jdk9)
-        api(libs.micronaut.context)
-        api(libs.micronaut.runtime)
-        api(libs.micronaut.test.junit5)
-        api(libs.micronaut.http)
+        api(mn.micronaut.context)
+        api(mn.micronaut.runtime)
+        api(mn.micronaut.test.junit5)
+        api(mn.micronaut.http)
         api(libs.junit.jupiter.api)
         api(libs.junit.jupiter.params)
 
@@ -123,8 +123,8 @@ kotlin {
         implementation(libs.truth.java8)
         implementation(libs.truth.proto)
 
-        implementation(libs.micronaut.http.client)
-        implementation(libs.micronaut.http.server)
+        implementation(mn.micronaut.http.client)
+        implementation(mn.micronaut.http.server)
 
         runtimeOnly(libs.junit.jupiter.engine)
         runtimeOnly(libs.logback)

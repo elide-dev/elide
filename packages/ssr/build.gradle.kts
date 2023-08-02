@@ -64,7 +64,7 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        api(libs.micronaut.http)
+        api(mn.micronaut.http)
       }
     }
     val jvmTest by getting {
@@ -92,7 +92,7 @@ kotlin {
   }
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

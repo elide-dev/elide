@@ -31,33 +31,9 @@ capnproto = "0.1.15"
 netty_iouring = "0.0.21.Final"
 netty_tcnative = "2.0.61.Final"
 dekorate = "3.1.1"
-micronaut_lib = "3.9.4"
-micronaut_aot = "1.1.2"
-micronaut_aws = "3.9.3"
-micronaut_data = "3.8.1"
-micronaut_grpc = "3.5.0"
-micronaut_graphql = "3.2.0"
-micronaut_gcp = "4.6.0"
-micronaut_test = "3.8.0"
-micronaut_plugin = "3.7.10"
-micronaut_redis = "5.3.2"
-micronaut_email = "1.4.0"
-micronaut_cache = "3.5.0"
-micronaut_views = "3.8.2"
-micronaut_serde = "1.5.0"
-micronaut_security = "3.9.0"
-micronaut_sql = "4.7.2"
-micronaut_openapi = "4.6.0"
-micronaut_picocli = "4.3.0"
-micronaut_objectstorage = "1.1.0"
-micronaut_multitenancy = "4.2.0"
-micronaut_tracing = "4.4.0"
-micronaut_jmx = "3.1.0"
-micronaut_k8s = "3.4.1"
-micronaut_rss = "3.2.0"
-micronaut_kafka = "4.4.0"
-micronaut_beanvalidation = "3.2.0"
-micronaut_kotlin = "3.2.2"
+micronaut_lib = "4.0.2"
+micronaut_plugin = "4.0.2"
+micronaut_aot = "2.0.2"
 compose = "1.4.0-dev-wasm09"
 kotlinx_coroutines = "1.7.2-wasm0"
 kotlinx_collections = "0.4-wasm0"
@@ -169,6 +145,7 @@ npm_lit_labs_virtualizer = "0.7.2"
 npm_lit_labs_task = "2.0.0"
 sqlite = "3.42.0.0"
 snappy = "1.1.10.3"
+snakeyaml = "2.0"
 msgpack = "0.9.4"
 larray = "0.2.1"
 google_api_common = "2.14.1"
@@ -202,12 +179,10 @@ hibernate = "5.6.11.Final"
 hikari = "4.0.3"
 postgres = "42.5.1"
 swagger = "2.2.15"
-micronaut_liquibase = "5.4.1"
 sqlcommenter = "2.1.1-elide"
 jackson = "2.15.2"
 jsr310 = "2.9.8"
 spotless = "6.11.0"
-micronaut_xml = "3.1.0"
 buildconfig_plugin = "3.1.0"
 kotlin_compile_testing = "1.5.0"
 auto_common = "1.2.2"
@@ -401,94 +376,7 @@ graalvm_tools_chromeinspector = { group = "org.graalvm.tools", name = "chromeins
 graalvm_svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm_sdk" }
 graalvm_svm_driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm_svm_driver" }
 graalvm_svm_nativeImage_base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm_sdk" }
-micronaut_aop = { group = "io.micronaut", name = "micronaut-aop", version.ref = "micronaut_lib" }
-micronaut_aot_api = { group = "io.micronaut.aot", name = "micronaut-aot-api", version.ref = "micronaut_aot" }
-micronaut_aot_core = { group = "io.micronaut.aot", name = "micronaut-aot-core", version.ref = "micronaut_aot" }
-micronaut_aot_cli = { group = "io.micronaut.aot", name = "micronaut-aot-cli", version.ref = "micronaut_aot" }
 micronaut_aot_optimizers_standard = { group = "io.micronaut.aot", name = "micronaut-aot-std-optimizers", version.ref = "micronaut_aot" }
-micronaut_bom = { group = "io.micronaut", name = "micronaut-bom", version.ref = "micronaut_lib" }
-micronaut_aws_sdk_v2 = { group = "io.micronaut.aws", name = "micronaut-aws-sdk-v2", version.ref = "micronaut_aws" }
-micronaut_context = { group = "io.micronaut", name = "micronaut-context", version.ref = "micronaut_lib" }
-micronaut_graal = { group = "io.micronaut", name = "micronaut-graal", version.ref = "micronaut_lib" }
-micronaut_graphql = { group = "io.micronaut.graphql", name = "micronaut-graphql", version.ref = "micronaut_graphql" }
-micronaut_data_processor = { group = "io.micronaut.data", name = "micronaut-data-processor", version.ref = "micronaut_data" }
-micronaut_data_document_processor = { group = "io.micronaut.data", name = "micronaut-data-document-processor", version.ref = "micronaut_data" }
-micronaut_data_tx = { group = "io.micronaut.data", name = "micronaut-data-tx", version.ref = "micronaut_data" }
-micronaut_data_tx_hibernate = { group = "io.micronaut.data", name = "micronaut-data-tx-hibernate", version.ref = "micronaut_data" }
-micronaut_data_runtime = { group = "io.micronaut.data", name = "micronaut-data-runtime", version.ref = "micronaut_data" }
-micronaut_data_model = { group = "io.micronaut.data", name = "micronaut-data-model", version.ref = "micronaut_data" }
-micronaut_data_document_model = { group = "io.micronaut.data", name = "micronaut-data-document-model", version.ref = "micronaut_data" }
-micronaut_data_jdbc = { group = "io.micronaut.data", name = "micronaut-data-jdbc", version.ref = "micronaut_data" }
-micronaut_data_hibernate_jpa = { group = "io.micronaut.data", name = "micronaut-data-hibernate-jpa", version.ref = "micronaut_data" }
-micronaut_email = { group = "io.micronaut.email", name = "micronaut-email", version.ref = "micronaut_email" }
-micronaut_email_template = { group = "io.micronaut.email", name = "micronaut-email-template", version.ref = "micronaut_email" }
-micronaut_email_sendgrid = { group = "io.micronaut.email", name = "micronaut-email-sendgrid", version.ref = "micronaut_email" }
-micronaut_hibernate_validator = { group = "io.micronaut.beanvalidation", name = "micronaut-hibernate-validator", version.ref = "micronaut_beanvalidation" }
-micronaut_http = { group = "io.micronaut", name = "micronaut-http", version.ref = "micronaut_lib" }
-micronaut_http_client = { group = "io.micronaut", name = "micronaut-http-client", version.ref = "micronaut_lib" }
-micronaut_http_server = { group = "io.micronaut", name = "micronaut-http-server", version.ref = "micronaut_lib" }
-micronaut_http_netty = { group = "io.micronaut", name = "micronaut-http-netty", version.ref = "micronaut_lib" }
-micronaut_http_server_netty = { group = "io.micronaut", name = "micronaut-http-server-netty", version.ref = "micronaut_lib" }
-micronaut_gcp_common = { group = "io.micronaut.gcp", name = "micronaut-gcp-common", version.ref = "micronaut_gcp" }
-micronaut_gcp_logging = { group = "io.micronaut.gcp", name = "micronaut-gcp-logging", version.ref = "micronaut_gcp" }
-micronaut_gcp_pubsub = { group = "io.micronaut.gcp", name = "micronaut-gcp-pubsub", version.ref = "micronaut_gcp" }
-micronaut_gcp_tracing = { group = "io.micronaut.gcp", name = "micronaut-gcp-tracing", version.ref = "micronaut_gcp" }
-micronaut_gcp_httpClient = { group = "io.micronaut.gcp", name = "micronaut-gcp-http-client", version.ref = "micronaut_gcp" }
-micronaut_gcp_secretManager = { group = "io.micronaut.gcp", name = "micronaut-gcp-secret-manager", version.ref = "micronaut_gcp" }
-micronaut_inject = { group = "io.micronaut", name = "micronaut-inject", version.ref = "micronaut_lib" }
-micronaut_inject_java = { group = "io.micronaut", name = "micronaut-inject-java", version.ref = "micronaut_lib" }
-micronaut_inject_java_test = { group = "io.micronaut", name = "micronaut-inject-java-test", version.ref = "micronaut_lib" }
-micronaut_jackson_databind = { group = "io.micronaut", name = "micronaut-jackson-databind", version.ref = "micronaut_lib" }
-micronaut_runtime = { group = "io.micronaut", name = "micronaut-runtime", version.ref = "micronaut_lib" }
-micronaut_runtime_osx = { group = "io.micronaut", name = "micronaut-runtime-osx", version.ref = "micronaut_lib" }
-micronaut_management = { group = "io.micronaut", name = "micronaut-management", version.ref = "micronaut_lib" }
-micronaut_multitenancy = { group = "io.micronaut.multitenancy", name = "micronaut-multitenancy", version.ref = "micronaut_multitenancy" }
-micronaut_protobuf = { group = "io.micronaut.grpc", name = "micronaut-protobuff-support", version.ref = "micronaut_grpc" }
-micronaut_grpc_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-runtime", version.ref = "micronaut_grpc" }
-micronaut_grpc_client_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-client-runtime", version.ref = "micronaut_grpc" }
-micronaut_grpc_server_runtime = { group = "io.micronaut.grpc", name = "micronaut-grpc-server-runtime", version.ref = "micronaut_grpc" }
-micronaut_cache_core = { group = "io.micronaut.cache", name = "micronaut-cache-core", version.ref = "micronaut_cache" }
-micronaut_cache_caffeine = { group = "io.micronaut.cache", name = "micronaut-cache-caffeine", version.ref = "micronaut_cache" }
-micronaut_redis = { group = "io.micronaut.redis", name = "micronaut-redis-lettuce", version.ref = "micronaut_redis" }
-micronaut_test_junit5 = { group = "io.micronaut.test", name = "micronaut-test-junit5", version.ref = "micronaut_test" }
-micronaut_router = { group = "io.micronaut", name = "micronaut-router", version.ref = "micronaut_lib" }
-micronaut_validation = { group = "io.micronaut", name = "micronaut-validation", version.ref = "micronaut_lib" }
-micronaut_http_validation = { group = "io.micronaut", name = "micronaut-http-validation", version.ref = "micronaut_lib" }
-micronaut_views_core = { group = "io.micronaut.views", name = "micronaut-views-core", version.ref = "micronaut_views" }
-micronaut_views_soy = { group = "io.micronaut.views", name = "micronaut-views-soy", version.ref = "micronaut_views" }
-micronaut_serde_api = { group = "io.micronaut.serde", name = "micronaut-serde-api", version.ref = "micronaut_serde" }
-micronaut_serde_processor = { group = "io.micronaut.serde", name = "micronaut-serde-processor", version.ref = "micronaut_serde" }
-micronaut_serde_jackson = { group = "io.micronaut.serde", name = "micronaut-serde-jackson", version.ref = "micronaut_serde" }
-micronaut_security = { group = "io.micronaut.security", name = "micronaut-security", version.ref = "micronaut_security" }
-micronaut_security_annotations = { group = "io.micronaut.security", name = "micronaut-security-annotations", version.ref = "micronaut_security" }
-micronaut_security_jwt = { group = "io.micronaut.security", name = "micronaut-security-jwt", version.ref = "micronaut_security" }
-micronaut_security_oauth2 = { group = "io.micronaut.security", name = "micronaut-security-oauth2", version.ref = "micronaut_security" }
-micronaut_security_session = { group = "io.micronaut.security", name = "micronaut-security-session", version.ref = "micronaut_security" }
-micronaut_sql_hibernate_jpa = { group = "io.micronaut.sql", name = "micronaut-hibernate-jpa", version.ref = "micronaut_sql" }
-micronaut_sql_jdbc_hikari = { group = "io.micronaut.sql", name = "micronaut-jdbc-hikari", version.ref = "micronaut_sql" }
-micronaut_openapi = { group = "io.micronaut.openapi", name = "micronaut-openapi", version.ref = "micronaut_openapi" }
-micronaut_picocli = { group = "io.micronaut.picocli", name = "micronaut-picocli", version.ref = "micronaut_picocli" }
-micronaut_objectstorage_bom = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-bom", version.ref = "micronaut_objectstorage" }
-micronaut_objectstorage_core = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-core", version.ref = "micronaut_objectstorage" }
-micronaut_objectstorage_aws = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-aws", version.ref = "micronaut_objectstorage" }
-micronaut_objectstorage_gcp = { group = "io.micronaut.objectstorage", name = "micronaut-object-storage-gcp", version.ref = "micronaut_objectstorage" }
-micronaut_kafka = { group = "io.micronaut.kafka", name = "micronaut-kafka", version.ref = "micronaut_kafka" }
-micronaut_liquibase = { group = "io.micronaut.liquibase", name = "micronaut-liquibase", version.ref = "micronaut_liquibase" }
-micronaut_kubernetes_client = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-client", version.ref = "micronaut_k8s" }
-micronaut_kubernetes_discovery = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-discovery-client", version.ref = "micronaut_k8s" }
-micronaut_kubernetes_informer = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-informer", version.ref = "micronaut_k8s" }
-micronaut_kubernetes_operator = { group = "io.micronaut.kubernetes", name = "micronaut-kubernetes-operator", version.ref = "micronaut_k8s" }
-micronaut_kotlin_ktor = { group = "io.micronaut.kotlin", name = "micronaut-ktor", version.ref = "micronaut_kotlin" }
-micronaut_kotlin_runtime = { group = "io.micronaut.kotlin", name = "micronaut-kotlin-runtime", version.ref = "micronaut_kotlin" }
-micronaut_kotlin_extension_functions = { group = "io.micronaut.kotlin", name = "micronaut-kotlin-extension-functions", version.ref = "micronaut_kotlin" }
-micronaut_jmx = { group = "io.micronaut.jmx", name = "micronaut-jmx", version.ref = "micronaut_jmx" }
-micronaut_xml_jackson = { group = "io.micronaut.xml", name = "micronaut-jackson-xml", version.ref = "micronaut_xml" }
-micronaut_rss = { group = "io.micronaut.rss", name = "micronaut-rss", version.ref = "micronaut_rss" }
-micronaut_tracing_core = { group = "io.micronaut.tracing", name = "micronaut-tracing-core", version.ref = "micronaut_tracing" }
-micronaut_tracing_annotation = { group = "io.micronaut.tracing", name = "micronaut-tracing-annotation", version.ref = "micronaut_tracing" }
-micronaut_tracing_opentelemetry_annotation = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-annotation", version.ref = "micronaut_tracing" }
-micronaut_tracing_opentelemetry_http = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-http", version.ref = "micronaut_tracing" }
-micronaut_tracing_opentelemetry_grpc = { group = "io.micronaut.tracing", name = "micronaut-tracing-opentelemetry-grpc", version.ref = "micronaut_tracing" }
 opentelemetry_exporter_logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
 opentelemetry_exporter_googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 kotlinx_wrappers_bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinx_wrappers_bom" }
@@ -629,6 +517,7 @@ larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref 
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
+snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
 ## Build Classpath
 openrewrite_kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite_lib" }
 openrewrite_test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite_lib" }

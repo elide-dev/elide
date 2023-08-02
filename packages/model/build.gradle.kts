@@ -125,8 +125,9 @@ kotlin {
         api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
 
         implementation(kotlin("stdlib-js"))
-        implementation(project(":packages:base"))
-        implementation(project(":packages:frontend"))
+        implementation(projects.packages.base)
+        implementation(projects.packages.frontend)
+        implementation(mn.micronaut.inject)
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.json.js)
         implementation(libs.kotlinx.serialization.protobuf.js)
@@ -157,7 +158,7 @@ kotlin {
   }
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 val buildDocs = project.properties["buildDocs"] == "true"
 val javadocJar: TaskProvider<Jar>? = if (buildDocs) {

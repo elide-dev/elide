@@ -33,7 +33,7 @@ val peers = mapOf(
   "protobuf" to ("com.google.protobuf:protobuf-java" to Versions.protobuf),
   "grpc" to ("io.grpc:grpc-bom" to Versions.grpc),
   "netty" to ("io.netty:netty-bom" to Versions.netty),
-  "micronaut" to ("io.micronaut:micronaut-bom" to Versions.micronaut),
+  "micronaut" to ("io.micronau.platform:micronaut-platform" to Versions.micronaut),
 )
 
 kover {
@@ -45,7 +45,7 @@ dependencies {
     // BOMs: gRPC, Netty, Micronaut.
     api(libs.grpc.bom)
     api(libs.netty.bom)
-    api(libs.micronaut.bom)
+    api(mn.micronaut.core)
     api(libs.projectreactor.bom)
 
     // Kotlin.

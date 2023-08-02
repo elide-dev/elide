@@ -302,7 +302,7 @@ Following this guide is recommended but optional. Depending on the style of deve
 not need some of these components:
 
 | Status                                                          | **Java**    | **Kotlin**   | **GraalVM** | **Micronaut** | **React** | **Protobuf/gRPC**  |
-| --------------------------------------------------------------- |-------------|--------------|-------------|---------------| --------- |--------------------|
+|-----------------------------------------------------------------|-------------|--------------|-------------|---------------| --------- |--------------------|
 | ![Status](https://img.shields.io/badge/-experimental-important) | `Java 20`   | `1.9.0-wasm` | `23.0.x`    | `4.0.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 20`   | `1.9.0`      | `23.0.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.56.1` |
 | ![Status](https://img.shields.io/badge/-tested-success)         | `Java 17`   | `1.8.20`     | `22.3.x`    | `3.9.x`       | `18.x`    | `3.21.11`/`1.42.0` |

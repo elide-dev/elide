@@ -175,6 +175,8 @@ jobs:
             -x jsTest
             -x jsBrowserTest
             -x nativeCompile
+            -x nativeTest
+            -x nativeOptimizedCompile
             --scan
             --no-daemon
             --warning-mode=none
@@ -283,7 +285,8 @@ jobs:
             -x ktlintKotlinScriptCheck
             -x apiCheck
             -x nativeTest
-            -x testNativeImage
+            -x nativeCompile
+            -x nativeOptimizedCompile
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false
@@ -339,7 +342,15 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     needs: [tests-jvm, preflight-checks]
     continue-on-error: true
-    if: false
+    if: |
+      (
+        github.ref == 'refs/heads/stable' ||
+        github.ref == 'refs/heads/v3' ||
+        startsWith(github.ref, 'release/') ||
+        contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
+        contains(github.event.head_commit.message, 'ci:test-native') ||
+        startsWith(github.ref, 'refs/tags/v')
+      )
 
     steps:
       - name: Harden Runner

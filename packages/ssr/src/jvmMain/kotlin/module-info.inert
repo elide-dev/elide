@@ -11,16 +11,17 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.model {
+module elide.ssr {
     requires java.base;
     requires kotlin.stdlib;
-
-    requires kotlinx.datetime;
     requires kotlinx.serialization.core;
-    requires kotlinx.serialization.protobuf;
 
-    requires com.google.protobuf;
+    requires org.graalvm.sdk;
 
-    requires elide.core;
     requires elide.base;
+
+    exports elide.ssr;
+    exports elide.ssr.annotations;
+    exports elide.ssr.type;
+    exports elide.vm.annotations;
 }

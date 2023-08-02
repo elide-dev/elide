@@ -72,7 +72,7 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 implementation(kotlin("test"))
                 configurations["kapt"].dependencies.add(
-                    libs.micronaut.inject.java.asProvider().get()
+                    mn.micronaut.inject.java.asProvider().get()
                 )
             }
         }

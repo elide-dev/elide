@@ -5,7 +5,6 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
@@ -52,7 +51,7 @@ public class ServerAssetManager @Inject internal constructor(
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-    val responseData = NettyStreamedFileCustomizableResponseType(
+    val responseData = StreamedAsset(
       ByteArrayInputStream(asset.producer.invoke().toByteArray()),
       asset.type.mediaType
     )

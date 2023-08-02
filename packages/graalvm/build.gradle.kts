@@ -160,15 +160,22 @@ dependencies {
   // General
   implementation(libs.jimfs)
   implementation(libs.lmax.disruptor.core)
+  runtimeOnly(libs.snakeyaml)
+
+  // Jackson
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.module.kotlin)
 
   // Compression
   implementation(libs.commons.compress)
 
   // Micronaut
-  runtimeOnly(libs.micronaut.graal)
-  implementation(libs.micronaut.http)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.inject)
+  runtimeOnly(mn.micronaut.graal)
+  implementation(mn.micronaut.http)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.inject)
+  implementation(mn.micronaut.jackson.databind)
 
   // Reactor Netty
   implementation(libs.reactor.netty)
@@ -191,7 +198,7 @@ dependencies {
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
 
   if (encloseSdk) {
@@ -199,7 +206,7 @@ dependencies {
   }
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 tasks {
   test {

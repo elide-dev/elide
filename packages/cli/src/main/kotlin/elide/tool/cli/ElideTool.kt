@@ -3,7 +3,7 @@
 package elide.tool.cli
 
 import ch.qos.logback.classic.Level
-import io.micronaut.configuration.picocli.MicronautFactory
+//import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
@@ -102,7 +102,8 @@ import elide.tool.cli.state.CommandState
     // Private execution entrypoint for customizing core Picocli settings.
     @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {
       Statics.args.set(args.toList())
-      CommandLine(ElideTool::class.java, MicronautFactory(it))
+//      , MicronautFactory(it)
+      CommandLine(ElideTool::class.java)
         .setCommandName(TOOL_NAME)
         .setResourceBundle(ResourceBundle.getBundle("ElideTool"))
         .setAbbreviatedOptionsAllowed(true)

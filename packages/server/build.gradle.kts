@@ -52,8 +52,8 @@ dependencies {
   api(libs.reactor.core)
 
   // KSP
-  kapt(libs.micronaut.inject)
-  kapt(libs.micronaut.inject.java)
+  kapt(mn.micronaut.inject)
+  kapt(mn.micronaut.inject.java)
 
   implementation(project(":packages:proto:proto-core"))
   implementation(project(":packages:proto:proto-protobuf"))
@@ -91,14 +91,13 @@ dependencies {
   implementation(libs.brotli.native.windows)
 
   // Micronaut
-  implementation(libs.micronaut.http)
-  implementation(libs.micronaut.http.server)
-  implementation(libs.micronaut.http.server.netty)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.inject)
-  implementation(libs.micronaut.inject.java)
-  implementation(libs.micronaut.protobuf)
-  implementation(libs.micronaut.management)
+  implementation(mn.micronaut.http)
+  implementation(mn.micronaut.http.server)
+  implementation(mn.micronaut.http.server.netty)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.inject)
+  implementation(mn.micronaut.inject.java)
+  implementation(mn.micronaut.management)
 
   // Coroutines
   implementation(libs.kotlinx.coroutines.core)
@@ -112,6 +111,7 @@ dependencies {
   // General
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
+  runtimeOnly(libs.snakeyaml)
 
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
@@ -153,12 +153,12 @@ dependencies {
   }
 
   // Testing
-  kaptTest(libs.micronaut.inject)
-  kaptTest(libs.micronaut.inject.java)
+  kaptTest(mn.micronaut.inject)
+  kaptTest(mn.micronaut.inject.java)
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
   testImplementation(kotlin("test"))
   testImplementation(project(":packages:test"))
 }

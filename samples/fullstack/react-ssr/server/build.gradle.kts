@@ -96,8 +96,8 @@ dependencies {
   implementation(project(":packages:graalvm"))
 
   implementation(libs.jsoup)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.runtime)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
@@ -115,7 +115,7 @@ dependencies {
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
   testImplementation(project(":packages:test"))
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuild") {

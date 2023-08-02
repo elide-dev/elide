@@ -15,7 +15,8 @@
   "UnstableApiUsage",
   "unused",
   "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE", "COMPATIBILITY_WARNING",
+  "UNUSED_VARIABLE",
+  "COMPATIBILITY_WARNING",
 )
 
 import kotlinx.benchmark.gradle.*
@@ -37,6 +38,7 @@ allOpen {
 
 group = "dev.elide"
 version = rootProject.version as String
+
 val encloseSdk = false
 
 kotlin {
@@ -123,24 +125,27 @@ micronaut {
   }
 }
 
-configurations["benchmarksImplementation"].extendsFrom(
-  configurations.implementation.get(),
-  configurations.testImplementation.get(),
-
-)
-configurations["benchmarksRuntimeOnly"].extendsFrom(
-  configurations.runtimeOnly.get(),
-  configurations.testRuntimeOnly.get()
-)
+val benchmarksImplementation: Configuration by configurations.getting {
+  extendsFrom(
+    configurations.implementation.get(),
+    configurations.testImplementation.get(),
+  )
+}
+val benchmarksRuntimeOnly: Configuration by configurations.getting {
+  extendsFrom(
+    configurations.runtimeOnly.get(),
+    configurations.testRuntimeOnly.get()
+  )
+}
 
 dependencies {
   // API Deps
   api(libs.jakarta.inject)
 
   // Modules
-  api(project(":packages:base"))
-  api(project(":packages:core"))
-  api(project(":packages:ssr"))
+  api(projects.packages.base)
+  api(projects.packages.core)
+  api(projects.packages.ssr)
 
   // Kotlin / KotlinX
   implementation(kotlin("stdlib"))
@@ -171,10 +176,10 @@ dependencies {
   // SQLite
   implementation(libs.sqlite)
 
-  implementation(project(":packages:proto:proto-core"))
-  implementation(project(":packages:proto:proto-protobuf"))
-  implementation(project(":packages:proto:proto-kotlinx"))
-  implementation(project(":packages:proto:proto-flatbuffers"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoProtobuf)
+  implementation(projects.packages.proto.protoKotlinx)
+  implementation(projects.packages.proto.protoFlatbuffers)
 
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
@@ -182,7 +187,7 @@ dependencies {
   }
 
   // Testing
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
@@ -202,9 +207,6 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
-  }
-  nativeTest {
-    environment.put("ELIDE_TEST", "test")
   }
 }
 

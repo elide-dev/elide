@@ -220,7 +220,9 @@ lmaxDisruptor = "3.4.4"
 lmaxDisruptorProxy = "2.0.7"
 gr8 = "0.9"
 proguard = "7.4.0-beta01"
-openrewrite = "6.1.19"
+openrewrite_plugin = "6.1.19"
+openrewrite_lib = "8.1.13"
+openrewrite_bom = "2.1.0"
 parallelGzip = "1.0.5"
 wrapperUpgrade = "0.11.1"
 gradleCommonCustomUserData = "1.11.1"
@@ -274,7 +276,7 @@ buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig
 flatbuffers = { id = "io.netifi.flatbuffers", version.ref = "flatbuffers_plugin" }
 buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
 gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
-openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite" }
+openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite_plugin" }
 gradle_wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrapperUpgrade" }
 gradle_commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
 gradle_checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
@@ -627,6 +629,26 @@ larray_mmap = {  group = "org.xerial.larray", name = "larray-mmap", version.ref 
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
+## Build Classpath
+openrewrite_kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite_lib" }
+openrewrite_test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite_lib" }
+openrewrite_properties = { group = "org.openrewrite", name = "rewrite-properties", version.ref = "openrewrite_lib" }
+openrewrite_protobuf = { group = "org.openrewrite", name = "rewrite-protobuf", version.ref = "openrewrite_lib" }
+openrewrite_json = { group = "org.openrewrite", name = "rewrite-json", version.ref = "openrewrite_lib" }
+openrewrite_yaml = { group = "org.openrewrite", name = "rewrite-yaml", version.ref = "openrewrite_lib" }
+openrewrite_gradle = { group = "org.openrewrite", name = "rewrite-gradle", version.ref = "openrewrite_lib" }
+openrewrite_java_test = { group = "org.openrewrite", name = "rewrite-java-test", version.ref = "openrewrite_lib" }
+openrewrite_plan_checkstyle = { group = "org.openrewrite.plan", name = "rewrite-checkstyle", version.ref = "openrewrite_lib" }
+openrewrite_recipe_bom = { group = "org.openrewrite.recipe", name = "rewrite-recipe-bom", version.ref = "openrewrite_bom" }
+openrewrite_recipe_javaDependencies = { group = "org.openrewrite.recipe", name = "rewrite-java-dependencies" }
+openrewrite_recipe_micronaut = { group = "org.openrewrite.recipe", name = "rewrite-micronaut" }
+openrewrite_recipe_githubActions = { group = "org.openrewrite.recipe", name = "rewrite-github-actions" }
+openrewrite_recipe_recommendations = { group = "org.openrewrite.recipe", name = "rewrite-recommendations" }
+openrewrite_recipe_hibernate = { group = "org.openrewrite.recipe", name = "rewrite-hibernate" }
+openrewrite_recipe_javaSecurity = { group = "org.openrewrite.recipe", name = "rewrite-java-security" }
+openrewrite_recipe_staticAnalysis = { group = "org.openrewrite.recipe", name = "rewrite-static-analysis" }
+openrewrite_recipe_sql = { group = "org.openrewrite.recipe", name = "rewrite-sql" }
+openrewrite_recipe_sandbox = { group = "org.openrewrite.recipe", name = "rewrite-sandbox" }
 ## Plugin Aliases
 plugin_mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
@@ -652,7 +674,7 @@ plugin_kotlinx_serialization = { group = "org.jetbrains.kotlin", name = "kotlin-
 plugin_kotlinx_abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
 plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.buildtools.native.gradle.plugin", version.ref = "graalvm_plugin" }
 plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
-plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite" }
+plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite_plugin" }
 plugin_gradle_testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 ## Elide Internal
 elide_uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide_uuid" }

@@ -194,6 +194,7 @@ val dokkaVersion: Provider<String> = libs.versions.dokka
 val mermaidDokka: Provider<String> = libs.versions.mermaidDokka
 
 dependencies {
+  // Kover: Merged Coverage Reporting
   kover(project(":packages:base"))
   kover(project(":packages:cli"))
   kover(project(":packages:core"))
@@ -211,6 +212,9 @@ dependencies {
   kover(project(":packages:test"))
   kover(project(":tools:bundler"))
   kover(project(":tools:processor"))
+
+  // OpenRewrite: Recipes
+  rewrite(platform(libs.openrewrite.recipe.bom))
 }
 
 rewrite {

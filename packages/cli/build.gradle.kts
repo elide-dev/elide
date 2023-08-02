@@ -349,7 +349,6 @@ val commonNativeArgs = listOf(
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
-  "-H:+AllowJRTFileSystem",
   "-H:+ReportExceptionStackTraces",
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
@@ -528,6 +527,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
   "-H:+AuxiliaryEngineCache",
+  "-H:+AllowJRTFileSystem",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
@@ -545,6 +545,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
+  "-H:+AllowJRTFileSystem",
 )).plus(
   if (enableG1) listOf(
     "--gc=G1",

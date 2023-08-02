@@ -22,3 +22,4 @@ tmp
 app-glibc
 app-musl
 tmpdocs/
+test-results-native/

@@ -12,8 +12,7 @@
  */
 
 @file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
-
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+@file:Suppress("UnstableApiUsage")
 
 plugins {
   id("dev.elide.build")
@@ -23,14 +22,19 @@ plugins {
 kotlin {
   wasm {
     d8()
-    nodejs()
     browser()
+    nodejs()
+  }
+
+  sourceSets.all {
+    languageSettings.apiVersion = Elide.kotlinLanguage
+    languageSettings.languageVersion = Elide.kotlinLanguage
   }
 
   sourceSets {
     val wasmMain by getting {
       dependencies {
-        implementation(kotlin("stdlib"))
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
       }
     }
     val wasmTest by getting {
@@ -40,9 +44,13 @@ kotlin {
     }
   }
 
-  tasks.withType<KotlinCompile<*>> {
-    kotlinOptions {
-      freeCompilerArgs += "-opt-in=kotlin.wasm.unsafe.UnsafeWasmMemoryApi"
+  targets.all {
+    compilations.all {
+      kotlinOptions {
+        options.optIn.add("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
+        options.apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+        options.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+      }
     }
   }
 }

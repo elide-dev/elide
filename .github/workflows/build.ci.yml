@@ -441,11 +441,11 @@ jobs:
             arch: amd64
             labs: false
             tag: darwin-amd64
-          - os: Windows
-            runner: windows-latest-8-cores
-            arch: amd64
-            tag: windows-amd64
-            labs: true
+#          - os: Windows
+#            runner: windows-latest-8-cores
+#            arch: amd64
+#            tag: windows-amd64
+#            labs: true
 
     steps:
       - name: "Setup: Checkout"

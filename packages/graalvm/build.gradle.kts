@@ -64,6 +64,10 @@ val initializeAtBuildTimeTest = listOf(
   "org.junit.platform.launcher.core.LauncherConfig",
 )
 
+val sharedLibArgs = listOf(
+  "-H:+AuxiliaryEngineCache",
+)
+
 graalvmNative {
   testSupport = true
 
@@ -76,7 +80,7 @@ graalvmNative {
       sharedLibrary = true
       buildArgs(initializeAtBuildTime.map {
         "--initialize-at-build-time=$it"
-      }.plus(emptyList()))
+      }.plus(sharedLibArgs))
     }
 
     named("test") {
@@ -85,7 +89,7 @@ graalvmNative {
       quickBuild = true
       buildArgs(initializeAtBuildTime.plus(initializeAtBuildTimeTest).map {
         "--initialize-at-build-time=$it"
-      }.plus(emptyList()))
+      }.plus(sharedLibArgs))
     }
   }
 }

@@ -176,6 +176,8 @@ jobs:
             -x jsBrowserTest
             -x nativeCompile
             -x nativeTest
+            -x nativeOptimizedCompile
+            -x testNativeImage
             --scan
             --no-daemon
             --warning-mode=none
@@ -285,6 +287,8 @@ jobs:
             -x apiCheck
             -x nativeTest
             -x nativeCompile
+            -x nativeOptimizedCompile
+            -x testNativeImage
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocs=false

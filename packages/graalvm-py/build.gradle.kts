@@ -37,7 +37,7 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
 
   // Testing
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
 }
 
 val buildDocs = project.properties["buildDocs"] == "true"

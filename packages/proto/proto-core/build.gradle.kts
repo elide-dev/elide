@@ -42,14 +42,14 @@ kotlin {
         // Common
         api(libs.kotlinx.datetime)
         implementation(kotlin("stdlib"))
-        implementation(project(":packages:core"))
-        implementation(project(":packages:base"))
+        implementation(projects.packages.core)
+        implementation(projects.packages.base)
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
 

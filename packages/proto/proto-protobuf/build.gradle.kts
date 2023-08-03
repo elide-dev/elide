@@ -177,7 +177,7 @@ publishing {
 dependencies {
   // API
   api(libs.kotlinx.datetime)
-  api(project(":packages:proto:proto-core"))
+  api(projects.packages.proto.protoCore)
   api(libs.protobuf.java)
   api(libs.protobuf.util)
   api(libs.protobuf.kotlin)
@@ -186,7 +186,7 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
-  implementation(project(":packages:core"))
+  implementation(projects.packages.core)
   implementation(libs.google.common.html.types.proto)
   api(libs.google.common.html.types.types)
 
@@ -194,7 +194,7 @@ dependencies {
   compileOnly(libs.google.cloud.nativeImageSupport)
 
   // Test
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)

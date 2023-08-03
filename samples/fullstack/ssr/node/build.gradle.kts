@@ -39,7 +39,7 @@ elide {
 }
 
 dependencies {
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:graalvm-js"))
   implementation(npm("esbuild", libs.versions.npm.esbuild.get()))
 }

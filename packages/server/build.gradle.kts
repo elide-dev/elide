@@ -44,20 +44,20 @@ dependencies {
   api(libs.slf4j)
 
   // Modules
-  api(project(":packages:base"))
-  api(project(":packages:core"))
-  api(project(":packages:model"))
-  api(project(":packages:ssr"))
-  api(project(":packages:graalvm"))
+  api(projects.packages.base)
+  api(projects.packages.core)
+  api(projects.packages.model)
+  api(projects.packages.ssr)
+  api(projects.packages.graalvm)
   api(libs.reactor.core)
 
   // KSP
   kapt(libs.micronaut.inject)
   kapt(libs.micronaut.inject.java)
 
-  implementation(project(":packages:proto:proto-core"))
-  implementation(project(":packages:proto:proto-protobuf"))
-  implementation(project(":packages:proto:proto-kotlinx"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoProtobuf)
+  implementation(projects.packages.proto.protoKotlinx)
 
   // Crypto
   implementation(libs.bouncycastle)
@@ -160,7 +160,7 @@ dependencies {
   testImplementation(libs.truth.proto)
   testImplementation(libs.micronaut.test.junit5)
   testImplementation(kotlin("test"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
 }
 
 tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {

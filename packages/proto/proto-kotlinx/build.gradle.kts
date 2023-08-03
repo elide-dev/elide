@@ -60,14 +60,14 @@ kotlin {
       dependencies {
         // API
         api(libs.kotlinx.datetime)
-        api(project(":packages:proto:proto-core"))
+        api(projects.packages.proto.protoCore)
         implementation(libs.kotlinx.serialization.core.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
 
         // Implementation
         implementation(kotlin("stdlib"))
         implementation(kotlin("stdlib-jdk8"))
-        implementation(project(":packages:core"))
+        implementation(projects.packages.core)
         runtimeOnly(kotlin("reflect"))
       }
     }
@@ -76,7 +76,7 @@ kotlin {
         // Testing
         implementation(libs.truth)
         implementation(libs.truth.java8)
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
         implementation(project(":packages:proto:proto-core", configuration = "testBase"))
       }
     }

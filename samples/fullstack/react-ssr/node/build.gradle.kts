@@ -38,7 +38,7 @@ elide {
 }
 
 dependencies {
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:graalvm-js"))
   implementation(project(":packages:graalvm-react"))
   implementation(project(":samples:fullstack:react-ssr:frontend"))

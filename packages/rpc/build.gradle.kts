@@ -75,9 +75,9 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        api(project(":packages:base"))
-        api(project(":packages:core"))
-        api(project(":packages:model"))
+        api(projects.packages.base)
+        api(projects.packages.core)
+        api(projects.packages.model)
         implementation(kotlin("stdlib"))
       }
     }
@@ -90,8 +90,8 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(kotlin("stdlib-jdk8"))
-        implementation(project(":packages:base"))
-        implementation(project(":packages:server"))
+        implementation(projects.packages.base)
+        implementation(projects.packages.server)
         configurations["kapt"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
 
         // Protobuf
@@ -144,7 +144,7 @@ kotlin {
         configurations["kaptTest"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
 
         // Testing
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
         implementation(kotlin("test-junit5"))
         implementation(libs.micronaut.test.junit5)
         implementation(libs.junit.jupiter.api)
@@ -156,8 +156,8 @@ kotlin {
     val jsMain by getting {
       dependencies {
         implementation(kotlin("stdlib-js"))
-        implementation(project(":packages:base"))
-        implementation(project(":packages:frontend"))
+        implementation(projects.packages.base)
+        implementation(projects.packages.frontend)
         implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
         implementation(npm("google-protobuf", libs.versions.npm.google.protobuf.get()))
         implementation(npm("grpc-web", libs.versions.npm.grpcweb.get()))
@@ -171,7 +171,7 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib-js"))
         implementation(kotlin("test"))
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
   }

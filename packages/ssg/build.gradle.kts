@@ -34,6 +34,28 @@ buildConfig {
 val buildSamples: String by properties
 val testProject = ":samples:server:hellocss"
 
+val initializeAtBuildTime = listOf(
+  "kotlin.DeprecationLevel",
+  "kotlin.annotation.AnnotationRetention",
+  "kotlin.coroutines.intrinsics.CoroutineSingletons",
+  "kotlin.annotation.AnnotationTarget",
+  "org.slf4j.LoggerFactory",
+  "org.slf4j.simple.SimpleLogger",
+  "org.slf4j.impl.StaticLoggerBinder",
+).map {
+  "--initialize-at-build-time=$it"
+}
+
+val initializeAtRuntime = listOf(
+  "io.netty.util.internal.logging.Log4JLogger",
+  "io.netty.util.AbstractReferenceCounted",
+  "io.netty.channel.epoll",
+  "io.netty.handler.ssl",
+  "io.netty.channel.unix",
+).map {
+  "--initialize-at-run-time=$it"
+}
+
 val embeddedJars by configurations.creating {
   isCanBeConsumed = true
   isCanBeResolved = false
@@ -46,7 +68,6 @@ dependencies {
   api(libs.slf4j)
 
   kapt(libs.micronaut.inject.java)
-  kapt(libs.micronaut.validation)
   kapt(libs.picocli.codegen)
   kapt(libs.micronaut.serde.processor)
 
@@ -55,15 +76,15 @@ dependencies {
   implementation(libs.jackson.jsr310)
   implementation(libs.jackson.module.kotlin)
 
-  implementation(project(":packages:proto:proto-core"))
-  implementation(project(":packages:proto:proto-protobuf"))
-  implementation(project(":packages:proto:proto-kotlinx"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoProtobuf)
+  implementation(projects.packages.proto.protoKotlinx)
 
   implementation(libs.guava)
   implementation(libs.commons.compress)
-  implementation(platform(project(":packages:platform")))
-  implementation(project(":packages:base"))
-  implementation(project(":packages:server"))
+  implementation(platform(projects.packages.platform))
+  implementation(projects.packages.base)
+  implementation(projects.packages.server)
   implementation(libs.jsoup)
   implementation(libs.picocli)
   implementation(kotlin("stdlib-jdk7"))
@@ -204,12 +225,6 @@ val quickbuild = (
   project.properties["elide.buildMode"] == "dev"
 )
 
-afterEvaluate {
-  tasks.named("testNativeImage") {
-    enabled = false
-  }
-}
-
 graalvmNative {
   testSupport = true
 
@@ -222,6 +237,7 @@ graalvmNative {
     named("main") {
       fallback = false
       sharedLibrary = false
+      quickBuild = quickbuild
       buildArgs.addAll(listOf(
         "--language:regex",
         "--gc=epsilon",
@@ -230,28 +246,19 @@ graalvmNative {
         "--enable-https",
         "--no-fallback",
         "--install-exit-handlers",
-        "--initialize-at-build-time=org.slf4j.LoggerFactory",
-        "--initialize-at-build-time=org.slf4j.simple.SimpleLogger",
-        "--initialize-at-build-time=org.slf4j.impl.StaticLoggerBinder",
-        "--initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger",
-        "--initialize-at-run-time=io.netty.util.AbstractReferenceCounted",
-        "--initialize-at-run-time=io.netty.channel.epoll",
-        "--initialize-at-run-time=io.netty.handler.ssl",
-        "--initialize-at-run-time=io.netty.channel.unix",
         "-Duser.country=US",
         "-Duser.language=en",
         "-H:IncludeLocales=en",
         "--enable-all-security-services",
-      ))
-      quickBuild = quickbuild
+      ).plus(initializeAtBuildTime).plus(initializeAtRuntime))
     }
 
     named("test") {
+      quickBuild = quickbuild
       buildArgs.addAll(listOf(
         "--language:regex",
         "--enable-all-security-services",
-      ))
-      quickBuild = quickbuild
+      ).plus(initializeAtBuildTime).plus(initializeAtRuntime))
     }
   }
 }

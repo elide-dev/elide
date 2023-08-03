@@ -13,6 +13,10 @@
 
 package elide.runtime.gvm.internals.context
 
+import com.lmax.disruptor.*
+import com.lmax.disruptor.dsl.Disruptor
+import com.lmax.disruptor.dsl.ProducerType
+import com.lmax.disruptor.util.DaemonThreadFactory
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -26,6 +30,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
 import kotlin.io.path.Path
@@ -42,9 +47,53 @@ import org.graalvm.polyglot.Context as VMContext
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
 /** TBD. */
-@Singleton internal class NativeContextManagerImpl(
-  config: GuestVMConfiguration
+@Singleton
+internal class NativeContextManagerImpl(
+  private val config: GuestVMConfiguration
 ) : ContextManager<VMContext, VMContext.Builder> {
+  private class ContextRequest(var continuation: ((VMContext) -> Unit)? = null)
+
+  private class ContextDispatcher(
+    poolSize: Int,
+    private val ordinal: Long,
+    private val context: VMContext,
+  ) : EventHandler<ContextRequest> {
+    private val poolSizeMask: Long = poolSize - 1L
+
+    override fun onEvent(event: ContextRequest, sequence: Long, endOfBatch: Boolean) {
+      // evenly distribute events between handlers
+      // see: https://github.com/LMAX-Exchange/disruptor/wiki/Frequently-Asked-Questions
+      // use a bitmask to calculate modulo, assuming power of two pool sizes (4x faster than %)
+      if(sequence and poolSizeMask != ordinal) return
+
+      event.continuation?.let { request ->
+        request(context)
+      }
+    }
+  }
+
+  /**
+   * Work queue used to manage context requests. [ContextRequest] messages are sent by the [acquire] method,
+   * and are handled by one of the [ContextDispatcher] instances in the pool.
+   *
+   * In order for this [Disruptor] to work properly, [activate] must be called before any other operation.
+   */
+  private val disruptor = Disruptor(
+    /*eventFactory=*/ ::ContextRequest,
+    /*ringBufferSize=*/ config.ringBufferSize ?: DEFAULT_RING_BUFFER_SIZE,
+    /*threadFactory=*/ DaemonThreadFactory.INSTANCE,
+    /*producerType=*/ProducerType.MULTI,
+    /*waitStrategy=*/when(config.waitStrategy) {
+      "busySpin" -> BusySpinWaitStrategy()
+      "liteBlocking" -> LiteBlockingWaitStrategy()
+      "liteTimeout" -> LiteTimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
+      "sleep" -> SleepingWaitStrategy()
+      "timeout" -> TimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
+      "yield" -> YieldingWaitStrategy()
+      else -> BlockingWaitStrategy()
+    }
+  )
+
   // Private logger.
   private val logging: Logger = Logging.of(NativeContextManagerImpl::class)
 
@@ -132,8 +181,18 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     if (!initialized.compareAndSet(false, true)) return
     logging.trace("Activating native VM context manager")
 
-    // TODO(@darvld): configure and start the disruptor
-    // ...
+    // configure and start the disruptor
+    val handlers = Array(config.poolSize ?: DEFAULT_POOL_SIZE) { number ->
+      ContextDispatcher(
+        poolSize = config.poolSize ?: DEFAULT_POOL_SIZE,
+        ordinal = number.toLong(),
+        context = allocateContext()
+      )
+    }
+
+    // configure and start the disruptor
+    disruptor.handleEventsWith(*handlers)
+    disruptor.start()
   }
 
   /** @inheritDoc */
@@ -144,15 +203,11 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
   }
 
   override fun <R> acquire(builder: ((VMContext.Builder) -> Unit)?, operation: VMContext.() -> R): R {
-    // safe to call even if already activated
-    activate(start = true)
-
-    val ctx = allocateContext(builder)
-    try {
-      ctx.enter()
-      return operation.invoke(ctx)
-    } finally {
-      ctx.leave()
+    // TODO(@darvld): migrate the builder out of this function, the contexts are constructed at init time
+    // submit the operation and wait for it to complete
+    return CompletableFuture<R>().let { future ->
+      disruptor.publishEvent { event, _ -> event.continuation = { future.complete(operation(it)) } }
+      future.get()
     }
   }
 
@@ -167,6 +222,12 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
   }
 
   private companion object {
+    // Number of VM context instances used to process tasks
+    const val DEFAULT_POOL_SIZE = 4
+
+    // Size of the Disruptor's ring buffer
+    const val DEFAULT_RING_BUFFER_SIZE = 2048
+
     // Whether to enable Isolates.
     const val ENABLE_ISOLATES = false
 

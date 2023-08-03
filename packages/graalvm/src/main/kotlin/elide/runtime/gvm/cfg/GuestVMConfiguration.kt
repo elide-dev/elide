@@ -93,4 +93,10 @@ internal interface GuestVMConfiguration : Toggleable {
    * @return GraalVM Enterprise Edition-specific configuration.
    */
   val enterprise: GuestVMEEConfig? get() = null
+
+  val poolSize: Int? get() = null
+
+  val ringBufferSize: Int? get() = null
+
+  val waitStrategy: String? get() = null
 }

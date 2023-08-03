@@ -54,7 +54,7 @@ publishing {
 
 dependencies {
   ksp(libs.autoService.ksp)
-  api(project(":compiler-util"))
+  api(projects.compilerUtil)
   compileOnly(libs.kotlin.compiler.embedded)
   implementation(libs.google.auto.service)
   implementation(kotlin("stdlib"))

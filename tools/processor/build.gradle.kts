@@ -48,9 +48,9 @@ dependencies {
   api(libs.slf4j)
 
   // Protocol dependencies.
-  implementation(project(":packages:proto:proto-core"))
-  implementation(project(":packages:proto:proto-protobuf"))
-  implementation(project(":packages:proto:proto-kotlinx"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoProtobuf)
+  implementation(projects.packages.proto.protoKotlinx)
 
   // Modules
   implementation(projects.packages.base)

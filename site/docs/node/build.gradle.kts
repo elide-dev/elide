@@ -85,7 +85,7 @@ dependencies {
 
   api(project(":packages:ssr"))
   api(project(":site:docs:content"))
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:graalvm-js"))
   implementation(project(":packages:graalvm-react"))
   implementation(project(":site:docs:ui"))

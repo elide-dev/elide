@@ -35,7 +35,7 @@ kotlin {
 }
 
 dependencies {
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:frontend"))
   implementation(project(":packages:graalvm-react"))
 

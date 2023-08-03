@@ -98,7 +98,7 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        implementation(project(":packages:server"))
+        implementation(projects.packages.server)
         api(kotlin("stdlib-jdk8"))
         api(kotlin("test-junit5"))
         api(libs.jakarta.inject)

@@ -53,7 +53,7 @@ dependencies {
   implementation(project(":packages:proto:proto-kotlinx"))
 
   // Modules
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
 
   // KSP
   implementation(libs.ksp)
@@ -83,5 +83,5 @@ dependencies {
 
   // Testing
   testImplementation(kotlin("test"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
 }

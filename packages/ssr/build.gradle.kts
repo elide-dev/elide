@@ -48,7 +48,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(kotlin("stdlib-common"))
-        implementation(project(":packages:base"))
+        implementation(projects.packages.base)
         implementation(libs.kotlinx.serialization.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.kotlinx.serialization.protobuf)
@@ -59,7 +59,7 @@ kotlin {
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
     val jvmMain by getting {
@@ -70,7 +70,7 @@ kotlin {
     val jvmTest by getting {
       dependencies {
         implementation(kotlin("test"))
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
         implementation(libs.junit.jupiter.api)
         implementation(libs.junit.jupiter.params)
         implementation(libs.kotlinx.serialization.core)

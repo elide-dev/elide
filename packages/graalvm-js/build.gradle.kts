@@ -53,7 +53,7 @@ kotlin {
     val jsTest by getting {
       dependencies {
         // Testing
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
   }

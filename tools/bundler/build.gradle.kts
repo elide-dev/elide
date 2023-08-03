@@ -107,8 +107,8 @@ dependencies {
   annotationProcessor(libs.micronaut.inject.java)
   annotationProcessor(libs.picocli.codegen)
 
-  implementation(project(":packages:core"))
-  implementation(project(":packages:base"))
+  implementation(projects.packages.core)
+  implementation(projects.packages.base)
   implementation(kotlin("stdlib-jdk7"))
   implementation(kotlin("stdlib-jdk8"))
   implementation(kotlin("reflect"))
@@ -138,7 +138,7 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)

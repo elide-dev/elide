@@ -112,7 +112,7 @@ graalvmNative {
 }
 
 dependencies {
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))
   implementation(libs.micronaut.context)

@@ -250,7 +250,7 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
@@ -551,6 +551,7 @@ val hostedRuntimeOptions = mapOf(
 val initializeAtBuildTime = listOf(
   "kotlin.DeprecationLevel",
   "kotlin.annotation.AnnotationRetention",
+  "kotlin.coroutines.intrinsics.CoroutineSingletons",
   "kotlin.annotation.AnnotationTarget",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "ch.qos.logback",

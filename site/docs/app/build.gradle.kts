@@ -279,7 +279,7 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.micronaut.test.junit5)
 }
 

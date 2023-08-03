@@ -91,7 +91,7 @@ application {
 dependencies {
   api(kotlin("stdlib"))
   api(kotlin("stdlib-jdk8"))
-  implementation(project(":packages:base"))
+  implementation(projects.packages.base)
   implementation(project(":packages:server"))
   implementation(project(":packages:graalvm"))
 
@@ -114,7 +114,7 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
-  testImplementation(project(":packages:test"))
+  testImplementation(projects.packages.test)
   testImplementation(libs.micronaut.test.junit5)
 }
 

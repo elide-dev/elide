@@ -34,7 +34,7 @@ kotlin {
         api(npm("buffer", libs.versions.npm.buffer.get()))
         api(npm("readable-stream", libs.versions.npm.stream.get()))
 
-        implementation(project(":packages:graalvm-js"))
+        implementation(projects.packages.graalvmJs)
 
         implementation(libs.kotlinx.wrappers.node)
         implementation(libs.kotlinx.wrappers.mui)
@@ -55,7 +55,7 @@ kotlin {
 
     val jsTest by getting {
       dependencies {
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
   }

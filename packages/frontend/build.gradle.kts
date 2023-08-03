@@ -31,7 +31,7 @@ kotlin {
     val jsMain by getting {
       dependencies {
         implementation(kotlin("stdlib-js"))
-        implementation(project(":packages:base"))
+        implementation(projects.packages.base)
 
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.core.js)
@@ -42,7 +42,7 @@ kotlin {
 
     val jsTest by getting {
       dependencies {
-        implementation(project(":packages:test"))
+        implementation(projects.packages.test)
       }
     }
   }

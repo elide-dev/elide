@@ -75,8 +75,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(kotlin("stdlib-common"))
-        api(project(":packages:base"))
-        api(project(":packages:core"))
+        api(projects.packages.base)
+        api(projects.packages.core)
         api(libs.kotlinx.collections.immutable)
         api(libs.kotlinx.datetime)
         api(libs.kotlinx.serialization.core)
@@ -92,10 +92,10 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        implementation(project(":packages:base"))
-        implementation(project(":packages:proto:proto-core"))
-        implementation(project(":packages:proto:proto-protobuf"))
-        implementation(project(":packages:proto:proto-kotlinx"))
+        implementation(projects.packages.base)
+        implementation(projects.packages.proto.protoCore)
+        implementation(projects.packages.proto.protoProtobuf)
+        implementation(projects.packages.proto.protoKotlinx)
         implementation(libs.jakarta.inject)
         api(libs.protobuf.java)
         api(libs.protobuf.kotlin)
@@ -112,7 +112,7 @@ kotlin {
     val jvmTest by getting {
       dependencies {
         implementation(kotlin("test-junit5"))
-        implementation(project(":packages:base"))
+        implementation(projects.packages.base)
         implementation(libs.truth)
         implementation(libs.truth.proto)
         runtimeOnly(libs.junit.jupiter.engine)
@@ -125,8 +125,8 @@ kotlin {
         api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
 
         implementation(kotlin("stdlib-js"))
-        implementation(project(":packages:base"))
-        implementation(project(":packages:frontend"))
+        implementation(projects.packages.base)
+        implementation(projects.packages.frontend)
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.json.js)
         implementation(libs.kotlinx.serialization.protobuf.js)
@@ -136,7 +136,7 @@ kotlin {
     val nativeMain by getting {
       dependencies {
         implementation(kotlin("stdlib"))
-        implementation(project(":packages:base"))
+        implementation(projects.packages.base)
       }
     }
     val nativeTest by getting

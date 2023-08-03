@@ -124,8 +124,8 @@ dependencies {
   implementation(libs.micronaut.kotlin.extension.functions)
   implementation(libs.micronaut.kotlin.runtime)
 
-  implementation(project(":packages:proto:proto-core"))
-  implementation(project(":packages:proto:proto-flatbuffers"))
+  implementation(projects.packages.proto.protoCore)
+  implementation(projects.packages.proto.protoFlatbuffers)
 
   implementation(libs.lz4)
   implementation(libs.sqlite)

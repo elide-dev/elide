@@ -83,8 +83,8 @@ kotlin {
 }
 
 dependencies {
-  kover(project(":compiler-util"))
-  kover(project(":redakt"))
+  kover(projects.compilerUtil)
+  kover(projects.redakt)
 }
 
 extensions.configure<kotlinx.kover.gradle.plugin.dsl.KoverReportExtension> {

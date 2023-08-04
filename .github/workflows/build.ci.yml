@@ -626,7 +626,7 @@ jobs:
             -PbuildDocs=false
       - name: "Artifacts: Release Binary"
         uses: actions/upload-artifact@v3
-        if: success() && !contains(matrix.runner, 'windows')
+        if: success()
         with:
           name: cli-release-${{ matrix.tag }}
           path: |

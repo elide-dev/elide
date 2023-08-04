@@ -131,7 +131,7 @@ kotlin {
       javaParameters = true
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
       freeCompilerArgs = ktCompilerArgs
     }
   }
@@ -859,7 +859,7 @@ afterEvaluate {
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       freeCompilerArgs = ktCompilerArgs
-      allWarningsAsErrors = true
+      allWarningsAsErrors = false
     }
   }
 

@@ -14,7 +14,7 @@
 <hr />
 
 [![Build](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml/badge.svg)](https://github.com/elide-dev/v3/actions/workflows/build.ci.yml)
-[![codecov](https://codecov.io/gh/elide-dev/v3/branch/v3/graph/badge.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
+[![codecov](https://codecov.io/gh/elide-dev/elide/branch/v3/graph/badge.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/elide)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=reliability_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=security_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=elide-dev_v3&metric=sqale_rating&token=7e7d03a5cb8a12b7297eb6eedf5fe9b93ade6d75)](https://sonarcloud.io/summary/new_code?id=elide-dev_v3)
@@ -52,16 +52,29 @@ to use (typically `server`) and add it via Gradle or Maven:
 
 ### Gradle
 
+**`build.gradle`:**
 ```groovy
 dependencies {
     implementation 'dev.elide:elide-server:1.0-v3-alpha4-b9'
 }
 ```
 
+**`build.gradle.kts`:**
 ```kotlin
 dependencies {
     implementation("dev.elide:elide-server:1.0-v3-alpha4-b9")
 }
+```
+
+**`libs.versions.toml`:**
+```toml
+[versions]
+elide = "1.0-v3-alpha4-b9"
+
+# ...
+
+[libraries]
+elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
 ```
 
 ### Maven
@@ -394,7 +407,7 @@ the report is available via FOSSA:
 Code coverage is continuously reported to [Codecov](https://app.codecov.io/gh/elide-dev/v3) and
 [SonarCloud](https://sonarcloud.io/project/overview?id=elide-dev_v3):
 
-[![Coverage grid](https://codecov.io/gh/elide-dev/v3/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
+[![Coverage grid](https://codecov.io/gh/elide-dev/elide/branch/v3/graphs/tree.svg?token=FXxhJlpKG3)](https://codecov.io/gh/elide-dev/v3)
 
 
 [1]: https://kotlinlang.org/

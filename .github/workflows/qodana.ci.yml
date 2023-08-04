@@ -33,7 +33,7 @@ jobs:
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Check: Qodana Scan"
-        uses: JetBrains/qodana-action@c33af005540b351ca67ddc16e63d26125517fd60 # main
+        uses: JetBrains/qodana-action@f41f0c641d138dc014603e418bb988d0ec72d91f # main
         env:
           GRADLE_ARGS: -PstrictMode=false -PbuildDocs=false -PbuildSamples=false
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}

@@ -11,6 +11,49 @@ public final class elide/core/PlatformDefaults$DefaultImpls {
 	public static fun getCharset (Lelide/core/PlatformDefaults;)Ljava/lang/String;
 }
 
+public abstract interface class elide/core/api/Symbolic {
+	public abstract fun getSymbol ()Ljava/lang/Object;
+}
+
+public abstract class elide/core/api/Symbolic$AbstractResolver : elide/core/api/Symbolic$SealedResolver {
+	public fun <init> ()V
+	public abstract fun getName ()Ljava/lang/String;
+	public fun resolveSymbol (Lelide/core/api/Symbolic;)Lelide/core/api/Symbolic;
+	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun unresolved (Lelide/core/api/Symbolic;)Lelide/core/api/Symbolic$Unresolved;
+	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+}
+
+public abstract interface class elide/core/api/Symbolic$Enumerated : elide/core/api/Symbolic$Resolver {
+	public abstract fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public abstract fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+}
+
+public final class elide/core/api/Symbolic$Enumerated$DefaultImpls {
+	public static fun resolveSymbol (Lelide/core/api/Symbolic$Enumerated;Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public static fun unresolved (Lelide/core/api/Symbolic$Enumerated;Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+}
+
+public abstract interface class elide/core/api/Symbolic$Resolver {
+	public abstract fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public abstract fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+}
+
+public final class elide/core/api/Symbolic$Resolver$DefaultImpls {
+	public static fun resolveSymbol (Lelide/core/api/Symbolic$Resolver;Ljava/lang/Object;)Lelide/core/api/Symbolic;
+}
+
+public abstract interface class elide/core/api/Symbolic$SealedResolver : elide/core/api/Symbolic$Enumerated {
+}
+
+public final class elide/core/api/Symbolic$SealedResolver$DefaultImpls {
+	public static fun resolveSymbol (Lelide/core/api/Symbolic$SealedResolver;Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public static fun unresolved (Lelide/core/api/Symbolic$SealedResolver;Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
+}
+
+public final class elide/core/api/Symbolic$Unresolved : java/lang/IllegalStateException {
+}
+
 public final class elide/core/crypto/HashAlgorithm : java/lang/Enum {
 	public static final field IDENTITY Lelide/core/crypto/HashAlgorithm;
 	public static final field MD5 Lelide/core/crypto/HashAlgorithm;

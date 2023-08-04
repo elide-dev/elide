@@ -188,8 +188,8 @@ public actual object Base64 : Codec<Base64Data> {
       var dp0 = dp
       while (sp0 < sl) {
         val bits: Int = src[sp0++].toInt() and 0xff shl 16 or (
-          src[sp0++].toInt() and 0xff shl 8) or
-          (src[sp0++].toInt() and 0xff)
+                src[sp0++].toInt() and 0xff shl 8) or
+                (src[sp0++].toInt() and 0xff)
         dst[dp0++] = toBase64[bits ushr 18 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 12 and 0x3f].code.toByte()
         dst[dp0++] = toBase64[bits ushr 6 and 0x3f].code.toByte()
@@ -335,7 +335,7 @@ public actual object Base64 : Codec<Base64Data> {
             // xx=y  shiftto==6 last is not =
             require(
               !(shiftto == 6 && (sp == sl || src[sp++].toInt().toChar() != '=') ||
-                shiftto == 18)
+                      shiftto == 18)
             ) { "Input byte array has wrong 4-byte ending unit" }
             break
           }
@@ -376,13 +376,10 @@ public actual object Base64 : Codec<Base64Data> {
     }
   }
 
-  /** @inheritDoc */
   actual override fun encoding(): Encoding = Encoding.BASE64
 
-  /** @inheritDoc */
   override fun decodeBytes(data: ByteArray): ByteArray = decoder.decode(data)
 
-  /** @inheritDoc */
   override fun encode(data: ByteArray): Base64Data = Base64Data(encoder.encode(data))
 
   /**

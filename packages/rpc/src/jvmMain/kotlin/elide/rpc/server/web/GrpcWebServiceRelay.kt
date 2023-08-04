@@ -283,10 +283,8 @@ import elide.runtime.Logging
     }
   }
 
-  /** @inheritDoc */
   override fun channel(): ManagedChannel = runtime.inProcessChannel()
 
-  /** @inheritDoc */
   override suspend fun fulfillAsync(call: GrpcWebCall, interceptor: GrpcWebClientInterceptor): Deferred<GrpcWebCall> {
     return Futures.immediateFuture(
       fulfillSingleCall(
@@ -328,14 +326,12 @@ import elide.runtime.Logging
       }
     }
 
-    /** @inheritDoc */
     override fun onNext(value: Any) {
       if (!completed.get()) {
         values.add(value)
       }
     }
 
-    /** @inheritDoc */
     override fun onError(t: Throwable) {
       completed.compareAndExchange(
         false,
@@ -349,7 +345,6 @@ import elide.runtime.Logging
       latch.countDown()
     }
 
-    /** @inheritDoc */
     override fun onCompleted() {
       completed.compareAndExchange(
         false,

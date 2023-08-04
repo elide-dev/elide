@@ -55,7 +55,6 @@ public interface Timestamp<Concrete, Builder> :
    * TBD.
    */
   public interface Factory<Concrete, B: IBuilder<Concrete>> : Record.Factory<Concrete, B> {
-    /** @InheritDoc */
     override fun create(op: B.() -> Unit): Concrete = builder().let { b ->
       op.invoke(b)
       b.build()

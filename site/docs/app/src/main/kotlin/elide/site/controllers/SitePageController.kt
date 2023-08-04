@@ -147,7 +147,6 @@ abstract class SitePageController protected constructor(val page: SitePage) : Pa
 
   /** Generate a cache key for an HTTP request. */
   internal class CachedResponseKeyGenerator : CacheKeyGenerator {
-    /** @inheritDoc */
     override fun generateKey(annotationMetadata: AnnotationMetadata, vararg params: Any): Any {
       val req = params.first() as? HttpRequest<*> ?: error(
         "Cannot generate cache key for type (expected `HttpRequest`): ${params.first()}"

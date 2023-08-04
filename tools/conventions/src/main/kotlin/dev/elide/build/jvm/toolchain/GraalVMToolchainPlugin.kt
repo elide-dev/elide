@@ -24,7 +24,6 @@ import javax.inject.Inject
 abstract class GraalVMToolchainPlugin : Plugin<Settings> {
   @Inject protected abstract fun getToolchainResolverRegistry(): JavaToolchainResolverRegistry
 
-  /** @inheritDoc */
   override fun apply(settings: Settings) {
     settings.extensions.findByType(GraalVMToolchainExtension::class.java)
       ?: settings.extensions.create("elide-graalvm-toolchain", GraalVMToolchainExtension::class.java)

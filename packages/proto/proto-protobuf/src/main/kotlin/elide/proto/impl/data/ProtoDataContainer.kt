@@ -41,37 +41,30 @@ public class ProtoDataContainer private constructor (private val container: Data
     Encoding,
     Builder,
   > {
-    /** @inheritDoc */
     override var data: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override var encoding: Encoding
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override fun setData(value: ByteArray): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setData(value: String): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setBase64(value: Base64Data): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setHex(value: HexData): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun build(): ProtoDataContainer {
       TODO("Not yet implemented")
     }
@@ -91,79 +84,63 @@ public class ProtoDataContainer private constructor (private val container: Data
       DataContainer.getDefaultInstance()
     )
 
-    /** @inheritDoc */
     override fun empty(): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun copy(model: ProtoDataContainer): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun defaultInstance(): ProtoDataContainer = DEFAULT_INSTANCE
 
-    /** @inheritDoc */
     override fun create(encoding: Encoding, data: ByteArray): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(data: ByteArray): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(base64: Base64Data): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(hex: HexData): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(data: String): ProtoDataContainer {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun builder(): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(op: context(Builder) () -> Unit): ProtoDataContainer {
       TODO("Not yet implemented")
     }
   }
 
-  /** @inheritDoc */
   override fun factory() = Factory
 
-  /** @inheritDoc */
   override fun bytes(): ByteArray {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun encoding(): Encoding? {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun fingerprint(): ProtoDataFingerprint? {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun toBuilder(): Builder {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun mutate(op: context(Builder) () -> Unit): ProtoDataContainer {
     TODO("Not yet implemented")
   }

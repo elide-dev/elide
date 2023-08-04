@@ -25,15 +25,12 @@ import elide.testing.annotations.Test
 
 /** Tests for data container protocol buffer models. */
 class DataProtoTests : AbstractDataContainerTests<DataContainer>() {
-  /** @inheritDoc */
   override fun allocateContainer(): DataContainer = DataContainer.newBuilder().build()
 
-  /** @inheritDoc */
   override fun allocateContainer(data: String): DataContainer = allocateContainer(data.toByteArray(
     StandardCharsets.UTF_8,
   ))
 
-  /** @inheritDoc */
   override fun allocateContainer(data: ByteArray): DataContainer = dataContainer {
     raw = data.toByteString()
     integrity.add(dataFingerprint {

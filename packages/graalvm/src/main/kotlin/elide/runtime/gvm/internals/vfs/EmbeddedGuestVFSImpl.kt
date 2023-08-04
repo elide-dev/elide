@@ -183,10 +183,8 @@ internal class EmbeddedGuestVFSImpl private constructor (
   ) : VFSBuilder<EmbeddedGuestVFSImpl> {
     /** Factory for embedded VFS implementations. */
     companion object Factory : VFSBuilderFactory<EmbeddedGuestVFSImpl, Builder> {
-      /** @inheritDoc */
       override fun newBuilder(): Builder = Builder()
 
-      /** @inheritDoc */
       override fun newBuilder(builder: Builder): Builder = builder.copy()
     }
 
@@ -240,7 +238,6 @@ internal class EmbeddedGuestVFSImpl private constructor (
       return this
     }
 
-    /** @inheritDoc */
     override fun build(): EmbeddedGuestVFSImpl {
       val config = EffectiveGuestVFSConfig.fromBuilder(this)
       val fsConfig = config.buildFs()
@@ -608,21 +605,17 @@ internal class EmbeddedGuestVFSImpl private constructor (
       )
     }
 
-    /** @inheritDoc */
     override fun create(): EmbeddedGuestVFSImpl = EmbeddedGuestVFSImpl(
       EffectiveGuestVFSConfig.DEFAULTS,
     )
 
-    /** @inheritDoc */
     override fun create(config: EffectiveGuestVFSConfig): EmbeddedGuestVFSImpl = EmbeddedGuestVFSImpl(
       config,
     )
 
-    /** @inheritDoc */
     override fun create(builder: VFSBuilder<EmbeddedGuestVFSImpl>): EmbeddedGuestVFSImpl =
       builder.build()
 
-    /** @inheritDoc */
     override fun create(configurator: Builder.() -> Unit): EmbeddedGuestVFSImpl {
       return Builder.newBuilder().apply {
         configurator.invoke(this)
@@ -683,12 +676,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
     }
   }
 
-  /** @inheritDoc */
   override fun logging(): Logger = logging
 
-  /** @inheritDoc */
   override fun allowsHostFileAccess(): Boolean = false
 
-  /** @inheritDoc */
   override fun allowsHostSocketAccess(): Boolean = false
 }

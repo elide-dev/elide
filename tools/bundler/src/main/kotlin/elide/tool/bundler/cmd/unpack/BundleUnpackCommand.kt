@@ -31,7 +31,6 @@ public class BundleUnpackCommand : AbstractBundlerSubcommand() {
     internal const val CMD_NAME = "unpack"
   }
 
-  /** @inheritDoc */
   override fun invoke() = operation {
     logging.info("Bundle `unpack` is not implemented yet")
   }

@@ -22,13 +22,12 @@ import elide.runtime.Logging
 
 /**
  * Deserializer which is responsible for (1) resolving a protocol buffer object from a given reflective [Method], then
- * (2) de-serializing a set of raw bytes into a resolved [Message].
+ * (2) deserializing a set of raw bytes into a resolved [Message].
  */
 internal class ReflectiveMessageDeserializer: MessageDeserializer {
   // Private logger.
   private val logging: Logger = Logging.of(ReflectiveMessageDeserializer::class)
 
-  /** @inheritDoc */
   override fun deserialize(method: Method, rawData: ByteArray): Message {
     if (method.parameterTypes.isEmpty())
       throw IllegalStateException("Failed to locate protocol buffer request type from method '${method.name}'")

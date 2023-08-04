@@ -29,15 +29,13 @@ public class Logger (private val logger: org.slf4j.Logger): elide.runtime.Logger
     return builder.toString()
   }
 
-  /** @inheritDoc */
-  override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
+    override fun isEnabled(level: LogLevel): Boolean = if (System.getProperty("elide.test", "false") == "true") {
     true
   } else {
     level.isEnabled(logger)
   }
 
-  /** @inheritDoc */
-  override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
+    override fun log(level: LogLevel, message: List<Any>, levelChecked: Boolean) {
     val enabled = levelChecked || isEnabled(level)
     if (enabled) {
       level.resolve(logger).invoke(

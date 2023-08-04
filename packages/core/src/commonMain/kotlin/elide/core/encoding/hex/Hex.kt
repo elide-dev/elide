@@ -23,12 +23,9 @@ import elide.core.encoding.Encoding
  * platform supported by Elide/Kotlin, including native platforms.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate") public expect object Hex : Codec<HexData> {
-  /** @inheritDoc */
-  override fun encoding(): Encoding
+    override fun encoding(): Encoding
 
-  /** @inheritDoc */
-  override fun encode(data: ByteArray): HexData
+    override fun encode(data: ByteArray): HexData
 
-  /** @inheritDoc */
-  override fun decodeBytes(data: ByteArray): ByteArray
+    override fun decodeBytes(data: ByteArray): ByteArray
 }

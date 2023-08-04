@@ -35,47 +35,38 @@ public class ProtoDataFingerprint private constructor (private val fingerprint: 
     Encoding,
     Builder,
   > {
-    /** @inheritDoc */
     override var fingerprint: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override var algorithm: HashAlgorithm
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override var encoding: Encoding
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override fun setFingerprint(data: ByteArray): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setFingerprint(data: ByteArray, withAlgorith: HashAlgorithm): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setFingerprint(value: ByteArray, withAlgorith: HashAlgorithm, withEncoding: Encoding): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setAlgorithm(value: HashAlgorithm): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setEncoding(value: Encoding): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun build(): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
@@ -88,76 +79,61 @@ public class ProtoDataFingerprint private constructor (private val fingerprint: 
     HashAlgorithm,
     Encoding,
   > {
-    /** @inheritDoc */
     override fun empty(): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun copy(model: ProtoDataFingerprint): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun defaultInstance(): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun builder(): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(op: Builder.() -> Unit): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: HashAlgorithm, data: ByteArray): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: HashAlgorithm, base64: Base64Data): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: HashAlgorithm, hex: HexData): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: HashAlgorithm, data: String): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: HashAlgorithm, data: String, encoding: Encoding): ProtoDataFingerprint {
       TODO("Not yet implemented")
     }
   }
 
-  /** @inheritDoc */
   override fun factory(): Factory = Factory
 
-  /** @inheritDoc */
   override fun toBuilder(): Builder {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun bytes(): ByteArray {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun encoding(): Encoding {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun algorithm(): HashAlgorithm {
     TODO("Not yet implemented")
   }

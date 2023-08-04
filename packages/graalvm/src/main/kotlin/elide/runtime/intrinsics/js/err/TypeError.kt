@@ -31,7 +31,6 @@ package elide.runtime.intrinsics.js.err
  * @see Error for the top-most guest-exposed base class for all JavaScript errors.
  */
 public abstract class TypeError : AbstractJSException, Error() {
-  /** @inheritDoc */
   override val name: String get() = "TypeError"
 
   /**
@@ -41,14 +40,12 @@ public abstract class TypeError : AbstractJSException, Error() {
    * message and cause can be provided, a-la Java exceptions.
    */
   public companion object Factory: AbstractJSException.ErrorFactory<TypeError> {
-    /** @inheritDoc */
     override fun create(error: Throwable): TypeError {
       return object : TypeError() {
         override val message: String get() = error.message ?: "An error occurred"
       }
     }
 
-    /** @inheritDoc */
     override fun create(message: String, cause: Throwable?): TypeError {
       return object : TypeError() {
         override val message: String get() = message

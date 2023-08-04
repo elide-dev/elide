@@ -67,9 +67,7 @@ public object Protocol : ServiceLoader.Provider<ElideProtocol> {
     }
   }
 
-  /** @inheritDoc */
   override fun get(): ElideProtocol = acquire(null)
 
-  /** @inheritDoc */
   override fun type(): Class<out ElideProtocol> = activeImplType
 }

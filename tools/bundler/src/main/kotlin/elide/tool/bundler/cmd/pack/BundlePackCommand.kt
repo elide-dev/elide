@@ -31,7 +31,6 @@ public class BundlePackCommand : AbstractBundlerSubcommand() {
     internal const val CMD_NAME = "pack"
   }
 
-  /** @inheritDoc */
   override fun invoke() = operation {
     logging.info("Bundle `pack` is not implemented yet")
   }

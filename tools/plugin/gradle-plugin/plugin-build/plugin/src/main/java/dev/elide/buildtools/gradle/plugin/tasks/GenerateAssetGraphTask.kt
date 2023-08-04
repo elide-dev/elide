@@ -185,7 +185,6 @@ public abstract class GenerateAssetGraphTask @Inject constructor(objects: Object
         .edgeOrder(ElementOrder.stable<AssetDependency>())
         .immutable()
 
-    /** @inheritDoc */
     override fun runAction() {
         val inputs = inputFiles.get()
         val assetModules = assetModules.get()

@@ -45,14 +45,12 @@ public abstract class ValueError : AbstractJSException, Error() {
    * message and cause can be provided, a-la Java exceptions.
    */
   public companion object Factory: AbstractJSException.ErrorFactory<ValueError> {
-    /** @inheritDoc */
     override fun create(error: Throwable): ValueError {
       return object : ValueError() {
         override val message: String get() = error.message ?: "An error occurred"
       }
     }
 
-    /** @inheritDoc */
     override fun create(message: String, cause: Throwable?): ValueError {
       return object : ValueError() {
         override val message: String get() = message

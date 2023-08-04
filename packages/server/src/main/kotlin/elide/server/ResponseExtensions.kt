@@ -84,7 +84,7 @@ public abstract class BaseResponseHandler<ResponseBody> : ResponseHandler<Respon
   private val acquired: AtomicBoolean = AtomicBoolean(false)
   private val response: AtomicReference<MutableHttpResponse<ResponseBody>?> = AtomicReference(null)
 
-  /** @inheritDoc */
+
   override suspend fun respond(response: MutableHttpResponse<ResponseBody>): MutableHttpResponse<ResponseBody> {
     this.acquired.compareAndSet(false, true)
     this.response.set(response)
@@ -261,7 +261,6 @@ public class AssetHandler(
     expectedType.set(type)
   }
 
-  /** @inheritDoc */
   override suspend fun finalize(): MutableHttpResponse<StreamedAsset> {
     return respond(
       handler.assets().serveAsync(

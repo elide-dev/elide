@@ -85,7 +85,6 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   /** Implements a thread factory for tool execution operations. */
   private class ToolThreadFactory : ThreadFactory {
-    /** @inheritDoc */
     override fun newThread(target: Runnable): Thread = Thread
       .ofPlatform()
       .allowSetThreadLocals(true)
@@ -189,10 +188,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   protected open class DefaultInputController (
     private val inbuf: BufferedReader? = null,
   ) : InputController {
-    /** @inheritDoc */
     override suspend fun readLine(): String? = readLineAsync().await()
 
-    /** @inheritDoc */
     override suspend fun readLineAsync(): Deferred<String?> = coroutineScope {
       async {
         withContext(Dispatchers.IO) {
@@ -201,7 +198,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       }
     }
 
-    /** @inheritDoc */
     override fun readLineBlocking(): String? = (inbuf ?: buffer).readLine()
 
     internal companion object {
@@ -213,30 +209,21 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Default output controller implementation. */
   protected open class DefaultOutputController<State: ToolState> (
     private val _state: State,
-//    private val _session: OutputSession?,
     private val _logger: Logger,
     private val _settings: ToolState.OutputSettings = _state.output
   ) : OutputController, Logger by _logger {
-    /** @inheritDoc */
     override val settings: ToolState.OutputSettings get() = _settings
 
-    /** @inheritDoc */
-//    override val session: Session? get() = _session
-
-    /** @inheritDoc */
     override fun emit(text: CharSequence) = (if (_settings.stderr) _stderr else _stdout).print(text)
 
-    /** @inheritDoc */
     override fun line(text: CharSequence) = (if (_settings.stderr) _stderr else _stdout).println(text)
 
-    /** @inheritDoc */
     override suspend fun pretty(operation: OutputCallable, fallback: OutputCallable) {
       if (_settings.pretty) {
         operation.invoke(_state, this)
       }
     }
 
-    /** @inheritDoc */
     override fun verbose(vararg args: Any) {
       if (_settings.verbose && !_settings.quiet) {
         _logger.info(*args)
@@ -296,16 +283,16 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Execution context for the current tool run. */
   protected lateinit var context: ToolContext<State>
 
-  /** @inheritDoc */
+  /** Debug flag status. */
   val debug: Boolean get() = base.debug
 
-  /** @inheritDoc */
+  /** Verbose output flag status. */
   val verbose: Boolean get() = base.verbose
 
-  /** @inheritDoc */
+  /** Quiet output flag status. */
   val quiet: Boolean get() = base.quiet
 
-  /** @inheritDoc */
+  /** Pretty output flag status. */
   val pretty: Boolean get() = base.pretty
 
   // Base execution context.

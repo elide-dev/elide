@@ -46,8 +46,7 @@ public object Hex : Encoder {
     return result.decodeToString()
   }
 
-  /** @inheritDoc */
-  override fun encoding(): Encoding {
+    override fun encoding(): Encoding {
     return Encoding.HEX
   }
 

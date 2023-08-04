@@ -49,14 +49,11 @@ import elide.core.encoding.Encoding
     return result.decodeToString()
   }
 
-  /** @inheritDoc */
-  override fun encoding(): Encoding = Encoding.HEX
+    override fun encoding(): Encoding = Encoding.HEX
 
-  /** @inheritDoc */
-  override fun encode(data: ByteArray): HexData {
+    override fun encode(data: ByteArray): HexData {
     return HexData(bytesToHex(data))
   }
 
-  /** @inheritDoc */
-  override fun decodeBytes(data: ByteArray): ByteArray = hexToString(data.decodeToString()).encodeToByteArray()
+    override fun decodeBytes(data: ByteArray): ByteArray = hexToString(data.decodeToString()).encodeToByteArray()
 }

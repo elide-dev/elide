@@ -19,9 +19,7 @@ import elide.core.encoding.Encoding
 
 /** Carrier value-class for base64-encoded data. */
 @JvmInline public value class Base64Data (override val data: ByteArray): EncodedData {
-  /** @inheritDoc */
-  override val encoding: Encoding get() = Encoding.HEX
+    override val encoding: Encoding get() = Encoding.HEX
 
-  /** @inheritDoc */
-  override val string: String get() = data.decodeToString()
+    override val string: String get() = data.decodeToString()
 }

@@ -34,32 +34,26 @@ public class FlatDataFingerprint private constructor (private val fingerprint: D
     FlatEncoding,
     Builder,
   > {
-    /** @inheritDoc */
     override var fingerprint: ByteArray
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override var algorithm: FlatHashAlgorithm
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override var encoding: FlatEncoding
       get() = TODO("Not yet implemented")
       set(value) {}
 
-    /** @inheritDoc */
     override fun setFingerprint(data: ByteArray): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setFingerprint(data: ByteArray, withAlgorith: FlatHashAlgorithm): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setFingerprint(
       value: ByteArray,
       withAlgorith: FlatHashAlgorithm,
@@ -68,17 +62,14 @@ public class FlatDataFingerprint private constructor (private val fingerprint: D
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setAlgorithm(value: FlatHashAlgorithm): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun setEncoding(value: FlatEncoding): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun build(): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
@@ -91,52 +82,42 @@ public class FlatDataFingerprint private constructor (private val fingerprint: D
     FlatHashAlgorithm,
     FlatEncoding,
   > {
-    /** @inheritDoc */
     override fun empty(): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun copy(model: FlatDataFingerprint): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun defaultInstance(): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun builder(): Builder {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(op: context(Builder) () -> Unit): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: FlatHashAlgorithm, data: ByteArray): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: FlatHashAlgorithm, base64: Base64Data): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: FlatHashAlgorithm, hex: HexData): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: FlatHashAlgorithm, data: String): FlatDataFingerprint {
       TODO("Not yet implemented")
     }
 
-    /** @inheritDoc */
     override fun create(algorithm: FlatHashAlgorithm, data: String, encoding: FlatEncoding): FlatDataFingerprint {
       TODO("Not yet implemented")
     }

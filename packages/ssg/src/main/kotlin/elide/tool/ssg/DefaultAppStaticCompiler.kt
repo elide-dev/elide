@@ -122,7 +122,6 @@ import elide.runtime.Logging
     }
   }
 
-  /** @inheritDoc */
   override fun prepare(params: SiteCompilerParams, appInfo: LoadedAppInfo, loader: AppLoader) {
     this.params = params
     this.appInfo = appInfo
@@ -130,13 +129,11 @@ import elide.runtime.Logging
     this.prepared.compareAndSet(false, true)
   }
 
-  /** @inheritDoc */
   override fun close() {
     executing.set(false)
     reset()
   }
 
-  /** @inheritDoc */
   override suspend fun compileStaticSiteAsync(
     count: Int,
     appInfo: LoadedAppInfo,

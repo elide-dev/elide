@@ -39,7 +39,6 @@ import elide.tool.ssg.StaticContentReader.ArtifactType
   // Private logger.
   private val logging: Logger = Logging.of(DefaultAppStaticReader::class)
 
-  /** @inheritDoc */
   override fun consume(response: HttpResponse<ByteArray>): Pair<Boolean, ByteBuffer> {
     val (body, shouldParse) = if (
       response.status == HttpStatus.OK &&
@@ -57,7 +56,6 @@ import elide.tool.ssg.StaticContentReader.ArtifactType
     return shouldParse to body
   }
 
-  /** @inheritDoc */
   override fun parse(
     request: HttpRequest<*>,
     response: HttpResponse<ByteArray>,

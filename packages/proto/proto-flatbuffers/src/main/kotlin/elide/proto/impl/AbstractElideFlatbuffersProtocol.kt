@@ -32,30 +32,23 @@ public abstract class AbstractElideFlatbuffersProtocol : ElideProtocol {
   // Strategy adapter singleton.
   private val strategy: FlatbuffersModelStrategy = FlatbuffersModelStrategy()
 
-  /** @inheritDoc */
   override val reflection: Boolean get() = false
 
-  /** @inheritDoc */
   override val compression: Boolean get() = true
 
-  /** @inheritDoc */
   override fun engine(): ImplementationLibrary = ImplementationLibrary.FLATBUFFERS
 
-  /** @inheritDoc */
   override fun dialects(): EnumSet<Dialect> = EnumSet.of(
     Dialect.JSON,
     Dialect.FLATBUFFERS,
   )
 
-  /** @inheritDoc */
   override fun base(): Class<*>? = null
 
-  /** @inheritDoc */
   override fun strategy() = strategy
 
   /** Core data model based on Flatbuffers. */
   public class FlatbuffersModelStrategy : ModelAdapterStrategy {
-    /** @inheritDoc */
     override fun model() = object : DataModelStrategy<
       FlatHashAlgorithm,
       FlatEncoding,

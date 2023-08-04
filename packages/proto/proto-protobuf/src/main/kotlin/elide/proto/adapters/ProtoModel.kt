@@ -30,6 +30,5 @@ interface ProtoModel<M: Message> : ProtoSchemaConvertible {
    */
   fun defaultMessageInstance(): M
 
-  /** @inheritDoc */
   override fun toDescriptor(): Descriptors.Descriptor = defaultMessageInstance().descriptorForType
 }

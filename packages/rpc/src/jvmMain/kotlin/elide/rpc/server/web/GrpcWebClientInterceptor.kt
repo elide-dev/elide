@@ -97,20 +97,17 @@ internal class GrpcWebClientInterceptor (
    * and trailers from the response.
    */
   inner class MetadataResponseListener<T>(listener: Listener<T>): SimpleForwardingClientCallListener<T>(listener) {
-    /** @inheritDoc */
     override fun onHeaders(headers: Metadata) {
       headersReceived(headers)
       super.onHeaders(headers)
     }
 
-    /** @inheritDoc */
     override fun onClose(status: Status, trailers: Metadata) {
       trailersReceived(status, trailers)
       super.onClose(status, trailers)
     }
   }
 
-  /** @inheritDoc */
   override fun <Req: Any, Resp: Any> interceptCall(
     method: MethodDescriptor<Req, Resp>,
     callOptions: CallOptions,
@@ -119,7 +116,6 @@ internal class GrpcWebClientInterceptor (
     return object: SimpleForwardingClientCall<Req, Resp>(next.newCall(
       method, callOptions
     )) {
-      /** @inheritDoc */
       override fun start(responseListener: Listener<Resp>, headers: Metadata) {
         super.start(
           MetadataResponseListener(responseListener),

@@ -38,7 +38,6 @@ internal class GrpcConfigurator @Inject constructor (
     healthManager.notifyPending(HealthGrpc.getServiceDescriptor())
   }
 
-  /** @inheritDoc */
   override fun onCreated(event: BeanCreatedEvent<ServerBuilder<*>>): ServerBuilder<*> {
     // grab the server as it is being created
     val builder = runtime.configureServer(

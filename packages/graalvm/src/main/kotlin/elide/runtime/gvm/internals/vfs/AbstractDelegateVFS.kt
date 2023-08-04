@@ -35,7 +35,7 @@ import elide.runtime.gvm.internals.GuestVFS
  *
  * The provided [config] is expected to be fully loaded; that is, it should have a loaded filesystem tree and data-bag
  * from which to pull file system information. The [backing] file system used by this class is closed when this class
- * is closed.
+ * closes.
  *
  * @param VFS Concrete virtual file system type under implementation.
  * @param config Effective guest VFS configuration to apply.
@@ -86,26 +86,20 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return GuestIOAccessDenied.forPath(path, types, message)
   }
 
-  /** @inheritDoc */
   override fun close(): Unit = backing.close()
 
-  /** @inheritDoc */
   override fun getSeparator(): String = backing.separator
 
-  /** @inheritDoc */
   override fun getPathSeparator(): String = backing.separator
 
-  /** @inheritDoc */
   override fun parsePath(uri: URI): Path {
     return backing.getPath(uri.path.toString())
   }
 
-  /** @inheritDoc */
   override fun parsePath(path: String): Path {
     return backing.getPath(path)
   }
 
-  /** @inheritDoc */
   override fun getPath(vararg segments: String): Path {
     return if (segments.size == 1) {
       backing.getPath(segments[0])
@@ -114,17 +108,14 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     }
   }
 
-  /** @inheritDoc */
   override fun toAbsolutePath(path: Path): Path {
     return path.toAbsolutePath()
   }
 
-  /** @inheritDoc */
   override fun toRealPath(path: Path, vararg linkOptions: LinkOption): Path {
     return path
   }
 
-  /** @inheritDoc */
   override fun checkAccess(path: Path, modes: MutableSet<out AccessMode>, vararg linkOptions: LinkOption) {
     debugLog {
       "Checking access to path: $path, modes: $modes, linkOptions: $linkOptions"
@@ -154,7 +145,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     }
   }
 
-  /** @inheritDoc */
   override fun createDirectory(dir: Path, vararg attrs: FileAttribute<*>) {
     debugLog {
       "Creating directory at path: '$dir'"
@@ -171,7 +161,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun newByteChannel(
     path: Path,
     options: MutableSet<out OpenOption>,
@@ -193,7 +182,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun newDirectoryStream(dir: Path, filter: DirectoryStream.Filter<in Path>): DirectoryStream<Path> {
     debugLog {
       "Streaming directory entries at path: '$dir'"
@@ -210,7 +198,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
     debugLog {
       "Reading attributes for file at path: '$path'"
@@ -227,7 +214,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun setAttribute(path: Path, attribute: String, value: Any, vararg options: LinkOption) {
     debugLog {
       "Setting attribute '$attribute' for file at path: '$path' (value: '$value', options: '$options')"
@@ -245,7 +231,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun copy(source: Path, target: Path, vararg options: CopyOption?) {
     debugLog {
       "Copying from '$source' -> '$target' (options: $options)"
@@ -267,7 +252,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun move(source: Path, target: Path, vararg options: CopyOption?) {
     debugLog {
       "Moving from '$source' -> '$target' (options: $options)"
@@ -289,7 +273,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun delete(path: Path) {
     debugLog {
       "Deleting filesystem entry at path: '$path'"
@@ -302,7 +285,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     backing.provider().delete(path)
   }
 
-  /** @inheritDoc */
   override fun createLink(link: Path, existing: Path) {
     debugLog {
       "Creating hard-link from '$link' -> '$existing'"
@@ -318,7 +300,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun createSymbolicLink(link: Path, target: Path, vararg attrs: FileAttribute<*>?) {
     debugLog {
       "Creating soft-link from '$link' -> '$target'"
@@ -334,7 +315,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun readSymbolicLink(link: Path): Path {
     debugLog {
       "Reading soft-link at '$link'"
@@ -347,7 +327,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return backing.provider().readSymbolicLink(link)
   }
 
-  /** @inheritDoc */
   override fun setCurrentWorkingDirectory(currentWorkingDirectory: Path) {
     debugLog {
       "Setting CWD to: '$currentWorkingDirectory'"
@@ -355,7 +334,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     TODO("not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun getMimeType(path: Path): String? {
     debugLog {
       "Getting MIME type for file at path: '$path'"
@@ -368,7 +346,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return Files.probeContentType(path)
   }
 
-  /** @inheritDoc */
   override fun getEncoding(path: Path): Charset {
     debugLog {
       "Fetching encoding for path: '$path'"
@@ -376,7 +353,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     return StandardCharsets.UTF_8  // TODO(sgammon): make this configurable or resolve from tree
   }
 
-  /** @inheritDoc */
   override fun getTempDirectory(): Path {
     debugLog {
       "Fetching temp directory path"
@@ -384,7 +360,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     TODO("not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean {
     debugLog {
       "Checking if '$path1' and '$path2' are the same file"
@@ -406,7 +381,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun readStream(path: Path, vararg options: OpenOption): InputStream {
     debugLog {
       "Performing host-side read for path '$path' (options: '$options')"
@@ -422,7 +396,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun writeStream(path: Path, vararg options: OpenOption): OutputStream {
     debugLog {
       "Performing host-side write for path '$path' (options: '$options')"
@@ -438,7 +411,6 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     )
   }
 
-  /** @inheritDoc */
   override fun checkPolicy(request: AccessRequest): AccessResponse {
     // if we're in read-only mode, and the `request` represents an operation that writes (or deletes), we can reject it
     // outright because we know it to be un-supported.

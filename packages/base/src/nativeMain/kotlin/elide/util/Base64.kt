@@ -19,8 +19,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 /** Cross-platform utilities for encoding and decoding to/from Base64. */
 public actual object Base64: Encoder {
-  /** @inheritDoc */
-  override fun encoding(): Encoding {
+    override fun encoding(): Encoding {
     return Encoding.BASE64
   }
 

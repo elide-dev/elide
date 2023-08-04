@@ -192,19 +192,14 @@ internal object ElideDependencies {
             supports = EnumSet.of(DependencyPlatform.JS),
         );
 
-        /** @inheritDoc */
         override val target: DependencyTarget get() = type
 
-        /** @inehritDoc */
         override val visibility: DependencyVisibility get() = config
 
-        /** @inheritDoc */
         override val artifactId: String get() = spec.substringAfter(":")
 
-        /** @inheritDoc */
         override val groupId: String get() = spec.ifBlank { libraryGroup }.substringBefore(":")
 
-        /** @inheritDoc */
         override val platforms: EnumSet<DependencyPlatform> get() = supports
     }
 

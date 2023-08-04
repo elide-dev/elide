@@ -31,7 +31,6 @@ public class BundleInspectCommand : AbstractBundlerSubcommand() {
     internal const val CMD_NAME = "inspect"
   }
 
-  /** @inheritDoc */
   override fun invoke() = operation {
     logging.info("Bundle `inspect` is not implemented yet")
   }

@@ -28,17 +28,14 @@ public class ProtoTimestamp private constructor (private val timestamp: Timestam
 
   /** Implementation of timestamp builder context backed by a proto-timestamp builder. */
   public class TimestampBuilder (private val builder: Timestamp.Builder) : Builder {
-    /** @inheritDoc */
     override var seconds: Long
       get() = builder.seconds
       set(value) { builder.seconds = value }
 
-    /** @inheritDoc */
     override var nanos: Int
       get() = builder.nanos
       set(value) { builder.nanos = value }
 
-    /** @inheritDoc */
     override fun build(): ProtoTimestamp = ProtoTimestamp(builder.build())
 
     // Internal helpers.
@@ -67,31 +64,22 @@ public class ProtoTimestamp private constructor (private val timestamp: Timestam
     /** @return [ProtoTimestamp] instance from a regular Protocol Buffers [Timestamp]. */
     public fun Timestamp.toModel() = ProtoTimestamp(this)
 
-    /** @inheritDoc */
     override fun empty(): ProtoTimestamp = TimestampBuilder.newBuilder().build()
 
-    /** @inheritDoc */
     override fun copy(model: ProtoTimestamp): ProtoTimestamp = model.toBuilder().build()
 
-    /** @inheritDoc */
     override fun defaultInstance(): ProtoTimestamp = DEFAULT_INSTANCE
 
-    /** @inheritDoc */
     override fun builder() = TimestampBuilder.newBuilder()
   }
 
-  /** @inheritDoc */
   override fun factory() = Factory
 
-  /** @inheritDoc */
   override fun toBuilder(): TimestampBuilder = TimestampBuilder.of(timestamp.toBuilder())
 
-  /** @inheritDoc */
   override val seconds: Long get() = timestamp.seconds
 
-  /** @inheritDoc */
   override val nanos: Int get() = timestamp.nanos
 
-  /** @inheritDoc */
   override fun toInstant(): Instant = timestamp.toKotlinInstant()
 }

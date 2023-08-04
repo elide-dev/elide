@@ -23,7 +23,6 @@ import elide.proto.ElideProtocol.ImplementationLibrary.FLATBUFFERS as FLAT
 
 /** Tests to load the Elide Protocol implementation backed by Flatbuffers. */
 internal class FlatbuffersProtocolTest : AbstractProtocolFacadeTest<ElideFlatbuffersProtocol>() {
-  /** @inheritDoc */
   override fun provide(): ElideFlatbuffersProtocol = Protocol.acquire(FLAT) as ElideFlatbuffersProtocol
 
   /** Test expected dialects for Flatbuffers. */

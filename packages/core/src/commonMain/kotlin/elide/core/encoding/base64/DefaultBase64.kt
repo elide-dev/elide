@@ -382,13 +382,10 @@ public object DefaultBase64 : Codec<Base64Data> {
     }
   }
 
-  /** @inheritDoc */
   override fun encoding(): Encoding = Encoding.BASE64
 
-  /** @inheritDoc */
   override fun decodeBytes(data: ByteArray): ByteArray = decoder.decode(data)
 
-  /** @inheritDoc */
   override fun encode(data: ByteArray): Base64Data = Base64Data(encoder.encode(data))
 
   /**

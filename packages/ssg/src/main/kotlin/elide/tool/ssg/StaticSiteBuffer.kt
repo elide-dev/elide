@@ -40,7 +40,6 @@ public class StaticSiteBuffer : Closeable, AutoCloseable {
   // All registered fragments.
   private val allFragments: Queue<StaticFragment> = ConcurrentLinkedQueue()
 
-  /** @inheritDoc */
   override fun close() {
     closed.compareAndSet(false, true)
   }

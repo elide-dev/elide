@@ -156,7 +156,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       }
     }
 
-    /** @inheritDoc */
     @Polyglot override fun shouldBeTrue(message: String?) = executeTest {
       val boolValue = when (val value = assertion.value) {
         is Boolean -> value
@@ -175,7 +174,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       )
     }
 
-    /** @inheritDoc */
     @Polyglot override fun shouldBeFalse(message: String?) = executeTest {
       val boolValue = when (val value = assertion.value) {
         is Boolean -> value
@@ -194,7 +192,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       )
     }
 
-    /** @inheritDoc */
     @Polyglot override fun isNotNull(message: String?) = executeTest {
       val possiblyNull = when (val value = assertion.value) {
         null -> null
@@ -206,7 +203,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       assertNotNull(possiblyNull, message ?: "expected guest value to be non-null (got `$possiblyNull`)")
     }
 
-    /** @inheritDoc */
     @Polyglot override fun isNull(message: String?) = executeTest {
       val possiblyNull = when (val value = assertion.value) {
         null -> null
@@ -218,7 +214,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       assertNull(possiblyNull, message ?: "expected guest value to be null (got `$possiblyNull`)")
     }
 
-    /** @inheritDoc */
     @Polyglot override fun isEqualTo(other: Any?, message: String?) = executeTest {
       assertEquals(
         other,
@@ -227,7 +222,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       )
     }
 
-    /** @inheritDoc */
     @Polyglot override fun isNotEqualTo(other: Any?, message: String?) = executeTest {
       assertNotEquals(
         assertion.value,
@@ -236,7 +230,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       )
     }
 
-    /** @inheritDoc */
     @Polyglot override fun fails(message: String?) {
       val executable = when (val value = assertion.value) {
         is GuestValue -> if (value.canExecute()) {
@@ -384,7 +377,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     op.invoke()
 
     return object : DualTestExecutionProxy() {
-      /** @inheritDoc */
       override fun guest(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
@@ -394,7 +386,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         )
       }.doesNotFail()
 
-      /** @inheritDoc */
       override fun thenRun(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,

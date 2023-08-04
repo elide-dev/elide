@@ -32,12 +32,10 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
     private var _nanos: Int = 0,
     private var bufferBuilder: FlatBufferBuilder? = null,
   ) : ITimestamp.IBuilder<FlatTimestamp> {
-    /** @inheritDoc */
     override var seconds: Long
       get() = _seconds
       set(value) { _seconds = value }
 
-    /** @inheritDoc */
     override var nanos: Int
       get() = _nanos
       set(value) { _nanos = value }
@@ -48,7 +46,6 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
       return this
     }
 
-    /** @inheritDoc */
     override fun build(): FlatTimestamp {
       val buf = when (val bufferBuilder = this.bufferBuilder) {
         null -> FlatBufferBuilder()
@@ -93,37 +90,28 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
     /** @return [ProtoTimestamp] instance from a regular Protocol Buffers [Timestamp]. */
     public fun Timestamp.toModel() = FlatTimestamp(this)
 
-    /** @inheritDoc */
     override fun empty(): FlatTimestamp = TimestampBuilder.newBuilder().build()
 
-    /** @inheritDoc */
     override fun copy(model: FlatTimestamp): FlatTimestamp = at(model.toInstant())
 
-    /** @inheritDoc */
     override fun defaultInstance(): FlatTimestamp = DEFAULT_INSTANCE
 
-    /** @inheritDoc */
     override fun builder(): TimestampBuilder = TimestampBuilder.newBuilder()
   }
 
-  /** @inheritDoc */
   override fun factory(): Record.Factory<out elide.proto.api.wkt.Timestamp<FlatTimestamp, TimestampBuilder>, TimestampBuilder> {
     TODO("Not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun toBuilder(): TimestampBuilder = TimestampBuilder.newBuilder().let { b ->
     b.seconds = this.seconds
     b.nanos = this.nanos
     b
   }
 
-  /** @inheritDoc */
   override val seconds: Long get() = timestamp.seconds
 
-  /** @inheritDoc */
   override val nanos: Int get() = timestamp.nanos
 
-  /** @inheritDoc */
   override fun toInstant(): Instant = timestamp.toKotlinInstant()
 }

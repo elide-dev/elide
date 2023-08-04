@@ -64,10 +64,8 @@ internal class HostVFSImpl private constructor (
       /** Whether to default to using temp-space. */
       const val DEFAULT_USE_TEMP = false
 
-      /** @inheritDoc */
       override fun newBuilder(): Builder = Builder()
 
-      /** @inheritDoc */
       override fun newBuilder(builder: Builder): Builder = Builder().apply {
         readOnly = builder.readOnly
         root = builder.root
@@ -78,7 +76,6 @@ internal class HostVFSImpl private constructor (
       }
     }
 
-    /** @inheritDoc */
     override fun build(): HostVFSImpl {
       return HostVFSImpl(EffectiveGuestVFSConfig(
         readOnly = readOnly,
@@ -98,18 +95,14 @@ internal class HostVFSImpl private constructor (
    * Coming soon.
    */
   internal companion object HostVFSFactory : VFSFactory<HostVFSImpl, Builder> {
-    /** @inheritDoc */
     override fun create(): HostVFSImpl = Builder.newBuilder().build()
 
-    /** @inheritDoc */
     override fun create(configurator: Builder.() -> Unit): HostVFSImpl = Builder.newBuilder().apply {
       configurator.invoke(this)
     }.build()
 
-    /** @inheritDoc */
     override fun create(config: EffectiveGuestVFSConfig): HostVFSImpl = HostVFSImpl(config)
 
-    /** @inheritDoc */
     override fun create(builder: VFSBuilder<HostVFSImpl>): HostVFSImpl = builder.build()
   }
 
@@ -137,12 +130,9 @@ internal class HostVFSImpl private constructor (
   // Logger.
   private val logging: Logger = Logging.of(HostVFSImpl::class)
 
-  /** @inheritDoc */
   override fun logging(): Logger = logging
 
-  /** @inheritDoc */
   override fun allowsHostFileAccess(): Boolean = true
 
-  /** @inheritDoc */
   override fun allowsHostSocketAccess(): Boolean = true
 }

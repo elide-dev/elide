@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *     https://opensource.org/license/mit/
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
     "UnstableApiUsage",
     "unused",
@@ -8,9 +21,9 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("org.jetbrains.kotlin.kapt") apply false
-    id("org.jetbrains.kotlinx.kover")
-    id("io.gitlab.arturbosch.detekt")
-    id("com.github.ben-manes.versions")
+    alias(libs.plugins.kover)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.versionCheck)
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.pluginPublish) apply false
     alias(libs.plugins.ktlint)
@@ -25,15 +38,11 @@ apiValidation {
     )
 }
 
-koverMerged {
-    enable()
-
-    xmlReport {
-        onCheck = isCI
-    }
-
-    htmlReport {
-        onCheck = isCI
+koverReport {
+    defaults {
+        xml {
+            onCheck = isCI
+        }
     }
 }
 
@@ -61,7 +70,7 @@ allprojects {
     }
 
     detekt {
-        config = rootProject.files("../config/detekt/detekt.yml")
+        config.from(rootProject.files("../config/detekt/detekt.yml"))
     }
 }
 

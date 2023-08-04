@@ -11,6 +11,8 @@
  *  License for the specific language governing permissions and limitations under the License.
  */
 
+import build.less.plugin.settings.buildless
+
 pluginManagement {
     repositories {
         maven("https://maven.pkg.st/")
@@ -20,6 +22,7 @@ pluginManagement {
 }
 
 plugins {
+    id("build.less") versio("1.0.0-beta1")
     id("com.gradle.enterprise") version("3.14.1")
     id("org.gradle.toolchains.foojay-resolver-convention") version("0.6.0")
 }
@@ -54,27 +57,8 @@ gradleEnterprise {
     }
 }
 
-val cachePassword: String? by settings
-val cachePush: String? by settings
-val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: false
-val localCache = System.getenv("GRADLE_LOCAL_REMOTE")?.toBoolean() ?: true
-
-buildCache {
-    local {
-        isEnabled = localCache
-    }
-
-    if (remoteCache) {
-        remote<HttpBuildCache> {
-            isEnabled = true
-            isPush = (cachePush ?: System.getenv("GRADLE_CACHE_PUSH")) == "true"
-            url = uri("https://gradle.less.build/cache/generic/")
-            credentials {
-                username = "apikey"
-                password = cachePassword ?: System.getenv("BUILDLESS_APIKEY") ?: error("Failed to resolve cache password")
-            }
-        }
-    }
+buildless {
+    // nothing at this time
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

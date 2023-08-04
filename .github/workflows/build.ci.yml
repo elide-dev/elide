@@ -455,11 +455,16 @@ jobs:
             tag: darwin-amd64
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -467,11 +472,11 @@ jobs:
           cleanup_credentials: true
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@7315a94840631165970262a99c72cfb48a65d25d # v1.12.0
         with:
           arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@c569e64c0b240dbe83c17275c08f6717d4bfc2fa # v1.1.2.1
         with:
           components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
@@ -479,7 +484,7 @@ jobs:
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
           cache: "yarn"
@@ -511,21 +516,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.debug
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -576,11 +581,16 @@ jobs:
             labs: true
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       - name: "Setup: Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - id: "auth"
         name: "Setup: Authorize Service Account"
-        uses: google-github-actions/auth@v1
+        uses: google-github-actions/auth@35b0e87d162680511bf346c299f71c9c5c379033 # v1.1.1
         with:
           credentials_json: "${{ secrets.BUILDBOT_SERVICE_ACCOUNT }}"
           create_credentials_file: true
@@ -588,11 +598,11 @@ jobs:
           cleanup_credentials: true
       - name: "Setup: MSVC"
         if: contains(matrix.runner, 'windows')
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: ilammy/msvc-dev-cmd@7315a94840631165970262a99c72cfb48a65d25d # v1.12.0
         with:
           arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@v1
+        uses: graalvm/setup-graalvm@c569e64c0b240dbe83c17275c08f6717d4bfc2fa # v1.1.2.1
         with:
           components: "native-image,js,wasm,espresso"
           distribution: 'graalvm'
@@ -600,7 +610,7 @@ jobs:
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
         with:
           node-version: 20
           cache: "yarn"
@@ -626,7 +636,7 @@ jobs:
             -PbuildDocsSite=false
             -PbuildDocs=false
       - name: "Artifacts: Release Binary"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: success()
         with:
           name: cli-release-${{ matrix.tag }}

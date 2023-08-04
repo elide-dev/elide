@@ -225,3 +225,28 @@ updates:
     directory: /tools/plugin/gradle-plugin/plugin-build/plugin/src/main/node/runtime/stream
     schedule:
       interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-react/src/jsMain/node/emotion-server
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/graalvm-react/src/jsMain/node/stream
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/jdk20
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /tools/images/runtime-jvm20
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /tools/scripts
+    schedule:
+      interval: daily

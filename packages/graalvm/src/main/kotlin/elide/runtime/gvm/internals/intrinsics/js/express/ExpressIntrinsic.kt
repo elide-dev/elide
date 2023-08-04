@@ -13,35 +13,32 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.proxy.ProxyExecutable
-import java.util.concurrent.Phaser
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
+import elide.runtime.gvm.internals.context.NativeContextManagerImpl
+import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.express.Express
 import elide.runtime.intrinsics.js.express.ExpressApp
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.util.concurrent.Phaser
 
 /**
  * Implementation for the [Express] intrinsic, capable of managing the VM context from which the route handlers are
  * passed and guarantee safe multithreaded execution of said handlers.
  */
 @Intrinsic(global = ExpressIntrinsic.GLOBAL_EXPRESS)
-internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic() {
+internal class ExpressIntrinsic(
+  private val contextManager: NativeContextManagerImpl
+) : Express, ExpressContext, AbstractJsIntrinsic() {
   private lateinit var phaser: Phaser
-  private lateinit var context: Context
-  private val contextLock: Lock = ReentrantLock()
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[EXPRESS_SYMBOL] = ProxyExecutable { create() }
   }
   
   override fun initialize(contextHandle: Context, phaserHandle: Phaser) {
-    context = contextHandle
     phaser = phaserHandle
   }
 
@@ -57,12 +54,8 @@ internal class ExpressIntrinsic : Express, ExpressContext, AbstractJsIntrinsic()
     phaser.arriveAndDeregister()
   }
 
-  override fun <T> useGuest(block: Context.() -> T): T = contextLock.withLock {
-    context.enter()
-    val result = runCatching { context.block() }
-    context.leave()
-    
-    result.getOrThrow()
+  override fun <T> useGuest(block: Context.() -> T): T {
+    return contextManager.acquire(operation = block)
   }
   
   companion object {

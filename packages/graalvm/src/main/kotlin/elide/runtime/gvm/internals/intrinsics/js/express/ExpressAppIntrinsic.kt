@@ -13,6 +13,11 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.express
 
+import elide.annotations.core.Polyglot
+import elide.runtime.Logging
+import elide.runtime.intrinsics.js.express.ExpressApp
+import io.micronaut.core.async.publisher.Publishers
+import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -58,26 +63,25 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   @Polyglot override fun use(path: String, handler: Value) = registerHandler(handler, path)
 
   @Polyglot override fun listen(port: Int, callback: Value?) {
-    val server = HttpServer.create().handle { request, response ->
-      // construct the wrappers
-      val requestProxy = ExpressRequestIntrinsic.from(request)
-      val responseWrapper = ExpressResponseIntrinsic(response)
+    // configure all the route handlers, set the port and bind the socket
+    HttpServer.create().handle { req, res ->
+      // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
+      // val responseWrapper = ExpressResponseIntrinsic(res)
+      // val requestProxy = ExpressRequestIntrinsic.from(req)
 
-      // send over the pipeline
-      context.useGuest { handlePipelineStage(request, responseWrapper, requestProxy) }
+      context.useGuest {
+        // handlePipelineStage(req, responseWrapper, requestProxy)
+        res.send(Publishers.just(Unpooled.wrappedBuffer("Hello".encodeToByteArray())))
+      }
 
-      // return the internal publisher handled by the wrapper
-      responseWrapper.end()
-    }
-
-    // set the port and bind the socket
-    server.port(port).bindNow()
+      // responseWrapper.end()
+    }.port(port).bindNow()
 
     // prevent the JVM from exiting while the server is running
     context.pin()
 
     // notify listeners
-    useCallback(callback) { executeVoid() }
+    callback?.executeVoid()
   }
 
   private fun registerHandler(handle: Value, path: String? = null, method: HttpMethod? = null) {
@@ -115,15 +119,6 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
       // skip this stage
       handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
     }
-  }
-
-  /** Safely enter the execution context and invoke the [block] on the [callback]. */
-  private inline fun useCallback(callback: Value?, crossinline block: Value.() -> Unit) {
-    // nothing to do if no valid callback is passed
-    if (callback == null) return
-    
-    // enter the context and then invoke the block
-    context.useGuest { callback.block() }
   }
 
   companion object {

@@ -167,9 +167,52 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
   dokkaSourceSets {
     configureEach {
       includes.from("module.md")
-//      samples.from("samples/basic.kt")
     }
   }
+}
+
+val commonNativeArgs = listOf(
+  "--gc=serial",
+)
+
+val initializeAtBuildTime = listOf(
+  "kotlin.DeprecationLevel",
+  "kotlin.coroutines.intrinsics.CoroutineSingletons",
+  "kotlin.annotation.AnnotationRetention",
+  "kotlin.annotation.AnnotationTarget",
+  "ch.qos.logback",
+  "org.slf4j.simple.SimpleLogger",
+  "org.slf4j.impl.StaticLoggerBinder",
+  "org.codehaus.stax2.typed.Base64Variants",
+  "org.bouncycastle.util.Properties",
+  "org.bouncycastle.util.Strings",
+  "org.bouncycastle.crypto.macs.HMac",
+  "org.bouncycastle.crypto.prng.drbg.Utils",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
+).map {
+  "--initialize-at-build-time=$it"
+}
+
+val initializeAtRuntime = listOf(
+  "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+  "io.micronaut.core.util.KotlinUtils",
+  "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
+  "com.sun.tools.javac.file.Locations",
+).map {
+  "--initialize-at-run-time=$it"
+}
+
+val initializeAtBuildTimeTest = initializeAtBuildTime.plus(listOf(
+  "org.junit.platform.launcher.core.LauncherConfig",
+  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
+).map {
+  "--initialize-at-build-time=$it"
+})
+
+val initializeAtRuntimeTest = emptyList<String>().map {
+  "--initialize-at-run-time=$it"
 }
 
 graalvmNative {
@@ -182,6 +225,18 @@ graalvmNative {
 
   agent {
     enabled = false
+  }
+
+  binaries {
+    named("main") {
+      sharedLibrary = true
+      buildArgs(commonNativeArgs.plus(initializeAtBuildTime).plus(initializeAtRuntime))
+    }
+
+    named("test") {
+      quickBuild = true
+      buildArgs(commonNativeArgs.plus(initializeAtBuildTimeTest).plus(initializeAtRuntimeTest))
+    }
   }
 }
 

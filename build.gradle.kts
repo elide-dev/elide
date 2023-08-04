@@ -215,6 +215,14 @@ dependencies {
 
   // OpenRewrite: Recipes
   rewrite(platform(libs.openrewrite.recipe.bom))
+
+  if (buildDocs == "true") {
+    val dokkaPlugin by configurations
+    dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
+    dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
+  }
 }
 
 rewrite {
@@ -233,16 +241,6 @@ subprojects {
 
     if (buildDocs == "true") {
       plugin("org.jetbrains.dokka")
-    }
-  }
-
-  dependencies {
-    if (buildDocs == "true") {
-      val dokkaPlugin by configurations
-      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
-      dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
-      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
-      dokkaPlugin("com.glureau:html-mermaid-dokka-plugin:${mermaidDokka.get()}")
     }
   }
 

@@ -123,7 +123,7 @@ pluginBundle {
 }
 
 val minimumMicronaut = "3.7.8"
-val preferredMicronaut = "3.9.4"
+val preferredMicronaut = "3.10.0"
 val defaultJavaMin = "17"
 val defaultJavaMax = "19"
 val baseJavaMin: Int = (defaultJavaMin).toInt()

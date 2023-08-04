@@ -35,7 +35,7 @@ val defaultKotlinVersion = "1.9"
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val ecmaVersion = project.properties["versions.ecma.language"] as String
-val strictMode = project.properties["strictMode"] as? String == "true"
+val strictMode = project.properties["elide.strict"] as? String == "true"
 val buildDocs = project.properties["buildDocs"] as String == "true"
 
 // Compiler: Kotlin

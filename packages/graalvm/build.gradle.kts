@@ -155,6 +155,8 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core.jvm)
   implementation(libs.kotlinx.serialization.core.jvm)
   implementation(libs.kotlinx.serialization.json.jvm)
+  implementation(libs.kotlinx.collections.immutable)
+  implementation(libs.kotlinx.collections.immutable.jvm)
   runtimeOnly(libs.kotlinx.coroutines.reactor)
 
   // General

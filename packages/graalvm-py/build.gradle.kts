@@ -69,3 +69,11 @@ publishing {
     }
   }
 }
+
+if (buildDocs) {
+  listOf("dokkaJavadoc").forEach {
+    tasks.named(it).configure {
+      dependsOn("kaptKotlin")
+    }
+  }
+}

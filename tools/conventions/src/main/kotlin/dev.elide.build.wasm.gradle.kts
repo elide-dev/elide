@@ -13,7 +13,6 @@
 
 @file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
 
-import gradle.kotlin.dsl.accessors._27a6a77a4d89b1651d5d764ce3cc240c.kotlin
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType

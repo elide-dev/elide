@@ -28,8 +28,8 @@ group = "dev.tools.compiler.plugin"
 version = rootProject.version as String
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {
@@ -48,7 +48,7 @@ tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
     apiVersion = ElideSubstrate.API_VERSION
     languageVersion = ElideSubstrate.KOTLIN_VERSION
-    jvmTarget = "20"
+    jvmTarget = "17"
     javaParameters = true
     allWarningsAsErrors = true
     incremental = true

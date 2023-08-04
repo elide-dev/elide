@@ -24,8 +24,8 @@ plugins {
 }
 
 val buildDocs by properties
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val javaLanguageTarget = project.properties["versions.java.target"] as String
+val javaLanguageVersion = "17"
+val javaLanguageTarget = "17"
 
 dependencies {
   implementation(gradleApi())

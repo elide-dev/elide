@@ -16,9 +16,6 @@
   "UnstableApiUsage",
 )
 
-import gradle.kotlin.dsl.accessors._66aa2ba983871d8ee71a004677014469.kotlin
-import gradle.kotlin.dsl.accessors._66aa2ba983871d8ee71a004677014469.publishing
-import org.gradle.api.GradleException
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.*

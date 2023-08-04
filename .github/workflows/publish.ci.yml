@@ -119,6 +119,10 @@ on:
         description: "Publish conventions"
         type: boolean
         default: true
+      auth:
+        description: "Authorize publish"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -242,6 +246,7 @@ jobs:
             -Psigning.password=${{ secrets.SIGNING_KEY_PASSPHRASE }}
             -Psigning.secretKeyRingFile=/home/runner/.gnupg/secring.gpg
             -Pelide.publish.repo.maven=${{ inputs.repo }}
+            -Pelide.publish.repo.auth=${{ inputs.auth }}
             -Pversion=${{ env.APP_VERSION }}
             -Pelide.release=true
             -Pelide.buildMode=release

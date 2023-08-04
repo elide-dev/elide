@@ -954,4 +954,5 @@ jobs:
     with:
       environment: central
       snapshot: false
-      repo: https://s01.oss.sonatype.org
+      auth: true
+      repo: https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/

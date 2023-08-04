@@ -44,9 +44,14 @@ jobs:
       GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
     if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
+        with:
+          egress-policy: audit
+
       ## Setup: Repo
       - name: Checkout Repo
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
       ## Setup: Node
       - name: "Setup: Node"
@@ -60,11 +65,12 @@ jobs:
 
       ## Setup: GraalVM
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@b53bc17dd7dc3052d7c6751f6a5c34abdbf928b3 # v1
+        uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:
           components: "native-image,js"
           version: latest
-          java-version: 19
+          distribution: graalvm
+          java-version: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       ## Setup: Gradle Caches
@@ -79,7 +85,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
 
-      ## Setup: Checkout Code
+      ## Setup: Cache
       - name: Cache SonarCloud packages
         uses: actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920 # v3
         if: ${{ matrix.os == 'ubuntu' }}
@@ -90,7 +96,7 @@ jobs:
 
       ## Job: Run build
       - name: Run Gradle build
-        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -106,7 +112,7 @@ jobs:
 
       ## Job: Reports
       - name: Pre-merge checks
-        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         if: ${{ matrix.os == 'ubuntu' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,7 +131,7 @@ jobs:
 
       ## Job: Sonar Scan
       - name: Sonar
-        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         if: ${{ matrix.os == 'ubuntu' }}
         continue-on-error: true
         env:
@@ -140,7 +146,7 @@ jobs:
 
       ## Job: Run plugin
       - name: Run the plugin
-        uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef # v2.3.3
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         if: success()
         with:
           arguments: |
@@ -156,7 +162,7 @@ jobs:
       ## CI: Build
       - name: "Failure reports"
         if: failure()
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: failure-reports
           path: |
@@ -181,7 +187,7 @@ jobs:
 
       ## Job: Report Code Coverage
       - name: "Report: Codecov"
-        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         continue-on-error: true
         if: ${{ matrix.os == 'ubuntu' }}
         with:

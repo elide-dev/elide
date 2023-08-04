@@ -50,8 +50,8 @@
     "readable-stream": "4.4.2"
   },
   "resolutions": {
-    "jszip": ">=3.8.0",
-    "node-fetch": ">=2.6.7"
+    "jszip": "3.10.1",
+    "node-fetch": "3.3.2"
   },
   "scripts": {
     "build": "make build",

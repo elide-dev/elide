@@ -28,6 +28,15 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
+  js {
+    compilations["main"].packageJson {
+      customField("resolutions", mapOf(
+        "jszip" to "3.10.1",
+        "node-fetch" to "3.3.2",
+      ))
+    }
+  }
+
   sourceSets {
     val jsMain by getting {
       dependencies {

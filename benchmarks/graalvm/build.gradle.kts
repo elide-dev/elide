@@ -18,22 +18,19 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import dev.elide.buildtools.gradle.plugin.BuildMode
 import kotlinx.benchmark.gradle.*
 import org.jetbrains.kotlin.allopen.gradle.*
-import tools.elide.assets.EmbeddedScriptLanguage
 
 plugins {
   kotlin("jvm")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  alias(libs.plugins.elide)
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
 }
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
+val javaLanguageVersion = "20"
 
 sourceSets.all {
   java.setSrcDirs(listOf("jmh/src"))
@@ -49,7 +46,7 @@ dependencies {
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject.java.test)
   implementation(libs.micronaut.runtime)
-  implementation(libs.elide.graalvm)
+  implementation(projects.packages.graalvm)
   implementation(libs.lmax.disruptor.core)
   compileOnly(libs.graalvm.sdk)
   runtimeOnly(libs.logback)

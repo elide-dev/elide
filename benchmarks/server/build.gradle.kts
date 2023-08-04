@@ -84,8 +84,8 @@ dependencies {
   implementation(libs.reactor.netty.http)
   runtimeOnly(libs.logback)
 
-  implementation(libs.elide.base)
-  implementation(libs.elide.server)
+  implementation(projects.packages.base)
+  implementation(projects.packages.server)
 }
 
 allOpen {

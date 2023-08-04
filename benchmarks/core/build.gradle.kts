@@ -29,7 +29,6 @@ plugins {
   kotlin("plugin.serialization")
   kotlin("multiplatform")
 
-  alias(libs.plugins.elide)
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
 }
@@ -43,7 +42,7 @@ sourceSets.all {
 
 dependencies {
   implementation(libs.kotlinx.benchmark.runtime)
-  implementation(libs.elide.core)
+  implementation(projects.packages.core)
 }
 
 allOpen {

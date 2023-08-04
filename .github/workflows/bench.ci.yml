@@ -94,6 +94,8 @@ jobs:
         with:
           cache-read-only: true
           arguments: |
+            :benchmarks:core:benchmark
+            :benchmarks:graalvm:benchmark
             :benchmarks:server:benchmark
             --no-daemon
             --warning-mode=none

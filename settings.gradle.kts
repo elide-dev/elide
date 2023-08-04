@@ -170,7 +170,11 @@ if (buildDocsSite == "true") {
 }
 
 if (buildBenchmarks == "true") {
-  includeBuild("benchmarks")
+  include(
+    ":benchmarks:core",
+    ":benchmarks:graalvm",
+    ":benchmarks:server",
+  )
 }
 
 gradleEnterprise {

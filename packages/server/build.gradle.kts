@@ -186,6 +186,7 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
 
 val commonNativeArgs = listOf(
   "--gc=serial",
+  "-H:+AuxiliaryEngineCache",
 )
 
 val initializeAtBuildTime = listOf(

@@ -24,6 +24,10 @@
     "name": "[Ljava.lang.String;"
   },
   {
+    "name":"com.google.common.jimfs.SystemJimfsFileSystemProvider",
+    "methods":[{"name":"removeFileSystemRunnable","parameterTypes":["java.net.URI"] }]
+  },
+  {
     "name": "[Lsun.security.pkcs.SignerInfo;"
   },
   {
@@ -6205,6 +6209,47 @@
       {
         "name": "<init>",
         "parameterTypes": ["java.lang.Boolean", "java.lang.Object"]
+      }
+    ]
+  },
+  {
+    "name": "tools.elide.assets.AssetBundle$GenericBundle",
+    "methods": [
+      {
+        "name": "getModule",
+        "parameterTypes": []
+      },
+      {
+        "name": "getFilename",
+        "parameterTypes": []
+      },
+      {
+        "name": "getToken",
+        "parameterTypes": []
+      },
+      {
+        "name": "getVariantList",
+        "parameterTypes": []
+      },
+      {
+        "name": "getVariantCount",
+        "parameterTypes": []
+      },
+      {
+        "name": "getVariant",
+        "parameterTypes": ["int"]
+      },
+      {
+        "name": "getCompressable",
+        "parameterTypes": []
+      },
+      {
+        "name": "getCacheable",
+        "parameterTypes": []
+      },
+      {
+        "name": "getExternal",
+        "parameterTypes": []
       }
     ]
   },

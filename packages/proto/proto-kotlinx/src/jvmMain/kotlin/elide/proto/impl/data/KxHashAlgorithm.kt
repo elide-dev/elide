@@ -15,13 +15,14 @@
 
 package elide.proto.impl.data
 
+import elide.core.api.Symbolic
+import elide.core.api.Symbolic.SealedResolver
 import elide.data.HashAlgorithm
-import elide.proto.api.Symbolic
 
 /**
  * TBD.
  */
-public enum class KxHashAlgorithm constructor (override val symbol: Int) : Symbolic<Int> {
+public enum class KxHashAlgorithm (override val symbol: Int) : Symbolic<Int> {
   /** Algorithm: No algorithm applied (just trimmed data). */
   IDENTITY(symbol = HashAlgorithm.IDENTITY.ordinal),
 
@@ -47,9 +48,9 @@ public enum class KxHashAlgorithm constructor (override val symbol: Int) : Symbo
   SHA3_512(symbol = HashAlgorithm.SHA3_512.ordinal);
 
   /** Resolves integer symbols to [KxHashAlgorithm] enumeration entries. */
-  public companion object : Symbolic.Resolver<Int, KxHashAlgorithm> {
+  public companion object : SealedResolver<Int, KxHashAlgorithm> {
     /** @return [KxHashAlgorithm] for the provided raw integer [symbol]. */
-    @JvmStatic override fun resoleSymbol(symbol: Int): KxHashAlgorithm = when (symbol) {
+    @JvmStatic override fun resolve(symbol: Int): KxHashAlgorithm = when (symbol) {
       HashAlgorithm.IDENTITY.ordinal -> IDENTITY
       HashAlgorithm.MD5.ordinal -> MD5
       HashAlgorithm.SHA1.ordinal -> SHA1

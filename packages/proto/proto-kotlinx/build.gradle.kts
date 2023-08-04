@@ -61,13 +61,13 @@ kotlin {
         // API
         api(libs.kotlinx.datetime)
         api(projects.packages.proto.protoCore)
+        api(projects.packages.core)
         implementation(libs.kotlinx.serialization.core.jvm)
         implementation(libs.kotlinx.serialization.protobuf.jvm)
 
         // Implementation
         implementation(kotlin("stdlib"))
         implementation(kotlin("stdlib-jdk8"))
-        implementation(projects.packages.core)
         runtimeOnly(kotlin("reflect"))
       }
     }

@@ -11,21 +11,44 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("RedundantVisibilityModifier")
+@file:Suppress(
+  "RedundantVisibilityModifier",
+  "DEPRECATION",
+)
 
 package elide.proto.api
 
 /**
  * TBD.
  */
+@Deprecated(
+  "`Symbolic` has moved to `elide-core`",
+  replaceWith = ReplaceWith(
+    "elide.core.api.Symbolic",
+    "elide.core.api.Symbolic",
+  ),
+)
 public interface Symbolic<T> {
   /** Thrown when a symbol could not be resolved. */
+  @Deprecated(
+    "`Symbolic.SymbolUnresolved` has moved to `elide-core`",
+    replaceWith = ReplaceWith(
+      "elide.core.api.Symbolic.Unresolved",
+      "elide.core.api.Symbolic.Unresolved",
+    ),
+  )
   public class SymbolUnresolved internal constructor (internal val requested: Any) : IllegalStateException()
 
   /** Return the raw symbol represented by this type. */
   val symbol: T
 
-  // Nothing yet.
+  @Deprecated(
+    "`Symbolic.Resolver` has moved to `elide-core`",
+    replaceWith = ReplaceWith(
+      "elide.core.api.Symbolic.SealedResolver",
+      "elide.core.api.Symbolic.SealedResolver",
+    ),
+  )
   public interface Resolver<Symbol: Any, Concrete> where Concrete: Symbolic<Symbol> {
     /**
      * TBD.

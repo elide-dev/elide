@@ -1,1 +1,8 @@
-{"dependencies":{"express":"^4.18.2"}}
+{
+  "name": "@elide-dev/tools",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies":{
+    "express": "^4.18.2"
+  }
+}

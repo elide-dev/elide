@@ -9,5 +9,6 @@ proto/buf.pb.json
 buildSrc
 benchmarks
 tools/plugin
+packages/uuid
 *.gradle.kts
 *.hbs

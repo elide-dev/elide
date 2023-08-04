@@ -24,30 +24,34 @@
     "packages/test",
     "packages/cli",
     "site/docs/content",
-    "tools/scripts"
+    "tools/scripts",
+    "tools/plugin/gradle-plugin"
   ],
   "dependencies": {
-    "browserslist": "^4.21.4",
-    "cssnano": "^5.1.14",
+    "browserslist": "4.21.10",
+    "cssnano": "6.0.1",
     "google-protobuf": "3.21.2",
-    "postcss": "^8.4.21",
-    "preact": "10.11.3",
+    "postcss": "8.4.27",
+    "preact": "10.16.0",
     "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {
-    "@mdx-js/esbuild": "2.2.1",
+    "@mdx-js/esbuild": "2.3.0",
     "@types/google-protobuf": "3.15.6",
-    "@types/prettier": "2.7.3",
-    "esbuild": "0.16.17",
+    "esbuild": "0.18.17",
     "husky": "8.0.3",
     "lint-staged": "13.2.3",
-    "postcss-cli": "^10.1.0",
-    "prettier": "2.8.8",
+    "postcss-cli": "10.1.0",
+    "prettier": "3.0.1",
     "prettier-plugin-java": "2.2.0",
     "prettier-plugin-properties": "0.2.0",
     "prettier-plugin-sh": "0.13.1",
-    "prettier-plugin-toml": "0.3.1",
-    "readable-stream": "4.3.0"
+    "prettier-plugin-toml": "1.0.0",
+    "readable-stream": "4.4.2"
+  },
+  "resolutions": {
+    "jszip": ">=3.8.0",
+    "node-fetch": ">=2.6.7"
   },
   "scripts": {
     "build": "make build",

@@ -22,6 +22,7 @@ grpc_kotlin = "1.3.0"
 grpc_web = "1.4.2"
 konform = "0.4.0"
 arrow = "1.2.0"
+sigstore = "0.4.2"
 testcontainers = "1.17.6"
 dependencyAnalysis = "1.20.0"
 errorprone = "2.20.0"
@@ -283,6 +284,7 @@ gradle_wrapperUpgrade = { id = "org.gradle.wrapper-upgrade", version.ref = "wrap
 gradle_commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version.ref = "gradleCommonCustomUserData" }
 gradle_checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
 gradle_testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
+sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
 
 [libraries]
 junit = "junit:junit:4.13.2"
@@ -681,6 +683,7 @@ plugin_graalvm = { group = "org.graalvm.buildtools.native", name = "org.graalvm.
 plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
 plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite_plugin" }
 plugin_gradle_testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
+plugin_sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
 ## Elide Internal
 elide_uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide_uuid" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }

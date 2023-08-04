@@ -25,6 +25,7 @@ plugins {
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.sonarqube")
+  id("dev.sigstore.sign")
 }
 
 tasks.register("resolveAndLockAll") {
@@ -57,6 +58,26 @@ publishing {
             ?: System.getenv("PUBLISH_TOKEN"))?.ifBlank { null }
         }
       }
+    }
+  }
+}
+
+// Artifacts: Sigstore
+// ------------------
+// Publish artifact signature registrations to Sigstore.
+sigstoreSign {
+  oidcClient {
+    gitHub {
+      audience = "sigstore"
+    }
+    web {
+      clientId = "sigstore"
+      issuer = "https://oauth2.sigstore.dev/auth"
+    }
+    if (project.properties["elide.ci"] == "true") {
+      client = gitHub
+    } else {
+      client = web
     }
   }
 }

@@ -122,7 +122,7 @@ kotlin {
     val jsMain by getting {
       dependencies {
         // KT-57235: fix for atomicfu-runtime error
-        api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+        api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.9.0")
         implementation(kotlin("stdlib-js"))
         implementation(libs.kotlinx.coroutines.core.js)
         implementation(libs.kotlinx.serialization.json.js)

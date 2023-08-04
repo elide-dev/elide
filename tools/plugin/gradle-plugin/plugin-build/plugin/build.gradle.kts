@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *     https://opensource.org/license/mit/
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
     "DSL_SCOPE_VIOLATION",
     "UnstableApiUsage",
@@ -8,17 +21,18 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    `java-gradle-plugin`
+
     kotlin("jvm")
     kotlin("plugin.noarg")
     kotlin("plugin.allopen")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlinx.kover")
 
-    id("java-gradle-plugin")
-    id("org.sonarqube")
-    id("com.adarshr.test-logger")
     id("com.gradle.plugin-publish")
-    id("com.github.gmazzo.buildconfig")
+    alias(libs.plugins.testLogger)
+    alias(libs.plugins.buildConfig)
+    alias(libs.plugins.sonar)
     alias(libs.plugins.shadow)
 }
 
@@ -261,11 +275,10 @@ kotlin {
 
 tasks.compileKotlin.configure {
     kotlinOptions {
-        apiVersion = Elide.kotlinLanguage
-        languageVersion = Elide.kotlinLanguage
+        apiVersion = kotlinLanguageVersion
+        languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        freeCompilerArgs = Elide.kaptCompilerArgs
         allWarningsAsErrors = true
         incremental = true
     }
@@ -273,11 +286,10 @@ tasks.compileKotlin.configure {
 
 tasks.compileTestKotlin.configure {
     kotlinOptions {
-        apiVersion = Elide.kotlinLanguage
-        languageVersion = Elide.kotlinLanguage
+        apiVersion = kotlinLanguageVersion
+        languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        freeCompilerArgs = Elide.kaptCompilerArgs
         allWarningsAsErrors = true
         incremental = true
     }
@@ -285,20 +297,19 @@ tasks.compileTestKotlin.configure {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        apiVersion = Elide.kotlinLanguage
-        languageVersion = Elide.kotlinLanguage
+        apiVersion = kotlinLanguageVersion
+        languageVersion = kotlinLanguageVersion
         jvmTarget = baseJavaMin.toString()
         javaParameters = true
-        freeCompilerArgs = Elide.kaptCompilerArgs
         allWarningsAsErrors = true
         incremental = true
     }
 }
 
 detekt {
-    source = files(
+    source.from(files(
         "src/main/java"
-    )
+    ))
 }
 
 ktlint {
@@ -398,7 +409,7 @@ tasks.named("check").configure {
     dependsOn("test")
     dependsOn("detekt")
     dependsOn("ktlintCheck")
-    dependsOn("koverReport")
+    dependsOn("koverXmlReport")
     dependsOn("koverVerify")
 }
 

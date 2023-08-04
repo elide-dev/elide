@@ -9,7 +9,7 @@ ktlintGradle = "11.5.0"
 kotlinx_coroutines = "1.7.3"
 kotlinx_collections = "0.3.5"
 kotlinx_datetime = "0.4.0"
-kotlinx_serialization = "1.5.2"
+kotlinx_serialization = "1.5.1"
 kotlinx_abiValidator = "0.13.2"
 google_api_common = "2.14.1"
 google_html_types = "1.0.8"
@@ -38,6 +38,7 @@ buildconfig_plugin = "3.1.0"
 auto_service = "1.1.1"
 kover_plugin = "0.7.3"
 testLoggerPlugin = "3.2.0"
+dependencyAnalysis = "1.20.0"
 
 micronaut = "3.10.0"
 micronaut_plugin = "3.7.10"
@@ -52,8 +53,9 @@ kotlin_plugin_noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = 
 kotlin_plugin_allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlin_plugin_atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 kotlinx_plugin_abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx_abiValidator" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover_plugin" }
 testLogger = { id = "com.adarshr.test-logger", version.ref = "testLoggerPlugin" }
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 
 micronaut_application = { id = "io.micronaut.application", version.ref = "micronaut_plugin" }
 micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
@@ -122,10 +124,10 @@ google_auto_service_annotations = { group = "com.google.auto.service", name = "a
 
 elide_core = { group = "dev.elide", name = "elide-core", version.ref = "elide" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }
-elide_ssg = { group = "dev.elide", name = "ssg", version.ref = "elide" }
-elide_server = { group = "dev.elide", name = "server", version.ref = "elide" }
+elide_ssg = { group = "dev.elide", name = "elide-ssg", version.ref = "elide" }
+elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elide" }
 elide_proto_core = { group = "dev.elide", name = "elide-proto-core", version.ref = "elide" }
-elide_proto_legacy = { group = "dev.elide", name = "proto", version = "1.0-v3-alpha1-rc38" }
+elide_proto_legacy = { group = "dev.elide", name = "elide-proto-core", version = "1.0-v3-alpha1-rc38" }
 elide_proto_protobuf = { group = "dev.elide", name = "elide-proto-protobuf", version.ref = "elide" }
 elide_proto_flatbuffers = { group = "dev.elide", name = "elide-proto-flatbuffers", version.ref = "elide" }
 elide_proto_kotlinx = { group = "dev.elide", name = "elide-proto-kotlinx", version.ref = "elide" }

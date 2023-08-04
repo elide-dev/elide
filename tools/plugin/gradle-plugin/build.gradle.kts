@@ -21,6 +21,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar)
+    alias(libs.plugins.dependencyAnalysis)
     alias(libs.plugins.versionCheck)
 }
 
@@ -64,15 +65,11 @@ sonarqube {
     }
 }
 
-koverMerged {
-    enable()
-
-    xmlReport {
-        onCheck.set(isCI)
-    }
-
-    htmlReport {
-        onCheck.set(isCI)
+koverReport {
+    defaults {
+        xml {
+            onCheck = isCI
+        }
     }
 }
 
@@ -114,15 +111,17 @@ subprojects {
         }
     }
 
-    configurations.all {
-        if (!name.contains("detached")) {
-            resolutionStrategy.activateDependencyLocking()
-        }
-    }
-
     detekt {
-        config = rootProject.files("config/detekt/detekt.yml")
+        config.from(rootProject.files("config/detekt/detekt.yml"))
     }
+}
+
+dependencyLocking {
+    lockMode = LockMode.LENIENT
+    ignoredDependencies.addAll(listOf(
+        "org.jetbrains.kotlinx:atomicfu*",
+        "org.jetbrains.kotlinx:kotlinx-serialization*",
+    ))
 }
 
 rootProject.plugins.withType(NodeJsRootPlugin::class.java) {
@@ -164,7 +163,7 @@ tasks.register("preMerge") {
     description = "Runs all the tests/verification tasks on both top level and included build."
 
     dependsOn("build", "test", "check")
-    dependsOn("koverReport", "koverVerify", "koverXmlReport")
+    dependsOn("koverVerify", "koverXmlReport")
 
     if ((properties["buildExamples"] as? String) == "true") {
         dependsOn(":example:fullstack:node:check")
@@ -172,7 +171,7 @@ tasks.register("preMerge") {
     }
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:check"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:validatePlugins"))
-    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverReport"))
+    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverXmlReport"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:koverVerify"))
 }
 

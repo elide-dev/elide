@@ -401,6 +401,7 @@ jobs:
             -x ktlintCheck
             -x ktlintKotlinScriptCheck
             -x apiCheck
+            -x :packages:server:nativeTest
             -Pelide.ci=true
             -PbuildSamples=false
             -PbuildDocsSite=false

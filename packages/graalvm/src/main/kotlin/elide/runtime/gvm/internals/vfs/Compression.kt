@@ -19,9 +19,10 @@
 
 package elide.runtime.gvm.internals.vfs
 
+import elide.core.api.Symbolic
+import elide.core.api.Symbolic.SealedResolver
 import elide.data.CompressionMode
 import elide.proto.api.Named
-import elide.proto.api.Symbolic
 
 /**
  * # VFS: Compression
@@ -43,7 +44,7 @@ import elide.proto.api.Symbolic
   /** @return Name formatted into a debug string. */
   override fun toString(): String = "Compression($name)"
 
-  internal companion object : Symbolic.Resolver<Int, Compression> {
+  internal companion object : SealedResolver<Int, Compression> {
     /** Alias for `IDENTITY` mode (no compression). */
     internal val IDENTITY = Compression(CompressionMode.IDENTITY to "IDENTITY")
 
@@ -63,7 +64,7 @@ import elide.proto.api.Symbolic
     internal val DEFAULT = GZIP
 
     /** Resolve the provided [symbol] to a validated [Compression] instance. */
-    @JvmStatic override fun resoleSymbol(symbol: Int): Compression = when (symbol) {
+    @JvmStatic override fun resolve(symbol: Int): Compression = when (symbol) {
       CompressionMode.IDENTITY -> IDENTITY
       CompressionMode.GZIP -> GZIP
       CompressionMode.BROTLI -> BROTLI

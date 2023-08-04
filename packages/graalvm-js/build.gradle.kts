@@ -42,6 +42,7 @@ kotlin {
       dependencies {
         api(projects.packages.ssr)
         api(npm("esbuild", libs.versions.npm.esbuild.get()))
+        api(npm("typescript", libs.versions.npm.typescript.get()))
         api(npm("prepack", libs.versions.npm.prepack.get()))
         api(npm("buffer", libs.versions.npm.buffer.get()))
         api(npm("readable-stream", libs.versions.npm.stream.get()))

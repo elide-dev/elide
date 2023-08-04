@@ -1,6 +1,6 @@
 {
-  "name": "@elide-dev/v3",
-  "version": "3.0.0",
+  "name": "@elide-dev/framework",
+  "version": "1.0.0-v3-alpha4-b9",
   "private": true,
   "packageManager": "yarn@3.2.1",
   "lint-staged": {
@@ -33,6 +33,7 @@
     "google-protobuf": "3.21.2",
     "postcss": "8.4.27",
     "preact": "10.16.0",
+    "typescript": "4.9.5",
     "web-streams-polyfill": "3.2.1"
   },
   "devDependencies": {

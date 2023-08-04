@@ -29,11 +29,19 @@ kotlin {
   explicitApi()
 
   js {
+    generateTypeScriptDefinitions()
     compilations["main"].packageJson {
       customField("resolutions", mapOf(
         "jszip" to "3.10.1",
         "node-fetch" to "3.3.2",
       ))
+    }
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
     }
   }
 
@@ -41,6 +49,8 @@ kotlin {
     val jsMain by getting {
       dependencies {
         api(projects.packages.ssr)
+        api(projects.packages.core)
+        api(projects.packages.base)
         api(npm("esbuild", libs.versions.npm.esbuild.get()))
         api(npm("typescript", libs.versions.npm.typescript.get()))
         api(npm("prepack", libs.versions.npm.prepack.get()))

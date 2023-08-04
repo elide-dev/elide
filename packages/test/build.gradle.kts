@@ -19,9 +19,18 @@ val buildMingw = project.properties["buildMingw"] == "true"
 kotlin {
   explicitApi()
 
-  js(IR) {
-    nodejs {}
-    browser {}
+  js {
+    nodejs()
+    browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
   }
 
   macosArm64()

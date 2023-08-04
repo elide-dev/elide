@@ -34,9 +34,18 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
-  js(IR) {
+  js {
     browser()
     nodejs()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
   }
   wasm {
     browser()

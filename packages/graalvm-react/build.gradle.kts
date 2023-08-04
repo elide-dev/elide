@@ -26,6 +26,26 @@ group = "dev.elide"
 version = rootProject.version as String
 
 kotlin {
+  js {
+    nodejs()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+      packageJson {
+        customField("resolutions", mapOf(
+          "jszip" to "3.10.1",
+          "node-fetch" to "3.3.2",
+          "typescript" to "4.9.5",
+        ))
+      }
+    }
+  }
+
   sourceSets {
     val jsMain by getting {
       dependencies {
@@ -33,6 +53,7 @@ kotlin {
         api(npm("prepack", libs.versions.npm.prepack.get()))
         api(npm("buffer", libs.versions.npm.buffer.get()))
         api(npm("readable-stream", libs.versions.npm.stream.get()))
+        api(npm("typescript", libs.versions.npm.typescript.get()))
         api(npm("@mui/system", libs.versions.npm.mui.get()))
 
         implementation(projects.packages.graalvmJs)

@@ -51,9 +51,18 @@ kotlin {
       useJUnitPlatform()
     }
   }
-  js(IR) {
-    browser {}
-    nodejs {}
+  js {
+    browser()
+    nodejs()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
   }
   wasm {
     browser()

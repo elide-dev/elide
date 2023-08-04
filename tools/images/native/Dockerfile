@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim@sha256:5bbfcb9f36a506f9c9c2fb53205f15f6e9d1f0e032939378ddc049a2d26d651e
+FROM debian:bookworm-slim@sha256:89468107e4c2b9fdea2f15fc582bf92c25aa4296a661ca0202f7ea2f4fc3f48c
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native)"

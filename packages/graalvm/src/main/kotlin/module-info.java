@@ -12,37 +12,46 @@
  */
 
 module elide.graalvm {
-    requires java.base;
-    requires jakarta.inject;
-    requires jakarta.annotation;
-    requires kotlin.stdlib;
-    requires kotlin.reflect;
-    requires kotlinx.coroutines.core;
-    requires kotlinx.coroutines.jdk9;
-    requires kotlinx.datetime;
-    requires kotlinx.serialization.core;
-    requires kotlinx.serialization.json;
-    requires io.micronaut.http;
-    requires io.micronaut.inject;
+  requires java.base;
+  requires jakarta.inject;
+  requires jakarta.annotation;
+  requires kotlin.stdlib;
+  requires kotlin.reflect;
+  requires kotlinx.coroutines.core;
+  requires kotlinx.coroutines.jdk9;
+  requires kotlinx.collections.immutable.jvm;
+  requires kotlinx.datetime;
+  requires kotlinx.serialization.core;
+  requires kotlinx.serialization.json;
+  requires io.micronaut.core;
+  requires io.micronaut.http;
+  requires io.micronaut.inject;
+  requires io.micronaut.core_reactive;
+  requires io.netty.codec.http;
+  requires reactor.netty.core;
+  requires reactor.netty.http;
+  requires org.reactivestreams;
+  requires com.lmax.disruptor;
 
-    requires reactor.netty.http;
-    requires io.netty.codec.http;
+  requires org.graalvm.sdk;
+  requires org.graalvm.truffle;
 
-    requires org.graalvm.sdk;
-    requires org.graalvm.truffle;
+  requires elide.core;
+  requires elide.base;
+  requires elide.ssr;
+  requires com.google.common.jimfs;
+  requires com.google.protobuf;
+  requires org.apache.commons.compress;
+  requires io.micronaut.context;
 
-    requires elide.core;
-    requires elide.base;
-    requires elide.ssr;
-
-    exports elide.runtime.intrinsics.js;
-    exports elide.runtime.intrinsics.js.express;
-    exports elide.runtime.gvm;
-    exports elide.runtime.gvm.internals;
-    exports elide.runtime.gvm.internals.intrinsics.js.base64;
-    exports elide.runtime.gvm.internals.intrinsics.js.console;
-    exports elide.runtime.gvm.internals.intrinsics.js.crypto;
-    exports elide.runtime.gvm.internals.intrinsics.js.express;
-    exports elide.runtime.gvm.internals.intrinsics.js.url;
-    exports elide.runtime.gvm.vfs;
+  exports elide.runtime.intrinsics.js;
+  exports elide.runtime.intrinsics.js.express;
+  exports elide.runtime.gvm;
+  exports elide.runtime.gvm.internals;
+  exports elide.runtime.gvm.internals.intrinsics.js.base64;
+  exports elide.runtime.gvm.internals.intrinsics.js.console;
+  exports elide.runtime.gvm.internals.intrinsics.js.crypto;
+  exports elide.runtime.gvm.internals.intrinsics.js.express;
+  exports elide.runtime.gvm.internals.intrinsics.js.url;
+  exports elide.runtime.gvm.vfs;
 }

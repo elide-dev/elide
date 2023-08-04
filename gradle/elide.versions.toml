@@ -541,6 +541,8 @@ netty_transport_native_kqueue = { group = "io.netty", name = "netty-transport-na
 netty_tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty_tcnative" }
 netty_tcnative_boringssl_static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty_tcnative" }
 netty_resolver_dns_native_macos = { group = "io.netty", name = "netty-resolver-dns-native-macos", version.ref = "netty" }
+netty_codec_http = { group = "io.netty", name = "netty-codec-http" }
+netty_codec_http2 = { group = "io.netty", name = "netty-codec-http2" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 gax_java = { group = "com.google.api", name = "gax", version.ref = "gax" }
 gax_java_grpc = { group = "com.google.api", name = "gax", version.ref = "gax" }

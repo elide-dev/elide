@@ -3000,7 +3000,7 @@ public final class elide/proto/impl/data/FlatDataFingerprint$Factory : elide/pro
 	public synthetic fun empty ()Ljava/lang/Object;
 }
 
-public final class elide/proto/impl/data/FlatEncoding : java/lang/Enum, elide/proto/api/Symbolic {
+public final class elide/proto/impl/data/FlatEncoding : java/lang/Enum, elide/core/api/Symbolic {
 	public static final field Companion Lelide/proto/impl/data/FlatEncoding$Companion;
 	public static final field UTF16 Lelide/proto/impl/data/FlatEncoding;
 	public static final field UTF32 Lelide/proto/impl/data/FlatEncoding;
@@ -3012,13 +3012,16 @@ public final class elide/proto/impl/data/FlatEncoding : java/lang/Enum, elide/pr
 	public static fun values ()[Lelide/proto/impl/data/FlatEncoding;
 }
 
-public final class elide/proto/impl/data/FlatEncoding$Companion : elide/proto/api/Symbolic$Resolver {
-	public fun resoleSymbol (I)Lelide/proto/impl/data/FlatEncoding;
-	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
-	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
+public final class elide/proto/impl/data/FlatEncoding$Companion : elide/core/api/Symbolic$SealedResolver {
+	public fun resolve (I)Lelide/proto/impl/data/FlatEncoding;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolveSymbol (I)Lelide/proto/impl/data/FlatEncoding;
+	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun unresolved (I)Lelide/core/api/Symbolic$Unresolved;
+	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
 }
 
-public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, elide/proto/api/Symbolic {
+public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, elide/core/api/Symbolic {
 	public static final field Companion Lelide/proto/impl/data/FlatHashAlgorithm$Companion;
 	public static final field IDENTITY Lelide/proto/impl/data/FlatHashAlgorithm;
 	public static final field MD5 Lelide/proto/impl/data/FlatHashAlgorithm;
@@ -3035,10 +3038,13 @@ public final class elide/proto/impl/data/FlatHashAlgorithm : java/lang/Enum, eli
 	public static fun values ()[Lelide/proto/impl/data/FlatHashAlgorithm;
 }
 
-public final class elide/proto/impl/data/FlatHashAlgorithm$Companion : elide/proto/api/Symbolic$Resolver {
-	public fun resoleSymbol (I)Lelide/proto/impl/data/FlatHashAlgorithm;
-	public synthetic fun resoleSymbol (Ljava/lang/Object;)Lelide/proto/api/Symbolic;
-	public fun unresolved (Ljava/lang/Object;)Lelide/proto/api/Symbolic$SymbolUnresolved;
+public final class elide/proto/impl/data/FlatHashAlgorithm$Companion : elide/core/api/Symbolic$SealedResolver {
+	public fun resolve (I)Lelide/proto/impl/data/FlatHashAlgorithm;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolveSymbol (I)Lelide/proto/impl/data/FlatHashAlgorithm;
+	public synthetic fun resolveSymbol (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun unresolved (I)Lelide/core/api/Symbolic$Unresolved;
+	public synthetic fun unresolved (Ljava/lang/Object;)Lelide/core/api/Symbolic$Unresolved;
 }
 
 public final class elide/proto/impl/wkt/FlatTimestamp : elide/proto/api/wkt/Timestamp {

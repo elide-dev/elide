@@ -345,11 +345,8 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
-        startsWith(github.ref, 'release/') ||
         contains(github.event.pull_request.labels.*.name, 'ci:test-native') ||
-        contains(github.event.head_commit.message, 'ci:test-native') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:test-native')
       )
 
     steps:
@@ -427,11 +424,9 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
         startsWith(github.ref, 'release/') ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-        contains(github.event.head_commit.message, 'ci:build-cli') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:build-cli')
       )
 
     strategy:
@@ -548,11 +543,8 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
-        startsWith(github.ref, 'release/') ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-cli') ||
-        contains(github.event.head_commit.message, 'ci:build-cli') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:build-cli')
       )
 
     strategy:
@@ -653,10 +645,8 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-img-jvm') ||
-        contains(github.event.head_commit.message, 'ci:build-img-jvm') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:build-img-jvm')
       )
 
     permissions:
@@ -758,10 +748,8 @@ jobs:
     if: |
       (
         github.ref == 'refs/heads/stable' ||
-        github.ref == 'refs/heads/v3' ||
         contains(github.event.pull_request.labels.*.name, 'ci:build-img-native') ||
-        contains(github.event.head_commit.message, 'ci:build-img-native') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:build-img-native')
       )
 
     permissions:
@@ -871,12 +859,10 @@ jobs:
     needs: [gradle, tests-jvm, docker-jvm, docker-native]
     if: |
       (
-        github.ref == 'refs/heads/stable' ||
         contains(github.event.pull_request.labels.*.name, 'ci:deploy-samples') ||
         contains(github.event.pull_request.labels.*.name, 'ci:deploy') ||
         contains(github.event.head_commit.message, 'ci:deploy-samples') ||
-        contains(github.event.head_commit.message, 'ci:deploy') ||
-        startsWith(github.ref, 'refs/tags/v')
+        contains(github.event.head_commit.message, 'ci:deploy')
       )
 
     strategy:

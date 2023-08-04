@@ -64,7 +64,6 @@ val enablePgo = true
 val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
-val enableUpx = false
 val enableDashboard = false
 val encloseSdk = false
 
@@ -444,11 +443,6 @@ val commonNativeArgs = listOf(
   if (enableTools) listOf(
     "--tool:chromeinspector",
     "--tool:coverage",
-    "--tool:lsp",
-    "--tool:sandbox",
-    "--tool:dap",
-    "--tool:insight",
-    "--tool:insightheap",
     "--tool:profiler",
   ) else emptyList()
 ).plus(
@@ -493,6 +487,13 @@ val experimentalFlags = listOf(
 
   // Significant slowdowns
   "-H:+RunMainInNewThread",
+
+  // Not yet supported/causes issues
+  "--tool:lsp",  // Causes crashes
+  "--tool:sandbox",
+  "--tool:dap",
+  "--tool:insight",
+  "--tool:insightheap",
 )
 
 // CFlags for release mode.

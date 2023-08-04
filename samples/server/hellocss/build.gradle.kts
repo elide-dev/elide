@@ -83,6 +83,7 @@ afterEvaluate {
   listOf(
     "buildLayers",
     "optimizedBuildLayers",
+    "optimizedBuildNativeLayersTask",
   ).forEach {
     tasks.named(it).configure {
       doNotTrackState("too big for build cache")

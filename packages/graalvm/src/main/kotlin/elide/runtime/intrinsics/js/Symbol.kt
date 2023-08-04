@@ -15,7 +15,7 @@
 
 package elide.runtime.intrinsics.js
 
-import elide.proto.api.Symbolic
+import elide.core.api.Symbolic
 
 /**
  * TBD.

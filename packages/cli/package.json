@@ -6,9 +6,6 @@
   "license": "(MIT OR Apache-2.0)",
   "keywords": ["runtime", "js", "ts", "polyglot", "server", "framework", "kotlin", "javascript", "typescript"],
   "repository": "github:elide-dev/v3",
-  "engines": {
-    "elide": "1.0-v3-alpha4-b9"
-  },
   "config": {
     "elideVersion": "1.0-v3-alpha4-b9"
   },
@@ -21,7 +18,8 @@
   },
   "os": [
     "darwin",
-    "linux"
+    "linux",
+    "windows"
   ],
   "cpu": [
     "x64",

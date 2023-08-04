@@ -11,4 +11,5 @@ packages:
   - packages/cli
   - site/docs/content
   - tools/scripts
+  - tools/plugin/gradle-plugin
 

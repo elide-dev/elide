@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.runtime.gvm.internals.intrinsics.js.express
 
 import io.netty.handler.codec.http.HttpMethod
@@ -85,7 +98,7 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
     // get the next handler in the pipeline (or end if no more handlers remaining)
     val handler = pipeline.getOrNull(stage) ?: return
 
-    if(handler.matches(incomingRequest.fullPath(), incomingRequest.method().name(), requestProxy)) {
+    if (handler.matches(incomingRequest.fullPath(), incomingRequest.method().name(), requestProxy)) {
       logging.debug { "Handler condition matches request at stage $stage" }
       // process this stage, giving the option to continue to the next stage
       handler.handle.executeVoid(

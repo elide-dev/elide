@@ -1,10 +1,23 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.runtime.gvm.internals.intrinsics.js.struct.map
 
 import elide.runtime.intrinsics.js.MapLike
 import elide.vm.annotations.Polyglot
 
 /** Implements a JavaScript-compatible `Map` with no mutable abilities, and a potential for multiple values per key. */
-@Suppress("unused") internal class JsMultiMap<K: Any, V> constructor (
+@Suppress("unused") internal class JsMultiMap<K: Any, V> (
   backingMap: Map<K, MutableList<V>>
 ) : BaseJsMultiMap<K, V>(
   backingMap,

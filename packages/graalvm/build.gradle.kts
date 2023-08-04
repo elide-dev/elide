@@ -170,8 +170,10 @@ dependencies {
   implementation(libs.micronaut.context)
   implementation(libs.micronaut.inject)
 
-  // Reactor Netty
+  // Netty
   implementation(libs.reactor.netty)
+  implementation(libs.netty.codec.http)
+  implementation(libs.netty.codec.http2)
 
   // SQLite
   implementation(libs.sqlite)

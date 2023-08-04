@@ -1146,7 +1146,7 @@ public abstract interface class elide/runtime/intrinsics/js/StringLike : java/la
 public abstract interface class elide/runtime/intrinsics/js/SubtleCrypto {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/Symbol : elide/proto/api/Symbolic {
+public abstract interface class elide/runtime/intrinsics/js/Symbol : elide/core/api/Symbolic {
 	public abstract fun getSymbol ()Ljava/lang/String;
 }
 

@@ -53,14 +53,8 @@ group = "dev.elide"
 // Set version from `.version` if stamping is enabled.
 val versionFile: File = rootProject.layout.projectDirectory.file(".version").asFile
 version = if (project.hasProperty("elide.stamp") && project.properties["elide.stamp"] == "true") {
-  if (project.hasProperty("version")) {
-    project.properties["version"] as String
-  } else if (versionFile.exists()) {
-    versionFile.readText().trim().replace("\n", "").ifBlank {
-      throw IllegalStateException("Failed to load `.version`")
-    }
-  } else {
-    "1.0-SNAPSHOT"
+  versionFile.readText().trim().replace("\n", "").ifBlank {
+    throw IllegalStateException("Failed to load `.version`")
   }
 } else {
   "1.0-SNAPSHOT"

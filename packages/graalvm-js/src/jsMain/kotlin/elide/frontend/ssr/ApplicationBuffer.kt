@@ -1,8 +1,21 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.frontend.ssr
 
 import js.core.jso
 import react.ReactElement
-import web.streams.ReadableStreamDefaultReadValueResult
+import web.streams.ReadableStreamReadValueResult
 import web.streams.ReadableStreamDefaultReader
 import kotlin.js.Promise
 import react.dom.server.rawRenderToString as renderSSRString
@@ -53,7 +66,7 @@ public class ApplicationBuffer constructor (private val app: ReactElement<*>, pr
 
   private fun pump(reader: ReadableStreamDefaultReader<ByteArray>, emitter: (ResponseChunk) -> Unit) {
     reader.read().then { value ->
-      val chunk = value.unsafeCast<ReadableStreamDefaultReadValueResult<ByteArray?>>()
+      val chunk = value.unsafeCast<ReadableStreamReadValueResult<ByteArray?>>()
 
       val rawContent = chunk.value
       var resolved = false

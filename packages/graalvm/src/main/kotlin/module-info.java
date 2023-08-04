@@ -19,7 +19,6 @@ module elide.graalvm {
   requires kotlin.reflect;
   requires kotlinx.coroutines.core;
   requires kotlinx.coroutines.jdk9;
-  requires kotlinx.collections.immutable.jvm;
   requires kotlinx.datetime;
   requires kotlinx.serialization.core;
   requires kotlinx.serialization.json;

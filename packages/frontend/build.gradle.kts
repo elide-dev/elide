@@ -27,6 +27,19 @@ version = rootProject.version as String
 kotlin {
   explicitApi()
 
+  js {
+    browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
+  }
+
   sourceSets {
     val jsMain by getting {
       dependencies {

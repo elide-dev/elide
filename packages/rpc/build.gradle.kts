@@ -67,9 +67,18 @@ kotlin {
   jvm {
     withJava()
   }
-  js(IR) {
+  js {
     nodejs {}
     browser {}
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
   }
 
   sourceSets {

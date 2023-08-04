@@ -30,8 +30,17 @@ val strictMode = project.properties["strictMode"] as? String == "true"
 kotlin {
   org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
 
-  js(IR) {
+  js {
     browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
   }
 }
 

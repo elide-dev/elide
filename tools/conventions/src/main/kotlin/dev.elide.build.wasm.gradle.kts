@@ -11,6 +11,12 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+
+import gradle.kotlin.dsl.accessors._27a6a77a4d89b1651d5d764ce3cc240c.kotlin
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 
 plugins {
@@ -28,17 +34,12 @@ val strictMode = project.properties["strictMode"] as? String == "true"
 // ----------------
 // Settings for compiling Kotlin to JavaScript.
 kotlin {
-  js {
-    nodejs()
-    generateTypeScriptDefinitions()
+  org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
 
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
+  wasm {
+    d8()
+    nodejs()
+    browser()
   }
 }
 
@@ -64,6 +65,7 @@ kotlin {
       languageVersion = kotlinLanguageVersion
       progressiveMode = true
       optIn("kotlin.ExperimentalUnsignedTypes")
+      optIn("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
     }
   }
 }

@@ -34,7 +34,6 @@ import elide.runtime.Logging
     // nothing at this time.
   }
 
-  /** @inheritDoc */
   override suspend fun readManifestAsync(path: String): Deferred<AppManifest> {
     logging.debug("Locating manifest at path '$path'...")
 

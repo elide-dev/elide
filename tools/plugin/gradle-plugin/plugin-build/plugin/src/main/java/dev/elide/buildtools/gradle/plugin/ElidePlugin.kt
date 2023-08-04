@@ -19,7 +19,6 @@ public abstract class ElidePlugin : Plugin<Project> {
         public const val EXTENSION_NAME: String = "elide"
     }
 
-    /** @inheritDoc */
     override fun apply(project: Project): Unit = project.run {
         var kotlinPluginFound = false
         var isKotlinJVM = false

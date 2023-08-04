@@ -47,20 +47,16 @@ class RedaktPluginTest : AbstractKotlinPluginTest() {
     annotation class Sensitive
   """.trimIndent())
 
-  /** @inheritDoc */
   override fun cliProcessor(): CommandLineProcessor = RedaktPlugin()
 
-  /** @inheritDoc */
   override fun defaultOptions(processor: CommandLineProcessor): List<PluginOption> = listOf(
     processor.option(KEY_ENABLED, true),
     processor.option(KEY_MASK, "<redacted>"),
     processor.option(KEY_ANNOTATION, "$testPackage.Sensitive"),
   )
 
-  /** @inheritDoc */
   override fun extraSources(): List<SourceFile> = listOf(sensitiveAnnoSrc)
 
-  /** @inheritDoc */
   override fun registrar(): ComponentRegistrar = RedaktRegistrar()
 
   /** Plugin constants should be expected values. */

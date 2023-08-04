@@ -79,7 +79,6 @@ public object JsProxy {
       }
     }
 
-    /** @inheritDoc */
     override fun getMember(key: String): Any {
       val getter = getters[key]
       return if (getter != null) {
@@ -93,13 +92,10 @@ public object JsProxy {
       }
     }
 
-    /** @inheritDoc */
     override fun getMemberKeys(): Any = keys
 
-    /** @inheritDoc */
     override fun hasMember(key: String): Boolean = keys.contains(key)
 
-    /** @inheritDoc */
     override fun putMember(key: String, value: Value) {
       val setter = setters[key]
       if (setter != null) {
@@ -109,17 +105,14 @@ public object JsProxy {
       }
     }
 
-    /** @inheritDoc */
     override fun hashCode(): Int = hostDelegate.hashCode()
 
-    /** @inheritDoc */
     override fun equals(other: Any?): Boolean {
       return if (other is PropertyProxy) {
         hostDelegate == other.hostDelegate
       } else false
     }
 
-    /** @inheritDoc */
     override fun toString(): String = hostDelegate.toString()
   }
 

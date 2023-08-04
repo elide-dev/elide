@@ -48,8 +48,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
     }.toCharArray()
   }
 
-  /** @inheritDoc */
-  override fun encoding(): Encoding {
+    override fun encoding(): Encoding {
     return Encoding.BASE64
   }
 

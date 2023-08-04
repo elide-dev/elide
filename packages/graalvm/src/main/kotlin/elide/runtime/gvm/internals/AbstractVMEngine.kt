@@ -289,7 +289,6 @@ internal abstract class AbstractVMEngine<
     initialized.compareAndSet(false, true)
   }
 
-  /** @inheritDoc */
   override fun language(): GuestLanguage = language
 
   // Install resolved intrinsics into the target `ctx` `bindings`.
@@ -388,12 +387,10 @@ internal abstract class AbstractVMEngine<
     language()
   )
 
-  /** @inheritDoc */
   override suspend fun prewarmScript(script: ExecutableScript) {
     // no-op (by default)
   }
 
-  /** @inheritDoc */
   override suspend fun executeStreaming(
     script: ExecutableScript,
     args: ExecutionInputs,
@@ -432,7 +429,6 @@ internal abstract class AbstractVMEngine<
     }
   }
 
-  /** @inheritDoc */
   override suspend fun <R> executeAsync(
     script: ExecutableScript,
     returnType: Class<R>,
@@ -620,7 +616,6 @@ internal abstract class AbstractVMEngine<
     }
   }
 
-  /** @inheritDoc */
   override suspend fun executeRender(
     script: ExecutableScript,
     request: HttpRequest<*>,
@@ -700,7 +695,6 @@ internal abstract class AbstractVMEngine<
     }
   }
 
-  /** @inheritDoc */
   override suspend fun <R> execute(
     script: ExecutableScript,
     returnType: Class<R>,
@@ -711,7 +705,6 @@ internal abstract class AbstractVMEngine<
     args,
   ).await()
 
-  /** @inheritDoc */
   override fun <R> executeBlocking(
     script: ExecutableScript,
     returnType: Class<R>,

@@ -42,7 +42,6 @@ import kotlinx.serialization.protobuf.ProtoNumber
    */
   @ProtoNumber(4) public val encoding: Encoding,
 ) {
-  /** @inheritDoc */
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -56,7 +55,6 @@ import kotlinx.serialization.protobuf.ProtoNumber
     return true
   }
 
-  /** @inheritDoc */
   override fun hashCode(): Int {
     var result = fingerprint.contentHashCode()
     result = 31 * result + algorithm.hashCode()

@@ -162,7 +162,6 @@ import elide.runtime.Logging
     }
   }
 
-  /** @inheritDoc */
   override suspend fun prepAsync(
     params: SiteCompilerParams,
     app: AppManifest,
@@ -205,7 +204,6 @@ import elide.runtime.Logging
     }
   }
 
-  /** @inheritDoc */
   override suspend fun generateRequests(factory: RequestFactory): Pair<Int, Sequence<StaticFragmentSpec>> {
     requestFactory = factory
     val count = config.manifest.app.endpointsCount
@@ -219,7 +217,6 @@ import elide.runtime.Logging
     return count to specs.asSequence()
   }
 
-  /** @inheritDoc */
   override suspend fun executeRequest(spec: StaticFragmentSpec): StaticFragment? {
     // execute the request against the app, logging a warning if it fails; at this stage, if the request fails due to an
     // application-level error, it's a non-halting event because it may be coming from user code.

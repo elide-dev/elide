@@ -26,7 +26,6 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
     override var seconds: Long,
     override var nanos: Int,
   ) : ITimestamp.IBuilder<KxTimestamp> {
-    /** @inheritDoc */
     override fun build(): KxTimestamp = KxTimestamp(seconds to nanos)
 
     // Internal helpers.
@@ -46,27 +45,21 @@ import elide.proto.api.wkt.Timestamp as ITimestamp
       0L to 0
     )
 
-    /** @inheritDoc */
     override fun empty(): KxTimestamp = TimestampBuilder.newBuilder().build()
 
-    /** @inheritDoc */
     override fun copy(model: KxTimestamp): KxTimestamp = TimestampBuilder.of(
       model.timestamp.first,
       model.timestamp.second,
     ).build()
 
-    /** @inheritDoc */
     override fun defaultInstance(): KxTimestamp = DEFAULT_INSTANCE
 
-    /** @inheritDoc */
     override fun builder(): TimestampBuilder = TimestampBuilder.newBuilder()
   }
 
-  /** @inheritDoc */
   override fun factory() = Factory
 
   override fun toBuilder(): TimestampBuilder = TimestampBuilder.of(timestamp.first, timestamp.second)
 
-  /** @inheritDoc */
   override fun toInstant(): Instant = Instant.fromEpochSeconds(timestamp.first, timestamp.second)
 }

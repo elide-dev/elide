@@ -148,7 +148,6 @@ public interface AppExecutor {
       this.runner = exec
     }
 
-    /** @inheritDoc */
     override fun service(): ListeningScheduledExecutorService = runner
   }
 }

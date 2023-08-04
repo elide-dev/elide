@@ -30,10 +30,8 @@ internal class JsServerAdapter : AbstractVMAdapter<
   inner class JsServerExecution (
     op: CompletableFuture<HttpResponse<Publisher<InputStream>>>,
   ) : VMStreamingExecution(op) {
-    /** @inheritDoc */
     override val done: Boolean get() = op.isDone
 
-    /** @inheritDoc */
     override fun execute(): PromiseLike<HttpResponse<Publisher<InputStream>>> {
       TODO("Not yet implemented")
     }

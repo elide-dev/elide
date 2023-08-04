@@ -87,7 +87,6 @@ internal class ServerAssetIndex @Inject constructor(
   @Context internal class AssetStartupListener : ApplicationEventListener<ServerStartupEvent> {
     @Inject private lateinit var beanContext: BeanContext
 
-    /** @inheritDoc */
     override fun onApplicationEvent(event: ServerStartupEvent) {
       // initialize the asset manager
       beanContext.getBean(ServerAssetIndex::class.java).initialize()

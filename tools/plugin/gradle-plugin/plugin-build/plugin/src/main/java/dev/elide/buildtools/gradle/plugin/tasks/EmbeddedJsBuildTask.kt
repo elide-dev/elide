@@ -635,12 +635,10 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         return subj
     }
 
-    /** @inheritDoc */
     override fun buildAssetCatalog(builderOp: EmbeddedBundleSpec.() -> Unit): EmbeddedScript {
         return embeddedScript(builderOp)
     }
 
-    /** @inheritDoc */
     override fun assetCatalog(): EmbeddedBundleSpec.() -> Unit = {
         module = libraryName
         filename = outputBundleName.get()
@@ -663,7 +661,6 @@ public abstract class EmbeddedJsBuildTask : BundleSpecTask<EmbeddedScript, Embed
         }
     }
 
-    /** @inheritDoc */
     override fun runAction() {
         processShim.get().writeText(
             renderTemplateVals(processShimTemplate)

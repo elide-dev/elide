@@ -65,7 +65,6 @@ public abstract class BundleWriteTask : BundleBaseTask() {
         }
     }
 
-    /** @inheritDoc */
     override fun runAction() {
         val sourceTask = project.tasks.named(sourceTaskName.get(), BundleSpecTask::class.java).get()
         val assetSpec = sourceTask.assetSpec.get()

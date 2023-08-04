@@ -42,7 +42,6 @@ internal class RedaktRegistrar(
 
   override val supportsK2: Boolean get() = true
 
-  /** @inheritDoc */
   override fun registerProjectComponents(
     project: MockProject,
     configuration: CompilerConfiguration

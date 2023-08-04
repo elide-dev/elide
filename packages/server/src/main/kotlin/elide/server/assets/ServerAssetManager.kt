@@ -55,7 +55,6 @@ public class ServerAssetManager @Inject internal constructor(
     public const val waitTimeout: Long = 10L
   }
 
-  /** @inheritDoc */
   override val logging: Logger = LoggerFactory.getLogger(AssetManager::class.java)
 
   // Check if a request has conditional headers.
@@ -85,7 +84,6 @@ public class ServerAssetManager @Inject internal constructor(
     return response
   }
 
-  /** @inheritDoc */
   override fun linkForAsset(module: AssetModuleId, overrideType: AssetType?): String {
     val pointer = reader.pointerTo(module)
     require(pointer != null) {
@@ -102,7 +100,6 @@ public class ServerAssetManager @Inject internal constructor(
     return "$prefix/$tag$extension"
   }
 
-  /** @inheritDoc */
   @Suppress("NestedBlockDepth", "ReturnCount")
   override suspend fun renderAssetAsync(request: HttpRequest<*>, asset: ServerAsset): Deferred<StreamedAssetResponse> {
     logging.debug(

@@ -12,10 +12,8 @@ import javax.inject.Inject
 internal class InternalRedaktPlugin @Inject constructor (
   project: Project
 ) : AbstractInternalPluginHost<RedaktExtension>(project, pluginId, pluginVersion) {
-  /** @inheritDoc */
   override fun resolve(config: ElideInternalPluginsExtension): RedaktExtension = config.redakt
 
-  /** @inheritDoc */
   override fun configure(extension: ElideInternalExtension, project: Project): List<SubpluginOption> = listOf(
     SubpluginOption(
       key = "enabled",

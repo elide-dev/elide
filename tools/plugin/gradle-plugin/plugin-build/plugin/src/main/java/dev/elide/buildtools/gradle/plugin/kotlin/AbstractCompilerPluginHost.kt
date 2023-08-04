@@ -36,20 +36,16 @@ internal abstract class AbstractCompilerPluginHost<O : ElideKotlinPluginsHandler
     /** Plugin-specific options. */
     protected lateinit var options: O
 
-    /** @inheritDoc */
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
 
-    /** @inheritDoc */
     override fun getCompilerPluginId(): String = pluginId
 
-    /** @inheritDoc */
     override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
         groupId = groupId,
         artifactId = artifactId,
         version = version,
     )
 
-    /** @inheritDoc */
     override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(ElideExtension::class.java)

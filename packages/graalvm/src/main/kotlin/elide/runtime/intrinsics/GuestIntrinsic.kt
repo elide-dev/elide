@@ -64,14 +64,12 @@ internal interface GuestIntrinsic {
           /** Clearing intrinsics is not allowed; this method always throws. */
           override fun clear() = notAllowed()
 
-          /** @inheritDoc */
           override fun put(key: JsSymbol, value: Any): Any? {
             checkName(key)
             bindingSet.add(key.symbol)
             return target.put(key ,value)
           }
 
-          /** @inheritDoc */
           override fun putAll(from: Map<out JsSymbol, Any>) {
             from.keys.forEach {
               checkName(it)
@@ -80,29 +78,22 @@ internal interface GuestIntrinsic {
             }
           }
 
-          /** @inheritDoc */
           override fun compute(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any?, out Any?>)
             = notAllowed()
 
-          /** @inheritDoc */
           override fun computeIfAbsent(key: JsSymbol, mappingFunction: Function<in JsSymbol, out Any>)
             = notAllowed()
 
-          /** @inheritDoc */
           override fun computeIfPresent(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any, out Any?>)
             = notAllowed()
 
-          /** @inheritDoc */
           override fun getMember(key: String): Any = target[JsSymbol(key)] ?:
             throw IllegalArgumentException("Intrinsic '$key' could not be resolved: not bound.")
 
-          /** @inheritDoc */
           override fun getMemberKeys(): Any = bindingSet.toTypedArray()
 
-          /** @inheritDoc */
           override fun hasMember(key: String): Boolean = bindingSet.contains(key)
 
-          /** @inheritDoc */
           override fun putMember(key: String, value: Value?) = error(
             "Cannot assign to `Intrinsics` members at runtime"
           )

@@ -238,7 +238,6 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     op.invoke()
 
     return object : DualTestExecutionProxy() {
-      /** @inheritDoc */
       override fun guest(esm: Boolean, guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
@@ -249,7 +248,6 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
         )
       }.doesNotFail()
 
-      /** @inheritDoc */
       override fun thenRun(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,

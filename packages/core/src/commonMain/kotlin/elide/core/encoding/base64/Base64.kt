@@ -123,16 +123,12 @@ public expect object Base64 : Codec<Base64Data> {
     public fun decode(src: ByteArray): ByteArray
   }
 
-  /** @inheritDoc */
   override fun encoding(): Encoding
 
-  /** @inheritDoc */
   override fun encoder(): elide.core.encoding.Encoder<Base64Data>
 
-  /** @inheritDoc */
   override fun decode(data: Base64Data): ByteArray
 
-  /** @inheritDoc */
   override fun decoder(): elide.core.encoding.Decoder<Base64Data>
 
   /**

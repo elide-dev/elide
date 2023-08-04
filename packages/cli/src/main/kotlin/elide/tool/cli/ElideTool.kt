@@ -154,8 +154,7 @@ import elide.tool.cli.state.CommandState
 
     /** Maps exceptions to exit codes. */
     private class ExceptionMapper : IExitCodeExceptionMapper {
-      /** @inheritDoc */
-      override fun getExitCode(exception: Throwable): Int = when (exception) {
+        override fun getExitCode(exception: Throwable): Int = when (exception) {
         // user code errors arising from the repl/shell/server
         is AbstractToolError -> {
           val exitCode = exception.exitCode

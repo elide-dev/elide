@@ -34,25 +34,19 @@ public abstract class AbstractElideKotlinXProtocol : ElideProtocol {
   // Strategy singleton.
   private val strategy: KotlinXModelStrategy = KotlinXModelStrategy()
 
-  /** @inheritDoc */
   override val reflection: Boolean get() = true
 
-  /** @inheritDoc */
   override val compression: Boolean get() = true
 
-  /** @inheritDoc */
   override fun engine(): ImplementationLibrary = ImplementationLibrary.KOTLINX
 
-  /** @inheritDoc */
   override fun dialects(): EnumSet<Dialect> = EnumSet.of(
     Dialect.JSON,
     Dialect.PROTO,
   )
 
-  /** @inheritDoc */
   override fun base(): Class<*>? = null
 
-  /** @inheritDoc */
   override fun strategy(): ModelAdapterStrategy = strategy
 
   /** Implements a model adapter strategy based on KotlinX Serialization. */

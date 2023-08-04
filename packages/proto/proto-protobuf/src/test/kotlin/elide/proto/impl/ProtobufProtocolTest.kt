@@ -24,7 +24,6 @@ import elide.testing.annotations.Test
 
 /** Tests to load the Elide Protocol implementation backed by Protocol Buffers. */
 internal class ProtobufProtocolTest : AbstractProtocolFacadeTest<ElideProtoJava>() {
-  /** @inheritDoc */
   override fun provide(): ElideProtoJava = Protocol.acquire(PROTOBUF) as ElideProtoJava
 
   /** Test expected dialects for protocol buffers implementation. */

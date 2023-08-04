@@ -208,7 +208,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
    * TBD.
    */
   private inner class VMInvocationFactory<Inputs: ExecutionInputs> : EventFactory<NativeVMInvocation<Inputs>> {
-    /** @inheritDoc */
     override fun newInstance(): NativeVMInvocation<Inputs> = NativeVMInvocation()
   }
 
@@ -243,7 +242,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       logging.trace { "VM worker initialized for thread '${thread.name}'" }
     }
 
-    /** @inheritDoc */
     override fun close() {
       try {
         logging.debug("Closing executor context: $threadName")
@@ -259,7 +257,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       }
     }
 
-    /** @inheritDoc */
     override fun onStart() {
       try {
         initializeVMContext()
@@ -268,7 +265,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       }
     }
 
-    /** @inheritDoc */
     override fun onShutdown() = close()
 
     // Prepare to enter the VM context.
@@ -301,7 +297,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       }
     }
 
-    /** @inheritDoc */
     override fun onEvent(event: NativeVMInvocation<I>, sequence: Long, endOfBatch: Boolean) {
       TODO("Not yet implemented")
     }
@@ -413,7 +408,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     return contextConfigure.get().invoke(fresh)
   }
 
-  /** @inheritDoc */
   override fun configureVM(props: Stream<VMProperty>) {
     check(!initialized.get()) {
       "Cannot configure VM context properties after initialization"
@@ -423,19 +417,16 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     }
   }
 
-  /** @inheritDoc */
   override fun installContextFactory(factory: (Engine) -> VMContext.Builder) {
     logging.trace("VM installed context factory")
     contextFactory.set(factory)
   }
 
-  /** @inheritDoc */
   override fun installContextSpawn(factory: (VMContext.Builder) -> VMContext) {
     logging.trace("VM installed context spawn")
     contextConfigure.set(factory)
   }
 
-  /** @inheritDoc */
   override fun activate(start: Boolean) {
     logging.trace("Activating native VM context manager")
     initialized.compareAndSet(
@@ -447,10 +438,8 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     }
   }
 
-  /** @inheritDoc */
   override fun engine(): Engine = engine.get()
 
-  /** @inheritDoc */
   override fun <R> executeAsync(operation: VMContext.() -> R): CompletableFuture<R> {
     // @TODO(sgammon): safe concurrent execution
 //    val completed = CountDownLatch(1)
@@ -462,7 +451,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     TODO("not yet implemented")
   }
 
-  /** @inheritDoc */
   override fun <R> acquire(builder: ((VMContext.Builder) -> Unit)?, operation: VMContext.() -> R): R {
     if (!initialized.get()) {
       // @TODO(sgammon): activation of disruptor that isn't based on inherent race condition

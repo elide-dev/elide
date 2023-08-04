@@ -439,7 +439,6 @@ import java.net.URI as NativeURL
       }
     }
 
-    /** @inheritDoc */
     override fun equals(other: Any?): Boolean {
       if (other?.javaClass != this.javaClass)
         return false
@@ -450,10 +449,8 @@ import java.net.URI as NativeURL
       }
     }
 
-    /** @inheritDoc */
     override fun hashCode(): Int = hashCode
 
-    /** @inheritDoc */
     fun absoluteString(): String = absolute
 
     // Splice a new protocol into the current URL, and return it re-wrapped as a parsed URL.
@@ -989,27 +986,21 @@ import java.net.URI as NativeURL
 
       // -- Factories: JS -- //
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun create(url: URL): URL =
         fromURL(url as URLValue)
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun create(url: String): URL =
         fromString(url)
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun create(url: String, base: String): URL =
         fromString(url)  // @TODO(sgammon): relative URLs
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun createObjectURL(file: File): URL =
         error("Not implemented: createObjectURL")
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun createObjectURL(blob: Blob): URL =
         error("Not implemented: createObjectURL")
 
-      /** @inheritDoc */
       @JvmStatic @Polyglot override fun revokeObjectURL(url: URL) =
         error("Not implemented: createObjectURL")
 
@@ -1105,13 +1096,10 @@ import java.net.URI as NativeURL
     // Whether this URL is locked (and, therefore, immutable).
     private val locked: AtomicBoolean = AtomicBoolean(false)
 
-    /** @inheritDoc */
     override fun wrappedURL(): URI = parsedURL().uri
 
-    /** @inheritDoc */
     override fun parsedURL(): ParsedURL = target.get()
 
-    /** @inheritDoc */
     override fun lock(): URL {
       check(isMutable()) {
         "Locked URL object is immutable"
@@ -1120,13 +1108,10 @@ import java.net.URI as NativeURL
       return this
     }
 
-    /** @inheritDoc */
     override fun isMutable(): Boolean = !locked.get()
 
-    /** @inheritDoc */
     @Polyglot override fun compareTo(other: URLValue): Int = target.get().absoluteString().compareTo(other.toString())
 
-    /** @inheritDoc */
     @Polyglot override fun equals(other: Any?): Boolean {
       if (other?.javaClass != this.javaClass)
         return false
@@ -1136,35 +1121,28 @@ import java.net.URI as NativeURL
       }
     }
 
-    /** @inheritDoc */
     @Polyglot override fun hashCode(): Int {
       return target.get().hashCode()
     }
 
-    /** @inheritDoc */
     @Polyglot override fun toString(): String = target.get().absoluteString()
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var hash: String
       get() = target.get().hash.resolve()
       set(value) = mutateURL { copySplice(hash = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var host: String
       get() = target.get().host
       set(value) = mutateURL { copySplice(host = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var hostname: String
       get() = target.get().hostname.resolve()
       set(value) = mutateURL { copySplice(hostname = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var href: String
       get() = target.get().absoluteString()
       set(value) = mutateURL { ParsedURL.fromString(value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var password: String
       get() = target.get().password.resolve()
       set(value) = mutateURL {
@@ -1176,44 +1154,35 @@ import java.net.URI as NativeURL
         }
       }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var pathname: String
       get() = target.get().pathname.resolve()
       set(value) = mutateURL { copySplice(pathname = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var port: Int?
       get() = target.get().port
       set(value) = mutateURL { copySplice(port = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var protocol: String
       get() = target.get().protocol
       set(value) = mutateURL { copySplice(protocol = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var search: String
       get() = target.get().search.resolve()
       set(value) = mutateURL { copySplice(search = value) }
 
-    /** @inheritDoc */
     @get:Polyglot @set:Polyglot override var username: String
       get() = target.get().username.resolve()
       set(value) = mutateURL { copySplice(username = value) }
 
-    /** @inheritDoc */
     @get:Polyglot override val origin: String get() = throw typeError(
       "Property `URL.origin` is not supported in server-side environments"
     )
 
-    /** @inheritDoc */
     @get:Polyglot override val searchParams: URLSearchParams get() = target.get().searchParams.resolve()
 
-    /** @inheritDoc */
     @Polyglot override fun toJSON(): String = toString()
   }
 
-  /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `URL`
     bindings[URL_SYMBOL] = ProxyInstantiable { arguments ->

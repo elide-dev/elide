@@ -63,7 +63,6 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
     sorted = true,
     threadsafe = true,
   ), ExtractableBackingMap {
-    /** @inheritDoc */
     @Suppress("UNCHECKED_CAST")
     override fun asMap(): URLParamsMap = backingMap as URLParamsMap
   }
@@ -78,7 +77,6 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
     threadsafe = true,
     sorted = true,
   ), ExtractableBackingMap {
-    /** @inheritDoc */
     @Suppress("UNCHECKED_CAST")
     override fun asMap(): URLParamsMap = backingMap as URLParamsMap
   }
@@ -105,7 +103,6 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
       else -> URLParamsMap.empty()
     })
 
-    /** @inheritDoc */
     @Polyglot override fun toString(): String = "URLSearchParams(immutable, count=$size)"
   }
 
@@ -134,7 +131,6 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
     /**
      * TBD.
      */
-    /** @inheritDoc */
     @Polyglot override fun toString(): String = "URLSearchParams(mutable, count=$size)"
   }
 

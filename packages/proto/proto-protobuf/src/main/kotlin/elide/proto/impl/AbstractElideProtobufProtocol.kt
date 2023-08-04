@@ -33,30 +33,23 @@ public abstract class AbstractElideProtobufProtocol : ElideProtocol {
   // Strategy adapter singleton.
   private val strategy: ProtoModelStrategy = ProtoModelStrategy()
 
-  /** @inheritDoc */
   override val reflection: Boolean get() = true
 
-  /** @inheritDoc */
   override val compression: Boolean get() = true
 
-  /** @inheritDoc */
   override fun engine(): ImplementationLibrary = ImplementationLibrary.PROTOBUF
 
-  /** @InheritDoc */
   override fun dialects(): EnumSet<Dialect> = EnumSet.of(
     Dialect.JSON,
     Dialect.PROTO,
   )
 
-  /** @InheritDoc */
   override fun base(): Class<*>? = GeneratedMessageV3::class.java
 
-  /** @InheritDoc */
   override fun strategy(): ModelAdapterStrategy = strategy
 
   /** Protocol Buffers-backed implementation of basic model features. */
   public class ProtoModelStrategy : ModelAdapterStrategy {
-    /** @inheritDoc */
     override fun model() = object : DataModelStrategy<
       HashAlgorithm,
       Encoding,

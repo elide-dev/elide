@@ -29,7 +29,7 @@ import elide.vm.annotations.Polyglot
  * @see ProxyIterator for GraalVM's Truffle iterator interface.
  * @see JsIteratorResult for a result type that can be returned by an iterator.
  */
-public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, ProxyIterator, ProxyIterable {
+public interface JsIterator<T> : Iterator<JsIteratorResult<T>>, ProxyIterator, ProxyIterable {
   /** Represents an inner iterator value. */
   public class JsIteratorResult<T> private constructor (
     private val held: T?,
@@ -70,7 +70,6 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, Proxy
       JsIteratorResult.ofErr(JsError.wrap(err))
     }
 
-    /** @inheritDoc */
     override fun getIterator(): Any = this
   }
 
@@ -119,9 +118,7 @@ public interface JsIterator<T> : Iterator<JsIterator.JsIteratorResult<T>>, Proxy
    */
   @Polyglot override fun next(): JsIteratorResult<T>
 
-  /** @inheritDoc */
   @Polyglot override fun getNext(): T? = next().value
 
-  /** @inheritDoc */
   override fun getIterator(): Any = this
 }

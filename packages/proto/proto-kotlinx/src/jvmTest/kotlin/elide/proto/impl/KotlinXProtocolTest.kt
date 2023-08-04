@@ -23,7 +23,6 @@ import elide.testing.annotations.Test
 
 /** Tests to load the Elide Protocol implementation backed by KotlinX Serialization. */
 internal class KotlinXProtocolTest : AbstractProtocolFacadeTest<ElideKotlinXProtocol>() {
-  /** @inheritDoc */
   override fun provide(): ElideKotlinXProtocol = Protocol.acquire(KOTLINX) as ElideKotlinXProtocol
 
   /** Test expected dialects for KotlinX implementation. */

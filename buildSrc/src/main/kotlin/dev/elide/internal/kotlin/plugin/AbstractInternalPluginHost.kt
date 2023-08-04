@@ -42,25 +42,21 @@ abstract class AbstractInternalPluginHost<O: ElideInternalPluginsExtension.Plugi
   /** Plugin-specific options. */
   protected val options: O by lazy { resolve(config) }
 
-  /** @inheritDoc */
-  override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean {
+    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean {
     return options.enabled.get()
   }
 
-  /** @inheritDoc */
-  override fun getCompilerPluginId(): String {
+    override fun getCompilerPluginId(): String {
     return pluginId
   }
 
-  /** @inheritDoc */
-  override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
+    override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
     groupId = groupId,
     artifactId = artifactId,
     version = version,
   )
 
-  /** @inheritDoc */
-  override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
+    override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
     val extension = project.extensions.getByType(ElideInternalPlugin.ElideInternalExtension::class.java)
     return project.provider {
       configure(extension, project)

@@ -92,7 +92,6 @@ public class RouteProcessor(
    */
   @AutoService(SymbolProcessorProvider::class)
   public class RouteProcessorFactory : SymbolProcessorProvider {
-    /** @inheritDoc */
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
       return RouteProcessor(
         environment.codeGenerator,
@@ -351,7 +350,6 @@ public class RouteProcessor(
     }
   }
 
-  /** @inheritDoc */
   override fun process(resolver: Resolver): List<KSAnnotated> {
     // scan for all `Page`-annotated classes. for each matching class, generate a pair of `String`, `Endpoint`.
     val pageAnno = resolver.getClassDeclarationByName(
@@ -386,7 +384,6 @@ public class RouteProcessor(
     return emptyList()
   }
 
-  /** @inheritDoc */
   override fun finish(): Unit = when (val manifest = manifest.get()) {
     null -> logger.info("No app manifest found.")
     else -> {

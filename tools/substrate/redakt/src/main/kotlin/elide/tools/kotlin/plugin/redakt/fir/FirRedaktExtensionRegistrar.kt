@@ -52,8 +52,7 @@ public class FirRedaktExtensionRegistrar private constructor (
     )
   }
 
-  /** @inheritDoc */
-  override fun ExtensionRegistrarContext.configurePlugin() {
+    override fun ExtensionRegistrarContext.configurePlugin() {
     +FirRedaktPredicateMatcher.factory(annotation)
     +::FirRedaktCheckers
   }

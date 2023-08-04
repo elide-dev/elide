@@ -410,7 +410,6 @@ public abstract class BundleAssetsBuildTask : BundleBaseTask() {
     )
     internal abstract val assets: ListProperty<AssetInfo>
 
-    /** @inheritDoc */
     override fun runAction() {
         // nothing at this time
     }

@@ -29,7 +29,6 @@ import javax.inject.Inject
 abstract class GraalVMToolchainResolver @Inject constructor (
   private val settings: Settings
 ) : JavaToolchainResolver {
-  /** @inheritDoc */
   override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
     val ext = settings.extensions.findByType(GraalVMToolchainExtension::class.java)
       ?: return Optional.empty()

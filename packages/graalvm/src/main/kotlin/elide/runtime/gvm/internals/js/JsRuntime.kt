@@ -254,8 +254,7 @@ internal class JsRuntime @Inject constructor (
 
     /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
     @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFS.VFSConfigurator {
-      /** @inheritDoc */
-      override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
+        override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
         "Failed to resolve runtime info: cannot prepare VFS."
       )).vfs.map {
         JsRuntime::class.java.getResource("$EMBEDDED_ROOT/${it.name}")?.toURI() ?: error(

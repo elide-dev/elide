@@ -26,7 +26,6 @@ interface ProtoConvertible<M: Message> : ProtoSchemaConvertible {
    */
   fun toMessage(): M
 
-  /** @inheritDoc */
   @Suppress("UNCHECKED_CAST")
   override fun toDescriptor(): Descriptors.Descriptor = (this::class.companionObjectInstance as ProtoModel<M>)
     .toDescriptor()

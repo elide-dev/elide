@@ -37,7 +37,6 @@ import kotlinx.serialization.protobuf.ProtoNumber
    */
   @ProtoNumber(3) public val encoding: Encoding?,
 ) {
-  /** @inheritDoc */
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -51,14 +50,12 @@ import kotlinx.serialization.protobuf.ProtoNumber
     return true
   }
 
-  /** @inheritDoc */
   override fun hashCode(): Int {
     var result = integrity?.hashCode() ?: 0
     result = 31 * result + encoding.hashCode()
     return result
   }
 
-  /** @inheritDoc */
   override fun toString(): String {
     return "DataContainer(size=${raw.size})"
   }

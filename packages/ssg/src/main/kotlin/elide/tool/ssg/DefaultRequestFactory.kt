@@ -58,7 +58,6 @@ import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
     }
   }
 
-  /** @inheritDoc */
   override fun create(page: Endpoint, controller: Class<*>?): HttpRequest<*> {
     val urlBase = page.base
     val urlPath = page.tail
@@ -86,7 +85,6 @@ import elide.tool.ssg.cfg.ElideSSGCompiler.ELIDE_TOOL_VERSION
     return affixHeaders(HttpRequest.GET<String>(resolvedUrl))
   }
 
-  /** @inheritDoc */
   override fun create(spec: StaticFragmentSpec, artifact: DetectedArtifact): HttpRequest<*> {
     return affixHeaders(HttpRequest.GET<String>(
       artifact.url.toURI()

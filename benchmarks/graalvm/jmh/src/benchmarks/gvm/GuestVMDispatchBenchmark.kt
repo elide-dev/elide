@@ -176,7 +176,6 @@ class GuestVMDispatchBenchmark {
   }
 
   private class DisruptorTestEventFactory : EventFactory<DisruptorGuestInvocationEvent> {
-    /** @inheritDoc */
     override fun newInstance(): DisruptorGuestInvocationEvent = DisruptorGuestInvocationEvent()
   }
 

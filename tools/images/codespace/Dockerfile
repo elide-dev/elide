@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-20.04
+FROM mcr.microsoft.com/vscode/devcontainers/base:ubuntu-22.04
 
 ARG DEV_USER=dev
 ARG IBAZEL_VERSION=v0.15.10

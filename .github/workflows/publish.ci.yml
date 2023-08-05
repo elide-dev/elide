@@ -63,6 +63,12 @@ on:
         type: boolean
         default: true
 
+      ## Whether to authorize the publish operation.
+      auth:
+        description: "Authorize publish"
+        type: boolean
+        default: false
+
     secrets:
       PUBLISH_USER:
         required: false

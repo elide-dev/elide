@@ -42,6 +42,7 @@ module elide.graalvm {
   requires com.google.protobuf;
   requires org.apache.commons.compress;
   requires io.micronaut.context;
+  requires io.netty.buffer;
 
   exports elide.runtime.intrinsics.js;
   exports elide.runtime.intrinsics.js.express;

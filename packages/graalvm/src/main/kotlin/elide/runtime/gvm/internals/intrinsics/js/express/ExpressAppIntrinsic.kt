@@ -13,9 +13,6 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import elide.annotations.core.Polyglot
-import elide.runtime.Logging
-import elide.runtime.intrinsics.js.express.ExpressApp
 import io.micronaut.core.async.publisher.Publishers
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.HttpMethod

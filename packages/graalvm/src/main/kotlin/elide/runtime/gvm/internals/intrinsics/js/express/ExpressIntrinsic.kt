@@ -14,10 +14,10 @@
 package elide.runtime.gvm.internals.intrinsics.js.express
 
 import elide.runtime.gvm.internals.context.NativeContextManagerImpl
-import elide.runtime.gvm.internals.intrinsics.GuestIntrinsic
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.express.Express
 import elide.runtime.intrinsics.js.express.ExpressApp
 import org.graalvm.polyglot.Context

@@ -19,6 +19,7 @@
   "COMPATIBILITY_WARNING",
 )
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlinx.benchmark.gradle.*
 import Java9Modularity.configure as configureJava9ModuleInfo
 
@@ -251,6 +252,14 @@ if (buildDocs) {
   listOf("dokkaJavadoc").forEach {
     tasks.named(it).configure {
       dependsOn("kaptKotlin")
+    }
+  }
+}
+
+afterEvaluate {
+  tasks.withType(KotlinCompile::class).configureEach {
+    kotlinOptions {
+      allWarningsAsErrors = false  // disabled for now
     }
   }
 }

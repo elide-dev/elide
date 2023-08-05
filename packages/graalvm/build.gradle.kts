@@ -39,8 +39,6 @@ allOpen {
 group = "dev.elide"
 version = rootProject.version as String
 
-val encloseSdk = false
-
 kotlin {
   explicitApi()
 }
@@ -185,10 +183,8 @@ dependencies {
   implementation(projects.packages.proto.protoKotlinx)
   implementation(projects.packages.proto.protoFlatbuffers)
 
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-    compileOnly(libs.graalvm.truffle.api)
-  }
+  compileOnly(libs.graalvm.sdk)
+  compileOnly(libs.graalvm.truffle.api)
 
   // Testing
   testImplementation(projects.packages.test)
@@ -197,10 +193,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testImplementation(libs.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
-
-  if (encloseSdk) {
-    testCompileOnly(libs.graalvm.sdk)
-  }
+  testImplementation(libs.graalvm.sdk)
 }
 
 configureJava9ModuleInfo(project)
@@ -214,13 +207,12 @@ tasks {
   }
 }
 
+
+
 val buildDocs = project.properties["buildDocs"] == "true"
 publishing {
   publications.withType<MavenPublication> {
     artifactId = artifactId.replace("graalvm", "elide-graalvm")
-    if (buildDocs) {
-      artifact(tasks.javadocJar)
-    }
 
     pom {
       name = "Elide for GraalVM"
@@ -248,7 +240,7 @@ publishing {
 }
 
 if (buildDocs) {
-  listOf("dokkaJavadoc").forEach {
+  listOf("dokkaJavadoc", "dokkaHtml").forEach {
     tasks.named(it).configure {
       dependsOn("kaptKotlin")
     }

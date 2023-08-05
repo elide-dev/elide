@@ -22,6 +22,9 @@
 )
 package lib.protobuf
 
+/**
+ * Protobuf: Field Type
+ */
 public external enum class FieldType {
   INVALID /* = -1 */,
   DOUBLE /* = 1 */,
@@ -46,6 +49,9 @@ public external enum class FieldType {
   VHASH64 /* = 31 */
 }
 
+/**
+ * Protobuf: Wire Type
+ */
 public external enum class WireType {
   INVALID /* = -1 */,
   VARINT /* = 0 */,

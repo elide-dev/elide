@@ -167,10 +167,6 @@ publishing {
   }
 }
 
-sonarqube {
-  isSkipProject = true
-}
-
 micronaut {
   version = libs.versions.micronaut.lib.get()
   runtime = io.micronaut.gradle.MicronautRuntime.NETTY

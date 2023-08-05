@@ -20,6 +20,18 @@ plugins {
 }
 
 kotlin {
+  js {
+    browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
+  }
   wasm {
     d8()
     browser()

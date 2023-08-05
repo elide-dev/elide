@@ -13,6 +13,9 @@
 
 @file:Suppress("UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.internal.KaptTask
+
+
 /*
 * Copyright (c) 2023 Elide Ventures, LLC.
 *
@@ -98,5 +101,14 @@ configurations.all {
 
     // prefer modules that are part of this build
     preferProjectModules()
+  }
+}
+
+val buildDocs = project.properties["buildDocs"] as? String == "true"
+if (buildDocs) {
+  afterEvaluate {
+    tasks.withType(org.jetbrains.dokka.gradle.DokkaTask::class).configureEach {
+      dependsOn(tasks.withType(KaptTask::class))
+    }
   }
 }

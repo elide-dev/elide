@@ -238,6 +238,15 @@ subprojects {
     }
   }
 
+  if (buildDocs == "true") {
+    dependencies {
+      val dokkaPlugin by configurations
+      dokkaPlugin("org.jetbrains.dokka:versioning-plugin:${dokkaVersion.get()}")
+      dokkaPlugin("org.jetbrains.dokka:templating-plugin:${dokkaVersion.get()}")
+      dokkaPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:${dokkaVersion.get()}")
+    }
+  }
+
   sonarqube {
     properties {
       if (!Elide.noTestModules.contains(name)) {

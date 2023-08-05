@@ -18,6 +18,9 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import org.jetbrains.kotlin.gradle.internal.KaptTask
+
+
 plugins {
   java
   jacoco

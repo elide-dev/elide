@@ -80,7 +80,7 @@ kotlin {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguage
       languageVersion = Elide.kotlinLanguage
-      jvmTarget = javaVersion
+      jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(extraArgs)
       allWarningsAsErrors = true
@@ -90,7 +90,7 @@ kotlin {
   afterEvaluate {
     target.compilations.all {
       kotlinOptions {
-        jvmTarget = Elide.javaTargetMinimum
+        jvmTarget = Elide.kotlinJvmTargetMaximum
         languageVersion = Elide.kotlinLanguage
         apiVersion = Elide.kotlinLanguage
         javaParameters = true
@@ -395,7 +395,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
   kotlinOptions {
     apiVersion = Elide.kotlinLanguageBeta
     languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.javaTargetMinimum
+    jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
     freeCompilerArgs = Elide.jvmCompilerArgs
     allWarningsAsErrors = true

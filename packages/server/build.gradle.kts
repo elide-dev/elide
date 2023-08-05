@@ -28,7 +28,6 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
-val encloseSdk = false
 
 kotlin {
   explicitApi()
@@ -126,9 +125,7 @@ dependencies {
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
 
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-  }
+  compileOnly(libs.graalvm.sdk)
 
   // Netty: Native
   implementation(libs.netty.tcnative)

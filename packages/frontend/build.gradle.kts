@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+
 @file:Suppress(
   "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
@@ -39,8 +41,19 @@ kotlin {
       }
     }
   }
+  wasm {
+    d8()
+    nodejs()
+    browser()
+  }
 
   sourceSets {
+    val commonMain by getting
+    val commonTest by getting
+
+    val wasmMain by getting
+    val wasmTest by getting
+
     val jsMain by getting {
       dependencies {
         implementation(kotlin("stdlib-js"))

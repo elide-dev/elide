@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
@@ -50,6 +52,23 @@ configurations {
 kotlin {
   jvm {
     withJava()
+  }
+  js {
+    browser()
+    generateTypeScriptDefinitions()
+
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
+  }
+  wasm {
+    d8()
+    nodejs()
+    browser()
   }
 
   sourceSets {

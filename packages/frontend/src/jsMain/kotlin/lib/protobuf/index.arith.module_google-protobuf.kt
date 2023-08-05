@@ -21,6 +21,9 @@
 )
 package lib.protobuf
 
+/**
+ * UInt64
+ */
 public open external class UInt64(lo: Number, hi: Number) {
   public open var lo: Number
   public open var hi: Number
@@ -43,6 +46,9 @@ public open external class UInt64(lo: Number, hi: Number) {
     }
 }
 
+/**
+ * Int64
+ */
 public open external class Int64(lo: Number, hi: Number) {
   public open var lo: Number
   public open var hi: Number

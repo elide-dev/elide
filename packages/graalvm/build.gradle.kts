@@ -214,9 +214,13 @@ tasks {
   }
 }
 
+val buildDocs = project.properties["buildDocs"] == "true"
 publishing {
   publications.withType<MavenPublication> {
     artifactId = artifactId.replace("graalvm", "elide-graalvm")
+    if (buildDocs) {
+      artifact(tasks.javadocJar)
+    }
 
     pom {
       name = "Elide for GraalVM"
@@ -239,6 +243,14 @@ publishing {
       scm {
         url = "https://github.com/elide-dev/elide"
       }
+    }
+  }
+}
+
+if (buildDocs) {
+  listOf("dokkaJavadoc").forEach {
+    tasks.named(it).configure {
+      dependsOn("kaptKotlin")
     }
   }
 }

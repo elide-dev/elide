@@ -272,4 +272,14 @@ afterEvaluate {
       doNotTrackState("too big for build cache")
     }
   }
+
+  val buildDocs = project.properties["buildDocs"] == "true"
+  if (buildDocs) {
+    listOf("dokkaJavadoc").forEach {
+      tasks.named(it).configure {
+        dependsOn("kaptKotlin")
+      }
+    }
+  }
+
 }

@@ -15,7 +15,9 @@ package elide.runtime.gvm.internals.intrinsics.js.express
 
 import io.micronaut.core.async.publisher.Publishers
 import io.netty.buffer.Unpooled
+import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
+import io.netty.channel.epoll.EpollMode.EDGE_TRIGGERED
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -23,9 +25,10 @@ import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
+import reactor.netty.http.HttpProtocol
+import reactor.netty.http.HttpProtocol.*
 import reactor.netty.http.server.HttpServer
 import reactor.netty.http.server.HttpServerRequest
-import reactor.netty.resources.LoopResources
 import kotlin.reflect.KClass
 import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
@@ -73,65 +76,93 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
     val eventLoopGroup: EventLoopGroup,
     val socketChannel: KClass<T>,
     val multiplexer: IoMultiplexer,
-    val channelOptions: (HttpServer) -> Unit = { },
+    val channelOptions: HttpServer.() -> Unit = { },
   ) where T: ServerSocketChannel
 
-//  @Suppress("UNUSED")
-//  private fun resolveEventLoop(): TransportImpl<*> = when {
-//    // prefer `io_uring` if available (Linux-only, modern kernels)
-//    io.netty.incubator.channel.uring.IOUring.isAvailable() -> TransportImpl(
-//      io.netty.incubator.channel.uring.IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()),
-//      io.netty.incubator.channel.uring.IOUringServerSocketChannel::class,
-//      IoMultiplexer.IO_URING,
-//    )
-//
-//    // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
-//    io.netty.channel.epoll.Epoll.isAvailable() -> TransportImpl(
-//      io.netty.channel.epoll.EpollEventLoopGroup(),
-//      io.netty.channel.epoll.EpollServerSocketChannel::class,
-//      IoMultiplexer.EPOLL,
-//    )
-//
-//    // next up, opt for `kqueue` on Unix-like systems
-//    io.netty.channel.kqueue.KQueue.isAvailable() -> TransportImpl(
-//      io.netty.channel.kqueue.KQueueEventLoopGroup(),
-//      io.netty.channel.kqueue.KQueueServerSocketChannel::class,
-//      IoMultiplexer.KQUEUE,
-//    )
-//
-//    // otherwise, fallback to NIO
-//    else -> TransportImpl(
-//      NioEventLoopGroup(),
-//      NioServerSocketChannel::class,
-//      IoMultiplexer.NIO,
-//    )
-//  }
+  @Suppress("UNUSED")
+  private fun resolveEventLoop(): TransportImpl<*> = when {
+    // prefer `io_uring` if available (Linux-only, modern kernels)
+    io.netty.incubator.channel.uring.IOUring.isAvailable() -> TransportImpl(
+      io.netty.incubator.channel.uring.IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()),
+      io.netty.incubator.channel.uring.IOUringServerSocketChannel::class,
+      IoMultiplexer.IO_URING,
+    ) {
+      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.SO_REUSEADDR, true)
+      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_NODELAY, true)
+      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_DEFER_ACCEPT, 256)
+      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_QUICKACK, true)
+    }
 
-  @Polyglot override fun listen(port: Int, callback: Value?) {
+    // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
+    io.netty.channel.epoll.Epoll.isAvailable() -> TransportImpl(
+      io.netty.channel.epoll.EpollEventLoopGroup(),
+      io.netty.channel.epoll.EpollServerSocketChannel::class,
+      IoMultiplexer.EPOLL,
+    ) {
+      childOption(io.netty.channel.epoll.EpollChannelOption.SO_REUSEADDR, true)
+      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_NODELAY, true)
+      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_DEFER_ACCEPT, 256)
+      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_QUICKACK, true)
+      childOption(io.netty.channel.epoll.EpollChannelOption.EPOLL_MODE, EDGE_TRIGGERED)
+    }
+
+    // next up, opt for `kqueue` on Unix-like systems
+    io.netty.channel.kqueue.KQueue.isAvailable() -> TransportImpl(
+      io.netty.channel.kqueue.KQueueEventLoopGroup(),
+      io.netty.channel.kqueue.KQueueServerSocketChannel::class,
+      IoMultiplexer.KQUEUE,
+    ) {
+      childOption(io.netty.channel.kqueue.KQueueChannelOption.SO_REUSEADDR, true)
+      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_NODELAY, true)
+      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_NOPUSH, true)
+      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_FASTOPEN_CONNECT, true)
+    }
+
+    // otherwise, fallback to NIO
+    else -> TransportImpl(
+      NioEventLoopGroup(),
+      NioServerSocketChannel::class,
+      IoMultiplexer.NIO,
+    )
+  }
+
+  @Polyglot override fun listen(port: Int, callback: Value?): Unit = resolveEventLoop().let { transport ->
     // configure all the route handlers, set the port and bind the socket
     HttpServer.create().apply {
-//      Logging.named("gvm:js.console").info("Using transport ${transport.multiplexer.name}")
+      Logging.named("gvm:js.console").info("Using transport ${transport.multiplexer.name}")
 
       // configure event loop group
-//      runOn { native ->
-//        if (!native) {
-//          error("Failed to load native transport")
-//        } else {
-//          transport.eventLoopGroup
-//        }
-//      }
+      runOn { native ->
+        if (!native) {
+          error("Failed to load native transport")
+        } else {
+          transport.eventLoopGroup
+        }
+      }
+
+      // set `SO_REUSEADDR` to allow multi-binding
+      childOption(ChannelOption.SO_REUSEADDR, true)
+      childOption(ChannelOption.TCP_NODELAY, true)
+      childOption(ChannelOption.TCP_FASTOPEN_CONNECT, true)
+
+      // maximum keep-alive
+      maxKeepAliveRequests(10_000_000)
+      protocol(HTTP11, H2C)
+      noSSL()
 
       // warmup the server (load native libs, start event loops, etc.)
       warmup().block()
 
-      handle { _, res ->
+      handle { req, res ->
         // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
         // val responseWrapper = ExpressResponseIntrinsic(res)
         // val requestProxy = ExpressRequestIntrinsic.from(req)
 
-        context.useGuest {
+        if (req.uri() == "/health") {
+          res.send(Publishers.just(Unpooled.wrappedBuffer(okResponse)))
+        } else context.useGuest {
           // handlePipelineStage(req, responseWrapper, requestProxy)
-          res.send(Publishers.just(Unpooled.wrappedBuffer("Hello".encodeToByteArray())))
+          res.send(Publishers.just(Unpooled.wrappedBuffer(helloResponse)))
         }
 
         // responseWrapper.end()
@@ -185,6 +216,9 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   }
 
   companion object {
+    private val okResponse = "OK".encodeToByteArray()
+    private val helloResponse = "Hello".encodeToByteArray()
+
     private const val MATCHER_NAME_GROUP = "name"
 
     /** Regex matching path variable templates specified by a guest handler */

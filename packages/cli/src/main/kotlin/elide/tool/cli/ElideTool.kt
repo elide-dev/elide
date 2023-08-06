@@ -72,6 +72,10 @@ import elide.tool.cli.state.CommandState
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
       System.setProperty("reactor.netty.native", "true")
+      System.setProperty("io.netty.allocator.type", "pooled")
+      System.setProperty("io.netty.buffer.checkBounds", "false")
+      System.setProperty("io.netty.buffer.checkAccessible", "true")
+      System.setProperty("io.netty.iouring.iosqeAsyncThreshold", "32000")
       System.setProperty("reactor.netty.ioWorkerCount", Runtime.getRuntime().availableProcessors().toString())
     }
 

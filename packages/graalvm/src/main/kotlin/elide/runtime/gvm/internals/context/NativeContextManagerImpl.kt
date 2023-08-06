@@ -70,18 +70,19 @@ internal class NativeContextManagerImpl(
    */
   private val disruptor = Disruptor(
     /*eventFactory=*/ ::ContextRequest,
-    /*ringBufferSize=*/ config.ringBufferSize ?: DEFAULT_RING_BUFFER_SIZE,
-    /*threadFactory=*/ DaemonThreadFactory.INSTANCE,
+    /*ringBufferSize=*/ DEFAULT_RING_BUFFER_SIZE,
+    /*threadFactory=*/ Thread.ofVirtual().allowSetThreadLocals(true).factory(),
     /*producerType=*/ProducerType.MULTI,
-    /*waitStrategy=*/when(config.waitStrategy) {
-      "busySpin" -> BusySpinWaitStrategy()
-      "liteBlocking" -> LiteBlockingWaitStrategy()
-      "liteTimeout" -> LiteTimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
-      "sleep" -> SleepingWaitStrategy()
-      "timeout" -> TimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
-      "yield" -> YieldingWaitStrategy()
-      else -> BlockingWaitStrategy()
-    }
+    BusySpinWaitStrategy(),
+//    /*waitStrategy=*/when(config.waitStrategy) {
+//      "busySpin" -> BusySpinWaitStrategy()
+//      "liteBlocking" -> LiteBlockingWaitStrategy()
+//      "liteTimeout" -> LiteTimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
+//      "sleep" -> SleepingWaitStrategy()
+//      "timeout" -> TimeoutBlockingWaitStrategy(100, TimeUnit.NANOSECONDS)
+//      "yield" -> YieldingWaitStrategy()
+//      else -> BlockingWaitStrategy()
+//    }
   )
 
   // Private logger.

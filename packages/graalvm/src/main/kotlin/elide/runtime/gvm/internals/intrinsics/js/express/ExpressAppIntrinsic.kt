@@ -25,7 +25,6 @@ import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
-import reactor.netty.http.HttpProtocol
 import reactor.netty.http.HttpProtocol.*
 import reactor.netty.http.server.HttpServer
 import reactor.netty.http.server.HttpServerRequest
@@ -144,6 +143,7 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
       childOption(ChannelOption.SO_REUSEADDR, true)
       childOption(ChannelOption.TCP_NODELAY, true)
       childOption(ChannelOption.TCP_FASTOPEN_CONNECT, true)
+      transport.channelOptions.invoke(this)
 
       // maximum keep-alive
       maxKeepAliveRequests(10_000_000)

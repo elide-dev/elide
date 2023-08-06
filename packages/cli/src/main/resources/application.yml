@@ -33,7 +33,7 @@ micronaut.server.netty.use-native-transport: true
 micronaut.netty.event-loops.*.prefer-native-transport: true
 micronaut.server.netty.parent.prefer-native-transport: true
 micronaut.server.netty.worker.prefer-native-transport: true
-micronaut.server.netty.worker.event-loop-group: native
 micronaut.netty.event-loops.default.prefer-native-transport: true
 micronaut.netty.event-loops.native.prefer-native-transport: true
-micronaut.netty.event-loops.native.num-threads: 16
+micronaut.server.netty.worker.num-threads: 1
+micronaut.executors.scheduled.core-pool-size: 4

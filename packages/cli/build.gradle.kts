@@ -347,7 +347,7 @@ tasks {
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
-  runtime = MicronautRuntime.NETTY
+  runtime = MicronautRuntime.NONE
   enableNativeImage(true)
 
   processing {
@@ -821,7 +821,7 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
   enabled = false
 }
 
-configureJava9ModuleInfo(project)
+//configureJava9ModuleInfo(project)
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {

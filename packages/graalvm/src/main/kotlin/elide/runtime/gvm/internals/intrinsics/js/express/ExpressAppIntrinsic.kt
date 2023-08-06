@@ -67,88 +67,11 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   @Polyglot override fun use(handler: Value) = registerHandler(handler)
   @Polyglot override fun use(path: String, handler: Value) = registerHandler(handler, path)
 
-  private enum class IoMultiplexer {
-    NIO, EPOLL, KQUEUE, IO_URING
-  }
-
-  private class TransportImpl<T>(
-    val eventLoopGroup: EventLoopGroup,
-    val socketChannel: KClass<T>,
-    val multiplexer: IoMultiplexer,
-    val channelOptions: HttpServer.() -> Unit = { },
-  ) where T: ServerSocketChannel
-
-  @Suppress("UNUSED")
-  private fun resolveEventLoop(): TransportImpl<*> = when {
-    // prefer `io_uring` if available (Linux-only, modern kernels)
-    io.netty.incubator.channel.uring.IOUring.isAvailable() -> TransportImpl(
-      io.netty.incubator.channel.uring.IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()),
-      io.netty.incubator.channel.uring.IOUringServerSocketChannel::class,
-      IoMultiplexer.IO_URING,
-    ) {
-      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.SO_REUSEADDR, true)
-      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_NODELAY, true)
-      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_DEFER_ACCEPT, 256)
-      childOption(io.netty.incubator.channel.uring.IOUringChannelOption.TCP_QUICKACK, true)
-    }
-
-    // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
-    io.netty.channel.epoll.Epoll.isAvailable() -> TransportImpl(
-      io.netty.channel.epoll.EpollEventLoopGroup(),
-      io.netty.channel.epoll.EpollServerSocketChannel::class,
-      IoMultiplexer.EPOLL,
-    ) {
-      childOption(io.netty.channel.epoll.EpollChannelOption.SO_REUSEADDR, true)
-      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_NODELAY, true)
-      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_DEFER_ACCEPT, 256)
-      childOption(io.netty.channel.epoll.EpollChannelOption.TCP_QUICKACK, true)
-      childOption(io.netty.channel.epoll.EpollChannelOption.EPOLL_MODE, EDGE_TRIGGERED)
-    }
-
-    // next up, opt for `kqueue` on Unix-like systems
-    io.netty.channel.kqueue.KQueue.isAvailable() -> TransportImpl(
-      io.netty.channel.kqueue.KQueueEventLoopGroup(),
-      io.netty.channel.kqueue.KQueueServerSocketChannel::class,
-      IoMultiplexer.KQUEUE,
-    ) {
-      childOption(io.netty.channel.kqueue.KQueueChannelOption.SO_REUSEADDR, true)
-      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_NODELAY, true)
-      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_NOPUSH, true)
-      childOption(io.netty.channel.kqueue.KQueueChannelOption.TCP_FASTOPEN_CONNECT, true)
-    }
-
-    // otherwise, fallback to NIO
-    else -> TransportImpl(
-      NioEventLoopGroup(),
-      NioServerSocketChannel::class,
-      IoMultiplexer.NIO,
-    )
-  }
-
-  @Polyglot override fun listen(port: Int, callback: Value?): Unit = resolveEventLoop().let { transport ->
+  @Polyglot override fun listen(port: Int, callback: Value?) {
     // configure all the route handlers, set the port and bind the socket
     HttpServer.create().apply {
-      Logging.named("gvm:js.console").info("Using transport ${transport.multiplexer.name}")
-
-      // configure event loop group
-      runOn { native ->
-        if (!native) {
-          error("Failed to load native transport")
-        } else {
-          transport.eventLoopGroup
-        }
-      }
-
       // set `SO_REUSEADDR` to allow multi-binding
       childOption(ChannelOption.SO_REUSEADDR, true)
-      childOption(ChannelOption.TCP_NODELAY, true)
-      childOption(ChannelOption.TCP_FASTOPEN_CONNECT, true)
-      transport.channelOptions.invoke(this)
-
-      // maximum keep-alive
-      maxKeepAliveRequests(10_000_000)
-      protocol(HTTP11, H2C)
-      noSSL()
 
       // warmup the server (load native libs, start event loops, etc.)
       warmup().block()
@@ -183,36 +106,6 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
         handle,
       ),
     )
-  }
-
-  private fun handlePipelineStage(
-    incomingRequest: HttpServerRequest,
-    responseWrapper: ExpressResponseIntrinsic,
-    requestProxy: ProxyObject,
-    stage: Int = 0,
-  ) {
-    logging.debug { "Handling pipeline stage: $stage" }
-
-    // get the next handler in the pipeline (or end if no more handlers remaining)
-    val handler = pipeline.getOrNull(stage) ?: return
-
-    if (handler.matches(incomingRequest.fullPath(), incomingRequest.method().name(), requestProxy)) {
-      logging.debug { "Handler condition matches request at stage $stage" }
-      // process this stage, giving the option to continue to the next stage
-      handler.handle.executeVoid(
-        requestProxy,
-        responseWrapper,
-        // "next" optional argument for express handlers
-        ProxyExecutable {
-          logging.debug { "Executable proxy for 'next' handler called from stage $stage" }
-          handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
-        },
-      )
-    } else {
-      logging.debug { "Handler condition does not match request at stage $stage, bypassing" }
-      // skip this stage
-      handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
-    }
   }
 
   companion object {

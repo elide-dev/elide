@@ -57,7 +57,7 @@ internal class ExpressIntrinsic(
   override fun <T> useGuest(block: Context.() -> T): T {
     return contextManager.acquire(operation = block)
   }
-  
+
   companion object {
     const val GLOBAL_EXPRESS = "express"
     val EXPRESS_SYMBOL = GLOBAL_EXPRESS.asJsSymbol()

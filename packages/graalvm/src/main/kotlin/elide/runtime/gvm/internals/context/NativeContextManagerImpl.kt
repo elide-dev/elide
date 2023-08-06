@@ -24,6 +24,7 @@ import java.io.OutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
 import kotlin.io.path.Path
@@ -71,8 +72,8 @@ internal class NativeContextManagerImpl(
   private val disruptor = Disruptor(
     /*eventFactory=*/ ::ContextRequest,
     /*ringBufferSize=*/ DEFAULT_RING_BUFFER_SIZE,
-    /*threadFactory=*/ Thread.ofVirtual().allowSetThreadLocals(true).factory(),
-    /*producerType=*/ProducerType.MULTI,
+    /*threadFactory=*/ Thread.ofPlatform().daemon(true).factory(),
+    /*producerType=*/ ProducerType.MULTI,
     BusySpinWaitStrategy(),
 //    /*waitStrategy=*/when(config.waitStrategy) {
 //      "busySpin" -> BusySpinWaitStrategy()
@@ -183,7 +184,7 @@ internal class NativeContextManagerImpl(
 
     // configure and start the disruptor
     disruptor.handleEventsWith(*handlers)
-    disruptor.start()
+//    disruptor.start()
   }
 
   /** @inheritDoc */
@@ -193,12 +194,30 @@ internal class NativeContextManagerImpl(
     TODO("not yet implemented")
   }
 
+  /** Thread-confined VM executor. */
+  private class VMContainer {
+    private val local = ThreadLocal<VMContext>()
+
+    fun obtain(allocate: () -> VMContext): VMContext {
+      val existing = local.get()
+      if (existing == null) {
+        val ctx = allocate()
+        local.set(ctx)
+      }
+      return local.get()
+    }
+  }
+
+  /** VM container. */
+  private val vm = VMContainer()
+
   override fun <R> acquire(builder: ((VMContext.Builder) -> Unit)?, operation: VMContext.() -> R): R {
     // TODO(@darvld): migrate the builder out of this function, the contexts are constructed at init time
     // submit the operation and wait for it to complete
-    return CompletableFuture<R>().let { future ->
-      disruptor.publishEvent { event, _ -> event.continuation = { future.complete(operation(it)) } }
-      future.get()
+    return vm.obtain {
+      allocateContext(builder)
+    }.let { context ->
+      operation(context)
     }
   }
 

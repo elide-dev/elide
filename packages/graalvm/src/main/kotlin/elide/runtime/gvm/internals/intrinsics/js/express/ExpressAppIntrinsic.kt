@@ -13,22 +13,22 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.express
 
-import io.micronaut.core.async.publisher.Publishers
-import io.netty.buffer.Unpooled
+import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.ChannelInboundHandlerAdapter
+import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
-import io.netty.channel.EventLoopGroup
-import io.netty.channel.epoll.EpollMode.EDGE_TRIGGERED
-import io.netty.channel.nio.NioEventLoopGroup
-import io.netty.channel.socket.ServerSocketChannel
-import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.http.HttpMethod
+import io.netty.channel.epoll.EpollChannelOption
+import io.netty.channel.epoll.EpollEventLoopGroup
+import io.netty.channel.epoll.EpollServerSocketChannel
+import io.netty.channel.socket.SocketChannel
+import io.netty.handler.codec.http.*
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
-import reactor.netty.http.HttpProtocol.*
-import reactor.netty.http.server.HttpServer
 import reactor.netty.http.server.HttpServerRequest
-import kotlin.reflect.KClass
+import java.net.InetSocketAddress
 import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import elide.vm.annotations.Polyglot
@@ -47,10 +47,30 @@ internal typealias ExpressPathMatcher = (path: String, method: String, proxy: Pr
  * server to be built and bound to the specified port.
  */
 internal class ExpressAppIntrinsic(private val context: ExpressContext) : ExpressApp {
+  private inner class GuestHandler : ChannelInboundHandlerAdapter() {
+    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+      // fast return
+      if (msg == LastHttpContent.EMPTY_LAST_CONTENT) return
+
+      if (msg is HttpRequest) context.useGuest {
+        handlePipelineStage(msg, ExpressResponseIntrinsic(ctx), ExpressRequestIntrinsic.from(msg))
+      }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
+      ctx.close()
+    }
+
+    override fun channelReadComplete(ctx: ChannelHandlerContext) {
+      ctx.flush()
+    }
+  }
+
   /** Represents a route handler registered by guest code. */
   private data class Handler(
     val matches: ExpressPathMatcher,
-    val handle: Value,
+    val handle: String,
   )
 
   private val logging by lazy { Logging.of(ExpressAppIntrinsic::class) }
@@ -69,27 +89,39 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
 
   @Polyglot override fun listen(port: Int, callback: Value?) {
     // configure all the route handlers, set the port and bind the socket
-    HttpServer.create().apply {
-      // set `SO_REUSEADDR` to allow multi-binding
+    with(ServerBootstrap()) {
+      val address = InetSocketAddress(port)
+
+      option(EpollChannelOption.SO_REUSEPORT, true)
+      option(ChannelOption.SO_BACKLOG, 8192)
+      option(ChannelOption.SO_REUSEADDR, true)
+
+      group(EpollEventLoopGroup())
+      channel(EpollServerSocketChannel::class.java)
+
+      childHandler(
+        object : ChannelInitializer<SocketChannel>() {
+          override fun initChannel(channel: SocketChannel) {
+            channel.pipeline()
+              .addLast("encoder", HttpResponseEncoder())
+              .addLast(
+                "decoder",
+                HttpRequestDecoder(
+                  /* maxInitialLineLength = */ 4096,
+                  /* maxHeaderSize = */ 8192,
+                  /* maxChunkSize = */  8192,
+                  /* validateHeaders = */false,
+                ),
+              )
+              .addLast(GuestHandler())
+          }
+        },
+      )
+
       childOption(ChannelOption.SO_REUSEADDR, true)
 
-      // warmup the server (load native libs, start event loops, etc.)
-      warmup().block()
-
-      handle { req, res ->
-        // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
-        // val responseWrapper = ExpressResponseIntrinsic(res)
-        // val requestProxy = ExpressRequestIntrinsic.from(req)
-
-        if (req.uri() == "/health") {
-          res.send(Publishers.just(Unpooled.wrappedBuffer(okResponse)))
-        } else context.useGuest {
-          // handlePipelineStage(req, responseWrapper, requestProxy)
-          res.send(Publishers.just(Unpooled.wrappedBuffer(helloResponse)))
-        }
-
-        // responseWrapper.end()
-      }.port(port).bindNow()
+      // start listening
+      bind(address).sync().channel()
 
       // prevent the JVM from exiting while the server is running
       context.pin()
@@ -103,15 +135,37 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
     pipeline.add(
       Handler(
         matches = requestMatcher(path, method?.name()),
-        handle,
+        handle.toString(),
       ),
     )
   }
 
-  companion object {
-    private val okResponse = "OK".encodeToByteArray()
-    private val helloResponse = "Hello".encodeToByteArray()
+  private fun Context.handlePipelineStage(
+    incomingRequest: HttpRequest,
+    responseWrapper: ExpressResponseIntrinsic,
+    requestProxy: ProxyObject,
+    stage: Int = 0,
+  ) {
+    // get the next handler in the pipeline (or end if no more handlers remaining)
+    val handler = pipeline.getOrNull(stage) ?: return
 
+    if (handler.matches(incomingRequest.uri(), incomingRequest.method().name(), requestProxy)) {
+      // process this stage, giving the option to continue to the next stage
+      eval("js", handler.handle).executeVoid(
+        requestProxy,
+        responseWrapper,
+        // "next" optional argument for express handlers
+        ProxyExecutable {
+          handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
+        }
+      )
+    } else {
+      // skip this stage
+      handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
+    }
+  }
+
+  companion object {
     private const val MATCHER_NAME_GROUP = "name"
 
     /** Regex matching path variable templates specified by a guest handler */
@@ -149,17 +203,17 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
 
       return matcher@{ incomingPath, incomingMethod, proxy ->
         // Filter by HTTP method
-        if(method != null && method != incomingMethod) return@matcher false
+        if (method != null && method != incomingMethod) return@matcher false
 
         // if no matcher template is specified, accept all paths
-        if(pattern == null) return@matcher true
+        if (pattern == null) return@matcher true
 
         // otherwise return true when the pattern matches the requested path
         pattern.matchEntire(incomingPath)?.also { match ->
           val requestParams = proxy.getMember("params") as ProxyObject
 
           // extract path variables and add them to the request
-          for(variable in variables) match.groups[variable]?.let {
+          for (variable in variables) match.groups[variable]?.let {
             requestParams.putMember(variable, Value.asValue(it.value))
           }
         } != null

@@ -203,6 +203,9 @@ internal class NativeContextManagerImpl(
       if (existing == null) {
         val ctx = allocate()
         local.set(ctx)
+
+        // explicitly enter the context once
+        ctx.enter()
       }
       return local.get()
     }

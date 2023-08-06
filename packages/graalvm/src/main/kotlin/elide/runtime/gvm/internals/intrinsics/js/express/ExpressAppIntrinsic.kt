@@ -15,12 +15,18 @@ package elide.runtime.gvm.internals.intrinsics.js.express
 
 import io.micronaut.core.async.publisher.Publishers
 import io.netty.buffer.Unpooled
+import io.netty.channel.EventLoopGroup
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.ServerSocketChannel
+import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.http.HttpMethod
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
 import reactor.netty.http.server.HttpServer
 import reactor.netty.http.server.HttpServerRequest
+import reactor.netty.resources.LoopResources
+import kotlin.reflect.KClass
 import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import elide.vm.annotations.Polyglot
@@ -59,33 +65,93 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   @Polyglot override fun use(handler: Value) = registerHandler(handler)
   @Polyglot override fun use(path: String, handler: Value) = registerHandler(handler, path)
 
+  private enum class IoMultiplexer {
+    NIO, EPOLL, KQUEUE, IO_URING
+  }
+
+  private class TransportImpl<T>(
+    val eventLoopGroup: EventLoopGroup,
+    val socketChannel: KClass<T>,
+    val multiplexer: IoMultiplexer,
+    val channelOptions: (HttpServer) -> Unit = { },
+  ) where T: ServerSocketChannel
+
+//  @Suppress("UNUSED")
+//  private fun resolveEventLoop(): TransportImpl<*> = when {
+//    // prefer `io_uring` if available (Linux-only, modern kernels)
+//    io.netty.incubator.channel.uring.IOUring.isAvailable() -> TransportImpl(
+//      io.netty.incubator.channel.uring.IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()),
+//      io.netty.incubator.channel.uring.IOUringServerSocketChannel::class,
+//      IoMultiplexer.IO_URING,
+//    )
+//
+//    // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
+//    io.netty.channel.epoll.Epoll.isAvailable() -> TransportImpl(
+//      io.netty.channel.epoll.EpollEventLoopGroup(),
+//      io.netty.channel.epoll.EpollServerSocketChannel::class,
+//      IoMultiplexer.EPOLL,
+//    )
+//
+//    // next up, opt for `kqueue` on Unix-like systems
+//    io.netty.channel.kqueue.KQueue.isAvailable() -> TransportImpl(
+//      io.netty.channel.kqueue.KQueueEventLoopGroup(),
+//      io.netty.channel.kqueue.KQueueServerSocketChannel::class,
+//      IoMultiplexer.KQUEUE,
+//    )
+//
+//    // otherwise, fallback to NIO
+//    else -> TransportImpl(
+//      NioEventLoopGroup(),
+//      NioServerSocketChannel::class,
+//      IoMultiplexer.NIO,
+//    )
+//  }
+
   @Polyglot override fun listen(port: Int, callback: Value?) {
     // configure all the route handlers, set the port and bind the socket
-    HttpServer.create().warmup().handle { req, res ->
-      // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
-      // val responseWrapper = ExpressResponseIntrinsic(res)
-      // val requestProxy = ExpressRequestIntrinsic.from(req)
+    HttpServer.create().apply {
+//      Logging.named("gvm:js.console").info("Using transport ${transport.multiplexer.name}")
 
-      context.useGuest {
-        // handlePipelineStage(req, responseWrapper, requestProxy)
-        res.send(Publishers.just(Unpooled.wrappedBuffer("Hello".encodeToByteArray())))
-      }
+      // configure event loop group
+//      runOn { native ->
+//        if (!native) {
+//          error("Failed to load native transport")
+//        } else {
+//          transport.eventLoopGroup
+//        }
+//      }
 
-      // responseWrapper.end()
-    }.port(port).bindNow()
+      // warmup the server (load native libs, start event loops, etc.)
+      warmup().block()
 
-    // prevent the JVM from exiting while the server is running
-    context.pin()
+      handle { _, res ->
+        // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
+        // val responseWrapper = ExpressResponseIntrinsic(res)
+        // val requestProxy = ExpressRequestIntrinsic.from(req)
 
-    // notify listeners
-    callback?.executeVoid()
+        context.useGuest {
+          // handlePipelineStage(req, responseWrapper, requestProxy)
+          res.send(Publishers.just(Unpooled.wrappedBuffer("Hello".encodeToByteArray())))
+        }
+
+        // responseWrapper.end()
+      }.port(port).bindNow()
+
+      // prevent the JVM from exiting while the server is running
+      context.pin()
+
+      // notify listeners
+      callback?.executeVoid()
+    }
   }
 
   private fun registerHandler(handle: Value, path: String? = null, method: HttpMethod? = null) {
-    pipeline.add(Handler(
-      matches = requestMatcher(path, method?.name()),
-      handle,
-    ))
+    pipeline.add(
+      Handler(
+        matches = requestMatcher(path, method?.name()),
+        handle,
+      ),
+    )
   }
 
   private fun handlePipelineStage(
@@ -109,7 +175,7 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
         ProxyExecutable {
           logging.debug { "Executable proxy for 'next' handler called from stage $stage" }
           handlePipelineStage(incomingRequest, responseWrapper, requestProxy, stage + 1)
-        }
+        },
       )
     } else {
       logging.debug { "Handler condition does not match request at stage $stage, bypassing" }

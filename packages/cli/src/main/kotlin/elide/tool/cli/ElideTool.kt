@@ -71,7 +71,7 @@ import elide.tool.cli.state.CommandState
   companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
-      System.setProperty("reactor.netty.native", "epoll")
+      System.setProperty("reactor.netty.native", "true")
       System.setProperty("reactor.netty.ioWorkerCount", Runtime.getRuntime().availableProcessors().toString())
     }
 

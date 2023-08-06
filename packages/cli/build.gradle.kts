@@ -211,32 +211,17 @@ dependencies {
     "arm64", "aarch64", "aarch_64" -> "aarch_64"
     else -> error("Unsupported architecture: ${System.getProperty("os.arch")}")
   }
-  when {
-    Os.isFamily(Os.FAMILY_WINDOWS) -> {
-      implementation(libs.netty.tcnative.boringssl.static)
-    }
+  implementation(libs.netty.tcnative.boringssl.static)
+  implementation(libs.netty.transport.native.kqueue)
+  implementation(libs.netty.transport.native.kqueue)
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+  implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
+  implementation(libs.netty.resolver.dns.native.macos)
 
-    Os.isFamily(Os.FAMILY_UNIX) -> {
-      when {
-        Os.isFamily(Os.FAMILY_MAC) -> {
-          implementation(libs.netty.transport.native.kqueue)
-          implementation(libs.netty.transport.native.kqueue)
-          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
-          implementation(libs.netty.resolver.dns.native.macos)
-        }
-
-        else -> {
-          implementation(libs.netty.transport.native.epoll)
-          implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
-          implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
-          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
-        }
-      }
-    }
-
-    else -> {}
-  }
+  implementation(libs.netty.transport.native.epoll)
+  implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
+  implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
+  implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("linux-$arch") })
 
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)

@@ -43,6 +43,11 @@ module elide.graalvm {
   requires org.apache.commons.compress;
   requires io.micronaut.context;
   requires io.netty.buffer;
+  requires reactor.core;
+  requires io.netty.transport;
+  requires io.netty.transport.classes.epoll;
+  requires io.netty.transport.classes.kqueue;
+  requires io.netty.incubator.transport.classes.io_uring;
 
   exports elide.runtime.intrinsics.js;
   exports elide.runtime.intrinsics.js.express;

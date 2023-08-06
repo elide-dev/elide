@@ -35,6 +35,9 @@
         </sift>
     </appender>
 
+    <logger name="elide.runtime.gvm.internals.intrinsics.js.express.ExpressIntrinsic" level="trace" />
+    <logger name="elide.runtime.gvm.internals.intrinsics.js.express.ExpressAppIntrinsic" level="trace" />
+
     <logger name="io.micronaut.context.condition" level="off"/>
     <logger name="io.micronaut.http.netty.channel" level="off"/>
     <logger name="io.micronaut.context.env" level="off"/>

@@ -1067,9 +1067,6 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
     try {
-      // @TODO(sgammon): temporary output hack
-      Logging.named("gvm:js.console").info("Using event loop: ${eventLoop::class.java.simpleName}")
-
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 

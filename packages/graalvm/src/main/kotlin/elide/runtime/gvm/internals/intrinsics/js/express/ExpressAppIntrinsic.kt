@@ -32,6 +32,11 @@ import java.net.InetSocketAddress
 import elide.runtime.Logging
 import elide.runtime.intrinsics.js.express.ExpressApp
 import elide.vm.annotations.Polyglot
+import io.netty.channel.EventLoopGroup
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.ServerSocketChannel
+import io.netty.channel.socket.nio.NioServerSocketChannel
+import kotlin.reflect.KClass
 
 /**
  * A function that tests whether an incoming [HttpServerRequest] should be passed to a handler, using a template string
@@ -87,17 +92,62 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
   @Polyglot override fun use(handler: Value) = registerHandler(handler)
   @Polyglot override fun use(path: String, handler: Value) = registerHandler(handler, path)
 
-  @Polyglot override fun listen(port: Int, callback: Value?) {
+  private enum class IoMultiplexer {
+    NIO, EPOLL, KQUEUE, IO_URING
+  }
+
+  private class TransportImpl<T>(
+    val eventLoopGroup: EventLoopGroup,
+    val socketChannel: KClass<T>,
+    val multiplexer: IoMultiplexer,
+    val channelOptions: ServerBootstrap.() -> Unit = { },
+  ) where T: ServerSocketChannel
+
+  @Suppress("UNUSED")
+  private fun resolveEventLoop(): TransportImpl<*> = when {
+    // prefer `io_uring` if available (Linux-only, modern kernels)
+    io.netty.incubator.channel.uring.IOUring.isAvailable() -> TransportImpl(
+      io.netty.incubator.channel.uring.IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()),
+      io.netty.incubator.channel.uring.IOUringServerSocketChannel::class,
+      IoMultiplexer.IO_URING,
+    )
+
+    // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
+    io.netty.channel.epoll.Epoll.isAvailable() -> TransportImpl(
+      io.netty.channel.epoll.EpollEventLoopGroup(),
+      io.netty.channel.epoll.EpollServerSocketChannel::class,
+      IoMultiplexer.EPOLL,
+    ) {
+      option(EpollChannelOption.SO_REUSEPORT, true)
+    }
+
+    // next up, opt for `kqueue` on Unix-like systems
+    io.netty.channel.kqueue.KQueue.isAvailable() -> TransportImpl(
+      io.netty.channel.kqueue.KQueueEventLoopGroup(),
+      io.netty.channel.kqueue.KQueueServerSocketChannel::class,
+      IoMultiplexer.KQUEUE,
+    )
+
+    // otherwise, fallback to NIO
+    else -> TransportImpl(
+      NioEventLoopGroup(),
+      NioServerSocketChannel::class,
+      IoMultiplexer.NIO,
+    )
+  }
+
+  @Polyglot override fun listen(port: Int, callback: Value?): Unit = resolveEventLoop().let { transport ->
     // configure all the route handlers, set the port and bind the socket
     with(ServerBootstrap()) {
+      Logging.named("gvm:js.console").info("Using transport: ${transport.multiplexer.name}")
+
       val address = InetSocketAddress(port)
 
-      option(EpollChannelOption.SO_REUSEPORT, true)
       option(ChannelOption.SO_BACKLOG, 8192)
       option(ChannelOption.SO_REUSEADDR, true)
-
-      group(EpollEventLoopGroup())
-      channel(EpollServerSocketChannel::class.java)
+      transport.channelOptions.invoke(this)
+      group(transport.eventLoopGroup)
+      channel(transport.socketChannel.java)
 
       childHandler(
         object : ChannelInitializer<SocketChannel>() {

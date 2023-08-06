@@ -20,6 +20,7 @@ import ch.qos.logback.core.ConsoleAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
+import io.netty.channel.EventLoopGroup
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
@@ -341,6 +342,9 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // All VFS configurators.
   @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
+
+  // All VFS configurators.
+  @Inject lateinit var eventLoop: EventLoopGroup
 
   // Server manager.
   @Inject private lateinit var server: ServerAgent
@@ -1063,6 +1067,9 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
     try {
+      // @TODO(sgammon): temporary output hack
+      Logging.named("gvm:js.console").info("Using event loop: ${eventLoop::class.java.simpleName}")
+
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 

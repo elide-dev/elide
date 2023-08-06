@@ -35,6 +35,7 @@ import kotlin.properties.Delegates
 import kotlin.system.exitProcess
 import elide.annotations.Eager
 import elide.annotations.Inject
+import elide.annotations.Named
 import elide.annotations.Singleton
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.info.ToolInfoCommand
@@ -70,6 +71,8 @@ import elide.tool.cli.state.CommandState
   companion object {
     init {
       System.setProperty("elide.js.vm.enableStreams", "true")
+      System.setProperty("reactor.netty.native", "epoll")
+      System.setProperty("reactor.netty.ioWorkerCount", Runtime.getRuntime().availableProcessors().toString())
     }
 
     /** Name of the tool. */
@@ -113,7 +116,9 @@ import elide.tool.cli.state.CommandState
     @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
 
     // Private execution entrypoint for customizing core Picocli settings.
-    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().args(*args).start().use {
+    @JvmStatic internal fun exec(args: Array<String>): Int = ApplicationContext.builder().apply {
+      ToolConfigurator().configure(this)
+    }.args(*args).start().use {
       Statics.args.set(args.toList())
       CommandLine(ElideTool::class.java, MicronautFactory(it))
         .setCommandName(TOOL_NAME)
@@ -148,7 +153,7 @@ import elide.tool.cli.state.CommandState
           .eagerInitSingletons(true)
           .environmentPropertySource(false)
           .enableDefaultPropertySources(false)
-          .overrideConfigLocations("classpath:elide.yml")
+          .overrideConfigLocations("classpath:application.yml")
       }
     }
 
@@ -184,7 +189,7 @@ import elide.tool.cli.state.CommandState
   }
 
   // Bean context.
-  @Inject internal lateinit var beanContext: BeanContext
+  @Inject @Named("native") internal lateinit var beanContext: BeanContext
 
   /** Verbose logging mode (wins over `--quiet`). */
   @set:Option(

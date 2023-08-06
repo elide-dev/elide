@@ -4,7 +4,7 @@
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <target>System.err</target>
+        <target>System.out</target>
         <encoder>
             <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
@@ -35,6 +35,8 @@
         </sift>
     </appender>
 
+    <logger name="io.micronaut.context.condition" level="off"/>
+    <logger name="io.micronaut.http.netty.channel" level="off"/>
     <logger name="io.micronaut.context.env" level="off"/>
     <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
 

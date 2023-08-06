@@ -61,7 +61,7 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
 
   @Polyglot override fun listen(port: Int, callback: Value?) {
     // configure all the route handlers, set the port and bind the socket
-    HttpServer.create().handle { req, res ->
+    HttpServer.create().warmup().handle { req, res ->
       // TODO(@darvld): restore use of the pipeline when supported by the disruptor context manager
       // val responseWrapper = ExpressResponseIntrinsic(res)
       // val requestProxy = ExpressRequestIntrinsic.from(req)

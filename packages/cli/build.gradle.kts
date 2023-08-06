@@ -193,6 +193,9 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
 
   api(libs.micronaut.inject)
+  implementation(libs.micronaut.http)
+  implementation(libs.micronaut.http.server)
+  implementation(libs.micronaut.http.server.netty)
   implementation(libs.micronaut.picocli)
   runtimeOnly(libs.micronaut.context)
   runtimeOnly(libs.micronaut.kotlin.runtime)

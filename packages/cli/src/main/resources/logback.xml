@@ -4,7 +4,7 @@
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <target>System.out</target>
+        <target>System.err</target>
         <encoder>
             <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
         </encoder>
@@ -38,7 +38,9 @@
     <logger name="io.micronaut.context.env" level="off"/>
     <logger name="io.micronaut.http.client.netty.ssl.NettyClientSslBuilder" level="off" />
 
-    <logger name="gvm:js.console" level="trace" />
+    <logger name="gvm:js.console" level="trace">
+        <appender-ref ref="${APPENDER}" />
+    </logger>
 
     <logger name="org.jline" level="error" />
     <logger name="info.picocli" level="error" />

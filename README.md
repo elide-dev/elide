@@ -24,6 +24,7 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Kotlin/JS. IR supported](https://img.shields.io/badge/kotlin-IR-yellow?logo=kotlin&logoColor=yellow)](https://kotl.in/jsirsupported)
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
+[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
 
 Latest version: `1.0-v3-alpha4-b9`
 

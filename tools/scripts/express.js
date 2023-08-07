@@ -21,7 +21,7 @@ app.get('/hello', (req, res) => {
 
 app.get('/hello/:name', (req, res) => {
   const name = req.params.name;
-  console.log(`said hello to name: ${req.params.name}`);
+  //console.log(`said hello to name: ${req.params.name}`);
   res.send(`Hello ${name}!`)
 })
 

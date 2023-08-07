@@ -270,9 +270,9 @@ internal class NativeContextManagerImpl(
       if (!ENABLE_ISOLATES) null else StaticProperty.of("engine.MaxIsolateMemory", "2GB"),
 
       // if we're running in a native image, enabled the code compile cache
-      if (!auxCache) null else StaticProperty.active("engine.CachePreinitializeContext"),
-      if (!auxCache) null else StaticProperty.of("engine.CacheCompile", "hot"),
-      if (!auxCache) null else StaticProperty.of(
+      if (!auxCache || !isNativeImage) null else StaticProperty.active("engine.UsePreInitializedContext"),
+      if (!auxCache || !isNativeImage) null else StaticProperty.of("engine.CacheCompile", "hot"),
+      if (!auxCache || !isNativeImage) null else StaticProperty.of(
         "engine.Cache",
         Path("/", "tmp", "elide-${ProcessHandle.current().pid()}.vmcache").toAbsolutePath().toString()
       ),

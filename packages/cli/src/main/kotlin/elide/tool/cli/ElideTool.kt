@@ -193,7 +193,7 @@ import elide.tool.cli.state.CommandState
   }
 
   // Bean context.
-  @Inject @Named("native") internal lateinit var beanContext: BeanContext
+  @Inject internal lateinit var beanContext: BeanContext
 
   /** Verbose logging mode (wins over `--quiet`). */
   @set:Option(

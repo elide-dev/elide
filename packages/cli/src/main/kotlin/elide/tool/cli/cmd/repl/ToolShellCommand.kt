@@ -343,9 +343,6 @@ import org.graalvm.polyglot.Engine as VMEngine
   // All VFS configurators.
   @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
 
-  // All VFS configurators.
-  @Inject lateinit var eventLoop: EventLoopGroup
-
   // Server manager.
   @Inject private lateinit var server: ServerAgent
 

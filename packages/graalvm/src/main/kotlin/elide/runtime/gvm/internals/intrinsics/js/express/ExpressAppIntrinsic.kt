@@ -142,7 +142,6 @@ internal class ExpressAppIntrinsic(private val context: ExpressContext) : Expres
       Logging.named("gvm:js.console").info("Using transport: ${transport.multiplexer.name}")
 
       val address = InetSocketAddress(port)
-
       option(ChannelOption.SO_BACKLOG, 8192)
       option(ChannelOption.SO_REUSEADDR, true)
       transport.channelOptions.invoke(this)

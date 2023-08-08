@@ -56,8 +56,8 @@ val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
 val enablePython = false
-val enableRuby = false
-val enableTools = true
+val enableRuby = true
+val enableTools = false
 val enableSbom = true
 val enableG1 = true
 val enablePgo = false
@@ -414,12 +414,14 @@ val commonNativeArgs = listOf(
   "-H:+BuildReport",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
+  "-H:+AddAllCharsets",
   "-H:+UseContainerSupport",
   "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
-  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+  "-H:MaxRuntimeCompileMethods=5400",
+  "-Dpolyglot.image-build-time.PreinitializeContexts=js,ruby",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
@@ -546,6 +548,10 @@ val initializeAtBuildTime = listOf(
   "ch.qos.logback",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",
+  "org.truffleruby",
+  "org.jcodings",
+  "org.joni",
+  "org.yarp",
   "org.codehaus.stax2.typed.Base64Variants",
   "org.bouncycastle.util.Properties",
   "org.bouncycastle.util.Strings",
@@ -823,10 +829,18 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
 
 //configureJava9ModuleInfo(project)
 
+val composeVersionOverride: String = libs.versions.compose.get()
+
 configurations.all {
   resolutionStrategy.dependencySubstitution {
     substitute(module("net.java.dev.jna:jna"))
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
+
+    substitute(module("org.jetbrains.compose.compiler:compiler"))
+      .using(module("org.jetbrains.compose.compiler:compiler:$composeVersionOverride"))
+
+    substitute(module("org.jetbrains.compose.runtime:runtime"))
+      .using(module("org.jetbrains.compose.runtime:runtime:$composeVersionOverride"))
   }
 
   // provided by runtime

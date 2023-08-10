@@ -25,8 +25,8 @@ import elide.runtime.gvm.ExecutionInputs
 /**
  * TBD.
  */
-internal interface ContextManager<Context, Builder> : ContextFactory<Context, Builder> {
-  companion object {
+public interface ContextManager<Context, Builder> : ContextFactory<Context, Builder> {
+  public companion object {
     /** Default context execution timeout (hard limit). */
     private val DEFAULT_TIMEOUT = 30.seconds
   }
@@ -34,34 +34,34 @@ internal interface ContextManager<Context, Builder> : ContextFactory<Context, Bu
   /**
    * TBD.
    */
-  interface VMInvocation<T: ExecutionInputs>
+  public interface VMInvocation<T: ExecutionInputs>
 
   /**
    * TBD.
    */
-  fun engine(): Engine
+  public fun engine(): Engine
 
   /**
    * TBD.
    */
-  fun <R> executeAsync(operation: Context.() -> R): CompletableFuture<R>
+  public fun <R> executeAsync(operation: Context.() -> R): CompletableFuture<R>
 
   /**
    * TBD.
    */
-  suspend fun <R> acquireSuspendAsync(operation: Context.() -> R): Deferred<R> = executeAsync(
+  public suspend fun <R> acquireSuspendAsync(operation: Context.() -> R): Deferred<R> = executeAsync(
     operation
   ).asDeferred()
 
   /**
    * TBD.
    */
-  suspend fun <R> acquireSuspend(operation: Context.() -> R): R = acquireSuspendAsync(operation).await()
+  public suspend fun <R> acquireSuspend(operation: Context.() -> R): R = acquireSuspendAsync(operation).await()
 
   /**
    *
    */
-  fun <R> executeBlocking(timeout: Duration = DEFAULT_TIMEOUT, operation: Context.() -> R): R = executeAsync(
+  public fun <R> executeBlocking(timeout: Duration = DEFAULT_TIMEOUT, operation: Context.() -> R): R = executeAsync(
     operation
   ).get()
 }

@@ -13,12 +13,33 @@
 
 package elide.runtime.gvm.internals
 
+import java.util.*
 import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.InvocationMode
 
 /** Enumerates known/supported GraalVM guest languages. */
 public enum class GraalVMGuest (override val symbol: String, override val label: String) : GuestLanguage {
   /**
    * ECMA2022-compliant JavaScript via Graal JS+JVM.
    */
-  JAVASCRIPT(symbol = "js", label = "JavaScript")
+  JAVASCRIPT(symbol = "js", label = "JavaScript") {
+    override val supportsSSR: Boolean get() = true
+    override val supportsStreamingSSR: Boolean get() = true
+    override val invocationModes: EnumSet<InvocationMode> get() = EnumSet.allOf(InvocationMode::class.java)
+  },
+
+  /**
+   * Python v3.0+ support via GraalPy
+   */
+  PYTHON(symbol = "python", label = "Python"),
+
+  /**
+   * Ruby support via TruffleRuby
+   */
+  RUBY(symbol = "python", label = "Python"),
+
+  /**
+   * JVM support via SVM and Espresso
+   */
+  JVM(symbol = "java", label = "JVM"),
 }

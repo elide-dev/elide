@@ -32,7 +32,7 @@ import org.graalvm.polyglot.Context as VMContext
  * Implements an [GuestScript] type  for use with GraalVM types, such as [GraalVMGuest] (enumerating a supported
  * language) and related framework types like [ExecutableScript].
  */
-internal abstract class AbstractGVMScript protected constructor (
+public abstract class AbstractGVMScript protected constructor (
   private val language: GraalVMGuest,
   private val source: ExecutableScript.ScriptSource,
   protected val spec: String,

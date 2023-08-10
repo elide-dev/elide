@@ -64,7 +64,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       val logging = Statics.logging
       logging.trace("Retrieving supported guest languages")
       return _engine.languages.values.mapNotNull {
-        val supported = GuestLanguage.resolveFromId(it.id)
+        val supported = GuestLanguage.resolveFromEngine(it.id)
         if (supported == null) {
           logging.debug("Language '${it.name}' not supported for CLI use: no support in Elide")
           null

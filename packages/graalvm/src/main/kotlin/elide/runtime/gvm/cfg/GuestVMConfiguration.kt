@@ -42,6 +42,12 @@ internal interface GuestVMConfiguration : Toggleable {
     /** WASM language tag. */
     const val LANGUAGE_WASM: String = "wasm"
 
+    /** Python language tag. */
+    const val LANGUAGE_PYTHON: String = "python"
+
+    /** Ruby language tag. */
+    const val LANGUAGE_RUBY: String = "ruby"
+
     /** Java language tag. */
     const val LANGUAGE_JAVA: String = "java"
 
@@ -49,6 +55,8 @@ internal interface GuestVMConfiguration : Toggleable {
     val DEFAULT_LANGUAGES: List<String> = listOf(
       LANGUAGE_JS,
       LANGUAGE_WASM,
+      LANGUAGE_PYTHON,
+      LANGUAGE_RUBY,
     )
 
     /** Default character set to use with raw data exchanged with the JS VM. */

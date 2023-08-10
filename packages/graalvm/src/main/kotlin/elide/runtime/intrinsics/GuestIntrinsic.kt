@@ -20,6 +20,7 @@ import java.util.function.BiFunction
 import java.util.function.Function
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
+import elide.runtime.intrinsics.js.Symbol
 
 /**
  * # Guest Intrinsic
@@ -27,27 +28,27 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
  * Applied to all intrinsic classes which are implemented for a guest language, in addition to various annotations which
  * designate the use context of a given implementation.
  */
-internal interface GuestIntrinsic {
+public interface GuestIntrinsic {
   /**
    * TBD.
    */
-  interface IntrinsicBindings : Map<JsSymbol, Any>
+  public interface IntrinsicBindings : Map<Symbol, Any>
 
   /**
    * TBD.
    */
-  interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<JsSymbol, Any>, ProxyObject {
+  public interface MutableIntrinsicBindings : IntrinsicBindings, MutableMap<Symbol, Any>, ProxyObject {
     /** factory for creating empty bindings. */
-    object Factory {
+    public object Factory {
       /** @return Mutable intrinsic bindings backed by a map. */
-      @JvmStatic fun create(): MutableIntrinsicBindings = wrap(TreeMap<JsSymbol, Any>())
+      @JvmStatic public fun create(): MutableIntrinsicBindings = wrap(TreeMap<Symbol, Any>())
 
       /** @return Mutable intrinsic bindings backed by a map. */
-      @JvmStatic fun wrap(target: MutableMap<JsSymbol, Any>): MutableIntrinsicBindings {
+      @JvmStatic public fun wrap(target: MutableMap<Symbol, Any>): MutableIntrinsicBindings {
         val bindingSet = TreeSet<String>()
-        return object: MutableIntrinsicBindings, MutableMap<JsSymbol, Any> by target {
-          // Check uniqueness of an intrinsic binding name.
-          private fun checkName(key: JsSymbol) {
+        return object: MutableIntrinsicBindings, MutableMap<Symbol, Any> by target {
+          // Check the uniqueness of an intrinsic binding name.
+          private fun checkName(key: Symbol) {
             check(key.symbol !in bindingSet) {
               "Intrinsic binding '$key' is already bound."
             }
@@ -59,18 +60,18 @@ internal interface GuestIntrinsic {
           )
 
           /** Removing intrinsics is not allowed; this method always throws. */
-          override fun remove(key: JsSymbol): Any = notAllowed()
+          override fun remove(key: Symbol): Any = notAllowed()
 
           /** Clearing intrinsics is not allowed; this method always throws. */
           override fun clear() = notAllowed()
 
-          override fun put(key: JsSymbol, value: Any): Any? {
+          override fun put(key: Symbol, value: Any): Any? {
             checkName(key)
             bindingSet.add(key.symbol)
             return target.put(key ,value)
           }
 
-          override fun putAll(from: Map<out JsSymbol, Any>) {
+          override fun putAll(from: Map<out Symbol, Any>) {
             from.keys.forEach {
               checkName(it)
               bindingSet.add(it.symbol)
@@ -78,13 +79,13 @@ internal interface GuestIntrinsic {
             }
           }
 
-          override fun compute(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any?, out Any?>)
+          override fun compute(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any?, out Any?>)
             = notAllowed()
 
-          override fun computeIfAbsent(key: JsSymbol, mappingFunction: Function<in JsSymbol, out Any>)
+          override fun computeIfAbsent(key: Symbol, mappingFunction: Function<in Symbol, out Any>)
             = notAllowed()
 
-          override fun computeIfPresent(key: JsSymbol, remappingFunction: BiFunction<in JsSymbol, in Any, out Any?>)
+          override fun computeIfPresent(key: Symbol, remappingFunction: BiFunction<in Symbol, in Any, out Any?>)
             = notAllowed()
 
           override fun getMember(key: String): Any = target[JsSymbol(key)] ?:
@@ -107,7 +108,7 @@ internal interface GuestIntrinsic {
    *
    * @return Guest language bound to this intrinsic.
    */
-  fun language(): GuestLanguage
+  public fun language(): GuestLanguage
 
   /**
    * Indicate whether this intrinsic is intended to be used with a given guest [language].
@@ -115,7 +116,7 @@ internal interface GuestIntrinsic {
    * @param language Language to check.
    * @return `true` if this intrinsic is intended to be used with the given language, `false` otherwise.
    */
-  fun supports(language: GuestLanguage): Boolean {
+  public fun supports(language: GuestLanguage): Boolean {
     return language().symbol == language.symbol
   }
 
@@ -128,10 +129,10 @@ internal interface GuestIntrinsic {
    *
    * @param bindings Language bindings target where the intrinsic should be installed.
    */
-  fun install(bindings: MutableIntrinsicBindings)
+  public fun install(bindings: MutableIntrinsicBindings)
 
   /**
    * TBD.
    */
-  fun displayName(): String
+  public fun displayName(): String
 }

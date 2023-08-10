@@ -14,6 +14,7 @@
 package elide.runtime.gvm.internals
 
 import elide.runtime.gvm.ExecutableScript
+import elide.runtime.gvm.InvocationBindings
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -32,7 +33,7 @@ import org.graalvm.polyglot.Value as GuestValue
  * Dispatch modes supported on GraalVM are enumerated in [DispatchStyle], and, at the time of this writing, include:
  *
  * - [DispatchStyle.UNARY]: Basic dispatch with one set of inputs and one output. In this mode, the guest VM executes
- *   in what amounts to be a "function". No output is available until the guest execution terminates.
+ *   in what amounts to be a "function." No output is available until the guest execution terminates.
  *
  * - [DispatchStyle.SERVER]: Dispatch of HTTP requests to the guest. Each HTTP request results in an invocation of the
  *   guest code. In this mode, the guest VM is entirely "in charge" of the request and response lifecycle. The server
@@ -43,11 +44,11 @@ import org.graalvm.polyglot.Value as GuestValue
  *   streamed in chunks). In this mode, the guest VM is charged with rendering output based on input, but is not
  *   ultimately authoritative over the response or the request lifecycle.
  */
-internal abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindings
+public abstract class GVMInvocationBindings<Bindings, Script> : InvocationBindings
   where Bindings : GVMInvocationBindings<Bindings, Script>,
         Script: ExecutableScript {
   /** Enumerates dispatch styles supported by this implementation. */
-  enum class DispatchStyle {
+  public enum class DispatchStyle {
     /** Regular "unary"-style dispatch, with a single source execution and output. */
     UNARY,
 

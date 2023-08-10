@@ -90,19 +90,30 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param Code Concrete executable script type associated with this VM implementation.
  * @param Bindings Invocation bindings surface definition for use with this VM implementation.
  */
-internal abstract class AbstractVMEngine<
+public abstract class AbstractVMEngine<
   Config : GuestRuntimeConfiguration,
   Code: ExecutableScript,
   Bindings: InvocationBindings,
-> (
-  private val contextManager: ContextManager<VMContext, VMContext.Builder>,
-  protected val language: GraalVMGuest,
-  protected val config: Config,
-) : VMEngineImpl<Config> {
+> (protected val language: GraalVMGuest) : VMEngineImpl<Config> {
   internal companion object {
     /** Manifest name for runtime info. */
     internal const val RUNTIME_MANIFEST = "runtime.json"
   }
+
+  /**
+   *
+   */
+  public abstract fun resolveConfig(): Config
+
+  /**
+   * Context manager which created this VM engine.
+   */
+  internal lateinit var contextManager: ContextManager<VMContext, VMContext.Builder>
+
+  /**
+   * Access to VM-specific configuration.
+   */
+  protected val config: Config get() = resolveConfig()
 
   /**
    * ## Runtime Info.
@@ -275,8 +286,7 @@ internal abstract class AbstractVMEngine<
     }
   )
 
-  init {
-    // install context factory
+  internal fun initialize() {
     contextManager.installContextFactory {
       builder(it)
     }
@@ -340,7 +350,7 @@ internal abstract class AbstractVMEngine<
    */
   @Suppress("DEPRECATION")
   private fun configureVM(builder: VMContext.Builder) {
-    // set strong secure baseline for context guest access
+    // set a strong secure baseline for context guest access
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowPolyglotAccess(PolyglotAccess.ALL)
@@ -779,7 +789,7 @@ internal abstract class AbstractVMEngine<
    * @param context Context builder which is in the process of being configured.
    * @return Stream of [VMProperty] instances, or adherents, to test and conditionally apply to the resulting context.
    */
-  protected abstract fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty>
+  protected abstract fun configure(engine: Engine, context: VMContext.Builder): Stream<out VMProperty>
 
   /**
    * ## Implementation: Prepare bindings.

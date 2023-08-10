@@ -150,12 +150,19 @@ kapt {
   keepJavacAnnotationProcessors = true
 }
 
+val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
+
 buildConfig {
   className("ElideCLITool")
   packageName("elide.tool.cli.cfg")
   useKotlinOutput()
 
-  buildConfigField("String", "ELIDE_TOOL_VERSION", "\"${libs.versions.elide.asProvider().get()}\"")
+  val cliVersion = if (stamp) {
+    libs.versions.elide.asProvider().get()
+  } else {
+    "1.0-dev-${System.currentTimeMillis() / 1000 / 60 / 60 / 24}"
+  }
+  buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
 }
 
 dependencies {
@@ -165,18 +172,17 @@ dependencies {
   kapt(libs.picocli.codegen)
 
   api(projects.packages.base)
-  implementation(projects.packages.graalvm)
   implementation(kotlin("stdlib-jdk8"))
-  implementation(libs.kotlin.scripting.common)
-  implementation(libs.kotlin.scripting.dependencies)
-  implementation(libs.kotlin.scripting.dependencies.maven)
-  implementation(libs.kotlin.scripting.jvm)
-  implementation(libs.kotlin.scripting.jvm.host)
-  implementation(libs.kotlin.scripting.jvm.engine)
   implementation(libs.logback)
   implementation(libs.conscrypt)
   implementation(libs.tink)
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
+
+  // GraalVM
+  implementation(projects.packages.graalvm)
+  implementation(projects.packages.graalvmPy)
+  implementation(projects.packages.graalvmRb)
+  implementation(projects.packages.graalvmKt)
 
   api(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
@@ -240,8 +246,6 @@ dependencies {
     compileOnly(libs.graalvm.sdk)
     compileOnly(libs.graalvm.truffle.api)
   }
-  compileOnly(libs.graalvm.espresso.polyglot)
-  compileOnly(libs.graalvm.espresso.hotswap)
   compileOnly(libs.graalvm.tools.lsp.api)
   compileOnly(libs.graalvm.truffle.nfi)
   compileOnly(libs.graalvm.truffle.nfi.libffi)
@@ -437,6 +441,7 @@ val commonNativeArgs = listOf(
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
+  "--trace-object-instantiation=elide.tool.cli.HttpResponseFactoryFactory",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,

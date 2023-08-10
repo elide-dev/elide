@@ -85,13 +85,22 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   /** Implements a thread factory for tool execution operations. */
   private class ToolThreadFactory : ThreadFactory {
-    override fun newThread(target: Runnable): Thread = Thread
-      .ofPlatform()
-      .allowSetThreadLocals(true)
-      .inheritInheritableThreadLocals(true)
-      .name("elide", 1337L)
-      .priority(Thread.MAX_PRIORITY)
-      .unstarted(target)
+    override fun newThread(target: Runnable): Thread {
+//      Thread
+//        .ofPlatform()
+//        .allowSetThreadLocals(true)
+//        .inheritInheritableThreadLocals(true)
+//        .name("elide", 1337L)
+//        .priority(Thread.MAX_PRIORITY)
+//        .unstarted(target)
+      return Thread().apply {
+        priority = Thread.MAX_PRIORITY
+        isDaemon = true
+//        isUncaughtExceptionHandler = Thread.UncaughtExceptionHandler { _, e ->
+//          e.printStackTrace()
+//        }
+      }
+    }
   }
 
   /** Output controller base surface. */

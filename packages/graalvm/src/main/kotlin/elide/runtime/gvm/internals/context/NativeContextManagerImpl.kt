@@ -53,7 +53,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     const val enableIsolates = false
 
     // Whether to enable the auxiliary cache.
-    const val enableAuxiliaryCache = true
+    const val enableAuxiliaryCache = false
 
     // Flipped if we're building or running a native image.
     private val isNativeImage = ImageInfo.inImageCode()
@@ -75,10 +75,10 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       StaticProperty.active("engine.BackgroundCompilation"),
       StaticProperty.active("engine.UsePreInitializedContext"),
       StaticProperty.active("engine.Compilation"),
-      StaticProperty.active("engine.Inlining"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
-      StaticProperty.active("engine.InlineAcrossTruffleBoundary"),
+      StaticProperty.active("compiler.Inlining"),
+      StaticProperty.active("compiler.InlineAcrossTruffleBoundary"),
 
       // isolate options
       if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),

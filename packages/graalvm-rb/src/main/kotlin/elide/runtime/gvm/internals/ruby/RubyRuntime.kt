@@ -14,13 +14,21 @@
 package elide.runtime.gvm.internals.ruby
 
 import io.micronaut.context.annotation.Requires
+import org.graalvm.polyglot.Source
+import java.net.URI
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
+import elide.annotations.Context
 import elide.annotations.Inject
+import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GraalVMGuest.RUBY
+import elide.runtime.gvm.internals.GuestVFS
 import elide.runtime.gvm.internals.VMProperty
 import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.ruby.RubyExecutableScript as RubyScript
@@ -40,7 +48,36 @@ import org.graalvm.polyglot.Value as GuestValue
 internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindings>(RUBY) {
   internal companion object {
     const val ENGINE_RUBY: String = "ruby"
+    private const val RUNTIME_PREINIT: String = "__runtime__.rb"
+    private const val RUBY_MIMETYPE: String = "application/x-ruby"
+
+    // Whether runtime assets have loaded.
+    private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
+
+    // Info about the runtime, loaded from the runtime bundle manifest.
+    internal val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
+
+    // Assembled runtime init code, loaded from `runtimeInfo`.
+    private val runtimeInit: AtomicReference<Source> = AtomicReference(null)
+
+    init {
+      check(!runtimeReady.get()) {
+        "Runtime cannot be prepared more than once (Ruby runtime must operate as a singleton)"
+      }
+
+      resolveRuntimeInfo(RUBY.symbol, RUNTIME_PREINIT, RUBY_MIMETYPE).let { (info, facade) ->
+        runtimeInfo.set(info)
+        runtimeInit.set(facade)
+        runtimeReady.set(true)
+      }
+    }
   }
+
+  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
+  @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
+    GuestLanguage.RUBY,
+    { runtimeInfo.get() }
+  )
 
   @Inject lateinit var rubyConfig: RubyConfig
 
@@ -49,6 +86,11 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
   override fun configure(engine: VMEngine, context: VMBuilder): Stream<out VMProperty> = listOfNotNull(
     VMStaticProperty.active("ruby.embedded"),
     VMStaticProperty.active("ruby.no-home-provided"),
+    VMStaticProperty.active("ruby.platform-native-interrupt"),
+    VMStaticProperty.active("ruby.platform-native"),
+    VMStaticProperty.active("ruby.polyglot-stdio"),
+    VMStaticProperty.active("ruby.rubygems"),
+    VMStaticProperty.inactive("ruby.virtual-thread-fibers"),
     VMStaticProperty.inactive("ruby.cexts"),
   ).stream()
 

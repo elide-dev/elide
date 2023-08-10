@@ -1,0 +1,12 @@
+{
+  "engine": "v3",
+  "language": "LLVM",
+  "vfs": [],
+  "artifacts": [],
+  "image": {
+    "type": "native",
+    "darwin": {
+      "arm64": "llvm-darwin-aarch64.tar.xz"
+    }
+  }
+}

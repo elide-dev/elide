@@ -38,6 +38,7 @@ kotlin {
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.graalvmJvm)
   implementation(libs.kotlin.scripting.common)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven)

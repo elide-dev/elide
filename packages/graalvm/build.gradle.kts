@@ -165,6 +165,8 @@ dependencies {
 
   // Compression
   implementation(libs.commons.compress)
+  implementation(libs.xz)
+  implementation(libs.zstd)
 
   // Micronaut
   runtimeOnly(libs.micronaut.graal)

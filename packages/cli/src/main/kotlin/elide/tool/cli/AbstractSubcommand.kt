@@ -292,6 +292,9 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Execution context for the current tool run. */
   protected lateinit var context: ToolContext<State>
 
+  /** Whether this is an interactive session. */
+  val interactive: AtomicBoolean = AtomicBoolean(false)
+
   /** Debug flag status. */
   val debug: Boolean get() = base.debug
 
@@ -348,16 +351,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       exec = toolContext.exec
       context = toolContext
 
-      // call into the subclass to initialize the VM, as needed
-      if (initializeVM(state)) {
-        // activate the context, having been configured by now via `configureVM`
-        try {
-          vmContextFactory.activate()
-        } catch (err: Throwable) {
-          logging.error("Failed to activate VM context factory", err)
-          throw err
-        }
-      }
+      initializeVM(state)
       op.invoke(toolContext)
     }
   }
@@ -368,7 +362,7 @@ import org.graalvm.polyglot.Engine as VMEngine
       logging.debug("Cleaning up tool resources")
       close()
 
-      runBlocking {
+      if (!quiet && interactive.get()) runBlocking {
         out.pretty({
           line("Exiting session. Have a great day! \uD83D\uDC4B")
         }, {

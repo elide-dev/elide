@@ -1,0 +1,12 @@
+{
+  "engine": "v3",
+  "language": "RUBY",
+  "vfs": [],
+  "artifacts": [],
+  "image": {
+    "type": "native",
+    "darwin": {
+      "arm64": "ruby-darwin-aarch64.tar.gz"
+    }
+  }
+}

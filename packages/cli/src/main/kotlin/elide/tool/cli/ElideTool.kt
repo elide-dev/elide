@@ -37,6 +37,7 @@ import elide.annotations.Eager
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.err.AbstractToolError
@@ -54,6 +55,7 @@ import elide.tool.cli.state.CommandState
   subcommands = [
     ToolInfoCommand::class,
     ToolShellCommand::class,
+    ToolDiscordCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +

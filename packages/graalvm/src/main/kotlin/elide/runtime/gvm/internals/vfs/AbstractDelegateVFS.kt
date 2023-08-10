@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.*
 import java.nio.file.attribute.FileAttribute
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
@@ -44,6 +45,7 @@ import elide.runtime.gvm.internals.GuestVFS
 internal abstract class AbstractDelegateVFS<VFS> protected constructor (
   config: EffectiveGuestVFSConfig,
   private val backing: FileSystem,
+  private val activeWorkingDirectory: AtomicReference<Path> = AtomicReference(Path.of(config.workingDirectory)),
 ) : GuestVFS, AbstractBaseVFS<VFS>(config) where VFS: AbstractBaseVFS<VFS> {
   internal companion object {
     /** Translate an [AccessMode] to an [AccessType]. */
@@ -331,7 +333,7 @@ internal abstract class AbstractDelegateVFS<VFS> protected constructor (
     debugLog {
       "Setting CWD to: '$currentWorkingDirectory'"
     }
-    TODO("not yet implemented")
+    activeWorkingDirectory.set(currentWorkingDirectory)
   }
 
   override fun getMimeType(path: Path): String? {

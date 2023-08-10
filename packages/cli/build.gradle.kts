@@ -52,20 +52,21 @@ version = rootProject.version as String
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = true
+val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
-val enablePython = false
-val enableRuby = false
+val enablePython = true
+val enableRuby = true
 val enableTools = true
-val enableSbom = true
+val enableSbom = false
 val enableG1 = true
-val enablePgo = true
+val enablePgo = false
 val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
 val enableDashboard = false
 val encloseSdk = false
+val oracleGvm = false
 
 buildscript {
   repositories {
@@ -107,8 +108,8 @@ val ktCompilerArgs = listOf(
 )
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 ktlint {
@@ -413,6 +414,11 @@ val quickbuild = (
  * Build: CLI Native Image
  */
 
+val commonGvmArgs = listOf(
+  "-H:+UseCompressedReferences",
+  "-H:+BuildReport",
+)
+
 val commonNativeArgs = listOf(
   "--language:js",
   "--language:nfi",
@@ -423,11 +429,9 @@ val commonNativeArgs = listOf(
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
-  "-H:+BuildReport",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
-  "-H:+UseCompressedReferences",
   "-H:+ReportExceptionStackTraces",
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
@@ -447,7 +451,7 @@ val commonNativeArgs = listOf(
   ) else emptyList()
 ).plus(
   jvmModuleArgs
-)
+).plus(if (oracleGvm) commonGvmArgs else emptyList())
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -508,22 +512,25 @@ val profiles: List<String> = listOf(
   "serve.iprof",
 )
 
+// GVM release flags
+val gvmReleaseFlags: List<String> = listOf(
+  "-H:+AOTInliner",
+  "-H:+AOTAggregateProfiles",
+  "-H:+AggressiveColdCodeOptimizations",
+  "-H:+VectorizeSIMD",
+  "-H:+MLProfileInference",
+  "-H:+BouncyCastleIntrinsics",
+  "-R:+BouncyCastleIntrinsics",
+  "-H:+VectorPolynomialIntrinsics",
+)
+
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-O2",
   "-dsa",
-  "-H:+AOTInliner",
-  "-H:+BuildReport",
-  "-H:+MLProfileInference",
   "-H:+LocalizationOptimizedMode",
-  "-H:+BouncyCastleIntrinsics",
-  "-H:+VectorPolynomialIntrinsics",
-  "-H:+VectorizeSIMD",
-  "-H:+AOTAggregateProfiles",
-  "-H:+AggressiveColdCodeOptimizations",
   "-H:+LSRAOptimization",
   "-H:+RemoveUnusedSymbols",
-  "-R:+BouncyCastleIntrinsics",
   "-J-Djdk.image.use.jvm.map=false",
 ).plus(releaseCFlags.flatMap {
   listOf(
@@ -538,6 +545,8 @@ val releaseFlags: List<String> = listOf(
   if (enableSbom) listOf("--enable-sbom") else emptyList()
 ).plus(
   if (enableDashboard) dashboardFlags else emptyList()
+).plus(
+  if (oracleGvm) gvmReleaseFlags else emptyList()
 )
 
 val jvmDefs = mapOf(
@@ -554,6 +563,7 @@ val initializeAtBuildTime = listOf(
   "kotlin.annotation.AnnotationRetention",
   "kotlin.coroutines.intrinsics.CoroutineSingletons",
   "kotlin.annotation.AnnotationTarget",
+  "com.google.common.jimfs.Feature",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "ch.qos.logback",
   "org.slf4j.simple.SimpleLogger",
@@ -565,10 +575,19 @@ val initializeAtBuildTime = listOf(
   "org.bouncycastle.crypto.prng.drbg.Utils",
   "org.bouncycastle.jcajce.provider.drbg.DRBG",
   "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
   "com.sun.tools.doclint",
   "jdk.jshell.Snippet${'$'}SubKind",
   "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
+  "org.xml.sax.helpers.LocatorImpl",
+  "org.xml.sax.helpers.AttributesImpl",
+  "org.sqlite.util.ProcessRunner",
+  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
+  "com.google.common.collect.MapMakerInternalMap",
+  "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueSegment",
+  "com.google.common.collect.MapMakerInternalMap${'$'}EntrySet",
+  "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
+  "com.google.common.collect.MapMakerInternalMap${'$'}1",
+  "com.google.common.base.Equivalence${'$'}Equals",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -581,6 +600,7 @@ val initializeAtRuntime: List<String> = listOf(
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
   "com.sun.tools.javac.file.Locations",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -597,24 +617,26 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
-  "-H:-AuxiliaryEngineCache",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList()))
+) else emptyList())).plus(if (oracleGvm) listOf(
+  "-H:-AuxiliaryEngineCache",
+) else emptyList())
 
 val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
-  "-H:+AuxiliaryEngineCache",
   "-H:+AllowJRTFileSystem",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList()))
+) else emptyList())).plus(if (oracleGvm) listOf(
+  "-H:+AuxiliaryEngineCache",
+) else emptyList())
 
 val windowsReleaseArgs = windowsOnlyArgs
 
@@ -636,11 +658,12 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
     "-Delide.vm.engine.preinitialize=false",
   ) else listOf(
     "--gc=serial",
-    "-H:+AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=true",
     "-R:MaximumHeapSizePercent=80",
     "-H:InitialCollectionPolicy=Adaptive",
-  )
+  ).plus(if (oracleGvm) listOf(
+    "-H:+AuxiliaryEngineCache",
+  ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else emptyList())

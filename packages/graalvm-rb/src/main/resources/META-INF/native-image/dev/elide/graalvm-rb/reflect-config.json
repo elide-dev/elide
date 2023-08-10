@@ -1,0 +1,14 @@
+[
+  {
+    "name": "elide.runtime.gvm.ruby.cfg.RubyRuntimeConfig",
+    "queryAllDeclaredMethods": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+
+        ]
+      }
+    ]
+  }
+]

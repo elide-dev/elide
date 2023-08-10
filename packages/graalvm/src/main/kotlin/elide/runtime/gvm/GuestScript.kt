@@ -16,4 +16,4 @@ package elide.runtime.gvm
 /**
  * TBD.
  */
-internal interface GuestScript : ExecutableScript
+public interface GuestScript : ExecutableScript

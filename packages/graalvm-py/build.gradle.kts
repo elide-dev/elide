@@ -29,6 +29,8 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+val encloseSdk = false
+
 kotlin {
   explicitApi()
 }
@@ -36,6 +38,10 @@ kotlin {
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
+  if (encloseSdk) {
+    compileOnly(libs.graalvm.sdk)
+    compileOnly(libs.graalvm.truffle.api)
+  }
 
   // Testing
   testImplementation(projects.packages.test)

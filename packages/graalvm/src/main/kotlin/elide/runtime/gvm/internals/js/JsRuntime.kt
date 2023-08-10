@@ -36,6 +36,7 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.RequestExecutionInputs
+import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.cfg.JsRuntimeConfig
 import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GraalVMGuest.JAVASCRIPT
@@ -118,22 +119,16 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
  */
 @Requires(property = "elide.gvm.enabled", value = "true", defaultValue = "true")
 @Requires(property = "elide.gvm.js.enabled", value = "true", defaultValue = "true")
-@GuestRuntime
+@GuestRuntime(engine = "js")
 internal class JsRuntime @Inject constructor (
-  contextManager: ContextManager<VMContext, VMContext.Builder>,
-  config: JsRuntimeConfig
-) : AbstractVMEngine<
-  JsRuntimeConfig,
-  JsExecutableScript,
-  JsInvocationBindings,
->(contextManager, JAVASCRIPT, config) {
+) : AbstractVMEngine<JsRuntimeConfig, JsExecutableScript, JsInvocationBindings>(JAVASCRIPT) {
   @OptIn(ExperimentalSerializationApi::class)
-  private companion object {
-    const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
-    const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"
-    const val JS_LANGUAGE_LEVEL_STABLE: String = "stable"
-    const val JS_LANGUAGE_LEVEL_LATEST: String = "latest"
-    const val DEFAULT_JS_LOCALE: String = "en-US"
+  companion object {
+    private const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
+    private const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"
+    private const val JS_LANGUAGE_LEVEL_STABLE: String = "stable"
+    private const val JS_LANGUAGE_LEVEL_LATEST: String = "latest"
+    private const val DEFAULT_JS_LOCALE: String = "en-US"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"
@@ -281,7 +276,14 @@ internal class JsRuntime @Inject constructor (
   }
 
   // JS runtime logger.
-  private val logger: Logger = Logging.of(JsRuntime::class)
+  private val logger: Logger by lazy {
+    Logging.of(JsRuntime::class)
+  }
+
+  /** JavaScript engine configuration. */
+  @Inject lateinit var jsConfig: JsRuntimeConfig
+
+  override fun resolveConfig(): JsRuntimeConfig = jsConfig
 
   /** @inheritDoc */
   override fun configure(engine: Engine, context: VMContext.Builder): Stream<VMProperty> = baseOptions.plus(listOf(

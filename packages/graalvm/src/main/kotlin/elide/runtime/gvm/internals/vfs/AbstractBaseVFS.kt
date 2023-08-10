@@ -283,7 +283,7 @@ internal abstract class AbstractBaseVFS<VFS> protected constructor (
    *
    * @return [Logger] that should be used for debug messages emitted from this VFS implementation.
    */
-  protected abstract fun logging(): Logger
+  abstract fun logging(): Logger
 
   /**
    * Subclass API: Enforcement.

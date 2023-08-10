@@ -33,7 +33,7 @@ public interface GuestLanguage {
   /**
    * TBD.
    */
-  public val supportsSSR: Boolean get() = true
+  public val supportsSSR: Boolean get() = false
 
   /**
    * TBD.
@@ -43,11 +43,20 @@ public interface GuestLanguage {
   /**
    * TBD.
    */
-  public val invocationModes: EnumSet<InvocationMode> get() = EnumSet.allOf(InvocationMode::class.java)
+  public val invocationModes: EnumSet<InvocationMode> get() = EnumSet.noneOf(InvocationMode::class.java)
 
   /** Well-known guest languages. */
   public companion object {
     /** JavaScript as a guest language. */
     public val JAVASCRIPT: GuestLanguage = GraalVMGuest.JAVASCRIPT
+
+    /** Python as a guest language. */
+    public val PYTHON: GuestLanguage = GraalVMGuest.PYTHON
+
+    /** Ruby as a guest language. */
+    public val RUBY: GuestLanguage = GraalVMGuest.RUBY
+
+    /** Java Virtual Machine (JVM) as a guest language. */
+    public val JVM: GuestLanguage = GraalVMGuest.JVM
   }
 }

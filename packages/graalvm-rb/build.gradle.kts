@@ -38,6 +38,7 @@ kotlin {
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.graalvmLlvm)
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
     compileOnly(libs.graalvm.truffle.api)

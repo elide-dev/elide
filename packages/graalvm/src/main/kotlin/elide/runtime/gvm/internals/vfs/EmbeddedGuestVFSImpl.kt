@@ -43,6 +43,9 @@ import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.gvm.internals.GuestVFS
 import elide.util.UUID
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream
+import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+import kotlin.io.path.exists
 
 /**
  * # VFS: Embedded.
@@ -103,8 +106,11 @@ internal class EmbeddedGuestVFSImpl private constructor (
     /** Regular (non-compressed) tarball. */
     TARBALL,
 
-    /** Compressed tarball. */
-    TARBALL_COMPRESSED,
+    /** Compressed tarball (with `gzip`). */
+    TARBALL_GZIP,
+
+    /** Compressed tarball (with `xz`). */
+    TARBALL_XZ,
 
     /** Elide's internal bundle format. */
     ELIDE_INTERNAL,
@@ -287,7 +293,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return [Jimfs] instance configured with the receiver's settings. */
     internal fun EffectiveGuestVFSConfig.buildFs(): Configuration.Builder =
-      Configuration.unix()
+      Configuration.forCurrentPlatform()
         .toBuilder()
         .setRoots(this.root)
         .setWorkingDirectory(this.workingDirectory)
@@ -360,7 +366,9 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
       // create the directory within the in-memory FS
       val folderPath = memoryFS.getPath(folder.name)
-      memoryFS.provider().createDirectory(folderPath)
+      if (!folderPath.exists()) {
+        memoryFS.provider().createDirectory(folderPath)
+      }
 
       var entry = tarball.nextEntry
       while (entry != null) {
@@ -489,11 +497,12 @@ internal class EmbeddedGuestVFSImpl private constructor (
       )
 
       // read each input tarball and compose the resulting structures
-      return streams.parallelStream().map { input ->
+      return streams.stream().map { input ->
         when (input.second) {
           BundleFormat.ELIDE_INTERNAL,
           BundleFormat.TARBALL -> TarArchiveInputStream(input.first) to input.second
-          BundleFormat.TARBALL_COMPRESSED -> TarArchiveInputStream(GZIPInputStream(input.first)) to input.second
+          BundleFormat.TARBALL_XZ -> TarArchiveInputStream(XZCompressorInputStream(input.first)) to input.second
+          BundleFormat.TARBALL_GZIP -> TarArchiveInputStream(GZIPInputStream(input.first)) to input.second
         }
       }.map { input ->
         if (input.second == BundleFormat.ELIDE_INTERNAL) {
@@ -511,18 +520,23 @@ internal class EmbeddedGuestVFSImpl private constructor (
 
     /** @return Loaded bundles from the provided input [streams], guessing the format from the file's name. */
     @JvmStatic private fun loadBundles(
+      image: Pair<String, InputStream>?,
       streams: List<Pair<String, InputStream>>,
       fsConfig: Configuration.Builder,
     ): Pair<FilesystemInfo, FileSystem> {
       // resolve the format from the filename, then pass along
-      return loadBundlesToMemoryFS(streams.map { (name, stream) ->
+      return loadBundlesToMemoryFS(when (image) {
+        null -> streams
+        else -> listOf(image) + streams
+      }.map { (name, stream) ->
         stream to when {
           name.endsWith(".tar") -> BundleFormat.TARBALL
-          name.endsWith(".tar.gz") -> BundleFormat.TARBALL_COMPRESSED
+          name.endsWith(".tar.gz") -> BundleFormat.TARBALL_GZIP
+          name.endsWith(".tar.xz") -> BundleFormat.TARBALL_XZ
           name.endsWith(".evfs") -> BundleFormat.ELIDE_INTERNAL
           else -> error(
             "Failed to load bundle from file '$name': unknown format. " +
-            "Please provide `.tar`, `.tar.gz`, or `.evfs`."
+            "Please provide `.tar`, `.tar.gz`, `.tar.xz`, or `.evfs`."
           )
         }
       }, fsConfig)
@@ -545,7 +559,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
         // hand back name + input stream so we can call `loadBundles`
         file.name to file.inputStream()
       }
-      return loadBundles(sources, fsConfig)
+      return loadBundles(null, sources, fsConfig)
     }
 
     /** @return Bundle pair loaded from the provided [URI]. */
@@ -577,7 +591,7 @@ internal class EmbeddedGuestVFSImpl private constructor (
           else -> error("Unsupported scheme for loading VFS bundle: '${path.scheme}' (URL: $path)")
         }
       }
-      return loadBundles(sources, fsConfig)
+      return loadBundles(null, sources, fsConfig)
     }
 
     /** @return Resolve bundle input data from the provided [builder]. */

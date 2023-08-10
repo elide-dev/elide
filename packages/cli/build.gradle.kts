@@ -83,7 +83,12 @@ buildscript {
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val jvmCompileArgs = listOf(
+  "--enable-preview",
   "--add-exports=java.base/jdk.internal.module=elide.cli",
+  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
+  "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
 )
 
 val nativeCompileJvmArgs = jvmCompileArgs.map {
@@ -178,11 +183,17 @@ dependencies {
   implementation(libs.tink)
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
-  // GraalVM
+  // GraalVM: Engines
   implementation(projects.packages.graalvm)
+  implementation(projects.packages.graalvmJvm)
+  implementation(projects.packages.graalvmLlvm)
   implementation(projects.packages.graalvmPy)
   implementation(projects.packages.graalvmRb)
   implementation(projects.packages.graalvmKt)
+  implementation(projects.packages.graalvmWasm)
+
+  // GraalVM: Tools + Compilers
+  compileOnly(libs.graalvm.svm)
 
   api(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
@@ -442,6 +453,7 @@ val commonNativeArgs = listOf(
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   "--trace-object-instantiation=elide.tool.cli.HttpResponseFactoryFactory",
+  "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
@@ -696,6 +708,10 @@ fun nativeCliImageArgs(
   release: Boolean = (!quickbuild && !test && (properties["elide.release"] == "true" || properties["buildMode"] == "release")),
 ): List<String> =
   commonNativeArgs.asSequence().plus(
+    jvmCompileArgs
+  ).plus(
+    jvmCompileArgs.map { "-J$it" }
+  ).plus(
     initializeAtBuildTime.map { "--initialize-at-build-time=$it" }
   ).plus(
     initializeAtRuntime.map { "--initialize-at-run-time=$it" }

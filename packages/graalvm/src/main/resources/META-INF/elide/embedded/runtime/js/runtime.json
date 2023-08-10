@@ -7,5 +7,9 @@
   "artifacts": [
     { "name": "polyfills.js" },
     { "name": "facade.js" }
-  ]
+  ],
+  "image": {
+    "type": "universal",
+    "universal": "js.runtime.tar.gz"
+  }
 }

@@ -39,4 +39,19 @@ enum GuestLanguage {
 
   // Guest language: JavaScript.
   JAVASCRIPT = 1;
+
+  // Guest language: JVM.
+  JVM = 2;
+
+  // Guest language: WASM.
+  WASM = 3;
+
+  // Guest language: LLVM.
+  LLVM = 4;
+
+  // Guest language: Python.
+  PYTHON = 5;
+
+  // Guest language: Ruby.
+  RUBY = 6;
 }

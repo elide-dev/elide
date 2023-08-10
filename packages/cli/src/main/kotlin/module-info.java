@@ -43,6 +43,7 @@ module elide.cli {
     requires ch.qos.logback.core;
     requires io.micronaut.core;
     requires org.jline.builtins;
+    requires java.desktop;
 
     exports elide.tool.cli;
     exports elide.tool.cli.cfg;

@@ -101,10 +101,12 @@ include(
   ":packages:base",
   ":packages:bom",
   ":packages:core",
-  ":packages:cli",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",
+  ":packages:graalvm-jvm",
+  ":packages:graalvm-llvm",
+  ":packages:graalvm-wasm",
   ":packages:graalvm-py",
   ":packages:graalvm-rb",
   ":packages:graalvm-kt",
@@ -122,6 +124,7 @@ include(
   ":tools:processor",
   ":tools:reports",
   ":tools:wrappers",
+  ":packages:cli",
 )
 
 val buildDocs: String by settings

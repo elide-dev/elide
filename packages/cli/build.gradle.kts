@@ -424,6 +424,7 @@ val commonNativeArgs = listOf(
   "--language:nfi",
   "--language:icu4j",
   "--language:regex",
+  "--language:truffle-json",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",

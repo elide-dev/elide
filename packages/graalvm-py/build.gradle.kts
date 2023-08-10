@@ -35,6 +35,7 @@ kotlin {
 
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
+  implementation(projects.packages.graalvm)
 
   // Testing
   testImplementation(projects.packages.test)

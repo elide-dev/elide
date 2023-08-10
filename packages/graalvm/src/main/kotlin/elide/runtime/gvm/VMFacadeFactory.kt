@@ -14,10 +14,15 @@
 package elide.runtime.gvm
 
 import io.micronaut.context.BeanContext
+import io.micronaut.http.HttpRequest
+import java.util.ServiceLoader
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
 import kotlin.reflect.KClass
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
@@ -33,26 +38,113 @@ import org.graalvm.polyglot.Context as VMContext
   // Active bean context.
   private val beanContext: BeanContext,
 ) {
+  /**
+   * TBD.
+   */
+  internal class CompoundVMFacade private constructor (private val engines: Array<out VMFacade>) : VMFacade {
+    internal companion object {
+      /**
+       * TBD.
+       */
+      @JvmStatic fun withEngines(engines: List<VMFacade>) = CompoundVMFacade(engines.toTypedArray())
+    }
+
+    override fun language(): GuestLanguage {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun prewarmScript(script: ExecutableScript) {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun executeStreaming(
+      script: ExecutableScript,
+      args: ExecutionInputs,
+      receiver: StreamingReceiver
+    ): Job {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun executeRender(
+      script: ExecutableScript,
+      request: HttpRequest<*>,
+      context: Any?,
+      receiver: StreamingReceiver
+    ): Job {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun <R> execute(script: ExecutableScript, returnType: Class<R>, args: ExecutionInputs?): R? {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun <R> executeAsync(
+      script: ExecutableScript,
+      returnType: Class<R>,
+      args: ExecutionInputs?
+    ): Deferred<R?> {
+      TODO("Not yet implemented")
+    }
+
+    override fun <R> executeBlocking(script: ExecutableScript, returnType: Class<R>, args: ExecutionInputs?): R? {
+      TODO("Not yet implemented")
+    }
+  }
+
+  // Lazy resolution of VM engine implementations.
+  private val installedEngines by lazy {
+    ServiceLoader.load(VMEngineImpl::class.java)
+  }
+
   // Resolve the VM implementation class to use for the provided `language`.
-  private fun resolveVMFactoryImpl(language: GuestLanguage): KClass<*> = when (language.symbol) {
-    "js" -> JsRuntime::class
-    else -> throw IllegalArgumentException("Unsupported guest language: ${language.symbol}")
+  private fun resolveStaticVMFactoryImpl(language: GuestLanguage): KClass<*>? = when (language.symbol) {
+    GuestLanguage.JAVASCRIPT.symbol -> JsRuntime::class
+    else -> null
+  }
+
+  // Load a VM implementation via a service-loader.
+  private fun resolveDynamicVMFactoryImpl(language: GuestLanguage): KClass<*>? {
+    return installedEngines.stream().filter {
+      it.type().annotations.find { anno ->
+        anno.annotationClass.qualifiedName == GuestRuntime::class.qualifiedName
+      }?.let { anno ->
+        val runtime = anno as GuestRuntime
+        runtime.engine == language.symbol
+      } ?: false
+    }.findFirst().let { candidate ->
+      if (candidate.isEmpty) {
+        null
+      } else {
+        candidate.get().type().kotlin
+      }
+    }
+  }
+
+  // Initialize a VM engine after loading it from the service loader; this is done by acquiring an instance through the
+  // active bean context.
+  private fun initializeVMEngine(impl: KClass<*>): AbstractVMEngine<*, *, *> {
+    return (beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>).apply {
+      this@apply.contextManager = this@VMFacadeFactory.contextManager
+      initialize()
+    }
   }
 
   /**
    * TBD.
    */
   public fun acquireVM(vararg languages: GuestLanguage): VMFacade {
-    require(languages.size == 1) {
-      "Please acquire a guest VM with a minimum and maximum of one supported `GuestLanguage`"
+    val engines = languages.map {
+      val impl = resolveStaticVMFactoryImpl(it) ?: resolveDynamicVMFactoryImpl(it) ?: error(
+        "Failed to resolve VM implementation for language: ${it.label}. Is it supported and installed?"
+      )
+      val vm = initializeVMEngine(impl)
+      object: VMFacade by vm {
+        /* No overrides at this time. */
+      }
     }
-
-    val language = languages.first()
-    val impl = resolveVMFactoryImpl(language)
-    val vm = beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>
-    return object: VMFacade by vm {
-      /* No overrides at this time. */
-    }
+    return CompoundVMFacade.withEngines(
+      engines
+    )
   }
 
   /**

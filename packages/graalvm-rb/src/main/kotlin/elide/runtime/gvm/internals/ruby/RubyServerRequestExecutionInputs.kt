@@ -11,12 +11,16 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.runtime.gvm.internals
+package elide.runtime.gvm.internals.ruby
+
+import elide.runtime.gvm.RequestExecutionInputs
+import elide.runtime.intrinsics.js.FetchRequest
 
 /**
  * TBD.
  */
-@MustBeDocumented
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.SOURCE)
-internal annotation class GuestRuntime
+internal abstract class RubyServerRequestExecutionInputs<Request: Any> (
+  private val state: Any? = null,
+) : RequestExecutionInputs<Request>, FetchRequest {
+  // nothing yet
+}

@@ -21,6 +21,7 @@ import java.util.concurrent.CompletionStage
 import java.util.concurrent.Future
 import elide.runtime.gvm.ExecutableScript
 import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.InvocationBindings
 
 /**
  * # VM: Adapter.

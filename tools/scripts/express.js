@@ -15,6 +15,14 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+/**
+ * Fetch a secret from the universal Elide Secrets API. This will be injected into the container automatically, based
+ * on the application's configuration. The secret can originate from Cloudflare transparently.
+ *
+ * @type {string}
+ */
+const secretValue = process.env.MY_SECRET_VALUE;
+
 app.get('/hello', (req, res) => {
   res.send("Hello!");
 })
@@ -22,7 +30,7 @@ app.get('/hello', (req, res) => {
 app.get('/hello/:name', (req, res) => {
   const name = req.params.name;
   console.log(`said hello to name: ${req.params.name}`);
-  res.send(`Hello ${name}!`)
+  res.send(`Hello ${name}! Secret value is ${secretValue}`)
 })
 
 app.listen(port, () => {

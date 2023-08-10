@@ -1,0 +1,14 @@
+[
+  {
+    "name": "elide.runtime.gvm.python.cfg.PythonRuntimeConfig",
+    "queryAllDeclaredMethods": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+
+        ]
+      }
+    ]
+  }
+]

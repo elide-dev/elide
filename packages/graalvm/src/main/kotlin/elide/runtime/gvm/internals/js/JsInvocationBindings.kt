@@ -15,7 +15,7 @@ package elide.runtime.gvm.internals.js
 
 import java.util.*
 import elide.runtime.gvm.internals.GVMInvocationBindings
-import elide.runtime.gvm.internals.InvocationBindings
+import elide.runtime.gvm.InvocationBindings
 import org.graalvm.polyglot.Value as GuestValue
 
 /**
@@ -100,7 +100,7 @@ import org.graalvm.polyglot.Value as GuestValue
  * @param mapped Resolved values for each binding.
  * @param types Entrypoint types expressed in [mapped].
  */
-internal sealed class JsInvocationBindings constructor (
+internal sealed class JsInvocationBindings (
   internal val mapped: Map<EntrypointInfo, JsEntrypoint>,
   private val modes: EnumSet<DispatchStyle>,
   internal val types: EnumSet<JsEntrypointType>,

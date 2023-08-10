@@ -34,6 +34,11 @@ public interface ContextFactory<Context, Builder> {
   /**
    * TBD.
    */
+  public fun installContextConfigurator(factory: (Builder) -> Unit)
+
+  /**
+   * TBD.
+   */
   public fun installContextSpawn(factory: (Builder) -> Context)
 
   /**

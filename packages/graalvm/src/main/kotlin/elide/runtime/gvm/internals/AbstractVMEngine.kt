@@ -16,17 +16,25 @@
 package elide.runtime.gvm.internals
 
 import io.micronaut.http.HttpRequest
+import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.net.URI
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
+import java.util.stream.Collectors
 import java.util.stream.Stream
 import kotlinx.coroutines.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import elide.annotations.Inject
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -34,6 +42,7 @@ import elide.runtime.gvm.*
 import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.cfg.GuestVMConfiguration
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
+import elide.runtime.gvm.internals.GuestVFS.VFSConfigurator
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.runtime.gvm.internals.js.JsInvocationBindings
@@ -95,13 +104,67 @@ public abstract class AbstractVMEngine<
   Code: ExecutableScript,
   Bindings: InvocationBindings,
 > (protected val language: GraalVMGuest) : VMEngineImpl<Config> {
-  internal companion object {
+  public companion object {
+    /** Version of the Elide GVM engine. */
+    private const val ENGINE_VERSION = "v3"
+
     /** Manifest name for runtime info. */
-    internal const val RUNTIME_MANIFEST = "runtime.json"
+    private const val RUNTIME_MANIFEST = "runtime.json"
+
+    // Root where we can find runtime-related files.
+    public const val EMBEDDED_ROOT: String = "/META-INF/elide/embedded/runtime"
+
+    /**
+     * Resolve an internal runtime configuration file, which describes embedded assets which should be mounted for a
+     * given language VM.
+     *
+     * @param engine Name of the engine.
+     */
+    @OptIn(ExperimentalSerializationApi::class)
+    @JvmStatic public fun resolveRuntimeInfo(
+      engine: String,
+      name: String,
+      mime: String? = null,
+    ): Pair<RuntimeInfo, Source> {
+      return try {
+        (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST") ?: error(
+          "Failed to locate embedded runtime manifest for language: $engine"
+        )).let { manifestFile ->
+          // decode manifest from JSON to discover injected artifacts
+          val manifest = Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile)
+          require(manifest.engine == ENGINE_VERSION) {
+            "Cannot load runtime for engine version: ${manifest.engine} (expected: $ENGINE_VERSION)"
+          }
+
+          // collect JS runtime internal sources as a string
+          val collectedRuntimeSource = manifest.artifacts.stream().flatMap {
+            (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/${it.name}") ?: error(
+              "Failed to locate embedded runtime artifact (engine: '$engine'): ${it.name}"
+            )).bufferedReader(StandardCharsets.UTF_8).lines()
+          }.filter {
+            it.isNotBlank() && !it.startsWith("//")
+          }.collect(Collectors.joining("\n"))
+
+          // load each file into a giant blob which can be used to preload contexts
+          manifest to Source.newBuilder(engine, collectedRuntimeSource, name)
+            .encoding(StandardCharsets.UTF_8)
+            .cached(true)
+            .internal(true)
+            .interactive(false)
+            .apply {
+              if (mime != null) mimeType(mime)
+            }
+            .build()
+        }
+      } catch (err: Throwable) {
+        println("Error loading runtime manifest (engine: $engine): ${err.message}")
+        throw err
+      }
+    }
   }
 
   /**
-   *
+   * Configuration for this VM engine.
    */
   public abstract fun resolveConfig(): Config
 
@@ -114,6 +177,86 @@ public abstract class AbstractVMEngine<
    * Access to VM-specific configuration.
    */
   protected val config: Config get() = resolveConfig()
+
+  /**
+   * TBD.
+   */
+  public abstract class GuestVFSConfigurator (
+    private val guestLanguage: GuestLanguage,
+    private val runtimeInfoProducer: () -> RuntimeInfo
+  ) : VFSConfigurator {
+    private val runtimeInfoCached by lazy {
+      runtimeInfoProducer.invoke()
+    }
+
+    // Resolve an OS/architecture pair for the current platform.
+    private fun resolveOsArch(): Pair<String, String> {
+      val os = System.getProperty("os.name", "unknown").lowercase()
+      val arch = System.getProperty("os.arch", "unknown").lowercase()
+      return when {
+        os.contains("linux") && (arch.contains("x86_64") || arch.contains("amd64")) ->
+          "linux" to "amd64"
+        os.contains("linux") && (arch.contains("arm64") || arch.contains("aarch64")) ->
+          "linux" to "arm64"
+        os.contains("mac") && (arch.contains("x86_64") || arch.contains("amd64")) ->
+          "darwin" to "amd64"
+        os.contains("mac") && (arch.contains("arm64") || arch.contains("aarch64")) ->
+          "darwin" to "arm64"
+        os.contains("windows") && (arch.contains("x86_64") || arch.contains("amd64")) ->
+          "windows" to "amd64"
+        os.contains("windows") && (arch.contains("arm64") || arch.contains("aarch64")) ->
+          "windows" to "arm64"
+        else -> error("Unsupported platform; could not detect OS/architecture pair: $os/$arch")
+      }
+    }
+
+    override fun image(): RuntimeVFS? = runtimeInfoCached.let { info ->
+      val (os, arch) = resolveOsArch()
+
+      val target: String? = when (val imgInfo = info.image) {
+        // with no image info, we have a `null`
+        null -> null
+
+        // with universal info, we use the universal bundle
+        is RuntimeImageInfo.UniversalImageInfo -> imgInfo.universal
+
+        // anything else is unrecognized
+        else -> (imgInfo as RuntimeImageInfo.NativeImageInfo).let { nativeInfo ->
+          val osBase = when (os) {
+            "linux" -> nativeInfo.linux
+            "darwin" -> nativeInfo.darwin
+            "windows" -> nativeInfo.windows
+            else -> error("Unrecognized image info OS: $imgInfo")
+          } ?: error("No image info for OS: $imgInfo")
+
+          when (arch) {
+            "amd64" -> osBase.amd64
+            "arm64" -> osBase.arm64
+            else -> error("Unrecognized image info architecture: $imgInfo")
+          } ?: error("No image info for architecture: $imgInfo")
+        }
+      }
+      if (target != null) {
+        RuntimeVFS(target)
+      } else {
+        null
+      }
+    }
+
+    override fun bundles(): List<URI> = runtimeInfoCached.let { info ->
+      val base = when (val img = image()) {
+        null -> emptyList()
+        else -> listOf(img)
+      }
+
+      base.plus(info.vfs).map {
+        val path = "$EMBEDDED_ROOT/${guestLanguage.symbol}/${it.name}"
+        GuestVFSConfigurator::class.java.getResource(path)?.toURI() ?: error(
+          "Failed to locate embedded runtime bundle: $it (path: '$path')"
+        )
+      }
+    }
+  }
 
   /**
    * ## Runtime Info.
@@ -143,36 +286,100 @@ public abstract class AbstractVMEngine<
    *   code, if specified. Deprecated (new VMs should not use unless no alternative exists).
    */
   @Serializable
-  internal data class RuntimeInfo(
+  public data class RuntimeInfo(
     val engine: String,
     val language: tools.elide.meta.GuestLanguage,
     val vfs: List<RuntimeVFS> = emptyList(),
     val artifacts: List<RuntimeArtifact> = emptyList(),
+    val image: RuntimeImageInfo? = null,
     val entry: String? = null,
+  )
+
+  /**
+   * ## Runtime Image Info.
+   *
+   * Describes information which binds a set of "image" files to a given guest language. Based on the host architecture
+   * (as applicable), these "image" files are loaded into the virtual guest file system, before any user code or runtime
+   * facade code.
+   *
+   * Some GraalVM guest languages require resources which are present "on-disk" (namely, Python, Ruby, and LLVM, at the
+   * time of this writing). In many cases, these resources are specialized to their anticipated native environment, so
+   * mappings are provided either in native or "universal" form (universal is used for engines like JavaScript which do
+   * not have specialized images).
+   */
+  @Serializable
+  public sealed class RuntimeImageInfo {
+    /**
+     * ### Universal Image Info
+     *
+     * Specifies universal guest runtime image information, which should be loaded regardless of host OS or arch. The
+     * JavaScript runtime uses this image info shape, for example.
+     *
+     * @param universal Universal image to load, if any.
+     */
+    @Serializable
+    @SerialName("universal")
+    public data class UniversalImageInfo(
+      val universal: String? = null,
+    ) : RuntimeImageInfo()
+
+    /**
+     * ### Native Image Info
+     *
+     * Specifies CPU and OS-native guest runtime image information, which should be loaded based on the host native
+     * architecture. This is used by Python, Ruby, and LLVM, for example.
+     *
+     * @param darwin Darwin (macOS) native image bundle set.
+     * @param linux Linux native image bundle set.
+     * @param windows Windows native image bundle set.
+     */
+    @Serializable
+    @SerialName("native")
+    public data class NativeImageInfo(
+      val darwin: RuntimeNativeResources? = null,
+      val linux: RuntimeNativeResources? = null,
+      val windows: RuntimeNativeResources? = null,
+    ) : RuntimeImageInfo()
+  }
+
+  /**
+   * ## Runtime Native Resources.
+   *
+   * Describes a single set of native-specialized resources for a given guest language runtime.
+   * This is used from a [RuntimeImageInfo.NativeImageInfo] shape to describe the native resources which should be
+   * loaded for a given platform.
+   *
+   * @param amd64 AMD64 (x86_64) native image bundle.
+   * @param arm64 ARM64 native image bundle.
+   */
+  @Serializable
+  public data class RuntimeNativeResources(
+    val amd64: String? = null,
+    val arm64: String? = null,
   )
 
   /**
    * ## Runtime Info: VFS.
    *
-   * Describes virtual file system (VFS) bundles which should be loaded along with user data, and placed into the guest
-   * accessible file system. Bundles specified in the [RuntimeInfo] configuration are loaded at VM construction time and
-   * written to the in-memory FS before any user data, so they can still be overridden by user data, and thus function
-   * as polyfills or sensible defaults.
+   * Describes virtual file system (VFS) bundles which should be loaded along with user data, and placed into the
+   * guest-accessible file system. Bundles specified in the [RuntimeInfo] configuration are loaded at VM construction
+   * time and written to the in-memory FS before any user data, so they can still be overridden by user data, and thus
+   * function as polyfills or sensible defaults.
    *
-   * VFS bundles can be expressed as compressed or un-compressed tarballs, or in Elide's internal format. The latter is
+   * VFS bundles can be expressed as compressed or uncompressed tarballs, or in Elide's internal format. The latter is
    * implemented through Elide's own bundler CLI tool.
    *
    * Multiple bundle files can be specified, in which case they are loaded and initialized into the in-memory filesystem
    * with preserved order. After runtime-listed VFS bundles are loaded, any user-provided VFS bundles are loaded.
    *
    * The internal format and compression state of a bundle is inferred from its file-name. If the file name ends in
-   * `.tar.gz`, it is interpreted as a compressed tarball; `.tar`, it is interpreted as an un-compressed tarball; the
+   * `.tar.gz`, it is interpreted as a compressed tarball; `.tar`, it is interpreted as an uncompressed tarball; the
    * special extension `.evfs` is interpreted as an Elide VFS bundle.
    *
    * @param name Name of the bundle file to load.
    */
   @Serializable
-  internal data class RuntimeVFS(
+  public data class RuntimeVFS(
     val name: String,
   )
 
@@ -193,7 +400,7 @@ public abstract class AbstractVMEngine<
    * @param name Name of the file to load and evaluate.
    */
   @Serializable
-  internal data class RuntimeArtifact(
+  public data class RuntimeArtifact(
     val name: String,
   )
 
@@ -291,6 +498,11 @@ public abstract class AbstractVMEngine<
       builder(it)
     }
 
+    // apply configurations from this VM
+    contextManager.installContextConfigurator {
+      configureVM(it)
+    }
+
     // install context spawn
     contextManager.installContextSpawn {
       spawn(it)
@@ -359,7 +571,7 @@ public abstract class AbstractVMEngine<
       .allowCreateProcess(false)
       .allowAllAccess(false)
       .allowHostClassLoading(false)
-      .allowNativeAccess(false)
+      .allowNativeAccess(true)
       .allowExperimentalOptions(true)
       .allowValueSharing(true)
       .fileSystem(filesystem)

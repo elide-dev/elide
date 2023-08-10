@@ -16,6 +16,8 @@ package elide.runtime.gvm.internals
 import org.graalvm.polyglot.io.FileSystem
 import java.io.Closeable
 import java.net.URI
+import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeInfo
+import elide.runtime.gvm.internals.AbstractVMEngine.RuntimeVFS
 
 /**
  * # Guest: Virtual Filesystem
@@ -56,6 +58,17 @@ public interface GuestVFS : FileSystem, Closeable, AutoCloseable {
    * internal use.
    */
   public interface VFSConfigurator {
+    /**
+     * ## VFS: Image
+     *
+     * Early-load bundle URI which is specialized with native libraries for the active host architecture and OS.
+     * This bundle is loaded before any other bundles. Only one image bundle may be specified; not all runtimes support
+     * or require this feature.
+     *
+     * @return URI for the right image bundle to load, based on the active host architecture and OS.
+     */
+    public fun image(): RuntimeVFS? = null
+
     /**
      * ## VFS: Bundles
      *

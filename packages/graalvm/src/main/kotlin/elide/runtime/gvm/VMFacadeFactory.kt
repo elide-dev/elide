@@ -23,6 +23,7 @@ import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.gvm.api.GuestRuntime
+import elide.runtime.gvm.cfg.GuestRuntimeConfiguration
 import elide.runtime.gvm.internals.AbstractVMEngine
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
@@ -41,7 +42,8 @@ import org.graalvm.polyglot.Context as VMContext
   /**
    * TBD.
    */
-  internal class CompoundVMFacade private constructor (private val engines: Array<out VMFacade>) : VMFacade {
+  internal class CompoundVMFacade private constructor (private val engines: Array<out VMFacade>)
+    : VMEngineImpl<GuestRuntimeConfiguration> {
     internal companion object {
       /**
        * TBD.
@@ -98,7 +100,7 @@ import org.graalvm.polyglot.Context as VMContext
 
   // Resolve the VM implementation class to use for the provided `language`.
   private fun resolveStaticVMFactoryImpl(language: GuestLanguage): KClass<*>? = when (language.symbol) {
-    GuestLanguage.JAVASCRIPT.symbol -> JsRuntime::class
+    "js" -> JsRuntime::class
     else -> null
   }
 

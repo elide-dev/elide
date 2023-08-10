@@ -1,0 +1,14 @@
+[
+  {
+    "name": "elide.runtime.gvm.wasm.cfg.WasmRuntimeConfig",
+    "queryAllDeclaredMethods": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+
+        ]
+      }
+    ]
+  }
+]

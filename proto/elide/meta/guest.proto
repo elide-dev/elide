@@ -60,6 +60,12 @@ enum JsLanguageLevel {
 
   // The language level is ES2022.
   ES2022 = 8;
+
+  // Use latest supported language level.
+  STABLE = 98;
+
+  // Use latest language level, stability be damned.
+  LATEST = 99;
 }
 
 // # Language Settings: JavaScript
@@ -83,6 +89,48 @@ message JsSettings {
   JsLanguageLevel level = 1;
 }
 
+// # Language Settings: Python
+//
+// Specifies Python-specific settings and configurations.
+message PythonSettings {
+  // Nothing at this time.
+}
+
+// # Language Settings: Ruby
+//
+// Specifies Ruby-specific settings and configurations.
+message RubySettings {
+  // Nothing at this time.
+}
+
+// # Language Settings: JVM
+//
+// Specifies JVM-specific settings and configurations.
+message JvmSettings {
+  // Nothing at this time.
+}
+
+// # Language Settings: WASM
+//
+// Specifies WASM-specific settings and configurations.
+message WasmSettings {
+  // Nothing at this time.
+}
+
+// # Language Settings: LLVM
+//
+// Specifies LLVM-specific settings and configurations.
+message LlvmSettings {
+  // Nothing at this time.
+}
+
+// # Language Settings: Kotlin
+//
+// Specifies Kotlin-specific settings and configurations.
+message KotlinSettings {
+  // Nothing at this time.
+}
+
 // # Language Settings: Policy
 //
 // Guest "policies" define the access rights granted to a given guest language VM. Policies are defined by the host and
@@ -95,7 +143,54 @@ message GuestPolicy {
     // Allows all host access for the guest language. This means the guest language can load classes, access I/O, and
     // perform other potentially sensitive or dangerous operations. Exercise extreme caution enabling this policy.
     bool allow_all = 1;
+
+    // ## Policies: Integrated.
+    //
+    // Allows some host access for the guest language; this includes values shared in callbacks and invocation bindings.
+    // The guest language can only load certain classes, cannot access host I/O (by default), and is *allowed* to call
+    // native code; this mode should be used when all executing code is under the developer's control.
+    bool integrated = 2;
+
+    // ## Policies: Isolated.
+    //
+    // Allows no host access for the guest language. This means the guest language cannot load classes, access host I/O,
+    // or perform other potentially sensitive or dangerous operations. Resources used by guest languages can be capped
+    // or otherwise controlled.
+    bool isolated = 3;
+
+    // ## Policies: Sandbox.
+    //
+    // Like the `ISOLATED` policy, but applies a stronger sandbox; allows no host access for the guest language. This
+    // means the guest language cannot load classes, access host I/O, or perform other potentially sensitive or
+    // dangerous operations. Resources used by guest languages can be capped or otherwise controlled.
+    //
+    // If available, hardware isolation is used; otherwise, software isolation is used.
+    bool sandbox = 4;
   }
+
+  // Whether to allow the guest language to call native code. Defaults to `false`.
+  bool allow_native = 5;
+
+  // Whether to allow the guest language to access host-side I/O. Defaults to `false`.
+  bool host_io = 6;
+
+  // Whether to allow the guest language to access host-side networking. Defaults to `false`.
+  bool host_net = 7;
+
+  // Whether to allow the guest language to access host-side environment. Defaults to `false`.
+  bool host_env = 8;
+
+  // Maximum memory to allow for allocation within this guest language; there is a sensible Elide-wide default if
+  // unspecified. Expressed as a count of bytes. `0` disables the restriction.
+  uint32 max_memory = 9;
+
+  // Maximum stack depth to allow for execution within this guest; there is a sensible Elide-wide default if
+  // unspecified. Specified as a numeric count. `0` disables the restriction.
+  uint32 stack_depth = 10;
+
+  // Maximum execution time to allow for execution within this guest; there is a sensible Elide-wide default if
+  // unspecified. Expressed in a count of milliseconds. `0` disables the restriction.
+  uint64 execution_time = 11;
 }
 
 // # Language Settings: General
@@ -128,6 +223,24 @@ message GuestSettingsStanza {
   oneof lang_settings {
     // JavaScript-specific language settings.
     JsSettings js = 10;
+
+    // JVM-specific language settings.
+    JvmSettings jvm = 20;
+
+    // Kotlin-specific language settings.
+    KotlinSettings kotlin = 21;
+
+    // WASM-specific language settings.
+    WasmSettings wasm = 30;
+
+    // LLVM-specific language settings.
+    LlvmSettings llvm = 40;
+
+    // Ruby-specific language settings.
+    RubySettings ruby = 50;
+
+    // Python-specific language settings.
+    PythonSettings python = 60;
   }
 }
 

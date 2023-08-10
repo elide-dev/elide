@@ -35,6 +35,8 @@ import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutionInputs
+import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.GuestLanguage.Companion
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.cfg.JsRuntimeConfig
@@ -180,21 +182,31 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("wasm.Memory64"),
       StaticProperty.active("wasm.MultiValue"),
       StaticProperty.active("wasm.UseUnsafeMemory"),
+      StaticProperty.active("wasm.MultiMemory"),
       StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
+      StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
+      StaticProperty.active("wasm.Threads"),
+      StaticProperty.active("wasm.UseUnsafeMemory"),
       StaticProperty.of("wasm.Builtins", WASI_STD),
     )
 
     // Root where we can find runtime-related files.
     private const val EMBEDDED_ROOT = "/META-INF/elide/embedded/runtime/js"
 
+    // Virtualized file name for the runtime pre-init (facade).
+    private const val RUNTIME_PREINIT = "__runtime__.js"
+
+    // String to use for JavaScript MIME type declarations/mappings.
+    private const val JS_MIMETYPE = "application/javascript"
+
+    // Whether runtime assets have loaded.
+    internal val runtimeReady: AtomicBoolean = AtomicBoolean(false)
+
     // Info about the runtime, loaded from the runtime bundle manifest.
-    private val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
+    internal val runtimeInfo: AtomicReference<RuntimeInfo> = AtomicReference(null)
 
     // Assembled runtime init code, loaded from `runtimeInfo`.
-    private val runtimeInit: AtomicReference<Source> = AtomicReference(null)
-
-    // Whether runtime assets have loaded yet.
-    private val runtimeReady: AtomicBoolean = AtomicBoolean(false)
+    internal val runtimeInit: AtomicReference<Source> = AtomicReference(null)
 
     // Core modules which patch Node.js builtins.
     private val coreModules: Map<String, String> = mapOf(
@@ -209,55 +221,19 @@ internal class JsRuntime @Inject constructor (
         "Runtime cannot be prepared more than once (JS runtime must operate as a singleton)"
       }
 
-      try {
-        (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/$RUNTIME_MANIFEST") ?: error(
-          "Failed to locate embedded JS runtime manifest"
-        )).let { manifestFile ->
-          // decode manifest from JSON to discover injected artifacts
-          Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile).also {
-            runtimeInfo.set(it)
-          }
-
-          // collect JS runtime internal sources as a string
-          val collectedRuntimeSource = runtimeInfo.get().artifacts.stream().flatMap {
-            (JsRuntime::class.java.getResourceAsStream("$EMBEDDED_ROOT/${it.name}") ?: error(
-              "Failed to locate embedded JS runtime artifact: ${it.name}"
-            )).bufferedReader(StandardCharsets.UTF_8).lines()
-          }.filter {
-            it.isNotBlank() && !it.startsWith("//")
-          }.collect(Collectors.joining("\n"))
-
-          // load each file into a giant blob which can be used to preload contexts
-          runtimeInit.set(Source.newBuilder("js", collectedRuntimeSource, "__runtime__.js")
-            .encoding(StandardCharsets.UTF_8)
-            .cached(true)
-            .internal(true)
-            .interactive(false)
-            .mimeType("application/javascript")
-            .build())
-
-          runtimeReady.compareAndSet(
-            false,
-            true,
-          )
-        }
-      } catch (err: Throwable) {
-        println("Error loading runtime manifest (JS): ${err.message}")
-        throw err
-      }
-    }
-
-    /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
-    @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFS.VFSConfigurator {
-        override fun bundles(): List<URI> = (runtimeInfo.get() ?: error(
-        "Failed to resolve runtime info: cannot prepare VFS."
-      )).vfs.map {
-        JsRuntime::class.java.getResource("$EMBEDDED_ROOT/${it.name}")?.toURI() ?: error(
-          "Failed to locate embedded JS runtime asset: $it"
-        )
+      resolveRuntimeInfo(JAVASCRIPT.symbol, RUNTIME_PREINIT, JS_MIMETYPE).let { (info, facade) ->
+        runtimeInfo.set(info)
+        runtimeInit.set(facade)
+        runtimeReady.set(true)
       }
     }
   }
+
+  /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
+  @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFSConfigurator(
+    GuestLanguage.JAVASCRIPT,
+    { runtimeInfo.get() }
+  )
 
   // Resolve the expected configuration symbol for the given ECMA standard level.
   private val JsLanguageLevel.symbol: String get() = when (this) {

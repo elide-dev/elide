@@ -21,6 +21,7 @@ import com.lmax.disruptor.dsl.Disruptor
 import com.lmax.disruptor.dsl.ProducerType
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.Platform
+import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import java.io.InputStream
 import java.io.OutputStream
@@ -231,7 +232,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     private val lastException: AtomicReference<Throwable?> = AtomicReference(null)
 
     // Initialize VM context for this executor.
-    @Suppress("DEPRECATION") private fun initializeVMContext() {
+    private fun initializeVMContext() {
       val thread = Thread.currentThread()
       logging.debug { "Allocating VM context for thread '${thread.name}'" }
       val ctx = allocateContext()
@@ -314,8 +315,11 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
   // Context factory function.
   private val contextFactory: AtomicReference<(Engine) -> VMContext.Builder> = AtomicReference(null)
 
+  // Effective (primary language) context spawn function.
+  private val contextSpawn: AtomicReference<(VMContext.Builder) -> VMContext> = AtomicReference(null)
+
   // Context configuration function.
-  private val contextConfigure: AtomicReference<(VMContext.Builder) -> VMContext> = AtomicReference(null)
+  private val contextConfigure: MutableList<(VMContext.Builder) -> Unit> = ArrayList()
 
   // Counter for VM thread spawns.
   private val threadCounter: AtomicInteger = AtomicInteger(0)
@@ -377,9 +381,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
   // Allocate a new thread-confined VM execution context.
   private fun allocateContext(builder: ((VMContext.Builder) -> Unit)? = null): VMContext {
-    check(initialized.get()) {
-      "Cannot allocate VM context: Engine is not initialized"
-    }
     val fresh = contextFactory.get().invoke(
       engine()
     )
@@ -405,7 +406,10 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     builder?.invoke(fresh)
 
     // finalize the new context and return
-    return contextConfigure.get().invoke(fresh)
+    contextConfigure.forEach {
+      it.invoke(fresh)
+    }
+    return fresh.build()
   }
 
   override fun configureVM(props: Stream<VMProperty>) {
@@ -422,9 +426,14 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     contextFactory.set(factory)
   }
 
+  override fun installContextConfigurator(factory: (Builder) -> Unit) {
+    logging.trace("VM installed context spawn")
+    contextConfigure.add(factory)
+  }
+
   override fun installContextSpawn(factory: (VMContext.Builder) -> VMContext) {
     logging.trace("VM installed context spawn")
-    contextConfigure.set(factory)
+    contextSpawn.set(factory)
   }
 
   override fun activate(start: Boolean) {
@@ -452,16 +461,13 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
   }
 
   override fun <R> acquire(builder: ((VMContext.Builder) -> Unit)?, operation: VMContext.() -> R): R {
-    if (!initialized.get()) {
-      // @TODO(sgammon): activation of disruptor that isn't based on inherent race condition
-      activate(start = true)
-    }
-    val ctx = allocateContext(builder)
-    try {
-      ctx.enter()
-      return operation.invoke(ctx)
-    } finally {
-      ctx.leave()
+    return allocateContext(builder).let { ctx ->
+      try {
+        ctx.enter()
+        operation.invoke(ctx)
+      } finally {
+        ctx.leave()
+      }
     }
   }
 }

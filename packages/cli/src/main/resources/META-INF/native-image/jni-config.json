@@ -1,5 +1,19 @@
 [
 {
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandArgumentInfo;"
+},
+{
+  "name":"[Lcom.sun.management.internal.DiagnosticCommandInfo;"
+},
+{
+  "name":"com.sun.management.internal.DiagnosticCommandArgumentInfo",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","boolean","int"] }]
+},
+{
+  "name":"com.sun.management.internal.DiagnosticCommandInfo",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","java.util.List"] }]
+},
+{
   "name":"elide.tool.cli.ElideTool",
   "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
@@ -74,6 +88,14 @@
   "methods":[{"name":"getBoolean","parameterTypes":["java.lang.String"] }]
 },
 {
+  "name":"java.lang.Class",
+  "methods":[{"name":"getClassLoader","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.ClassLoader",
+  "methods":[{"name":"loadClass","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"java.lang.OutOfMemoryError"
 },
 {
@@ -105,6 +127,13 @@
 {
   "name":"java.nio.channels.ClosedChannelException",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.util.Arrays",
+  "methods":[{"name":"asList","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"jdk.internal.loader.ClassLoaders$AppClassLoader"
 },
 {
   "name":"sun.management.VMManagementImpl",

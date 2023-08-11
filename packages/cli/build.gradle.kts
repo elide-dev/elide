@@ -386,21 +386,21 @@ micronaut {
   }
 
   aot {
-    configFile = file("$projectDir/aot-native.properties")
+//    configFile = file("$projectDir/aot-native.properties")
 
-    convertYamlToJava = true
-    precomputeOperations = true
-    cacheEnvironment = true
-    deduceEnvironment = true
-    replaceLogbackXml = true
+    convertYamlToJava = false
+    precomputeOperations = false
+    cacheEnvironment = false
+    deduceEnvironment = false
+    replaceLogbackXml = false
 
-    optimizeServiceLoading = true
+    optimizeServiceLoading = false
     optimizeClassLoading = true
-    optimizeNetty = true
+    optimizeNetty = false
     possibleEnvironments = listOf("cli")
 
     netty {
-      enabled = true
+      enabled = false
       machineId = "13-37-7C-D1-6F-F5"
       pid = "1337"
     }
@@ -452,7 +452,6 @@ val commonNativeArgs = listOf(
   "-H:-EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
-  "--trace-object-instantiation=elide.tool.cli.HttpResponseFactoryFactory",
   "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).plus(listOfNotNull(
@@ -520,8 +519,8 @@ val experimentalFlags = listOf(
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
-  "-O3",
-  "-flto",
+//  "-O3",
+//  "-flto",
 )
 
 // PGO profiles to specify in release mode.
@@ -545,11 +544,10 @@ val gvmReleaseFlags: List<String> = listOf(
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-O2",
-  "-dsa",
-  "-H:+LocalizationOptimizedMode",
-  "-H:+LSRAOptimization",
-  "-H:+RemoveUnusedSymbols",
-  "-J-Djdk.image.use.jvm.map=false",
+//  "-H:+LocalizationOptimizedMode",
+//  "-H:+LSRAOptimization",
+//  "-H:+RemoveUnusedSymbols",
+//  "-J-Djdk.image.use.jvm.map=false",
 ).plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -586,16 +584,16 @@ val initializeAtBuildTime = listOf(
   "ch.qos.logback",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",
-  "org.codehaus.stax2.typed.Base64Variants",
-  "org.bouncycastle.util.Properties",
-  "org.bouncycastle.util.Strings",
-  "org.bouncycastle.crypto.macs.HMac",
-  "org.bouncycastle.crypto.prng.drbg.Utils",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
-  "com.sun.tools.doclint",
-  "jdk.jshell.Snippet${'$'}SubKind",
-  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
+//  "org.codehaus.stax2.typed.Base64Variants",
+//  "org.bouncycastle.util.Properties",
+//  "org.bouncycastle.util.Strings",
+//  "org.bouncycastle.crypto.macs.HMac",
+//  "org.bouncycastle.crypto.prng.drbg.Utils",
+//  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+//  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
+//  "com.sun.tools.doclint",
+//  "jdk.jshell.Snippet${'$'}SubKind",
+//  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
   "org.xml.sax.helpers.LocatorImpl",
   "org.xml.sax.helpers.AttributesImpl",
   "org.sqlite.util.ProcessRunner",
@@ -606,6 +604,14 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
+
+  //
+//  "elide.tool.cli.HttpRequestFactoryFactory",
+//  "elide.tool.cli.HttpResponseFactoryFactory",
+//  "elide.tool.cli.PropertySourceLoaderFactory",
+//  "elide.tool.cli.BeanConfigurationFactory",
+//  "elide.tool.cli.BeanDefinitionReferenceFactory",
+//  "elide.tool.cli.BeanIntrospectionReferenceFactory",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -614,6 +620,7 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
+  "io.netty.channel.ChannelInitializer",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
@@ -658,9 +665,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 
 val windowsReleaseArgs = windowsOnlyArgs
 
-val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
-  "-H:+NativeArchitecture",
-))
+val darwinReleaseArgs = darwinOnlyArgs.plus(emptyList())
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
@@ -772,7 +777,7 @@ graalvmNative {
 
   binaries {
     named("main") {
-      imageName = "elide.debug"
+      imageName = if (quickbuild) "elide.debug" else "elide"
       fallback = false
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
       quickBuild = quickbuild
@@ -816,14 +821,14 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
-  shadowJar {
-    from(collectReachabilityMetadata)
-
-    exclude(
-      "java-header-style.xml",
-      "license.header",
-    )
-  }
+//  shadowJar {
+//    from(collectReachabilityMetadata)
+//
+//    exclude(
+//      "java-header-style.xml",
+//      "license.header",
+//    )
+//  }
 
   nativeOptimizedCompile {
     dependsOn(decompressProfiles)

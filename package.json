@@ -39,7 +39,7 @@
   "devDependencies": {
     "@mdx-js/esbuild": "2.3.0",
     "@types/google-protobuf": "3.15.6",
-    "esbuild": "0.18.17",
+    "esbuild": "0.19.2",
     "husky": "8.0.3",
     "lint-staged": "13.2.3",
     "postcss-cli": "10.1.0",

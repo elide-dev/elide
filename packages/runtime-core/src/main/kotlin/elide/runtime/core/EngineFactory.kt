@@ -4,7 +4,7 @@ import elide.runtime.core.internals.graalvm.GraalVMConfiguration
 import elide.runtime.core.internals.graalvm.GraalVMEngine
 
 /**
- * Create and [configure] a [PolyglotEngine][elide.runtime.core.PolyglotEngine]. Within the the configuration scope,
+ * Create and [configure] a [PolyglotEngine][elide.runtime.core.PolyglotEngine]. Within the configuration scope,
  * you can install plugins and adjust general engine configuration that will be applied to every context.
  *
  * ### Using the DSL

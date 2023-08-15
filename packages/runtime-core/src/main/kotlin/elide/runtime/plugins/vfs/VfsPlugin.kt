@@ -10,8 +10,6 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.PolyglotEngineBuilder
-import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl
-import elide.runtime.gvm.internals.vfs.HostVFSImpl
 
 /**
  * Engine plugin providing configurable VFS support for polyglot contexts. Both embedded and host VFS implementations
@@ -36,7 +34,8 @@ import elide.runtime.gvm.internals.vfs.HostVFSImpl
 
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
     // select the VFS implementation depending on the configuration
-    fileSystem = when(config.useHost) {
+    // TODO(@darvld)
+    /*fileSystem = when(config.useHost) {
       true -> HostVFSImpl.Builder.newBuilder()
         .setReadOnly(!config.writable)
         .build()
@@ -45,7 +44,7 @@ import elide.runtime.gvm.internals.vfs.HostVFSImpl
         .setBundlePaths(config.registeredBundles)
         .setReadOnly(!config.writable)
         .build()
-    }
+    }*/
   }
 
   /** Configure a context builder to use a custom [fileSystem]. */

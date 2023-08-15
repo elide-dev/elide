@@ -53,9 +53,7 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
       configuration.lifecycle.emit(EngineCreated, builder)
 
       // build the engine
-      val engine = GraalVMEngine(configuration.lifecycle, builder.build())
-
-      return engine
+      return GraalVMEngine(configuration.lifecycle, builder.build())
     }
   }
 }

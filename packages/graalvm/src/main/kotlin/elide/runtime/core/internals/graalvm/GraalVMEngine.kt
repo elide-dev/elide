@@ -26,10 +26,14 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
     // build a new context using the shared engine
     val builder = Context.newBuilder().engine(engine)
 
-    // allow plugins to customzie the context on creation
+    // allow plugins to customize the context on creation
     lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
 
-    return GraalVMContext(builder.build())
+    // build the context and notify event listeners
+    val context = GraalVMContext(builder.build())
+    lifecycle.emit(EngineLifecycleEvent.ContextInitialized, context)
+
+    return context
   }
 
   override fun acquire(): PolyglotContext {

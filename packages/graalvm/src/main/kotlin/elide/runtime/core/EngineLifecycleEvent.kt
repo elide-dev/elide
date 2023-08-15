@@ -22,4 +22,10 @@ package elide.runtime.core
    * called, to allow intercepting the newly built context.
    */
   public data object ContextCreated : EngineLifecycleEvent<PolyglotContextBuilder>
+
+  /**
+   * Lifecycle event triggered when a [PolyglotContext] is initialized after construction. This event is typically
+   * received after [ContextCreated], once the context has been built, allowing plugins to run guest init code.
+   */
+  public data object ContextInitialized : EngineLifecycleEvent<PolyglotContext>
 }

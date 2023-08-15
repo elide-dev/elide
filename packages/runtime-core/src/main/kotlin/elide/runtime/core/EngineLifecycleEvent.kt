@@ -14,7 +14,12 @@ package elide.runtime.core
    * be customized before the engine is built. This event is typically received only once. 
    */
   public data object EngineCreated : EngineLifecycleEvent<PolyglotEngineBuilder>
-  
+
+  /**
+   * Lifecycle event triggered when a [PolyglotEngine] is initialized after construction. This event is typically
+   * received only once, after [EngineCreated].
+   */
+  public data object EngineInitialized : EngineLifecycleEvent<PolyglotEngine>
   
   /**
    * Lifecycle event triggered when a [PolyglotContext] is being created, providing a [PolyglotContextBuilder] that can

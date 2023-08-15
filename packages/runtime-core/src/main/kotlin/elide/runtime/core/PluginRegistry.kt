@@ -12,7 +12,7 @@ package elide.runtime.core
    * @param configure A configuration DSL block to be applied to the plugin on installation.
    * @return A plugin instance added to the registry after installation.
    */
-  public fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I
+  public fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit = { }): I
 
   /**
    * Retrieve a plugin instance identified by the provided [key] from this registry. If no

@@ -45,7 +45,6 @@ ij_css_use_double_quotes = true
 ij_css_value_alignment = do_not_align
 
 [*.feature]
-indent_size = 2
 ij_visual_guides = none
 ij_gherkin_keep_indents_on_empty_lines = false
 
@@ -316,7 +315,6 @@ ij_java_wrap_first_method_in_call_chain = false
 ij_java_wrap_long_lines = false
 
 [*.less]
-indent_size = 2
 ij_visual_guides = none
 ij_less_align_closing_brace_with_properties = false
 ij_less_blank_lines_around_nested_selector = 1
@@ -340,8 +338,6 @@ ij_less_use_double_quotes = true
 ij_less_value_alignment = 0
 
 [*.proto]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 4
 ij_visual_guides = none
 ij_protobuf_keep_blank_lines_in_code = 2
@@ -354,7 +350,6 @@ ij_protobuf_spaces_within_braces = false
 ij_protobuf_spaces_within_brackets = false
 
 [*.sass]
-indent_size = 2
 ij_visual_guides = none
 ij_sass_align_closing_brace_with_properties = false
 ij_sass_blank_lines_around_nested_selector = 1
@@ -377,7 +372,6 @@ ij_sass_use_double_quotes = true
 ij_sass_value_alignment = 0
 
 [*.scss]
-indent_size = 2
 ij_visual_guides = none
 ij_scss_align_closing_brace_with_properties = false
 ij_scss_blank_lines_around_nested_selector = 1
@@ -401,8 +395,6 @@ ij_scss_use_double_quotes = true
 ij_scss_value_alignment = 0
 
 [*.vue]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 2
 ij_visual_guides = 80
 ij_vue_indent_children_of_top_level = template
@@ -443,8 +435,6 @@ ij_xml_text_wrap = normal
 ij_xml_use_custom_settings = false
 
 [{*.ats,*.cts,*.mts,*.ts}]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 2
 ij_visual_guides = 80
 ij_typescript_align_imports = false
@@ -618,8 +608,6 @@ ij_typescript_while_on_new_line = false
 ij_typescript_wrap_comments = false
 
 [{*.bash,*.sh,*.zsh}]
-indent_size = 2
-tab_width = 2
 ij_visual_guides = none
 ij_shell_binary_ops_start_line = false
 ij_shell_keep_column_alignment_padding = false
@@ -629,8 +617,6 @@ ij_shell_switch_cases_indented = false
 ij_shell_use_unix_line_separator = true
 
 [{*.cjs,*.js}]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 2
 ij_visual_guides = 80
 ij_javascript_align_imports = false
@@ -996,7 +982,6 @@ ij_groovy_wrap_chain_calls_after_dot = false
 ij_groovy_wrap_long_lines = false
 
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
-indent_size = 2
 ij_visual_guides = none
 ij_json_array_wrapping = split_into_lines
 ij_json_keep_blank_lines_in_code = 0
@@ -1014,8 +999,6 @@ ij_json_spaces_within_brackets = false
 ij_json_wrap_long_lines = false
 
 [{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 2
 ij_visual_guides = 80
 ij_html_add_new_line_before_tags = body,div,p,form,h1,h2,h3
@@ -1061,8 +1044,6 @@ ij_visual_guides = none
 ij_jspx_keep_indents_on_empty_lines = false
 
 [{*.kt,*.kts}]
-indent_size = 2
-indent_style = space
 ktlint_code_style = ktlint_official
 ktlint_experimental = disabled
 ktlint_standard_annotations = disabled
@@ -1076,7 +1057,6 @@ ktlint_standard_trailing-comma-on-declaration-site = disabled
 ktlint_standard_no-multi-spaces = disabled
 ktlint_no-wildcard-imports = disabled
 ktlint_argument-list-wrapping = disabled
-ij_visual_guides = 120
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false
@@ -1095,7 +1075,7 @@ ij_kotlin_call_parameters_new_line_after_left_paren = true
 ij_kotlin_call_parameters_right_paren_on_new_line = true
 ij_kotlin_call_parameters_wrap = on_every_item
 ij_kotlin_catch_on_new_line = false
-ij_kotlin_class_annotation_wrap = split_into_lines
+ij_kotlin_class_annotation_wrap = off
 ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
 ij_kotlin_continuation_indent_for_chained_calls = false
 ij_kotlin_continuation_indent_for_expression_bodies = false
@@ -1107,7 +1087,7 @@ ij_kotlin_continuation_indent_in_supertype_lists = false
 ij_kotlin_else_on_new_line = false
 ij_kotlin_enum_constants_wrap = off
 ij_kotlin_extends_list_wrap = normal
-ij_kotlin_field_annotation_wrap = split_into_lines
+ij_kotlin_field_annotation_wrap = off
 ij_kotlin_finally_on_new_line = false
 ij_kotlin_if_rparen_on_new_line = true
 ij_kotlin_import_nested_classes = true
@@ -1124,7 +1104,7 @@ ij_kotlin_line_break_after_multiline_when_entry = true
 ij_kotlin_line_comment_add_space = false
 ij_kotlin_line_comment_add_space_on_reformat = false
 ij_kotlin_line_comment_at_first_column = true
-ij_kotlin_method_annotation_wrap = split_into_lines
+ij_kotlin_method_annotation_wrap = off
 ij_kotlin_method_call_chain_wrap = normal
 ij_kotlin_method_parameters_new_line_after_left_paren = true
 ij_kotlin_method_parameters_right_paren_on_new_line = true
@@ -1184,8 +1164,6 @@ ij_markdown_wrap_text_inside_blockquotes = true
 ij_visual_guides = none
 
 [{*.pb,*.textproto}]
-indent_size = 2
-tab_width = 2
 ij_continuation_indent_size = 4
 ij_visual_guides = none
 ij_prototext_keep_blank_lines_in_code = 2
@@ -1214,7 +1192,6 @@ ij_visual_guides = none
 ij_toml_keep_indents_on_empty_lines = false
 
 [{*.yaml,*.yml,Kptfile}]
-indent_size = 2
 ij_visual_guides = none
 ij_yaml_align_values_properties = do_not_align
 ij_yaml_autoinsert_sequence_marker = true

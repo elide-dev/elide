@@ -5,6 +5,7 @@ import org.graalvm.polyglot.Engine
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
+import elide.runtime.core.EngineLifecycleEvent.EngineInitialized
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.internals.MutableEngineLifecycle
@@ -53,7 +54,12 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
       configuration.lifecycle.emit(EngineCreated, builder)
 
       // build the engine
-      return GraalVMEngine(configuration.lifecycle, builder.build())
+      val engine = GraalVMEngine(configuration.lifecycle, builder.build())
+
+      // one more event for initialization plugins
+      configuration.lifecycle.emit(EngineInitialized, engine)
+
+      return engine
     }
   }
 }

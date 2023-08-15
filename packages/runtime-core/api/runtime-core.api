@@ -1,0 +1,123 @@
+public abstract interface annotation class elide/runtime/core/DelicateElideApi : java/lang/annotation/Annotation {
+}
+
+public final class elide/runtime/core/EngineFactoryKt {
+	public static final fun PolyglotEngine (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotEngine;
+	public static synthetic fun PolyglotEngine$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotEngine;
+}
+
+public abstract interface class elide/runtime/core/EngineLifecycle {
+	public abstract fun on (Lelide/runtime/core/EngineLifecycleEvent;Lkotlin/jvm/functions/Function1;)V
+}
+
+public abstract interface class elide/runtime/core/EngineLifecycleEvent {
+}
+
+public final class elide/runtime/core/EngineLifecycleEvent$ContextCreated : elide/runtime/core/EngineLifecycleEvent {
+	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$ContextCreated;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/core/EngineLifecycleEvent$ContextInitialized : elide/runtime/core/EngineLifecycleEvent {
+	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$ContextInitialized;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/core/EngineLifecycleEvent$EngineCreated : elide/runtime/core/EngineLifecycleEvent {
+	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$EngineCreated;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/core/EnginePlugin {
+	public abstract fun getKey-wLvarY0 ()Ljava/lang/String;
+	public abstract fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/core/EnginePlugin$InstallationScope {
+	public abstract fun getConfiguration ()Lelide/runtime/core/PolyglotEngineConfiguration;
+	public abstract fun getLifecycle ()Lelide/runtime/core/EngineLifecycle;
+}
+
+public final class elide/runtime/core/EnginePlugin$Key {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/core/EnginePlugin$Key;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/core/GuestLanguage {
+	public abstract fun getLanguageId ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/core/PluginRegistry {
+	public abstract fun install (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public abstract fun plugin-LqGrbaI (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/core/PluginRegistryKt {
+	public static final fun plugin (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;)Ljava/lang/Object;
+	public static final fun requirePlugin (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;)Ljava/lang/Object;
+	public static final fun requirePlugin-TZlicS8 (Lelide/runtime/core/PluginRegistry;Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/core/PolyglotContext {
+	public abstract fun bindings (Lelide/runtime/core/GuestLanguage;)Lorg/graalvm/polyglot/Value;
+	public static synthetic fun bindings$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
+	public abstract fun execute (Lelide/runtime/core/GuestLanguage;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+}
+
+public abstract interface class elide/runtime/core/PolyglotEngine {
+	public abstract fun acquire ()Lelide/runtime/core/PolyglotContext;
+}
+
+public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
+	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
+}
+
+public final class elide/runtime/core/extensions/ContextBuilderKt {
+	public static final fun disableOption (Lorg/graalvm/polyglot/Context$Builder;Ljava/lang/String;)V
+	public static final fun disableOptions (Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
+	public static final fun enableOption (Lorg/graalvm/polyglot/Context$Builder;Ljava/lang/String;)V
+	public static final fun enableOptions (Lorg/graalvm/polyglot/Context$Builder;[Ljava/lang/String;)V
+	public static final fun setBooleanOptions (Lorg/graalvm/polyglot/Context$Builder;[Lkotlin/Pair;)V
+	public static final fun setOption (Lorg/graalvm/polyglot/Context$Builder;Ljava/lang/String;Z)V
+	public static final fun setOptions (Lorg/graalvm/polyglot/Context$Builder;[Lkotlin/Pair;)V
+}
+
+public final class elide/runtime/plugins/vfs/Vfs {
+	public static final field Companion Lelide/runtime/plugins/vfs/Vfs$Companion;
+	public synthetic fun <init> (Lelide/runtime/plugins/vfs/VfsConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lelide/runtime/plugins/vfs/VfsConfig;
+}
+
+public final class elide/runtime/plugins/vfs/Vfs$Companion : elide/runtime/core/EnginePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/vfs/Vfs;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/vfs/VfsConfig {
+	public final fun getUseHost ()Z
+	public final fun getWritable ()Z
+	public final fun include (Ljava/net/URI;)V
+	public final fun setUseHost (Z)V
+	public final fun setWritable (Z)V
+}
+
+public final class elide/runtime/plugins/vfs/VfsConfigKt {
+	public static final fun include (Lelide/runtime/plugins/vfs/VfsConfig;Ljava/net/URL;)V
+}
+

@@ -23,6 +23,15 @@ package elide.runtime.core
  */
 @DelicateElideApi public interface PolyglotContext {
   /**
+   * Returns the root value that provides intrinsic bindings for the specified [language], or all supported languages
+   * if [language] is set to `null`.
+   *
+   * The [putMember][org.graalvm.polyglot.Value.putMember] can be used to add a new top-level binding, which will be
+   * accessible in target languages by name, without any import statements.
+   */
+  public fun bindings(language: GuestLanguage? = null): PolyglotValue
+
+  /**
    * Evaluate a unit of guest code in the given [language], returning the result of the execution. Depending on the
    * configuration of the context, this method may fail if the [language] is not enabled in the underlying engine.
    *

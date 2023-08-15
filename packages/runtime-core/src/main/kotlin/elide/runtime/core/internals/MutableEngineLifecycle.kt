@@ -21,7 +21,7 @@ import elide.runtime.core.EngineLifecycleEvent
 
   @Suppress("unchecked_cast")
   fun <T> emit(event: EngineLifecycleEvent<T>, payload: T) {
-    // trigger the envent for each listener in this entry
+    // trigger the event for each listener in this entry
     listeners[event]?.forEach { (it as (T) -> Unit).invoke(payload) }
   }
 }

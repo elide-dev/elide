@@ -6,7 +6,7 @@ package elide.runtime.core
  * 
  * ```kotlin
  * val engine = PolyglotEngine {
- *  // install support for sepecific languages
+ *  // install support for specific languages
  *  install(JavaScript) {
  *    esm = true
  *
@@ -110,7 +110,7 @@ package elide.runtime.core
   }
 
   /**
-   * Identifies the plugin's instances so they can be retrieved after being applied to the engine, avoiding the need
+   * Identifies the plugin's instances, so they can be retrieved after being applied to the engine, avoiding the need
    * for global references.
    */
   public val key: Key<Instance>

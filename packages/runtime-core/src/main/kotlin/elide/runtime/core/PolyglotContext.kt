@@ -5,7 +5,7 @@ package elide.runtime.core
  * execution result. Context instances can be [acquired][PolyglotEngine.acquire] from a [PolyglotEngine].
  *
  * Contexts are fully generic, meaning they do not impose constraints on the nature of the guest code (as long as the
- * requested language is supported by the context), nor do they infer any execution details from the it. This allows
+ * requested language is supported by the context), nor do they infer any execution details from it. This allows
  * specific use cases such as SSR to be built using the context API without coupling.
  *
  * ### Configuration

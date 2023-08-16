@@ -1,0 +1,92 @@
+package elide.runtime.plugins.js
+
+import java.nio.charset.Charset
+import java.time.ZoneId
+import java.util.*
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.plugins.AbstractLanguageConfig
+import elide.runtime.plugins.js.JavaScriptVersion.ES2022
+
+@DelicateElideApi public class JavaScriptConfig : AbstractLanguageConfig() {
+  /** Configuration for NPM features. */
+  public inner class NpmConfig {
+    /** Whether to enable NPM support. */
+    public var enabled: Boolean = true
+
+    /** Path to look for modules at. Defaults to `node_modules`. */
+    public var modulesPath: String = "node_modules"
+  }
+
+  public inner class BuiltInModulesConfig {
+    /** Core module replacement map. */
+    private val moduleReplacements = mutableMapOf<String, String>()
+
+    internal fun replacements(): Map<String, String> {
+      return moduleReplacements
+    }
+
+    /** Replace the specified built-in CommonJS [module] with a module at the [replacementPath]. */
+    public fun replaceModule(module: String, replacementPath: String) {
+      moduleReplacements[module] = replacementPath
+    }
+  }
+
+  /** Internal NPM configuration holder, see the DSL method for entry point. */
+  internal val npmConfig: NpmConfig = NpmConfig()
+
+  /** Internal NPM configuration holder, see the DSL method for entry point. */
+  internal val builtinModulesConfig: BuiltInModulesConfig = BuiltInModulesConfig()
+
+  /** Whether to enable source-maps support, which enhances stack-traces, logs, and other system features. */
+  public var sourceMaps: Boolean = true
+
+  /**  Whether to enable V8 compatibility mode. This is not recommended for most users. */
+  public var v8: Boolean = false
+
+  /** Enable WASM support and related bindings. Defaults to `true`; only active where supported. */
+  public var wasm: Boolean = true
+
+  /** Enable experimental built-in runtime support for TypeScript. Defaults to `false`. */
+  public var typescript: Boolean = false
+
+  /** ECMA Script language level to apply within the VM; defaults to [JavaScriptVersion.ES2022]. */
+  public var language: JavaScriptVersion = ES2022
+
+  /** Default locale to apply to the JS VM. Defaults to the system default. */
+  public var defaultLocale: Locale = Locale.getDefault()
+
+  /** Default timezone to apply to the JS VM. Defaults to the system default. */
+  public var timezone: ZoneId = ZoneId.systemDefault()
+
+  /** Locale to use for embedded JS VMs. */
+  public var locale: Locale = Locale.getDefault()
+
+  /** Whether to run the JS interpreter in interactive shell mode. */
+  public var interactive: Boolean = false
+
+  /** Whether to enable ESM support. */
+  public var esm: Boolean = true
+
+  /** Configure NPM support. */
+  public fun npm(config: NpmConfig.() -> Unit) {
+    npmConfig.apply(config)
+  }
+
+  /** Configure builtin module replacements. */
+  public fun builtinModules(config: BuiltInModulesConfig.() -> Unit) {
+    builtinModulesConfig.apply(config)
+  }
+
+  /**
+   * Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`. `UTF-8` and `UTF-32`
+   * are explicitly supported; other support may vary.
+   */
+  public var charset: Charset = Charsets.UTF_8
+
+  /** Apply init-time settings to a new [context]. */
+  internal fun applyTo(context: PolyglotContext) {
+    // register JS intrinsics
+    applyBindings(context, JavaScript)
+  }
+}

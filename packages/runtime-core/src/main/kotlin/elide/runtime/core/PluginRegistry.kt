@@ -46,3 +46,15 @@ package elide.runtime.core
 @DelicateElideApi public fun <T : Any> PluginRegistry.requirePlugin(plugin: EnginePlugin<*, T>): T {
   return plugin(plugin.key) ?: error("Plugin not found: ${plugin.key.id}")
 }
+
+/**
+ * Returns the installed [plugin] instance from the registry, or throws [IllegalStateException] of no plugin instance
+ * is found.
+ */
+@DelicateElideApi public fun <C : Any, T : Any> PluginRegistry.getOrInstall(
+  plugin: EnginePlugin<C, T>,
+  configure: C.() -> Unit = { },
+): T {
+  return plugin(plugin.key) ?: install(plugin, configure)
+}
+

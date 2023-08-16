@@ -31,3 +31,8 @@ import elide.runtime.core.DelicateElideApi
 @DelicateElideApi public fun VfsConfig.include(url: URL) {
   include(url.toURI())
 }
+
+/** Include a bundle using a URI string. The string must be a properly formatted URI. */
+@DelicateElideApi public fun VfsConfig.include(uriString: String) {
+  include(URI.create(uriString))
+}

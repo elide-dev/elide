@@ -6,7 +6,8 @@ import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@OptIn(DelicateElideApi::class) class ContextTest {
+@OptIn(DelicateElideApi::class)
+internal class ContextTest {
   /** Simple mock implementation for a JS language marker. */
   private object JavaScript : GuestLanguage {
     override val languageId: String = "js"

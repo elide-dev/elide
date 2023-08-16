@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test
 import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.EnginePlugin.InstallationScope
 
-@OptIn(DelicateElideApi::class) class LifecycleEventsTest {
+@OptIn(DelicateElideApi::class)
+internal class LifecycleEventsTest {
   /** Instrumented test plugin that allows using the [EngineLifecycle] without a full implementation. */
   private class InstrumentedLifecyclePlugin<T>(
     val event: EngineLifecycleEvent<T>,

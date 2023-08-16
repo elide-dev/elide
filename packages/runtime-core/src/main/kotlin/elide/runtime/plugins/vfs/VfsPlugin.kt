@@ -10,6 +10,8 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.PolyglotEngineBuilder
+import elide.runtime.gvm.vfs.EmbeddedGuestVFS
+import elide.runtime.gvm.vfs.HostVFS
 
 /**
  * Engine plugin providing configurable VFS support for polyglot contexts. Both embedded and host VFS implementations
@@ -34,17 +36,17 @@ import elide.runtime.core.PolyglotEngineBuilder
 
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
     // select the VFS implementation depending on the configuration
-    // TODO(@darvld)
-    /*fileSystem = when(config.useHost) {
-      true -> HostVFSImpl.Builder.newBuilder()
-        .setReadOnly(!config.writable)
-        .build()
+    fileSystem = when (config.useHost) {
+      true -> when (config.writable) {
+        true -> HostVFS.acquireWritable()
+        false -> HostVFS.acquire()
+      }
 
-      false -> EmbeddedGuestVFSImpl.Builder.newBuilder()
-        .setBundlePaths(config.registeredBundles)
-        .setReadOnly(!config.writable)
-        .build()
-    }*/
+      false -> when (config.writable) {
+        true -> EmbeddedGuestVFS.writable(config.registeredBundles)
+        else -> EmbeddedGuestVFS.forBundles(config.registeredBundles)
+      }
+    }
   }
 
   /** Configure a context builder to use a custom [fileSystem]. */
@@ -52,20 +54,20 @@ import elide.runtime.core.PolyglotEngineBuilder
     // use the configured VFS for each context
     builder.allowIO(IOAccess.newBuilder().fileSystem(fileSystem).build())
   }
-  
+
   /** Identifier for the [Vfs] plugin, which configures contexts with a custom file system. */
-  public companion object : EnginePlugin<VfsConfig, Vfs> {
+  public companion object Plugin : EnginePlugin<VfsConfig, Vfs> {
     override val key: Key<Vfs> = Key("GuestVFS")
 
     override fun install(scope: InstallationScope, configuration: VfsConfig.() -> Unit): Vfs {
       // apply the configuration and create the plugin instance
       val config = VfsConfig().apply(configuration)
       val instance = Vfs(config)
-      
+
       // subscribe to lifecycle events
       scope.lifecycle.on(EngineCreated, instance::onEngineCreated)
       scope.lifecycle.on(ContextCreated, instance::configureContext)
-      
+
       return instance
     }
   }

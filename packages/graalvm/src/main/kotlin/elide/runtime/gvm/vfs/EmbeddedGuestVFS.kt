@@ -34,6 +34,12 @@ public object EmbeddedGuestVFS {
     .setReadOnly(false)
     .build()
 
+  /** @return Embedded VFS backed by a list of [bundles], but writable. */
+  public fun writable(bundles: List<URI>): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setBundlePaths(bundles)
+    .setReadOnly(false)
+    .build()
+
   /** @return Embedded VFS backed by [bundle], but writable. */
   public fun writable(bundle: File): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
     .setBundleFiles(listOf(bundle))
@@ -48,5 +54,11 @@ public object EmbeddedGuestVFS {
   /** @return Embedded VFS backed by the provided [bundle] file. */
   public fun forBundle(vararg bundle: File): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
     .setBundleFiles(bundle.toList())
+    .build()
+
+  /** @return Embedded VFS backed by a list of [bundles]. */
+  public fun forBundles(bundles: List<URI>): GuestVFS = EmbeddedGuestVFSImpl.Builder.newBuilder()
+    .setBundlePaths(bundles)
+    .setReadOnly(false)
     .build()
 }

@@ -10,7 +10,7 @@ import elide.runtime.core.internals.graalvm.GraalVMContext
 import elide.runtime.core.internals.graalvm.GraalVMEngine
 
 @OptIn(DelicateElideApi::class)
-class EngineFactoryTest {
+internal class EngineFactoryTest {
   @Test fun testEngineFactory() {
     var engineCreationIntercepted = false
     var contextCreationIntercepted = false

@@ -20,4 +20,9 @@ import elide.runtime.gvm.internals.vfs.HostVFSImpl
 public object HostVFS {
   /** @return Factory for producing new instances of [HostVFSImpl]. */
   public fun acquire(): GuestVFS = HostVFSImpl.Builder.newBuilder().build()
+
+  /** @return Factory for producing new writable instances of [HostVFSImpl]. */
+  public fun acquireWritable(): GuestVFS = HostVFSImpl.Builder.newBuilder()
+    .setReadOnly(false)
+    .build()
 }

@@ -1,5 +1,7 @@
 package elide.runtime.core
 
+import org.graalvm.polyglot.Source
+
 /**
  * The Polyglot Context is the core of the Elide runtime: it evaluates guest code in the embedded VM, returning the
  * execution result. Context instances can be [acquired][PolyglotEngine.acquire] from a [PolyglotEngine].
@@ -32,12 +34,23 @@ package elide.runtime.core
   public fun bindings(language: GuestLanguage? = null): PolyglotValue
 
   /**
-   * Evaluate a unit of guest code in the given [language], returning the result of the execution. Depending on the
-   * configuration of the context, this method may fail if the [language] is not enabled in the underlying engine.
+   * Evaluate the given [source], returning the result of the execution. Depending on the configuration of the context,
+   * this method may fail if the selected language is not enabled in the underlying engine.
    *
-   * @param language The language of the [source] code to be evaluated.
    * @param source The guest code to be executed.
-   * @return The result of evaluating [source].
+   * @return The result of evaluating the [source].
    */
-  public fun execute(language: GuestLanguage, source: String): PolyglotValue
+  public fun execute(source: Source): PolyglotValue
+}
+
+/**
+ * Evaluate a fragment of [source] code in the specified [language], returning the result of the execution. Depending
+ * on the configuration of the context, this method may fail if the [language] is not enabled in the underlying engine.
+ *
+ * @param language The language of the [source] code.
+ * @param source The guest code to be executed.
+ * @return The result of evaluating the [source].
+ */
+@DelicateElideApi public fun PolyglotContext.execute(language: GuestLanguage, source: String): PolyglotValue {
+  return execute(Source.create(language.languageId, source))
 }

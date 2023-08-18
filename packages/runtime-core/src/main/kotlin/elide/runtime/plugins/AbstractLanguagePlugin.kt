@@ -23,13 +23,21 @@ import elide.runtime.core.GuestLanguage
   @OptIn(ExperimentalSerializationApi::class)
   protected fun resolveLanguageResources(): EmbeddedLanguageResources = runCatching {
     // resolve path relative to the common root
-    val path = "$EMBEDDED_RESOURCES_ROOT/${languageId}/$RUNTIME_MANIFEST"
+    val manifestPath = "$EMBEDDED_RESOURCES_ROOT/${languageId}/$RUNTIME_MANIFEST"
+    fun relativeToManifest(path: String) = "$manifestPath/$path"
 
-    return AbstractLanguagePlugin::class.java.getResourceAsStream(path)?.let { stream ->
+    // read and deserialize manifest
+    val manifest = AbstractLanguagePlugin::class.java.getResourceAsStream(manifestPath)?.let { stream ->
       // deserialize the manifest
       Json.decodeFromStream<EmbeddedLanguageResources>(stream)
     } ?: error(
-      "Failed to locate embedded runtime manifest at path '$path'",
+      "Failed to locate embedded runtime manifest at path '$manifestPath'",
+    )
+
+    // resolve resource paths relative to the manifest
+    EmbeddedLanguageResources(
+      bundles = manifest.bundles.map(::relativeToManifest),
+      setupScripts = manifest.setupScripts.map(::relativeToManifest),
     )
   }.getOrElse { cause ->
     // rethrow with a more meaningful message

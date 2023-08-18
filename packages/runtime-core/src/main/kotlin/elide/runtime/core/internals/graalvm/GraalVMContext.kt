@@ -1,6 +1,7 @@
 package elide.runtime.core.internals.graalvm
 
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
@@ -14,7 +15,7 @@ import elide.runtime.core.PolyglotValue
     return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
   }
 
-  override fun execute(language: GuestLanguage, source: String): PolyglotValue {
-    return context.eval(language.languageId, source)
+  override fun execute(source: Source): PolyglotValue {
+    return context.eval(source)
   }
 }

@@ -1,9 +1,11 @@
 module elide.runtime.core {
-  requires kotlin.stdlib;
-  requires org.graalvm.sdk;
   requires elide.graalvm;
-    requires kotlinx.serialization.core;
+  requires org.graalvm.sdk;
+
+  requires kotlin.stdlib;
+  requires kotlinx.serialization.core;
   requires kotlinx.serialization.json;
+  requires annotations;
 
   exports elide.runtime.core;
   exports elide.runtime.core.extensions;

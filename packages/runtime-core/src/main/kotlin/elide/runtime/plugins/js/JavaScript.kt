@@ -66,7 +66,7 @@ import elide.runtime.plugins.vfs.include
       "js.print",
       "js.polyglot-builtin",
       "js.polyglot-evalfile",
-      "js.regex-static-result",
+      "js.regexp-static-result",
       "js.scripting",
       "js.syntax-extensions",
     )

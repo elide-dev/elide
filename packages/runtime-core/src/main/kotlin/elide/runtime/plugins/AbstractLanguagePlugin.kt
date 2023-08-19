@@ -6,7 +6,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
-import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
 

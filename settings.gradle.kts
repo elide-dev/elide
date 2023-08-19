@@ -102,6 +102,7 @@ include(
   ":packages:bom",
   ":packages:core",
   ":packages:runtime-core",
+  ":packages:runtime-js",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

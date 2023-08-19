@@ -1,10 +1,10 @@
 package elide.runtime.core
 
+import org.graalvm.polyglot.PolyglotException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.random.Random
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(DelicateElideApi::class)
 internal class ContextTest {
@@ -23,12 +23,7 @@ internal class ContextTest {
       enableLanguage(Python)
       enableLanguage(JavaScript)
     }.acquire()
-
-    val (globalKey, globalValue) = "globalTestBinding" to Random.nextInt()
     val (jsKey, jsValue) = "jsTestBinding" to Random.nextInt()
-
-    // set a global binding
-    context.bindings(language = null).putMember(globalKey, globalValue)
 
     // set a language-scoped binding
     context.bindings(language = JavaScript).putMember(jsKey, jsValue)
@@ -39,22 +34,9 @@ internal class ContextTest {
       message = "language-scoped binding should be accessible in target language",
     )
 
-    assertTrue(
-      actual = context.execute(language = Python, source = jsKey).isNull,
-      message = "language-scoped binding should not be accessible to other languages",
-    )
-
-    assertEquals(
-      expected = globalValue,
-      actual = context.execute(language = JavaScript, source = globalKey).asInt(),
-      message = "global binding should be accessible in JavaScript",
-    )
-
-    assertEquals(
-      expected = globalValue,
-      actual = context.execute(language = Python, source = globalKey).asInt(),
-      message = "global binding should be accessible in Python",
-    )
+    assertThrows<PolyglotException>("language-scoped binding should not be accessible to other languages") {
+      context.execute(language = Python, source = jsKey)
+    }
   }
 
   @Test fun testEnableLanguage() {

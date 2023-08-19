@@ -1,0 +1,10 @@
+{
+  "engine": "v4",
+  "language": "TestLang",
+  "bundles": [
+    "sample-vfs.tar.gz"
+  ],
+  "setupScripts": [
+    "setup.txt"
+  ]
+}

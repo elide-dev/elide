@@ -104,6 +104,7 @@ include(
   ":packages:runtime-core",
   ":packages:runtime-js",
   ":packages:runtime-py",
+  ":packages:runtime-rb",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

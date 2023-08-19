@@ -74,20 +74,16 @@ graalvmNative {
 
 dependencies {
   // Modules
-  implementation(projects.packages.graalvm)
-
-  // Kotlin / KotlinX
+  implementation(projects.packages.runtimeCore)
+  
+  // Kotlin
   implementation(kotlin("stdlib"))
-  implementation(libs.kotlinx.serialization.core.jvm)
-  implementation(libs.kotlinx.serialization.json.jvm)
-
+  
   // Testing
   testImplementation(projects.packages.test)
-  testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testCompileOnly(libs.graalvm.sdk)
 }
 
 configureJava9ModuleInfo(project)
@@ -103,15 +99,15 @@ tasks {
 
 val buildDocs = project.properties["buildDocs"] == "true"
 publishing.publications.withType<MavenPublication> {
-  artifactId = artifactId.replace("runtime-core", "elide-runtime-core")
+  artifactId = artifactId.replace("runtime-js", "elide-runtime-js")
   if (buildDocs) {
     artifact(tasks.javadocJar)
   }
 
   pom {
-    name = "Elide runtime core"
+    name = "Elide JavaScript plugin"
     url = "https://elide.dev"
-    description = "Core API for the Elide polyglot runtime."
+    description = "JavaScript plugin for the Elide polyglot runtime."
 
     licenses {
       license {

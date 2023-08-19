@@ -1,6 +1,5 @@
 package elide.runtime.plugins.js
 
-import org.intellij.lang.annotations.Language
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
@@ -13,6 +12,6 @@ import elide.runtime.core.execute
  * @param source The JavaScript source code to be executed.
  * @return The result of the invocation.
  */
-@DelicateElideApi public fun PolyglotContext.javaScript(@Language("javascript") source: String): PolyglotValue {
+@DelicateElideApi public fun PolyglotContext.javaScript(/*language=javascript*/ source: String): PolyglotValue {
   return execute(JavaScript, source)
 }

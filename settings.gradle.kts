@@ -103,6 +103,7 @@ include(
   ":packages:core",
   ":packages:runtime-core",
   ":packages:runtime-js",
+  ":packages:runtime-py",
   ":packages:frontend",
   ":packages:graalvm",
   ":packages:graalvm-js",

@@ -204,7 +204,10 @@ val remoteCache = System.getenv("GRADLE_CACHE_REMOTE")?.toBoolean() ?: true
 val localCache = System.getenv("GRADLE_CACHE_LOCAL")?.toBoolean() ?: true
 
 buildless {
-  // nothing to configure at this time
+  remoteCache {
+    // allow disabling pushing to the remote cache
+    push = cachePush?.toBooleanStrictOrNull() ?: true
+  }
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")

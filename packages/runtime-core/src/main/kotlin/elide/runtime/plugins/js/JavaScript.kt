@@ -1,18 +1,18 @@
 package elide.runtime.plugins.js
 
-import elide.runtime.core.*
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
 import elide.runtime.plugins.js.JavaScriptVersion.*
-import elide.runtime.plugins.vfs.Vfs
-import elide.runtime.plugins.vfs.include
 
 /**
  * Engine plugin adding support for JavaScript.
@@ -27,7 +27,7 @@ import elide.runtime.plugins.vfs.include
     config.applyTo(context)
 
     // run embedded initialization code
-    resources.setupScripts.forEach { source -> context.execute(JavaScript, source) }
+    initializeEmbeddedScripts(context, resources)
   }
 
   private fun configureContext(builder: PolyglotContextBuilder): Unit = with(builder) {
@@ -126,10 +126,8 @@ import elide.runtime.plugins.vfs.include
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
 
-      scope.configuration.getOrInstall(Vfs).config.apply {
-        // add embedded bundles to the VFS
-        embedded.bundles.forEach { include(it) }
-      }
+      // register resources with the VFS
+      installEmbeddedBundles(scope, embedded)
 
       return instance
     }

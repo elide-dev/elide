@@ -25,7 +25,7 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(): GraalVMContext {
     // build a new context using the shared engine
-    val builder = Context.newBuilder().engine(engine)
+    val builder = Context.newBuilder().allowExperimentalOptions(true).engine(engine)
 
     // allow plugins to customize the context on creation
     lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
@@ -48,7 +48,7 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
      */
     fun create(configuration: GraalVMConfiguration): GraalVMEngine {
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
-      val builder = Engine.newBuilder(*languages)
+      val builder = Engine.newBuilder(*languages).allowExperimentalOptions(true)
 
       // allow plugins to customize the engine builder
       configuration.lifecycle.emit(EngineCreated, builder)

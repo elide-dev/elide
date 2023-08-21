@@ -14,8 +14,16 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
     /** Whether to enable NPM support. */
     public var enabled: Boolean = true
 
-    /** Path to look for modules at. Defaults to `node_modules`. */
-    public var modulesPath: String = "node_modules"
+    /**
+     * Path to look for modules at. Defaults to the current working directory.
+     *
+     * Note that this value does not replace the `node_modules` directory used by NPM for resolving package specifiers.
+     *
+     * For example: if `my_modules` is specified as a value, the interpreter will look for modules at both
+     * `/my_modules` *and* `/my_modules/node_modules`, as well as other pre-defined locations, according to
+     * [the Node.js specification](https://nodejs.org/api/modules.html#modules_all_together).
+     */
+    public var modulesPath: String = "."
   }
 
   public inner class BuiltInModulesConfig {

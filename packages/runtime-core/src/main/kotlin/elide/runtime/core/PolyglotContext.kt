@@ -20,7 +20,7 @@ import org.graalvm.polyglot.Source
  *
  * ### Guest code execution
  *
- * To evaluate and execute a unit of guest code, call [execute] indicating the target [GuestLanguage] and source, the
+ * To evaluate and execute a unit of guest code, call [evaluate] indicating the target [GuestLanguage] and source, the
  * returned [PolyglotValue] will contain the result of the execution, depending on the context configuration.
  */
 @DelicateElideApi public interface PolyglotContext {
@@ -40,7 +40,18 @@ import org.graalvm.polyglot.Source
    * @param source The guest code to be executed.
    * @return The result of evaluating the [source].
    */
-  public fun execute(source: Source): PolyglotValue
+  public fun evaluate(source: Source): PolyglotValue
+
+  /**
+   * Explicitly enter the context in the current thread. This can reduce the overhead when using [evaluate] repeatedly.
+   */
+  public fun enter()
+
+  /**
+   * Explicitly leave the context in the current thread. Do not call this method if a high number of [evaluate] calls
+   * is expected; instead, leave once the last call has been received.
+   */
+  public fun leave()
 }
 
 /**
@@ -51,6 +62,6 @@ import org.graalvm.polyglot.Source
  * @param source The guest code to be executed.
  * @return The result of evaluating the [source].
  */
-@DelicateElideApi public fun PolyglotContext.execute(language: GuestLanguage, source: String): PolyglotValue {
-  return execute(Source.create(language.languageId, source))
+@DelicateElideApi public fun PolyglotContext.evaluate(language: GuestLanguage, source: String): PolyglotValue {
+  return evaluate(Source.create(language.languageId, source))
 }

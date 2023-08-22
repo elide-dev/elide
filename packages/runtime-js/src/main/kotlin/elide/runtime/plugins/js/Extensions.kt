@@ -4,11 +4,11 @@ import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
-import elide.runtime.core.execute
+import elide.runtime.core.evaluate
 
 /**
  * Execute the given JavaScript [source] code, returning the result. This is equivalent to calling
- * [PolyglotContext.execute] and selecting [JavaScript] as source language.
+ * [PolyglotContext.evaluate] and selecting [JavaScript] as source language.
  *
  * @param source The JavaScript source code to be executed.
  * @param esm Whether to treat the [source] as an ESM module. If false, the code is evaluted as CommonJS source.
@@ -24,5 +24,5 @@ import elide.runtime.core.execute
     /* name = */ if(esm) "source.mjs" else "source.js",
    ).build()
 
-  return execute(src)
+  return evaluate(src)
 }

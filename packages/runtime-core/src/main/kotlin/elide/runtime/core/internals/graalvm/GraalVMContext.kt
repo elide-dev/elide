@@ -15,7 +15,15 @@ import elide.runtime.core.PolyglotValue
     return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
   }
 
-  override fun execute(source: Source): PolyglotValue {
+  override fun evaluate(source: Source): PolyglotValue {
     return context.eval(source)
+  }
+
+  override fun enter() {
+    context.enter()
+  }
+
+  override fun leave() {
+    context.leave()
   }
 }

@@ -89,7 +89,7 @@ import elide.runtime.plugins.vfs.include
       val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source)
         ?: error("Failed to load embedded resource: $source")
 
-      context.execute(this, script.bufferedReader().use { it.readText() })
+      context.evaluate(this, script.bufferedReader().use { it.readText() })
     }
   }
 

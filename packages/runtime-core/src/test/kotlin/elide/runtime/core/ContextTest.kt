@@ -30,12 +30,12 @@ internal class ContextTest {
 
     assertEquals(
       expected = jsValue,
-      actual = context.execute(language = JavaScript, source = jsKey).asInt(),
+      actual = context.evaluate(language = JavaScript, source = jsKey).asInt(),
       message = "language-scoped binding should be accessible in target language",
     )
 
     assertThrows<PolyglotException>("language-scoped binding should not be accessible to other languages") {
-      context.execute(language = Python, source = jsKey)
+      context.evaluate(language = Python, source = jsKey)
     }
   }
 
@@ -52,7 +52,7 @@ internal class ContextTest {
     """
 
     assertThrows<IllegalArgumentException> {
-      context.execute(JavaScript, code)
+      context.evaluate(JavaScript, code)
     }
   }
 
@@ -73,7 +73,7 @@ internal class ContextTest {
 
     assertEquals(
       expected = "Hello, Elide",
-      actual = context.execute(JavaScript, code).asString(),
+      actual = context.evaluate(JavaScript, code).asString(),
     )
   }
 }

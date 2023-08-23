@@ -11,7 +11,7 @@ import elide.runtime.core.DelicateElideApi
   
   /** Internal list of bundles registered for use in the VFS. */
   internal val registeredBundles: List<URI> get() = bundles
-  
+
   /** Whether the file system is writable. If false, write operations will throw an exception. */
   public var writable: Boolean = false
   
@@ -19,7 +19,7 @@ import elide.runtime.core.DelicateElideApi
    * Whether to use the host's file system instead of an embedded VFS. If true, bundles registered using [include] will
    * not be applied.
    */
-  public var useHost: Boolean = false
+  internal var useHost: Boolean = false
   
   /** Register a [bundle] to be added to the VFS on creation. */
   public fun include(bundle: URI) {

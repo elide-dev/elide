@@ -2,14 +2,14 @@ package elide.runtime.plugins.vfs
 
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
-import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
-import elide.runtime.core.EnginePlugin
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
-import elide.runtime.core.PolyglotContextBuilder
-import elide.runtime.core.PolyglotEngineBuilder
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_ALL
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.ALLOW_IO
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.gvm.vfs.HostVFS
 
@@ -21,7 +21,6 @@ import elide.runtime.gvm.vfs.HostVFS
  * val engine = PolyglotEngine {
  *   install(Vfs) {
  *     // this is the default, if set to true, registered bundles are ignored
- *     useHost = false
  *     writable = true
  *
  *     // add bundles from resources
@@ -62,6 +61,10 @@ import elide.runtime.gvm.vfs.HostVFS
     override fun install(scope: InstallationScope, configuration: VfsConfig.() -> Unit): Vfs {
       // apply the configuration and create the plugin instance
       val config = VfsConfig().apply(configuration)
+
+      // switch to the host's FS if requested in the general configuration
+      config.useHost = scope.configuration.hostAccess.useHostFs
+
       val instance = Vfs(config)
 
       // subscribe to lifecycle events
@@ -70,5 +73,12 @@ import elide.runtime.gvm.vfs.HostVFS
 
       return instance
     }
+
+    private val HostAccess.useHostFs get() = this == ALLOW_IO || this == ALLOW_ALL
   }
+}
+
+/** Configure the [Vfs] plugin, installing it if not already present. */
+@DelicateElideApi public fun PolyglotEngineConfiguration.vfs(configure: VfsConfig.() -> Unit) {
+  plugin(Vfs)?.config?.apply(configure) ?: install(Vfs, configure)
 }

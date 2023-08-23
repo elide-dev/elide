@@ -238,7 +238,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       val ctx = allocateContext()
       logging.trace { "Context ready for VM thread '${thread.name}'" }
       workerContext.set(ctx)
-      threadId.set(thread.id)
+      threadId.set(thread.threadId())
       threadName = thread.name
       logging.trace { "VM worker initialized for thread '${thread.name}'" }
     }

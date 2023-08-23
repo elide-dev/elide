@@ -34,6 +34,13 @@ public final class elide/runtime/core/EngineLifecycleEvent$EngineCreated : elide
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/runtime/core/EngineLifecycleEvent$EngineInitialized : elide/runtime/core/EngineLifecycleEvent {
+	public static final field INSTANCE Lelide/runtime/core/EngineLifecycleEvent$EngineInitialized;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/runtime/core/EnginePlugin {
 	public abstract fun getKey-wLvarY0 ()Ljava/lang/String;
 	public abstract fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
@@ -64,10 +71,13 @@ public abstract interface class elide/runtime/core/GuestLanguage {
 
 public abstract interface class elide/runtime/core/PluginRegistry {
 	public abstract fun install (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun install$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun plugin-LqGrbaI (Ljava/lang/String;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/core/PluginRegistryKt {
+	public static final fun getOrInstall (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun getOrInstall$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun plugin (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;)Ljava/lang/Object;
 	public static final fun requirePlugin (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;)Ljava/lang/Object;
 	public static final fun requirePlugin-TZlicS8 (Lelide/runtime/core/PluginRegistry;Ljava/lang/String;)Ljava/lang/Object;
@@ -76,7 +86,13 @@ public final class elide/runtime/core/PluginRegistryKt {
 public abstract interface class elide/runtime/core/PolyglotContext {
 	public abstract fun bindings (Lelide/runtime/core/GuestLanguage;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun bindings$default (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;
-	public abstract fun execute (Lelide/runtime/core/GuestLanguage;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
+	public abstract fun enter ()V
+	public abstract fun evaluate (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
+	public abstract fun leave ()V
+}
+
+public final class elide/runtime/core/PolyglotContextKt {
+	public static final fun evaluate (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 }
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
@@ -85,6 +101,18 @@ public abstract interface class elide/runtime/core/PolyglotEngine {
 
 public abstract class elide/runtime/core/PolyglotEngineConfiguration : elide/runtime/core/PluginRegistry {
 	public abstract fun enableLanguage (Lelide/runtime/core/GuestLanguage;)V
+	public final fun getHostAccess ()Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public final fun setHostAccess (Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;)V
+}
+
+public final class elide/runtime/core/PolyglotEngineConfiguration$HostAccess : java/lang/Enum {
+	public static final field ALLOW_ALL Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public static final field ALLOW_ENV Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public static final field ALLOW_IO Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public static final field ALLOW_NONE Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
+	public static fun values ()[Lelide/runtime/core/PolyglotEngineConfiguration$HostAccess;
 }
 
 public final class elide/runtime/core/extensions/ContextBuilderKt {
@@ -97,27 +125,84 @@ public final class elide/runtime/core/extensions/ContextBuilderKt {
 	public static final fun setOptions (Lorg/graalvm/polyglot/Context$Builder;[Lkotlin/Pair;)V
 }
 
+public abstract class elide/runtime/plugins/AbstractLanguageConfig {
+	public fun <init> ()V
+	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
+	public static synthetic fun applyBindings$default (Lelide/runtime/plugins/AbstractLanguageConfig;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)V
+	public final fun bindings (Lkotlin/jvm/functions/Function1;)V
+	protected final fun getIntrinsicBindings ()Ljava/util/Map;
+}
+
+public abstract class elide/runtime/plugins/AbstractLanguagePlugin : elide/runtime/core/EnginePlugin, elide/runtime/core/GuestLanguage {
+	protected static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$Companion;
+	public fun <init> ()V
+	protected final fun initializeEmbeddedScripts (Lelide/runtime/core/PolyglotContext;Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;)V
+	protected final fun installEmbeddedBundles (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;)V
+	protected final fun resolveLanguageResources ()Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;
+}
+
+protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
+}
+
+public final class elide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources {
+	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;
+	public static synthetic fun copy$default (Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBundles ()Ljava/util/List;
+	public final fun getEngine ()Ljava/lang/String;
+	public final fun getLanguage ()Ljava/lang/String;
+	public final fun getSetupScripts ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/runtime/plugins/vfs/Vfs {
-	public static final field Companion Lelide/runtime/plugins/vfs/Vfs$Companion;
+	public static final field Plugin Lelide/runtime/plugins/vfs/Vfs$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/vfs/VfsConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getConfig ()Lelide/runtime/plugins/vfs/VfsConfig;
 }
 
-public final class elide/runtime/plugins/vfs/Vfs$Companion : elide/runtime/core/EnginePlugin {
+public final class elide/runtime/plugins/vfs/Vfs$Plugin : elide/runtime/core/EnginePlugin {
 	public fun getKey-wLvarY0 ()Ljava/lang/String;
 	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/vfs/Vfs;
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
 public final class elide/runtime/plugins/vfs/VfsConfig {
-	public final fun getUseHost ()Z
 	public final fun getWritable ()Z
 	public final fun include (Ljava/net/URI;)V
-	public final fun setUseHost (Z)V
 	public final fun setWritable (Z)V
 }
 
 public final class elide/runtime/plugins/vfs/VfsConfigKt {
+	public static final fun include (Lelide/runtime/plugins/vfs/VfsConfig;Ljava/lang/String;)V
 	public static final fun include (Lelide/runtime/plugins/vfs/VfsConfig;Ljava/net/URL;)V
+}
+
+public final class elide/runtime/plugins/vfs/VfsPluginKt {
+	public static final fun vfs (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
 }
 

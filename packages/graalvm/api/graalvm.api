@@ -1676,4 +1676,3 @@ public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/E
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 }
-

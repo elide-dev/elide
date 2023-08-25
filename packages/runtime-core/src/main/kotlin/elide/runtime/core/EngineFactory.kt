@@ -1,5 +1,6 @@
 package elide.runtime.core
 
+import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMConfiguration
 import elide.runtime.core.internals.graalvm.GraalVMEngine
 
@@ -26,5 +27,8 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine
  * between them: for example, the JavaScript plugin may depend on the VFS plugin to load core intrinsics from a bundle.
  */
 @DelicateElideApi public fun PolyglotEngine(configure: PolyglotEngineConfiguration.() -> Unit = { }): PolyglotEngine {
-  return GraalVMEngine.create(GraalVMConfiguration().apply(configure))
+  val lifecycle = MutableEngineLifecycle()
+  val configuration = GraalVMConfiguration(lifecycle).apply(configure)
+
+  return GraalVMEngine.create(configuration, lifecycle)
 }

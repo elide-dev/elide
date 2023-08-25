@@ -2,12 +2,15 @@ package elide.runtime.core.internals.graalvm
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.EnvironmentAccess
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EngineLifecycleEvent.EngineInitialized
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 
@@ -20,12 +23,22 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
  */
 @DelicateElideApi internal class GraalVMEngine private constructor(
   private val lifecycle: MutableEngineLifecycle,
+  private val config: GraalVMConfiguration,
   private val engine: Engine,
 ) : PolyglotEngine {
+  /** Select an [EnvironmentAccess] configuration from the [HostAccess] settings for this engine. */
+  private fun HostAccess.toEnvAccess(): EnvironmentAccess? = when (this) {
+    ALLOW_ENV, ALLOW_ALL -> EnvironmentAccess.INHERIT
+    ALLOW_IO, ALLOW_NONE -> EnvironmentAccess.NONE
+  }
+
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(): GraalVMContext {
     // build a new context using the shared engine
-    val builder = Context.newBuilder().allowExperimentalOptions(true).engine(engine)
+    val builder = Context.newBuilder()
+      .allowExperimentalOptions(true)
+      .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
+      .engine(engine)
 
     // allow plugins to customize the context on creation
     lifecycle.emit(EngineLifecycleEvent.ContextCreated, builder)
@@ -46,18 +59,21 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event
      * for registered plugins.
      */
-    fun create(configuration: GraalVMConfiguration): GraalVMEngine {
+    fun create(
+      configuration: GraalVMConfiguration,
+      lifecycle: MutableEngineLifecycle,
+    ): GraalVMEngine {
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
       val builder = Engine.newBuilder(*languages).allowExperimentalOptions(true)
 
       // allow plugins to customize the engine builder
-      configuration.lifecycle.emit(EngineCreated, builder)
+      lifecycle.emit(EngineCreated, builder)
 
       // build the engine
-      val engine = GraalVMEngine(configuration.lifecycle, builder.build())
+      val engine = GraalVMEngine(lifecycle, configuration, builder.build())
 
       // one more event for initialization plugins
-      configuration.lifecycle.emit(EngineInitialized, engine)
+      lifecycle.emit(EngineInitialized, engine)
 
       return engine
     }

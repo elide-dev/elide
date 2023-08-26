@@ -93,8 +93,8 @@ publishing {
   publications {
     create<MavenPublication>("maven") {
       groupId = "dev.elide"
-      artifactId = "bom"
-      version = project.version as String
+      artifactId = "elide-bom"
+      version = rootProject.version as String
       from(components["versionCatalog"])
     }
   }

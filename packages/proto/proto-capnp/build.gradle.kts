@@ -23,6 +23,7 @@ plugins {
   distribution
   signing
   id("dev.elide.build.kotlin")
+  id("dev.elide.build.jvm11")
 }
 
 group = "dev.elide"

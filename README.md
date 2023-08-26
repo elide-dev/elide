@@ -26,7 +26,7 @@
 [![ECMA](https://img.shields.io/badge/ECMA-2020-blue.svg?logo=javascript)](https://262.ecma-international.org/11.0/)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7690/badge)](https://bestpractices.coreinfrastructure.org/projects/7690)
 
-Latest version: `1.0-v3-alpha4-b9`
+Latest version: `1.0-v3-alpha4-b10`
 
 <hr />
 
@@ -56,21 +56,21 @@ to use (typically `server`) and add it via Gradle or Maven:
 **`build.gradle`:**
 ```groovy
 dependencies {
-    implementation 'dev.elide:elide-server:1.0-v3-alpha4-b9'
+    implementation 'dev.elide:elide-server:1.0-v3-alpha4-b10'
 }
 ```
 
 **`build.gradle.kts`:**
 ```kotlin
 dependencies {
-    implementation("dev.elide:elide-server:1.0-v3-alpha4-b9")
+    implementation("dev.elide:elide-server:1.0-v3-alpha4-b10")
 }
 ```
 
 **`libs.versions.toml`:**
 ```toml
 [versions]
-elide = "1.0-v3-alpha4-b9"
+elide = "1.0-v3-alpha4-b10"
 
 # ...
 
@@ -84,7 +84,7 @@ elide_server = { group = "dev.elide", name = "elide-server", version.ref = "elid
 <dependency>
     <groupId>dev.elide</groupId>
     <artifactId>elide-server</artifactId>
-    <version>1.0-v3-alpha4-b9</version>
+    <version>1.0-v3-alpha4-b10</version>
 </dependency>
 ```
 

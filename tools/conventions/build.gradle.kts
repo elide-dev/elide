@@ -52,7 +52,7 @@ dependencies {
   implementation(libs.plugin.spotless)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
-  implementation(libs.plugin.sigstore)
+//  implementation(libs.plugin.sigstore)
   implementation(embeddedKotlin("allopen"))
   implementation(embeddedKotlin("noarg"))
   implementation(embeddedKotlin("serialization"))

@@ -5,7 +5,9 @@ deps:
     owner: elide
     repository: safe-html-types
     commit: 3d5d7e9b28be4293bba1e2571091590e
+    digest: shake256:7456d665f7d46d01a546fb74d48fe9233b39fc75f0a5dd8d3f645963ddb7347ac51ca9ade346f19d3ee59f787761f13619860f0a16a20a5dc2e78d0d08322931
   - remote: buf.build
     owner: googleapis
     repository: googleapis
-    commit: 75b4300737fb4efca0831636be94e517
+    commit: cc916c31859748a68fd229a3c8d7a2e8
+    digest: shake256:469b049d0eb04203d5272062636c078decefc96fec69739159c25d85349c50c34c7706918a8b216c5c27f76939df48452148cff8c5c3ae77fa6ba5c25c1b8bf8

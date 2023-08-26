@@ -28,6 +28,7 @@ import elide.runtime.gvm.internals.AbstractIntrinsicTest
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.Symbol
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
@@ -73,6 +74,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         jsvm.spawn(it)
       }
       contextManager.activate(start = false)
+      initialized.set(true)
     }
     contextManager {
       op.invoke(this)
@@ -289,7 +291,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
     // prep intrinsic bindings under test
     val bindings = if (bind) {
-      val target = HashMap<JsSymbol, Any>()
+      val target = HashMap<Symbol, Any>()
       provide().install(GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(target))
       target
     } else {

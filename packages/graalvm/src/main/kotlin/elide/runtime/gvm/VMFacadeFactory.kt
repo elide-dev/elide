@@ -14,6 +14,7 @@
 package elide.runtime.gvm
 
 import io.micronaut.context.BeanContext
+import io.micronaut.context.annotation.Prototype
 import io.micronaut.http.HttpRequest
 import java.util.ServiceLoader
 import kotlinx.coroutines.Deferred
@@ -152,5 +153,9 @@ import org.graalvm.polyglot.Context as VMContext
   /**
    * TBD.
    */
-  @Factory internal fun acquireContextManager(): ContextManager<VMContext, VMContext.Builder> = contextManager
+  @Singleton @Factory internal fun acquireContextManager(): ContextManager<VMContext, VMContext.Builder> {
+    // acquire a VM to initialize context
+    acquireVM(GuestLanguage.JAVASCRIPT)
+    return contextManager
+  }
 }

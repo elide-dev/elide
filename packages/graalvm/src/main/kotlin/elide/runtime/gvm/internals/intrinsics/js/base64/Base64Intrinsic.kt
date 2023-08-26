@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.internals.intrinsics.js.base64
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.core.encoding.base64.DefaultBase64
 import elide.runtime.gvm.internals.intrinsics.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
@@ -54,5 +55,14 @@ internal class Base64Intrinsic : JavaScriptBase64, AbstractJsIntrinsic() {
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Base64`
     bindings[BASE64_SYMBOL] = this
+
+    // mount `atob`
+    bindings[GLOBAL_ATOB.asJsSymbol()] = ProxyExecutable {
+      return@ProxyExecutable decode(it.firstOrNull()?.asString() ?: error("Cannot decode $it as string"))
+    }
+    // mount `btoa`
+    bindings[GLOBAL_BTOA.asJsSymbol()] = ProxyExecutable {
+      return@ProxyExecutable encode(it.firstOrNull()?.asString() ?: error("Cannot decode $it as string"))
+    }
   }
 }

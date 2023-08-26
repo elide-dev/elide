@@ -195,9 +195,6 @@ dependencies {
   implementation(projects.packages.graalvmKt)
   implementation(projects.packages.graalvmWasm)
 
-  // GraalVM: Tools + Compilers
-  compileOnly(libs.graalvm.svm)
-
   api(libs.picocli)
   implementation(libs.picocli.jansi.graalvm)
   implementation(libs.slf4j)
@@ -255,6 +252,9 @@ dependencies {
 
     else -> {}
   }
+
+  // GraalVM: Tools + Compilers
+  compileOnly(libs.graalvm.svm)
 
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
@@ -822,6 +822,27 @@ val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
 tasks {
   jar {
     from(collectReachabilityMetadata)
+  }
+
+  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
+    kotlinOptions {
+      jvmTarget = Elide.kotlinJvmTargetMaximum
+      javaParameters = true
+      languageVersion = Elide.kotlinLanguage
+      apiVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = false
+      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+    }
+  }
+  withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
+    kotlinOptions {
+      jvmTarget = Elide.kotlinJvmTargetMaximum
+      javaParameters = true
+      languageVersion = Elide.kotlinLanguage
+      apiVersion = Elide.kotlinLanguage
+      allWarningsAsErrors = false
+      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+    }
   }
 
 //  shadowJar {

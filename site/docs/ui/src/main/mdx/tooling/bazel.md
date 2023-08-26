@@ -66,7 +66,7 @@ By default, the latest available version of the Elide tool is used (which was av
 
 elide_bindist_repository(
     name = "elide",
-    version = "1.0-v3-alpha4-b10",
+    version = "1.0-v3-alpha4-b11",
 )
 ```
 

@@ -128,8 +128,8 @@ object Java9Modularity {
       destinationDirectory = targetDir
 
       // Configure JVM compatibility
-      sourceCompatibility = JavaVersion.VERSION_17.toString()
-      targetCompatibility = JavaVersion.VERSION_17.toString()
+      sourceCompatibility = JavaVersion.VERSION_20.toString()
+      targetCompatibility = JavaVersion.VERSION_20.toString()
 
       // Patch the compileKotlinJvm output classes into the compilation so exporting packages works correctly.
       val destinationDirProperty = compileKotlinTask.destinationDirectory.asFile
@@ -151,7 +151,7 @@ object Java9Modularity {
       from(compileJavaModuleInfo) {
         // Include **only** file we are interested in as JavaCompile output also contains some tmp files
         include("module-info.class")
-        into("META-INF/versions/17/")
+        into("META-INF/versions/20/")
       }
     }
   }

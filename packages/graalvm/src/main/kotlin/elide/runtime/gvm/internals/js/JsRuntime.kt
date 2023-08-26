@@ -231,7 +231,7 @@ internal class JsRuntime @Inject constructor (
 
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class JsRuntimeVFSConfigurator : GuestVFSConfigurator(
-    GuestLanguage.JAVASCRIPT,
+    GraalVMGuest.JAVASCRIPT,
     { runtimeInfo.get() }
   )
 

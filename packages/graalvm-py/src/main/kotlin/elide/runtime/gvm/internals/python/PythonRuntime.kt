@@ -25,12 +25,9 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.GuestRuntime
-import elide.runtime.gvm.internals.AbstractVMEngine
+import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GraalVMGuest.PYTHON
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.VMStaticProperty.Companion
 import elide.runtime.gvm.internals.python.PythonExecutableScript as PythonScript
 import elide.runtime.gvm.internals.python.PythonInvocationBindings as PythonBindings
@@ -76,7 +73,7 @@ internal class PythonRuntime : AbstractVMEngine<PythonConfig, PythonScript, Pyth
 
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class PythonRuntimeVFSConfigurator : GuestVFSConfigurator(
-    GuestLanguage.PYTHON,
+    PYTHON,
     { runtimeInfo.get() }
   )
 

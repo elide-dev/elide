@@ -232,7 +232,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     private val lastException: AtomicReference<Throwable?> = AtomicReference(null)
 
     // Initialize VM context for this executor.
-    private fun initializeVMContext() {
+    @Suppress("DEPRECATION") private fun initializeVMContext() {
       val thread = Thread.currentThread()
       logging.debug { "Allocating VM context for thread '${thread.name}'" }
       val ctx = allocateContext()

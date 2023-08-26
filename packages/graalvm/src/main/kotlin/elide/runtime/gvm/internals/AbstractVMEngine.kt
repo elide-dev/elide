@@ -171,7 +171,7 @@ public abstract class AbstractVMEngine<
   /**
    * Context manager which created this VM engine.
    */
-  internal lateinit var contextManager: ContextManager<VMContext, VMContext.Builder>
+  @Inject internal lateinit var contextManager: ContextManager<VMContext, VMContext.Builder>
 
   /**
    * Access to VM-specific configuration.

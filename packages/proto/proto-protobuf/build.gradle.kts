@@ -27,6 +27,7 @@ plugins {
   signing
   id("dev.elide.build.kotlin")
   alias(libs.plugins.protobuf)
+  id("dev.elide.build.jvm11")
 }
 
 group = "dev.elide"

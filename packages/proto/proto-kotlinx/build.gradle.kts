@@ -28,6 +28,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("dev.elide.build.multiplatform.jvm")
+  id("dev.elide.build.jvm11")
 }
 
 group = "dev.elide"

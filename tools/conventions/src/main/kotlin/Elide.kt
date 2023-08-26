@@ -84,7 +84,7 @@ object Elide {
   const val kotlinLanguageBeta = kotlinLanguage
 
   /** Minimum Java language target. */
-  const val javaTargetMinimum = "17"
+  const val javaTargetMinimum = "11"
 
   /** Maximum Java language target. */
   const val javaTargetMaximum = "20"

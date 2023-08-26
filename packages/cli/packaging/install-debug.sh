@@ -41,7 +41,7 @@
 set -e;
 set +x;
 
-TOOL_REVISION="1.0-v3-alpha4-b9";
+TOOL_REVISION="1.0-v3-alpha4-b10";
 INSTALLER_VERSION="v0.9";
 
 TOOL="cli";

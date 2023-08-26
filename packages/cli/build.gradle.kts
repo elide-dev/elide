@@ -110,6 +110,9 @@ val ktCompilerArgs = listOf(
   "-Xjsr305=strict",
   "-Xjvm-default=all",
   "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
+
+  // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
+  "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.10"
 )
 
 java {

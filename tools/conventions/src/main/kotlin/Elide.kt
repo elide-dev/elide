@@ -87,13 +87,13 @@ object Elide {
   const val javaTargetMinimum = "17"
 
   /** Maximum Java language target. */
-  const val javaTargetMaximum = "17"
+  const val javaTargetMaximum = "20"
 
   /** Maximum Kotlin JVM language target. */
-  const val kotlinJvmTargetMaximum = "17"
+  const val kotlinJvmTargetMaximum = "20"
 
   /** Maximum Java language target for Proguard. */
-  const val javaTargetProguard = "19"
+  const val javaTargetProguard = "17"
 
   /** Sample code modules. */
   val samplesList = listOf(

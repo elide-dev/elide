@@ -13,7 +13,7 @@
 
 @file:Suppress("JAVA_MODULE_DOES_NOT_READ_UNNAMED_MODULE")
 
-package elide.runtime.intrinsics.js
+package elide.runtime.intrinsics
 
 import elide.core.api.Symbolic
 

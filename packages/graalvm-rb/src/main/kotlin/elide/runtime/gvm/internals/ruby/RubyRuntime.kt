@@ -25,12 +25,9 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.ExecutionInputs
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.GuestRuntime
-import elide.runtime.gvm.internals.AbstractVMEngine
+import elide.runtime.gvm.internals.*
 import elide.runtime.gvm.internals.GVMInvocationBindings.DispatchStyle
 import elide.runtime.gvm.internals.GraalVMGuest.RUBY
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
 import elide.runtime.gvm.internals.ruby.RubyExecutableScript as RubyScript
 import elide.runtime.gvm.internals.ruby.RubyInvocationBindings as RubyBindings
 import elide.runtime.gvm.ruby.cfg.RubyRuntimeConfig as RubyConfig
@@ -75,7 +72,7 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
 
   /** Configurator: VFS. Injects JavaScript runtime assets as a VFS component. */
   @Singleton @Context class RubyRuntimeVFSConfigurator : GuestVFSConfigurator(
-    GuestLanguage.RUBY,
+    RUBY,
     { runtimeInfo.get() }
   )
 

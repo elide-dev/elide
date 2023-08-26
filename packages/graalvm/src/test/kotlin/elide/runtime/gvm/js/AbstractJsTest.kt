@@ -33,6 +33,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.gvm.internals.js.JsRuntime
 import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.Symbol
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @Suppress("unused")
@@ -68,7 +69,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
     // prep intrinsic bindings under test
     if (bind) {
       val manager = intrinsicsManager()
-      val intrinsicsMap = mutableMapOf<JsSymbol, Any>()
+      val intrinsicsMap = mutableMapOf<Symbol, Any>()
       val bindings = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(intrinsicsMap)
 
       manager.resolver().resolve(GraalVMGuest.JAVASCRIPT).forEach { intrinsic ->

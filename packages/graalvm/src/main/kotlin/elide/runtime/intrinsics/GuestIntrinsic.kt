@@ -20,7 +20,6 @@ import java.util.function.BiFunction
 import java.util.function.Function
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
-import elide.runtime.intrinsics.js.Symbol
 
 /**
  * # Guest Intrinsic

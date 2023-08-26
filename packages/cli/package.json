@@ -7,7 +7,7 @@
   "keywords": ["runtime", "js", "ts", "polyglot", "server", "framework", "kotlin", "javascript", "typescript"],
   "repository": "github:elide-dev/v3",
   "config": {
-    "elideVersion": "1.0-v3-alpha4-b9"
+    "elideVersion": "1.0-v3-alpha4-b10"
   },
   "author": {
     "name": "Sam Gammon",

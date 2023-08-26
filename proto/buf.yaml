@@ -49,5 +49,5 @@ breaking:
   use:
     - FILE
 deps:
-  - buf.build/googleapis/googleapis
+  - buf.build/googleapis/googleapis:cc916c31859748a68fd229a3c8d7a2e8
   - buf.build/elide/safe-html-types

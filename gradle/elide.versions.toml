@@ -1,11 +1,11 @@
 [versions]
 elide = "1.0-v3-alpha4-b9"
 elide_plugin = "1.0.0-beta23"
-kotlin_sdk = "1.9.0"
+kotlin_sdk = "1.9.10"
 kotlin_language = "1.9"
 confundus = "1.0.0"
 jna = "5.8.0"
-ksp = "1.9.0-1.0.13"
+ksp = "1.9.10-1.0.13"
 koin = "3.4.3"
 koin_ksp = "1.2.2"
 graalvm = "23.0.1"

@@ -1,0 +1,4 @@
+public final class elide/runtime/gvm/wasm/WebAssembly {
+	public static final field INSTANCE Lelide/runtime/gvm/wasm/WebAssembly;
+}
+

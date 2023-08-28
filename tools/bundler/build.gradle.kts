@@ -90,7 +90,7 @@ kotlin {
   afterEvaluate {
     target.compilations.all {
       kotlinOptions {
-        jvmTarget = Elide.javaTargetMinimum
+        jvmTarget = Elide.javaTargetMaximum
         languageVersion = Elide.kotlinLanguage
         apiVersion = Elide.kotlinLanguage
         javaParameters = true

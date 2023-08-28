@@ -52,14 +52,11 @@ val buildSsg by properties
 
 dependencies {
   Elide.serverModules.plus(
-    if (buildSsg == "true") {
-      listOf("ssg")
-    } else {
-      emptyList()
-    }
-  ).plus(
     Elide.multiplatformModules
   ).forEach {
+    if (it == "ssg" && buildSsg != "true") {
+      return@forEach
+    }
     testReportAggregation(project(":packages:$it"))
   }
 

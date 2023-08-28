@@ -78,8 +78,8 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
       StaticProperty.active("engine.Compilation"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
-      StaticProperty.active("compiler.Inlining"),
-      StaticProperty.active("compiler.InlineAcrossTruffleBoundary"),
+      StaticProperty.active("engine.Inlining"),
+      StaticProperty.active("engine.InlineAcrossTruffleBoundary"),
 
       // isolate options
       if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),

@@ -201,11 +201,15 @@ dependencies {
   kover(projects.packages.proto.protoProtobuf)
   kover(projects.packages.rpc)
   kover(projects.packages.server)
-  kover(projects.packages.ssg)
   kover(projects.packages.ssr)
   kover(projects.packages.test)
-  kover(projects.tools.bundler)
   kover(projects.tools.processor)
+
+  val buildSsg: String by properties
+  if (buildSsg == "true") {
+    kover(project(":packages:ssg"))
+    kover(project(":tools:bundler"))
+  }
 
   // OpenRewrite: Recipes
   rewrite(platform(libs.openrewrite.recipe.bom))

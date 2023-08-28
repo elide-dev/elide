@@ -7245,9 +7245,19 @@ public abstract interface class tools/elide/meta/GuestConfigurationOrBuilder : c
 public final class tools/elide/meta/GuestLanguage : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {
 	public static final field JAVASCRIPT Ltools/elide/meta/GuestLanguage;
 	public static final field JAVASCRIPT_VALUE I
+	public static final field JVM Ltools/elide/meta/GuestLanguage;
+	public static final field JVM_VALUE I
+	public static final field LLVM Ltools/elide/meta/GuestLanguage;
+	public static final field LLVM_VALUE I
 	public static final field NO_GUEST_ENABLED Ltools/elide/meta/GuestLanguage;
 	public static final field NO_GUEST_ENABLED_VALUE I
+	public static final field PYTHON Ltools/elide/meta/GuestLanguage;
+	public static final field PYTHON_VALUE I
+	public static final field RUBY Ltools/elide/meta/GuestLanguage;
+	public static final field RUBY_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/meta/GuestLanguage;
+	public static final field WASM Ltools/elide/meta/GuestLanguage;
+	public static final field WASM_VALUE I
 	public static fun forNumber (I)Ltools/elide/meta/GuestLanguage;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
 	public final fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
@@ -7262,18 +7272,41 @@ public final class tools/elide/meta/GuestLanguage : java/lang/Enum, com/google/p
 
 public final class tools/elide/meta/GuestPolicy : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GuestPolicyOrBuilder {
 	public static final field ALLOW_ALL_FIELD_NUMBER I
+	public static final field ALLOW_NATIVE_FIELD_NUMBER I
+	public static final field EXECUTION_TIME_FIELD_NUMBER I
+	public static final field HOST_ENV_FIELD_NUMBER I
+	public static final field HOST_IO_FIELD_NUMBER I
+	public static final field HOST_NET_FIELD_NUMBER I
+	public static final field INTEGRATED_FIELD_NUMBER I
+	public static final field ISOLATED_FIELD_NUMBER I
+	public static final field MAX_MEMORY_FIELD_NUMBER I
+	public static final field SANDBOX_FIELD_NUMBER I
+	public static final field STACK_DEPTH_FIELD_NUMBER I
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getAllowAll ()Z
+	public fun getAllowNative ()Z
 	public static fun getDefaultInstance ()Ltools/elide/meta/GuestPolicy;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/meta/GuestPolicy;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getExecutionTime ()J
+	public fun getHostEnv ()Z
+	public fun getHostIo ()Z
+	public fun getHostNet ()Z
+	public fun getIntegrated ()Z
+	public fun getIsolated ()Z
+	public fun getMaxMemory ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
 	public fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public fun getSandbox ()Z
 	public fun getSerializedSize ()I
+	public fun getStackDepth ()I
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasAllowAll ()Z
+	public fun hasIntegrated ()Z
+	public fun hasIsolated ()Z
+	public fun hasSandbox ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/GuestPolicy$Builder;
@@ -7316,14 +7349,24 @@ public final class tools/elide/meta/GuestPolicy$Builder : com/google/protobuf/Ge
 	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
 	public fun clear ()Ltools/elide/meta/GuestPolicy$Builder;
 	public fun clearAllowAll ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearAllowNative ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearExecutionTime ()Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearHostEnv ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearHostIo ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearHostNet ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearIntegrated ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearIsolated ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearMaxMemory ()Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/GuestPolicy$Builder;
 	public fun clearPolicy ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearSandbox ()Ltools/elide/meta/GuestPolicy$Builder;
+	public fun clearStackDepth ()Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -7332,13 +7375,26 @@ public final class tools/elide/meta/GuestPolicy$Builder : com/google/protobuf/Ge
 	public synthetic fun clone ()Ljava/lang/Object;
 	public fun clone ()Ltools/elide/meta/GuestPolicy$Builder;
 	public fun getAllowAll ()Z
+	public fun getAllowNative ()Z
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
 	public fun getDefaultInstanceForType ()Ltools/elide/meta/GuestPolicy;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
 	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getExecutionTime ()J
+	public fun getHostEnv ()Z
+	public fun getHostIo ()Z
+	public fun getHostNet ()Z
+	public fun getIntegrated ()Z
+	public fun getIsolated ()Z
+	public fun getMaxMemory ()I
 	public fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public fun getSandbox ()Z
+	public fun getStackDepth ()I
 	public fun hasAllowAll ()Z
+	public fun hasIntegrated ()Z
+	public fun hasIsolated ()Z
+	public fun hasSandbox ()Z
 	public final fun isInitialized ()Z
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
@@ -7354,12 +7410,22 @@ public final class tools/elide/meta/GuestPolicy$Builder : com/google/protobuf/Ge
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestPolicy$Builder;
 	public fun setAllowAll (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setAllowNative (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setExecutionTime (J)Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setHostEnv (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setHostIo (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setHostNet (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setIntegrated (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setIsolated (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setMaxMemory (I)Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setSandbox (Z)Ltools/elide/meta/GuestPolicy$Builder;
+	public fun setStackDepth (I)Ltools/elide/meta/GuestPolicy$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestPolicy$Builder;
@@ -7367,7 +7433,10 @@ public final class tools/elide/meta/GuestPolicy$Builder : com/google/protobuf/Ge
 
 public final class tools/elide/meta/GuestPolicy$PolicyCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
 	public static final field ALLOW_ALL Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static final field INTEGRATED Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static final field ISOLATED Ltools/elide/meta/GuestPolicy$PolicyCase;
 	public static final field POLICY_NOT_SET Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public static final field SANDBOX Ltools/elide/meta/GuestPolicy$PolicyCase;
 	public static fun forNumber (I)Ltools/elide/meta/GuestPolicy$PolicyCase;
 	public fun getNumber ()I
 	public static fun valueOf (I)Ltools/elide/meta/GuestPolicy$PolicyCase;
@@ -7384,11 +7453,44 @@ public final class tools/elide/meta/GuestPolicyKt$Dsl {
 	public synthetic fun <init> (Ltools/elide/meta/GuestPolicy$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun _build ()Ltools/elide/meta/GuestPolicy;
 	public final fun clearAllowAll ()V
+	public final fun clearAllowNative ()V
+	public final fun clearExecutionTime ()V
+	public final fun clearHostEnv ()V
+	public final fun clearHostIo ()V
+	public final fun clearHostNet ()V
+	public final fun clearIntegrated ()V
+	public final fun clearIsolated ()V
+	public final fun clearMaxMemory ()V
 	public final fun clearPolicy ()V
+	public final fun clearSandbox ()V
+	public final fun clearStackDepth ()V
 	public final fun getAllowAll ()Z
+	public final fun getAllowNative ()Z
+	public final fun getExecutionTime ()J
+	public final fun getHostEnv ()Z
+	public final fun getHostIo ()Z
+	public final fun getHostNet ()Z
+	public final fun getIntegrated ()Z
+	public final fun getIsolated ()Z
+	public final fun getMaxMemory ()I
 	public final fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public final fun getSandbox ()Z
+	public final fun getStackDepth ()I
 	public final fun hasAllowAll ()Z
+	public final fun hasIntegrated ()Z
+	public final fun hasIsolated ()Z
+	public final fun hasSandbox ()Z
 	public final fun setAllowAll (Z)V
+	public final fun setAllowNative (Z)V
+	public final fun setExecutionTime (J)V
+	public final fun setHostEnv (Z)V
+	public final fun setHostIo (Z)V
+	public final fun setHostNet (Z)V
+	public final fun setIntegrated (Z)V
+	public final fun setIsolated (Z)V
+	public final fun setMaxMemory (I)V
+	public final fun setSandbox (Z)V
+	public final fun setStackDepth (I)V
 }
 
 public final class tools/elide/meta/GuestPolicyKt$Dsl$Companion {
@@ -7402,14 +7504,33 @@ public final class tools/elide/meta/GuestPolicyKtKt {
 
 public abstract interface class tools/elide/meta/GuestPolicyOrBuilder : com/google/protobuf/MessageOrBuilder {
 	public abstract fun getAllowAll ()Z
+	public abstract fun getAllowNative ()Z
+	public abstract fun getExecutionTime ()J
+	public abstract fun getHostEnv ()Z
+	public abstract fun getHostIo ()Z
+	public abstract fun getHostNet ()Z
+	public abstract fun getIntegrated ()Z
+	public abstract fun getIsolated ()Z
+	public abstract fun getMaxMemory ()I
 	public abstract fun getPolicyCase ()Ltools/elide/meta/GuestPolicy$PolicyCase;
+	public abstract fun getSandbox ()Z
+	public abstract fun getStackDepth ()I
 	public abstract fun hasAllowAll ()Z
+	public abstract fun hasIntegrated ()Z
+	public abstract fun hasIsolated ()Z
+	public abstract fun hasSandbox ()Z
 }
 
 public final class tools/elide/meta/GuestSettingsStanza : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GuestSettingsStanzaOrBuilder {
 	public static final field GENERAL_FIELD_NUMBER I
 	public static final field JS_FIELD_NUMBER I
+	public static final field JVM_FIELD_NUMBER I
+	public static final field KOTLIN_FIELD_NUMBER I
 	public static final field LANG_FIELD_NUMBER I
+	public static final field LLVM_FIELD_NUMBER I
+	public static final field PYTHON_FIELD_NUMBER I
+	public static final field RUBY_FIELD_NUMBER I
+	public static final field WASM_FIELD_NUMBER I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun getDefaultInstance ()Ltools/elide/meta/GuestSettingsStanza;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
@@ -7420,14 +7541,32 @@ public final class tools/elide/meta/GuestSettingsStanza : com/google/protobuf/Ge
 	public fun getGeneralOrBuilder ()Ltools/elide/meta/GeneralLanguageSettingsOrBuilder;
 	public fun getJs ()Ltools/elide/meta/JsSettings;
 	public fun getJsOrBuilder ()Ltools/elide/meta/JsSettingsOrBuilder;
+	public fun getJvm ()Ltools/elide/meta/JvmSettings;
+	public fun getJvmOrBuilder ()Ltools/elide/meta/JvmSettingsOrBuilder;
+	public fun getKotlin ()Ltools/elide/meta/KotlinSettings;
+	public fun getKotlinOrBuilder ()Ltools/elide/meta/KotlinSettingsOrBuilder;
 	public fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public fun getLangSettingsCase ()Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public fun getLangValue ()I
+	public fun getLlvm ()Ltools/elide/meta/LlvmSettings;
+	public fun getLlvmOrBuilder ()Ltools/elide/meta/LlvmSettingsOrBuilder;
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getPython ()Ltools/elide/meta/PythonSettings;
+	public fun getPythonOrBuilder ()Ltools/elide/meta/PythonSettingsOrBuilder;
+	public fun getRuby ()Ltools/elide/meta/RubySettings;
+	public fun getRubyOrBuilder ()Ltools/elide/meta/RubySettingsOrBuilder;
 	public fun getSerializedSize ()I
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun getWasm ()Ltools/elide/meta/WasmSettings;
+	public fun getWasmOrBuilder ()Ltools/elide/meta/WasmSettingsOrBuilder;
 	public fun hasGeneral ()Z
 	public fun hasJs ()Z
+	public fun hasJvm ()Z
+	public fun hasKotlin ()Z
+	public fun hasLlvm ()Z
+	public fun hasPython ()Z
+	public fun hasRuby ()Z
+	public fun hasWasm ()Z
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
 	public static fun newBuilder ()Ltools/elide/meta/GuestSettingsStanza$Builder;
@@ -7474,12 +7613,18 @@ public final class tools/elide/meta/GuestSettingsStanza$Builder : com/google/pro
 	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun clearGeneral ()Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun clearJs ()Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearJvm ()Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearKotlin ()Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun clearLang ()Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun clearLangSettings ()Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearLlvm ()Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearPython ()Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearRuby ()Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun clearWasm ()Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -7498,11 +7643,35 @@ public final class tools/elide/meta/GuestSettingsStanza$Builder : com/google/pro
 	public fun getJs ()Ltools/elide/meta/JsSettings;
 	public fun getJsBuilder ()Ltools/elide/meta/JsSettings$Builder;
 	public fun getJsOrBuilder ()Ltools/elide/meta/JsSettingsOrBuilder;
+	public fun getJvm ()Ltools/elide/meta/JvmSettings;
+	public fun getJvmBuilder ()Ltools/elide/meta/JvmSettings$Builder;
+	public fun getJvmOrBuilder ()Ltools/elide/meta/JvmSettingsOrBuilder;
+	public fun getKotlin ()Ltools/elide/meta/KotlinSettings;
+	public fun getKotlinBuilder ()Ltools/elide/meta/KotlinSettings$Builder;
+	public fun getKotlinOrBuilder ()Ltools/elide/meta/KotlinSettingsOrBuilder;
 	public fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public fun getLangSettingsCase ()Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public fun getLangValue ()I
+	public fun getLlvm ()Ltools/elide/meta/LlvmSettings;
+	public fun getLlvmBuilder ()Ltools/elide/meta/LlvmSettings$Builder;
+	public fun getLlvmOrBuilder ()Ltools/elide/meta/LlvmSettingsOrBuilder;
+	public fun getPython ()Ltools/elide/meta/PythonSettings;
+	public fun getPythonBuilder ()Ltools/elide/meta/PythonSettings$Builder;
+	public fun getPythonOrBuilder ()Ltools/elide/meta/PythonSettingsOrBuilder;
+	public fun getRuby ()Ltools/elide/meta/RubySettings;
+	public fun getRubyBuilder ()Ltools/elide/meta/RubySettings$Builder;
+	public fun getRubyOrBuilder ()Ltools/elide/meta/RubySettingsOrBuilder;
+	public fun getWasm ()Ltools/elide/meta/WasmSettings;
+	public fun getWasmBuilder ()Ltools/elide/meta/WasmSettings$Builder;
+	public fun getWasmOrBuilder ()Ltools/elide/meta/WasmSettingsOrBuilder;
 	public fun hasGeneral ()Z
 	public fun hasJs ()Z
+	public fun hasJvm ()Z
+	public fun hasKotlin ()Z
+	public fun hasLlvm ()Z
+	public fun hasPython ()Z
+	public fun hasRuby ()Z
+	public fun hasWasm ()Z
 	public final fun isInitialized ()Z
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
@@ -7515,10 +7684,16 @@ public final class tools/elide/meta/GuestSettingsStanza$Builder : com/google/pro
 	public fun mergeFrom (Ltools/elide/meta/GuestSettingsStanza;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun mergeGeneral (Ltools/elide/meta/GeneralLanguageSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun mergeJs (Ltools/elide/meta/JsSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergeJvm (Ltools/elide/meta/JvmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergeKotlin (Ltools/elide/meta/KotlinSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergeLlvm (Ltools/elide/meta/LlvmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergePython (Ltools/elide/meta/PythonSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergeRuby (Ltools/elide/meta/RubySettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun mergeWasm (Ltools/elide/meta/WasmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/GuestSettingsStanza$Builder;
@@ -7526,19 +7701,37 @@ public final class tools/elide/meta/GuestSettingsStanza$Builder : com/google/pro
 	public fun setGeneral (Ltools/elide/meta/GeneralLanguageSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun setJs (Ltools/elide/meta/JsSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun setJs (Ltools/elide/meta/JsSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setJvm (Ltools/elide/meta/JvmSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setJvm (Ltools/elide/meta/JvmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setKotlin (Ltools/elide/meta/KotlinSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setKotlin (Ltools/elide/meta/KotlinSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun setLang (Ltools/elide/meta/GuestLanguage;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public fun setLangValue (I)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setLlvm (Ltools/elide/meta/LlvmSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setLlvm (Ltools/elide/meta/LlvmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setPython (Ltools/elide/meta/PythonSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setPython (Ltools/elide/meta/PythonSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setRuby (Ltools/elide/meta/RubySettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setRuby (Ltools/elide/meta/RubySettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setWasm (Ltools/elide/meta/WasmSettings$Builder;)Ltools/elide/meta/GuestSettingsStanza$Builder;
+	public fun setWasm (Ltools/elide/meta/WasmSettings;)Ltools/elide/meta/GuestSettingsStanza$Builder;
 }
 
 public final class tools/elide/meta/GuestSettingsStanza$LangSettingsCase : java/lang/Enum, com/google/protobuf/AbstractMessageLite$InternalOneOfEnum, com/google/protobuf/Internal$EnumLite {
 	public static final field JS Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field JVM Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field KOTLIN Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public static final field LANGSETTINGS_NOT_SET Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field LLVM Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field PYTHON Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field RUBY Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public static final field WASM Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public static fun forNumber (I)Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public fun getNumber ()I
 	public static fun valueOf (I)Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
@@ -7556,17 +7749,41 @@ public final class tools/elide/meta/GuestSettingsStanzaKt$Dsl {
 	public final synthetic fun _build ()Ltools/elide/meta/GuestSettingsStanza;
 	public final fun clearGeneral ()V
 	public final fun clearJs ()V
+	public final fun clearJvm ()V
+	public final fun clearKotlin ()V
 	public final fun clearLang ()V
 	public final fun clearLangSettings ()V
+	public final fun clearLlvm ()V
+	public final fun clearPython ()V
+	public final fun clearRuby ()V
+	public final fun clearWasm ()V
 	public final fun getGeneral ()Ltools/elide/meta/GeneralLanguageSettings;
 	public final fun getJs ()Ltools/elide/meta/JsSettings;
+	public final fun getJvm ()Ltools/elide/meta/JvmSettings;
+	public final fun getKotlin ()Ltools/elide/meta/KotlinSettings;
 	public final fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public final fun getLangSettingsCase ()Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
+	public final fun getLlvm ()Ltools/elide/meta/LlvmSettings;
+	public final fun getPython ()Ltools/elide/meta/PythonSettings;
+	public final fun getRuby ()Ltools/elide/meta/RubySettings;
+	public final fun getWasm ()Ltools/elide/meta/WasmSettings;
 	public final fun hasGeneral ()Z
 	public final fun hasJs ()Z
+	public final fun hasJvm ()Z
+	public final fun hasKotlin ()Z
+	public final fun hasLlvm ()Z
+	public final fun hasPython ()Z
+	public final fun hasRuby ()Z
+	public final fun hasWasm ()Z
 	public final fun setGeneral (Ltools/elide/meta/GeneralLanguageSettings;)V
 	public final fun setJs (Ltools/elide/meta/JsSettings;)V
+	public final fun setJvm (Ltools/elide/meta/JvmSettings;)V
+	public final fun setKotlin (Ltools/elide/meta/KotlinSettings;)V
 	public final fun setLang (Ltools/elide/meta/GuestLanguage;)V
+	public final fun setLlvm (Ltools/elide/meta/LlvmSettings;)V
+	public final fun setPython (Ltools/elide/meta/PythonSettings;)V
+	public final fun setRuby (Ltools/elide/meta/RubySettings;)V
+	public final fun setWasm (Ltools/elide/meta/WasmSettings;)V
 }
 
 public final class tools/elide/meta/GuestSettingsStanzaKt$Dsl$Companion {
@@ -7578,6 +7795,12 @@ public final class tools/elide/meta/GuestSettingsStanzaKtKt {
 	public static final synthetic fun copy (Ltools/elide/meta/GuestSettingsStanza;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/GuestSettingsStanza;
 	public static final fun getGeneralOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/GeneralLanguageSettings;
 	public static final fun getJsOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/JsSettings;
+	public static final fun getJvmOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/JvmSettings;
+	public static final fun getKotlinOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/KotlinSettings;
+	public static final fun getLlvmOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/LlvmSettings;
+	public static final fun getPythonOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/PythonSettings;
+	public static final fun getRubyOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/RubySettings;
+	public static final fun getWasmOrNull (Ltools/elide/meta/GuestSettingsStanzaOrBuilder;)Ltools/elide/meta/WasmSettings;
 }
 
 public abstract interface class tools/elide/meta/GuestSettingsStanzaOrBuilder : com/google/protobuf/MessageOrBuilder {
@@ -7585,11 +7808,29 @@ public abstract interface class tools/elide/meta/GuestSettingsStanzaOrBuilder : 
 	public abstract fun getGeneralOrBuilder ()Ltools/elide/meta/GeneralLanguageSettingsOrBuilder;
 	public abstract fun getJs ()Ltools/elide/meta/JsSettings;
 	public abstract fun getJsOrBuilder ()Ltools/elide/meta/JsSettingsOrBuilder;
+	public abstract fun getJvm ()Ltools/elide/meta/JvmSettings;
+	public abstract fun getJvmOrBuilder ()Ltools/elide/meta/JvmSettingsOrBuilder;
+	public abstract fun getKotlin ()Ltools/elide/meta/KotlinSettings;
+	public abstract fun getKotlinOrBuilder ()Ltools/elide/meta/KotlinSettingsOrBuilder;
 	public abstract fun getLang ()Ltools/elide/meta/GuestLanguage;
 	public abstract fun getLangSettingsCase ()Ltools/elide/meta/GuestSettingsStanza$LangSettingsCase;
 	public abstract fun getLangValue ()I
+	public abstract fun getLlvm ()Ltools/elide/meta/LlvmSettings;
+	public abstract fun getLlvmOrBuilder ()Ltools/elide/meta/LlvmSettingsOrBuilder;
+	public abstract fun getPython ()Ltools/elide/meta/PythonSettings;
+	public abstract fun getPythonOrBuilder ()Ltools/elide/meta/PythonSettingsOrBuilder;
+	public abstract fun getRuby ()Ltools/elide/meta/RubySettings;
+	public abstract fun getRubyOrBuilder ()Ltools/elide/meta/RubySettingsOrBuilder;
+	public abstract fun getWasm ()Ltools/elide/meta/WasmSettings;
+	public abstract fun getWasmOrBuilder ()Ltools/elide/meta/WasmSettingsOrBuilder;
 	public abstract fun hasGeneral ()Z
 	public abstract fun hasJs ()Z
+	public abstract fun hasJvm ()Z
+	public abstract fun hasKotlin ()Z
+	public abstract fun hasLlvm ()Z
+	public abstract fun hasPython ()Z
+	public abstract fun hasRuby ()Z
+	public abstract fun hasWasm ()Z
 }
 
 public final class tools/elide/meta/GuestVM : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/GuestVMOrBuilder {
@@ -7781,6 +8022,10 @@ public final class tools/elide/meta/JsLanguageLevel : java/lang/Enum, com/google
 	public static final field ES6_VALUE I
 	public static final field JS_LANGUAGE_LEVEL_DEFAULT Ltools/elide/meta/JsLanguageLevel;
 	public static final field JS_LANGUAGE_LEVEL_DEFAULT_VALUE I
+	public static final field LATEST Ltools/elide/meta/JsLanguageLevel;
+	public static final field LATEST_VALUE I
+	public static final field STABLE Ltools/elide/meta/JsLanguageLevel;
+	public static final field STABLE_VALUE I
 	public static final field UNRECOGNIZED Ltools/elide/meta/JsLanguageLevel;
 	public static fun forNumber (I)Ltools/elide/meta/JsLanguageLevel;
 	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$EnumDescriptor;
@@ -7944,10 +8189,712 @@ public abstract interface class tools/elide/meta/JsSettingsOrBuilder : com/googl
 	public abstract fun getLevelValue ()I
 }
 
+public final class tools/elide/meta/JvmSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/JvmSettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/JvmSettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/JvmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/JvmSettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/JvmSettings;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/JvmSettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/JvmSettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/JvmSettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/JvmSettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/JvmSettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/JvmSettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/JvmSettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/JvmSettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/JvmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/JvmSettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/JvmSettings;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/JvmSettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/JvmSettings$Builder;
+}
+
+public final class tools/elide/meta/JvmSettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/JvmSettingsKt;
+}
+
+public final class tools/elide/meta/JvmSettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/JvmSettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/JvmSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/JvmSettings;
+}
+
+public final class tools/elide/meta/JvmSettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/JvmSettings$Builder;)Ltools/elide/meta/JvmSettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/JvmSettingsKtKt {
+	public static final fun -initializejvmSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/JvmSettings;
+	public static final synthetic fun copy (Ltools/elide/meta/JvmSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/JvmSettings;
+}
+
+public abstract interface class tools/elide/meta/JvmSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/meta/KotlinSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/KotlinSettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/KotlinSettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/KotlinSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/KotlinSettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/KotlinSettings;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/KotlinSettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/KotlinSettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/KotlinSettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/KotlinSettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/KotlinSettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/KotlinSettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/KotlinSettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/KotlinSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/KotlinSettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/KotlinSettings;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/KotlinSettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/KotlinSettings$Builder;
+}
+
+public final class tools/elide/meta/KotlinSettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/KotlinSettingsKt;
+}
+
+public final class tools/elide/meta/KotlinSettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/KotlinSettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/KotlinSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/KotlinSettings;
+}
+
+public final class tools/elide/meta/KotlinSettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/KotlinSettings$Builder;)Ltools/elide/meta/KotlinSettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/KotlinSettingsKtKt {
+	public static final fun -initializekotlinSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/KotlinSettings;
+	public static final synthetic fun copy (Ltools/elide/meta/KotlinSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/KotlinSettings;
+}
+
+public abstract interface class tools/elide/meta/KotlinSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/meta/LlvmSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/LlvmSettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/LlvmSettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/LlvmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/LlvmSettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/LlvmSettings;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/LlvmSettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/LlvmSettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/LlvmSettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/LlvmSettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/LlvmSettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/LlvmSettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/LlvmSettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/LlvmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/LlvmSettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/LlvmSettings;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/LlvmSettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/LlvmSettings$Builder;
+}
+
+public final class tools/elide/meta/LlvmSettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/LlvmSettingsKt;
+}
+
+public final class tools/elide/meta/LlvmSettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/LlvmSettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/LlvmSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/LlvmSettings;
+}
+
+public final class tools/elide/meta/LlvmSettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/LlvmSettings$Builder;)Ltools/elide/meta/LlvmSettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/LlvmSettingsKtKt {
+	public static final fun -initializellvmSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/LlvmSettings;
+	public static final synthetic fun copy (Ltools/elide/meta/LlvmSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/LlvmSettings;
+}
+
+public abstract interface class tools/elide/meta/LlvmSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/meta/PythonSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/PythonSettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/PythonSettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/PythonSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/PythonSettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/PythonSettings;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/PythonSettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/PythonSettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/PythonSettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/PythonSettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/PythonSettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/PythonSettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/PythonSettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/PythonSettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/PythonSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/PythonSettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/PythonSettings;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/PythonSettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/PythonSettings$Builder;
+}
+
+public final class tools/elide/meta/PythonSettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/PythonSettingsKt;
+}
+
+public final class tools/elide/meta/PythonSettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/PythonSettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/PythonSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/PythonSettings;
+}
+
+public final class tools/elide/meta/PythonSettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/PythonSettings$Builder;)Ltools/elide/meta/PythonSettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/PythonSettingsKtKt {
+	public static final fun -initializepythonSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/PythonSettings;
+	public static final synthetic fun copy (Ltools/elide/meta/PythonSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/PythonSettings;
+}
+
+public abstract interface class tools/elide/meta/PythonSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
+public final class tools/elide/meta/RubySettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/RubySettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/RubySettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/RubySettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/RubySettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/RubySettings;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/RubySettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/RubySettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/RubySettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/RubySettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/RubySettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/RubySettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/RubySettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/RubySettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/RubySettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/RubySettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/RubySettings;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/RubySettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/RubySettings$Builder;
+}
+
+public final class tools/elide/meta/RubySettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/RubySettingsKt;
+}
+
+public final class tools/elide/meta/RubySettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/RubySettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/RubySettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/RubySettings;
+}
+
+public final class tools/elide/meta/RubySettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/RubySettings$Builder;)Ltools/elide/meta/RubySettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/RubySettingsKtKt {
+	public static final fun -initializerubySettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/RubySettings;
+	public static final synthetic fun copy (Ltools/elide/meta/RubySettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/RubySettings;
+}
+
+public abstract interface class tools/elide/meta/RubySettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
+}
+
 public final class tools/elide/meta/Syntax {
 	public static fun getDescriptor ()Lcom/google/protobuf/Descriptors$FileDescriptor;
 	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistry;)V
 	public static fun registerAllExtensions (Lcom/google/protobuf/ExtensionRegistryLite;)V
+}
+
+public final class tools/elide/meta/WasmSettings : com/google/protobuf/GeneratedMessageV3, tools/elide/meta/WasmSettingsOrBuilder {
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun getDefaultInstance ()Ltools/elide/meta/WasmSettings;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/WasmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getParserForType ()Lcom/google/protobuf/Parser;
+	public fun getSerializedSize ()I
+	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
+	public fun hashCode ()I
+	public final fun isInitialized ()Z
+	public static fun newBuilder ()Ltools/elide/meta/WasmSettings$Builder;
+	public static fun newBuilder (Ltools/elide/meta/WasmSettings;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun newBuilderForType ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun newBuilderForType ()Ltools/elide/meta/WasmSettings$Builder;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;)Ltools/elide/meta/WasmSettings;
+	public static fun parseDelimitedFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/ByteString;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Ljava/io/InputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom (Ljava/nio/ByteBuffer;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom ([B)Ltools/elide/meta/WasmSettings;
+	public static fun parseFrom ([BLcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings;
+	public static fun parser ()Lcom/google/protobuf/Parser;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun toBuilder ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun toBuilder ()Ltools/elide/meta/WasmSettings$Builder;
+	public fun writeTo (Lcom/google/protobuf/CodedOutputStream;)V
+}
+
+public final class tools/elide/meta/WasmSettings$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/meta/WasmSettingsOrBuilder {
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun build ()Lcom/google/protobuf/Message;
+	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
+	public fun build ()Ltools/elide/meta/WasmSettings;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/Message;
+	public synthetic fun buildPartial ()Lcom/google/protobuf/MessageLite;
+	public fun buildPartial ()Ltools/elide/meta/WasmSettings;
+	public synthetic fun clear ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clear ()Lcom/google/protobuf/MessageLite$Builder;
+	public fun clear ()Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
+	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/Message$Builder;
+	public synthetic fun clone ()Lcom/google/protobuf/MessageLite$Builder;
+	public synthetic fun clone ()Ljava/lang/Object;
+	public fun clone ()Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
+	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/MessageLite;
+	public fun getDefaultInstanceForType ()Ltools/elide/meta/WasmSettings;
+	public static final fun getDescriptor ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public fun getDescriptorForType ()Lcom/google/protobuf/Descriptors$Descriptor;
+	public final fun isInitialized ()Z
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/Message$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/MessageLite$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeFrom (Lcom/google/protobuf/Message;)Lcom/google/protobuf/Message$Builder;
+	public fun mergeFrom (Lcom/google/protobuf/Message;)Ltools/elide/meta/WasmSettings$Builder;
+	public fun mergeFrom (Ltools/elide/meta/WasmSettings;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/AbstractMessage$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun mergeUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
+	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/meta/WasmSettings$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
+	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
+	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/meta/WasmSettings$Builder;
+}
+
+public final class tools/elide/meta/WasmSettingsKt {
+	public static final field INSTANCE Ltools/elide/meta/WasmSettingsKt;
+}
+
+public final class tools/elide/meta/WasmSettingsKt$Dsl {
+	public static final field Companion Ltools/elide/meta/WasmSettingsKt$Dsl$Companion;
+	public synthetic fun <init> (Ltools/elide/meta/WasmSettings$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final synthetic fun _build ()Ltools/elide/meta/WasmSettings;
+}
+
+public final class tools/elide/meta/WasmSettingsKt$Dsl$Companion {
+	public final synthetic fun _create (Ltools/elide/meta/WasmSettings$Builder;)Ltools/elide/meta/WasmSettingsKt$Dsl;
+}
+
+public final class tools/elide/meta/WasmSettingsKtKt {
+	public static final fun -initializewasmSettings (Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/WasmSettings;
+	public static final synthetic fun copy (Ltools/elide/meta/WasmSettings;Lkotlin/jvm/functions/Function1;)Ltools/elide/meta/WasmSettings;
+}
+
+public abstract interface class tools/elide/meta/WasmSettingsOrBuilder : com/google/protobuf/MessageOrBuilder {
 }
 
 public final class tools/elide/model/BigQueryOptions : com/google/protobuf/GeneratedMessageV3, tools/elide/model/BigQueryOptionsOrBuilder {

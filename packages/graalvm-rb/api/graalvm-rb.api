@@ -1,4 +1,4 @@
-public final synthetic class elide/runtime/gvm/internals/python/$PythonRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/internals/ruby/$RubyRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
@@ -6,7 +6,7 @@ public final synthetic class elide/runtime/gvm/internals/python/$PythonRuntime$D
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/gvm/internals/python/$PythonRuntime$PythonRuntimeVFSConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/internals/ruby/$RubyRuntime$RubyRuntimeVFSConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
@@ -14,15 +14,15 @@ public final synthetic class elide/runtime/gvm/internals/python/$PythonRuntime$P
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/gvm/internals/python/PythonServerAdapter {
+public final class elide/runtime/gvm/internals/ruby/RubyServerAdapter {
 	public fun <init> ()V
 }
 
-public final class elide/runtime/gvm/python/Python {
-	public static final field INSTANCE Lelide/runtime/gvm/python/Python;
+public final class elide/runtime/gvm/ruby/Ruby {
+	public static final field INSTANCE Lelide/runtime/gvm/ruby/Ruby;
 }
 
-public final synthetic class elide/runtime/gvm/python/cfg/$PythonRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+public final synthetic class elide/runtime/gvm/ruby/cfg/$RubyRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getBeanDefinitionType ()Ljava/lang/Class;
@@ -30,8 +30,8 @@ public final synthetic class elide/runtime/gvm/python/cfg/$PythonRuntimeConfig$D
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
-	public static final field Companion Lelide/runtime/gvm/python/cfg/PythonRuntimeConfig$Companion;
+public final class elide/runtime/gvm/ruby/cfg/RubyRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/runtime/gvm/ruby/cfg/RubyRuntimeConfig$Companion;
 	public static final field DEFAULT_ENABLED Z
 	public fun <init> ()V
 	public final fun getCharset ()Ljava/nio/charset/Charset;
@@ -41,7 +41,7 @@ public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig : elide/runt
 	public fun isEnabled ()Z
 }
 
-public final class elide/runtime/gvm/python/cfg/PythonRuntimeConfig$Companion {
+public final class elide/runtime/gvm/ruby/cfg/RubyRuntimeConfig$Companion {
 	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
 	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;

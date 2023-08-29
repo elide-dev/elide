@@ -74,7 +74,7 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        api(libs.micronaut.http)
+        api(mn.micronaut.http)
         compileOnly(libs.graalvm.sdk)
       }
     }

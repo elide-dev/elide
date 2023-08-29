@@ -165,6 +165,10 @@ dependencies {
   // General
   implementation(libs.jimfs)
   implementation(libs.lmax.disruptor.core)
+  implementation(libs.jackson.core)
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.module.kotlin)
+  implementation(mn.micronaut.jackson.databind)
 
   // Compression
   implementation(libs.commons.compress)
@@ -172,10 +176,10 @@ dependencies {
   implementation(libs.zstd)
 
   // Micronaut
-  runtimeOnly(libs.micronaut.graal)
-  implementation(libs.micronaut.http)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.inject)
+  runtimeOnly(mn.micronaut.graal)
+  implementation(mn.micronaut.http)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.inject)
 
   // Netty
   implementation(libs.reactor.netty)
@@ -185,6 +189,8 @@ dependencies {
   // SQLite
   implementation(libs.sqlite)
 
+  implementation(libs.protobuf.java)
+  implementation(libs.protobuf.kotlin)
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
   implementation(projects.packages.proto.protoKotlinx)
@@ -200,7 +206,7 @@ dependencies {
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
 
   if (encloseSdk) {

@@ -104,7 +104,7 @@ kotlin {
 dependencies {
   api(libs.slf4j)
 
-  annotationProcessor(libs.micronaut.inject.java)
+  annotationProcessor(mn.micronaut.inject.java)
   annotationProcessor(libs.picocli.codegen)
 
   implementation(projects.packages.core)
@@ -118,11 +118,11 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.jdk9)
 
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.graal)
-  implementation(libs.micronaut.kotlin.extension.functions)
-  implementation(libs.micronaut.kotlin.runtime)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.graal)
+  implementation(mn.micronaut.kotlin.extension.functions)
+  implementation(mn.micronaut.kotlin.runtime)
 
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoFlatbuffers)
@@ -134,7 +134,7 @@ dependencies {
   implementation(libs.larray.buffer)
   implementation(libs.larray.mmap)
   implementation(libs.logback)
-  runtimeOnly(libs.micronaut.runtime)
+  runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -143,7 +143,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 application {

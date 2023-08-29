@@ -26,7 +26,7 @@ plugins {
   signing
 
   id("dev.elide.build.multiplatform.jvm")
-  id("dev.elide.build.jvm11")
+  id("dev.elide.build.jvm17")
   id("dev.elide.build.publishable")
 }
 
@@ -40,8 +40,14 @@ kotlin {
   jvm {
     withJava()
   }
-  js()
-  wasm()
+  js {
+    browser()
+    nodejs()
+  }
+  wasm {
+    browser()
+    nodejs()
+  }
 
   sourceSets {
     val commonMain by getting {

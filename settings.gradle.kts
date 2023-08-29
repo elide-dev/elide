@@ -58,8 +58,8 @@ dependencyResolutionManagement {
     create("libs") {
       from(files("./gradle/elide.versions.toml"))
     }
-    create("mnLibs") {
-      from("io.micronaut:micronaut-bom:$micronautVersion")
+    create("mn") {
+      from("io.micronaut.platform:micronaut-platform:$micronautVersion")
     }
   }
 }

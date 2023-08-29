@@ -81,7 +81,7 @@ kotlin {
         implementation(kotlin("stdlib"))
         implementation(kotlin("test"))
         configurations["kapt"].dependencies.add(
-          libs.micronaut.inject.java.asProvider().get()
+          mn.micronaut.inject.java.asProvider().get()
         )
       }
     }
@@ -131,10 +131,10 @@ kotlin {
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
     val wasmMain by getting {
-      dependsOn(nativeMain)
-      dependencies {
-        implementation(kotlin("stdlib-wasm"))
-      }
+      dependsOn(commonMain)
+    }
+    val wasmTest by getting {
+      dependsOn(commonTest)
     }
   }
 }

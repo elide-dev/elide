@@ -66,12 +66,12 @@ val embeddedJars by configurations.creating {
 dependencies {
   api(libs.jakarta.inject)
   api(platform(libs.netty.bom))
-  api(platform("io.micronaut:micronaut-bom:${libs.versions.micronaut.lib.get()}"))
+  api(platform("io.micronaut.platform:micronaut-platform:${libs.versions.micronaut.lib.get()}"))
   api(libs.slf4j)
 
-  kapt(libs.micronaut.inject.java)
+  kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
-  kapt(libs.micronaut.serde.processor)
+  kapt(mn.micronaut.serde.processor)
 
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
@@ -101,15 +101,15 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
 
-  implementation(libs.micronaut.inject.java)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.validation)
-  implementation(libs.micronaut.picocli)
-  implementation(libs.micronaut.http.client)
-  implementation(libs.micronaut.graal)
-  implementation(libs.micronaut.jackson.databind)
-  implementation(libs.micronaut.kotlin.extension.functions)
-  implementation(libs.micronaut.kotlin.runtime)
+  implementation(mn.micronaut.inject.java)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.validation)
+  implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.http.client)
+  implementation(mn.micronaut.graal)
+  implementation(mn.micronaut.jackson.databind)
+  implementation(mn.micronaut.kotlin.extension.functions)
+  implementation(mn.micronaut.kotlin.runtime)
 
   implementation(libs.netty.resolver.dns.native.macos)
   implementation(libs.netty.transport.native.unixCommon)
@@ -132,8 +132,8 @@ dependencies {
     "io.netty:netty-resolver-dns-native-macos:4.1.95.Final:osx-x86_64"
   )
 
-  runtimeOnly(libs.micronaut.runtime)
-  runtimeOnly(libs.micronaut.runtime.osx)
+  runtimeOnly(mn.micronaut.runtime)
+  runtimeOnly(mn.micronaut.runtime.osx)
   runtimeOnly(libs.brotli)
   runtimeOnly(libs.brotli.native.osx.amd64)
   runtimeOnly(libs.brotli.native.osx.arm64)
@@ -145,7 +145,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 
   if (buildSamples == "true") {
     testImplementation(project(testProject))

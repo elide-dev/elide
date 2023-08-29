@@ -102,7 +102,7 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
         api(libs.slf4j)
         api(libs.jakarta.inject)
-        api(libs.micronaut.inject.java)
+        api(mn.micronaut.context)
         api(libs.kotlinx.collections.immutable)
         api(libs.kotlinx.datetime)
         implementation(libs.kotlinx.serialization.core)
@@ -163,7 +163,12 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
-    val wasmMain by getting { dependsOn(commonMain) }
+    val wasmMain by getting {
+      dependsOn(commonMain)
+    }
+    val wasmTest by getting {
+      dependsOn(commonTest)
+    }
   }
 }
 

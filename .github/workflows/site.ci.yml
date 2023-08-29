@@ -112,7 +112,6 @@ jobs:
             -x check
             -x apiCheck
             -x nativeTest
-            -x testNativeImage
             -x nativeCompile
       - name: "Build: Compress Site"
         run: |

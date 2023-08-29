@@ -115,13 +115,30 @@ object Elide {
     "rpc",
     "ssr",
     "test",
+    "proto:proto-core",
   )
 
   /** Server-side only modules. */
   val serverModules = listOf(
     "graalvm",
+    "graalvm",
+    "graalvm-js",
+    "graalvm-jvm",
+    "graalvm-kt",
+    "graalvm-llvm",
+    "graalvm-py",
+    "graalvm-rb",
+    "graalvm-react",
+    "proto:proto-capnp",
+    "proto:proto-flatbuffers",
+    "proto:proto-kotlinx",
+    "proto:proto-protobuf",
     "server",
-    "ssg",
+  )
+
+  /** Packages which are not in use at this time. */
+  val disabledPackages = listOf(
+    ":packages:ssg",
   )
 
   /** Browser-side only modules. */
@@ -160,13 +177,19 @@ object Elide {
     "frontend",
     "graalvm",
     "graalvm-js",
+    "graalvm-jvm",
+    "graalvm-kt",
+    "graalvm-llvm",
+    "graalvm-py",
+    "graalvm-rb",
     "graalvm-react",
     "model",
     "platform",
     "proto:proto-core",
-    "proto:proto-protobuf",
+    "proto:proto-capnp",
     "proto:proto-flatbuffers",
     "proto:proto-kotlinx",
+    "proto:proto-protobuf",
     "rpc",
     "server",
     "ssg",
@@ -175,18 +198,19 @@ object Elide {
   ).map { ":packages:$it" }.plus(listOf(
     // Tools
     "processor",
-  ).map { ":tools:$it" })
+  ).map { ":tools:$it" }).filter {
+    !disabledPackages.contains(it)
+  }
 
   /** All subproject modules which are published. */
   val publishedSubprojects = listOf(
     "bom",
     "compiler-util",
-    "injekt",
-    "interakt",
     "redakt",
-    "sekret",
-  ).map { ":substrate:$it" }.plus(listOf(
-    ":substrate",
-    ":conventions",
-  ))
+  ).map { "substrate:$it" }
+
+  /** All publishable targets. */
+  val allPublishTargets = publishedModules.plus(
+    publishedSubprojects
+  )
 }

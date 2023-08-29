@@ -42,8 +42,8 @@ kotlin {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_20
-  targetCompatibility = JavaVersion.VERSION_20
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
 }
 
 val buildDocs = (project.properties["buildDocs"] as? String ?: "true") == "true"

@@ -134,7 +134,7 @@ else
 SIGNING_ON = false
 endif
 
-OMIT_NATIVE ?= -x nativeCompile -x testNativeImage -x nativeOptimizedCompile
+OMIT_NATIVE ?= -x nativeCompile -x nativeTest -x nativeOptimizedCompile
 
 ifneq ($(NATIVE),)
 ifneq ($(NATIVE),no)

@@ -39,6 +39,7 @@ dependencies {
   implementation(libs.plugin.buildConfig)
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.kover)
+  implementation(libs.plugin.sigstore)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.ksp)

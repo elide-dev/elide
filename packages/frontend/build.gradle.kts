@@ -42,6 +42,9 @@ kotlin {
       }
     }
   }
+  wasm {
+    d8()
+  }
 
   sourceSets {
     val jsMain by getting {
@@ -68,4 +71,6 @@ elidePackage(
   id = "frontend",
   name = "Elide Frontend",
   description = "Tools for building UI experiences on top of the Elide Framework/Runtime.",
-)
+) {
+  java9Modularity = false
+}

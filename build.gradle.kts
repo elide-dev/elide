@@ -520,17 +520,41 @@ tasks.create("docs") {
   }
 }
 
+val publishBom by tasks.registering {
+  description = "Publish BOM, Version Catalog, and platform artifacts to Elide repositories and Maven Central"
+  group = "Publishing"
+
+  dependsOn(
+    ":packages:bom:publishAllElidePublications",
+    ":packages:platform:publishAllElidePublications",
+  )
+}
+
 val publishElide by tasks.registering {
-  description = "Publish all Elide publications to Elide repositories and Maven Central"
+  description = "Publish Elide library publications to Elide repositories and Maven Central"
   group = "Publishing"
 
   dependsOn(Elide.publishedModules.map {
     project(it).tasks.named("publishAllElidePublications")
-  }.plus(Elide.publishedSubprojects.map {
+  })
+}
+
+val publishSubstrate by tasks.registering {
+  description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
+  group = "Publishing"
+
+  dependsOn(Elide.publishedSubprojects.map {
     gradle.includedBuild(it.substringBefore(":")).task(listOf(
       "",
       it.substringAfter(":"),
       "publishAllElidePublications"
     ).joinToString(":"))
-  }))
+  })
+}
+
+val publishAll by tasks.registering {
+  description = "Publish all publications to Elide repositories and Maven Central"
+  group = "Publishing"
+
+  dependsOn(publishElide, publishSubstrate, publishBom)
 }

@@ -15,7 +15,7 @@
 
 import Java9Modularity.configure as configureJava9ModuleInfo
 import com.google.devtools.ksp.gradle.KspTask
-import gradle.kotlin.dsl.accessors._3f9332120740c3ccbb72b904ececd095.sigstoreSign
+import dev.sigstore.sign.SigstoreSignExtension
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.publish.PublishingExtension
@@ -112,7 +112,10 @@ object ElidePackages {
 
   fun PublishingExtension.publishable(project: Project, info: PomInfo, javadocJarTask: TaskProvider<Jar>? = null) {
     publications.withType<MavenPublication> {
-      if (project.properties["buildDocs"] != "false") {
+      if (
+        project.properties["buildDocs"] != "false" &&
+        project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+      ) {
         (javadocJarTask ?: project.tasks.named("javadocJar").orNull)?.let { task ->
           artifact(task)
         }
@@ -156,17 +159,16 @@ object ElidePackages {
         project.tasks.named("dokkaHtml").orNull?.dependsOn(
           project.tasks.withType(KaptTask::class),
         )
+        listOf("dokkaJavadoc").forEach {
+          tasks.findByName(it)?.apply {
+            dependsOn("kaptKotlin")
+          }
+        }
       }
       if (project.plugins.hasPlugin("com.google.devtools.ksp")) {
         project.tasks.named("dokkaHtml").orNull?.dependsOn(
           project.tasks.withType(KspTask::class)
         )
-      }
-
-      listOf("dokkaJavadoc").forEach {
-        tasks.findByName(it)?.apply {
-          dependsOn("kaptKotlin")
-        }
       }
       val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 
@@ -191,7 +193,9 @@ object ElidePackages {
   }
 
   private fun Project.configureSigstore() {
-    sigstoreSign {
+    apply(plugin = "dev.sigstore.sign")
+
+    the<SigstoreSignExtension>().apply {
       oidcClient {
         gitHub {
           audience.set("sigstore")
@@ -220,7 +224,8 @@ object ElidePackages {
   fun Project.elidePackage(pkg: PackageContext) {
     val buildDocs = properties["buildDocs"] != "false"
     val enableSigning = properties["enableSigning"] != "false"
-    val release = project.properties["elide.release"] == "true" || project.properties["elide.buildMode"] == "release"
+    val release = properties["elide.release"] == "true" || properties["elide.buildMode"] == "release"
+    val enableSigstore = pkg.enableSigstore && properties["enableSigstore"] != "false"
 
     // docs typically depend on the output of kapt or ksp
     val javadocJar = if (!buildDocs && release) {
@@ -231,7 +236,7 @@ object ElidePackages {
 
     // central publishing requires signing
     if (enableSigning) {
-      if (pkg.enableSigstore) configureSigstore()
+      if (enableSigstore) configureSigstore()
       configureSigning()
     } else if (release) {
       error("Cannot release library packages without signing. Please pass `enableSigning=true`.")

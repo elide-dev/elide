@@ -17,4 +17,5 @@ plugins {
   signing
   idea
   id("dev.elide.build.substrate.base")
+  id("dev.sigstore.sign")
 }

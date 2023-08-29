@@ -37,6 +37,7 @@ plugins {
 group = "dev.elide"
 
 val buildMingw = project.properties["buildMingw"] == "true"
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -66,7 +67,7 @@ kotlin {
       }
     }
   }
-  wasm {
+  if (buildWasm) wasm {
     browser()
     nodejs()
     d8()
@@ -163,8 +164,10 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
-    val wasmMain by getting { dependsOn(commonMain) }
-    val wasmTest by getting { dependsOn(commonTest) }
+    if (buildWasm) {
+      val wasmMain by getting { dependsOn(commonMain) }
+      val wasmTest by getting { dependsOn(commonTest) }
+    }
   }
 }
 
@@ -173,12 +176,3 @@ elidePackage(
   name = "Elide Model",
   description = "Data and structure modeling runtime package for use with the Elide Framework.",
 )
-
-afterEvaluate {
-  tasks.named("compileTestDevelopmentExecutableKotlinJs") {
-    enabled = false
-  }
-  tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
-    enabled = false
-  }
-}

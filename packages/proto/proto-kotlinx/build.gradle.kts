@@ -17,6 +17,9 @@
   "DSL_SCOPE_VIOLATION",
   "UNUSED_VARIABLE",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import ElidePackages.elidePackage
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
@@ -40,6 +43,7 @@ version = rootProject.version as String
 
 val javaLanguageVersion = project.properties["versions.java.language"] as String
 val javaLanguageTarget = project.properties["versions.java.target"] as String
+val buildWasm = project.properties["buildWasm"] == "true"
 
 configurations {
   // `modelInternalJvm` is the dependency used internally by other Elide packages to access the protocol model. at
@@ -60,7 +64,7 @@ kotlin {
     browser()
     nodejs()
   }
-  wasm {
+  if (buildWasm) wasm {
     browser()
     d8()
   }

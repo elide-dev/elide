@@ -17,6 +17,9 @@
   "DSL_SCOPE_VIOLATION",
   "UNUSED_VARIABLE",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import ElidePackages.elidePackage
 
@@ -35,6 +38,7 @@ version = rootProject.version as String
 
 val javaLanguageVersion = project.properties["versions.java.minimum"] as String
 val javaLanguageTarget = project.properties["versions.java.minimum"] as String
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   jvm {
@@ -44,7 +48,7 @@ kotlin {
     browser()
     nodejs()
   }
-  wasm {
+  if (buildWasm) wasm {
     browser()
     nodejs()
   }

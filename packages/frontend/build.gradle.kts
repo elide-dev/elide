@@ -16,6 +16,9 @@
   "DSL_SCOPE_VIOLATION",
   "UnstableApiUsage",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import ElidePackages.elidePackage
 
@@ -26,6 +29,8 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -42,7 +47,7 @@ kotlin {
       }
     }
   }
-  wasm {
+  if (buildWasm) wasm {
     d8()
   }
 

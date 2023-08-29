@@ -32,6 +32,8 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+val buildWasm = project.properties["buildWasm"] == "true"
+
 kotlin {
   explicitApi()
 
@@ -48,7 +50,8 @@ kotlin {
       }
     }
   }
-  wasm {
+  jvm()
+  if (buildWasm) wasm {
     browser()
     nodejs()
     d8()
@@ -108,12 +111,3 @@ elidePackage(
   name = "Elide SSR",
   description = "Package for server-side rendering (SSR) capabilities with the Elide Framework.",
 )
-
-afterEvaluate {
-  tasks.named("compileTestDevelopmentExecutableKotlinJs") {
-    enabled = false
-  }
-  tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
-    enabled = false
-  }
-}

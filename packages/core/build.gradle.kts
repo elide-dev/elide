@@ -32,6 +32,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val buildMingw = project.properties["buildMingw"] == "true"
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -64,7 +65,7 @@ kotlin {
   tvosX64()
   if (buildMingw) mingwX64()
 
-  wasm {
+  if (buildWasm) wasm {
     nodejs()
     d8()
     browser()
@@ -130,11 +131,13 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
-    val wasmMain by getting {
-      dependsOn(commonMain)
-    }
-    val wasmTest by getting {
-      dependsOn(commonTest)
+    if (buildWasm) {
+      val wasmMain by getting {
+        dependsOn(commonMain)
+      }
+      val wasmTest by getting {
+        dependsOn(commonTest)
+      }
     }
   }
 }

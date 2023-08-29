@@ -33,6 +33,7 @@ group = "dev.elide"
 version = rootProject.version as String
 
 val buildMingw = project.properties["buildMingw"] == "true"
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -71,7 +72,7 @@ kotlin {
   tvosArm64()
   tvosX64()
 
-  wasm {
+  if (buildWasm) wasm {
     nodejs()
     d8()
     browser()
@@ -163,11 +164,13 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
-    val wasmMain by getting {
-      dependsOn(commonMain)
-    }
-    val wasmTest by getting {
-      dependsOn(commonTest)
+    if (buildWasm) {
+      val wasmMain by getting {
+        dependsOn(commonMain)
+      }
+      val wasmTest by getting {
+        dependsOn(commonTest)
+      }
     }
   }
 }
@@ -177,12 +180,3 @@ elidePackage(
   name = "Elide Base",
   description = "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms.",
 )
-
-afterEvaluate {
-  tasks.named("compileTestDevelopmentExecutableKotlinJs") {
-    enabled = false
-  }
-  tasks.named("compileTestDevelopmentExecutableKotlinWasm") {
-    enabled = false
-  }
-}

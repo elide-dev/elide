@@ -172,7 +172,6 @@ object Elide {
   val publishedModules = listOf(
     // Library Packages
     "base",
-    "bom",
     "core",
     "frontend",
     "graalvm",
@@ -184,7 +183,6 @@ object Elide {
     "graalvm-rb",
     "graalvm-react",
     "model",
-    "platform",
     "proto:proto-core",
     "proto:proto-capnp",
     "proto:proto-flatbuffers",

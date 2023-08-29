@@ -48,6 +48,9 @@ kotlin {
       }
     }
   }
+  wasm {
+    d8()
+  }
 
   sourceSets {
     val jsMain by getting {

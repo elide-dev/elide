@@ -40,6 +40,8 @@ kotlin {
   jvm {
     withJava()
   }
+  js()
+  wasm()
 
   sourceSets {
     val commonMain by getting {

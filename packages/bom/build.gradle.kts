@@ -96,8 +96,8 @@ val publishAllElidePublications by tasks.registering {
   group = "Publishing"
   description = "Publish all release publications for this Elide package"
   dependsOn(
-    tasks.named("publishMavenPublicationToElideRepository"),
-    tasks.named("publishMavenPublicationToSonatypeRepository"),
+    tasks.named("publishAllPublicationsToElideRepository"),
+    tasks.named("publishAllPublicationsToSonatypeRepository"),
   )
 }
 

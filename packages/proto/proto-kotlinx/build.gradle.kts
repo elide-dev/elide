@@ -56,6 +56,14 @@ kotlin {
   jvm {
     withJava()
   }
+  js {
+    browser()
+    nodejs()
+  }
+  wasm {
+    browser()
+    d8()
+  }
 
   sourceSets {
     /**

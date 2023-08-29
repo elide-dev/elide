@@ -31,6 +31,7 @@ plugins {
   alias(libs.plugins.dokka)
   alias(libs.plugins.versionCheck)
   alias(libs.plugins.testLogger)
+  alias(libs.plugins.nexusPublishing)
   id(libs.plugins.sonar.get().pluginId)
   id(libs.plugins.kover.get().pluginId)
 }
@@ -138,4 +139,13 @@ publishing {
     summary = "BOM for Kotlin compiler plugins and other core project infrastructure.",
     parent = true,
   )
+}
+
+nexusPublishing {
+  this@nexusPublishing.repositories {
+    sonatype {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+  }
 }

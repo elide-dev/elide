@@ -83,7 +83,7 @@ buildscript {
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val jvmCompileArgs = listOf(
-  "--enable-preview",
+  // "--enable-preview",
   "--add-exports=java.base/jdk.internal.module=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
@@ -443,7 +443,7 @@ val commonNativeArgs = listOf(
   "--language:icu4j",
   "--language:regex",
   "--no-fallback",
-  "--enable-preview",
+  // "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",

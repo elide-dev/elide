@@ -38,6 +38,8 @@ PUSH ?= no
 # IGNORE_ERRORS ?= no
 # RELOCK ?= no
 # SIGNING ?= no
+# SIGSTORE ?= no
+# WASM ?= no
 # SIGNING_KEY ?= "F812016B"
 # REMOTE ?= no
 # PUSH ?= no
@@ -99,6 +101,12 @@ else
 BUILD_ARGS += -PbuildDocsSite=false
 endif
 
+ifeq ($(WASM),yes)
+BUILD_ARGS += -PbuildWasm=true
+else
+BUILD_ARGS += -PbuildWasm=false
+endif
+
 ifeq ($(RELOCK),yes)
 BUILD_ARGS += --write-verification-metadata $(DEP_HASH_ALGO) --export-keys
 endif
@@ -132,6 +140,12 @@ ifeq ($(SIGNING),yes)
 SIGNING_ON = true
 else
 SIGNING_ON = false
+endif
+
+ifeq ($(SIGSTORE),yes)
+SIGSTORE_ON = true
+else
+SIGSTORE_ON = false
 endif
 
 OMIT_NATIVE ?= -x nativeCompile -x nativeTest -x nativeOptimizedCompile
@@ -183,31 +197,7 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 publish:  ## Publish a new version of all Elide packages.
 	$(info Publishing packages for version "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
-		:conventions:publish \
-		:substrate:compiler-util:publish \
-		:substrate:redakt:publish \
-		:substrate:injekt:publish \
-		:substrate:sekret:publish \
-		:substrate:interakt:publish \
-		:tools:processor:publish \
-		:packages:core:publish \
-		:packages:base:publish \
-		:packages:test:publish \
-		:packages:proto:proto-core:publish \
-		:packages:proto:proto-kotlinx:publish \
-		:packages:proto:proto-protobuf:publish \
-		:packages:proto:proto-flatbuffers:publish \
-		:packages:model:publish \
-		:packages:rpc:publish \
-		:packages:graalvm:publish \
-		:packages:graalvm-js:publish \
-		:packages:graalvm-react:publish \
-		:packages:ssr:publish \
-		:packages:server:publish \
-		:packages:ssg:publish \
-		:packages:platform:publish \
-		:packages:bom:publish \
-		:packages:cli:publish \
+		publishElide \
 		--no-daemon \
 		--warning-mode=none \
 		-Pversion=$(VERSION) \
@@ -215,12 +205,19 @@ publish:  ## Publish a new version of all Elide packages.
 		-PbuildDocs=true \
 		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
+		-PenableSigstore=$(SIGSTORE_ON) \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
 		$(PUBLISH_PROPS) \
 		-x test \
 		-x jvmTest \
 		-x jsTest;
+
+release:  ## Perform a full release, including publishing to Maven Central and the Elide repository.
+	@echo "Releasing version '$(VERSION)'..."
+	$(CMD)$(CP) -f .version .release
+	$(MAKE) publish
+	@echo "Release complete. Please commit changes to the '.release' file."
 
 clean-cli:  ## Clean built CLI targets.
 	$(CMD)echo "Cleaning CLI targets..."

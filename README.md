@@ -365,6 +365,7 @@ cloning the project, you can run `make help` to get familiar with some standard 
   image-runtime-jvm17            Build runtime GVM17 builder image.
   images                         Build all Docker images.
   publish                        Publish a new version of all Elide packages.
+  release                        Perform a full release, including publishing to Maven Central and the Elide repository.
   relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
   reports                        Generate reports for tests, coverage, etc.
   serve-docs                     Serve documentation locally.
@@ -389,6 +390,12 @@ cloning the project, you can run `make help` to get familiar with some standard 
   # SCAN ?= no
   # IGNORE_ERRORS ?= no
   # RELOCK ?= no
+  # SIGNING ?= no
+  # SIGSTORE ?= no
+  # WASM ?= no
+  # SIGNING_KEY ?= "F812016B"
+  # REMOTE ?= no
+  # PUSH ?= no
   ```
 
 When committing to Elide, make sure to follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)

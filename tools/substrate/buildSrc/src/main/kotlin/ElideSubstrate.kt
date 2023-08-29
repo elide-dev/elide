@@ -54,7 +54,7 @@ object ElideSubstrate {
         licenses {
           license {
             name.set("MIT License")
-            url.set("https://github.com/elide-dev/v3/blob/v3/LICENSE")
+            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
           }
         }
         developers {
@@ -68,6 +68,12 @@ object ElideSubstrate {
           url.set("https://github.com/elide-dev/v3")
         }
       }
+    }
+    project.tasks.register("publishAllElidePublications") {
+      setGroup("Publishing")
+      description = "Publish all release publications for this Elide package"
+
+      dependsOn("publishToSonatype", "publishAllPublicationsToElideRepository")
     }
   }
 }

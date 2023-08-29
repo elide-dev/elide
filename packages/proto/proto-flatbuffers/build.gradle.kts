@@ -18,14 +18,18 @@
   "UNUSED_VARIABLE",
 )
 
+import ElidePackages.elidePackage
 import io.netifi.flatbuffers.plugin.tasks.FlatBuffers
 
 plugins {
   `maven-publish`
   distribution
   signing
+
   id("dev.elide.build.kotlin")
   id("dev.elide.build.jvm11")
+  id("dev.elide.build.publishable")
+
   alias(libs.plugins.flatbuffers)
 }
 
@@ -114,52 +118,12 @@ tasks {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications {
-    /** Publication: Flatbuffers */
-    create<MavenPublication>("maven") {
-      artifactId = artifactId.replace("proto-flatbuffers", "elide-proto-flatbuffers")
-      from(components["kotlin"])
-      artifact(tasks["kotlinSourcesJar"])
-      if (buildDocs) {
-        artifact(javadocJar)
-      }
-
-      pom {
-        name = "Elide Protocol: Flatbuffers"
-        description = "Elide protocol implementation for Flatbuffers"
-        url = "https://elide.dev"
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
-        }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
-      }
-    }
-  }
+elidePackage(
+  id = "proto-flatbuffers",
+  name = "Elide Protocol: Flatbuffers",
+  description = "Elide protocol implementation for Flatbuffers",
+) {
+  java9Modularity = false
 }
 
 dependencies {

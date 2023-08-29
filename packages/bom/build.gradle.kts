@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import ElidePackages.elidePackage
+
 plugins {
   `version-catalog`
   `maven-publish`
@@ -19,6 +21,7 @@ plugins {
   idea
 
   id("org.jetbrains.kotlinx.kover")
+
   id("dev.elide.build.core")
 }
 
@@ -87,6 +90,15 @@ catalog {
       )
     }
   }
+}
+
+val publishAllElidePublications by tasks.registering {
+  group = "Publishing"
+  description = "Publish all release publications for this Elide package"
+  dependsOn(
+    tasks.named("publishMavenPublicationToElideRepository"),
+    tasks.named("publishMavenPublicationToSonatypeRepository"),
+  )
 }
 
 publishing {

@@ -39,6 +39,7 @@ plugins {
   id(libs.plugins.kover.get().pluginId)
   id(libs.plugins.kotlinx.plugin.abiValidator.get().pluginId)
   id(libs.plugins.detekt.get().pluginId)
+  id(libs.plugins.nexusPublishing.get().pluginId)
   alias(libs.plugins.gradle.testretry)
   alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.gradle.checksum)
@@ -80,7 +81,7 @@ val enableKnit: String? by properties
 val enableProguard: String? by properties
 
 val buildSsg: String by properties
-val buildDocs by properties
+val buildDocs: String by properties
 
 buildscript {
   repositories {
@@ -496,6 +497,15 @@ idea {
   }
 }
 
+nexusPublishing {
+  this@nexusPublishing.repositories {
+    sonatype {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+  }
+}
+
 tasks.create("docs") {
   if (buildDocs == "true") {
     dependsOn(
@@ -508,4 +518,19 @@ tasks.create("docs") {
       )
     )
   }
+}
+
+val publishElide by tasks.registering {
+  description = "Publish all Elide publications to Elide repositories and Maven Central"
+  group = "Publishing"
+
+  dependsOn(Elide.publishedModules.map {
+    project(it).tasks.named("publishAllElidePublications")
+  }.plus(Elide.publishedSubprojects.map {
+    gradle.includedBuild(it.substringBefore(":")).task(listOf(
+      "",
+      it.substringAfter(":"),
+      "publishAllElidePublications"
+    ).joinToString(":"))
+  }))
 }

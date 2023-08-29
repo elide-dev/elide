@@ -17,8 +17,11 @@
   "UnstableApiUsage",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
   id("dev.elide.build.js")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -61,61 +64,8 @@ kotlin {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-    artifactId = artifactId.replace("frontend", "elide-frontend")
-
-    pom {
-      name = "Elide Model"
-      url = "https://elide.dev"
-      description = (
-        "Tools for building UI experiences on top of the Elide Framework/Runtime"
-        )
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
-
-val enableSigning: String? by properties
-if (enableSigning == "true") {
-  afterEvaluate {
-    listOf(
-      "publishKotlinMultiplatformPublicationToElideRepository" to "signKotlinMultiplatformPublication",
-    ).forEach {
-      tasks.named(it.first).configure {
-        dependsOn(it.second)
-      }
-    }
-  }
-}
+elidePackage(
+  id = "frontend",
+  name = "Elide Frontend",
+  description = "Tools for building UI experiences on top of the Elide Framework/Runtime.",
+)

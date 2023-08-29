@@ -17,9 +17,13 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
-  id("dev.elide.build.jvm")
   id("com.google.devtools.ksp")
+
+  id("dev.elide.build.jvm")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide.tools"
@@ -84,4 +88,12 @@ dependencies {
   // Testing
   testImplementation(kotlin("test"))
   testImplementation(projects.packages.test)
+}
+
+elidePackage(
+  id = "processor",
+  name = "Elide KSP Processor",
+  description = "Annotation processor for KSP and Elide",
+) {
+  java9Modularity = false
 }

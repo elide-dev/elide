@@ -21,7 +21,9 @@ plugins {
   idea
 
   id("org.jetbrains.kotlinx.kover")
+
   id("dev.elide.build.core")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -87,6 +89,15 @@ publishing {
 
 sonarqube {
   isSkipProject = true
+}
+
+val publishAllElidePublications by tasks.registering {
+  group = "Publishing"
+  description = "Publish all release publications for this Elide package"
+  dependsOn(
+    tasks.named("publishMavenPublicationToElideRepository"),
+    tasks.named("publishMavenPublicationToSonatypeRepository"),
+  )
 }
 
 publishing {

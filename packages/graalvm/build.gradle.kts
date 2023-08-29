@@ -19,15 +19,18 @@
   "COMPATIBILITY_WARNING",
 )
 
+import ElidePackages.elidePackage
 import kotlinx.benchmark.gradle.*
-import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
   kotlin("plugin.allopen")
+
   id("dev.elide.build.native.lib")
+  id("dev.elide.build.publishable")
+
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
 }
@@ -205,7 +208,11 @@ dependencies {
   }
 }
 
-configureJava9ModuleInfo(project)
+elidePackage(
+  id = "graalvm",
+  name = "Elide for GraalVM",
+  description = "Integration package with GraalVM and GraalJS.",
+)
 
 tasks {
   test {
@@ -213,46 +220,5 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
-  }
-}
-
-val buildDocs = project.properties["buildDocs"] == "true"
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = artifactId.replace("graalvm", "elide-graalvm")
-    if (buildDocs) {
-      artifact(tasks.javadocJar)
-    }
-
-    pom {
-      name = "Elide for GraalVM"
-      url = "https://elide.dev"
-      description = "Integration package with GraalVM and GraalJS."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
-
-if (buildDocs) {
-  listOf("dokkaJavadoc").forEach {
-    tasks.named(it).configure {
-      dependsOn("kaptKotlin")
-    }
   }
 }

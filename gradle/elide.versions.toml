@@ -23,6 +23,7 @@ grpc_web = "1.4.2"
 konform = "0.4.0"
 arrow = "1.2.0"
 sigstore = "0.4.2"
+nexusPublishing = "1.3.0"
 testcontainers = "1.17.6"
 dependencyAnalysis = "1.20.0"
 errorprone = "2.20.0"
@@ -273,6 +274,7 @@ micronaut_graalvm = { id = "io.micronaut.graalvm", version.ref = "micronaut_plug
 micronaut_aot = { id = "io.micronaut.aot", version.ref = "micronaut_plugin" }
 micronaut_crac = { id = "io.micronaut.crac", version.ref = "micronaut_plugin" }
 micronaut_test_resources = { id = "io.micronaut.test-resources", version.ref = "micronaut_plugin" }
+nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishing" }
 node = { id = "com.github.node-gradle.node", version.ref = "node_plugin" }
 docker = { id = "com.bmuschko.docker-java-application", version.ref = "docker_plugin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow_plugin" }
@@ -663,6 +665,7 @@ openrewrite_recipe_sql = { group = "org.openrewrite.recipe", name = "rewrite-sql
 openrewrite_recipe_sandbox = { group = "org.openrewrite.recipe", name = "rewrite-sandbox" }
 wasmtime = { group = "io.github.kawamuray.wasmtime", name = "wasmtime-java", version.ref = "wasmtime" }
 ## Plugin Aliases
+plugin_nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plugin", version.ref = "nexusPublishing" }
 plugin_mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-gradle-plugin", version.ref = "mosaic" }
 plugin_flatbuffers = { group = "gradle.plugin.io.netifi", name = "gradle-flatbuffers-plugin", version.ref = "flatbuffers_plugin" }
 plugin_buildConfig = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildconfig_plugin" }

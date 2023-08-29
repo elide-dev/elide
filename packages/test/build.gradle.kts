@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Elide Ventures, LLC.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
@@ -6,10 +19,11 @@
   "OPT_IN_USAGE",
 )
 
-//import Java9Modularity.configure as configureJava9ModuleInfo
+import ElidePackages.elidePackage
 
 plugins {
   id("dev.elide.build.multiplatform")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -66,20 +80,6 @@ kotlin {
           useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
         }
       })
-    }
-  }
-
-  val publicationsFromMainHost =
-    listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
-
-  publishing {
-    publications {
-      matching { it.name in publicationsFromMainHost }.all {
-        val targetPublication = this@all
-        tasks.withType<AbstractPublishToMaven>()
-          .matching { it.publication == targetPublication }
-          .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
-      }
     }
   }
 
@@ -183,48 +183,10 @@ kotlin {
   }
 }
 
-//configureJava9ModuleInfo(project)
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-    artifactId = artifactId.replace("test", "elide-test")
-
-    pom {
-      name = "Elide Test"
-      url = "https://github.com/elide-dev/elide"
-      description = "Universal testing utilities in every language supported by Kotlin and Elide."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/v3"
-      }
-    }
-  }
+elidePackage(
+  id = "test",
+  name = "Elide Test",
+  description = "Universal testing utilities in every language supported by Kotlin and Elide.",
+) {
+  java9Modularity = false
 }

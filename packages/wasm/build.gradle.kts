@@ -14,9 +14,12 @@
 @file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
 @file:Suppress("UnstableApiUsage")
 
+import ElidePackages.elidePackage
+
 plugins {
   id("dev.elide.build")
   id("dev.elide.build.multiplatform")
+  id("dev.elide.build.publishable")
 }
 
 kotlin {
@@ -55,31 +58,8 @@ kotlin {
   }
 }
 
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = artifactId.replace("wasm", "elide-wasm")
-
-    pom {
-      name = "Elide WASM Runtime"
-      url = "https://elide.dev"
-      description = "Integration with WASM/WASI for Elide."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
+elidePackage(
+  id = "wasm",
+  name = "Elide WASM",
+  description = "Integration with WASM/WASI for Elide.",
+)

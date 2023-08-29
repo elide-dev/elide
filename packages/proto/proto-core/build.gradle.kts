@@ -18,12 +18,16 @@
   "UNUSED_VARIABLE",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
   `maven-publish`
   distribution
   signing
+
   id("dev.elide.build.multiplatform.jvm")
   id("dev.elide.build.jvm11")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -108,48 +112,10 @@ tasks {
   }
 }
 
-val sourcesJar by tasks.getting(org.gradle.jvm.tasks.Jar::class)
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-
-    artifactId = artifactId.replace("proto-core", "elide-proto-core")
-
-    pom {
-      name = "Elide Protocol: API"
-      description = "API headers and services for the Elide Protocol"
-      url = "https://elide.dev"
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
+elidePackage(
+  id = "proto-core",
+  name = "Elide Protocol: API",
+  description = "API headers and services for the Elide Protocol.",
+) {
+  java9Modularity = false
 }

@@ -13,6 +13,8 @@
 
 @file:Suppress("UnstableApiUsage")
 
+import ElideSubstrate.elideTarget
+
 plugins {
   `maven-publish`
   distribution
@@ -73,36 +75,11 @@ artifacts {
 }
 
 publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      group = "dev.elide.tools"
-      artifactId = "compiler-util"
-      version = rootProject.version as String
-      from(components["kotlin"])
-      artifact(tasks["testArchive"])
-
-      pom {
-        name = "Elide Substrate: Compiler Utilities"
-        url = "https://github.com/elide-dev/v3"
-        description = "Provides utilities for Elide Kotlin Compiler plugins."
-
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/v3/blob/v3/LICENSE"
-          }
-        }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/v3"
-        }
-      }
-    }
-  }
+  elideTarget(
+    project,
+    label = "Elide Substrate: Compiler Utilities",
+    group = "dev.elide.tools",
+    artifact = "compiler-util",
+    summary = "Provides utilities for Elide Kotlin Compiler plugins.",
+  )
 }

@@ -17,13 +17,17 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
   kotlin("kapt")
   kotlin("plugin.allopen")
+
   id("dev.elide.build.native.lib")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -48,40 +52,10 @@ dependencies {
   testImplementation(projects.packages.test)
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = artifactId.replace("graalvm-rb", "elide-graalvm-rb")
-
-    pom {
-      name = "Elide Ruby for GraalVM"
-      url = "https://elide.dev"
-      description = "Integration package with GraalVM and TruffleRuby."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
-
-if (buildDocs) {
-  listOf("dokkaJavadoc").forEach {
-    tasks.named(it).configure {
-      dependsOn("kaptKotlin")
-    }
-  }
+elidePackage(
+  id = "graalvm-rb",
+  name = "Elide Ruby for GraalVM",
+  description = "Integration package with GraalVM and TruffleRuby.",
+) {
+  java9Modularity = false
 }

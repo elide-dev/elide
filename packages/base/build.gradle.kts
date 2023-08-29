@@ -21,11 +21,12 @@
   org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class,
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
+import ElidePackages.elidePackage
 
 plugins {
   id("dev.elide.build")
   id("dev.elide.build.multiplatform")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -166,57 +167,11 @@ kotlin {
   }
 }
 
-configureJava9ModuleInfo(project)
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-tasks.jvmJar {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-    artifactId = artifactId.replace("base", "elide-base")
-
-    pom {
-      name = "Elide Base"
-      url = "https://elide.dev"
-      description = (
-              "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms."
-              )
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
+elidePackage(
+  id = "base",
+  name = "Elide Base",
+  description = "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms.",
+)
 
 afterEvaluate {
   tasks.named("compileTestDevelopmentExecutableKotlinJs") {

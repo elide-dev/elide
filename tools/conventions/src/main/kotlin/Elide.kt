@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 /** Static library configuration values. */
 object Elide {
   /** Name of the library. */

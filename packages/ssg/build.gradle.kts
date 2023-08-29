@@ -13,7 +13,9 @@ plugins {
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
   id("io.micronaut.aot")
+
   id("dev.elide.build.jvm.kapt")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"

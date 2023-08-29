@@ -18,10 +18,11 @@ import io.micronaut.context.annotation.Context
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
+import io.micronaut.http.MediaType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import jakarta.inject.Inject
 import kotlinx.coroutines.Deferred
@@ -64,12 +65,10 @@ public class ServerAssetManager @Inject internal constructor(
 
   // Build an HTTP asset response from the provided asset result.
   private fun buildAssetResponse(asset: RenderedAsset): StreamedAssetResponse {
-    val responseData = NettyStreamedFileCustomizableResponseType(
-      ByteArrayInputStream(asset.producer.invoke().toByteArray()),
-      asset.type.mediaType
-    )
+    val responseData = asset.type.mediaType to ByteArrayInputStream(asset.producer.invoke().toByteArray())
+
     val response = HttpResponse.ok(
-      responseData
+      responseData as Pair<MediaType, InputStream>
     ).characterEncoding(
       StandardCharsets.UTF_8
     ).contentType(

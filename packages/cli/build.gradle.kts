@@ -22,7 +22,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import Java9Modularity.configure as configureJava9ModuleInfo
 
 plugins {
   java
@@ -177,7 +176,7 @@ buildConfig {
 dependencies {
   implementation(platform(libs.netty.bom))
 
-  kapt(libs.micronaut.inject.java)
+  kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
 
   api(projects.packages.base)
@@ -211,16 +210,16 @@ dependencies {
 
   implementation(libs.kotlinx.coroutines.core)
 
-  api(libs.micronaut.inject)
-  implementation(libs.micronaut.picocli)
-  runtimeOnly(libs.micronaut.context)
-  runtimeOnly(libs.micronaut.kotlin.runtime)
+  api(mn.micronaut.inject)
+  implementation(mn.micronaut.picocli)
+  runtimeOnly(mn.micronaut.context)
+  runtimeOnly(mn.micronaut.kotlin.runtime)
 
   implementation(projects.packages.proto.protoCore)
   implementation(projects.packages.proto.protoProtobuf)
   runtimeOnly(projects.packages.proto.protoKotlinx)
 
-  runtimeOnly(libs.micronaut.graal)
+  runtimeOnly(mn.micronaut.graal)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -265,7 +264,7 @@ dependencies {
   compileOnly(libs.graalvm.truffle.nfi)
   compileOnly(libs.graalvm.truffle.nfi.libffi)
 
-  runtimeOnly(libs.micronaut.runtime)
+  runtimeOnly(mn.micronaut.runtime)
 
   testImplementation(kotlin("test"))
   testImplementation(kotlin("test-junit5"))
@@ -274,7 +273,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-  testImplementation(libs.micronaut.test.junit5)
+  testImplementation(mn.micronaut.test.junit5)
 }
 
 application {
@@ -910,8 +909,6 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("dockerBuil
 tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedDockerBuild") {
   enabled = false
 }
-
-configureJava9ModuleInfo(project)
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {

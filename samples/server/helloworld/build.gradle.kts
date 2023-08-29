@@ -41,8 +41,8 @@ micronaut {
 dependencies {
   ksp(project(":tools:processor"))
   implementation(project(":packages:server"))
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.runtime)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
   implementation(libs.kotlinx.html.jvm)
   runtimeOnly(libs.logback)
 }

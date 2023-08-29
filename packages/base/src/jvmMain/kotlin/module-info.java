@@ -14,10 +14,9 @@
 module elide.base {
     requires java.base;
     requires kotlin.stdlib;
-    requires io.micronaut.inject;
     requires jakarta.inject;
-    requires jakarta.annotation;
     requires org.slf4j;
+    requires io.micronaut.inject;
 
     exports elide.annotations;
     exports elide.annotations.base;

@@ -104,7 +104,7 @@ kotlin {
         implementation(kotlin("stdlib-jdk8"))
         implementation(projects.packages.base)
         implementation(projects.packages.server)
-        configurations["kapt"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
+        configurations["kapt"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
 
         // Protobuf
         implementation(libs.protobuf.java)
@@ -122,14 +122,14 @@ kotlin {
         implementation(libs.grpc.kotlin.stub)
 
         // Micronaut
-        implementation(libs.micronaut.http)
-        implementation(libs.micronaut.context)
-        implementation(libs.micronaut.inject)
-        implementation(libs.micronaut.inject.java)
-        implementation(libs.micronaut.management)
-        implementation(libs.micronaut.grpc.runtime)
-        implementation(libs.micronaut.grpc.client.runtime)
-        implementation(libs.micronaut.grpc.server.runtime)
+        implementation(mn.micronaut.http)
+        implementation(mn.micronaut.context)
+        implementation(mn.micronaut.inject)
+        implementation(mn.micronaut.inject.java)
+        implementation(mn.micronaut.management)
+        implementation(mn.micronaut.grpc.runtime)
+        implementation(mn.micronaut.grpc.client.runtime)
+        implementation(mn.micronaut.grpc.server.runtime)
 
         // Serialization
         implementation(libs.kotlinx.serialization.core)
@@ -153,12 +153,12 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("test-junit5"))
-        configurations["kaptTest"].dependencies.add(libs.micronaut.inject.java.asProvider().get())
+        configurations["kaptTest"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
 
         // Testing
         implementation(projects.packages.test)
         implementation(kotlin("test-junit5"))
-        implementation(libs.micronaut.test.junit5)
+        implementation(mn.micronaut.test.junit5)
         implementation(libs.junit.jupiter.api)
         implementation(libs.junit.jupiter.params)
         runtimeOnly(libs.junit.jupiter.engine)

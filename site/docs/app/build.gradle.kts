@@ -221,7 +221,7 @@ application {
 }
 
 dependencies {
-  annotationProcessor(libs.micronaut.serde.processor)
+  annotationProcessor(mn.micronaut.serde.processor)
   compileOnly(libs.graalvm.sdk)
   ksp(project(":tools:processor"))
   ksp(libs.autoService.ksp)
@@ -237,11 +237,11 @@ dependencies {
   implementation(libs.jackson.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.jsr310)
-  implementation(libs.micronaut.context)
-  implementation(libs.micronaut.runtime)
-  implementation(libs.micronaut.cache.core)
-  implementation(libs.micronaut.cache.caffeine)
-  implementation(libs.micronaut.views.core)
+  implementation(mn.micronaut.context)
+  implementation(mn.micronaut.runtime)
+  implementation(mn.micronaut.cache.core)
+  implementation(mn.micronaut.cache.caffeine)
+  implementation(mn.micronaut.views.core)
   implementation(libs.micronaut.serde.api)
   implementation(libs.micronaut.jackson.databind)
   implementation(libs.kotlinx.html.jvm)

@@ -28,6 +28,7 @@ val defaultKotlinVersion = "1.9"
 
 val strictMode = project.properties["strictMode"] as? String == "true"
 val enableK2 = project.properties["elide.kotlin.k2"] as? String == "true"
+val kotlinVersion = project.properties["versions.kotlin.sdk"] as? String
 val javaLanguageVersion = project.properties["versions.java.language"] as? String ?: defaultJavaVersion
 val javaLanguageTarget = project.properties["versions.java.target"] as? String ?: defaultJavaVersion
 val kotlinLanguageVersion = project.properties["versions.kotlin.language"] as? String ?: defaultKotlinVersion
@@ -80,14 +81,20 @@ noArg {
 // Tool: Kover
 // -----------
 // Settings for Kotlin coverage.
-// Tool: Kover
-// -----------
-// Settings for Kotlin coverage.
 extensions.configure<kotlinx.kover.gradle.plugin.dsl.KoverReportExtension> {
   defaults {
     xml {
       //  generate an XML report when running the `check` task
       onCheck = properties["elide.ci"] == "true"
+    }
+  }
+}
+
+configurations.all {
+  resolutionStrategy.eachDependency {
+    if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
+      useVersion(kotlinVersion ?: "1.9.10")
+      because("pin kotlin stdlib")
     }
   }
 }

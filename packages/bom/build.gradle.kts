@@ -54,7 +54,7 @@ val peers = mapOf(
   "guava" to ("com.google.guava:guava" to libs.versions.guava.get()),
   "protobuf" to ("com.google.protobuf:protobuf-java" to libs.versions.protobuf.get()),
   "grpc" to ("io.grpc:grpc-bom" to libs.versions.grpc.java.get()),
-  "micronaut" to ("io.micronaut:micronaut-bom" to libs.versions.micronaut.lib.get()),
+  "micronaut" to ("io.micronaut.platform:micronaut-platform" to libs.versions.micronaut.lib.get()),
 )
 
 kover {

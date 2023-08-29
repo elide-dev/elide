@@ -17,11 +17,12 @@ package elide.server
 
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpResponse
-import io.micronaut.http.server.netty.types.files.NettyStreamedFileCustomizableResponseType
 import org.reactivestreams.Publisher
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -46,7 +47,7 @@ public typealias RawResponse = HttpResponse<RawPayload>
 /**
  * Raw streamed file alias, used internally for assets.
  */
-public typealias StreamedAsset = NettyStreamedFileCustomizableResponseType
+public typealias StreamedAsset = Pair<MediaType, InputStream>
 
 /**
  * Raw streamed file response, used internally for assets.
@@ -332,10 +333,7 @@ internal class CssContent(
     val contentBytes = CssBuilder().apply(builder).toString().toByteArray(
       StandardCharsets.UTF_8
     )
-    return NettyStreamedFileCustomizableResponseType(
-      ByteArrayInputStream(contentBytes),
-      AssetType.STYLESHEET.mediaType,
-    )
+    return AssetType.STYLESHEET.mediaType to ByteArrayInputStream(contentBytes)
   }
 }
 

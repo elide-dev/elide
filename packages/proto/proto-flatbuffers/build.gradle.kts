@@ -27,7 +27,7 @@ plugins {
   signing
 
   id("dev.elide.build.kotlin")
-  id("dev.elide.build.jvm11")
+  id("dev.elide.build.jvm17")
   id("dev.elide.build.publishable")
 
   alias(libs.plugins.flatbuffers)

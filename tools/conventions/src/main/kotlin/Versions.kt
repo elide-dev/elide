@@ -17,23 +17,23 @@ object Versions {
   const val kotlin = "1.9.10"
 
   /** Micronaut version. */
-  const val micronaut = "3.10.0"
+  const val micronaut = "4.0.5"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"
 
   /** Static Netty version. */
-  const val netty = "4.1.85.Final"
+  const val netty = "4.1.97.Final"
 
   /** Protocol Buffers version. */
   const val protobuf = "3.21.11"
 
   /** Guava version. */
-  const val guava = "31.1-jre"
+  const val guava = "32.1.1-jre"
 
   /** gRPC version. */
-  const val grpc = "1.51.0"
+  const val grpc = "1.57.2"
 
   /** GraalVM version. */
-  const val graalvm = "22.3.0"
+  const val graalvm = "23.0.1"
 }

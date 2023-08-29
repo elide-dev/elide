@@ -39,7 +39,6 @@ module elide.graalvm {
   requires elide.base;
   requires elide.ssr;
   requires com.google.common.jimfs;
-  requires com.google.protobuf;
   requires org.apache.commons.compress;
   requires io.micronaut.context;
 

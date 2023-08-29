@@ -31,7 +31,7 @@ plugins {
   kotlin("plugin.serialization")
 
   id("dev.elide.build.multiplatform.jvm")
-  id("dev.elide.build.jvm11")
+  id("dev.elide.build.jvm17")
   id("dev.elide.build.publishable")
 }
 

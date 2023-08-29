@@ -56,6 +56,7 @@ val enableEspresso = false
 val enableWasm = true
 val enableLlvm = false
 val enablePython = true
+val enableTruffleJson = false
 val enableRuby = true
 val enableTools = true
 val enableSbom = false
@@ -442,7 +443,6 @@ val commonNativeArgs = listOf(
   "--language:nfi",
   "--language:icu4j",
   "--language:regex",
-  "--language:truffle-json",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -468,6 +468,10 @@ val commonNativeArgs = listOf(
     "--tool:chromeinspector",
     "--tool:coverage",
     "--tool:profiler",
+  ) else emptyList()
+).plus(
+  if (enableTruffleJson) listOf(
+    "--language:truffle-json",
   ) else emptyList()
 ).plus(
   jvmModuleArgs
@@ -628,7 +632,7 @@ val initializeAtRuntime: List<String> = listOf(
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
   "com.sun.tools.javac.file.Locations",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
+//  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()

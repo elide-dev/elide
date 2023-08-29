@@ -18,6 +18,7 @@
   "UNUSED_VARIABLE",
 )
 
+import ElidePackages.elidePackage
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.proto
 
@@ -25,9 +26,12 @@ plugins {
   `maven-publish`
   distribution
   signing
-  id("dev.elide.build.kotlin")
+
   alias(libs.plugins.protobuf)
+
+  id("dev.elide.build.kotlin")
   id("dev.elide.build.jvm11")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -127,52 +131,12 @@ tasks {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications {
-    /** Publication: Protocol Buffers */
-    create<MavenPublication>("maven") {
-      artifactId = artifactId.replace("proto-protobuf", "elide-proto-protobuf")
-      from(components["kotlin"])
-      artifact(tasks["sourcesJar"])
-      if (buildDocs) {
-        artifact(javadocJar)
-      }
-
-      pom {
-        name = "Elide Protocol: Protobuf"
-        description = "Elide protocol implementation for Protocol Buffers"
-        url = "https://elide.dev"
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
-        }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
-      }
-    }
-  }
+elidePackage(
+  id = "proto-protobuf",
+  name = "Elide Protocol: Protobuf",
+  description = "Elide protocol implementation for Protocol Buffers.",
+) {
+  java9Modularity = false
 }
 
 dependencies {

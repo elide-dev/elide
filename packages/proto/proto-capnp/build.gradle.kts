@@ -18,12 +18,16 @@
   "UNUSED_VARIABLE",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
   `maven-publish`
   distribution
   signing
+
   id("dev.elide.build.kotlin")
   id("dev.elide.build.jvm11")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -35,6 +39,14 @@ val javaLanguageTarget = project.properties["versions.java.target"] as String
 sourceSets {
   val main by getting
   val test by getting
+}
+
+elidePackage(
+  id = "proto-capnp",
+  name = "Elide Protocol: Cap'n'Proto",
+  description = "Elide protocol implementation for Cap'n'Proto.",
+) {
+  java9Modularity = false
 }
 
 configurations {
@@ -102,54 +114,6 @@ tasks {
 //    archiveClassifier.set("sources")
 //    from(sourceSets["main"].allSource)
 //  }
-}
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications {
-    /** Publication: Cap'n'proto */
-    create<MavenPublication>("maven") {
-      artifactId = artifactId.replace("proto-capn", "elide-proto-capn")
-      from(components["kotlin"])
-      artifact(tasks["kotlinSourcesJar"])
-      if (buildDocs) {
-        artifact(javadocJar)
-      }
-
-      pom {
-        name.set("Elide Protocol: Cap'n'Proto")
-        description.set("Elide protocol implementation for Cap'n'Proto")
-        url.set("https://elide.dev")
-        licenses {
-          license {
-            name.set("MIT License")
-            url.set("https://github.com/elide-dev/elide/blob/v3/LICENSE")
-          }
-        }
-        developers {
-          developer {
-            id.set("sgammon")
-            name.set("Sam Gammon")
-            email.set("samuel.gammon@gmail.com")
-          }
-        }
-        scm {
-          url.set("https://github.com/elide-dev/elide")
-        }
-      }
-    }
-  }
 }
 
 dependencies {

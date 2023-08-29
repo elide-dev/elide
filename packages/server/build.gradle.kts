@@ -17,13 +17,17 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import ElidePackages.elidePackage
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.JavaVersion.VERSION_17
 
 
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
+
   id("dev.elide.build.native.lib")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -254,40 +258,10 @@ graalvmNative {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = artifactId.replace("server", "elide-server")
-
-    pom {
-      name = "Elide for Servers"
-      url = "https://elide.dev"
-      description = "Server-side tools, framework, and runtime, based on GraalVM and Micronaut"
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
-
-if (buildDocs) {
-  listOf("dokkaJavadoc").forEach {
-    tasks.named(it).configure {
-      dependsOn("kaptKotlin")
-    }
-  }
+elidePackage(
+  id = "server",
+  name = "Elide for Servers",
+  description = "Server-side tools, framework, and runtime, based on GraalVM and Micronaut.",
+) {
+  java9Modularity = false
 }

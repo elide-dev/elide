@@ -18,8 +18,11 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import ElidePackages.elidePackage
+
 plugins {
   id("dev.elide.build.js.node")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -83,45 +86,8 @@ kotlin {
   }
 }
 
-val buildDocs = project.properties["buildDocs"] == "true"
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = artifactId.replace("graalvm-react", "elide-graalvm-react")
-
-    pom {
-      name = "Elide React integration for GraalJS"
-      url = "https://elide.dev"
-      description = "Integration package with GraalVM and GraalJS."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
-}
-
-val enableSigning: String? by properties
-if (enableSigning == "true") {
-  afterEvaluate {
-    listOf(
-      "publishKotlinMultiplatformPublicationToElideRepository" to "signKotlinMultiplatformPublication",
-    ).forEach {
-      tasks.named(it.first).configure {
-        dependsOn(it.second)
-      }
-    }
-  }
-}
+elidePackage(
+  id = "graalvm-react",
+  name = "Elide React integration for GraalJs",
+  description = "Integration package with GraalVM and GraalJS.",
+)

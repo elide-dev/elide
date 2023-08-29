@@ -18,6 +18,7 @@
   "UNUSED_VARIABLE",
 )
 
+import ElidePackages.elidePackage
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 
@@ -25,10 +26,13 @@ plugins {
   `maven-publish`
   distribution
   signing
+
   kotlin("multiplatform")
   kotlin("plugin.serialization")
+
   id("dev.elide.build.multiplatform.jvm")
   id("dev.elide.build.jvm11")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -125,47 +129,10 @@ tasks {
   }
 }
 
-val sourcesJar by tasks.getting(org.gradle.jvm.tasks.Jar::class)
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
-
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-    artifactId = artifactId.replace("proto-kotlinx", "elide-proto-kotlinx")
-
-    pom {
-      name = "Elide Protocol: KotlinX"
-      description = "Elide protocol implementation for KotlinX Serialization"
-      url = "https://elide.dev"
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
+elidePackage(
+  id = "proto-kotlinx",
+  name = "Elide Protocol: KotlinX",
+  description = "Elide protocol implementation for KotlinX Serialization",
+) {
+  java9Modularity = false
 }

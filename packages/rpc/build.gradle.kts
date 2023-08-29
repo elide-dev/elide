@@ -18,14 +18,17 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import ElidePackages.elidePackage
 import com.google.protobuf.gradle.id
 
 plugins {
-  id("dev.elide.build")
-  id("dev.elide.build.multiplatform")
-  `java`
+  java
   kotlin("kapt")
   alias(libs.plugins.protobuf)
+
+  id("dev.elide.build")
+  id("dev.elide.build.multiplatform")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -190,26 +193,11 @@ tasks {
   withType(Copy::class).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   }
-  withType(Jar::class).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-  }
 
   named("compileTestKotlinJvm").configure {
     dependsOn("generateProto", "generateTestProto")
   }
 }
-
-val buildDocs = project.properties["buildDocs"] == "true"
-val javadocJar: TaskProvider<Jar>? = if (buildDocs) {
-  val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
-
-  val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
-    archiveClassifier = "javadoc"
-    from(dokkaHtml.outputDirectory)
-  }
-  javadocJar
-} else null
 
 afterEvaluate {
   listOf(
@@ -223,34 +211,10 @@ afterEvaluate {
   }
 }
 
-publishing {
-  publications.withType<MavenPublication> {
-    if (buildDocs) {
-      artifact(javadocJar)
-    }
-    artifactId = artifactId.replace("rpc", "elide-rpc")
-
-    pom {
-      name = "Elide RPC"
-      url = "https://elide.dev"
-      description = "Cross-platform RPC dispatch and definition tools and runtime utilities"
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
+elidePackage(
+  id = "rpc",
+  name = "Elide RPC",
+  description = "Cross-platform RPC dispatch and definition tools and runtime utilities.",
+) {
+  java9Modularity = false
 }

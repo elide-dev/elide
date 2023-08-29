@@ -17,7 +17,7 @@
   "DSL_SCOPE_VIOLATION",
 )
 
-import Java9Modularity.configure as configureJava9ModuleInfo
+import ElidePackages.elidePackage
 
 plugins {
   id("dev.elide.build.native.lib")
@@ -25,6 +25,14 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+
+elidePackage(
+  id = "runtime-js",
+  name = "Elide JavaScript Runtime",
+  description = "Package providing the JavaScript plugin for the Elide runtime.",
+) {
+  java9Modularity = false
+}
 
 kotlin {
   explicitApi()
@@ -86,8 +94,6 @@ dependencies {
   testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
-configureJava9ModuleInfo(project)
-
 tasks {
   test {
     maxHeapSize = "2G"
@@ -95,45 +101,4 @@ tasks {
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
   }
-}
-
-val buildDocs = project.properties["buildDocs"] == "true"
-publishing.publications.withType<MavenPublication> {
-  artifactId = artifactId.replace("runtime-js", "elide-runtime-js")
-  if (buildDocs) {
-    artifact(tasks.javadocJar)
-  }
-
-  pom {
-    name = "Elide JavaScript plugin"
-    url = "https://elide.dev"
-    description = "JavaScript plugin for the Elide polyglot runtime."
-
-    licenses {
-      license {
-        name = "MIT License"
-        url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-      }
-    }
-    developers {
-      developer {
-        id = "sgammon"
-        name = "Sam Gammon"
-        email = "samuel.gammon@gmail.com"
-      }
-
-      developer {
-        id = "darvld"
-        name = "Dario Valdespino"
-        email = "dvaldespino00@gmail.com"
-      }
-    }
-    scm {
-      url = "https://github.com/elide-dev/elide"
-    }
-  }
-}
-
-if (buildDocs) tasks.named("dokkaJavadoc").configure {
-  dependsOn("kaptKotlin")
 }

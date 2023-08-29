@@ -28,7 +28,9 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+
 val buildMingw = project.properties["buildMingw"] == "true"
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -56,12 +58,6 @@ kotlin {
   tvosArm64()
   tvosX64()
 
-  wasm {
-    nodejs()
-    d8()
-    browser()
-  }
-
   if (buildMingw) mingwX64()
 
   jvm {
@@ -71,7 +67,10 @@ kotlin {
     }
   }
 
-  wasm {
+  if (buildWasm) wasm {
+    nodejs()
+    d8()
+
     browser {
       testTask(Action {
         useKarma {
@@ -174,10 +173,15 @@ kotlin {
     val watchosX64Main by getting { dependsOn(nativeMain) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
-    val wasmMain by getting {
-      dependsOn(nativeMain)
-      dependencies {
-        implementation(kotlin("stdlib-wasm"))
+    if (buildWasm) {
+      val wasmMain by getting {
+        dependsOn(nativeMain)
+        dependencies {
+          implementation(kotlin("stdlib-wasm"))
+        }
+      }
+      val wasmTest by getting {
+        dependsOn(nativeTest)
       }
     }
   }

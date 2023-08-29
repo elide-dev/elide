@@ -22,6 +22,8 @@ plugins {
   id("dev.elide.build.publishable")
 }
 
+val buildWasm = project.properties["buildWasm"] == "true"
+
 kotlin {
   wasm {
     d8()

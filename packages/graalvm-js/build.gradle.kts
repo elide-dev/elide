@@ -17,6 +17,9 @@
   "UNUSED_VARIABLE",
   "DSL_SCOPE_VIOLATION",
 )
+@file:OptIn(
+  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
+)
 
 import ElidePackages.elidePackage
 
@@ -27,6 +30,8 @@ plugins {
 
 group = "dev.elide"
 version = rootProject.version as String
+
+val buildWasm = project.properties["buildWasm"] == "true"
 
 kotlin {
   explicitApi()
@@ -47,8 +52,11 @@ kotlin {
       }
     }
   }
-  wasm {
+  jvm()
+  if (buildWasm) wasm {
     d8()
+    browser()
+    nodejs()
   }
 
   sourceSets {
@@ -89,4 +97,6 @@ elidePackage(
   id = "graalvm-js",
   name = "Elide JavaScript for GraalVM",
   description = "Integration package with GraalVM and GraalJS.",
-)
+) {
+  java9Modularity = false
+}

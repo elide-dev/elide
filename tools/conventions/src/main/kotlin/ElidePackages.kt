@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 object ElidePackages {
   private val publicationTasks: List<String> = listOf(
     "publishToSonatype",
+    "publishAllPublicationsToElideRepository",
   )
 
   private val allDevelopers = listOf(

@@ -57,6 +57,10 @@ configurations {
   }
 }
 
+java {
+  withJavadocJar()
+}
+
 kotlin {
   target.compilations.all {
     kotlinOptions {
@@ -92,29 +96,36 @@ tasks.withType<JavaCompile>().configureEach {
   options.isWarnings = false
 }
 
-tasks {
-  test {
-    useJUnitPlatform()
-  }
+tasks.test {
+  useJUnitPlatform()
+}
 
-  /**
-   * Variant: Flatbuffers
-   */
-  val compileFlatbuffers by creating(FlatBuffers::class) {
-    description = "Generate Flatbuffers code for Kotlin/JVM"
-    inputDir = file("${rootProject.projectDir}/proto")
-    outputDir = file("$projectDir/src/main/flat")
-  }
+/**
+ * Variant: Flatbuffers
+ */
+val compileFlatbuffers by tasks.creating(FlatBuffers::class) {
+  description = "Generate Flatbuffers code for Kotlin/JVM"
+  inputDir = file("${rootProject.projectDir}/proto")
+  outputDir = file("$projectDir/src/main/flat")
+}
 
-  artifacts {
-    archives(jar)
-    add("flatInternal", jar)
-  }
+val sourcesJar by tasks.registering(Jar::class) {
+  dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+  archiveClassifier = "sources"
+  from(sourceSets["main"].allSource)
+}
 
-  val sourcesJar by registering(Jar::class) {
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    archiveClassifier = "sources"
-    from(sourceSets["main"].allSource)
+val javadocJar by tasks.getting(Jar::class)
+
+artifacts {
+  add("flatInternal", tasks.jar)
+  archives(sourcesJar)
+  archives(javadocJar)
+}
+
+publishing {
+  publications.create<MavenPublication>("maven") {
+    from(components["kotlin"])
   }
 }
 

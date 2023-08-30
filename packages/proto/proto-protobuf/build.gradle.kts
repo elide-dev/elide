@@ -145,6 +145,8 @@ artifacts {
 publishing {
   publications.create<MavenPublication>("maven") {
     from(components["kotlin"])
+    artifact(sourcesJar)
+    artifact(javadocJar)
   }
 }
 

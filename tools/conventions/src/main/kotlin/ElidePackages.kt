@@ -111,6 +111,9 @@ object ElidePackages {
   }
 
   fun PublishingExtension.publishable(project: Project, info: PomInfo, javadocJarTask: TaskProvider<Jar>? = null) {
+    if (publications.isEmpty()) {
+      error("Cannot setup publishable Elide package '${info.id}' with no publications")
+    }
     publications.withType<MavenPublication> {
       if (
         project.properties["buildDocs"] != "false" &&

@@ -114,14 +114,24 @@ tasks.withType<JavaCompile>().configureEach {
   options.compilerArgs.add("-Xlint:-deprecation")
 }
 
+artifacts {
+  archives(tasks.jar)
+  add("modelInternal", tasks.jar)
+}
+
+publishing {
+  publications.create<MavenPublication>("maven") {
+    from(components["kotlin"])
+  }
+}
+
 tasks {
   test {
     useJUnitPlatform()
+    dependsOn(generateTestProto)
   }
-
-  artifacts {
-    archives(jar)
-    add("modelInternal", jar)
+  jar {
+    dependsOn(generateProto)
   }
 
   val sourcesJar by registering(Jar::class) {

@@ -1,0 +1,365 @@
+public final class tools/elide/assets/Embedded {
+	public fun <init> ()V
+}
+
+public class tools/elide/assets/Embedded$EmbeddedScript {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/assets/Embedded$EmbeddedScript$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScript$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/assets/Embedded$EmbeddedScript$Reader;
+	public final fun getDirectDependency ()Lorg/capnproto/TextList$Builder;
+	public final fun getFilename ()Lorg/capnproto/Text$Builder;
+	public final fun getLanguage ()Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public final fun getLastModified ()Ltools/elide/std/Temporal$Timestamp$Builder;
+	public final fun getMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;
+	public final fun getModule ()Lorg/capnproto/Text$Builder;
+	public final fun getScript ()Ltools/elide/data/Data$DataContainerRef$Builder;
+	public final fun getSourcemap ()Ltools/elide/data/Data$DataContainerRef$Builder;
+	public final fun getTransitiveDependency ()Lorg/capnproto/TextList$Builder;
+	public final fun hasDirectDependency ()Z
+	public final fun hasFilename ()Z
+	public final fun hasModule ()Z
+	public final fun hasTransitiveDependency ()Z
+	public final fun initDirectDependency (I)Lorg/capnproto/TextList$Builder;
+	public final fun initFilename (I)Lorg/capnproto/Text$Builder;
+	public final fun initLastModified ()Ltools/elide/std/Temporal$Timestamp$Builder;
+	public final fun initMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;
+	public final fun initModule (I)Lorg/capnproto/Text$Builder;
+	public final fun initScript ()Ltools/elide/data/Data$DataContainerRef$Builder;
+	public final fun initSourcemap ()Ltools/elide/data/Data$DataContainerRef$Builder;
+	public final fun initTransitiveDependency (I)Lorg/capnproto/TextList$Builder;
+	public final fun setDirectDependency (Lorg/capnproto/TextList$Reader;)V
+	public final fun setFilename (Ljava/lang/String;)V
+	public final fun setFilename (Lorg/capnproto/Text$Reader;)V
+	public final fun setLanguage (Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;)V
+	public final fun setLastModified (Ltools/elide/std/Temporal$Timestamp$Reader;)V
+	public final fun setMetadata (Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;)V
+	public final fun setModule (Ljava/lang/String;)V
+	public final fun setModule (Lorg/capnproto/Text$Reader;)V
+	public final fun setScript (Ltools/elide/data/Data$DataContainerRef$Reader;)V
+	public final fun setSourcemap (Ltools/elide/data/Data$DataContainerRef$Reader;)V
+	public final fun setTransitiveDependency (Lorg/capnproto/TextList$Reader;)V
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScript$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScript$Builder;)Ltools/elide/assets/Embedded$EmbeddedScript$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScript$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/assets/Embedded$EmbeddedScript$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScript$Reader : org/capnproto/StructReader {
+	public final fun getDirectDependency ()Lorg/capnproto/TextList$Reader;
+	public fun getFilename ()Lorg/capnproto/Text$Reader;
+	public final fun getLanguage ()Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public fun getLastModified ()Ltools/elide/std/Temporal$Timestamp$Reader;
+	public fun getMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;
+	public fun getModule ()Lorg/capnproto/Text$Reader;
+	public fun getScript ()Ltools/elide/data/Data$DataContainerRef$Reader;
+	public fun getSourcemap ()Ltools/elide/data/Data$DataContainerRef$Reader;
+	public final fun getTransitiveDependency ()Lorg/capnproto/TextList$Reader;
+	public final fun hasDirectDependency ()Z
+	public fun hasFilename ()Z
+	public fun hasLastModified ()Z
+	public fun hasMetadata ()Z
+	public fun hasModule ()Z
+	public fun hasScript ()Z
+	public fun hasSourcemap ()Z
+	public final fun hasTransitiveDependency ()Z
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptLanguage : java/lang/Enum {
+	public static final field GROOVY Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field JAVASCRIPT Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field JVM Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field KOTLIN Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field LANGUAGE_UNSPECIFIED Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field LLVM Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field PYTHON Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field RUBY Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field SCALA Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field WASM Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+	public static fun values ()[Ltools/elide/assets/Embedded$EmbeddedScriptLanguage;
+}
+
+public class tools/elide/assets/Embedded$EmbeddedScriptMetadata {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;
+	public final fun getMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;
+	public final fun initMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader;
+	public final fun getJavascript ()Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;
+	public final fun getPython ()Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;
+	public final fun initJavascript ()Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;
+	public final fun initPython ()Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;
+	public final fun isJavascript ()Z
+	public final fun isPython ()Z
+	public final fun setJavascript (Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;)V
+	public final fun setPython (Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;)V
+	public fun which ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader : org/capnproto/StructReader {
+	public fun getJavascript ()Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;
+	public fun getPython ()Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;
+	public fun hasJavascript ()Z
+	public fun hasPython ()Z
+	public final fun isJavascript ()Z
+	public final fun isPython ()Z
+	public fun which ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which : java/lang/Enum {
+	public static final field JAVASCRIPT Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+	public static final field PYTHON Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+	public static fun values ()[Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Which;
+}
+
+public final class tools/elide/assets/Embedded$EmbeddedScriptMetadata$Reader : org/capnproto/StructReader {
+	public fun getMetadata ()Ltools/elide/assets/Embedded$EmbeddedScriptMetadata$Metadata$Reader;
+}
+
+public final class tools/elide/assets/Embedded$JsLanguageLevel : java/lang/Enum {
+	public static final field _NOT_IN_SCHEMA Ltools/elide/assets/Embedded$JsLanguageLevel;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/assets/Embedded$JsLanguageLevel;
+	public static fun values ()[Ltools/elide/assets/Embedded$JsLanguageLevel;
+}
+
+public class tools/elide/assets/Embedded$JsScriptMetadata {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/assets/Embedded$JsScriptMetadata$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/assets/Embedded$JsScriptMetadata$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;
+	public final fun getLanguageLevel ()Ltools/elide/assets/Embedded$JsLanguageLevel;
+	public final fun setLanguageLevel (Ltools/elide/assets/Embedded$JsLanguageLevel;)V
+}
+
+public final class tools/elide/assets/Embedded$JsScriptMetadata$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;)Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$JsScriptMetadata$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/assets/Embedded$JsScriptMetadata$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/assets/Embedded$JsScriptMetadata$Reader : org/capnproto/StructReader {
+	public final fun getLanguageLevel ()Ltools/elide/assets/Embedded$JsLanguageLevel;
+}
+
+public class tools/elide/assets/Embedded$PyScriptMetadata {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/assets/Embedded$PyScriptMetadata$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/assets/Embedded$PyScriptMetadata$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;
+}
+
+public final class tools/elide/assets/Embedded$PyScriptMetadata$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;)Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/assets/Embedded$PyScriptMetadata$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/assets/Embedded$PyScriptMetadata$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/assets/Embedded$PyScriptMetadata$Reader : org/capnproto/StructReader {
+}
+
+public final class tools/elide/assets/Embedded$Schemas {
+	public static final field b_ad14563c6ae73c76 Lorg/capnproto/SegmentReader;
+	public static final field b_b0beda8255788ee7 Lorg/capnproto/SegmentReader;
+	public static final field b_c6b31851c82171b9 Lorg/capnproto/SegmentReader;
+	public static final field b_d6a320098300a406 Lorg/capnproto/SegmentReader;
+	public static final field b_e398ce44dcb9a6d3 Lorg/capnproto/SegmentReader;
+	public static final field b_f60c5800da34b539 Lorg/capnproto/SegmentReader;
+	public static final field b_ff55d0bd7804e3d0 Lorg/capnproto/SegmentReader;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data {
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$CompressionMode : java/lang/Enum {
+	public static final field BROTLI Ltools/elide/data/Data$CompressionMode;
+	public static final field DEFLATE Ltools/elide/data/Data$CompressionMode;
+	public static final field GZIP Ltools/elide/data/Data$CompressionMode;
+	public static final field IDENTITY Ltools/elide/data/Data$CompressionMode;
+	public static final field SNAPPY Ltools/elide/data/Data$CompressionMode;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/data/Data$CompressionMode;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/data/Data$CompressionMode;
+	public static fun values ()[Ltools/elide/data/Data$CompressionMode;
+}
+
+public class tools/elide/data/Data$DataContainer {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$DataContainer$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$DataContainer$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$DataContainer$Reader;
+}
+
+public final class tools/elide/data/Data$DataContainer$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$DataContainer$Builder;)Ltools/elide/data/Data$DataContainer$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainer$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$DataContainer$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$DataContainer$Reader : org/capnproto/StructReader {
+}
+
+public class tools/elide/data/Data$DataContainerRef {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$DataContainerRef$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$DataContainerRef$Reader;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$Builder;)Ltools/elide/data/Data$DataContainerRef$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$DataContainerRef$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Reader : org/capnproto/StructReader {
+}
+
+public final class tools/elide/data/Data$Schemas {
+	public static final field b_9d66b4bfd514f842 Lorg/capnproto/SegmentReader;
+	public static final field b_b1862cdf396f9c3a Lorg/capnproto/SegmentReader;
+	public static final field b_ea3181bc9315330c Lorg/capnproto/SegmentReader;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Encodings {
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Encodings$Encoding : java/lang/Enum {
+	public static final field UTF16 Ltools/elide/data/Encodings$Encoding;
+	public static final field UTF32 Ltools/elide/data/Encodings$Encoding;
+	public static final field UTF8 Ltools/elide/data/Encodings$Encoding;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/data/Encodings$Encoding;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/data/Encodings$Encoding;
+	public static fun values ()[Ltools/elide/data/Encodings$Encoding;
+}
+
+public final class tools/elide/data/Encodings$Schemas {
+	public static final field b_84a5836f9a7bcf87 Lorg/capnproto/SegmentReader;
+	public fun <init> ()V
+}
+
+public final class tools/elide/std/Temporal {
+	public fun <init> ()V
+}
+
+public final class tools/elide/std/Temporal$Schemas {
+	public static final field b_d94f5c93604fd9fd Lorg/capnproto/SegmentReader;
+	public fun <init> ()V
+}
+
+public class tools/elide/std/Temporal$Timestamp {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/std/Temporal$Timestamp$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/std/Temporal$Timestamp$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/std/Temporal$Timestamp$Reader;
+}
+
+public final class tools/elide/std/Temporal$Timestamp$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/std/Temporal$Timestamp$Builder;)Ltools/elide/std/Temporal$Timestamp$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/std/Temporal$Timestamp$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/std/Temporal$Timestamp$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/std/Temporal$Timestamp$Reader : org/capnproto/StructReader {
+}
+

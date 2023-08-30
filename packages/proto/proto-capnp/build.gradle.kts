@@ -49,7 +49,14 @@ configurations {
 
     extendsFrom(configurations["implementation"])
   }
+
+  create("capnproto") {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+  }
 }
+
+val capnproto: Configuration by configurations.getting
 
 java {
   withJavadocJar()
@@ -140,10 +147,12 @@ dependencies {
 
   // Variant: Cap'n'Proto
   api(projects.packages.proto.protoCore)
+  api(libs.capnproto.runtime)
   implementation(kotlin("stdlib"))
   implementation(kotlin("stdlib-jdk8"))
-  implementation(libs.capnproto)
   testImplementation(project(":packages:proto:proto-core", configuration = "testBase"))
+
+  capnproto(libs.capnproto.compiler)
 }
 
 afterEvaluate {

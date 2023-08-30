@@ -14,34 +14,44 @@
 # Specifies structures used to define the notion of an "embedded" script asset in some foreign language, which can be
 # executed at runtime by Elide to fulfill user requests.
 
-using Timestamp = import "../std/timestamp.capnp".Timestamp;
+using Java = import "/capnp/java.capnp";
+using Timestamp = import "../std/temporal.capnp".Timestamp;
 using DataContainerRef = import "../data/data.capnp".DataContainerRef;
+
+$Java.package("tools.elide.assets");
+$Java.outerClassname("Embedded");
 
 # Enumerates languages which are supported for embedded scripting in Elide.
 enum EmbeddedScriptLanguage {
   # The language is unknown or unspecified; regular code should not use this value.
-  LANGUAGE_UNSPECIFIED @0;
+  languageUnspecified @0;
 
   # The language is a dialect of JavaScript.
-  JAVASCRIPT @1;
+  javascript @1;
 
   # The language is Python; language support for Python.
-  PYTHON @2;
+  python @2;
 
   # The language is Ruby; language support for Ruby.
-  RUBY @3;
+  ruby @3;
 
   # The language is supported by the JVM.
-  JVM @4;
+  jvm @4;
 
   # The language is Kotlin; language support for JVM with Kotlin compiler.
-  KOTLIN @5;
+  kotlin @5;
 
   # The language is Groovy; language support for JVM with Groovy compiler.
-  GROOVY @6;
+  groovy @6;
 
   # The language is Scala; language support for JVM with Scala compiler.
-  SCALA @7;
+  scala @7;
+
+  # The language runs on LLVM; language support for LLVM.
+  llvm @8;
+
+  # The language runs on WASM; language support for WASM.
+  wasm @9;
 }
 
 # Enumerates supported JavaScript language levels.
@@ -50,7 +60,12 @@ enum JsLanguageLevel {}
 # Specifies JavaScript-specific script metadata.
 struct JsScriptMetadata {
   # Specifies the language level of the script.
-  languageLevel @1 :JsLanguageLevel;
+  languageLevel @0 :JsLanguageLevel;
+}
+
+# Specifies Python-specific script metadata.
+struct PyScriptMetadata {
+  # Nothing at this time.
 }
 
 # Describes embedded script-level metadata which is enclosed with the asset spec for an embedded script.
@@ -58,7 +73,10 @@ struct EmbeddedScriptMetadata {
   # Language-specific script metadata.
   metadata :union {
     # JavaScript-related metadata.
-    javascript @1 :JsScriptMetadata;
+    javascript @0 :JsScriptMetadata;
+
+    # Python-related metadata.
+    python @1 :PyScriptMetadata;
   }
 }
 
@@ -66,32 +84,32 @@ struct EmbeddedScriptMetadata {
 # within the protocol buffer record, along with a digest and various metadata.
 struct EmbeddedScript {
   # Module name / ID for this embedded script. Set at build time.
-  module @1 :Text;
+  module @0 :Text;
 
   # Filename, or some synthesized filename, for this script.
-  filename @2 :Text;
+  filename @1 :Text;
 
   # Language of the embedded script, and expected interpreted language.
-  language @3 :EmbeddedScriptLanguage;
+  language @2 :EmbeddedScriptLanguage;
 
   # Embedded script-level metadata, including language-specific metadata.
-  metadata @4 :EmbeddedScriptMetadata;
+  metadata @3 :EmbeddedScriptMetadata;
 
   # Last-modified timestamp for the assets underlying this script.
-  last_modified @5 :Timestamp;
+  lastModified @4 :Timestamp;
 
   # Unique set of direct dependencies for this embedded script asset; expected to be other, compatible embedded scripts
   # (same language, same runtime level). Expressed as a `module` ID.
-  direct_dependency @6 : List(Text);
+  directDependency @5 : List(Text);
 
   # Unique transitive closure of all dependencies this module relies upon; expected to be other, compatible embedded
   # scripts (same language, same runtime level). Expressed as a `module` ID.
-  transitive_dependency @7 : List(Text);
+  transitiveDependency @6 : List(Text);
 
   # Describes the raw data for the script content itself, plus a digest of the data for verification purposes; the
   # digest payload additionally specifies the algorithm used.
-  script @8 : DataContainerRef;
+  script @7 : DataContainerRef;
 
   # Source-map file path for the embedded script, if generated as an external file.
-  sourcemap @9 : DataContainerRef;
+  sourcemap @8 : DataContainerRef;
 }

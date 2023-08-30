@@ -1,0 +1,8 @@
+
+The ownership of this codebase is specified as the "Elide Framework authors," which refers to Elide Ventures, LLC, and
+James S. Clark. The framework is owned in terms of copyright by Mr. Clark with license granted to Elide Ventures (and
+vice versa for brand use).
+
+For the purposes of notices and licensure, the term "Elide Framework Authors" is sufficient to refer to these entities
+and their assigns, partners, and affiliates, as designated from time to time in writing from directly authorized
+personnel.

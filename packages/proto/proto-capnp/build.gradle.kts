@@ -41,22 +41,18 @@ sourceSets {
   val test by getting
 }
 
-elidePackage(
-  id = "proto-capnp",
-  name = "Elide Protocol: Cap'n'Proto",
-  description = "Elide protocol implementation for Cap'n'Proto.",
-) {
-  java9Modularity = false
-}
-
 configurations {
-  // `capnInternal` uses the Cap'N'Proto implementation only, rather than the full cruft of Protocol Buffers non-lite.
-  create("capnInternal") {
+  // `capnpInternal` uses the Cap'N'Proto implementation only, rather than the full cruft of Protocol Buffers non-lite.
+  create("capnpInternal") {
     isCanBeResolved = false
     isCanBeConsumed = true
 
     extendsFrom(configurations["implementation"])
   }
+}
+
+java {
+  withJavadocJar()
 }
 
 kotlin {
@@ -82,6 +78,20 @@ kotlin {
   }
 }
 
+publishing {
+  publications.create<MavenPublication>("maven") {
+    from(components["kotlin"])
+  }
+}
+
+elidePackage(
+  id = "proto-capnp",
+  name = "Elide Protocol: Cap'n'Proto",
+  description = "Elide protocol implementation for Cap'n'Proto.",
+) {
+  java9Modularity = false
+}
+
 tasks.withType<JavaCompile>().configureEach {
   sourceCompatibility = javaLanguageTarget
   targetCompatibility = javaLanguageTarget
@@ -90,30 +100,31 @@ tasks.withType<JavaCompile>().configureEach {
   options.isWarnings = false
 }
 
-tasks {
-  test {
-    useJUnitPlatform()
-  }
+tasks.test {
+  useJUnitPlatform()
+}
 
-  /**
-   * Variant: Cap'N'Proto
-   */
+/**
+ * Variant: Cap'N'Proto
+ */
 //  val compileCapnProtos by creating(FlatBuffers::class) {
 //    description = "Generate Flatbuffers code for Kotlin/JVM"
 //    inputDir = file("${rootProject.projectDir}/proto")
 //    outputDir = file("$projectDir/src/main/flat")
 //  }
 
-//  artifacts {
-//    archives(jar)
-//    add("flatInternal", jar)
-//  }
+val sourcesJar by tasks.registering(Jar::class) {
+  dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+  archiveClassifier.set("sources")
+  from(sourceSets["main"].allSource)
+}
 
-//  val sourcesJar by registering(Jar::class) {
-//    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-//    archiveClassifier.set("sources")
-//    from(sourceSets["main"].allSource)
-//  }
+val javadocJar by tasks.getting
+
+artifacts {
+  add("capnpInternal", tasks.jar)
+  archives(sourcesJar)
+  archives(javadocJar)
 }
 
 dependencies {

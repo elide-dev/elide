@@ -105,6 +105,10 @@ protobuf {
   }
 }
 
+java {
+  withJavadocJar()
+}
+
 tasks.withType<JavaCompile>().configureEach {
   sourceCompatibility = javaLanguageTarget
   targetCompatibility = javaLanguageTarget
@@ -112,17 +116,6 @@ tasks.withType<JavaCompile>().configureEach {
   options.isIncremental = true
   options.isWarnings = false
   options.compilerArgs.add("-Xlint:-deprecation")
-}
-
-artifacts {
-  archives(tasks.jar)
-  add("modelInternal", tasks.jar)
-}
-
-publishing {
-  publications.create<MavenPublication>("maven") {
-    from(components["kotlin"])
-  }
 }
 
 tasks {
@@ -133,11 +126,25 @@ tasks {
   jar {
     dependsOn(generateProto)
   }
+}
 
-  val sourcesJar by registering(Jar::class) {
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    archiveClassifier = "sources"
-    from(sourceSets["main"].allSource)
+val sourcesJar by tasks.registering(Jar::class) {
+  dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+  archiveClassifier = "sources"
+  from(sourceSets["main"].allSource)
+}
+
+val javadocJar by tasks.getting(Jar::class)
+
+artifacts {
+  add("modelInternal", tasks.jar)
+  archives(sourcesJar)
+  archives(javadocJar)
+}
+
+publishing {
+  publications.create<MavenPublication>("maven") {
+    from(components["kotlin"])
   }
 }
 

@@ -1,4 +1,4 @@
-@0xf355846bbd4268e2;
+@0x8affbcb9f0543e1b;
 
 # Copyright © 2022, The Elide Framework Authors. All rights reserved.
 #
@@ -11,25 +11,44 @@
 # by trade secret and copyright law. Dissemination of this information, or reproduction of this material, in any form,
 # is strictly forbidden except in adherence with assigned license requirements.
 
-# Specifies structures used to define the notion of an "embedded" script asset in some foreign language, which can be
-# executed at runtime by Elide to fulfill user requests.
+# Specifies core structures related to cryptographic operations and primitives. These records and enumerates are used
+# throughout the codebase as a standard base set of definitions for hashing, encryption, and more.
 
 using Java = import "/capnp/java.capnp";
 
-$Java.package("elide.data");
-$Java.outerClassname("Encodings");
+$Java.package("elide.crypto");
+$Java.outerClassname("Crypto");
 
 
-# Data Encoding
-#
-# Describes supported file encodings. By default, files are encoded with `UTF-8`.
-enum Encoding {
-  # The encoding is UTF-8.
-  utf8 @0;
+# Specifies well-known hash algorithms.
+enum HashAlgorithm {
+  # No hash algorithm was/is active.
+  identity @0;
 
-  # The encoding is UTF-16.
-  utf16 @1;
+  # Algorithm: MD5.
+  md5 @1;
 
-  # The encoding is UTF-32.
-  utf32 @2;
+  # Algorithm: SHA1.
+  sha1 @2;
+
+  # Algorithm: SHA2.
+  sha2 @3;
+
+  # Algorithm: SHA-256.
+  sha256 @4;
+
+  # Algorithm: SHA-384.
+  sha384 @5;
+
+  # Algorithm: SHA-512.
+  sha512 @6;
+
+  # Algorithm: SHA3-224.
+  sha3224 @7;
+
+  # Algorithm: SHA3-256.
+  sha3256 @8;
+
+  # Algorithm: SHA3-512.
+  sha3512 @9;
 }

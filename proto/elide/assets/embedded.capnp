@@ -18,8 +18,9 @@ using Java = import "/capnp/java.capnp";
 using Timestamp = import "../std/temporal.capnp".Timestamp;
 using DataContainerRef = import "../data/data.capnp".DataContainerRef;
 
-$Java.package("tools.elide.assets");
+$Java.package("elide.assets");
 $Java.outerClassname("Embedded");
+
 
 # Enumerates languages which are supported for embedded scripting in Elide.
 enum EmbeddedScriptLanguage {

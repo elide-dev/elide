@@ -15,9 +15,15 @@
 
 using Java = import "/capnp/java.capnp";
 
-$Java.package("tools.elide.std");
+$Java.package("elide.std");
 $Java.outerClassname("Temporal");
+
 
 # Timestamp record which is capable of expressing up to nanosecond-level precision.
 struct Timestamp {
+    # Specifies the number of seconds since the Unix epoch, in UTC.
+    seconds @0 :Int64;
+
+    # Offset of nanoseconds to apply.
+    nanos @1 :Int32;
 }

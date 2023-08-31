@@ -239,8 +239,75 @@ public final class tools/elide/assets/Embedded$Schemas {
 	public fun <init> ()V
 }
 
+public final class tools/elide/crypto/Crypto {
+	public fun <init> ()V
+}
+
+public final class tools/elide/crypto/Crypto$HashAlgorithm : java/lang/Enum {
+	public static final field IDENTITY Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field MD5 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA1 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA2 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA256 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA3224 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA3256 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA3512 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA384 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field SHA512 Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public static fun values ()[Ltools/elide/crypto/Crypto$HashAlgorithm;
+}
+
+public final class tools/elide/crypto/Crypto$Schemas {
+	public static final field b_c44010948997e2a9 Lorg/capnproto/SegmentReader;
+	public fun <init> ()V
+}
+
 public final class tools/elide/data/Data {
 	public fun <init> ()V
+}
+
+public class tools/elide/data/Data$CompressedData {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$CompressedData$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$CompressedData$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$CompressedData$Reader;
+	public final fun getCompression ()Ltools/elide/data/Data$CompressionMode;
+	public final fun getData ()Ltools/elide/data/Data$DataContainer$Builder;
+	public final fun getIntegrity ()Lorg/capnproto/StructList$Builder;
+	public final fun getSize ()J
+	public final fun hasIntegrity ()Z
+	public final fun initData ()Ltools/elide/data/Data$DataContainer$Builder;
+	public final fun initIntegrity (I)Lorg/capnproto/StructList$Builder;
+	public final fun setCompression (Ltools/elide/data/Data$CompressionMode;)V
+	public final fun setData (Ltools/elide/data/Data$DataContainer$Reader;)V
+	public final fun setIntegrity (Lorg/capnproto/StructList$Reader;)V
+	public final fun setSize (J)V
+}
+
+public final class tools/elide/data/Data$CompressedData$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$CompressedData$Builder;)Ltools/elide/data/Data$CompressedData$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$CompressedData$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$CompressedData$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$CompressedData$Reader : org/capnproto/StructReader {
+	public final fun getCompression ()Ltools/elide/data/Data$CompressionMode;
+	public fun getData ()Ltools/elide/data/Data$DataContainer$Reader;
+	public final fun getIntegrity ()Lorg/capnproto/StructList$Reader;
+	public final fun getSize ()J
+	public fun hasData ()Z
+	public final fun hasIntegrity ()Z
 }
 
 public final class tools/elide/data/Data$CompressionMode : java/lang/Enum {
@@ -263,6 +330,16 @@ public class tools/elide/data/Data$DataContainer {
 
 public final class tools/elide/data/Data$DataContainer$Builder : org/capnproto/StructBuilder {
 	public final fun asReader ()Ltools/elide/data/Data$DataContainer$Reader;
+	public final fun getEncoding ()Ltools/elide/data/Encodings$Encoding;
+	public final fun getIntegrity ()Lorg/capnproto/StructList$Builder;
+	public final fun getRaw ()Lorg/capnproto/DataList$Builder;
+	public final fun hasIntegrity ()Z
+	public final fun hasRaw ()Z
+	public final fun initIntegrity (I)Lorg/capnproto/StructList$Builder;
+	public final fun initRaw (I)Lorg/capnproto/DataList$Builder;
+	public final fun setEncoding (Ltools/elide/data/Encodings$Encoding;)V
+	public final fun setIntegrity (Lorg/capnproto/StructList$Reader;)V
+	public final fun setRaw (Lorg/capnproto/DataList$Reader;)V
 }
 
 public final class tools/elide/data/Data$DataContainer$Factory : org/capnproto/StructFactory {
@@ -277,6 +354,11 @@ public final class tools/elide/data/Data$DataContainer$Factory : org/capnproto/S
 }
 
 public final class tools/elide/data/Data$DataContainer$Reader : org/capnproto/StructReader {
+	public final fun getEncoding ()Ltools/elide/data/Encodings$Encoding;
+	public final fun getIntegrity ()Lorg/capnproto/StructList$Reader;
+	public final fun getRaw ()Lorg/capnproto/DataList$Reader;
+	public final fun hasIntegrity ()Z
+	public final fun hasRaw ()Z
 }
 
 public class tools/elide/data/Data$DataContainerRef {
@@ -288,6 +370,8 @@ public class tools/elide/data/Data$DataContainerRef {
 
 public final class tools/elide/data/Data$DataContainerRef$Builder : org/capnproto/StructBuilder {
 	public final fun asReader ()Ltools/elide/data/Data$DataContainerRef$Reader;
+	public final fun getReference ()Ltools/elide/data/Data$DataContainerRef$Reference$Builder;
+	public final fun initReference ()Ltools/elide/data/Data$DataContainerRef$Reference$Builder;
 }
 
 public final class tools/elide/data/Data$DataContainerRef$Factory : org/capnproto/StructFactory {
@@ -301,13 +385,169 @@ public final class tools/elide/data/Data$DataContainerRef$Factory : org/capnprot
 	public final fun structSize ()Lorg/capnproto/StructSize;
 }
 
+public class tools/elide/data/Data$DataContainerRef$FingerprintPathPair {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
+	public final fun getFingerprint ()Ltools/elide/data/Data$DataFingerprint$Builder;
+	public final fun getPath ()Lorg/capnproto/Text$Builder;
+	public final fun hasPath ()Z
+	public final fun initFingerprint ()Ltools/elide/data/Data$DataFingerprint$Builder;
+	public final fun initPath (I)Lorg/capnproto/Text$Builder;
+	public final fun setFingerprint (Ltools/elide/data/Data$DataFingerprint$Reader;)V
+	public final fun setPath (Ljava/lang/String;)V
+	public final fun setPath (Lorg/capnproto/Text$Reader;)V
+}
+
+public final class tools/elide/data/Data$DataContainerRef$FingerprintPathPair$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;)Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader : org/capnproto/StructReader {
+	public fun getFingerprint ()Ltools/elide/data/Data$DataFingerprint$Reader;
+	public fun getPath ()Lorg/capnproto/Text$Reader;
+	public fun hasFingerprint ()Z
+	public fun hasPath ()Z
+}
+
 public final class tools/elide/data/Data$DataContainerRef$Reader : org/capnproto/StructReader {
+	public fun getReference ()Ltools/elide/data/Data$DataContainerRef$Reference$Reader;
+}
+
+public class tools/elide/data/Data$DataContainerRef$Reference {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$DataContainerRef$Reference$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Reference$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$DataContainerRef$Reference$Reader;
+	public final fun getData ()Ltools/elide/data/Data$CompressedData$Builder;
+	public final fun getFilesystem ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
+	public final fun getResource ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
+	public final fun initData ()Ltools/elide/data/Data$CompressedData$Builder;
+	public final fun initFilesystem ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
+	public final fun initResource ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Builder;
+	public final fun isData ()Z
+	public final fun isFilesystem ()Z
+	public final fun isResource ()Z
+	public final fun setData (Ltools/elide/data/Data$CompressedData$Reader;)V
+	public final fun setFilesystem (Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;)V
+	public final fun setResource (Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;)V
+	public fun which ()Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Reference$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$DataContainerRef$Reference$Builder;)Ltools/elide/data/Data$DataContainerRef$Reference$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataContainerRef$Reference$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$DataContainerRef$Reference$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Reference$Reader : org/capnproto/StructReader {
+	public fun getData ()Ltools/elide/data/Data$CompressedData$Reader;
+	public fun getFilesystem ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
+	public fun getResource ()Ltools/elide/data/Data$DataContainerRef$FingerprintPathPair$Reader;
+	public fun hasData ()Z
+	public fun hasFilesystem ()Z
+	public fun hasResource ()Z
+	public final fun isData ()Z
+	public final fun isFilesystem ()Z
+	public final fun isResource ()Z
+	public fun which ()Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+}
+
+public final class tools/elide/data/Data$DataContainerRef$Reference$Which : java/lang/Enum {
+	public static final field DATA Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+	public static final field FILESYSTEM Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+	public static final field RESOURCE Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+	public static final field _NOT_IN_SCHEMA Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+	public static fun valueOf (Ljava/lang/String;)Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+	public static fun values ()[Ltools/elide/data/Data$DataContainerRef$Reference$Which;
+}
+
+public class tools/elide/data/Data$DataFingerprint {
+	public static final field STRUCT_SIZE Lorg/capnproto/StructSize;
+	public static final field factory Ltools/elide/data/Data$DataFingerprint$Factory;
+	public static final field listFactory Lorg/capnproto/StructList$Factory;
+	public fun <init> ()V
+}
+
+public final class tools/elide/data/Data$DataFingerprint$Builder : org/capnproto/StructBuilder {
+	public final fun asReader ()Ltools/elide/data/Data$DataFingerprint$Reader;
+	public final fun getEncoding ()Ltools/elide/data/Encodings$Encoding;
+	public final fun getFingerprint ()Lorg/capnproto/Data$Builder;
+	public final fun getHash ()Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public final fun getPrefix ()Lorg/capnproto/DataList$Builder;
+	public final fun getSeparator ()Lorg/capnproto/Data$Builder;
+	public final fun getSuffix ()Lorg/capnproto/DataList$Builder;
+	public final fun hasFingerprint ()Z
+	public final fun hasPrefix ()Z
+	public final fun hasSeparator ()Z
+	public final fun hasSuffix ()Z
+	public final fun initFingerprint (I)Lorg/capnproto/Data$Builder;
+	public final fun initPrefix (I)Lorg/capnproto/DataList$Builder;
+	public final fun initSeparator (I)Lorg/capnproto/Data$Builder;
+	public final fun initSuffix (I)Lorg/capnproto/DataList$Builder;
+	public final fun setEncoding (Ltools/elide/data/Encodings$Encoding;)V
+	public final fun setFingerprint (Lorg/capnproto/Data$Reader;)V
+	public final fun setFingerprint ([B)V
+	public final fun setHash (Ltools/elide/crypto/Crypto$HashAlgorithm;)V
+	public final fun setPrefix (Lorg/capnproto/DataList$Reader;)V
+	public final fun setSeparator (Lorg/capnproto/Data$Reader;)V
+	public final fun setSeparator ([B)V
+	public final fun setSuffix (Lorg/capnproto/DataList$Reader;)V
+}
+
+public final class tools/elide/data/Data$DataFingerprint$Factory : org/capnproto/StructFactory {
+	public fun <init> ()V
+	public synthetic fun asReader (Ljava/lang/Object;)Lorg/capnproto/StructReader;
+	public final fun asReader (Ltools/elide/data/Data$DataFingerprint$Builder;)Ltools/elide/data/Data$DataFingerprint$Reader;
+	public synthetic fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ljava/lang/Object;
+	public final fun constructBuilder (Lorg/capnproto/SegmentBuilder;IIIS)Ltools/elide/data/Data$DataFingerprint$Builder;
+	public synthetic fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ljava/lang/Object;
+	public final fun constructReader (Lorg/capnproto/SegmentReader;IIISI)Ltools/elide/data/Data$DataFingerprint$Reader;
+	public final fun structSize ()Lorg/capnproto/StructSize;
+}
+
+public final class tools/elide/data/Data$DataFingerprint$Reader : org/capnproto/StructReader {
+	public final fun getEncoding ()Ltools/elide/data/Encodings$Encoding;
+	public fun getFingerprint ()Lorg/capnproto/Data$Reader;
+	public final fun getHash ()Ltools/elide/crypto/Crypto$HashAlgorithm;
+	public final fun getPrefix ()Lorg/capnproto/DataList$Reader;
+	public fun getSeparator ()Lorg/capnproto/Data$Reader;
+	public final fun getSuffix ()Lorg/capnproto/DataList$Reader;
+	public fun hasFingerprint ()Z
+	public final fun hasPrefix ()Z
+	public fun hasSeparator ()Z
+	public final fun hasSuffix ()Z
 }
 
 public final class tools/elide/data/Data$Schemas {
 	public static final field b_9d66b4bfd514f842 Lorg/capnproto/SegmentReader;
+	public static final field b_a243adc34f1c37cb Lorg/capnproto/SegmentReader;
 	public static final field b_b1862cdf396f9c3a Lorg/capnproto/SegmentReader;
+	public static final field b_b94e6245869e1c07 Lorg/capnproto/SegmentReader;
+	public static final field b_e5cab5f700ec7647 Lorg/capnproto/SegmentReader;
 	public static final field b_ea3181bc9315330c Lorg/capnproto/SegmentReader;
+	public static final field b_f2ac679e83230f42 Lorg/capnproto/SegmentReader;
 	public fun <init> ()V
 }
 
@@ -347,6 +587,10 @@ public class tools/elide/std/Temporal$Timestamp {
 
 public final class tools/elide/std/Temporal$Timestamp$Builder : org/capnproto/StructBuilder {
 	public final fun asReader ()Ltools/elide/std/Temporal$Timestamp$Reader;
+	public final fun getNanos ()I
+	public final fun getSeconds ()J
+	public final fun setNanos (I)V
+	public final fun setSeconds (J)V
 }
 
 public final class tools/elide/std/Temporal$Timestamp$Factory : org/capnproto/StructFactory {
@@ -361,5 +605,7 @@ public final class tools/elide/std/Temporal$Timestamp$Factory : org/capnproto/St
 }
 
 public final class tools/elide/std/Temporal$Timestamp$Reader : org/capnproto/StructReader {
+	public final fun getNanos ()I
+	public final fun getSeconds ()J
 }
 

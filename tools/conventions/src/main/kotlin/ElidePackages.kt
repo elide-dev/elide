@@ -38,6 +38,7 @@ object ElidePackages {
   private val publicationTasks: List<String> = listOf(
     "publishToSonatype",
     "publishAllPublicationsToElideRepository",
+    "publishAllPublicationsToGithubRepository",
   )
 
   val allDevelopers = listOf(

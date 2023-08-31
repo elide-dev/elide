@@ -194,8 +194,27 @@ test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(GRADLE) test $(_ARGS)
 
-publish:  ## Publish a new version of all Elide packages.
-	$(info Publishing packages for version "$(VERSION)"...)
+publish-substrate:
+	$(info Publishing Elide Substrate "$(VERSION)"...)
+	$(CMD)$(GRADLE) \
+		publishSubstrate \
+		--no-daemon \
+		--warning-mode=none \
+		-Pversion=$(VERSION) \
+		-PbuildSamples=false \
+		-PbuildDocs=true \
+		-PbuildDocsSite=false \
+		-PenableSigning=$(SIGNING_ON) \
+		-PenableSigstore=$(SIGSTORE_ON) \
+		-Pelide.release=true \
+		-Pelide.buildMode=release \
+		$(PUBLISH_PROPS) \
+		-x test \
+		-x jvmTest \
+		-x jsTest;
+
+publish-framework:
+	$(info Publishing Elide Framework "$(VERSION)"...)
 	$(CMD)$(GRADLE) \
 		publishElide \
 		--no-daemon \
@@ -212,6 +231,28 @@ publish:  ## Publish a new version of all Elide packages.
 		-x test \
 		-x jvmTest \
 		-x jsTest;
+
+publish-bom:
+	$(info Publishing Elide BOM "$(VERSION)"...)
+	$(CMD)$(GRADLE) \
+		publishBom \
+		--no-daemon \
+		--warning-mode=none \
+		-Pversion=$(VERSION) \
+		-PbuildSamples=false \
+		-PbuildDocs=true \
+		-PbuildDocsSite=false \
+		-PenableSigning=$(SIGNING_ON) \
+		-PenableSigstore=$(SIGSTORE_ON) \
+		-Pelide.release=true \
+		-Pelide.buildMode=release \
+		$(PUBLISH_PROPS) \
+		-x test \
+		-x jvmTest \
+		-x jsTest;
+
+publish: publish-substrate publish-framework publish-bom  ## Publish a new version of all Elide packages.
+	@echo "Elide version '$(VERSION)' published.";
 
 release:  ## Perform a full release, including publishing to Maven Central and the Elide repository.
 	@echo "Releasing version '$(VERSION)'..."

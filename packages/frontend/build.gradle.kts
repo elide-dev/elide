@@ -47,6 +47,7 @@ kotlin {
       }
     }
   }
+  jvm()
   if (buildWasm) wasm {
     d8()
   }

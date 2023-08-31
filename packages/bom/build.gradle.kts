@@ -11,7 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import ElidePackages.elidePackage
+@file:Suppress("UnstableApiUsage")
+
+import ElidePackages.allDevelopers
 
 plugins {
   `version-catalog`
@@ -23,6 +25,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 
   id("dev.elide.build.core")
+  id("dev.elide.build.publishable")
 }
 
 group = "dev.elide"
@@ -107,7 +110,35 @@ publishing {
       groupId = "dev.elide"
       artifactId = "elide-bom"
       version = rootProject.version as String
+
       from(components["versionCatalog"])
+
+      pom {
+        name = "Elide BOM"
+        url = "https://elide.dev"
+        description = "Version catalog and BOM for the Elide Framework and Runtime"
+
+        licenses {
+          license {
+            name = "MIT License"
+            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
+          }
+        }
+        allDevelopers.map {
+          developers {
+            developer {
+              id = it.id
+              name = it.name
+              if (it.email != null) {
+                email = it.email
+              }
+            }
+          }
+        }
+        scm {
+          url = "https://github.com/elide-dev/elide"
+        }
+      }
     }
   }
 }

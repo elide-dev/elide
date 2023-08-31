@@ -54,6 +54,10 @@ dependencies {
   testImplementation(projects.packages.test)
 }
 
+tasks.jar.configure {
+  exclude("**/runtime.current.json")
+}
+
 elidePackage(
   id = "graalvm-llvm",
   name = "Elide LLVM for GraalVM",

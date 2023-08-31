@@ -24,6 +24,7 @@ plugins {
 
   id("dev.elide.build.core")
   id("dev.elide.build.publishable")
+  id("dev.sigstore.sign")
 }
 
 group = "dev.elide"
@@ -47,7 +48,6 @@ dependencies {
     // BOMs: gRPC, Netty, Micronaut.
     api(libs.grpc.bom)
     api(libs.netty.bom)
-    api(libs.micronaut.bom)
     api(libs.projectreactor.bom)
 
     // Kotlin.
@@ -83,6 +83,29 @@ publishing {
       groupId = "dev.elide"
       artifactId = "elide-platform"
       version = project.version as String
+
+      pom {
+        name = "Elide Platform"
+        url = "https://elide.dev"
+        description = "Elide Platform and catalog for Gradle."
+
+        licenses {
+          license {
+            name = "MIT License"
+            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
+          }
+        }
+        developers {
+          developer {
+            id = "sgammon"
+            name = "Sam Gammon"
+            email = "samuel.gammon@gmail.com"
+          }
+        }
+        scm {
+          url = "https://github.com/elide-dev/elide"
+        }
+      }
     }
   }
 }
@@ -98,33 +121,4 @@ val publishAllElidePublications by tasks.registering {
     tasks.named("publishMavenPublicationToElideRepository"),
     tasks.named("publishMavenPublicationToSonatypeRepository"),
   )
-}
-
-publishing {
-  publications.withType<MavenPublication> {
-    artifactId = "elide-platform"
-
-    pom {
-      name = "Elide Platform"
-      url = "https://elide.dev"
-      description = "Elide Platform and catalog for Gradle."
-
-      licenses {
-        license {
-          name = "MIT License"
-          url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-        }
-      }
-      developers {
-        developer {
-          id = "sgammon"
-          name = "Sam Gammon"
-          email = "samuel.gammon@gmail.com"
-        }
-      }
-      scm {
-        url = "https://github.com/elide-dev/elide"
-      }
-    }
-  }
 }

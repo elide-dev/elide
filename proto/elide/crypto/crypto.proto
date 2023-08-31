@@ -30,8 +30,7 @@ option csharp_namespace = "Elide.Crypto";
 option go_package = "github.com/elide-tools/elide/crypto;crypto";
 
 
-// Specifies hash algorithms supported by the asset manifest code. We keep a token for this around so that we can
-// easily detect configuration changes and make evictions accordingly.
+// Specifies well-known hash algorithms.
 enum HashAlgorithm {
   // No hash algorithm was/is active.
   IDENTITY = 0;
@@ -42,18 +41,24 @@ enum HashAlgorithm {
   // Algorithm: SHA1.
   SHA1 = 2;
 
+  // Algorithm: SHA2.
+  SHA2 = 3;
+
   // Algorithm: SHA-256.
-  SHA256 = 3;
+  SHA256 = 4;
+
+  // Algorithm: SHA-384.
+  SHA384 = 5;
 
   // Algorithm: SHA-512.
-  SHA512 = 4;
+  SHA512 = 6;
 
   // Algorithm: SHA3-224.
-  SHA3_224 = 5;
+  SHA3_224 = 7;
 
   // Algorithm: SHA3-256.
-  SHA3_256 = 6;
+  SHA3_256 = 8;
 
   // Algorithm: SHA3-512.
-  SHA3_512 = 7;
+  SHA3_512 = 9;
 }

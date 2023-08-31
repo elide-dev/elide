@@ -113,6 +113,7 @@ include(
   ":packages:graalvm-react",
   ":packages:model",
   ":packages:platform",
+  ":packages:runtime",
   ":packages:proto:proto-core",
   ":packages:proto:proto-capnp",
   ":packages:proto:proto-flatbuffers",

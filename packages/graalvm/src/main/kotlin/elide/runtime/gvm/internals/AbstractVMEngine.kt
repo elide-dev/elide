@@ -50,6 +50,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.ssr.ServerResponse
 import elide.util.RuntimeFlag
+import java.util.zip.GZIPInputStream
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -109,7 +110,7 @@ public abstract class AbstractVMEngine<
     private const val ENGINE_VERSION = "v3"
 
     /** Manifest name for runtime info. */
-    private const val RUNTIME_MANIFEST = "runtime.json"
+    private const val RUNTIME_MANIFEST = "runtime.json.gz"
 
     // Root where we can find runtime-related files.
     public const val EMBEDDED_ROOT: String = "/META-INF/elide/embedded/runtime"
@@ -131,7 +132,9 @@ public abstract class AbstractVMEngine<
           "Failed to locate embedded runtime manifest for language: $engine"
         )).let { manifestFile ->
           // decode manifest from JSON to discover injected artifacts
-          val manifest = Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile)
+          val manifest = GZIPInputStream(manifestFile).use {
+            Json.decodeFromStream(RuntimeInfo.serializer(), it)
+          }
           require(manifest.engine == ENGINE_VERSION) {
             "Cannot load runtime for engine version: ${manifest.engine} (expected: $ENGINE_VERSION)"
           }

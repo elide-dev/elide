@@ -59,30 +59,35 @@ message DataFingerprint {
   // Algorithm in use when fingerprinting the associated data.
   crypto.HashAlgorithm hash = 1;
 
-  // Salt value used when fingerprinting the associated data, if applicable. Generally appended to the end of the data
-  // to be fingerprinted.
-  bytes salt = 2;
+  // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
+  data.Encoding encoding = 2;
+
+  // Prefix values used when fingerprinting the associated data, if applicable.
+  repeated bytes prefix = 3;
+
+  // Suffix values used when fingerprinting the associated data, if applicable.
+  repeated bytes suffix = 4;
+
+  // Separator to use for pre-image reconstruction.
+  bytes separator = 5;
 
   // Content of the fingerprint/checksum calculated as part of this data fingerprint.
-  bytes fingerprint = 3;
-
-  // Specifies the encoding for the affixed fingerprint data. If unspecified, the fingerprint is expressed in raw bytes.
-  data.Encoding encoding = 4;
+  bytes fingerprint = 6;
 }
 
 
 // Specifies an arbitrary container, which is used to hold raw data, along with the optional specification of a
 // cryptographic fingerprint calculated from the data.
 message DataContainer {
-  // Raw bytes for the data referenced by this container.
-  bytes raw = 1;
+  // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
+  data.Encoding encoding = 1;
 
   // Specifies an (optional) integrity fingerprint that may be used to verify the consistency of the underlying data
   // held by this data container.
   repeated DataFingerprint integrity = 2;
 
-  // Specifies the encoding for the affixed container data. If unspecified, the data is expressed in raw bytes.
-  data.Encoding encoding = 3;
+  // Raw bytes for the data referenced by this container.
+  bytes raw = 3;
 }
 
 
@@ -92,17 +97,17 @@ message CompressedData {
   // Compression mode applied to this data. If no compression is active, `IDENTITY` may be specified as a default.
   CompressionMode compression = 1;
 
-  // Container holding the raw compressed data, and a fingerprint of the data in compressed form. This is unmodified raw
-  // bytes, aside from being compressed by the algorithm specified by `compression`.
-  DataContainer data = 2;
-
   // Size of the asset data before compression. To obtain the size of the data in compressed form, simply take the
   // length of the data field itself. This value is expressed in bytes.
-  uint64 size = 3;
+  uint64 size = 2;
 
   // Holds an (optional) integrity fingerprint, calculated from the held data *before* compression, which maybe used to
   // verify the consistency of the data held by this container after de-compression.
-  repeated DataFingerprint integrity = 4;
+  repeated DataFingerprint integrity = 3;
+
+  // Container holding the raw compressed data, and a fingerprint of the data in compressed form. This is unmodified raw
+  // bytes, aside from being compressed by the algorithm specified by `compression`.
+  DataContainer data = 4;
 }
 
 // Specifies the structure of a data container which can also be a reference to a different resource or file-system

@@ -40,7 +40,7 @@ object ElidePackages {
     "publishAllPublicationsToElideRepository",
   )
 
-  private val allDevelopers = listOf(
+  val allDevelopers = listOf(
     PomDeveloper(id = "sgammon", name = "Sam Gammon", email = "samuel.gammon@gmail.com"),
     PomDeveloper(id = "darvld", name = "Dario Valdespino"),
   )

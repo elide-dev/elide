@@ -52,6 +52,10 @@ dependencies {
   testImplementation(projects.packages.test)
 }
 
+tasks.jar.configure {
+  exclude("**/runtime.current.json")
+}
+
 elidePackage(
   id = "graalvm-py",
   name = "Elide Python for GraalVM",

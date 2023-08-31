@@ -1,4 +1,4 @@
-module elide.runtime.plugins.js {
+module elide.runtime.plugins.python {
   requires elide.runtime.core;
   
   requires kotlin.stdlib;

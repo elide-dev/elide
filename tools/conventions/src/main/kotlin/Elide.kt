@@ -39,6 +39,9 @@ object Elide {
   /** Maven group shared by Elide artifacts. */
   const val group = "dev.elide"
 
+  /** Maven group shared by Elide artifacts. */
+  const val substrateGroup = "dev.elide.tools"
+
   /** Compiler args to include in all Kotlin targets. */
   val compilerArgs = listOf(
     "-progressive",

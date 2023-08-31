@@ -118,6 +118,7 @@ object Elide {
     "rpc",
     "ssr",
     "test",
+    "runtime",
     "proto:proto-core",
   )
 
@@ -196,6 +197,7 @@ object Elide {
     "ssg",
     "ssr",
     "test",
+    "runtime",
   ).map { ":packages:$it" }.plus(listOf(
     // Tools
     "processor",

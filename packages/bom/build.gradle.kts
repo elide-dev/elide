@@ -33,31 +33,52 @@ version = rootProject.version as String
 
 // Elide modules.
 val libraries = listOf(
-  "elide-base",
-  "elide-core",
-  "elide-test",
-  "elide-proto-core",
-  "elide-proto-flatbuffers",
-  "elide-proto-protobuf",
-  "elide-proto-kotlinx",
-  "elide-ssr",
-  "elide-graalvm",
-  "elide-graalvm-js",
-  "elide-graalvm-react",
-  "elide-model",
-  "elide-server",
-  "elide-frontend",
-  "elide-rpc",
-  "elide-ssg",
-  "elide-wasm",
+  "base",
+  "core",
+  "test",
+  "proto-core",
+  "proto-flatbuffers",
+  "proto-protobuf",
+  "proto-kotlinx",
+  "proto-capnp",
+  "ssr",
+  "graalvm",
+  "graalvm-js",
+  "graalvm-jvm",
+  "graalvm-kt",
+  "graalvm-llvm",
+  "graalvm-py",
+  "graalvm-rb",
+  "graalvm-react",
+  "graalvm-wasm",
+  "model",
+  "platform",
+  "server",
+  "frontend",
+  "rpc",
+  "ssg",
+  "uuid",
+  "wasm",
 )
 
 // Peer modules.
 val peers = mapOf(
-  "guava" to ("com.google.guava:guava" to libs.versions.guava.get()),
-  "protobuf" to ("com.google.protobuf:protobuf-java" to libs.versions.protobuf.get()),
-  "grpc" to ("io.grpc:grpc-bom" to libs.versions.grpc.java.get()),
-  "micronaut" to ("io.micronaut.platform:micronaut-platform" to libs.versions.micronaut.lib.get()),
+  "guava" to ("com.google.guava:guava" to libs.versions.guava),
+  "protobuf" to ("com.google.protobuf:protobuf-java" to libs.versions.protobuf),
+  "grpc" to ("io.grpc:grpc-bom" to libs.versions.grpc.java),
+  "micronaut" to ("io.micronaut.platform:micronaut-platform" to libs.versions.micronaut.lib),
+  "kotlin.sdk" to ("org.jetbrains.kotlin:kotlin-stdlib" to libs.versions.kotlin.sdk),
+)
+
+// Generic version aliases.
+val versionAliases = mapOf(
+  "graalvm" to libs.versions.graalvm.sdk,
+  "kotlin.language" to libs.versions.kotlin.language,
+)
+
+// Kotlin plugin targets.
+val kotlinPlugins = listOf(
+  "redakt",
 )
 
 kover {
@@ -67,23 +88,32 @@ kover {
 catalog {
   versionCatalog {
     // map Elide versions
-    version("elide", libs.versions.elide.asProvider().get())
-    version("elidePlugin", libs.versions.elide.plugin.get())
+    version("elide.framework", libs.versions.elide.asProvider().get())
+    version("elide.plugin", libs.versions.elide.plugin.get())
 
     // map each peer version
     peers.forEach { alias, (_, version) ->
-      version(alias, version)
+      version(alias, version.get())
+    }
+    versionAliases.forEach { (alias, version) ->
+      version(alias, version.get())
     }
 
     // define Elide build plugin
-    plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elidePlugin")
+    plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elide.plugin")
 
     // define the BOM (this module)
-    library("elide-bom", Elide.group, "bom").versionRef("elide")
+    library("elide.bom", Elide.group, "bom").versionRef("elide.framework")
 
     // define Elide library aliases
     libraries.forEach { libName ->
-      library("elide-$libName", Elide.group, libName).versionRef("elide")
+      library("elide.$libName", Elide.group, "elide-$libName").versionRef("elide.framework")
+    }
+
+    // define Elide plugin aliases
+    kotlinPlugins.forEach { pluginName ->
+      library("elide.plugins.$pluginName", Elide.substrateGroup, "$pluginName-plugin")
+        .versionRef("elide.framework")
     }
 
     // define peer library aliases

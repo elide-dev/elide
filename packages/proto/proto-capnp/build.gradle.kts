@@ -85,20 +85,6 @@ kotlin {
   }
 }
 
-publishing {
-  publications.create<MavenPublication>("maven") {
-    from(components["kotlin"])
-  }
-}
-
-elidePackage(
-  id = "proto-capnp",
-  name = "Elide Protocol: Cap'n'Proto",
-  description = "Elide protocol implementation for Cap'n'Proto.",
-) {
-  java9Modularity = false
-}
-
 tasks.withType<JavaCompile>().configureEach {
   sourceCompatibility = javaLanguageTarget
   targetCompatibility = javaLanguageTarget
@@ -132,6 +118,22 @@ artifacts {
   add("capnpInternal", tasks.jar)
   archives(sourcesJar)
   archives(javadocJar)
+}
+
+publishing {
+  publications.create<MavenPublication>("maven") {
+    from(components["kotlin"])
+    artifact(javadocJar)
+    artifact(sourcesJar)
+  }
+}
+
+elidePackage(
+  id = "proto-capnp",
+  name = "Elide Protocol: Cap'n'Proto",
+  description = "Elide protocol implementation for Cap'n'Proto.",
+) {
+  java9Modularity = false
 }
 
 dependencies {

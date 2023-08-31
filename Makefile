@@ -125,6 +125,8 @@ endif
 
 ifeq ($(RELEASE),yes)
 BUILD_MODE ?= release
+SIGNING ?= yes
+SIGSTORE ?= yes
 NATIVE_TARGET_NAME ?= nativeOptimizedCompile
 CLI_DISTPATH ?= ./packages/cli/build/dist/release
 BUILD_ARGS += -Pelide.buildMode=prod -Pelide.stamp=true -Pelide.release=true -Pelide.strict=true
@@ -200,12 +202,14 @@ publish-substrate:
 		publishSubstrate \
 		--no-daemon \
 		--warning-mode=none \
+		--no-configuration-cache \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
 		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
+		-Pelide.stamp=true \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
 		$(PUBLISH_PROPS) \
@@ -219,12 +223,14 @@ publish-framework:
 		publishElide \
 		--no-daemon \
 		--warning-mode=none \
+		--no-configuration-cache \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
 		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
+		-Pelide.stamp=true \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
 		$(PUBLISH_PROPS) \
@@ -238,12 +244,14 @@ publish-bom:
 		publishBom \
 		--no-daemon \
 		--warning-mode=none \
+		--no-configuration-cache \
 		-Pversion=$(VERSION) \
 		-PbuildSamples=false \
 		-PbuildDocs=true \
 		-PbuildDocsSite=false \
 		-PenableSigning=$(SIGNING_ON) \
 		-PenableSigstore=$(SIGSTORE_ON) \
+		-Pelide.stamp=true \
 		-Pelide.release=true \
 		-Pelide.buildMode=release \
 		$(PUBLISH_PROPS) \
@@ -254,11 +262,16 @@ publish-bom:
 publish: publish-substrate publish-framework publish-bom  ## Publish a new version of all Elide packages.
 	@echo "Elide version '$(VERSION)' published.";
 
+ifneq ($(RELEASE),yes)
+release:
+	@echo "To perform a release, unlock the release gate with RELEASE=yes. Make sure \`.version\` is up-to-date."
+else
 release:  ## Perform a full release, including publishing to Maven Central and the Elide repository.
 	@echo "Releasing version '$(VERSION)'..."
 	$(CMD)$(CP) -f .version .release
-	$(MAKE) publish
+	$(CMD)$(MAKE) publish RELEASE=yes
 	@echo "Release complete. Please commit changes to the '.release' file."
+endif
 
 clean-cli:  ## Clean built CLI targets.
 	$(CMD)echo "Cleaning CLI targets..."

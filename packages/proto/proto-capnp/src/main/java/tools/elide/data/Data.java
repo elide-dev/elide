@@ -13,8 +13,186 @@ public final class Data {
     _NOT_IN_SCHEMA,
   }
 
+  public static class DataFingerprint {
+    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)1,(short)4);
+    public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
+      public Factory() {
+      }
+      public final Reader constructReader(org.capnproto.SegmentReader segment, int data,int pointers, int dataSize, short pointerCount, int nestingLimit) {
+        return new Reader(segment,data,pointers,dataSize,pointerCount,nestingLimit);
+      }
+      public final Builder constructBuilder(org.capnproto.SegmentBuilder segment, int data,int pointers, int dataSize, short pointerCount) {
+        return new Builder(segment, data, pointers, dataSize, pointerCount);
+      }
+      public final org.capnproto.StructSize structSize() {
+        return DataFingerprint.STRUCT_SIZE;
+      }
+      public final Reader asReader(Builder builder) {
+        return builder.asReader();
+      }
+    }
+    public static final Factory factory = new Factory();
+    public static final org.capnproto.StructList.Factory<Builder,Reader> listFactory =
+      new org.capnproto.StructList.Factory<Builder, Reader>(factory);
+    public static final class Builder extends org.capnproto.StructBuilder {
+      Builder(org.capnproto.SegmentBuilder segment, int data, int pointers,int dataSize, short pointerCount){
+        super(segment, data, pointers, dataSize, pointerCount);
+      }
+      public final Reader asReader() {
+        return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+      }
+      public final tools.elide.crypto.Crypto.HashAlgorithm getHash() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.crypto.Crypto.HashAlgorithm.IDENTITY;
+          case 1 : return tools.elide.crypto.Crypto.HashAlgorithm.MD5;
+          case 2 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA1;
+          case 3 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA2;
+          case 4 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA256;
+          case 5 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA384;
+          case 6 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA512;
+          case 7 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3224;
+          case 8 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3256;
+          case 9 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3512;
+          default: return tools.elide.crypto.Crypto.HashAlgorithm._NOT_IN_SCHEMA;
+        }
+      }
+      public final void setHash(tools.elide.crypto.Crypto.HashAlgorithm value) {
+        _setShortField(0, (short)value.ordinal());
+      }
+
+      public final tools.elide.data.Encodings.Encoding getEncoding() {
+        switch(_getShortField(1)) {
+          case 0 : return tools.elide.data.Encodings.Encoding.UTF8;
+          case 1 : return tools.elide.data.Encodings.Encoding.UTF16;
+          case 2 : return tools.elide.data.Encodings.Encoding.UTF32;
+          default: return tools.elide.data.Encodings.Encoding._NOT_IN_SCHEMA;
+        }
+      }
+      public final void setEncoding(tools.elide.data.Encodings.Encoding value) {
+        _setShortField(1, (short)value.ordinal());
+      }
+
+      public final boolean hasPrefix() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.DataList.Builder getPrefix() {
+        return _getPointerField(org.capnproto.DataList.factory, 0, null, 0);
+      }
+      public final void setPrefix(org.capnproto.DataList.Reader value) {
+        _setPointerField(org.capnproto.DataList.factory, 0, value);
+      }
+      public final org.capnproto.DataList.Builder initPrefix(int size) {
+        return _initPointerField(org.capnproto.DataList.factory, 0, size);
+      }
+      public final boolean hasSuffix() {
+        return !_pointerFieldIsNull(1);
+      }
+      public final org.capnproto.DataList.Builder getSuffix() {
+        return _getPointerField(org.capnproto.DataList.factory, 1, null, 0);
+      }
+      public final void setSuffix(org.capnproto.DataList.Reader value) {
+        _setPointerField(org.capnproto.DataList.factory, 1, value);
+      }
+      public final org.capnproto.DataList.Builder initSuffix(int size) {
+        return _initPointerField(org.capnproto.DataList.factory, 1, size);
+      }
+      public final boolean hasSeparator() {
+        return !_pointerFieldIsNull(2);
+      }
+      public final org.capnproto.Data.Builder getSeparator() {
+        return _getPointerField(org.capnproto.Data.factory, 2, null, 0, 0);
+      }
+      public final void setSeparator(org.capnproto.Data.Reader value) {
+        _setPointerField(org.capnproto.Data.factory, 2, value);
+      }
+      public final void setSeparator(byte [] value) {
+        _setPointerField(org.capnproto.Data.factory, 2, new org.capnproto.Data.Reader(value));
+      }
+      public final org.capnproto.Data.Builder initSeparator(int size) {
+        return _initPointerField(org.capnproto.Data.factory, 2, size);
+      }
+      public final boolean hasFingerprint() {
+        return !_pointerFieldIsNull(3);
+      }
+      public final org.capnproto.Data.Builder getFingerprint() {
+        return _getPointerField(org.capnproto.Data.factory, 3, null, 0, 0);
+      }
+      public final void setFingerprint(org.capnproto.Data.Reader value) {
+        _setPointerField(org.capnproto.Data.factory, 3, value);
+      }
+      public final void setFingerprint(byte [] value) {
+        _setPointerField(org.capnproto.Data.factory, 3, new org.capnproto.Data.Reader(value));
+      }
+      public final org.capnproto.Data.Builder initFingerprint(int size) {
+        return _initPointerField(org.capnproto.Data.factory, 3, size);
+      }
+    }
+
+    public static final class Reader extends org.capnproto.StructReader {
+      Reader(org.capnproto.SegmentReader segment, int data, int pointers,int dataSize, short pointerCount, int nestingLimit){
+        super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+      }
+
+      public final tools.elide.crypto.Crypto.HashAlgorithm getHash() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.crypto.Crypto.HashAlgorithm.IDENTITY;
+          case 1 : return tools.elide.crypto.Crypto.HashAlgorithm.MD5;
+          case 2 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA1;
+          case 3 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA2;
+          case 4 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA256;
+          case 5 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA384;
+          case 6 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA512;
+          case 7 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3224;
+          case 8 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3256;
+          case 9 : return tools.elide.crypto.Crypto.HashAlgorithm.SHA3512;
+          default: return tools.elide.crypto.Crypto.HashAlgorithm._NOT_IN_SCHEMA;
+        }
+      }
+
+      public final tools.elide.data.Encodings.Encoding getEncoding() {
+        switch(_getShortField(1)) {
+          case 0 : return tools.elide.data.Encodings.Encoding.UTF8;
+          case 1 : return tools.elide.data.Encodings.Encoding.UTF16;
+          case 2 : return tools.elide.data.Encodings.Encoding.UTF32;
+          default: return tools.elide.data.Encodings.Encoding._NOT_IN_SCHEMA;
+        }
+      }
+
+      public final boolean hasPrefix() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.DataList.Reader getPrefix() {
+        return _getPointerField(org.capnproto.DataList.factory, 0, null, 0);
+      }
+
+      public final boolean hasSuffix() {
+        return !_pointerFieldIsNull(1);
+      }
+      public final org.capnproto.DataList.Reader getSuffix() {
+        return _getPointerField(org.capnproto.DataList.factory, 1, null, 0);
+      }
+
+      public boolean hasSeparator() {
+        return !_pointerFieldIsNull(2);
+      }
+      public org.capnproto.Data.Reader getSeparator() {
+        return _getPointerField(org.capnproto.Data.factory, 2, null, 0, 0);
+      }
+
+      public boolean hasFingerprint() {
+        return !_pointerFieldIsNull(3);
+      }
+      public org.capnproto.Data.Reader getFingerprint() {
+        return _getPointerField(org.capnproto.Data.factory, 3, null, 0, 0);
+      }
+
+    }
+
+  }
+
+
   public static class DataContainer {
-    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)0,(short)0);
+    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)1,(short)2);
     public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
       public Factory() {
       }
@@ -41,11 +219,181 @@ public final class Data {
       public final Reader asReader() {
         return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
       }
+      public final tools.elide.data.Encodings.Encoding getEncoding() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.data.Encodings.Encoding.UTF8;
+          case 1 : return tools.elide.data.Encodings.Encoding.UTF16;
+          case 2 : return tools.elide.data.Encodings.Encoding.UTF32;
+          default: return tools.elide.data.Encodings.Encoding._NOT_IN_SCHEMA;
+        }
+      }
+      public final void setEncoding(tools.elide.data.Encodings.Encoding value) {
+        _setShortField(0, (short)value.ordinal());
+      }
+
+      public final boolean hasIntegrity() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.StructList.Builder<tools.elide.data.Data.DataFingerprint.Builder> getIntegrity() {
+        return _getPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, null, 0);
+      }
+      public final void setIntegrity(org.capnproto.StructList.Reader<tools.elide.data.Data.DataFingerprint.Reader> value) {
+        _setPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, value);
+      }
+      public final org.capnproto.StructList.Builder<tools.elide.data.Data.DataFingerprint.Builder> initIntegrity(int size) {
+        return _initPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, size);
+      }
+      public final boolean hasRaw() {
+        return !_pointerFieldIsNull(1);
+      }
+      public final org.capnproto.DataList.Builder getRaw() {
+        return _getPointerField(org.capnproto.DataList.factory, 1, null, 0);
+      }
+      public final void setRaw(org.capnproto.DataList.Reader value) {
+        _setPointerField(org.capnproto.DataList.factory, 1, value);
+      }
+      public final org.capnproto.DataList.Builder initRaw(int size) {
+        return _initPointerField(org.capnproto.DataList.factory, 1, size);
+      }
     }
 
     public static final class Reader extends org.capnproto.StructReader {
       Reader(org.capnproto.SegmentReader segment, int data, int pointers,int dataSize, short pointerCount, int nestingLimit){
         super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+      }
+
+      public final tools.elide.data.Encodings.Encoding getEncoding() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.data.Encodings.Encoding.UTF8;
+          case 1 : return tools.elide.data.Encodings.Encoding.UTF16;
+          case 2 : return tools.elide.data.Encodings.Encoding.UTF32;
+          default: return tools.elide.data.Encodings.Encoding._NOT_IN_SCHEMA;
+        }
+      }
+
+      public final boolean hasIntegrity() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.StructList.Reader<tools.elide.data.Data.DataFingerprint.Reader> getIntegrity() {
+        return _getPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, null, 0);
+      }
+
+      public final boolean hasRaw() {
+        return !_pointerFieldIsNull(1);
+      }
+      public final org.capnproto.DataList.Reader getRaw() {
+        return _getPointerField(org.capnproto.DataList.factory, 1, null, 0);
+      }
+
+    }
+
+  }
+
+
+  public static class CompressedData {
+    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)2,(short)2);
+    public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
+      public Factory() {
+      }
+      public final Reader constructReader(org.capnproto.SegmentReader segment, int data,int pointers, int dataSize, short pointerCount, int nestingLimit) {
+        return new Reader(segment,data,pointers,dataSize,pointerCount,nestingLimit);
+      }
+      public final Builder constructBuilder(org.capnproto.SegmentBuilder segment, int data,int pointers, int dataSize, short pointerCount) {
+        return new Builder(segment, data, pointers, dataSize, pointerCount);
+      }
+      public final org.capnproto.StructSize structSize() {
+        return CompressedData.STRUCT_SIZE;
+      }
+      public final Reader asReader(Builder builder) {
+        return builder.asReader();
+      }
+    }
+    public static final Factory factory = new Factory();
+    public static final org.capnproto.StructList.Factory<Builder,Reader> listFactory =
+      new org.capnproto.StructList.Factory<Builder, Reader>(factory);
+    public static final class Builder extends org.capnproto.StructBuilder {
+      Builder(org.capnproto.SegmentBuilder segment, int data, int pointers,int dataSize, short pointerCount){
+        super(segment, data, pointers, dataSize, pointerCount);
+      }
+      public final Reader asReader() {
+        return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+      }
+      public final tools.elide.data.Data.CompressionMode getCompression() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.data.Data.CompressionMode.IDENTITY;
+          case 1 : return tools.elide.data.Data.CompressionMode.GZIP;
+          case 2 : return tools.elide.data.Data.CompressionMode.BROTLI;
+          case 3 : return tools.elide.data.Data.CompressionMode.SNAPPY;
+          case 4 : return tools.elide.data.Data.CompressionMode.DEFLATE;
+          default: return tools.elide.data.Data.CompressionMode._NOT_IN_SCHEMA;
+        }
+      }
+      public final void setCompression(tools.elide.data.Data.CompressionMode value) {
+        _setShortField(0, (short)value.ordinal());
+      }
+
+      public final long getSize() {
+        return _getLongField(1);
+      }
+      public final void setSize(long value) {
+        _setLongField(1, value);
+      }
+
+      public final boolean hasIntegrity() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.StructList.Builder<tools.elide.data.Data.DataFingerprint.Builder> getIntegrity() {
+        return _getPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, null, 0);
+      }
+      public final void setIntegrity(org.capnproto.StructList.Reader<tools.elide.data.Data.DataFingerprint.Reader> value) {
+        _setPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, value);
+      }
+      public final org.capnproto.StructList.Builder<tools.elide.data.Data.DataFingerprint.Builder> initIntegrity(int size) {
+        return _initPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, size);
+      }
+      public final tools.elide.data.Data.DataContainer.Builder getData() {
+        return _getPointerField(tools.elide.data.Data.DataContainer.factory, 1, null, 0);
+      }
+      public final void setData(tools.elide.data.Data.DataContainer.Reader value) {
+        _setPointerField(tools.elide.data.Data.DataContainer.factory,1, value);
+      }
+      public final tools.elide.data.Data.DataContainer.Builder initData() {
+        return _initPointerField(tools.elide.data.Data.DataContainer.factory,1, 0);
+      }
+    }
+
+    public static final class Reader extends org.capnproto.StructReader {
+      Reader(org.capnproto.SegmentReader segment, int data, int pointers,int dataSize, short pointerCount, int nestingLimit){
+        super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+      }
+
+      public final tools.elide.data.Data.CompressionMode getCompression() {
+        switch(_getShortField(0)) {
+          case 0 : return tools.elide.data.Data.CompressionMode.IDENTITY;
+          case 1 : return tools.elide.data.Data.CompressionMode.GZIP;
+          case 2 : return tools.elide.data.Data.CompressionMode.BROTLI;
+          case 3 : return tools.elide.data.Data.CompressionMode.SNAPPY;
+          case 4 : return tools.elide.data.Data.CompressionMode.DEFLATE;
+          default: return tools.elide.data.Data.CompressionMode._NOT_IN_SCHEMA;
+        }
+      }
+
+      public final long getSize() {
+        return _getLongField(1);
+      }
+
+      public final boolean hasIntegrity() {
+        return !_pointerFieldIsNull(0);
+      }
+      public final org.capnproto.StructList.Reader<tools.elide.data.Data.DataFingerprint.Reader> getIntegrity() {
+        return _getPointerField(tools.elide.data.Data.DataFingerprint.listFactory, 0, null, 0);
+      }
+
+      public boolean hasData() {
+        return !_pointerFieldIsNull(1);
+      }
+      public tools.elide.data.Data.DataContainer.Reader getData() {
+        return _getPointerField(tools.elide.data.Data.DataContainer.factory,1,null, 0);
       }
 
     }
@@ -54,7 +402,7 @@ public final class Data {
 
 
   public static class DataContainerRef {
-    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)0,(short)0);
+    public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)1,(short)1);
     public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
       public Factory() {
       }
@@ -81,6 +429,15 @@ public final class Data {
       public final Reader asReader() {
         return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
       }
+      public final Reference.Builder getReference() {
+        return new DataContainerRef.Reference.Builder(segment, data, pointers, dataSize, pointerCount);
+      }
+      public final Reference.Builder initReference() {
+        _setShortField(0,(short)0);
+        _clearPointerField(0);
+  return new DataContainerRef.Reference.Builder(segment, data, pointers, dataSize, pointerCount);
+      }
+
     }
 
     public static final class Reader extends org.capnproto.StructReader {
@@ -88,7 +445,235 @@ public final class Data {
         super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
       }
 
+      public Reference.Reader getReference() {
+        return new DataContainerRef.Reference.Reader(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+      }
+
     }
+
+    public static class FingerprintPathPair {
+      public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)0,(short)2);
+      public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
+        public Factory() {
+        }
+        public final Reader constructReader(org.capnproto.SegmentReader segment, int data,int pointers, int dataSize, short pointerCount, int nestingLimit) {
+          return new Reader(segment,data,pointers,dataSize,pointerCount,nestingLimit);
+        }
+        public final Builder constructBuilder(org.capnproto.SegmentBuilder segment, int data,int pointers, int dataSize, short pointerCount) {
+          return new Builder(segment, data, pointers, dataSize, pointerCount);
+        }
+        public final org.capnproto.StructSize structSize() {
+          return DataContainerRef.FingerprintPathPair.STRUCT_SIZE;
+        }
+        public final Reader asReader(Builder builder) {
+          return builder.asReader();
+        }
+      }
+      public static final Factory factory = new Factory();
+      public static final org.capnproto.StructList.Factory<Builder,Reader> listFactory =
+        new org.capnproto.StructList.Factory<Builder, Reader>(factory);
+      public static final class Builder extends org.capnproto.StructBuilder {
+        Builder(org.capnproto.SegmentBuilder segment, int data, int pointers,int dataSize, short pointerCount){
+          super(segment, data, pointers, dataSize, pointerCount);
+        }
+        public final Reader asReader() {
+          return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+        }
+        public final tools.elide.data.Data.DataFingerprint.Builder getFingerprint() {
+          return _getPointerField(tools.elide.data.Data.DataFingerprint.factory, 0, null, 0);
+        }
+        public final void setFingerprint(tools.elide.data.Data.DataFingerprint.Reader value) {
+          _setPointerField(tools.elide.data.Data.DataFingerprint.factory,0, value);
+        }
+        public final tools.elide.data.Data.DataFingerprint.Builder initFingerprint() {
+          return _initPointerField(tools.elide.data.Data.DataFingerprint.factory,0, 0);
+        }
+        public final boolean hasPath() {
+          return !_pointerFieldIsNull(1);
+        }
+        public final org.capnproto.Text.Builder getPath() {
+          return _getPointerField(org.capnproto.Text.factory, 1, null, 0, 0);
+        }
+        public final void setPath(org.capnproto.Text.Reader value) {
+          _setPointerField(org.capnproto.Text.factory, 1, value);
+        }
+        public final void setPath(String value) {
+          _setPointerField(org.capnproto.Text.factory, 1, new org.capnproto.Text.Reader(value));
+        }
+        public final org.capnproto.Text.Builder initPath(int size) {
+          return _initPointerField(org.capnproto.Text.factory, 1, size);
+        }
+      }
+
+      public static final class Reader extends org.capnproto.StructReader {
+        Reader(org.capnproto.SegmentReader segment, int data, int pointers,int dataSize, short pointerCount, int nestingLimit){
+          super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+        }
+
+        public boolean hasFingerprint() {
+          return !_pointerFieldIsNull(0);
+        }
+        public tools.elide.data.Data.DataFingerprint.Reader getFingerprint() {
+          return _getPointerField(tools.elide.data.Data.DataFingerprint.factory,0,null, 0);
+        }
+
+        public boolean hasPath() {
+          return !_pointerFieldIsNull(1);
+        }
+        public org.capnproto.Text.Reader getPath() {
+          return _getPointerField(org.capnproto.Text.factory, 1, null, 0, 0);
+        }
+
+      }
+
+    }
+
+
+    public static class Reference {
+      public static final org.capnproto.StructSize STRUCT_SIZE = new org.capnproto.StructSize((short)1,(short)1);
+      public static final class Factory extends org.capnproto.StructFactory<Builder, Reader> {
+        public Factory() {
+        }
+        public final Reader constructReader(org.capnproto.SegmentReader segment, int data,int pointers, int dataSize, short pointerCount, int nestingLimit) {
+          return new Reader(segment,data,pointers,dataSize,pointerCount,nestingLimit);
+        }
+        public final Builder constructBuilder(org.capnproto.SegmentBuilder segment, int data,int pointers, int dataSize, short pointerCount) {
+          return new Builder(segment, data, pointers, dataSize, pointerCount);
+        }
+        public final org.capnproto.StructSize structSize() {
+          return DataContainerRef.Reference.STRUCT_SIZE;
+        }
+        public final Reader asReader(Builder builder) {
+          return builder.asReader();
+        }
+      }
+      public static final Factory factory = new Factory();
+      public static final org.capnproto.StructList.Factory<Builder,Reader> listFactory =
+        new org.capnproto.StructList.Factory<Builder, Reader>(factory);
+      public static final class Builder extends org.capnproto.StructBuilder {
+        Builder(org.capnproto.SegmentBuilder segment, int data, int pointers,int dataSize, short pointerCount){
+          super(segment, data, pointers, dataSize, pointerCount);
+        }
+        public Which which() {
+          switch(_getShortField(0)) {
+            case 0 : return Which.DATA;
+            case 1 : return Which.RESOURCE;
+            case 2 : return Which.FILESYSTEM;
+            default: return Which._NOT_IN_SCHEMA;
+          }
+        }
+        public final Reader asReader() {
+          return new Reader(segment, data, pointers, dataSize, pointerCount, 0x7fffffff);
+        }
+        public final boolean isData() {
+          return which() == DataContainerRef.Reference.Which.DATA;
+        }
+        public final tools.elide.data.Data.CompressedData.Builder getData() {
+          assert which() == DataContainerRef.Reference.Which.DATA:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.CompressedData.factory, 0, null, 0);
+        }
+        public final void setData(tools.elide.data.Data.CompressedData.Reader value) {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.DATA.ordinal());
+          _setPointerField(tools.elide.data.Data.CompressedData.factory,0, value);
+        }
+        public final tools.elide.data.Data.CompressedData.Builder initData() {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.DATA.ordinal());
+          return _initPointerField(tools.elide.data.Data.CompressedData.factory,0, 0);
+        }
+        public final boolean isResource() {
+          return which() == DataContainerRef.Reference.Which.RESOURCE;
+        }
+        public final tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Builder getResource() {
+          assert which() == DataContainerRef.Reference.Which.RESOURCE:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory, 0, null, 0);
+        }
+        public final void setResource(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Reader value) {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.RESOURCE.ordinal());
+          _setPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0, value);
+        }
+        public final tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Builder initResource() {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.RESOURCE.ordinal());
+          return _initPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0, 0);
+        }
+        public final boolean isFilesystem() {
+          return which() == DataContainerRef.Reference.Which.FILESYSTEM;
+        }
+        public final tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Builder getFilesystem() {
+          assert which() == DataContainerRef.Reference.Which.FILESYSTEM:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory, 0, null, 0);
+        }
+        public final void setFilesystem(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Reader value) {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.FILESYSTEM.ordinal());
+          _setPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0, value);
+        }
+        public final tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Builder initFilesystem() {
+          _setShortField(0, (short)DataContainerRef.Reference.Which.FILESYSTEM.ordinal());
+          return _initPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0, 0);
+        }
+      }
+
+      public static final class Reader extends org.capnproto.StructReader {
+        Reader(org.capnproto.SegmentReader segment, int data, int pointers,int dataSize, short pointerCount, int nestingLimit){
+          super(segment, data, pointers, dataSize, pointerCount, nestingLimit);
+        }
+
+        public Which which() {
+          switch(_getShortField(0)) {
+            case 0 : return Which.DATA;
+            case 1 : return Which.RESOURCE;
+            case 2 : return Which.FILESYSTEM;
+            default: return Which._NOT_IN_SCHEMA;
+          }
+        }
+        public final boolean isData() {
+          return which() == DataContainerRef.Reference.Which.DATA;
+        }
+        public boolean hasData() {
+          return !_pointerFieldIsNull(0);
+        }
+        public tools.elide.data.Data.CompressedData.Reader getData() {
+          assert which() == DataContainerRef.Reference.Which.DATA:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.CompressedData.factory,0,null, 0);
+        }
+
+        public final boolean isResource() {
+          return which() == DataContainerRef.Reference.Which.RESOURCE;
+        }
+        public boolean hasResource() {
+          return !_pointerFieldIsNull(0);
+        }
+        public tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Reader getResource() {
+          assert which() == DataContainerRef.Reference.Which.RESOURCE:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0,null, 0);
+        }
+
+        public final boolean isFilesystem() {
+          return which() == DataContainerRef.Reference.Which.FILESYSTEM;
+        }
+        public boolean hasFilesystem() {
+          return !_pointerFieldIsNull(0);
+        }
+        public tools.elide.data.Data.DataContainerRef.FingerprintPathPair.Reader getFilesystem() {
+          assert which() == DataContainerRef.Reference.Which.FILESYSTEM:
+                      "Must check which() before get()ing a union member.";
+          return _getPointerField(tools.elide.data.Data.DataContainerRef.FingerprintPathPair.factory,0,null, 0);
+        }
+
+      }
+
+      public enum Which {
+        DATA,
+        RESOURCE,
+        FILESYSTEM,
+        _NOT_IN_SCHEMA,
+      }
+    }
+
 
   }
 
@@ -137,18 +722,140 @@ public static final org.capnproto.SegmentReader b_ea3181bc9315330c =
    "\u0062\u0072\u006f\u0074\u006c\u0069\u0000\u0000" +
    "\u0073\u006e\u0061\u0070\u0070\u0079\u0000\u0000" +
    "\u0064\u0065\u0066\u006c\u0061\u0074\u0065\u0000" + "");
+public static final org.capnproto.SegmentReader b_b94e6245869e1c07 =
+   org.capnproto.GeneratedClassSupport.decodeRawBytes(
+   "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
+   "\u0007\u001c\u009e\u0086\u0045\u0062\u004e\u00b9" +
+   "\u0016\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u001d\"\u00a9\u009f\u0079\u002f\u0007\u008b" +
+   "\u0004\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0015\u0000\u0000\u0000\u0032\u0001\u0000\u0000" +
+   "\u0025\u0000\u0000\u0000\u0007\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0021\u0000\u0000\u0000\u0057\u0001\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
+   "\u0074\u0061\u002f\u0064\u0061\u0074\u0061\u002e" +
+   "\u0063\u0061\u0070\u006e\u0070\u003a\u0044\u0061" +
+   "\u0074\u0061\u0046\u0069\u006e\u0067\u0065\u0072" +
+   "\u0070\u0072\u0069\u006e\u0074\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u0018\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0099\u0000\u0000\u0000\u002a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0094\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00a0\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0001\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u009d\u0000\u0000\u0000\u004a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u009c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00a8\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0002\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00a5\u0000\u0000\u0000\u003a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00a0\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00bc\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0003\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0003\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00b9\u0000\u0000\u0000\u003a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00b4\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00d0\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0004\u0000\u0000\u0000\u0002\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0004\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00cd\u0000\u0000\u0000\u0052\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00cc\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00d8\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0005\u0000\u0000\u0000\u0003\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0005\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00d5\u0000\u0000\u0000\u0062\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00d4\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u00e0\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0068\u0061\u0073\u0068\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00a9\u00e2\u0097\u0089\u0094\u0010\u0040\u00c4" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u006e\u0063\u006f\u0064\u0069\u006e\u0067" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0087\u00cf\u007b\u009a\u006f\u0083\u00a5\u0084" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0070\u0072\u0065\u0066\u0069\u0078\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0073\u0075\u0066\u0066\u0069\u0078\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0073\u0065\u0070\u0061\u0072\u0061\u0074\u006f" +
+   "\u0072\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0066\u0069\u006e\u0067\u0065\u0072\u0070\u0072" +
+   "\u0069\u006e\u0074\u0000\u0000\u0000\u0000\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
 public static final org.capnproto.SegmentReader b_b1862cdf396f9c3a =
    org.capnproto.GeneratedClassSupport.decodeRawBytes(
    "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
    "\u003a\u009c\u006f\u0039\u00df\u002c\u0086\u00b1" +
-   "\u0016\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0016\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
    "\u001d\"\u00a9\u009f\u0079\u002f\u0007\u008b" +
-   "\u0000\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
+   "\u0002\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0015\u0000\u0000\u0000\"\u0001\u0000\u0000" +
    "\u0025\u0000\u0000\u0000\u0007\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
-   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0021\u0000\u0000\u0000\u00af\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
@@ -156,19 +863,162 @@ public static final org.capnproto.SegmentReader b_b1862cdf396f9c3a =
    "\u0063\u0061\u0070\u006e\u0070\u003a\u0044\u0061" +
    "\u0074\u0061\u0043\u006f\u006e\u0074\u0061\u0069" +
    "\u006e\u0065\u0072\u0000\u0000\u0000\u0000\u0000" +
-   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" + "");
+   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u000c\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0045\u0000\u0000\u0000\u004a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0044\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0050\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u004d\u0000\u0000\u0000\u0052\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u004c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0068\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0002\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0002\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u0000\u0000\u0000\"\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0060\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u007c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0065\u006e\u0063\u006f\u0064\u0069\u006e\u0067" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0087\u00cf\u007b\u009a\u006f\u0083\u00a5\u0084" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0069\u006e\u0074\u0065\u0067\u0072\u0069\u0074" +
+   "\u0079\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0007\u001c\u009e\u0086\u0045\u0062\u004e\u00b9" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0072\u0061\u0077\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
+public static final org.capnproto.SegmentReader b_a243adc34f1c37cb =
+   org.capnproto.GeneratedClassSupport.decodeRawBytes(
+   "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
+   "\u00cb\u0037\u001c\u004f\u00c3\u00ad\u0043\u00a2" +
+   "\u0016\u0000\u0000\u0000\u0001\u0000\u0002\u0000" +
+   "\u001d\"\u00a9\u009f\u0079\u002f\u0007\u008b" +
+   "\u0002\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0015\u0000\u0000\u0000\u002a\u0001\u0000\u0000" +
+   "\u0025\u0000\u0000\u0000\u0007\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0021\u0000\u0000\u0000\u00e7\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
+   "\u0074\u0061\u002f\u0064\u0061\u0074\u0061\u002e" +
+   "\u0063\u0061\u0070\u006e\u0070\u003a\u0043\u006f" +
+   "\u006d\u0070\u0072\u0065\u0073\u0073\u0065\u0064" +
+   "\u0044\u0061\u0074\u0061\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u0010\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0061\u0000\u0000\u0000\u0062\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0060\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u006c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0001\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0069\u0000\u0000\u0000\u002a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0064\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0070\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0002\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u006d\u0000\u0000\u0000\u0052\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u006c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0088\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0003\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0003\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0085\u0000\u0000\u0000\u002a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0080\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u008c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0063\u006f\u006d\u0070\u0072\u0065\u0073\u0073" +
+   "\u0069\u006f\u006e\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000c\u0033\u0015\u0093\u00bc\u0081\u0031\u00ea" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0073\u0069\u007a\u0065\u0000\u0000\u0000\u0000" +
+   "\u0009\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0009\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0069\u006e\u0074\u0065\u0067\u0072\u0069\u0074" +
+   "\u0079\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0007\u001c\u009e\u0086\u0045\u0062\u004e\u00b9" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0064\u0061\u0074\u0061\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u003a\u009c\u006f\u0039\u00df\u002c\u0086\u00b1" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
 public static final org.capnproto.SegmentReader b_9d66b4bfd514f842 =
    org.capnproto.GeneratedClassSupport.decodeRawBytes(
    "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
    "\u0042\u00f8\u0014\u00d5\u00bf\u00b4\u0066\u009d" +
-   "\u0016\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0016\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
    "\u001d\"\u00a9\u009f\u0079\u002f\u0007\u008b" +
-   "\u0000\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
+   "\u0001\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0015\u0000\u0000\u0000\u003a\u0001\u0000\u0000" +
-   "\u0025\u0000\u0000\u0000\u0007\u0000\u0000\u0000" +
+   "\u0025\u0000\u0000\u0000\u0017\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
-   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0035\u0000\u0000\u0000\u003f\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
    "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
@@ -176,7 +1026,146 @@ public static final org.capnproto.SegmentReader b_9d66b4bfd514f842 =
    "\u0063\u0061\u0070\u006e\u0070\u003a\u0044\u0061" +
    "\u0074\u0061\u0043\u006f\u006e\u0074\u0061\u0069" +
    "\u006e\u0065\u0072\u0052\u0065\u0066\u0000\u0000" +
-   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" + "");
+   "\u0004\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u0047\u0076\u00ec\u0000\u00f7\u00b5\u00ca\u00e5" +
+   "\u0001\u0000\u0000\u0000\u00a2\u0000\u0000\u0000" +
+   "\u0046\u0069\u006e\u0067\u0065\u0072\u0070\u0072" +
+   "\u0069\u006e\u0074\u0050\u0061\u0074\u0068\u0050" +
+   "\u0061\u0069\u0072\u0000\u0000\u0000\u0000\u0000" +
+   "\u0004\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0042\u000f\u0023\u0083\u009e\u0067\u00ac\u00f2" +
+   "\r\u0000\u0000\u0000\u0052\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0072\u0065\u0066\u0065\u0072\u0065\u006e\u0063" +
+   "\u0065\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
+public static final org.capnproto.SegmentReader b_e5cab5f700ec7647 =
+   org.capnproto.GeneratedClassSupport.decodeRawBytes(
+   "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
+   "\u0047\u0076\u00ec\u0000\u00f7\u00b5\u00ca\u00e5" +
+   "\u0027\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0042\u00f8\u0014\u00d5\u00bf\u00b4\u0066\u009d" +
+   "\u0002\u0000\u0007\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0015\u0000\u0000\u0000\u00da\u0001\u0000\u0000" +
+   "\u0031\u0000\u0000\u0000\u0007\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u002d\u0000\u0000\u0000\u0077\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
+   "\u0074\u0061\u002f\u0064\u0061\u0074\u0061\u002e" +
+   "\u0063\u0061\u0070\u006e\u0070\u003a\u0044\u0061" +
+   "\u0074\u0061\u0043\u006f\u006e\u0074\u0061\u0069" +
+   "\u006e\u0065\u0072\u0052\u0065\u0066\u002e\u0046" +
+   "\u0069\u006e\u0067\u0065\u0072\u0070\u0072\u0069" +
+   "\u006e\u0074\u0050\u0061\u0074\u0068\u0050\u0061" +
+   "\u0069\u0072\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u0008\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0029\u0000\u0000\u0000\u0062\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0028\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0034\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0001\u0000\u0000\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0031\u0000\u0000\u0000\u002a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u002c\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0038\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0066\u0069\u006e\u0067\u0065\u0072\u0070\u0072" +
+   "\u0069\u006e\u0074\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0007\u001c\u009e\u0086\u0045\u0062\u004e\u00b9" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0070\u0061\u0074\u0068\u0000\u0000\u0000\u0000" +
+   "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000c\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
+public static final org.capnproto.SegmentReader b_f2ac679e83230f42 =
+   org.capnproto.GeneratedClassSupport.decodeRawBytes(
+   "\u0000\u0000\u0000\u0000\u0005\u0000\u0006\u0000" +
+   "\u0042\u000f\u0023\u0083\u009e\u0067\u00ac\u00f2" +
+   "\u0027\u0000\u0000\u0000\u0001\u0000\u0001\u0000" +
+   "\u0042\u00f8\u0014\u00d5\u00bf\u00b4\u0066\u009d" +
+   "\u0001\u0000\u0007\u0000\u0001\u0000\u0003\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0015\u0000\u0000\u0000\u008a\u0001\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0025\u0000\u0000\u0000\u00af\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0065\u006c\u0069\u0064\u0065\u002f\u0064\u0061" +
+   "\u0074\u0061\u002f\u0064\u0061\u0074\u0061\u002e" +
+   "\u0063\u0061\u0070\u006e\u0070\u003a\u0044\u0061" +
+   "\u0074\u0061\u0043\u006f\u006e\u0074\u0061\u0069" +
+   "\u006e\u0065\u0072\u0052\u0065\u0066\u002e\u0072" +
+   "\u0065\u0066\u0065\u0072\u0065\u006e\u0063\u0065" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u000c\u0000\u0000\u0000\u0003\u0000\u0004\u0000" +
+   "\u0000\u0000\u00ff\u00ff\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0045\u0000\u0000\u0000\u002a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0040\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u004c\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0001\u0000\u00fe\u00ff\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0001\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0049\u0000\u0000\u0000\u004a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0048\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\u0054\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0002\u0000\u00fd\u00ff\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0001\u0000\u0002\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0051\u0000\u0000\u0000\u005a\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0050\u0000\u0000\u0000\u0003\u0000\u0001\u0000" +
+   "\\\u0000\u0000\u0000\u0002\u0000\u0001\u0000" +
+   "\u0064\u0061\u0074\u0061\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u00cb\u0037\u001c\u004f\u00c3\u00ad\u0043\u00a2" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0072\u0065\u0073\u006f\u0075\u0072\u0063\u0065" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0047\u0076\u00ec\u0000\u00f7\u00b5\u00ca\u00e5" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0066\u0069\u006c\u0065\u0073\u0079\u0073\u0074" +
+   "\u0065\u006d\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0047\u0076\u00ec\u0000\u00f7\u00b5\u00ca\u00e5" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" +
+   "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000" + "");
 }
 }
 

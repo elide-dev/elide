@@ -143,9 +143,15 @@ public final class elide/proto/impl/data/ProtoDataFingerprint : elide/proto/api/
 	public fun getHashValue ()I
 	public fun getInitializationErrorString ()Ljava/lang/String;
 	public fun getOneofFieldDescriptor (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Descriptors$FieldDescriptor;
+	public fun getPrefix (I)Lcom/google/protobuf/ByteString;
+	public fun getPrefixCount ()I
+	public fun getPrefixList ()Ljava/util/List;
 	public fun getRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;I)Ljava/lang/Object;
 	public fun getRepeatedFieldCount (Lcom/google/protobuf/Descriptors$FieldDescriptor;)I
-	public fun getSalt ()Lcom/google/protobuf/ByteString;
+	public fun getSeparator ()Lcom/google/protobuf/ByteString;
+	public fun getSuffix (I)Lcom/google/protobuf/ByteString;
+	public fun getSuffixCount ()I
+	public fun getSuffixList ()Ljava/util/List;
 	public fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hasField (Lcom/google/protobuf/Descriptors$FieldDescriptor;)Z
 	public fun hasOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Z
@@ -4651,8 +4657,12 @@ public final class tools/elide/crypto/HashAlgorithm : java/lang/Enum, com/google
 	public static final field MD5_VALUE I
 	public static final field SHA1 Ltools/elide/crypto/HashAlgorithm;
 	public static final field SHA1_VALUE I
+	public static final field SHA2 Ltools/elide/crypto/HashAlgorithm;
 	public static final field SHA256 Ltools/elide/crypto/HashAlgorithm;
 	public static final field SHA256_VALUE I
+	public static final field SHA2_VALUE I
+	public static final field SHA384 Ltools/elide/crypto/HashAlgorithm;
+	public static final field SHA384_VALUE I
 	public static final field SHA3_224 Ltools/elide/crypto/HashAlgorithm;
 	public static final field SHA3_224_VALUE I
 	public static final field SHA3_256 Ltools/elide/crypto/HashAlgorithm;
@@ -5426,7 +5436,9 @@ public final class tools/elide/data/DataFingerprint : com/google/protobuf/Genera
 	public static final field ENCODING_FIELD_NUMBER I
 	public static final field FINGERPRINT_FIELD_NUMBER I
 	public static final field HASH_FIELD_NUMBER I
-	public static final field SALT_FIELD_NUMBER I
+	public static final field PREFIX_FIELD_NUMBER I
+	public static final field SEPARATOR_FIELD_NUMBER I
+	public static final field SUFFIX_FIELD_NUMBER I
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun getDefaultInstance ()Ltools/elide/data/DataFingerprint;
 	public synthetic fun getDefaultInstanceForType ()Lcom/google/protobuf/Message;
@@ -5439,8 +5451,14 @@ public final class tools/elide/data/DataFingerprint : com/google/protobuf/Genera
 	public fun getHash ()Ltools/elide/crypto/HashAlgorithm;
 	public fun getHashValue ()I
 	public fun getParserForType ()Lcom/google/protobuf/Parser;
-	public fun getSalt ()Lcom/google/protobuf/ByteString;
+	public fun getPrefix (I)Lcom/google/protobuf/ByteString;
+	public fun getPrefixCount ()I
+	public fun getPrefixList ()Ljava/util/List;
+	public fun getSeparator ()Lcom/google/protobuf/ByteString;
 	public fun getSerializedSize ()I
+	public fun getSuffix (I)Lcom/google/protobuf/ByteString;
+	public fun getSuffixCount ()I
+	public fun getSuffixList ()Ljava/util/List;
 	public final fun getUnknownFields ()Lcom/google/protobuf/UnknownFieldSet;
 	public fun hashCode ()I
 	public final fun isInitialized ()Z
@@ -5469,9 +5487,13 @@ public final class tools/elide/data/DataFingerprint : com/google/protobuf/Genera
 }
 
 public final class tools/elide/data/DataFingerprint$Builder : com/google/protobuf/GeneratedMessageV3$Builder, tools/elide/data/DataFingerprintOrBuilder {
+	public fun addAllPrefix (Ljava/lang/Iterable;)Ltools/elide/data/DataFingerprint$Builder;
+	public fun addAllSuffix (Ljava/lang/Iterable;)Ltools/elide/data/DataFingerprint$Builder;
+	public fun addPrefix (Lcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
 	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun addRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;Ljava/lang/Object;)Ltools/elide/data/DataFingerprint$Builder;
+	public fun addSuffix (Lcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
 	public synthetic fun build ()Lcom/google/protobuf/Message;
 	public synthetic fun build ()Lcom/google/protobuf/MessageLite;
 	public fun build ()Ltools/elide/data/DataFingerprint;
@@ -5493,7 +5515,9 @@ public final class tools/elide/data/DataFingerprint$Builder : com/google/protobu
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Lcom/google/protobuf/Message$Builder;
 	public fun clearOneof (Lcom/google/protobuf/Descriptors$OneofDescriptor;)Ltools/elide/data/DataFingerprint$Builder;
-	public fun clearSalt ()Ltools/elide/data/DataFingerprint$Builder;
+	public fun clearPrefix ()Ltools/elide/data/DataFingerprint$Builder;
+	public fun clearSeparator ()Ltools/elide/data/DataFingerprint$Builder;
+	public fun clearSuffix ()Ltools/elide/data/DataFingerprint$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/AbstractMessageLite$Builder;
 	public synthetic fun clone ()Lcom/google/protobuf/GeneratedMessageV3$Builder;
@@ -5511,7 +5535,13 @@ public final class tools/elide/data/DataFingerprint$Builder : com/google/protobu
 	public fun getFingerprint ()Lcom/google/protobuf/ByteString;
 	public fun getHash ()Ltools/elide/crypto/HashAlgorithm;
 	public fun getHashValue ()I
-	public fun getSalt ()Lcom/google/protobuf/ByteString;
+	public fun getPrefix (I)Lcom/google/protobuf/ByteString;
+	public fun getPrefixCount ()I
+	public fun getPrefixList ()Ljava/util/List;
+	public fun getSeparator ()Lcom/google/protobuf/ByteString;
+	public fun getSuffix (I)Lcom/google/protobuf/ByteString;
+	public fun getSuffixCount ()I
+	public fun getSuffixList ()Ljava/util/List;
 	public final fun isInitialized ()Z
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessage$Builder;
 	public synthetic fun mergeFrom (Lcom/google/protobuf/CodedInputStream;Lcom/google/protobuf/ExtensionRegistryLite;)Lcom/google/protobuf/AbstractMessageLite$Builder;
@@ -5534,10 +5564,12 @@ public final class tools/elide/data/DataFingerprint$Builder : com/google/protobu
 	public fun setFingerprint (Lcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
 	public fun setHash (Ltools/elide/crypto/HashAlgorithm;)Ltools/elide/data/DataFingerprint$Builder;
 	public fun setHashValue (I)Ltools/elide/data/DataFingerprint$Builder;
+	public fun setPrefix (ILcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Lcom/google/protobuf/Message$Builder;
 	public fun setRepeatedField (Lcom/google/protobuf/Descriptors$FieldDescriptor;ILjava/lang/Object;)Ltools/elide/data/DataFingerprint$Builder;
-	public fun setSalt (Lcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
+	public fun setSeparator (Lcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
+	public fun setSuffix (ILcom/google/protobuf/ByteString;)Ltools/elide/data/DataFingerprint$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/GeneratedMessageV3$Builder;
 	public synthetic fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Lcom/google/protobuf/Message$Builder;
 	public final fun setUnknownFields (Lcom/google/protobuf/UnknownFieldSet;)Ltools/elide/data/DataFingerprint$Builder;
@@ -5551,22 +5583,42 @@ public final class tools/elide/data/DataFingerprintKt$Dsl {
 	public static final field Companion Ltools/elide/data/DataFingerprintKt$Dsl$Companion;
 	public synthetic fun <init> (Ltools/elide/data/DataFingerprint$Builder;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun _build ()Ltools/elide/data/DataFingerprint;
+	public final synthetic fun addAllPrefix (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun addAllSuffix (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun addPrefix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
+	public final synthetic fun addSuffix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
 	public final fun clearEncoding ()V
 	public final fun clearFingerprint ()V
 	public final fun clearHash ()V
-	public final fun clearSalt ()V
+	public final synthetic fun clearPrefix (Lcom/google/protobuf/kotlin/DslList;)V
+	public final fun clearSeparator ()V
+	public final synthetic fun clearSuffix (Lcom/google/protobuf/kotlin/DslList;)V
 	public final fun getEncoding ()Ltools/elide/data/Encoding;
 	public final fun getFingerprint ()Lcom/google/protobuf/ByteString;
 	public final fun getHash ()Ltools/elide/crypto/HashAlgorithm;
-	public final fun getSalt ()Lcom/google/protobuf/ByteString;
+	public final synthetic fun getPrefix ()Lcom/google/protobuf/kotlin/DslList;
+	public final fun getSeparator ()Lcom/google/protobuf/ByteString;
+	public final synthetic fun getSuffix ()Lcom/google/protobuf/kotlin/DslList;
+	public final synthetic fun plusAssignAllPrefix (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun plusAssignAllSuffix (Lcom/google/protobuf/kotlin/DslList;Ljava/lang/Iterable;)V
+	public final synthetic fun plusAssignPrefix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
+	public final synthetic fun plusAssignSuffix (Lcom/google/protobuf/kotlin/DslList;Lcom/google/protobuf/ByteString;)V
 	public final fun setEncoding (Ltools/elide/data/Encoding;)V
 	public final fun setFingerprint (Lcom/google/protobuf/ByteString;)V
 	public final fun setHash (Ltools/elide/crypto/HashAlgorithm;)V
-	public final fun setSalt (Lcom/google/protobuf/ByteString;)V
+	public final synthetic fun setPrefix (Lcom/google/protobuf/kotlin/DslList;ILcom/google/protobuf/ByteString;)V
+	public final fun setSeparator (Lcom/google/protobuf/ByteString;)V
+	public final synthetic fun setSuffix (Lcom/google/protobuf/kotlin/DslList;ILcom/google/protobuf/ByteString;)V
 }
 
 public final class tools/elide/data/DataFingerprintKt$Dsl$Companion {
 	public final synthetic fun _create (Ltools/elide/data/DataFingerprint$Builder;)Ltools/elide/data/DataFingerprintKt$Dsl;
+}
+
+public final class tools/elide/data/DataFingerprintKt$Dsl$PrefixProxy : com/google/protobuf/kotlin/DslProxy {
+}
+
+public final class tools/elide/data/DataFingerprintKt$Dsl$SuffixProxy : com/google/protobuf/kotlin/DslProxy {
 }
 
 public final class tools/elide/data/DataFingerprintKtKt {
@@ -5580,7 +5632,13 @@ public abstract interface class tools/elide/data/DataFingerprintOrBuilder : com/
 	public abstract fun getFingerprint ()Lcom/google/protobuf/ByteString;
 	public abstract fun getHash ()Ltools/elide/crypto/HashAlgorithm;
 	public abstract fun getHashValue ()I
-	public abstract fun getSalt ()Lcom/google/protobuf/ByteString;
+	public abstract fun getPrefix (I)Lcom/google/protobuf/ByteString;
+	public abstract fun getPrefixCount ()I
+	public abstract fun getPrefixList ()Ljava/util/List;
+	public abstract fun getSeparator ()Lcom/google/protobuf/ByteString;
+	public abstract fun getSuffix (I)Lcom/google/protobuf/ByteString;
+	public abstract fun getSuffixCount ()I
+	public abstract fun getSuffixList ()Ljava/util/List;
 }
 
 public final class tools/elide/data/Encoding : java/lang/Enum, com/google/protobuf/ProtocolMessageEnum {

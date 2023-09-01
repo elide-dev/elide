@@ -1,0 +1,5 @@
+public final class dev/elide/ElideRuntime {
+	public static final field INSTANCE Ldev/elide/ElideRuntime;
+	public static final field SERVICE_VERSION Ljava/lang/String;
+}
+

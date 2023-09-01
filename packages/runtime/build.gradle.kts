@@ -86,7 +86,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        //
+        implementation(kotlin("stdlib"))
       }
     }
     val commonTest by getting {
@@ -139,4 +139,6 @@ elidePackage(
   id = "runtime",
   name = "Elide Runtime",
   description = "Runtime context and API definitions.",
-)
+) {
+  java9Modularity = false
+}

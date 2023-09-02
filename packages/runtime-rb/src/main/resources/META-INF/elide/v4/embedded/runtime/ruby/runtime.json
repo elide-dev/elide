@@ -1,6 +1,15 @@
 {
   "engine": "v4",
   "language": "Ruby",
-  "bundles": [],
-  "setupScripts": []
+  "bundles": [
+    {
+      "path": "ruby-darwin-aarch64.tar.gz",
+      "platform": "darwin_aarch64"
+    },
+    {
+      "path": "ruby-linux-amd64.tar.xz",
+      "platform": "linux_amd64"
+    }
+  ],
+  "scripts": []
 }

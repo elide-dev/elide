@@ -11,11 +11,11 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
-import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
+import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
-  private val resources: EmbeddedLanguageResources,
+  private val resources: LanguagePluginManifest,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
@@ -60,7 +60,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
       // apply the configuration and create the plugin instance
       val config = PythonConfig().apply(configuration)
-      val resources = resolveLanguageResources()
+      val resources = resolveEmbeddedManifest(scope)
       val instance = Python(config, resources)
 
       // subscribe to lifecycle events

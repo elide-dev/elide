@@ -1,11 +1,19 @@
 package elide.runtime.plugins
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
+import elide.runtime.core.HostPlatform
+import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.EmbeddedResource
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
 
@@ -14,25 +22,64 @@ import elide.runtime.plugins.vfs.include
  */
 @DelicateElideApi public abstract class AbstractLanguagePlugin<C : Any, I : Any> : EnginePlugin<C, I>, GuestLanguage {
   /** Provides information about resources embedded into the runtime, used by language plugins. */
-  @Serializable public data class EmbeddedLanguageResources(
-    /** The engine version these resources are meant to be used with. Used for legibility. */
+  @Serializable public data class LanguagePluginManifest(
+    /** The engine version these resources are meant to be used with. */
     val engine: String,
-    /** The language these resources are meant to be used with. Used for legibility. */
+    /** The language these resources are meant to be used with. */
     val language: String,
     /** A list of URIs representing bundles to be preloaded into the VFS by the plugin. */
-    val bundles: List<String>,
-    /** Source code snippets to be evaluated on context initialization. */
-    val setupScripts: List<String>,
-  )
+    val bundles: List<EmbeddedResource>,
+    /** Guest scripts to be evaluated on context initialization. */
+    val scripts: List<EmbeddedResource>,
+  ) {
+    /** Represents an embedded resource that should be loaded by the language plugin. */
+    @Serializable public data class EmbeddedResource(
+      /** Path to the resource, relative to the plugin manifest. */
+      val path: String,
+      /** Optionally sets a target platform for this resource. If not present, the resource will always be loaded. */
+      @Serializable(with = EmbeddedHostPlatformSerializer::class)
+      val platform: HostPlatform? = null,
+    )
+
+    /** Custom [HostPlatform] serializer using a primitive string form instead of an object. */
+    internal object EmbeddedHostPlatformSerializer : KSerializer<HostPlatform> {
+      override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        serialName = "HostPlatform",
+        kind = PrimitiveKind.STRING,
+      )
+
+      override fun deserialize(decoder: Decoder): HostPlatform {
+        return HostPlatform.parsePlatform(decoder.decodeString())
+      }
+
+      override fun serialize(encoder: Encoder, value: HostPlatform) {
+        encoder.encodeString(value.platformString())
+      }
+    }
+  }
 
   /**
-   * Resolve and deserialize the runtime manifest for this plugin, embedded as a resource.
+   * Resolve and deserialize the runtime manifest for this plugin from resources. Any embedded resources listed in the
+   * manifest are filtered to match the current platform information provided in the [scope].
    *
-   * @return The [EmbeddedLanguageResources] for this plugin's language.
+   * @param scope The installation scope used to resolve host platform information.
+   * @return The [LanguagePluginManifest] for this plugin's language.
+   * @see installEmbeddedBundles
+   */
+  protected fun resolveEmbeddedManifest(scope: InstallationScope): LanguagePluginManifest {
+    return resolveEmbeddedManifest(scope.configuration.hostPlatform)
+  }
+
+  /**
+   * Resolve and deserialize the runtime manifest for this plugin from resources. Any embedded resources listed in the
+   * manifest are filtered to match the given [platform].
+   *
+   * @param platform the host platform used to filter embedded resources.
+   * @return The [LanguagePluginManifest] for this plugin's language.
    * @see installEmbeddedBundles
    */
   @OptIn(ExperimentalSerializationApi::class)
-  protected fun resolveLanguageResources(): EmbeddedLanguageResources = runCatching {
+  protected fun resolveEmbeddedManifest(platform: HostPlatform): LanguagePluginManifest = runCatching {
     // resolve path relative to the common root
     val resourcesRoot = "$EMBEDDED_RESOURCES_ROOT/${languageId}"
     fun relativeToRoot(path: String) = "$resourcesRoot/$path"
@@ -40,15 +87,19 @@ import elide.runtime.plugins.vfs.include
     // read and deserialize manifest
     val manifest = AbstractLanguagePlugin::class.java.getResourceAsStream(relativeToRoot(RUNTIME_MANIFEST))?.let {
       // deserialize the manifest
-      Json.decodeFromStream<EmbeddedLanguageResources>(it)
+      Json.decodeFromStream<LanguagePluginManifest>(it)
     } ?: error(
       "Failed to locate embedded runtime manifest at path '$resourcesRoot'",
     )
 
-    // resolve resource paths relative to the manifest
+    // resolve resource paths relative to the manifest, and filter out resources for other platforms
+    fun mapResource(resource: EmbeddedResource) = resource.takeUnless {
+      it.platform != null && it.platform != platform
+    }?.copy(path = relativeToRoot(resource.path))
+
     manifest.copy(
-      bundles = manifest.bundles.map(::relativeToRoot),
-      setupScripts = manifest.setupScripts.map(::relativeToRoot),
+      bundles = manifest.bundles.mapNotNull(::mapResource),
+      scripts = manifest.scripts.mapNotNull(::mapResource),
     )
   }.getOrElse { cause ->
     // rethrow with a more meaningful message
@@ -64,14 +115,14 @@ import elide.runtime.plugins.vfs.include
    * @param scope The installation scope for the plugin, used to resolve the VFS.
    * @param resources The embedded resources for this plugin, providing the list of bundles to install.
    */
-  protected fun installEmbeddedBundles(scope: InstallationScope, resources: EmbeddedLanguageResources) {
+  protected fun installEmbeddedBundles(scope: InstallationScope, resources: LanguagePluginManifest) {
     // resolve the VFS plugin (install it if not present to avoid explicit installation requirements)
-    scope.configuration.getOrInstall(Vfs).config.apply {
-      // add embedded bundles to the VFS
-      resources.bundles.forEach {
-        include(AbstractLanguagePlugin::class.java.getResource(it) ?: error("Failed to load embedded resource: $it"))
-      }
-    }
+    val vfs = scope.configuration.getOrInstall(Vfs).config
+
+    // add embedded bundles to the VFS
+    for (it in resources.bundles) vfs.include(
+      AbstractLanguagePlugin::class.java.getResource(it.path) ?: error("Failed to load embedded resource: $it"),
+    )
   }
 
   /**
@@ -83,10 +134,10 @@ import elide.runtime.plugins.vfs.include
    * @param context A [PolyglotContext] used to execute the initialization scripts.
    * @param resources The embedded resources for this plugin, providing the script sources.
    */
-  protected fun initializeEmbeddedScripts(context: PolyglotContext, resources: EmbeddedLanguageResources) {
-    resources.setupScripts.forEach { source ->
+  protected fun initializeEmbeddedScripts(context: PolyglotContext, resources: LanguagePluginManifest) {
+    resources.scripts.forEach { source ->
       // read the script from resources
-      val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source)
+      val script = AbstractLanguagePlugin::class.java.getResourceAsStream(source.path)
         ?: error("Failed to load embedded resource: $source")
 
       context.evaluate(this, script.bufferedReader().use { it.readText() })

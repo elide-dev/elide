@@ -1,6 +1,12 @@
 {
   "engine": "v4",
   "language": "JavaScript",
-  "bundles": [],
-  "setupScripts": []
+  "bundles": [
+    { "path": "js.modules.tar.gz" },
+    { "path": "js.runtime.tar.gz" }
+  ],
+  "scripts": [
+    { "path": "facade.js" },
+    { "path": "polyfills.js" }
+  ]
 }

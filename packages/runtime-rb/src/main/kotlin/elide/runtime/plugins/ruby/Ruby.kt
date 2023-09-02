@@ -10,11 +10,11 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
-import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
+import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
 @DelicateElideApi public class Ruby(
   private val config: RubyConfig,
-  private val resources: EmbeddedLanguageResources,
+  private val resources: LanguagePluginManifest,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
@@ -50,7 +50,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
     override fun install(scope: InstallationScope, configuration: RubyConfig.() -> Unit): Ruby {
       // apply the configuration and create the plugin instance
       val config = RubyConfig().apply(configuration)
-      val resources = resolveLanguageResources()
+      val resources = resolveEmbeddedManifest(scope)
       val instance = Ruby(config, resources)
 
       // subscribe to lifecycle events

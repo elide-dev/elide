@@ -11,7 +11,7 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin
-import elide.runtime.plugins.AbstractLanguagePlugin.EmbeddedLanguageResources
+import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.js.JavaScriptVersion.*
 
 /**
@@ -19,7 +19,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
  */
 @DelicateElideApi public class JavaScript private constructor(
   private val config: JavaScriptConfig,
-  private val resources: EmbeddedLanguageResources,
+  private val resources: LanguagePluginManifest,
 ) {
 
   private fun initializeContext(context: PolyglotContext) {
@@ -119,7 +119,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
       // apply the configuration and create the plugin instance
       val config = JavaScriptConfig().apply(configuration)
-      val embedded = resolveLanguageResources()
+      val embedded = resolveEmbeddedManifest(scope)
       val instance = JavaScript(config, embedded)
 
       // subscribe to lifecycle events

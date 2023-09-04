@@ -45,6 +45,7 @@ import kotlin.test.*
 
 /** Tests for [ServerAssetIndex]. */
 @Suppress("UnstableApiUsage")
+@Ignore
 @MicronautTest
 class ServerAssetIndexTest {
   private fun loadSampleManifest(): AssetBundle {

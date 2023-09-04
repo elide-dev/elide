@@ -522,19 +522,85 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$Comp
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle {
+	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Ljava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;ILjava/lang/Object;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBundle ()Ljava/lang/String;
+	public final fun getSha256 ()Ljava/lang/String;
+	public final fun getSignature ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature {
+	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$Companion;
+	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBundle ()Ljava/lang/String;
+	public final fun getSha256 ()Ljava/lang/String;
+	public final fun getStamp ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$Companion;
 	public fun <init> ()V
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
+	public synthetic fun <init> (ILelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)V
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public final fun component2 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public final fun copy (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;ILjava/lang/Object;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAmd64 ()Ljava/lang/String;
-	public final fun getArm64 ()Ljava/lang/String;
+	public final fun getAmd64 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
+	public final fun getArm64 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V

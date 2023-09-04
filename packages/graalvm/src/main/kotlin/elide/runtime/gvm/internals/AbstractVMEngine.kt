@@ -233,8 +233,8 @@ public abstract class AbstractVMEngine<
           } ?: error("No image info for OS: $imgInfo")
 
           when (arch) {
-            "amd64" -> osBase.amd64
-            "arm64" -> osBase.arm64
+            "amd64" -> osBase.amd64?.bundle
+            "arm64" -> osBase.arm64?.bundle
             else -> error("Unrecognized image info architecture: $imgInfo")
           } ?: error("No image info for architecture: $imgInfo")
         }
@@ -357,8 +357,33 @@ public abstract class AbstractVMEngine<
    */
   @Serializable
   public data class RuntimeNativeResources(
-    val amd64: String? = null,
-    val arm64: String? = null,
+    val amd64: RuntimeNativeResourceBundle? = null,
+    val arm64: RuntimeNativeResourceBundle? = null,
+  )
+
+  /**
+   * ## Runtime Native Resource Bundle
+   *
+   * Describes a single entry of native resources for a given guest language runtime. This is used to locate bundled
+   * resources and verify the signature once resolved.
+   */
+  @Serializable
+  public data class RuntimeNativeResourceBundle(
+    val bundle: String,
+    val sha256: String,
+    val signature: RuntimeNativeResourceSignature,
+  )
+
+  /**
+   * ## Runtime Native Resource Signature
+   *
+   * Describes a signature attached to a [RuntimeNativeResourceBundle].
+   */
+  @Serializable
+  public data class RuntimeNativeResourceSignature(
+    val bundle: String,
+    val sha256: String,
+    val stamp: String,
   )
 
   /**

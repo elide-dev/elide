@@ -1219,14 +1219,17 @@ public final class elide/runtime/gvm/vfs/EmbeddedGuestVFS {
 	public final fun empty ()Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun forBundle ([Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun forBundle ([Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun forBundles (Ljava/util/List;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable ()Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable (Ljava/io/File;)Lelide/runtime/gvm/internals/GuestVFS;
 	public final fun writable (Ljava/net/URI;)Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun writable (Ljava/util/List;)Lelide/runtime/gvm/internals/GuestVFS;
 }
 
 public final class elide/runtime/gvm/vfs/HostVFS {
 	public static final field INSTANCE Lelide/runtime/gvm/vfs/HostVFS;
 	public final fun acquire ()Lelide/runtime/gvm/internals/GuestVFS;
+	public final fun acquireWritable ()Lelide/runtime/gvm/internals/GuestVFS;
 }
 
 public abstract interface class elide/runtime/intrinsics/GuestIntrinsic {
@@ -1676,3 +1679,4 @@ public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/E
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 }
+

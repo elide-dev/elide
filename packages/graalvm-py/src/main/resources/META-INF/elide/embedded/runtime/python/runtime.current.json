@@ -11,8 +11,8 @@
         "sha256": "b716836044d613a4ac02958d018c16f80025a83148e9fd47e6b5e9da6b0cc308",
         "signature": {
           "bundle": "python-darwin-aarch64.sigstore.json.gz",
-          "sha256": "7814ed49579a227e85e7d13ce955096622c557b9a5dacf2f582d6177a4014602",
-          "stamp": "MEYCIQD7nFAN84QrgRyLfCCkQa4JIxhJ+aDLCdVT82hIFSJh5gIhAJlk8ozFnAZhxCzWi49Z126re4YY+n0We/07TGYKI0AK"
+          "sha256": "7ada91bf5b9aa52b336f6b890de52490da8a2e35c68d2c22959405f62e766f79",
+          "stamp": "MEUCIQCR4uEV143+9nWeD9VDyedgJoN9vAo0KQi+qamdkK2x3gIgcoGWLB88/kJ11lIBEjxQkQXeroYAXsasPqh2DR98//E="
         }
       }
     },
@@ -22,8 +22,8 @@
         "sha256": "cd324270d8ad7659878d79a602e05043ce703a3d1a56ae65562c0339e8da01e2",
         "signature": {
           "bundle": "python-linux-amd64.sigstore.json.gz",
-          "sha256": "76d2ce97f4d875cd1e3823cf885772ed6037a74e92edf825a87d65bd9da015fd",
-          "stamp": "MEUCIQCj+3s2Lw44FsS1XO6zYcxXmmKgFZody6ga+13/0y4ZugIgB+zzLdxTg1x2SJlNAXGte6XCFWX6vhiJOKrC1B0qVps="
+          "sha256": "fb919933cccae2bbf3c36d6a26caa0a6a12b6d5075d2043bbdcdd400c970a4ab",
+          "stamp": "MEQCIFT/uL5fWF+BDSnY8zE0ejK3ebkFhL/ZGg8XfzlsmSmYAiBcaqMT0talV7VGsDm+eX/YbKEWcuraX+qLLt/QOjLmvw=="
         }
       }
     }

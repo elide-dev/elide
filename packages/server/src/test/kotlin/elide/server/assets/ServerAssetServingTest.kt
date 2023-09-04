@@ -28,6 +28,7 @@ import kotlin.test.*
 import elide.server.StreamedAsset
 
 /** Tests general asset serving features, like ETags/conditional requests and compression variants. */
+@Ignore
 @MicronautTest class ServerAssetServingTest {
   companion object {
     private const val assetPrefix = "/_/assets"

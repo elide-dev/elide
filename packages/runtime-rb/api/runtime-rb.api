@@ -4,7 +4,7 @@ public final class elide/runtime/plugins/ruby/ExtensionsKt {
 
 public final class elide/runtime/plugins/ruby/Ruby {
 	public static final field Plugin Lelide/runtime/plugins/ruby/Ruby$Plugin;
-	public fun <init> (Lelide/runtime/plugins/ruby/RubyConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;)V
+	public fun <init> (Lelide/runtime/plugins/ruby/RubyConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
 }
 
 public final class elide/runtime/plugins/ruby/Ruby$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {

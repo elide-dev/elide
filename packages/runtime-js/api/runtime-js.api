@@ -5,7 +5,7 @@ public final class elide/runtime/plugins/js/ExtensionsKt {
 
 public final class elide/runtime/plugins/js/JavaScript {
 	public static final field Plugin Lelide/runtime/plugins/js/JavaScript$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$EmbeddedLanguageResources;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class elide/runtime/plugins/js/JavaScript$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {

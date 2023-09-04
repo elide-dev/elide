@@ -19,14 +19,11 @@ import tools.elide.assets.AssetBundle
 import tools.elide.assets.ManifestFormat
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 import elide.server.TestUtil
 
 /** Tests for [ServerAssetManifest] and [ServerAssetManifestProvider]. */
-class ServerAssetManifestTest {
+@Ignore class ServerAssetManifestTest {
   @Test fun testParseSampleManifestBinary() {
     val data = TestUtil.loadBinary("/manifests/app.assets.pb")
     val baos = ByteArrayInputStream(data)

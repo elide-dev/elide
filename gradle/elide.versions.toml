@@ -581,6 +581,7 @@ plugin_sonar = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gra
 plugin_ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 plugin_buf = { group = "com.parmet", name = "buf-gradle-plugin", version.ref = "pluginBuf" }
 plugin_protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
+plugin_kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin_sdk" }
 plugin_kotlin_allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin_sdk" }
 plugin_kotlin_noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin_sdk" }
 plugin_kotlin_samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin_sdk" }

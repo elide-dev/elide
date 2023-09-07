@@ -113,8 +113,8 @@ public actual interface Logger {
    * @param producer Function that produces the message to log.
    */
   public actual fun info(producer: () -> String) {
-    if (isEnabled(LogLevel.DEBUG)) {
-      log(LogLevel.DEBUG, listOf(producer.invoke()), levelChecked = true)
+    if (isEnabled(LogLevel.INFO)) {
+      log(LogLevel.INFO, listOf(producer.invoke()), levelChecked = true)
     }
   }
 

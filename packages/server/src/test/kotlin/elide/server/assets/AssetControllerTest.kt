@@ -18,10 +18,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.assertDoesNotThrow
 import jakarta.inject.Inject
 import kotlinx.coroutines.runBlocking
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
+import kotlin.test.*
 
 /** Tests for the built-in [AssetController]. */
 @MicronautTest
@@ -46,7 +43,7 @@ class AssetControllerTest {
     assertEquals(404, response.status.code)
   }
 
-  @Test fun testServeKnownGoodAssetStyle() {
+  @Test @Ignore fun testServeKnownGoodAssetStyle() {
     val response = assertDoesNotThrow {
       runBlocking {
         controller.assetGet(

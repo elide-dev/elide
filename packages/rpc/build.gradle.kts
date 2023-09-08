@@ -116,6 +116,7 @@ kotlin {
         implementation(libs.grpc.auth)
         implementation(libs.grpc.core)
         implementation(libs.grpc.stub)
+        implementation(libs.grpc.inprocess)
         implementation(libs.grpc.services)
         implementation(libs.grpc.netty)
         implementation(libs.grpc.protobuf)

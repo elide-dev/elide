@@ -26,13 +26,13 @@ object Versions {
   const val netty = "4.1.97.Final"
 
   /** Protocol Buffers version. */
-  const val protobuf = "3.21.11"
+  const val protobuf = "3.24.3"
 
   /** Guava version. */
   const val guava = "32.1.1-jre"
 
   /** gRPC version. */
-  const val grpc = "1.57.2"
+  const val grpc = "1.58.0"
 
   /** GraalVM version. */
   const val graalvm = "23.0.1"

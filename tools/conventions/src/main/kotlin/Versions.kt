@@ -17,7 +17,7 @@ object Versions {
   const val kotlin = "1.9.10"
 
   /** Micronaut version. */
-  const val micronaut = "4.0.5"
+  const val micronaut = "4.1.0"
 
   /** Ant/JUnit version. */
   const val antJUnit = "1.10.12"

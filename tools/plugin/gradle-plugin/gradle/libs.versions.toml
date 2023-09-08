@@ -40,8 +40,8 @@ kover_plugin = "0.7.3"
 testLoggerPlugin = "3.2.0"
 dependencyAnalysis = "1.20.0"
 
-micronaut = "4.0.5"
-micronaut_plugin = "3.7.10"
+micronaut = "4.1.0"
+micronaut_plugin = "4.0.3"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

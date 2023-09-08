@@ -19,8 +19,6 @@ module elide.model {
     requires kotlinx.serialization.core;
     requires kotlinx.serialization.protobuf;
 
-    requires com.google.protobuf;
-
     requires elide.core;
     requires elide.base;
 }

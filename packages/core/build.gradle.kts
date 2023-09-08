@@ -81,6 +81,7 @@ kotlin {
       dependencies {
         implementation(kotlin("stdlib"))
         implementation(kotlin("test"))
+
         configurations["kapt"].dependencies.add(
           mn.micronaut.inject.java.asProvider().get()
         )

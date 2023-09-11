@@ -547,7 +547,7 @@ public abstract class AbstractVMEngine<
   }
 
   // Context builder factory. Provided to the context manager.
-  internal fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
+  public fun builder(engine: Engine): VMContext.Builder = VMContext.newBuilder(
     *(guestConfig.languages ?: GuestVMConfiguration.DEFAULT_LANGUAGES).toTypedArray()
   ).engine(engine).apply {
     // configure baseline settings for the builder according to the implemented VM
@@ -555,8 +555,8 @@ public abstract class AbstractVMEngine<
   }
 
   // Context configuration function. Provided to the context manager.
-  internal fun spawn(builder: VMContext.Builder): VMContext {
-    // 2: build the context
+  public fun spawn(builder: VMContext.Builder): VMContext {
+    // 2: build context
     return builder.build().apply {
       // 3: resolve target language bindings
       val globals = getBindings(language().symbol)
@@ -589,7 +589,7 @@ public abstract class AbstractVMEngine<
    * @param builder VM context builder which should receive the configuration.
    */
   @Suppress("DEPRECATION")
-  internal fun configureVM(builder: VMContext.Builder) {
+  public fun configureVM(builder: VMContext.Builder) {
     // set a strong secure baseline for context guest access
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)

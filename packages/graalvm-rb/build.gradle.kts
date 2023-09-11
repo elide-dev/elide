@@ -39,6 +39,8 @@ kotlin {
   explicitApi()
 }
 
+graalvmNative.agent.enabled = false
+
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
@@ -50,6 +52,7 @@ dependencies {
 
   // Testing
   testImplementation(projects.packages.test)
+  testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
 tasks.jar.configure {

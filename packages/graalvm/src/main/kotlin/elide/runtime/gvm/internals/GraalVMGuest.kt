@@ -36,7 +36,7 @@ public enum class GraalVMGuest (override val symbol: String, override val label:
   /**
    * Ruby support via TruffleRuby
    */
-  RUBY(symbol = "python", label = "Python"),
+  RUBY(symbol = "ruby", label = "Ruby"),
 
   /**
    * JVM support via SVM and Espresso

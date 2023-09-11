@@ -347,7 +347,9 @@ public abstract class elide/runtime/gvm/internals/AbstractVMEngine : elide/runti
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$Companion;
 	public static final field EMBEDDED_ROOT Ljava/lang/String;
 	public fun <init> (Lelide/runtime/gvm/internals/GraalVMGuest;)V
+	public final fun builder (Lorg/graalvm/polyglot/Engine;)Lorg/graalvm/polyglot/Context$Builder;
 	protected abstract fun configure (Lorg/graalvm/polyglot/Engine;Lorg/graalvm/polyglot/Context$Builder;)Ljava/util/stream/Stream;
+	public final fun configureVM (Lorg/graalvm/polyglot/Context$Builder;)V
 	public fun execute (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	protected abstract fun execute (Lorg/graalvm/polyglot/Context;Lelide/runtime/gvm/ExecutableScript;Lelide/runtime/gvm/InvocationBindings;Lelide/runtime/gvm/ExecutionInputs;)Lorg/graalvm/polyglot/Value;
 	public fun executeAsync (Lelide/runtime/gvm/ExecutableScript;Ljava/lang/Class;Lelide/runtime/gvm/ExecutionInputs;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -364,6 +366,7 @@ public abstract class elide/runtime/gvm/internals/AbstractVMEngine : elide/runti
 	public static synthetic fun resolve$default (Lelide/runtime/gvm/internals/AbstractVMEngine;Lorg/graalvm/polyglot/Context;Lelide/runtime/gvm/ExecutableScript;Lelide/runtime/gvm/internals/GVMInvocationBindings$DispatchStyle;ILjava/lang/Object;)Lelide/runtime/gvm/InvocationBindings;
 	public abstract fun resolveConfig ()Lelide/runtime/gvm/cfg/GuestRuntimeConfiguration;
 	public static final fun resolveRuntimeInfo (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lkotlin/Pair;
+	public final fun spawn (Lorg/graalvm/polyglot/Context$Builder;)Lorg/graalvm/polyglot/Context;
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$Companion {

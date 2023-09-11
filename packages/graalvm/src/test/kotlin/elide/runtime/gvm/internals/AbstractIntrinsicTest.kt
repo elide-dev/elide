@@ -20,7 +20,7 @@ import elide.runtime.intrinsics.Symbol
 import elide.testing.annotations.Test
 
 /** Abstract base for intrinsic-bound tests. */
-internal abstract class AbstractIntrinsicTest<T : GuestIntrinsic> : AbstractDualTest() {
+abstract class AbstractIntrinsicTest<T : GuestIntrinsic> : AbstractDualTest() {
   /** @return Intrinsic implementation under test. */
   protected abstract fun provide(): T
 

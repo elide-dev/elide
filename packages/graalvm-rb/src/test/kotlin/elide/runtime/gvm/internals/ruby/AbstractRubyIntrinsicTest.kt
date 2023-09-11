@@ -11,32 +11,37 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate", "SameParameterValue")
+package elide.runtime.gvm.internals.ruby
 
-package elide.runtime.gvm.internals.js
-
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Engine
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
-import java.util.function.Function
-import kotlinx.coroutines.runBlocking
-import elide.annotations.Inject
 import elide.runtime.gvm.internals.AbstractIntrinsicTest
+import elide.annotations.Inject
 import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.vm.annotations.Polyglot
-import org.graalvm.polyglot.Context as VMContext
-import org.graalvm.polyglot.Value as GuestValue
+import kotlinx.coroutines.runBlocking
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Value
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.function.Function
 
-/** Abstract base for JS intrinsics. */
-internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
-  private val testInject: Boolean = true,
-) : AbstractIntrinsicTest<T>() {
-  companion object {
-    init {
-      System.setProperty("elide.js.vm.enableStreams", "true")
+/** Specializes the [AbstractIntrinsicTest] base with support for Ruby guest testing. */
+abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T>() {
+  /** Assertion capture interface. */
+  @FunctionalInterface internal interface RubyAssertion : TestAssertion, Function<Any?, TestContext> {
+    /** Invoke a null-check-based assertion. */
+    @Polyglot override fun apply(value: Any?): TestContext
+  }
+
+  /** Default top-level assertion implementation. */
+  internal class CaptureAssertion : RubyAssertion {
+    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
+    override val value: Any? get() = heldValue.get()
+
+    @Polyglot override fun apply(value: Any?): TestContext {
+      heldValue.set(value)
+      return TestResultContext(this)
     }
   }
 
@@ -45,30 +50,20 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   // Guest context manager.
   @Inject lateinit var contextManager: ContextManager<Context, Context.Builder>
 
-  // JS runtime.
-  @Inject lateinit var jsvm: JsRuntime
+  // Ruby runtime.
+  @Inject internal lateinit var ruby: RubyRuntime
 
-  // Build a customized guest context from scratch.
-  override fun buildContext(engine: Engine, conf: (Context.Builder.() -> Unit)?): Context.Builder {
-    throw UnsupportedOperationException("not supported for this test case")
-  }
-
-  // Prepare an operation with a customized guest context.
-  override fun <V : Any> withContext(op: Context.() -> V, conf: (Context.Builder.() -> Unit)?): V {
-    throw UnsupportedOperationException("not supported for this test case")
-  }
-
-  // Run the provided `op` with an active (and exclusively owned) JS VM context.
-  override fun <V: Any> withContext(op: VMContext.() -> V): V = runBlocking {
+  // Run the provided `op` with an active (and exclusively owned) Ruby VM context.
+  override fun <V: Any> withContext(op: Context.() -> V): V = runBlocking {
     if (!initialized.get()) {
       contextManager.installContextFactory {
-        jsvm.builder(it)
+        ruby.builder(it)
       }
       contextManager.installContextConfigurator {
-        jsvm.configureVM(it)
+        ruby.configureVM(it)
       }
       contextManager.installContextSpawn {
-        jsvm.spawn(it)
+        ruby.spawn(it)
       }
       contextManager.activate(start = false)
       initialized.set(true)
@@ -78,29 +73,13 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     }
   }
 
-  /** Assertion capture interface. */
-  @FunctionalInterface internal interface JsAssertion : TestAssertion, Function<Any?, TestContext> {
-    /** Invoke a null-check-based assertion. */
-    @Polyglot override fun apply(value: Any?): TestContext
-  }
-
-  /** Default top-level assertion implementation. */
-  internal class CaptureAssertion : JsAssertion {
-    private val heldValue: AtomicReference<Any?> = AtomicReference(null)
-    override val value: Any? get() = heldValue.get()
-    @Polyglot override fun apply(value: Any?): TestContext {
-      heldValue.set(value)
-      return TestResultContext(this)
-    }
-  }
-
   // Logic to execute a guest-side test.
   private inline fun executeGuestInternal(
-    ctx: VMContext,
+    ctx: Context,
     bind: Boolean,
     bindUtils: Boolean,
-    op: VMContext.() -> String,
-  ): GuestValue {
+    op: Context.() -> String,
+  ): Value {
     // resolve the script
     val script = op.invoke(ctx)
 
@@ -114,7 +93,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     }
 
     // install bindings under test, if directed
-    val target = ctx.getBindings("js")
+    val target = ctx.getBindings("ruby")
     bindings.forEach {
       target.putMember(it.key.symbol, it.value)
     }
@@ -131,7 +110,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     // execute script
     val returnValue = try {
       ctx.enter()
-      ctx.eval("js", script)
+      ctx.eval("ruby", script)
     } catch (err: Throwable) {
       hasErr.set(true)
       subjectErr.set(err)
@@ -140,34 +119,6 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       ctx.leave()
     }
     return returnValue
-  }
-
-  // Run the provided factory to produce a script, then run that test within a warmed `Context`.
-  override fun executeGuest(bind: Boolean, op: VMContext.() -> String) = GuestTestExecution(::withContext) {
-    executeGuestInternal(
-      this,
-      bind,
-      bindUtils = true,
-      op,
-    )
-  }
-
-  // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun executeDual(op: () -> Unit, guest: VMContext.() -> String) = executeDual(true, op, guest)
-
-  // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun executeDual(
-    bind: Boolean,
-    op: () -> Unit,
-    guest: VMContext.() -> String,
-  ) = GuestTestExecution(::withContext) {
-    op.invoke()
-    executeGuestInternal(
-      this,
-      bind,
-      bindUtils = true,
-      guest,
-    )
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
@@ -194,3 +145,4 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     }
   }
 }
+

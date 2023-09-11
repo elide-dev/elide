@@ -220,11 +220,27 @@ elidePackage(
   description = "Integration package with GraalVM and GraalJS.",
 )
 
+// Configurations: Testing
+val testBase: Configuration by configurations.creating {}
+
 tasks {
   test {
     maxHeapSize = "2G"
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+  }
+
+  /**
+   * Variant: Testsuite
+   */
+  val testJar by registering(Jar::class) {
+    description = "Base (abstract) test classes for all GraalVM modules"
+    archiveClassifier = "tests"
+    from(sourceSets.named("test").get().output)
+  }
+
+  artifacts {
+    add("testBase", testJar)
   }
 }

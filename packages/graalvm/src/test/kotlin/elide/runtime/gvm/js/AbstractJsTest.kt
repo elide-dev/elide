@@ -248,7 +248,7 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
   }
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */
-  internal abstract inner class DualTestExecutionProxy {
+  internal abstract inner class JsDualTestExecutionProxy : AbstractDualTest.DualTestExecutionProxy() {
     /**
      * Wire together the guest-side of a dual test.
      *
@@ -256,25 +256,13 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
      * @param guestOperation Operation to run on the guest.
      */
     abstract fun guest(esm: Boolean = false, guestOperation: Context.() -> String)
-
-    /**
-     * Wire together the guest-side of a dual test, but defer for additional assertions.
-     *
-     * @param guestOperation Operation to run on the guest.
-     * @return Guest test execution control proxy.
-     */
-    abstract fun thenRun(guestOperation: Context.() -> String): GuestTestExecution
   }
 
   // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun dual(op: () -> Unit): DualTestExecutionProxy =
-    dual(true, op)
-
-  // Run the provided `op` on the host, and the provided `guest` via `executeGuest`.
-  protected fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
+  override fun dual(bind: Boolean, op: () -> Unit): DualTestExecutionProxy {
     op.invoke()
 
-    return object : DualTestExecutionProxy() {
+    return object : JsDualTestExecutionProxy() {
       override fun guest(esm: Boolean, guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(
           this,
@@ -284,6 +272,10 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
           guestOperation,
         )
       }.doesNotFail()
+
+      override fun guest(guestOperation: Context.() -> String) {
+        return guest(false, guestOperation)
+      }
 
       override fun thenRun(guestOperation: Context.() -> String) = GuestTestExecution(::withContext) {
         executeGuestInternal(

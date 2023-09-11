@@ -241,7 +241,7 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@ac032b0e7e84649553af8cab1e85d7f0665bce3d # v1.1.3
         with:
-          components: "native-image,js,wasm,espresso"
+          components: "native-image,js,wasm,espresso,python,ruby"
           distribution: 'graalvm'
           java-version: 20
           check-for-updates: false

@@ -409,7 +409,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     contextConfigure.forEach {
       it.invoke(fresh)
     }
-    return fresh.build()
+    return contextSpawn.get().invoke(fresh)
   }
 
   override fun configureVM(props: Stream<VMProperty>) {

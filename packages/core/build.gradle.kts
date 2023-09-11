@@ -90,6 +90,7 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         api(kotlin("stdlib-jdk8"))
+        api(libs.jetbrains.annotations)
       }
     }
     val jvmTest by getting {

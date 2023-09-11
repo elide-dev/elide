@@ -30,6 +30,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.vm.annotations.Polyglot
+import org.intellij.lang.annotations.Language
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -357,6 +358,9 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   /** Proxy which wires together a dual-test execution (in the guest and on the host). */
   internal abstract inner class DualTestExecutionProxy {
+    /** JavaScript code for this test. */
+    @field:Language("javascript") lateinit var code: String
+
     /**
      * Wire together the guest-side of a dual test.
      *

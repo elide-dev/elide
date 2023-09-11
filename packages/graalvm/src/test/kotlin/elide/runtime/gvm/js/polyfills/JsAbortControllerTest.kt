@@ -23,18 +23,16 @@ import kotlin.test.Ignore
 /** Tests that the `AbortController` and `AbortSignal` polyfills are available globally. */
 @TestCase internal class JsAbortControllerTest : AbstractJsTest() {
   // `AbortController`` type should be present globally.
-  @Test fun testAbortControllerPresent() = executeGuest {
-    // language=javascript
-    """
+  @Test fun testAbortControllerPresent() = test {
+    code("""
       test(AbortController).isNotNull();
-    """
+    """)
   }.doesNotFail()
 
   // `AbortSignal`` type should be present globally.
-  @Test fun testAbortSignalPresent() = executeGuest {
-    // language=javascript
-    """
+  @Test fun testAbortSignalPresent() = test {
+    code("""
       test(AbortSignal).isNotNull();
-    """
+    """)
   }.doesNotFail()
 }

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.test.runTest
+import org.intellij.lang.annotations.Language
 import org.graalvm.polyglot.Context as VMContext
 
 /** Base implementation of a test which can spawn VM contexts, and execute tests within them. */
@@ -50,6 +51,18 @@ internal abstract class AbstractDualTest {
       }
       return result.get()
     }
+  }
+
+  /**
+   * Typed and highlighted guest executor context.
+   */
+  internal interface GuestTestContext {
+    /**
+     * Prepares guest code in a test.
+     *
+     * @param code Code to use for the test.
+     */
+    fun code(code: String)
   }
 
   /** @return Initialized and exclusively-owned context for use with this test. */

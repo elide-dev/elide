@@ -34,10 +34,23 @@ import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.gvm.internals.js.JsRuntime
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import org.intellij.lang.annotations.Language
 
 /** Abstract dual-execution test which expects a JavaScript snippet in addition to a regular test. */
 @Suppress("unused")
 internal abstract class AbstractJsTest : AbstractDualTest() {
+  /**
+   * Typed and highlighted JavaScript test executor context.
+   */
+  internal interface JsTestContext: GuestTestContext {
+    /**
+     * Prepares guest code in a test for the JavaScript VM.
+     *
+     * @param code Code to use for the test.
+     */
+    override fun code(@Language("javascript") code: String)
+  }
+
   private val initialized: AtomicBoolean = AtomicBoolean(false)
 
   // Guest context manager.
@@ -169,6 +182,29 @@ internal abstract class AbstractJsTest : AbstractDualTest() {
       esm = true,
       op,
     )
+  }
+
+  fun test(op: context(Context, JsTestContext) () -> Unit) = test(
+    bind = true,
+    op = op,
+  )
+
+  fun test(bind: Boolean, op: context(Context, JsTestContext) () -> Unit) = GuestTestExecution(::withContext) {
+    executeGuestInternal(
+      this,
+      bind,
+      bindUtils = true,
+      esm = false,
+    ) {
+      val codeToRun = AtomicReference<String>(null)
+      val wrapped = object: JsTestContext {
+        override fun code(code: String) {
+          codeToRun.set(code)
+        }
+      }
+      op.invoke(this, wrapped)
+      codeToRun.get() ?: error("Failed to resolve guest code for test")
+    }
   }
 
   // Run the provided factory to produce a script, then run that test within a warmed `Context`.

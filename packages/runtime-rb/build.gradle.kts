@@ -30,9 +30,7 @@ elidePackage(
   id = "runtime-rb",
   name = "Elide Ruby Runtime",
   description = "Package providing the Ruby plugin for the Elide runtime.",
-) {
-  java9Modularity = false
-}
+)
 
 kotlin {
   explicitApi()

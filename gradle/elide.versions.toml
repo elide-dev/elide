@@ -212,6 +212,7 @@ gradleCommonCustomUserData = "1.11.1"
 gradleChecksum = "1.4.0"
 gradleTestRetry = "1.5.4"
 lombok = "8.3"
+jetbrains_annotations = "24.0.1"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -268,6 +269,7 @@ gradle_testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetr
 sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
 
 [libraries]
+jetbrains_annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains_annotations" }
 junit = "junit:junit:4.13.2"
 jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" }
 junit_jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit_jupiter" }

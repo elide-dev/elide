@@ -1,4 +1,4 @@
-module elide.runtime.plugins.ruby {
+module elide.runtime.rb {
   requires elide.runtime.core;
   
   requires kotlin.stdlib;

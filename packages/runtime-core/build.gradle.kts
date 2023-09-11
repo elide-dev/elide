@@ -30,9 +30,7 @@ elidePackage(
   id = "runtime-core",
   name = "Elide Runtime Core",
   description = "Core package providing the API and base implementation for the Elide polyglot runtime.",
-) {
-  java9Modularity = false
-}
+)
 
 kotlin {
   explicitApi()

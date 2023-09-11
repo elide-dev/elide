@@ -14,7 +14,7 @@ import elide.runtime.core.evaluate
  * @param esm Whether to treat the [source] as an ESM module. If false, the code is evaluted as CommonJS source.
  * @return The result of the invocation. If [esm] is `true`, an object is returned, with exported values as members.
  */
-@DelicateElideApi public fun PolyglotContext.javaScript(
+@DelicateElideApi public fun PolyglotContext.javascript(
   source: String,
   esm: Boolean = false,
 ): PolyglotValue {

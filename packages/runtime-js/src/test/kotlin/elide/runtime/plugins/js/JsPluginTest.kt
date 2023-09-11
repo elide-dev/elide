@@ -52,7 +52,7 @@ internal class JsPluginTest {
   }
 
   @Test fun testExecution() = withJsPlugin {
-    val result = javaScript(
+    val result = javascript(
       """
       const a = 42
       function getValue() { return a; }
@@ -71,7 +71,7 @@ internal class JsPluginTest {
   @Test fun testEmbeddedCjs() = withJsPlugin(
     configureEngine = useResourceBundle("hello-world/hello.tar.gz")
   ) {
-    val requireResult = javaScript(
+    val requireResult = javascript(
       """
       const hello = require("hello")
       hello("Elide")
@@ -88,7 +88,7 @@ internal class JsPluginTest {
   @Test fun testEmbeddedEsm() = withJsPlugin(
     configureEngine = useResourceBundle("hello-world/hello.tar.gz")
   ) {
-    val importResult = javaScript(
+    val importResult = javascript(
       """
       import { greet } from "hello"
       export const returnValue = greet("Elide")

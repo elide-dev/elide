@@ -30,9 +30,7 @@ elidePackage(
   id = "runtime-py",
   name = "Elide Python Runtime",
   description = "Package providing the Python plugin for the Elide runtime.",
-) {
-  java9Modularity = false
-}
+)
 
 kotlin {
   explicitApi()

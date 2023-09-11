@@ -146,7 +146,7 @@ jobs:
         with:
           install: true
       - name: "Setup: Checkout"
-        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: "Setup: GraalVM (Java 20)"
         uses: graalvm/setup-graalvm@d1891786152ae96fee67f86c3a1eae596291bbed # v1.1.2
         with:

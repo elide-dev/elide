@@ -68,7 +68,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
         jsvm.builder(it)
       }
       contextManager.installContextConfigurator {
-        jsvm.spawn(it)
+        jsvm.configureVM(it)
       }
       contextManager.installContextSpawn {
         jsvm.spawn(it)

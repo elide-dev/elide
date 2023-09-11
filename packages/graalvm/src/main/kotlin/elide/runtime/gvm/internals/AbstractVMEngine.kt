@@ -589,7 +589,7 @@ public abstract class AbstractVMEngine<
    * @param builder VM context builder which should receive the configuration.
    */
   @Suppress("DEPRECATION")
-  private fun configureVM(builder: VMContext.Builder) {
+  internal fun configureVM(builder: VMContext.Builder) {
     // set a strong secure baseline for context guest access
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)

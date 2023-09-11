@@ -18,10 +18,8 @@ package elide.runtime.gvm.js.polyfills
 import elide.runtime.gvm.js.AbstractJsTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
-import kotlin.test.Ignore
 
 /** Tests that the `Event` polyfill is available globally. */
-@Ignore("TODO: broken on gvm latest")
 @TestCase internal class JsEventTest : AbstractJsTest() {
   // `EventTarget` type should be present globally.
   @Test fun testEventTargetPresent() = executeGuest {

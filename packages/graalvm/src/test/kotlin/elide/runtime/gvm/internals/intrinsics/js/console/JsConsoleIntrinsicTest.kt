@@ -31,7 +31,6 @@ import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
  /** Tests for intrinsic JS console implementation, which pipes to logging. */
-@Ignore("TODO: broken on gvm latest")
 @TestCase internal class JsConsoleIntrinsicTest : AbstractJsIntrinsicTest<ConsoleIntrinsic>() {
   // Logger facade to use for testing.
   private val loggerFacade: AtomicReference<Logger> = AtomicReference(null)

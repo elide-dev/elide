@@ -57,7 +57,7 @@ jobs:
       - name: "Patch: Neutralize Yarn Lock"
         run: mv yarn.lock yarn.inert
       - name: "Check: Dependency Review"
-        uses: actions/dependency-review-action@f6fff72a3217f580d5afd49a46826795305b63c7 # v3.0.8
+        uses: actions/dependency-review-action@6c5ccdad469c9f8a2996bfecaec55a631a347034 # v3.1.0
         continue-on-error: true
         if: ${{ github.event_name == 'pull_request' }}
         with:

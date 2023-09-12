@@ -30,11 +30,6 @@ public actual open class WireMessage {
   public actual open fun toSerializedString(): String {
     return this.message.toString()
   }
-
-  /** @return Underlying [lib.protobuf.Message] object. */
-  public fun getProto(): lib.protobuf.Message {
-    return message
-  }
 }
 
 

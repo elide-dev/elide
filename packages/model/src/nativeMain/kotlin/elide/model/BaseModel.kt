@@ -27,11 +27,6 @@ public actual open class WireMessage {
   public actual open fun toSerializedString(): String {
     TODO("not yet implemented")
   }
-
-  /** @return Underlying [lib.protobuf.Message] object. */
-  public fun getProto(): Any {
-    TODO("not yet implemented")
-  }
 }
 
 

@@ -429,8 +429,6 @@
   }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
   }, {
-    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/resources/darwin/aarch64/sha256\\E"
-  }, {
     "pattern":"org/jline/utils/.*caps$"
   }, {
     "pattern":"org/jline/utils/capabilities\\.txt$"

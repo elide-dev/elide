@@ -33,6 +33,7 @@ version = rootProject.version as String
 
 val buildMingw = project.properties["buildMingw"] == "true"
 val buildWasm = project.properties["buildWasm"] == "true"
+val kotlinVersion: String = project.properties["versions.kotlin.sdk"] as String
 
 kotlin {
   explicitApi()
@@ -65,10 +66,15 @@ kotlin {
   tvosX64()
   if (buildMingw) mingwX64()
 
-  if (buildWasm) wasm {
-    nodejs()
-    d8()
-    browser()
+  if (buildWasm) {
+    wasmJs {
+      nodejs()
+      d8()
+      browser()
+    }
+    wasmWasi {
+      // nothing yet
+    }
   }
 
   sourceSets {
@@ -134,10 +140,16 @@ kotlin {
     val tvosArm64Main by getting { dependsOn(nativeMain) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
     if (buildWasm) {
-      val wasmMain by getting {
+      val wasmJsMain by getting {
         dependsOn(commonMain)
       }
-      val wasmTest by getting {
+      val wasmJsTest by getting {
+        dependsOn(commonTest)
+      }
+      val wasmWasiMain by getting {
+        dependsOn(commonMain)
+      }
+      val wasmWasiTest by getting {
         dependsOn(commonTest)
       }
     }
@@ -149,3 +161,12 @@ elidePackage(
   name = "Elide Core",
   description = "Pure Kotlin utilities provided across all supported platforms for the Elide Framework.",
 )
+
+configurations.all {
+  resolutionStrategy.eachDependency {
+    if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
+      useVersion(kotlinVersion)
+      because("pin kotlin stdlib")
+    }
+  }
+}

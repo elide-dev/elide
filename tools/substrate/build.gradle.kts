@@ -25,7 +25,7 @@ plugins {
   distribution
   signing
   idea
-  `embedded-kotlin`
+  kotlin("jvm")
 
   alias(libs.plugins.ktlint)
   alias(libs.plugins.dokka)

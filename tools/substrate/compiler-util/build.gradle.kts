@@ -21,7 +21,7 @@ plugins {
   signing
   java
   `java-test-fixtures`
-  `embedded-kotlin`
+  kotlin("jvm")
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")

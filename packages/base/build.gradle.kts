@@ -11,194 +11,71 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class,
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("dev.elide.build")
-  id("dev.elide.build.multiplatform")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
+  kotlin("multiplatform")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "base"
+    name = "Elide Base"
+    description = "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms."
+  }
 
-val buildMingw = project.properties["buildMingw"] == "true"
-val buildWasm = project.properties["buildWasm"] == "true"
-val kotlinVersion: String = project.properties["versions.kotlin.sdk"] as String
+  kotlin {
+    target = KotlinTarget.All
+    explicitApi = true
+  }
+}
 
-kotlin {
-  explicitApi()
+dependencies {
+  common {
+    api(projects.packages.core)
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
+
+    implementation(kotlin("stdlib"))
+    implementation(libs.elide.uuid)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.core)
+  }
 
   jvm {
-    withJava()
+    api(libs.slf4j)
+    api(libs.jakarta.inject)
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
+    api(mn.micronaut.context)
+
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(libs.kotlinx.coroutines.jdk9)
+    implementation(libs.kotlinx.coroutines.slf4j)
+  }
+
+  jvmTest {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("test-junit5"))
+    implementation(libs.junit.jupiter)
+
+    runtimeOnly(libs.junit.jupiter.engine)
+    runtimeOnly(libs.logback)
   }
 
   js {
-    browser()
-    nodejs()
-    generateTypeScriptDefinitions()
+    // KT-57235: fix for atomicfu-runtime error
+    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
 
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
-  }
-  macosArm64()
-  iosArm64()
-  iosX64()
-  watchosArm32()
-  watchosArm64()
-  watchosX64()
-  tvosArm64()
-  tvosX64()
-
-  if (buildWasm) {
-    wasmJs {
-      nodejs()
-      d8()
-      browser()
-    }
-    wasmWasi {
-      // nothing at this time
-    }
+    implementation(libs.kotlinx.serialization.json)
   }
 
-  if (buildMingw) mingwX64()
-
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        api(projects.packages.core)
-        implementation(libs.elide.uuid)
-        api(libs.kotlinx.collections.immutable)
-        api(libs.kotlinx.datetime)
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.serialization.core)
-      }
-    }
-    val commonTest by getting {
-      dependencies {
-        implementation(kotlin("test"))
-        implementation(kotlin("stdlib"))
-      }
-    }
-    val jvmMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-        api(libs.slf4j)
-        api(libs.jakarta.inject)
-        api(mn.micronaut.context)
-        api(libs.kotlinx.collections.immutable)
-        api(libs.kotlinx.datetime)
-        implementation(libs.kotlinx.serialization.core)
-        implementation(libs.kotlinx.coroutines.core.jvm)
-        implementation(libs.kotlinx.coroutines.jdk9)
-        implementation(libs.kotlinx.coroutines.slf4j)
-      }
-    }
-    val jvmTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-        implementation(kotlin("test-junit5"))
-        implementation(libs.junit.jupiter)
-        runtimeOnly(libs.junit.jupiter.engine)
-        runtimeOnly(libs.logback)
-      }
-    }
-    val jsMain by getting {
-      dependencies {
-        // KT-57235: fix for atomicfu-runtime error
-        api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
-        implementation(kotlin("stdlib-js"))
-        implementation(libs.kotlinx.coroutines.core.js)
-        implementation(libs.kotlinx.serialization.json.js)
-        api(libs.kotlinx.collections.immutable)
-        api(libs.kotlinx.datetime)
-      }
-    }
-    val jsTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-        implementation(kotlin("test"))
-      }
-    }
-    val nativeMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(libs.kotlinx.coroutines.core)
-        api(libs.kotlinx.collections.immutable)
-        api(libs.kotlinx.datetime)
-      }
-    }
-    val nativeTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("test"))
-      }
-    }
-
-    if (buildMingw) {
-      val mingwX64Main by getting { dependsOn(nativeMain) }
-      val mingwX64Test by getting { dependsOn(nativeTest) }
-    }
-    val macosArm64Main by getting { dependsOn(nativeMain) }
-    val macosArm64Test by getting { dependsOn(nativeTest) }
-    val iosArm64Main by getting { dependsOn(nativeMain) }
-    val iosArm64Test by getting { dependsOn(nativeTest) }
-    val iosX64Main by getting { dependsOn(nativeMain) }
-    val iosX64Test by getting { dependsOn(nativeTest) }
-    val watchosArm32Main by getting { dependsOn(nativeMain) }
-    val watchosArm32Test by getting { dependsOn(nativeTest) }
-    val watchosArm64Main by getting { dependsOn(nativeMain) }
-    val watchosArm64Test by getting { dependsOn(nativeTest) }
-    val watchosX64Main by getting { dependsOn(nativeMain) }
-    val watchosX64Test by getting { dependsOn(nativeTest) }
-    val tvosArm64Main by getting { dependsOn(nativeMain) }
-    val tvosArm64Test by getting { dependsOn(nativeTest) }
-    val tvosX64Main by getting { dependsOn(nativeMain) }
-    val tvosX64Test by getting { dependsOn(nativeTest) }
-    if (buildWasm) {
-      val commonWasmMain by creating {
-        dependsOn(commonMain)
-      }
-      val commonWasmTest by creating {
-        dependsOn(commonTest)
-      }
-      val wasmJsMain by getting {
-        dependsOn(commonWasmMain)
-      }
-      val wasmJsTest by getting {
-        dependsOn(commonWasmTest)
-      }
-    }
-  }
-}
-
-elidePackage(
-  id = "base",
-  name = "Elide Base",
-  description = "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms.",
-)
-
-configurations.all {
-  resolutionStrategy.eachDependency {
-    if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-      useVersion(kotlinVersion)
-      because("pin kotlin stdlib")
-    }
+  native {
+    api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.datetime)
   }
 }

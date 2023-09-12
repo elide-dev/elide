@@ -11,39 +11,64 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
-)
-
-import ElidePackages.elidePackage
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
-
+ import elide.internal.conventions.elide
+ import elide.internal.conventions.kotlin.*
 
 plugins {
-  `maven-publish`
-  distribution
-  signing
-
   kotlin("multiplatform")
   kotlin("plugin.serialization")
 
-  id("dev.elide.build.multiplatform.jvm")
-  id("dev.elide.build.jvm17")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
-
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val javaLanguageTarget = project.properties["versions.java.target"] as String
 val buildWasm = project.properties["buildWasm"] == "true"
+
+elide {
+  publishing {
+    id = "proto-kotlinx"
+    name = "Elide Protocol: KotlinX"
+    description = "Elide protocol implementation for KotlinX Serialization"
+  }
+
+  kotlin {
+    target = (KotlinTarget.JVM + KotlinTarget.JsNode).let {
+      if(buildWasm) it + KotlinTarget.WASM else it
+    }
+  }
+
+  jvm {
+    forceJvm17 = true
+  }
+
+  java {
+    configureModularity = false
+    includeSources = false
+  }
+}
+
+dependencies {
+  jvm {
+    // API
+    api(libs.kotlinx.datetime)
+    api(projects.packages.proto.protoCore)
+    api(projects.packages.core)
+    implementation(libs.kotlinx.serialization.core.jvm)
+    implementation(libs.kotlinx.serialization.protobuf.jvm)
+
+    // Implementation
+    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
+    runtimeOnly(kotlin("reflect"))
+  }
+
+  jvmTest {
+    // Testing
+    implementation(libs.truth)
+    implementation(libs.truth.java8)
+    implementation(projects.packages.test)
+    implementation(project(":packages:proto:proto-core", configuration = "testBase"))
+  }
+}
 
 configurations {
   // `modelInternalJvm` is the dependency used internally by other Elide packages to access the protocol model. at
@@ -54,97 +79,4 @@ configurations {
 
     extendsFrom(configurations["jvmRuntimeClasspath"])
   }
-}
-
-kotlin {
-  jvm {
-    withJava()
-  }
-  js {
-    browser()
-    nodejs()
-  }
-  if (buildWasm) wasm {
-    browser()
-    d8()
-  }
-
-  sourceSets {
-    /**
-     * Variant: KotlinX
-     */
-    val jvmMain by getting {
-      dependencies {
-        // API
-        api(libs.kotlinx.datetime)
-        api(projects.packages.proto.protoCore)
-        api(projects.packages.core)
-        implementation(libs.kotlinx.serialization.core.jvm)
-        implementation(libs.kotlinx.serialization.protobuf.jvm)
-
-        // Implementation
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("stdlib-jdk8"))
-        runtimeOnly(kotlin("reflect"))
-      }
-    }
-    val jvmTest by getting {
-      dependencies {
-        // Testing
-        implementation(libs.truth)
-        implementation(libs.truth.java8)
-        implementation(projects.packages.test)
-        implementation(project(":packages:proto:proto-core", configuration = "testBase"))
-      }
-    }
-  }
-
-  targets.all {
-    compilations.all {
-      kotlinOptions {
-        apiVersion = Elide.kotlinLanguage
-        languageVersion = Elide.kotlinLanguage
-        allWarningsAsErrors = true
-
-        if (this is KotlinJvmOptions) {
-          jvmTarget = javaLanguageTarget
-          javaParameters = true
-        }
-      }
-    }
-  }
-
-  // force -Werror to be off
-  afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-      kotlinOptions.allWarningsAsErrors = true
-    }
-  }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageTarget
-  targetCompatibility = javaLanguageTarget
-  options.isFork = true
-  options.isIncremental = true
-  options.isWarnings = false
-}
-
-tasks {
-  jvmTest {
-    useJUnitPlatform()
-  }
-
-  artifacts {
-    archives(jvmJar)
-    add("modelInternalJvm", jvmJar)
-  }
-}
-
-elidePackage(
-  id = "proto-kotlinx",
-  name = "Elide Protocol: KotlinX",
-  description = "Elide protocol implementation for KotlinX Serialization",
-) {
-  java9Modularity = false
 }

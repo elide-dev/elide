@@ -1,28 +1,35 @@
-@file:Suppress(
-  "DSL_SCOPE_VIOLATION",
-  "UnstableApiUsage",
-)
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.analysis.skipAnalysis
 
 plugins {
-  `java-library`
-  publishing
-  jacoco
-
+  kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.serialization")
+
+  id("java-library")
   id("com.github.gmazzo.buildconfig")
   id("io.micronaut.application")
   id("io.micronaut.graalvm")
   id("io.micronaut.aot")
 
-  id("dev.elide.build.jvm.kapt")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  skipAnalysis()
 
-kotlin {
-  explicitApi()
+  publishing {
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+
+  kotlin {
+    target = KotlinTarget.JVM
+    explicitApi = true
+  }
 }
 
 buildConfig {
@@ -159,18 +166,6 @@ dependencies {
 
 application {
   mainClass = "elide.tool.ssg.SiteCompiler"
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["kotlin"])
-    }
-  }
-}
-
-sonarqube {
-  isSkipProject = true
 }
 
 micronaut {

@@ -103,6 +103,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         configureAllOpen = allOpen,
         configureNoArgs = noArgs,
         explicitApi = explicitApi,
+        configureJavaModules = conventions.java.configureModularity
       )
     }
 

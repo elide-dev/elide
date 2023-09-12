@@ -155,4 +155,4 @@ internal object Constants {
 }
 
 /** Whether this [Project] is running in CI, as indicated by the [CI_FLAG][Constants.CI_FLAG] property. */
-internal val Project.isCI get() = property(Constants.CI_FLAG)?.toString().toBoolean()
+internal val Project.isCI get() = findProperty(Constants.CI_FLAG)?.toString().toBoolean()

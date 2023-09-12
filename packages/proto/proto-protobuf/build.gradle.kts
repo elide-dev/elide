@@ -11,34 +11,42 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.proto
 
 plugins {
-  `maven-publish`
-  distribution
-  signing
-
+  kotlin("jvm")
   alias(libs.plugins.protobuf)
 
-  id("dev.elide.build.kotlin")
-  id("dev.elide.build.jvm17")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "proto-protobuf"
+    name = "Elide Protocol: Protobuf"
+    description = "Elide protocol implementation for Protocol Buffers."
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val javaLanguageTarget = project.properties["versions.java.target"] as String
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+
+  kotlin {
+    target = KotlinTarget.JVM
+  }
+
+  jvm {
+    forceJvm17 = true
+  }
+
+  java {
+    configureModularity = false
+  }
+}
 
 sourceSets {
   /**
@@ -63,35 +71,6 @@ configurations {
   }
 }
 
-kotlin {
-  target.compilations.all {
-    kotlinOptions {
-      jvmTarget = javaLanguageTarget
-      javaParameters = true
-      apiVersion = Elide.kotlinLanguage
-      languageVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = false
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
-        // do not warn for generated code
-        "-nowarn",
-        "-Xjavac-arguments=-Xlint:-deprecation",
-      )).toSortedSet().toList()
-    }
-  }
-
-  // force -Werror to be off
-  afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-      kotlinOptions.allWarningsAsErrors = false
-      kotlinOptions.freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
-        // do not warn for generated code
-        "-nowarn",
-        "-Xjavac-arguments=-Xlint:-deprecation",
-      )).toSortedSet().toList()
-    }
-  }
-}
-
 protobuf {
   protoc {
     artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
@@ -105,19 +84,6 @@ protobuf {
   }
 }
 
-java {
-  withJavadocJar()
-}
-
-tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageTarget
-  targetCompatibility = javaLanguageTarget
-  options.isFork = true
-  options.isIncremental = true
-  options.isWarnings = false
-  options.compilerArgs.add("-Xlint:-deprecation")
-}
-
 tasks {
   test {
     useJUnitPlatform()
@@ -126,36 +92,6 @@ tasks {
   jar {
     dependsOn(generateProto)
   }
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-  dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-  archiveClassifier = "sources"
-  from(sourceSets["main"].allSource)
-}
-
-val javadocJar by tasks.getting(Jar::class)
-
-artifacts {
-  add("modelInternal", tasks.jar)
-  archives(sourcesJar)
-  archives(javadocJar)
-}
-
-publishing {
-  publications.create<MavenPublication>("maven") {
-    from(components["kotlin"])
-    artifact(sourcesJar)
-    artifact(javadocJar)
-  }
-}
-
-elidePackage(
-  id = "proto-protobuf",
-  name = "Elide Protocol: Protobuf",
-  description = "Elide protocol implementation for Protocol Buffers.",
-) {
-  java9Modularity = false
 }
 
 dependencies {

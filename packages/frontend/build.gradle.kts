@@ -11,72 +11,38 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-  "UnstableApiUsage",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("dev.elide.build.js")
-  id("dev.elide.build.publishable")
+  kotlin("multiplatform")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "frontend"
+    name = "Elide Frontend"
+    description = "Tools for building UI experiences on top of the Elide Framework/Runtime."
+  }
 
-val buildWasm = project.properties["buildWasm"] == "true"
+  kotlin {
+    target = KotlinTarget.JsBrowser
+    explicitApi = true
+  }
+}
 
-kotlin {
-  explicitApi()
-
+dependencies {
   js {
-    browser()
-    generateTypeScriptDefinitions()
+    implementation(projects.packages.base)
 
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
-  }
-  jvm()
-  if (buildWasm) wasm {
-    d8()
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
   }
 
-  sourceSets {
-    val jsMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-        implementation(projects.packages.base)
-
-        implementation(libs.kotlinx.coroutines.core.js)
-        implementation(libs.kotlinx.serialization.core.js)
-        implementation(libs.kotlinx.serialization.json.js)
-        implementation(libs.kotlinx.serialization.protobuf.js)
-      }
-    }
-
-    val jsTest by getting {
-      dependencies {
-        implementation(projects.packages.test)
-      }
-    }
+  jsTest {
+    implementation(projects.packages.test)
   }
-}
-
-elidePackage(
-  id = "frontend",
-  name = "Elide Frontend",
-  description = "Tools for building UI experiences on top of the Elide Framework/Runtime.",
-) {
-  java9Modularity = false
 }

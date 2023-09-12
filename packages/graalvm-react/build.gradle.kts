@@ -11,94 +11,59 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.native.NativeTarget
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("dev.elide.build.js.node")
-  id("dev.elide.build.publishable")
+  kotlin("multiplatform")
+  id("elide.internal.conventions")
 }
-
-group = "dev.elide"
-version = rootProject.version as String
 
 val buildWasm = project.properties["buildWasm"] == "true"
 
-kotlin {
-  js {
-    nodejs()
-    generateTypeScriptDefinitions()
-
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-//      packageJson {
-//        customField("resolutions", mapOf(
-//          "jszip" to "3.10.1",
-//          "node-fetch" to "3.3.2",
-//          "typescript" to "4.9.5",
-//        ))
-//      }
-    }
-  }
-  jvm()
-  if (buildWasm) wasm {
-    d8()
+elide {
+  publishing {
+    id = "graalvm-react"
+    name = "Elide React integration for GraalJs"
+    description = "Integration package with GraalVM and GraalJS."
   }
 
-  sourceSets {
-    val jsMain by getting {
-      dependencies {
-        api(npm("esbuild", libs.versions.npm.esbuild.get()))
-        api(npm("prepack", libs.versions.npm.prepack.get()))
-        api(npm("buffer", libs.versions.npm.buffer.get()))
-        api(npm("readable-stream", libs.versions.npm.stream.get()))
-        api(npm("typescript", libs.versions.npm.typescript.get()))
-        api(npm("@mui/system", libs.versions.npm.mui.get()))
-
-        implementation(projects.packages.graalvmJs)
-
-        implementation(libs.kotlinx.wrappers.node)
-        implementation(libs.kotlinx.wrappers.mui)
-        implementation(libs.kotlinx.wrappers.react)
-        implementation(libs.kotlinx.wrappers.react.dom)
-        implementation(libs.kotlinx.wrappers.react.router.dom)
-        implementation(libs.kotlinx.wrappers.remix.run.router)
-        implementation(libs.kotlinx.coroutines.core.js)
-        implementation(libs.kotlinx.serialization.core.js)
-        implementation(libs.kotlinx.serialization.json.js)
-        implementation(libs.kotlinx.wrappers.css)
-        implementation(libs.kotlinx.wrappers.emotion)
-        implementation(libs.kotlinx.wrappers.browser)
-        implementation(libs.kotlinx.wrappers.history)
-        implementation(libs.kotlinx.wrappers.typescript)
-      }
-    }
-
-    val jsTest by getting {
-      dependencies {
-        implementation(projects.packages.test)
-      }
+  kotlin {
+    target = KotlinTarget.JsNode.let {
+      if(buildWasm) it + KotlinTarget.WASM else it
     }
   }
 }
 
-elidePackage(
-  id = "graalvm-react",
-  name = "Elide React integration for GraalJs",
-  description = "Integration package with GraalVM and GraalJS.",
-) {
-  java9Modularity = false
+dependencies {
+  js {
+    api(npm("esbuild", libs.versions.npm.esbuild.get()))
+    api(npm("prepack", libs.versions.npm.prepack.get()))
+    api(npm("buffer", libs.versions.npm.buffer.get()))
+    api(npm("readable-stream", libs.versions.npm.stream.get()))
+    api(npm("typescript", libs.versions.npm.typescript.get()))
+    api(npm("@mui/system", libs.versions.npm.mui.get()))
+
+    implementation(projects.packages.graalvmJs)
+
+    implementation(libs.kotlinx.wrappers.node)
+    implementation(libs.kotlinx.wrappers.mui)
+    implementation(libs.kotlinx.wrappers.react)
+    implementation(libs.kotlinx.wrappers.react.dom)
+    implementation(libs.kotlinx.wrappers.react.router.dom)
+    implementation(libs.kotlinx.wrappers.remix.run.router)
+    implementation(libs.kotlinx.coroutines.core.js)
+    implementation(libs.kotlinx.serialization.core.js)
+    implementation(libs.kotlinx.serialization.json.js)
+    implementation(libs.kotlinx.wrappers.css)
+    implementation(libs.kotlinx.wrappers.emotion)
+    implementation(libs.kotlinx.wrappers.browser)
+    implementation(libs.kotlinx.wrappers.history)
+    implementation(libs.kotlinx.wrappers.typescript)
+  }
+
+  jsTest {
+    implementation(projects.packages.test)
+  }
 }

@@ -11,34 +11,31 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
-)
-
-import ElidePackages.elidePackage
+ import elide.internal.conventions.elide
+ import elide.internal.conventions.publishing.publish
+ import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
-  `maven-publish`
-  distribution
-  signing
-
-  id("dev.elide.build.kotlin")
-  id("dev.elide.build.jvm17")
-  id("dev.elide.build.publishable")
+  kotlin("jvm")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "proto-capnp"
+    name = "Elide Protocol: Cap'n'Proto"
+    description = "Elide protocol implementation for Cap'n'Proto."
+    
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+  
+  kotlin { target = KotlinTarget.JVM }
+  jvm { forceJvm17 = true }
 
-val javaLanguageVersion = project.properties["versions.java.language"] as String
-val javaLanguageTarget = project.properties["versions.java.target"] as String
-
-sourceSets {
-  val main by getting
-  val test by getting
+  // disable module-info processing (not present)
+  java { configureModularity = false }
 }
 
 configurations {
@@ -58,82 +55,13 @@ configurations {
 
 val capnproto: Configuration by configurations.getting
 
-java {
-  withJavadocJar()
-}
-
-kotlin {
-  target.compilations.all {
-    kotlinOptions {
-      jvmTarget = javaLanguageTarget
-      javaParameters = true
-      apiVersion = Elide.kotlinLanguage
-      languageVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = true
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
-        // do not warn for generated code
-        "-nowarn"
-      )).toSortedSet().toList()
-    }
-  }
-
-  // force -Werror to be off
-  afterEvaluate {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-      kotlinOptions.allWarningsAsErrors = true
-    }
-  }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageTarget
-  targetCompatibility = javaLanguageTarget
-  options.isFork = true
-  options.isIncremental = true
-  options.isWarnings = false
-}
-
-tasks.test {
-  useJUnitPlatform()
-}
-
-/**
- * Variant: Cap'N'Proto
- */
-//  val compileCapnProtos by creating(FlatBuffers::class) {
-//    description = "Generate Flatbuffers code for Kotlin/JVM"
-//    inputDir = file("${rootProject.projectDir}/proto")
-//    outputDir = file("$projectDir/src/main/flat")
-//  }
-
-val sourcesJar by tasks.registering(Jar::class) {
-  dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-  archiveClassifier.set("sources")
-  from(sourceSets["main"].allSource)
-}
-
+val sourcesJar by tasks.getting
 val javadocJar by tasks.getting
 
 artifacts {
   add("capnpInternal", tasks.jar)
   archives(sourcesJar)
   archives(javadocJar)
-}
-
-publishing {
-  publications.create<MavenPublication>("maven") {
-    from(components["kotlin"])
-    artifact(javadocJar)
-    artifact(sourcesJar)
-  }
-}
-
-elidePackage(
-  id = "proto-capnp",
-  name = "Elide Protocol: Cap'n'Proto",
-  description = "Elide protocol implementation for Cap'n'Proto.",
-) {
-  java9Modularity = false
 }
 
 dependencies {

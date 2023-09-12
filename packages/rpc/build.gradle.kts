@@ -11,30 +11,36 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.*
 import com.google.protobuf.gradle.id
 
 plugins {
   java
   kotlin("kapt")
+  kotlin("multiplatform")
   alias(libs.plugins.protobuf)
 
-  id("dev.elide.build")
-  id("dev.elide.build.multiplatform")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "rpc"
+    name = "Elide RPC"
+    description = "Cross-platform RPC dispatch and definition tools and runtime utilities."
+  }
 
-val ideaActive = properties["idea.active"] == "true"
+  kotlin {
+    target = KotlinTarget.All
+    explicitApi = true
+  }
+
+  java {
+    configureModularity = false
+    includeSources = false
+  }
+}
 
 protobuf {
   protoc {
@@ -64,140 +70,98 @@ protobuf {
   }
 }
 
-kotlin {
-  explicitApi()
+dependencies {
+  common {
+    api(projects.packages.base)
+    api(projects.packages.core)
+    api(projects.packages.model)
+  }
 
   jvm {
-    withJava()
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(projects.packages.server)
+    configurations["kapt"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
+
+    // Protobuf
+    implementation(libs.protobuf.java)
+    implementation(libs.protobuf.util)
+    implementation(libs.protobuf.kotlin)
+
+    // gRPC
+    implementation(libs.grpc.api)
+    implementation(libs.grpc.auth)
+    implementation(libs.grpc.core)
+    implementation(libs.grpc.stub)
+    implementation(libs.grpc.inprocess)
+    implementation(libs.grpc.services)
+    implementation(libs.grpc.netty)
+    implementation(libs.grpc.protobuf)
+    implementation(libs.grpc.kotlin.stub)
+
+    // Micronaut
+    implementation(mn.micronaut.http)
+    implementation(mn.micronaut.context)
+    implementation(mn.micronaut.inject)
+    implementation(mn.micronaut.inject.java)
+    implementation(mn.micronaut.management)
+    implementation(mn.micronaut.grpc.runtime)
+    implementation(mn.micronaut.grpc.client.runtime)
+    implementation(mn.micronaut.grpc.server.runtime)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.core.jvm)
+    implementation(libs.kotlinx.serialization.json.jvm)
+    implementation(libs.kotlinx.serialization.protobuf.jvm)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.core.jvm)
+    implementation(libs.kotlinx.coroutines.guava)
   }
+
+  jvmTest {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("test-junit5"))
+    configurations["kaptTest"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
+
+    // Testing
+    implementation(projects.packages.test)
+    implementation(kotlin("test-junit5"))
+    implementation(mn.micronaut.test.junit5)
+    implementation(libs.junit.jupiter.api)
+    implementation(libs.junit.jupiter.params)
+    runtimeOnly(libs.junit.jupiter.engine)
+    runtimeOnly(libs.logback)
+  }
+
   js {
-    nodejs {}
-    browser {}
-    generateTypeScriptDefinitions()
+    implementation(projects.packages.base)
+    implementation(projects.packages.frontend)
+    implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
+    implementation(npm("google-protobuf", libs.versions.npm.google.protobuf.get()))
+    implementation(npm("grpc-web", libs.versions.npm.grpcweb.get()))
 
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
+    implementation(libs.kotlinx.coroutines.core.js)
+    implementation(libs.kotlinx.serialization.json.js)
+    implementation(libs.kotlinx.serialization.protobuf.js)
   }
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        api(projects.packages.base)
-        api(projects.packages.core)
-        api(projects.packages.model)
-        implementation(kotlin("stdlib"))
-      }
-    }
-    val commonTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("test"))
-      }
-    }
-    val jvmMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-        implementation(projects.packages.base)
-        implementation(projects.packages.server)
-        configurations["kapt"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
-
-        // Protobuf
-        implementation(libs.protobuf.java)
-        implementation(libs.protobuf.util)
-        implementation(libs.protobuf.kotlin)
-
-        // gRPC
-        implementation(libs.grpc.api)
-        implementation(libs.grpc.auth)
-        implementation(libs.grpc.core)
-        implementation(libs.grpc.stub)
-        implementation(libs.grpc.inprocess)
-        implementation(libs.grpc.services)
-        implementation(libs.grpc.netty)
-        implementation(libs.grpc.protobuf)
-        implementation(libs.grpc.kotlin.stub)
-
-        // Micronaut
-        implementation(mn.micronaut.http)
-        implementation(mn.micronaut.context)
-        implementation(mn.micronaut.inject)
-        implementation(mn.micronaut.inject.java)
-        implementation(mn.micronaut.management)
-        implementation(mn.micronaut.grpc.runtime)
-        implementation(mn.micronaut.grpc.client.runtime)
-        implementation(mn.micronaut.grpc.server.runtime)
-
-        // Serialization
-        implementation(libs.kotlinx.serialization.core)
-        implementation(libs.kotlinx.serialization.core.jvm)
-        implementation(libs.kotlinx.serialization.json.jvm)
-        implementation(libs.kotlinx.serialization.protobuf.jvm)
-
-        // Coroutines
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.coroutines.core.jvm)
-        implementation(libs.kotlinx.coroutines.guava)
-      }
-    }
-    val jvmTest by getting {
-      kotlin.srcDirs(
-        layout.projectDirectory.dir("src/jvmTest/kotlin"),
-        layout.buildDirectory.dir("generated/source/proto/test/grpckt"),
-        layout.buildDirectory.dir("generated/source/proto/test/kotlin"),
-      )
-
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-        implementation(kotlin("test-junit5"))
-        configurations["kaptTest"].dependencies.add(mn.micronaut.inject.java.asProvider().get())
-
-        // Testing
-        implementation(projects.packages.test)
-        implementation(kotlin("test-junit5"))
-        implementation(mn.micronaut.test.junit5)
-        implementation(libs.junit.jupiter.api)
-        implementation(libs.junit.jupiter.params)
-        runtimeOnly(libs.junit.jupiter.engine)
-        runtimeOnly(libs.logback)
-      }
-    }
-    val jsMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-        implementation(projects.packages.base)
-        implementation(projects.packages.frontend)
-        implementation(npm("@types/google-protobuf", libs.versions.npm.types.protobuf.get()))
-        implementation(npm("google-protobuf", libs.versions.npm.google.protobuf.get()))
-        implementation(npm("grpc-web", libs.versions.npm.grpcweb.get()))
-
-        implementation(libs.kotlinx.coroutines.core.js)
-        implementation(libs.kotlinx.serialization.json.js)
-        implementation(libs.kotlinx.serialization.protobuf.js)
-      }
-    }
-    val jsTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-        implementation(kotlin("test"))
-        implementation(projects.packages.test)
-      }
-    }
+  jsTest {
+    implementation(projects.packages.test)
   }
 }
 
-tasks {
-  withType(Copy::class).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-  }
+val jvmTest by kotlin.sourceSets.getting {
+  kotlin.srcDirs(
+    layout.projectDirectory.dir("src/jvmTest/kotlin"),
+    layout.buildDirectory.dir("generated/source/proto/test/grpckt"),
+    layout.buildDirectory.dir("generated/source/proto/test/kotlin"),
+  )
+}
 
-  named("compileTestKotlinJvm").configure {
-    dependsOn("generateProto", "generateTestProto")
-  }
+tasks.named("compileTestKotlinJvm").configure {
+  dependsOn("generateProto", "generateTestProto")
 }
 
 afterEvaluate {
@@ -207,15 +171,13 @@ afterEvaluate {
     "runKtlintCheckOverJvmTestSourceSet",
   ).forEach {
     tasks.named(it) {
-      dependsOn(tasks.generateProto, tasks.generateTestProto)
+      dependsOn("generateProto", "generateTestProto")
     }
   }
 }
 
-elidePackage(
-  id = "rpc",
-  name = "Elide RPC",
-  description = "Cross-platform RPC dispatch and definition tools and runtime utilities.",
-) {
-  java9Modularity = false
+tasks {
+  withType(Copy::class).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
 }

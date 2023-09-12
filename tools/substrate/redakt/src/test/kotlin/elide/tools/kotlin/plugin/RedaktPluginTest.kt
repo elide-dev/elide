@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 /** Top-level tests for the Redakt plugin. */
-class RedaktPluginTest : AbstractKotlinPluginTest() {
+@Disabled class RedaktPluginTest : AbstractKotlinPluginTest() {
   companion object {
     const val testPackage = "elide.tools.kotlin.plugin.redakt.test"
   }

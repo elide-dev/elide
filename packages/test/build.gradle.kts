@@ -191,6 +191,4 @@ elidePackage(
   id = "test",
   name = "Elide Test",
   description = "Universal testing utilities in every language supported by Kotlin and Elide.",
-) {
-  java9Modularity = false
-}
+)

@@ -19,7 +19,6 @@ module elide.test {
     requires com.google.common;
 
     requires org.junit.jupiter.api;
-    requires io.micronaut.test.test_junit5;
 
     requires elide.core;
     requires elide.base;

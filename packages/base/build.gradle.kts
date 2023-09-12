@@ -34,6 +34,7 @@ version = rootProject.version as String
 
 val buildMingw = project.properties["buildMingw"] == "true"
 val buildWasm = project.properties["buildWasm"] == "true"
+val kotlinVersion: String = project.properties["versions.kotlin.sdk"] as String
 
 kotlin {
   explicitApi()
@@ -64,10 +65,15 @@ kotlin {
   tvosArm64()
   tvosX64()
 
-  if (buildWasm) wasm {
-    nodejs()
-    d8()
-    browser()
+  if (buildWasm) {
+    wasmJs {
+      nodejs()
+      d8()
+      browser()
+    }
+    wasmWasi {
+      // nothing at this time
+    }
   }
 
   if (buildMingw) mingwX64()
@@ -187,3 +193,12 @@ elidePackage(
   name = "Elide Base",
   description = "Baseline logic and utilities which are provided for most supported Kotlin and Elide platforms.",
 )
+
+configurations.all {
+  resolutionStrategy.eachDependency {
+    if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
+      useVersion(kotlinVersion)
+      because("pin kotlin stdlib")
+    }
+  }
+}

@@ -18,7 +18,7 @@ plugins {
   `maven-publish`
   distribution
   signing
-  `embedded-kotlin`
+  kotlin("jvm")
 
   id("dev.elide.build")
   id("dev.elide.build.jvm")

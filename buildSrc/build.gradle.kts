@@ -20,7 +20,6 @@ val kotlinVersion = "1.9.20-Beta"
 plugins {
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
-  `embedded-kotlin`
 }
 
 val buildDocs by properties

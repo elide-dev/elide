@@ -32,7 +32,7 @@ plugins {
   jacoco
   signing
   `project-report`
-  `embedded-kotlin` apply false
+  kotlin("multiplatform") apply false
 
   id(libs.plugins.sonar.get().pluginId)
   id(libs.plugins.dokka.get().pluginId)

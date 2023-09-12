@@ -382,7 +382,6 @@ public abstract class elide/runtime/gvm/internals/AbstractVMEngine$GuestVFSConfi
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;
@@ -391,7 +390,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact 
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeArtifact$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -422,7 +420,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo : elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo$Companion;
 	public fun <init> ()V
-	public synthetic fun <init> (ILelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;)V
 	public synthetic fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
@@ -436,7 +433,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 	public final fun getWindows ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$NativeImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -457,7 +453,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo : elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo$Companion;
 	public fun <init> ()V
-	public synthetic fun <init> (ILjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -467,7 +462,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 	public final fun getUniversal ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo$UniversalImageInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -487,7 +481,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ltools/elide/meta/GuestLanguage;Ljava/util/List;Ljava/util/List;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ltools/elide/meta/GuestLanguage;Ljava/util/List;Ljava/util/List;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ltools/elide/meta/GuestLanguage;Ljava/util/List;Ljava/util/List;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeImageInfo;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -507,7 +500,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo {
 	public final fun getVfs ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -527,7 +519,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeInfo$Comp
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
@@ -540,7 +531,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public final fun getSignature ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -560,7 +550,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
@@ -573,7 +562,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public final fun getStamp ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceSignature$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -594,7 +582,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$Companion;
 	public fun <init> ()V
-	public synthetic fun <init> (ILelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;)V
 	public synthetic fun <init> (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
@@ -606,7 +593,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 	public final fun getArm64 ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResourceBundle;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeResources$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -626,7 +612,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeNativeRes
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS {
 	public static final field Companion Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;
@@ -635,7 +620,6 @@ public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS {
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS$$serializer : kotlinx/serialization/internal/GeneratedSerializer {

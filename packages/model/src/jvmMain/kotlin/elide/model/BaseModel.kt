@@ -6,14 +6,14 @@ import kotlinx.datetime.Instant
 /** Describes the expected interface for wire messages, usually implemented via Protocol Buffers on a given platform. */
 @Suppress("MemberVisibilityCanBePrivate") public actual open class WireMessage {
   /** Message which is wrapped by this wire message. */
-  internal lateinit var message: com.google.protobuf.Message
+  private lateinit var message: com.google.protobuf.Message
 
   /**
    * Serialize this [WireMessage] instance into a raw [ByteArray], which is suitable for sending over the wire; formats
    * expressed via this interface must keep schema in sync on both sides.
    *
-   * Binary serialization depends on platform but is typically implemented via Protocol Buffer messages. For schemaless
-   * serialization, use Proto-JSON.
+   * Binary serialization behavior depends on the host platform but is typically implemented via Protocol Buffer
+   * messages. For schemaless serialization, use Proto-JSON.
    *
    * @return Raw bytes of this message, in serialized form.
    */
@@ -29,11 +29,6 @@ import kotlinx.datetime.Instant
    */
   public actual open fun toSerializedString(): String {
     return this.message.toString()
-  }
-
-  /** @return Underlying [com.google.protobuf.Message] for this [WireMessage]. */
-  public fun getProto(): com.google.protobuf.Message {
-    return this.message
   }
 }
 

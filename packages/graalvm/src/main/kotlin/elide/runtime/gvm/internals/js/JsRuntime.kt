@@ -182,11 +182,9 @@ internal class JsRuntime @Inject constructor (
       StaticProperty.active("wasm.Memory64"),
       StaticProperty.active("wasm.MultiValue"),
       StaticProperty.active("wasm.UseUnsafeMemory"),
-      StaticProperty.active("wasm.MultiMemory"),
+//      StaticProperty.active("wasm.MultiMemory"),
       StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
-      StaticProperty.active("wasm.BulkMemoryAndRefTypes"),
-      StaticProperty.active("wasm.Threads"),
-      StaticProperty.active("wasm.UseUnsafeMemory"),
+//      StaticProperty.active("wasm.Threads"),
       StaticProperty.of("wasm.Builtins", WASI_STD),
     )
 

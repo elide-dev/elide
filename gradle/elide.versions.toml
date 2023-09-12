@@ -28,6 +28,7 @@ testcontainers = "1.17.6"
 dependencyAnalysis = "1.21.0"
 errorprone = "2.21.1"
 jline = "3.23.0"
+spdx = "0.2.0"
 netty = "4.1.97.Final"
 capnproto = "0.1.16"
 netty_iouring = "0.0.21.Final"
@@ -56,8 +57,9 @@ ktlintGradle = "11.5.0"
 qodanaGradle = "0.1.13"
 pluginPublish = "0.21.0"
 pluginProtobuf = "0.9.4"
-versionCheck = "0.47.0"
-sonar = "4.3.0.3225"
+versionCheck = "0.48.0"
+versionCatalogUpdate = "0.8.1"
+sonar = "4.3.1.3277"
 truth = "1.1.5"
 soy = "2022-03-07" # next: "2022-07-20"
 closure = "v20221004"
@@ -197,7 +199,6 @@ auto_common = "1.2.2"
 auto_service = "1.1.1"
 auto_factory = "1.0.1"
 auto_value = "1.10.1"
-kotter = "1.0.0"
 pluginBuf = "0.8.5"
 lmaxDisruptor = "3.4.4"
 lmaxDisruptorProxy = "2.0.7"
@@ -213,6 +214,8 @@ gradleChecksum = "1.4.0"
 gradleTestRetry = "1.5.4"
 lombok = "8.3"
 jetbrains_annotations = "24.0.1"
+buildTimeTracker = "4.3.0"
+cyclonedx = "1.7.4"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -267,6 +270,10 @@ gradle_commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-
 gradle_checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
 gradle_testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
 sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }
+versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
+buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
+spdx_sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
 
 [libraries]
 jetbrains_annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains_annotations" }

@@ -187,7 +187,6 @@ protected final class elide/runtime/plugins/AbstractLanguagePlugin$Companion {
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
@@ -202,7 +201,6 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public final fun getScripts ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -222,7 +220,6 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Lelide/runtime/core/HostPlatform;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;Lelide/runtime/core/HostPlatform;)V
 	public synthetic fun <init> (Ljava/lang/String;Lelide/runtime/core/HostPlatform;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
@@ -234,7 +231,6 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 	public final fun getPlatform ()Lelide/runtime/core/HostPlatform;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {

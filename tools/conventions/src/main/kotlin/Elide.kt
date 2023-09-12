@@ -47,6 +47,7 @@ object Elide {
     "-progressive",
     "-Xcontext-receivers",
     "-Xskip-prerelease-check",
+    "-Xexpect-actual-classes",
   )
 
   /** Compiler args to include in Kotlin JVM targets. */

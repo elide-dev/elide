@@ -92,7 +92,7 @@ tasks.withType<KotlinCompileCommon>().configureEach {
   kotlinOptions {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
-    freeCompilerArgs = Elide.mppCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.mppCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = strictMode
     incremental = true
   }
@@ -103,7 +103,7 @@ tasks.withType<KotlinCompile>().configureEach {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
     jvmTarget = javaLanguageTarget
-    freeCompilerArgs = Elide.mppCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.mppCompilerArgs).toSortedSet().toList()
     javaParameters = true
     allWarningsAsErrors = strictMode
     incremental = true

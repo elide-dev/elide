@@ -73,7 +73,7 @@ kotlin {
       freeCompilerArgs = Elide.jvmCompilerArgsBeta.plus(listOf(
         // do not warn for generated code
         "-nowarn"
-      ))
+      )).toSortedSet().toList()
     }
   }
 

@@ -112,7 +112,7 @@ val ktCompilerArgs = listOf(
   "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
 
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
-  "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta"
+  "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta",
 )
 
 java {
@@ -141,7 +141,7 @@ kotlin {
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
-      freeCompilerArgs = ktCompilerArgs
+      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     }
   }
 }
@@ -882,7 +882,7 @@ tasks.withType<KotlinCompile>().configureEach {
     languageVersion = Elide.kotlinLanguageBeta
     jvmTarget = Elide.kotlinJvmTargetMaximum
     javaParameters = true
-    freeCompilerArgs = ktCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = false  // module path breaks @TODO: fix
     incremental = true
   }
@@ -933,7 +933,7 @@ afterEvaluate {
       languageVersion = Elide.kotlinLanguageBeta
       jvmTarget = Elide.kotlinJvmTargetMaximum
       javaParameters = true
-      freeCompilerArgs = ktCompilerArgs
+      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
       allWarningsAsErrors = false
     }
   }

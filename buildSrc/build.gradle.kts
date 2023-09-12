@@ -45,10 +45,10 @@ dependencies {
   implementation(libs.plugin.versionCheck)
   implementation(libs.plugin.ksp)
   implementation(libs.plugin.kotlinx.abiValidator)
-  implementation(embeddedKotlin("allopen"))
-  implementation(embeddedKotlin("noarg"))
-  implementation(embeddedKotlin("lombok"))
-  implementation(embeddedKotlin("serialization"))
+  implementation(kotlin("allopen"))
+  implementation(kotlin("noarg"))
+  implementation(kotlin("lombok"))
+  implementation(kotlin("serialization"))
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-sam-with-receiver")
   }

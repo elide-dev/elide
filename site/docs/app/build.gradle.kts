@@ -121,7 +121,7 @@ kotlin {
       languageVersion = Elide.kotlinLanguage
       apiVersion = Elide.kotlinLanguage
       allWarningsAsErrors = true
-      freeCompilerArgs = Elide.jvmCompilerArgsBeta
+      freeCompilerArgs = freeCompilerArgs.plus(Elide.jvmCompilerArgsBeta).toSortedSet().toList()
     }
   }
 }

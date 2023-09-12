@@ -38,12 +38,12 @@ kotlin {
 
   js {
     generateTypeScriptDefinitions()
-    compilations["main"].packageJson {
-      customField("resolutions", mapOf(
-        "jszip" to "3.10.1",
-        "node-fetch" to "3.3.2",
-      ))
-    }
+//    compilations["main"].packageJson {
+//      customField("resolutions", mapOf(
+//        "jszip" to "3.10.1",
+//        "node-fetch" to "3.3.2",
+//      ))
+//    }
     compilations.all {
       kotlinOptions {
         sourceMap = true

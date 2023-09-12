@@ -42,7 +42,6 @@ public final class elide/model/VersionedRecord$DefaultImpls {
 
 public class elide/model/WireMessage {
 	public fun <init> ()V
-	public final fun getProto ()Lcom/google/protobuf/Message;
 	public fun toSerializedBytes ()[B
 	public fun toSerializedString ()Ljava/lang/String;
 }
@@ -52,7 +51,6 @@ public abstract interface annotation class elide/model/annotations/Model : java/
 
 public final class elide/model/token/Token {
 	public static final field Companion Lelide/model/token/Token$Companion;
-	public synthetic fun <init> (ILelide/model/token/TokenType;Lelide/model/token/TokenValue;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Lelide/model/token/TokenType;Lelide/model/token/TokenValue;)V
 	public final fun component1 ()Lelide/model/token/TokenType;
 	public final fun component2 ()Lelide/model/token/TokenValue;
@@ -63,7 +61,6 @@ public final class elide/model/token/Token {
 	public final fun getValue ()Lelide/model/token/TokenValue;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/model/token/Token;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/model/token/Token$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -99,7 +96,6 @@ public final class elide/model/token/TokenType$Companion {
 
 public final class elide/model/token/TokenValue {
 	public static final field Companion Lelide/model/token/TokenValue$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lelide/model/token/TokenValue;
@@ -108,7 +104,6 @@ public final class elide/model/token/TokenValue {
 	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lelide/model/token/TokenValue;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final class elide/model/token/TokenValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {

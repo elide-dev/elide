@@ -11,162 +11,39 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-  "OPT_IN_USAGE",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.*
 
 plugins {
+  id("elide.internal.conventions")
+
+  kotlin("multiplatform")
   kotlin("kapt")
-  id("dev.elide.build")
-  id("dev.elide.build.publishable")
-  id("dev.elide.build.multiplatform")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "core"
+    name = "Elide Core"
+    description = "Pure Kotlin utilities provided across all supported platforms for the Elide Framework."
+  }
 
-val buildMingw = project.properties["buildMingw"] == "true"
-val buildWasm = project.properties["buildWasm"] == "true"
-val kotlinVersion: String = project.properties["versions.kotlin.sdk"] as String
+  kotlin {
+    target = KotlinTarget.All
+    explicitApi = true
+    kapt = true
+  }
+}
 
-kotlin {
-  explicitApi()
-
+dependencies {
   jvm {
-    withJava()
+    api(kotlin("stdlib-jdk8"))
+    api(libs.jetbrains.annotations)
   }
 
-  js {
-    nodejs()
-    browser()
-    generateTypeScriptDefinitions()
-
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
-  }
-
-  macosArm64()
-  iosArm64()
-  iosX64()
-  watchosArm32()
-  watchosArm64()
-  watchosX64()
-  tvosArm64()
-  tvosX64()
-  if (buildMingw) mingwX64()
-
-  if (buildWasm) {
-    wasmJs {
-      nodejs()
-      d8()
-      browser()
-    }
-    wasmWasi {
-      // nothing yet
-    }
-  }
-
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-      }
-    }
-    val commonTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("test"))
-
-        configurations["kapt"].dependencies.add(
-          mn.micronaut.inject.java.asProvider().get()
-        )
-      }
-    }
-    val jvmMain by getting {
-      dependencies {
-        api(kotlin("stdlib-jdk8"))
-        api(libs.jetbrains.annotations)
-      }
-    }
-    val jvmTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib-jdk8"))
-        implementation(kotlin("test"))
-      }
-    }
-    val jsMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-      }
-    }
-    val jsTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib-js"))
-        implementation(kotlin("test"))
-      }
-    }
-    val nativeMain by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-      }
-    }
-    val nativeTest by getting {
-      dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("test"))
-      }
-    }
-
-    if (buildMingw) {
-      val mingwX64Main by getting { dependsOn(nativeMain) }
-    }
-    val macosArm64Main by getting { dependsOn(nativeMain) }
-    val iosArm64Main by getting { dependsOn(nativeMain) }
-    val iosX64Main by getting { dependsOn(nativeMain) }
-    val watchosArm32Main by getting { dependsOn(nativeMain) }
-    val watchosArm64Main by getting { dependsOn(nativeMain) }
-    val watchosX64Main by getting { dependsOn(nativeMain) }
-    val tvosArm64Main by getting { dependsOn(nativeMain) }
-    val tvosX64Main by getting { dependsOn(nativeMain) }
-    if (buildWasm) {
-      val wasmJsMain by getting {
-        dependsOn(commonMain)
-      }
-      val wasmJsTest by getting {
-        dependsOn(commonTest)
-      }
-      val wasmWasiMain by getting {
-        dependsOn(commonMain)
-      }
-      val wasmWasiTest by getting {
-        dependsOn(commonTest)
-      }
-    }
-  }
-}
-
-elidePackage(
-  id = "core",
-  name = "Elide Core",
-  description = "Pure Kotlin utilities provided across all supported platforms for the Elide Framework.",
-)
-
-configurations.all {
-  resolutionStrategy.eachDependency {
-    if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-      useVersion(kotlinVersion)
-      because("pin kotlin stdlib")
-    }
+  jvmTest {
+    configurations["kapt"].dependencies.add(
+      mn.micronaut.inject.java.asProvider().get()
+    )
   }
 }

@@ -11,27 +11,34 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
-
-import ElidePackages.allDevelopers
+import elide.internal.conventions.elide
+import elide.internal.conventions.analysis.skipAnalysis
+import elide.internal.conventions.publishing.publish
 
 plugins {
-  `version-catalog`
-  `maven-publish`
-  distribution
-  signing
-  idea
+  id("version-catalog")
 
   id("org.jetbrains.kotlinx.kover")
-
-  id("dev.elide.build.core")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "bom"
+    name = "Elide BOM"
+    description = "Version catalog and BOM for the Elide Framework and Runtime."
 
-// Elide modules.
+    // create a custom publication
+    publish("catalog") {
+      from(components["versionCatalog"])
+    }
+  }
+
+  // disable code analysis tools for this project
+  skipAnalysis()
+}
+
+// Elide modules
 val libraries = listOf(
   "base",
   "core",
@@ -81,10 +88,6 @@ val kotlinPlugins = listOf(
   "redakt",
 )
 
-kover {
-  disable()
-}
-
 catalog {
   versionCatalog {
     // map Elide versions
@@ -92,12 +95,8 @@ catalog {
     version("elide.plugin", libs.versions.elide.plugin.get())
 
     // map each peer version
-    peers.forEach { alias, (_, version) ->
-      version(alias, version.get())
-    }
-    versionAliases.forEach { (alias, version) ->
-      version(alias, version.get())
-    }
+    peers.forEach { alias, (_, version) -> version(alias, version.get()) }
+    versionAliases.forEach { (alias, version) -> version(alias, version.get()) }
 
     // define Elide build plugin
     plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elide.plugin")
@@ -123,56 +122,4 @@ catalog {
       )
     }
   }
-}
-
-val publishAllElidePublications by tasks.registering {
-  group = "Publishing"
-  description = "Publish all release publications for this Elide package"
-  dependsOn(
-    tasks.named("publishAllPublicationsToElideRepository"),
-    tasks.named("publishAllPublicationsToSonatypeRepository"),
-  )
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      groupId = "dev.elide"
-      artifactId = "elide-bom"
-      version = rootProject.version as String
-
-      from(components["versionCatalog"])
-
-      pom {
-        name = "Elide BOM"
-        url = "https://elide.dev"
-        description = "Version catalog and BOM for the Elide Framework and Runtime"
-
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
-        }
-        allDevelopers.map {
-          developers {
-            developer {
-              id = it.id
-              name = it.name
-              if (it.email != null) {
-                email = it.email
-              }
-            }
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
-      }
-    }
-  }
-}
-
-sonarqube {
-  isSkipProject = true
 }

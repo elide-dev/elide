@@ -22,6 +22,8 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   java
@@ -35,6 +37,7 @@ plugins {
   kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.serialization")
+  id("io.micronaut.docker")
   id(libs.plugins.kover.get().pluginId)
   id(libs.plugins.buildConfig.get().pluginId)
   id(libs.plugins.micronaut.application.get().pluginId)
@@ -42,12 +45,27 @@ plugins {
   id(libs.plugins.micronaut.aot.get().pluginId)
   id(libs.plugins.shadow.get().pluginId)
   id(libs.plugins.gradle.checksum.get().pluginId)
-  id("dev.elide.build.docker")
-  id("dev.elide.build")
+
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  kotlin {
+    target = KotlinTarget.JVM
+  }
+
+  docker {
+    useGoogleCredentials = true
+  }
+
+  jvm {
+    alignVersions = false
+  }
+
+  java {
+    configureModularity = false
+  }
+}
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
@@ -296,14 +314,6 @@ dependencies {
 
 application {
   mainClass = entrypoint
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["kotlin"])
-    }
-  }
 }
 
 val targetOs = when {

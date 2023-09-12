@@ -11,57 +11,32 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
-@file:Suppress("UnstableApiUsage")
-
-import ElidePackages.elidePackage
+ import elide.internal.conventions.elide
+ import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
-  id("dev.elide.build")
-  id("dev.elide.build.multiplatform")
-  id("dev.elide.build.publishable")
+  kotlin("multiplatform")
+  id("elide.internal.conventions")
 }
 
-val buildWasm = project.properties["buildWasm"] == "true"
+elide {
+  publishing {
+    id = "wasm"
+    name = "Elide WASM"
+    description = "Integration with WASM/WASI for Elide."
+  }
+  
+  kotlin {
+    target = KotlinTarget.WASM
+  }
+}
 
 kotlin {
-  wasm {
-    d8()
-    browser()
-    nodejs()
-  }
-
-  sourceSets.all {
-    languageSettings.apiVersion = Elide.kotlinLanguage
-    languageSettings.languageVersion = Elide.kotlinLanguage
-  }
-
-  sourceSets {
-    val wasmMain by getting {
-      dependencies {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
-      }
-    }
-    val wasmTest by getting {
-      dependencies {
-        implementation(kotlin("test"))
-      }
-    }
-  }
-
   targets.all {
     compilations.all {
       kotlinOptions {
         options.optIn.add("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
-        options.apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
-        options.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
       }
     }
   }
 }
-
-elidePackage(
-  id = "wasm",
-  name = "Elide WASM",
-  description = "Integration with WASM/WASI for Elide.",
-)

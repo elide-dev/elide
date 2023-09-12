@@ -19,42 +19,60 @@
   "COMPATIBILITY_WARNING",
 )
 
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.native.NativeTarget
 import kotlinx.benchmark.gradle.*
 
 plugins {
+  kotlin("jvm")
+  kotlin("plugin.allopen")
+  kotlin("plugin.serialization")
+
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
-
-  kotlin("plugin.allopen")
-
-  id("dev.elide.build.native.lib")
-  id("dev.elide.build.publishable")
+  id("org.graalvm.buildtools.native")
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
+  
+  id("elide.internal.conventions")
+}
+
+elide {
+  publishing {
+    id = "graalvm"
+    name = "Elide for GraalVM"
+    description = "Integration package with GraalVM and GraalJS."
+
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+
+  kotlin {
+    target = KotlinTarget.JVM
+    explicitApi = true
+  }
+
+  native {
+    target = NativeTarget.LIB
+    useAgent = false
+  }
 }
 
 allOpen {
   annotation("org.openjdk.jmh.annotations.State")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
-
 val encloseSdk = false
 
-kotlin {
-  explicitApi()
-}
-
-sourceSets {
-  val benchmarks by creating {
-    kotlin.srcDirs(
-      "$projectDir/src/benchmarks/kotlin",
-      "$projectDir/src/main/kotlin",
-    )
-  }
+sourceSets.create("benchmarks") {
+  kotlin.srcDirs(
+    "$projectDir/src/benchmarks/kotlin",
+    "$projectDir/src/main/kotlin",
+  )
 }
 
 val initializeAtBuildTime = listOf(
@@ -74,12 +92,6 @@ val sharedLibArgs = listOf(
 )
 
 graalvmNative {
-  testSupport = true
-
-  agent {
-    enabled = false
-  }
-
   binaries {
     create("shared") {
       sharedLibrary = true
@@ -213,12 +225,6 @@ dependencies {
     testCompileOnly(libs.graalvm.sdk)
   }
 }
-
-elidePackage(
-  id = "graalvm",
-  name = "Elide for GraalVM",
-  description = "Integration package with GraalVM and GraalJS.",
-)
 
 // Configurations: Testing
 val testBase: Configuration by configurations.creating {}

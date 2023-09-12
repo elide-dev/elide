@@ -69,7 +69,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var includeJavadoc: Boolean = true
 
     /** Whether to configure Java 9 modularity. */
-    public var configureModularity: Boolean = false
+    public var configureModularity: Boolean = true
   }
 
   /** Configuration for the JVM platform */

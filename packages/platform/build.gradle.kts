@@ -11,24 +11,31 @@
 * License for the specific language governing permissions and limitations under the License.
 */
 
-@file:Suppress("UnstableApiUsage")
+import elide.internal.conventions.elide
+import elide.internal.conventions.analysis.skipAnalysis
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
-  `maven-publish`
-  `java-platform`
-  distribution
-  signing
-  idea
-
+  id("java-platform")
   id("org.jetbrains.kotlinx.kover")
-
-  id("dev.elide.build.core")
-  id("dev.elide.build.publishable")
   id("dev.sigstore.sign")
+
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  skipAnalysis()
+
+  publishing {
+    id = "platform"
+    name = "Elide Platform"
+
+    publish("maven") {
+      from(components["javaPlatform"])
+    }
+  }
+}
 
 // Peer modules.
 val peers = mapOf(
@@ -38,10 +45,6 @@ val peers = mapOf(
   "netty" to ("io.netty:netty-bom" to Versions.netty),
   "micronaut" to ("io.micronaut.platform:micronaut-platform" to Versions.micronaut),
 )
-
-kover {
-  disable()
-}
 
 dependencies {
   constraints {
@@ -74,51 +77,4 @@ dependencies {
     api(libs.kotlinx.serialization.protobuf)
     api(libs.kotlinx.serialization.protobuf.jvm)
   }
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["javaPlatform"])
-      groupId = "dev.elide"
-      artifactId = "elide-platform"
-      version = project.version as String
-
-      pom {
-        name = "Elide Platform"
-        url = "https://elide.dev"
-        description = "Elide Platform and catalog for Gradle."
-
-        licenses {
-          license {
-            name = "MIT License"
-            url = "https://github.com/elide-dev/elide/blob/v3/LICENSE"
-          }
-        }
-        developers {
-          developer {
-            id = "sgammon"
-            name = "Sam Gammon"
-            email = "samuel.gammon@gmail.com"
-          }
-        }
-        scm {
-          url = "https://github.com/elide-dev/elide"
-        }
-      }
-    }
-  }
-}
-
-sonarqube {
-  isSkipProject = true
-}
-
-val publishAllElidePublications by tasks.registering {
-  group = "Publishing"
-  description = "Publish all release publications for this Elide package"
-  dependsOn(
-    tasks.named("publishMavenPublicationToElideRepository"),
-    tasks.named("publishMavenPublicationToSonatypeRepository"),
-  )
 }

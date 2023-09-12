@@ -11,32 +11,49 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.native.NativeTarget
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.JavaVersion.VERSION_17
 
-
 plugins {
+  kotlin("jvm")
+  kotlin("kapt")
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
-  id("dev.elide.build.native.lib")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "server"
+    name = "Elide for Servers"
+    description = "Server-side tools, framework, and runtime, based on GraalVM and Micronaut."
+
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+
+  kotlin {
+    target = KotlinTarget.JVM
+    explicitApi = true
+  }
+
+  java {
+    configureModularity = false
+  }
+
+  native {
+    target = NativeTarget.LIB
+    useAgent = false
+  }
+}
+
 val encloseSdk = false
-
-kotlin {
-  explicitApi()
-}
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
@@ -239,17 +256,6 @@ val initializeAtRuntimeTest = emptyList<String>().map {
 }
 
 graalvmNative {
-  testSupport = true
-
-  metadataRepository {
-    enabled = true
-    version = GraalVMVersions.graalvmMetadata
-  }
-
-  agent {
-    enabled = false
-  }
-
   binaries {
     named("main") {
       sharedLibrary = true
@@ -261,12 +267,4 @@ graalvmNative {
       buildArgs(commonNativeArgs.plus(initializeAtBuildTimeTest).plus(initializeAtRuntimeTest))
     }
   }
-}
-
-elidePackage(
-  id = "server",
-  name = "Elide for Servers",
-  description = "Server-side tools, framework, and runtime, based on GraalVM and Micronaut.",
-) {
-  java9Modularity = false
 }

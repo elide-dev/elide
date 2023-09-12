@@ -17,13 +17,14 @@ internal fun Project.configureKotlinBuild(
   configureKapt: Boolean = false,
   configureAllOpen: Boolean = false,
   configureNoArgs: Boolean = false,
+  configureJavaModules: Boolean = false,
 ) {
   val kotlinVersion = findProperty(Versions.KOTLIN)?.toString()
   val kotlinSdk = findProperty(Versions.KOTLIN_SDK)?.toString()
   val useStrictMode = findProperty(Kotlin.STRICT_MODE).toString().toBoolean()
 
   // Multiplatform targets have a few extra settings
-  if (target !is JVM) configureKotlinMultiplatform(target)
+  if (target !is JVM) configureKotlinMultiplatform(target, configureJavaModules)
 
   // base Kotlin options
   extensions.getByType(KotlinProjectExtension::class.java).apply {

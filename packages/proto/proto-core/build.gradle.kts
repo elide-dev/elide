@@ -11,107 +11,70 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-  "UNUSED_VARIABLE",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  `maven-publish`
-  distribution
-  signing
-
-  id("dev.elide.build.multiplatform.jvm")
-  id("dev.elide.build.jvm17")
-  id("dev.elide.build.publishable")
+  kotlin("multiplatform")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
-
-val javaLanguageVersion = project.properties["versions.java.minimum"] as String
-val javaLanguageTarget = project.properties["versions.java.minimum"] as String
 val buildWasm = project.properties["buildWasm"] == "true"
 
-kotlin {
+elide {
+  publishing {
+    id = "proto-core"
+    name = "Elide Protocol: API"
+    description = "API headers and services for the Elide Protocol."
+  }
+
+  kotlin {
+    target = (KotlinTarget.JVM + KotlinTarget.JsNode).let {
+      if(buildWasm) it + KotlinTarget.WASM else it
+    }
+  }
+
   jvm {
-    withJava()
-  }
-  js {
-    browser()
-    nodejs()
-  }
-  if (buildWasm) wasm {
-    browser()
-    nodejs()
+    forceJvm17 = true
   }
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        // Common
-        api(libs.kotlinx.datetime)
-        implementation(kotlin("stdlib"))
-        implementation(projects.packages.core)
-        implementation(projects.packages.base)
-      }
-    }
-    val commonTest by getting {
-      dependencies {
-        implementation(kotlin("test"))
-        implementation(projects.packages.test)
-      }
-    }
+  // disable module-info processing (not present)
+  java {
+    includeSources = false
+    configureModularity = false
+  }
+}
 
-    /**
-     * Variant: Core
-     */
-    val jvmMain by getting {
-      dependencies {
-        // Common
-        implementation(kotlin("stdlib-jdk8"))
-      }
-    }
-    val jvmTest by getting {
-      dependencies {
-        // Common
-        implementation(libs.truth)
-        implementation(libs.truth.java8)
-        implementation(libs.junit.jupiter.api)
-        implementation(libs.junit.jupiter.params)
-        runtimeOnly(libs.junit.jupiter.engine)
-      }
-    }
+dependencies {
+  common {
+    api(libs.kotlinx.datetime)
+    implementation(projects.packages.core)
+    implementation(projects.packages.base)
+  }
+
+  commonTest {
+    implementation(projects.packages.test)
+  }
+
+  jvm {
+    implementation(kotlin("stdlib-jdk8"))
+  }
+
+  jvmTest {
+    implementation(libs.truth)
+    implementation(libs.truth.java8)
+    implementation(libs.junit.jupiter.api)
+    implementation(libs.junit.jupiter.params)
+    runtimeOnly(libs.junit.jupiter.engine)
   }
 }
 
 // Configurations: Testing
 val testBase: Configuration by configurations.creating {}
 
-tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = javaLanguageTarget
-  targetCompatibility = javaLanguageTarget
-  options.isFork = true
-  options.isIncremental = true
-  options.isWarnings = false
-  options.compilerArgs.add("-Xlint:-deprecation")
-}
-
 tasks {
-  jvmTest {
-    useJUnitPlatform()
-  }
-
-  /**
-   * Variant: Core
-   */
   val testJar by registering(Jar::class) {
     description = "Base (abstract) test classes for all implementations"
     archiveClassifier = "tests"
@@ -119,15 +82,6 @@ tasks {
   }
 
   artifacts {
-    archives(jvmJar)
     add("testBase", testJar)
   }
-}
-
-elidePackage(
-  id = "proto-core",
-  name = "Elide Protocol: API",
-  description = "API headers and services for the Elide Protocol.",
-) {
-  java9Modularity = false
 }

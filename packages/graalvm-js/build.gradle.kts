@@ -11,92 +11,56 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "UNUSED_VARIABLE",
-  "DSL_SCOPE_VIOLATION",
-)
-@file:OptIn(
-  org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.*
 
 plugins {
-  id("dev.elide.build.js")
-  id("dev.elide.build.publishable")
+  kotlin("multiplatform")
+  id("elide.internal.conventions")
 }
-
-group = "dev.elide"
-version = rootProject.version as String
 
 val buildWasm = project.properties["buildWasm"] == "true"
 
-kotlin {
-  explicitApi()
-
-  js {
-    generateTypeScriptDefinitions()
-//    compilations["main"].packageJson {
-//      customField("resolutions", mapOf(
-//        "jszip" to "3.10.1",
-//        "node-fetch" to "3.3.2",
-//      ))
-//    }
-    compilations.all {
-      kotlinOptions {
-        sourceMap = true
-        moduleKind = "umd"
-        metaInfo = true
-      }
-    }
-  }
-  jvm()
-  if (buildWasm) wasm {
-    d8()
-    browser()
-    nodejs()
+elide {
+  publishing {
+    id = "graalvm-js"
+    name = "Elide JavaScript for GraalVM"
+    description = "Integration package with GraalVM and GraalJS."
   }
 
-  sourceSets {
-    val jsMain by getting {
-      dependencies {
-        api(projects.packages.ssr)
-        api(projects.packages.core)
-        api(projects.packages.base)
-        api(npm("esbuild", libs.versions.npm.esbuild.get()))
-        api(npm("typescript", libs.versions.npm.typescript.get()))
-        api(npm("prepack", libs.versions.npm.prepack.get()))
-        api(npm("buffer", libs.versions.npm.buffer.get()))
-        api(npm("readable-stream", libs.versions.npm.stream.get()))
-        api(npm("web-streams-polyfill", libs.versions.npm.webstreams.get()))
-        api(npm("@emotion/css", libs.versions.npm.emotion.core.get()))
-        api(npm("@emotion/server", libs.versions.npm.emotion.server.get()))
-
-        implementation(libs.kotlinx.coroutines.core)
-        implementation(libs.kotlinx.wrappers.node)
-        implementation(libs.kotlinx.wrappers.emotion)
-        implementation(libs.kotlinx.wrappers.history)
-        implementation(libs.kotlinx.wrappers.typescript)
-        implementation(libs.kotlinx.wrappers.react.router.dom)
-        implementation(libs.kotlinx.wrappers.remix.run.router)
-      }
+  kotlin {
+    target = KotlinTarget.JsBrowser.let {
+      if(buildWasm) it + KotlinTarget.WASM else it
     }
 
-    val jsTest by getting {
-      dependencies {
-        // Testing
-        implementation(projects.packages.test)
-      }
-    }
+    explicitApi = true
   }
 }
 
-elidePackage(
-  id = "graalvm-js",
-  name = "Elide JavaScript for GraalVM",
-  description = "Integration package with GraalVM and GraalJS.",
-) {
-  java9Modularity = false
+dependencies {
+  js {
+    api(projects.packages.ssr)
+    api(projects.packages.core)
+    api(projects.packages.base)
+    api(npm("esbuild", libs.versions.npm.esbuild.get()))
+    api(npm("typescript", libs.versions.npm.typescript.get()))
+    api(npm("prepack", libs.versions.npm.prepack.get()))
+    api(npm("buffer", libs.versions.npm.buffer.get()))
+    api(npm("readable-stream", libs.versions.npm.stream.get()))
+    api(npm("web-streams-polyfill", libs.versions.npm.webstreams.get()))
+    api(npm("@emotion/css", libs.versions.npm.emotion.core.get()))
+    api(npm("@emotion/server", libs.versions.npm.emotion.server.get()))
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.wrappers.node)
+    implementation(libs.kotlinx.wrappers.emotion)
+    implementation(libs.kotlinx.wrappers.history)
+    implementation(libs.kotlinx.wrappers.typescript)
+    implementation(libs.kotlinx.wrappers.react.router.dom)
+    implementation(libs.kotlinx.wrappers.remix.run.router)
+  }
+
+  jsTest {
+    implementation(projects.packages.test)
+  }
 }

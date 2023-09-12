@@ -11,35 +11,50 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.native.NativeTarget
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   id("io.micronaut.library")
   id("io.micronaut.graalvm")
 
+  kotlin("jvm")
   kotlin("kapt")
   kotlin("plugin.allopen")
 
-  id("dev.elide.build.native.lib")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "graalvm-py"
+    name = "Elide Python for GraalVM"
+    description = "Integration package with GraalVM and GraalPy."
+
+    publish("jvm") {
+      from(components["kotlin"])
+    }
+  }
+  
+  kotlin {
+    target = KotlinTarget.JVM
+    explicitApi = true
+  }
+
+  java {
+    // disable module-info processing (not present)
+    configureModularity = false
+  }
+
+  native {
+    target = NativeTarget.LIB
+    useAgent = false
+  }
+}
 
 val encloseSdk = false
-
-kotlin {
-  explicitApi()
-}
-
-graalvmNative.agent.enabled = false
 
 dependencies {
   implementation(libs.kotlinx.coroutines.core)
@@ -57,12 +72,4 @@ dependencies {
 
 tasks.jar.configure {
   exclude("**/runtime.current.json")
-}
-
-elidePackage(
-  id = "graalvm-py",
-  name = "Elide Python for GraalVM",
-  description = "Integration package with GraalVM and GraalPy.",
-) {
-  java9Modularity = false
 }

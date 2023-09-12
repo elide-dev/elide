@@ -13,7 +13,10 @@ import elide.internal.conventions.kotlin.KotlinTarget.*
  * - configure publications?
  */
 @OptIn(ExperimentalWasmDsl::class)
-internal fun Project.configureKotlinMultiplatform(target: KotlinTarget) {
+internal fun Project.configureKotlinMultiplatform(
+  target: KotlinTarget,
+  configureJavaModules: Boolean,
+) {
   // quick sanity check (JVM is not allowed as a pure target, only as part of a KMP target)
   require(target !is JVM) { "Kotlin JVM target should use the Multiplatform plugin." }
 
@@ -23,7 +26,7 @@ internal fun Project.configureKotlinMultiplatform(target: KotlinTarget) {
       withJava()
       
       // java modules support
-      configureJavaModularity()
+      if(configureJavaModules) configureJavaModularity()
 
       // use JUnit5 runner
       testRuns.getByName("test").executionTask.configure { useJUnitPlatform() }

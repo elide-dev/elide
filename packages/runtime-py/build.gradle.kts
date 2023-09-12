@@ -11,70 +11,29 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
-  id("dev.elide.build.native.lib")
+  kotlin("jvm")
+  id("elide.internal.conventions")
 }
 
-group = "dev.elide"
-version = rootProject.version as String
+elide {
+  publishing {
+    id = "runtime-py"
+    name = "Elide Python Runtime"
+    description = "Python plugin for the Elide runtime."
 
-elidePackage(
-  id = "runtime-py",
-  name = "Elide Python Runtime",
-  description = "Package providing the Python plugin for the Elide runtime.",
-)
-
-kotlin {
-  explicitApi()
-}
-
-val initializeAtBuildTime = listOf(
-  "kotlin.DeprecationLevel",
-  "kotlin.annotation.AnnotationRetention",
-  "kotlin.annotation.AnnotationTarget",
-  "kotlin.coroutines.intrinsics.CoroutineSingletons",
-)
-
-val initializeAtBuildTimeTest = listOf(
-  "org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
-  "org.junit.platform.launcher.core.LauncherConfig",
-)
-
-val sharedLibArgs = listOf(
-  "-H:+AuxiliaryEngineCache",
-)
-
-graalvmNative {
-  testSupport = true
-
-  agent {
-    enabled = false
+    publish("maven") {
+      from(components["kotlin"])
+    }
   }
 
-  binaries {
-    val mergedBuildArgs = initializeAtBuildTime.map { arg ->
-      "--initialize-at-build-time=$arg"
-    }.plus(sharedLibArgs)
-
-    create("shared") {
-      sharedLibrary = true
-      buildArgs(mergedBuildArgs)
-    }
-
-    named("test") {
-      fallback = false
-      sharedLibrary = false
-      quickBuild = true
-      buildArgs(mergedBuildArgs)
-    }
+  kotlin {
+    target = KotlinTarget.JVM
+    explicitApi = true
   }
 }
 
@@ -88,15 +47,5 @@ dependencies {
   // Testing
   testImplementation(projects.packages.test)
   testImplementation(libs.junit.jupiter.api)
-  testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
-}
-
-tasks {
-  test {
-    maxHeapSize = "2G"
-    maxParallelForks = 4
-    environment("ELIDE_TEST", "true")
-    systemProperty("elide.test", "true")
-  }
 }

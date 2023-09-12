@@ -151,6 +151,10 @@ if (buildPlugins == "true") {
   )
 }
 
+includeBuild(
+  "tools/elide-build",
+)
+
 if (buildSsg == "true") {
   include(
     ":packages:ssg",

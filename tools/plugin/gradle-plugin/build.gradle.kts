@@ -15,7 +15,7 @@ import java.util.Properties
 
 plugins {
     java
-    embeddedKotlin("kapt") apply false
+    kotlin("kapt") apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover)
     alias(libs.plugins.detekt)

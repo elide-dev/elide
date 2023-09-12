@@ -39,7 +39,6 @@ auto_service = "1.1.1"
 kover_plugin = "0.7.3"
 testLoggerPlugin = "3.2.0"
 dependencyAnalysis = "1.20.0"
-
 micronaut = "4.1.0"
 micronaut_plugin = "4.0.3"
 

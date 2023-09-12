@@ -51,7 +51,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     languageVersion = Elide.kotlinLanguage
     jvmTarget = javaLanguageTarget
     javaParameters = true
-    freeCompilerArgs = Elide.jvmCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.jvmCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = strictMode
     incremental = true
   }

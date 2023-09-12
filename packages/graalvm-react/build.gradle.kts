@@ -44,13 +44,13 @@ kotlin {
         moduleKind = "umd"
         metaInfo = true
       }
-      packageJson {
-        customField("resolutions", mapOf(
-          "jszip" to "3.10.1",
-          "node-fetch" to "3.3.2",
-          "typescript" to "4.9.5",
-        ))
-      }
+//      packageJson {
+//        customField("resolutions", mapOf(
+//          "jszip" to "3.10.1",
+//          "node-fetch" to "3.3.2",
+//          "typescript" to "4.9.5",
+//        ))
+//      }
     }
   }
   jvm()

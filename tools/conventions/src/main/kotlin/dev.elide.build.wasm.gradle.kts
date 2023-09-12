@@ -35,7 +35,7 @@ val strictMode = project.properties["strictMode"] as? String == "true"
 kotlin {
   org.jetbrains.kotlin.gradle.plugin.VariantImplementationFactories.getProvider(project)
 
-  wasm {
+  wasmJs {
     d8()
     nodejs()
     browser()
@@ -73,7 +73,7 @@ tasks.withType<KotlinCompileCommon>().configureEach {
   kotlinOptions.apply {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
-    freeCompilerArgs = Elide.jsCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.jsCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = strictMode
   }
 }

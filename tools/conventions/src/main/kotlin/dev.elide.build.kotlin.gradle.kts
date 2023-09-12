@@ -42,7 +42,7 @@ tasks.withType<KotlinCompile>().configureEach {
     languageVersion = Elide.kotlinLanguage
     jvmTarget = javaLanguageTarget
     javaParameters = true
-    freeCompilerArgs = Elide.kaptCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.kaptCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = strictMode
     incremental = true
   }

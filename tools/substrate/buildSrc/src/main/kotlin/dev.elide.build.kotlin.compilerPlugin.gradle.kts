@@ -54,7 +54,7 @@ tasks.withType<KotlinCompile>().configureEach {
     incremental = true
     freeCompilerArgs = freeCompilerArgs.plus(listOf(
       "-Xallow-unstable-dependencies",
-    ))
+    )).toSortedSet().toList()
   }
 }
 

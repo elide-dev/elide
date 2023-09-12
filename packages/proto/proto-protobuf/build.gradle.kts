@@ -75,7 +75,7 @@ kotlin {
         // do not warn for generated code
         "-nowarn",
         "-Xjavac-arguments=-Xlint:-deprecation",
-      ))
+      )).toSortedSet().toList()
     }
   }
 
@@ -87,7 +87,7 @@ kotlin {
         // do not warn for generated code
         "-nowarn",
         "-Xjavac-arguments=-Xlint:-deprecation",
-      ))
+      )).toSortedSet().toList()
     }
   }
 }

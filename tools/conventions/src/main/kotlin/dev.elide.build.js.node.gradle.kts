@@ -72,7 +72,7 @@ tasks.withType<KotlinCompileCommon>().configureEach {
   kotlinOptions.apply {
     apiVersion = kotlinLanguageVersion
     languageVersion = kotlinLanguageVersion
-    freeCompilerArgs = Elide.jsCompilerArgs
+    freeCompilerArgs = freeCompilerArgs.plus(Elide.jsCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = strictMode
   }
 }

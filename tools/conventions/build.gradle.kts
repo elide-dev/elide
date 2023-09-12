@@ -55,9 +55,9 @@ dependencies {
   implementation(libs.plugin.nexusPublishing)
   implementation(libs.plugin.ksp)
   implementation(libs.plugin.sigstore)
-  implementation(embeddedKotlin("allopen"))
-  implementation(embeddedKotlin("noarg"))
-  implementation(embeddedKotlin("serialization"))
+  implementation(kotlin("allopen"))
+  implementation(kotlin("noarg"))
+  implementation(kotlin("serialization"))
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion") {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-sam-with-receiver")
   }

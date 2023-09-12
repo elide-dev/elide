@@ -43,9 +43,9 @@ dependencies {
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.kover)
   implementation(libs.plugin.ksp)
-  implementation(embeddedKotlin("allopen"))
-  implementation(embeddedKotlin("noarg"))
-  implementation(embeddedKotlin("serialization"))
+  implementation(kotlin("allopen"))
+  implementation(kotlin("noarg"))
+  implementation(kotlin("serialization"))
   implementation(libs.plugin.kotlinx.abiValidator)
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
   if (enableAtomicfu) {

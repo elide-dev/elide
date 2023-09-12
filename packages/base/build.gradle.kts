@@ -47,14 +47,6 @@ kotlin {
     nodejs()
     generateTypeScriptDefinitions()
 
-    compilations["main"].packageJson {
-      customField("resolutions", mapOf(
-        "jszip" to "3.10.1",
-        "node-fetch" to "3.3.2",
-        "typescript" to "4.9.5",
-      ))
-    }
-
     compilations.all {
       kotlinOptions {
         sourceMap = true
@@ -155,21 +147,36 @@ kotlin {
 
     if (buildMingw) {
       val mingwX64Main by getting { dependsOn(nativeMain) }
+      val mingwX64Test by getting { dependsOn(nativeTest) }
     }
     val macosArm64Main by getting { dependsOn(nativeMain) }
+    val macosArm64Test by getting { dependsOn(nativeTest) }
     val iosArm64Main by getting { dependsOn(nativeMain) }
+    val iosArm64Test by getting { dependsOn(nativeTest) }
     val iosX64Main by getting { dependsOn(nativeMain) }
+    val iosX64Test by getting { dependsOn(nativeTest) }
     val watchosArm32Main by getting { dependsOn(nativeMain) }
+    val watchosArm32Test by getting { dependsOn(nativeTest) }
     val watchosArm64Main by getting { dependsOn(nativeMain) }
+    val watchosArm64Test by getting { dependsOn(nativeTest) }
     val watchosX64Main by getting { dependsOn(nativeMain) }
+    val watchosX64Test by getting { dependsOn(nativeTest) }
     val tvosArm64Main by getting { dependsOn(nativeMain) }
+    val tvosArm64Test by getting { dependsOn(nativeTest) }
     val tvosX64Main by getting { dependsOn(nativeMain) }
+    val tvosX64Test by getting { dependsOn(nativeTest) }
     if (buildWasm) {
-      val wasmMain by getting {
+      val commonWasmMain by creating {
         dependsOn(commonMain)
       }
-      val wasmTest by getting {
+      val commonWasmTest by creating {
         dependsOn(commonTest)
+      }
+      val wasmJsMain by getting {
+        dependsOn(commonWasmMain)
+      }
+      val wasmJsTest by getting {
+        dependsOn(commonWasmTest)
       }
     }
   }

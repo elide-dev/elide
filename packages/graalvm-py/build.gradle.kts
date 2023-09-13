@@ -33,7 +33,7 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
-val encloseSdk = false
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 kotlin {
   explicitApi()

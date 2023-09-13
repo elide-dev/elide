@@ -65,9 +65,9 @@ val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
 val enableDashboard = false
-val encloseSdk = false
 val oracleGvm = false
 val enableEdge = true
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 buildscript {
   repositories {
@@ -934,9 +934,11 @@ configurations.all {
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
   }
 
-  // provided by runtime
-  exclude(group = "org.graalvm.sdk", module = "graal-sdk")
-  exclude(group = "org.graalvm.truffle", module = "truffle-api")
+  if (!encloseSdk) {
+    // provided by runtime
+    exclude(group = "org.graalvm.sdk", module = "graal-sdk")
+    exclude(group = "org.graalvm.truffle", module = "truffle-api")
+  }
 }
 
 afterEvaluate {

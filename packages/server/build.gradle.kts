@@ -54,7 +54,9 @@ elide {
   }
 }
 
-val encloseSdk = false
+group = "dev.elide"
+version = rootProject.version as String
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 micronaut {
   version = libs.versions.micronaut.lib.get()

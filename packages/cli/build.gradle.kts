@@ -67,6 +67,7 @@ val enableProguard = false
 val enableDashboard = false
 val encloseSdk = false
 val oracleGvm = false
+val enableEdge = true
 
 buildscript {
   repositories {
@@ -83,7 +84,7 @@ buildscript {
 if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 
 val jvmCompileArgs = listOf(
-  // "--enable-preview",
+  "--enable-preview",
   "--add-exports=java.base/jdk.internal.module=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
@@ -147,8 +148,8 @@ kotlin {
 }
 
 // use consistent compose plugin version
-//the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
-//  libs.versions.compose.get()
+the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
+  libs.versions.compose.get()
 
 kapt {
   useBuildCache = true
@@ -188,17 +189,19 @@ dependencies {
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
-  implementation(projects.packages.graalvmJvm)
-  implementation(projects.packages.graalvmLlvm)
-  implementation(projects.packages.graalvmPy)
-  implementation(projects.packages.graalvmRb)
-  implementation(projects.packages.graalvmKt)
-  implementation(projects.packages.graalvmWasm)
+  if (enableEspresso) implementation(projects.packages.graalvmJvm)
+  if (enableLlvm) implementation(projects.packages.graalvmLlvm)
+  if (enablePython) implementation(projects.packages.graalvmPy)
+  if (enableRuby) implementation(projects.packages.graalvmRb)
+  if (enableEspresso) implementation(projects.packages.graalvmKt)
+  if (enableWasm) implementation(projects.packages.graalvmWasm)
 
   api(libs.picocli)
+  api(libs.slf4j)
+  api(libs.slf4j.jul)
+  api(libs.slf4j.log4j.bridge)
+
   implementation(libs.picocli.jansi.graalvm)
-  implementation(libs.slf4j)
-  implementation(libs.slf4j.jul)
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
@@ -212,6 +215,18 @@ dependencies {
 
   api(mn.micronaut.inject)
   implementation(mn.micronaut.picocli)
+  implementation(mn.micronaut.http)
+  implementation(mn.micronaut.http.netty)
+  implementation(mn.micronaut.http.client)
+  implementation(mn.micronaut.http.server)
+  implementation(mn.netty.handler)
+  implementation(mn.netty.handler.proxy)
+  implementation(mn.netty.codec.http)
+  implementation(mn.netty.codec.http2)
+  implementation(mn.netty.buffer)
+  implementation(mn.netty.incubator.codec.http3)
+  implementation(mn.micronaut.websocket)
+
   runtimeOnly(mn.micronaut.context)
   runtimeOnly(mn.micronaut.kotlin.runtime)
 
@@ -220,6 +235,10 @@ dependencies {
   runtimeOnly(projects.packages.proto.protoKotlinx)
 
   runtimeOnly(mn.micronaut.graal)
+  implementation("org.eclipse.jetty.npn:npn-api:8.1.2.v20120308")
+  implementation("org.eclipse.jetty.alpn:alpn-api:1.1.3.v20160715")
+
+  implementation(libs.netty.tcnative)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -235,10 +254,9 @@ dependencies {
       when {
         Os.isFamily(Os.FAMILY_MAC) -> {
           implementation(libs.netty.transport.native.kqueue)
-          implementation(libs.netty.transport.native.kqueue)
-          implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
           implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
           implementation(libs.netty.resolver.dns.native.macos)
+          implementation(variantOf(libs.netty.tcnative.boringssl.static) { classifier("osx-$arch") })
         }
 
         else -> {
@@ -443,15 +461,16 @@ val commonNativeArgs = listOf(
   "--language:icu4j",
   "--language:regex",
   "--no-fallback",
-  // "--enable-preview",
+  "--enable-preview",
   "--enable-http",
   "--enable-https",
+  "--enable-all-security-services",
   "--install-exit-handlers",
   "-H:CStandard=C11",
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
-  "-H:-EnableAllSecurityServices",
+  "-H:+EnableAllSecurityServices",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
@@ -462,19 +481,13 @@ val commonNativeArgs = listOf(
   if (enableLlvm) "--language:llvm" else null,
   if (enablePython) "--language:python" else null,
   if (enableRuby) "--language:ruby" else null,
-)).plus(
-  if (enableTools) listOf(
+)).plus(if (enableTools) listOf(
     "--tool:chromeinspector",
     "--tool:coverage",
     "--tool:profiler",
-  ) else emptyList()
-).plus(
-  if (enableTruffleJson) listOf(
-    "--language:truffle-json",
-  ) else emptyList()
-).plus(
-  jvmModuleArgs
-).plus(if (oracleGvm) commonGvmArgs else emptyList())
+) else emptyList()).plus(if (enableEdge) listOfNotNull(
+  if (!enableTruffleJson) null else "--language:truffle-json",
+) else emptyList()).plus(if (oracleGvm) commonGvmArgs else emptyList())
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -525,8 +538,8 @@ val experimentalFlags = listOf(
 
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
-//  "-O3",
-//  "-flto",
+  "-O3",
+  "-flto",
 )
 
 // PGO profiles to specify in release mode.
@@ -588,29 +601,32 @@ val initializeAtBuildTime = listOf(
   "com.google.common.jimfs.Feature",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "ch.qos.logback",
+  "org.slf4j.MarkerFactory",
   "org.slf4j.simple.SimpleLogger",
   "org.slf4j.impl.StaticLoggerBinder",
-//  "org.codehaus.stax2.typed.Base64Variants",
-//  "org.bouncycastle.util.Properties",
-//  "org.bouncycastle.util.Strings",
-//  "org.bouncycastle.crypto.macs.HMac",
-//  "org.bouncycastle.crypto.prng.drbg.Utils",
-//  "org.bouncycastle.jcajce.provider.drbg.DRBG",
-//  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
-//  "com.sun.tools.doclint",
-//  "jdk.jshell.Snippet${'$'}SubKind",
-//  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
+  "org.codehaus.stax2.typed.Base64Variants",
+  "org.bouncycastle.util.Properties",
+  "org.bouncycastle.util.Strings",
+  "org.bouncycastle.crypto.macs.HMac",
+  "org.bouncycastle.crypto.prng.drbg.Utils",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
+  "com.sun.tools.doclint",
+  "jdk.jshell.Snippet${'$'}SubKind",
+  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
   "org.xml.sax.helpers.LocatorImpl",
   "org.xml.sax.helpers.AttributesImpl",
   "org.sqlite.util.ProcessRunner",
   "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
+  "io.micronaut.http.util.HttpTypeInformationProvider",
+  "io.micronaut.inject.provider.ProviderTypeInformationProvider",
+  "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
   "com.google.common.collect.MapMakerInternalMap",
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueSegment",
   "com.google.common.collect.MapMakerInternalMap${'$'}EntrySet",
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
-
   //
 //  "elide.tool.cli.HttpRequestFactoryFactory",
 //  "elide.tool.cli.HttpResponseFactoryFactory",
@@ -626,12 +642,11 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
-  "io.netty.channel.ChannelInitializer",
+//  "io.netty.channel.ChannelInitializer",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
   "com.sun.tools.javac.file.Locations",
-//  "org.bouncycastle.jcajce.provider.drbg.DRBG${'$'}NonceAndIV",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -660,7 +675,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "--gc=serial",
   "-Delide.vm.engine.preinitialize=true",
-  "-H:+AllowJRTFileSystem",
   "-H:InitialCollectionPolicy=Adaptive",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
@@ -678,7 +692,6 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-march=native",
   "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
   "-H:+StaticExecutableWithDynamicLibC",
-  "-H:+AllowJRTFileSystem",
 )).plus(
   if (enableG1) listOf(
     "--gc=G1",

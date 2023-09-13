@@ -111,6 +111,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
     private val initialized: AtomicBoolean = AtomicBoolean(false)
+    private val engine: VMEngine = VMEngine.create()
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
@@ -142,49 +143,49 @@ import org.graalvm.polyglot.Engine as VMEngine
       names = ["--js", "--javascript", "-js"],
       description = ["Equivalent to passing '--language=JS'."],
     )
-    internal var javascript: Boolean = true
+    internal var javascript: Boolean = engine.languages.containsKey("js")
 
     /** Flag for JVM support. */
     @Option(
       names = ["--jvm", "--java", "-java"],
       description = ["Equivalent to passing '--language=JVM'."],
     )
-    internal var jvm: Boolean = false  // not yet implemented (experimental)
+    internal var jvm: Boolean = engine.languages.containsKey("java")
 
     /** Flag for Kotlin support. */
     @Option(
       names = ["--kotlin", "--kt", "-kt"],
       description = ["Equivalent to passing '--language=KOTLIN'."],
     )
-    internal var kotlin: Boolean = false
+    internal var kotlin: Boolean = jvm
 
     /** Flag for Ruby support. */
     @Option(
       names = ["--ruby", "--rb", "-rb"],
       description = ["Equivalent to passing '--language=RUBY'."],
     )
-    internal var ruby: Boolean = true
+    internal var ruby: Boolean = engine.languages.containsKey("ruby")
 
     /** Flag for Python support. */
     @Option(
       names = ["--python", "--py", "-py"],
       description = ["Equivalent to passing '--language=PYTHON'."],
     )
-    internal var python: Boolean = true
+    internal var python: Boolean = engine.languages.containsKey("python")
 
     /** Flag for WebAssembly support. */
     @Option(
       names = ["--wasm"],
       description = ["Equivalent to passing '--language=WASM'."],
     )
-    internal var wasm: Boolean = true
+    internal var wasm: Boolean = engine.languages.containsKey("wasm")
 
     /** Flag for LLVM support. */
     @Option(
       names = ["--llvm"],
       description = ["Equivalent to passing '--language=LLVM'."],
     )
-    internal var llvm: Boolean = true
+    internal var llvm: Boolean = engine.languages.containsKey("llvm")
 
     // Calculated and cached suite of supported languages loaded into the VM space.
     private val langs: EnumSet<GuestLanguage> by lazy {

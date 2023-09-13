@@ -125,6 +125,12 @@ public final synthetic class elide/server/assets/$ServerAssetIndex$AssetStartupL
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final synthetic class elide/server/assets/$ServerAssetIndex$AssetStartupListener$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public final synthetic class elide/server/assets/$ServerAssetIndex$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

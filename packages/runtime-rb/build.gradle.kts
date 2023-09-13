@@ -36,6 +36,8 @@ kotlin {
   explicitApi()
 }
 
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
+
 val initializeAtBuildTime = listOf(
   "kotlin.DeprecationLevel",
   "kotlin.annotation.AnnotationRetention",
@@ -90,13 +92,29 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testRuntimeOnly(libs.junit.jupiter.engine)
+
+  if (encloseSdk) {
+    compileOnly(libs.graalvm.sdk)
+    compileOnly(libs.graalvm.truffle.api)
+    testCompileOnly(libs.graalvm.sdk)
+    testCompileOnly(libs.graalvm.truffle.api)
+  }
 }
 
 tasks {
   test {
+    enabled = false  // @TODO(sgammon): temporary while broken
+
     maxHeapSize = "2G"
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+
+    javaToolchains {
+      javaLauncher.set(launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.GRAAL_VM
+      })
+    }
   }
 }

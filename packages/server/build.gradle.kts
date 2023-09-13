@@ -185,10 +185,26 @@ dependencies {
   testImplementation(projects.packages.test)
 }
 
-tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
-  dokkaSourceSets {
-    configureEach {
-      includes.from("module.md")
+tasks {
+  withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
+    dokkaSourceSets {
+      configureEach {
+        includes.from("module.md")
+      }
+    }
+  }
+
+  test {
+    maxHeapSize = "2G"
+    maxParallelForks = 4
+    environment("ELIDE_TEST", "true")
+    systemProperty("elide.test", "true")
+
+    javaToolchains {
+      javaLauncher.set(launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.GRAAL_VM
+      })
     }
   }
 }

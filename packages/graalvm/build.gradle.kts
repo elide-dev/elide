@@ -214,7 +214,11 @@ dependencies {
 
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
+    compileOnly(libs.graalvm.svm)
     compileOnly(libs.graalvm.truffle.api)
+    testCompileOnly(libs.graalvm.sdk)
+    testCompileOnly(libs.graalvm.svm)
+    testCompileOnly(libs.graalvm.truffle.api)
   }
 
   // Testing
@@ -224,10 +228,6 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testImplementation(mn.micronaut.test.junit5)
   testRuntimeOnly(libs.junit.jupiter.engine)
-
-  if (encloseSdk) {
-    testCompileOnly(libs.graalvm.sdk)
-  }
 }
 
 // Configurations: Testing

@@ -67,7 +67,6 @@ closure_stylesheets = "1.5.0"
 picocli = "4.7.5"
 picocli_jansi_graalvm = "1.2.0"
 slf4j = "2.0.9"
-slf4j_jul = "2.0.9"
 jakarta = "2.0.1"
 jakarta_persistence = "3.1.0"
 jakarta_annotation_api = "2.1.1"
@@ -367,7 +366,8 @@ picocli_jline3 = { group = "info.picocli", name = "picocli-shell-jline3", versio
 picocli_jansi_graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli_jansi_graalvm" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j_jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
-slf4j_jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j_jul" }
+slf4j_jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
+slf4j_log4j_bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
 jakarta_annotation_api = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakarta_annotation_api" }
 jakarta_inject = { group = "jakarta.inject", name = "jakarta.inject-api", version.ref = "jakarta" }
 jakarta_persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakarta_persistence" }

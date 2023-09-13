@@ -413,21 +413,21 @@ micronaut {
   }
 
   aot {
-//    configFile = file("$projectDir/aot-native.properties")
+    configFile = file("$projectDir/aot-native.properties")
 
-    convertYamlToJava = false
-    precomputeOperations = false
-    cacheEnvironment = false
-    deduceEnvironment = false
+    convertYamlToJava = true
+    precomputeOperations = true
+    cacheEnvironment = true
+    deduceEnvironment = true
     replaceLogbackXml = false
 
-    optimizeServiceLoading = false
+    optimizeServiceLoading = true
     optimizeClassLoading = true
-    optimizeNetty = false
+    optimizeNetty = true
     possibleEnvironments = listOf("cli")
 
     netty {
-      enabled = false
+      enabled = true
       machineId = "13-37-7C-D1-6F-F5"
       pid = "1337"
     }
@@ -696,7 +696,9 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 
 val windowsReleaseArgs = windowsOnlyArgs
 
-val darwinReleaseArgs = darwinOnlyArgs.plus(emptyList())
+val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
+  "-march=native",
+))
 
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",

@@ -539,8 +539,9 @@ val experimentalFlags = listOf(
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-O3",
-  "-flto",
-)
+).plus(if (!enableRuby) listOf(
+  "-flto"
+) else emptyList())
 
 // PGO profiles to specify in release mode.
 val profiles: List<String> = listOf(
@@ -554,6 +555,7 @@ val gvmReleaseFlags: List<String> = listOf(
   "-H:+AOTAggregateProfiles",
   "-H:+AggressiveColdCodeOptimizations",
   "-H:+VectorizeSIMD",
+  "-H:+LSRAOptimization",
   "-H:+MLProfileInference",
   "-H:+BouncyCastleIntrinsics",
   "-R:+BouncyCastleIntrinsics",
@@ -562,11 +564,10 @@ val gvmReleaseFlags: List<String> = listOf(
 
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
-  "-O2",
-//  "-H:+LocalizationOptimizedMode",
-//  "-H:+LSRAOptimization",
-//  "-H:+RemoveUnusedSymbols",
-//  "-J-Djdk.image.use.jvm.map=false",
+  "-O3",
+  "-H:+LocalizationOptimizedMode",
+  "-H:+RemoveUnusedSymbols",
+  "-J-Djdk.image.use.jvm.map=false",
 ).plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
@@ -627,13 +628,15 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
-  //
-//  "elide.tool.cli.HttpRequestFactoryFactory",
-//  "elide.tool.cli.HttpResponseFactoryFactory",
-//  "elide.tool.cli.PropertySourceLoaderFactory",
-//  "elide.tool.cli.BeanConfigurationFactory",
-//  "elide.tool.cli.BeanDefinitionReferenceFactory",
-//  "elide.tool.cli.BeanIntrospectionReferenceFactory",
+//  "elide.runtime.intrinsics",
+//  "elide.runtime.intrinsics.js",
+//  "elide.runtime.gvm",
+//  "elide.runtime.gvm.js",
+//  "elide.runtime.gvm.internals",
+//  "elide.runtime.gvm.internals.intrinsics",
+//  "elide.runtime.gvm.internals.intrinsics.js",
+//  "elide.runtime.gvm.internals.intrinsics.js.url",
+//  "elide.tool.cli",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -679,7 +682,9 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList())).plus(if (oracleGvm) listOf(
+) else listOf(
+  "-J-Xmx24g",
+))).plus(if (oracleGvm) listOf(
   "-H:+AuxiliaryEngineCache",
 ) else emptyList())
 

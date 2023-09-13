@@ -54,7 +54,7 @@ elide {
   }
 }
 
-val encloseSdk = false
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 dependencies {
   implementation(libs.kotlinx.coroutines.core)

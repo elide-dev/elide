@@ -40,10 +40,10 @@ elide {
 dependencies {
   // Modules
   implementation(projects.packages.runtimeCore)
-  
+
   // Kotlin
   implementation(kotlin("stdlib"))
-  
+
   // Testing
   testImplementation(projects.packages.test)
   testImplementation(libs.junit.jupiter.api)

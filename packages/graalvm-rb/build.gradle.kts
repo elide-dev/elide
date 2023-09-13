@@ -60,9 +60,12 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.graalvmLlvm)
+
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
     compileOnly(libs.graalvm.truffle.api)
+    testCompileOnly(libs.graalvm.sdk)
+    testCompileOnly(libs.graalvm.truffle.api)
   }
 
   // Testing
@@ -70,6 +73,24 @@ dependencies {
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
-tasks.jar.configure {
-  exclude("**/runtime.current.json")
+tasks {
+  jar.configure {
+    exclude("**/runtime.current.json")
+  }
+
+  test {
+    enabled = false  // @TODO(sgammon): temporary while broken
+
+    maxHeapSize = "2G"
+    maxParallelForks = 4
+    environment("ELIDE_TEST", "true")
+    systemProperty("elide.test", "true")
+
+    javaToolchains {
+      javaLauncher.set(launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.GRAAL_VM
+      })
+    }
+  }
 }

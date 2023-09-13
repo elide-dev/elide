@@ -70,6 +70,22 @@ dependencies {
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
 }
 
-tasks.jar.configure {
-  exclude("**/runtime.current.json")
+tasks {
+  jar.configure {
+    exclude("**/runtime.current.json")
+  }
+
+  test {
+    maxHeapSize = "2G"
+    maxParallelForks = 4
+    environment("ELIDE_TEST", "true")
+    systemProperty("elide.test", "true")
+
+    javaToolchains {
+      javaLauncher.set(launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+        vendor = JvmVendorSpec.GRAAL_VM
+      })
+    }
+  }
 }

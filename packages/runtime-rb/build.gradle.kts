@@ -103,18 +103,9 @@ dependencies {
 
 tasks {
   test {
-    enabled = false  // @TODO(sgammon): temporary while broken
-
     maxHeapSize = "2G"
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
-
-    javaToolchains {
-      javaLauncher.set(launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.GRAAL_VM
-      })
-    }
   }
 }

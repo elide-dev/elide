@@ -843,30 +843,32 @@ val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
  */
 
 tasks {
-  named("run", JavaExec::class).configure {
-    javaToolchains {
-      javaLauncher.set(launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.GRAAL_VM
-      })
+  if (enableEdge) {
+    named("run", JavaExec::class).configure {
+      javaToolchains {
+        javaLauncher.set(launcherFor {
+          languageVersion = JavaLanguageVersion.of(21)
+          vendor = JvmVendorSpec.GRAAL_VM
+        })
+      }
     }
-  }
 
-  optimizedRun {
-    javaToolchains {
-      javaLauncher.set(launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.GRAAL_VM
-      })
+    optimizedRun {
+      javaToolchains {
+        javaLauncher.set(launcherFor {
+          languageVersion = JavaLanguageVersion.of(21)
+          vendor = JvmVendorSpec.GRAAL_VM
+        })
+      }
     }
-  }
 
-  test {
-    javaToolchains {
-      javaLauncher.set(launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
-        vendor = JvmVendorSpec.GRAAL_VM
-      })
+    test {
+      javaToolchains {
+        javaLauncher.set(launcherFor {
+          languageVersion = JavaLanguageVersion.of(21)
+          vendor = JvmVendorSpec.GRAAL_VM
+        })
+      }
     }
   }
 

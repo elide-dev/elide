@@ -6,38 +6,12 @@
 #
 
 IMAGE ?= codespace
+PLATFORMS = linux/amd64
 
-PUSH ?= yes
-REMOTE ?= yes
-VERSION ?= latest
-PROJECT ?= elide-fw
-REGISTRY ?= us-docker.pkg.dev
+PUB_IMAGE ?= codespace
+PROVENANCE ?= yes
 REPOSITORY ?= tools/$(IMAGE)
-DOCKER ?= $(shell which docker)
-GCLOUD ?= $(shell which gcloud) beta
+PUB_IMAGE_PATH ?= ghcr.io/elide-dev/codespace:$(VERSION)
+ORIGIN_IMAGE ?= $(PUB_IMAGE_PATH)
 
-ifeq ($(PUSH),yes)
-DOCKER_ARGS ?= --push
-all: image
-else
-DOCKER_ARGS ?=
-all: image
-endif
-
-ifeq ($(REMOTE),no)
-image:
-	$(DOCKER) buildx build $(DOCKER_ARGS) --tag $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION) .
-
-push:
-	$(DOCKER) push $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)
-
-.PHONY: image push
-else
-image:
-	$(GCLOUD) builds submit . --config cloudbuild.yaml
-
-push:
-	@echo "Remote image build complete: $(REGISTRY)/$(PROJECT)/$(REPOSITORY):$(VERSION)"
-
-.PHONY: image
-endif
+include ../Docker.mk

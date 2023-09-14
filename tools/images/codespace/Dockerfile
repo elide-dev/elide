@@ -5,7 +5,7 @@ ARG IBAZEL_VERSION=v0.15.10
 
 ARG NODE_VERSION="18"
 ARG YARN_VERSION="berry"
-ARG GRADLE_VERSION=7.6
+ARG GRADLE_VERSION=8.3
 ARG KOTLIN_VERSION=1.9.20-Beta
 ARG GRADLE_DIST=bin
 ARG INSTALL_ZSH="true"
@@ -14,8 +14,9 @@ ARG USERNAME=${DEV_USER}
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ARG GRAAL_EDITION=ce
-ARG GRAAL_VERSION=22.3.0
-ARG JAVA_VERSION=java19
+ARG GRAAL_VERSION=20.0.2
+ARG JAVA_VERSION=20
+ARG JAVA_VM_VERSION=graalvm-jdk-20.0.2+9.1
 
 RUN apt-get update \
   && apt-get -y upgrade \
@@ -48,7 +49,6 @@ RUN apt-get update \
     libtool \
     make \
     pkg-config \
-    qt5-default \
     software-properties-common \
     tar \
     time \
@@ -80,19 +80,16 @@ RUN apt-get update \
   && export ARCH="$(uname -m)" \
   && export FORMAL_ARCH="$(uname -m)" \
   && export COMPONENTS="native-image js" \
-  && if [ "$ARCH" = "x86_64" ] ; then ARCH="amd64"; FORMAL_ARCH="amd64"; COMPONENTS="native-image js wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
-  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; fi \
+  && if [ "$ARCH" = "x86_64" ] ; then ARCH="x64"; FORMAL_ARCH="amd64"; BAZELISK_ARCH="x86_64"; COMPONENTS="native-image js python ruby wasm llvm llvm-toolchain native-image-llvm-backend"; fi \
+  && if [ "$ARCH" = "aarch64" ] ; then ARCH="aarch64"; FORMAL_ARCH="arm64"; BAZELISK_ARCH="arm64"; fi \
+  && if [ "$ARCH" = "arm64" ] ; then ARCH="aarch64"; FORMAL_ARCH="arm64"; BAZELISK_ARCH="arm64"; fi \
   && mkdir -p /tmp/gvm \
   && cd /tmp/gvm \
-  && export GRAAL_DOWNLOAD_URL="https://github.com/graalvm/graalvm-$GRAAL_EDITION-builds/releases/download/vm-$GRAAL_VERSION/graalvm-$GRAAL_EDITION-$JAVA_VERSION-linux-$ARCH-$GRAAL_VERSION.tar.gz" \
+  && export GRAAL_DOWNLOAD_URL="https://download.oracle.com/graalvm/$JAVA_VERSION/latest/graalvm-jdk-${JAVA_VERSION}_linux-${ARCH}_bin.tar.gz" \
   && echo "GraalVM Download URL: $GRAAL_DOWNLOAD_URL" \
   && curl --progress-bar -SL "$GRAAL_DOWNLOAD_URL" > ./graalvm.tar.gz \
-  && curl --progress-bar -sSL "$GRAAL_DOWNLOAD_URL.sha256" > ./graalvm.tar.gz.sha256 \
-  && ls -la ./graalvm.tar.gz ./graalvm.tar.gz.sha256 \
-  && echo "Downloaded checksum for GraalVM: $(cat ./graalvm.tar.gz.sha256)" \
-  && echo "$(cat ./graalvm.tar.gz.sha256) graalvm.tar.gz" | sha256sum --check --status \
   && tar -xzvf ./graalvm.tar.gz \
-  && mv "./graalvm-$GRAAL_EDITION-$JAVA_VERSION-$GRAAL_VERSION" /usr/lib/gvm \
+  && mv "./${JAVA_VM_VERSION}" /usr/lib/gvm \
   && rm -f ./graalvm.tar.gz \
   && cd / \
   && rm -fr /tmp/gvm \
@@ -118,7 +115,7 @@ RUN apt-get update \
   && rm *kotlin*.zip \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A040830F7FAC5991 \
   && echo "Installing Bazelisk..." \
-  && curl -fLO https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-amd64 \
+  && curl -fLO https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-$FORMAL_ARCH \
   && mv "bazelisk-linux-$FORMAL_ARCH" "/usr/bin/bazel" \
   && chmod +x /usr/bin/bazel \
   && ln -s /usr/bin/bazel /usr/bin/bazelisk \
@@ -133,15 +130,15 @@ RUN apt-get update \
   && cd ~ \
   && /var/lib/gcloud/google-cloud-sdk/bin/gcloud auth configure-docker us-docker.pkg.dev \
   && echo "Installing Go..." \
-  && curl -fLO https://go.dev/dl/go1.19.linux-amd64.tar.gz \
-  && tar -C /usr/local -xzf go1.19.linux-amd64.tar.gz \
-  && rm go1.19.linux-amd64.tar.gz \
+  && curl -fLO https://go.dev/dl/go1.19.linux-${FORMAL_ARCH}.tar.gz \
+  && tar -C /usr/local -xzf go1.19.linux-${FORMAL_ARCH}.tar.gz \
+  && rm go1.19.linux-${FORMAL_ARCH}.tar.gz \
   && export GOPATH="/go" \
   && mkdir -p "$GOPATH/src" "$GOPATH/bin" \
   && chmod -R 777 "$GOPATH" \
   && echo "Installing Buf..." \
-  && curl -fLSO https://github.com/bufbuild/buf/releases/download/v1.11.0/buf-Linux-x86_64 \
-  && mv buf-Linux-x86_64 /usr/local/bin/buf \
+  && curl -fLSO https://github.com/bufbuild/buf/releases/download/v1.11.0/buf-Linux-${BAZELISK_ARCH} \
+  && mv buf-Linux-${BAZELISK_ARCH} /usr/local/bin/buf \
   && chmod +x /usr/local/bin/buf \
   && echo "Setting up Debian-based codespace..." \
   && yes | unminimize 2>&1 \

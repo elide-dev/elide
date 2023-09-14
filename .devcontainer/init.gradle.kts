@@ -1,4 +1,4 @@
-val pkgst = true
+val pkgst = false
 
 if (pkgst) allprojects {
   repositories {

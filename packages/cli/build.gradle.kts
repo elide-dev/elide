@@ -77,13 +77,13 @@ val enableTruffleJson = false
 val enableRuby = true
 val enableTools = true
 val enableSbom = false
-val enableG1 = true
 val enablePgo = false
 val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
 val enableDashboard = false
 val oracleGvm = false
+val enableG1 = oracleGvm
 val enableEdge = true
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
@@ -723,11 +723,14 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-J-Xmx12g",
 ) else emptyList())
 
+val linuxGvmReleaseFlags = listOf(
+  "-H:+ObjectInlining",
+)
+
 val linuxReleaseArgs = linuxOnlyArgs.plus(listOf(
   "-R:+WriteableCodeCache",
   "-H:+StripDebugInfo",
-  "-H:+ObjectInlining",
-))
+).plus(if (oracleGvm) linuxGvmReleaseFlags else emptyList()))
 
 val muslArgs = listOf(
   "--libc=musl",

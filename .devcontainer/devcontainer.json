@@ -74,7 +74,8 @@
       "documentationUrl": "https://docs.less.build/reference/intro/getting-started"
     }
   },
-  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && ./gradlew tasks && git checkout kotlin-js-store || exit 0",
+  "updateContentCommand": "./gradlew dependencies --refresh-dependencies && ./gradlew tasks && git checkout kotlin-js-store || exit 0 && sudo chown -R dev /home/dev/.gradle || echo 'Failed to set dev permissions'",
+  "postAttachCommand": "elide --help",
   "forwardPorts": [8080, 50051],
   "remoteUser": "dev"
 }

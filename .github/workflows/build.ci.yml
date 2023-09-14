@@ -41,7 +41,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -148,7 +148,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -157,7 +157,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -259,7 +259,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -268,7 +268,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -384,7 +384,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -393,7 +393,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -507,7 +507,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -516,7 +516,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -639,7 +639,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -648,7 +648,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -728,7 +728,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -737,7 +737,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -840,7 +840,7 @@ jobs:
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
           components: "native-image,js,wasm,ruby,python,llvm"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -849,7 +849,7 @@ jobs:
         if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           distribution_url: 'https://dl.less.build/toolchains/graalvm/dev/graalvm-java21-24.0.0-dev.linux-amd64.tar.gz'
           java-version: 'dev'
           github-token: ${{ secrets.GITHUB_TOKEN }}

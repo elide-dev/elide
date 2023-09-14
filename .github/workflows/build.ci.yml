@@ -40,13 +40,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -146,13 +147,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -256,13 +258,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -382,13 +385,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -504,13 +508,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -635,13 +640,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -723,13 +729,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'
@@ -834,13 +841,14 @@ jobs:
       - name: "Setup: GraalVM (Java 20)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
         with:
-          components: "js,ruby,python"
+          components: "native-image,js,wasm,ruby,python,llvm"
           distribution: 'graalvm-community'
           java-version: '20'
           check-for-updates: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: GraalVM (Java 21)"
         uses: elide-dev/setup-graalvm@0711c08964f86c1721bebb824b2ac856457e0f55 # custom
+        if: false
         with:
           components: "native-image,js,wasm,ruby,python,llvm,regex,icu4j,trufflejson"
           distribution: 'graalvm-community'

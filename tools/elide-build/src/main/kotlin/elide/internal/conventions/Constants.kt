@@ -153,7 +153,11 @@ internal object Constants {
     )
 
     /** Compiler args to include in KMP targets. */
-    val KmpCompilerArgs = BaseCompilerArgs
+    val KmpCompilerArgs = BaseCompilerArgs.plus(
+      listOf(
+        "-Xexpect-actual-classes"
+      )
+    )
   }
 }
 

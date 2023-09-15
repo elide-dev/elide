@@ -19,7 +19,6 @@ import elide.internal.conventions.kotlin.KotlinTarget
 plugins {
   id("java-platform")
   id("org.jetbrains.kotlinx.kover")
-  id("dev.sigstore.sign")
 
   id("elide.internal.conventions")
 }
@@ -39,11 +38,11 @@ elide {
 
 // Peer modules.
 val peers = mapOf(
-  "guava" to ("com.google.guava:guava" to Versions.guava),
-  "protobuf" to ("com.google.protobuf:protobuf-java" to Versions.protobuf),
-  "grpc" to ("io.grpc:grpc-bom" to Versions.grpc),
-  "netty" to ("io.netty:netty-bom" to Versions.netty),
-  "micronaut" to ("io.micronaut.platform:micronaut-platform" to Versions.micronaut),
+  "guava" to ("com.google.guava:guava" to libs.versions.guava.get()),
+  "protobuf" to ("com.google.protobuf:protobuf-java" to libs.versions.protobuf.get()),
+  "grpc" to ("io.grpc:grpc-bom" to libs.versions.grpc.java.get()),
+  "netty" to ("io.netty:netty-bom" to libs.versions.netty.asProvider().get()),
+  "micronaut" to ("io.micronaut.platform:micronaut-platform" to libs.versions.micronaut.lib.get()),
 )
 
 dependencies {

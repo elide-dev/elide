@@ -59,6 +59,7 @@ dependencies {
   implementation(libs.plugin.detekt)
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.sigstore)
+  implementation(libs.plugin.redacted)
 
   // embedded Kotlin plugins
   implementation(embeddedKotlin("allopen"))

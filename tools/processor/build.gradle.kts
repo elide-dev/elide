@@ -11,37 +11,43 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress(
-  "UnstableApiUsage",
-  "unused",
-  "DSL_SCOPE_VIOLATION",
-)
-
-import ElidePackages.elidePackage
+import elide.internal.conventions.elide
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
-  id("com.google.devtools.ksp")
+  kotlin("jvm")
+  alias(libs.plugins.ksp)
 
-  id("dev.elide.build.jvm")
-  id("dev.elide.build.publishable")
+  id("elide.internal.conventions")
+}
+
+elide {
+  publishing {
+    id = "processor"
+    name = "Elide KSP Processor"
+    description = "Annotation processor for KSP and Elide"
+
+    publish("maven") {
+      artifactId = "processor"
+      groupId = "dev.elide.tools"
+      version = rootProject.version as String
+
+      from(components["kotlin"])
+    }
+  }
+
+  kotlin {
+    explicitApi = true
+  }
+
+  java {
+    configureModularity = false
+  }
 }
 
 group = "dev.elide.tools"
 version = rootProject.version as String
-
-kotlin {
-  explicitApi()
-
-  publishing {
-    publications {
-      create<MavenPublication>("maven") {
-        artifactId = "processor"
-        groupId = "dev.elide.tools"
-        version = rootProject.version as String
-      }
-    }
-  }
-}
 
 dependencies {
   // Core platform versions.
@@ -88,12 +94,4 @@ dependencies {
   // Testing
   testImplementation(kotlin("test"))
   testImplementation(projects.packages.test)
-}
-
-elidePackage(
-  id = "processor",
-  name = "Elide KSP Processor",
-  description = "Annotation processor for KSP and Elide",
-) {
-  java9Modularity = false
 }

@@ -102,16 +102,16 @@ catalog {
     plugin("buildtools", "dev.elide.buildtools.plugin").versionRef("elide.plugin")
 
     // define the BOM (this module)
-    library("elide.bom", Elide.group, "bom").versionRef("elide.framework")
+    library("elide.bom", "dev.elide", "bom").versionRef("elide.framework")
 
     // define Elide library aliases
     libraries.forEach { libName ->
-      library("elide.$libName", Elide.group, "elide-$libName").versionRef("elide.framework")
+      library("elide.$libName", "dev.elide", "elide-$libName").versionRef("elide.framework")
     }
 
     // define Elide plugin aliases
     kotlinPlugins.forEach { pluginName ->
-      library("elide.plugins.$pluginName", Elide.substrateGroup, "$pluginName-plugin")
+      library("elide.plugins.$pluginName", "dev.elide.tools", "$pluginName-plugin")
         .versionRef("elide.framework")
     }
 

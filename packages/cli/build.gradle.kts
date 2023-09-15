@@ -38,13 +38,13 @@ plugins {
   kotlin("kapt")
   kotlin("plugin.serialization")
   id("io.micronaut.docker")
-  id(libs.plugins.kover.get().pluginId)
-  id(libs.plugins.buildConfig.get().pluginId)
-  id(libs.plugins.micronaut.application.get().pluginId)
-  id(libs.plugins.micronaut.graalvm.get().pluginId)
-  id(libs.plugins.micronaut.aot.get().pluginId)
-  id(libs.plugins.shadow.get().pluginId)
-  id(libs.plugins.gradle.checksum.get().pluginId)
+  alias(libs.plugins.kover)
+  alias(libs.plugins.buildConfig)
+  alias(libs.plugins.micronaut.application)
+  alias(libs.plugins.micronaut.graalvm)
+  alias(libs.plugins.micronaut.aot)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.gradle.checksum)
 
   id("elide.internal.conventions")
 }
@@ -65,6 +65,8 @@ elide {
   java {
     configureModularity = false
   }
+
+  native()
 }
 
 val entrypoint = "elide.tool.cli.ElideTool"
@@ -155,10 +157,6 @@ ktlint {
 kotlin {
   target.compilations.all {
     kotlinOptions {
-      jvmTarget = Elide.kotlinJvmTargetMaximum
-      javaParameters = true
-      languageVersion = Elide.kotlinLanguage
-      apiVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     }
@@ -780,11 +778,6 @@ graalvmNative {
   toolchainDetection = false
   testSupport = true
 
-  metadataRepository {
-    enabled = true
-    version = GraalVMVersions.graalvmMetadata
-  }
-
   agent {
     defaultMode = "standard"
     builtinCallerFilter = true
@@ -850,22 +843,14 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
-  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
-    kotlinOptions {
-      jvmTarget = Elide.kotlinJvmTargetMaximum
-      javaParameters = true
-      languageVersion = Elide.kotlinLanguage
-      apiVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-    }
-  }
+  // withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
+  //   kotlinOptions {
+  //     allWarningsAsErrors = false
+  //     freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+  //   }
+  // }
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     kotlinOptions {
-      jvmTarget = Elide.kotlinJvmTargetMaximum
-      javaParameters = true
-      languageVersion = Elide.kotlinLanguage
-      apiVersion = Elide.kotlinLanguage
       allWarningsAsErrors = false
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     }
@@ -901,13 +886,8 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
-    apiVersion = Elide.kotlinLanguageBeta
-    languageVersion = Elide.kotlinLanguageBeta
-    jvmTarget = Elide.kotlinJvmTargetMaximum
-    javaParameters = true
     freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     allWarningsAsErrors = false  // module path breaks @TODO: fix
-    incremental = true
   }
 }
 
@@ -952,10 +932,6 @@ afterEvaluate {
 
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
     kotlinOptions {
-      apiVersion = Elide.kotlinLanguageBeta
-      languageVersion = Elide.kotlinLanguageBeta
-      jvmTarget = Elide.kotlinJvmTargetMaximum
-      javaParameters = true
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
       allWarningsAsErrors = false
     }

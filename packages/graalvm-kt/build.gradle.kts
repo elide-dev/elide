@@ -17,8 +17,8 @@ import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
-  id("io.micronaut.library")
-  id("io.micronaut.graalvm")
+  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.graalvm)
 
   kotlin("jvm")
   kotlin("kapt")

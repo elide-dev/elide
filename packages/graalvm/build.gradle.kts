@@ -30,8 +30,8 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  id("io.micronaut.library")
-  id("io.micronaut.graalvm")
+  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.graalvm)
   id("org.graalvm.buildtools.native")
 
   alias(libs.plugins.jmh)

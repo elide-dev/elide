@@ -66,28 +66,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "elide"
 
-// 1: Gradle convention plugins.
-includeBuild("tools/conventions") {
-  dependencySubstitution {
-    substitute(module("dev.elide.tools:elide-convention-plugins")).using(project(":"))
-  }
-}
-
-// 2: Kotlin Compiler substrate.
-includeBuild("tools/substrate") {
-  dependencySubstitution {
-    substitute(module("dev.elide.tools:elide-substrate")).using(project(":"))
-    substitute(module("dev.elide.tools:elide-substrate-bom")).using(project(":bom"))
-    substitute(module("dev.elide.tools:compiler-util")).using(project(":compiler-util"))
-    substitute(module("dev.elide.tools.kotlin.plugin:redakt-plugin")).using(project(":redakt"))
-  }
-}
-
-// 3: Third-party modules.
+// Third-party modules.
 if (embeddedR8 == "true") includeBuild("tools/third_party/google/r8")
 if (embeddedCompose == "true") includeBuild("tools/third_party/jetbrains/compose/web")
 
-// 4: External builds.
+// External builds.
 if (buildUuid == "true") {
   includeBuild("packages/uuid") {
     dependencySubstitution {
@@ -96,7 +79,7 @@ if (buildUuid == "true") {
   }
 }
 
-// 5: Build modules.
+// Build modules.
 include(
   ":packages:base",
   ":packages:bom",

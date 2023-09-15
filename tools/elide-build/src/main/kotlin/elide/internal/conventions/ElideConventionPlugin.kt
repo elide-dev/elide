@@ -3,6 +3,7 @@ package elide.internal.conventions
 import com.adarshr.gradle.testlogger.TestLoggerPlugin
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.benmanes.gradle.versions.VersionsPlugin
+import dev.zacsweers.redacted.gradle.RedactedGradleSubplugin
 import io.gitlab.arturbosch.detekt.DetektPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -29,6 +30,7 @@ import elide.internal.conventions.publishing.configurePublishing
 import elide.internal.conventions.publishing.configurePublishingRepositories
 import elide.internal.conventions.publishing.configureSigning
 import elide.internal.conventions.publishing.configureSigstore
+import elide.internal.conventions.redacted.configureRedactedPlugin
 import elide.internal.conventions.tests.configureJacoco
 import elide.internal.conventions.tests.configureKoverCI
 import elide.internal.conventions.tests.configureTestExecution
@@ -56,6 +58,9 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
     plugins.apply(DistributionPlugin::class.java)
     plugins.apply(SigningPlugin::class.java)
 
+    // other plugins
+    plugins.apply(RedactedGradleSubplugin::class.java)
+
     // testing
     plugins.apply(TestLoggerPlugin::class.java)
   }
@@ -67,6 +72,9 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
     // apply conventions
     configureProject()
+
+    // configure the redacted compiler plugin
+    configureRedactedPlugin()
 
     if (conventions.lockDependencies) configureDependencyLocking()
     if (conventions.strictDependencies) configureDependencyResolution()

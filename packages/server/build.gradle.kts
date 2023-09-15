@@ -21,8 +21,9 @@ import org.gradle.api.JavaVersion.VERSION_17
 plugins {
   kotlin("jvm")
   kotlin("kapt")
-  id("io.micronaut.library")
-  id("io.micronaut.graalvm")
+  
+  alias(libs.plugins.micronaut.library)
+  alias(libs.plugins.micronaut.graalvm)
 
   id("elide.internal.conventions")
 }

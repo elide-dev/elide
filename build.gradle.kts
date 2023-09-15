@@ -26,20 +26,20 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import java.util.Properties
+import elide.internal.conventions.project.Projects
 
 plugins {
   idea
-  jacoco
-  signing
-  `project-report`
-  kotlin("multiplatform") apply false
+  id("project-report")
+  alias(libs.plugins.kotlin.multiplatform) apply false
 
-  id(libs.plugins.sonar.get().pluginId)
-  id(libs.plugins.dokka.get().pluginId)
-  id(libs.plugins.kover.get().pluginId)
-  id(libs.plugins.kotlinx.plugin.abiValidator.get().pluginId)
-  id(libs.plugins.detekt.get().pluginId)
-  id(libs.plugins.nexusPublishing.get().pluginId)
+  alias(libs.plugins.shadow)
+  alias(libs.plugins.kotlinx.plugin.abiValidator)
+  alias(libs.plugins.sonar)
+  alias(libs.plugins.dokka)
+  alias(libs.plugins.kover)
+  alias(libs.plugins.detekt)
+  alias(libs.plugins.nexusPublishing)
   alias(libs.plugins.gradle.testretry)
   alias(libs.plugins.buildTimeTracker)
   alias(libs.plugins.dependencyAnalysis)
@@ -50,7 +50,8 @@ plugins {
   alias(libs.plugins.ktlint)
   alias(libs.plugins.openrewrite)
   alias(libs.plugins.lombok)
-  id("dev.elide.build")
+  
+  id("elide.internal.conventions")
 }
 
 group = "dev.elide"
@@ -249,10 +250,10 @@ subprojects {
 
   sonarqube {
     properties {
-      if (!Elide.noTestModules.contains(name)) {
+      if (!Projects.noTestModules.contains(name)) {
         when {
           // pure Java/Kotlin coverage
-          Elide.serverModules.contains(name) -> {
+          Projects.serverModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
             property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/main"))
@@ -269,14 +270,14 @@ subprojects {
           }
 
           // KotlinJS coverage via Kover
-          Elide.frontendModules.contains(name) -> {
+          Projects.frontendModules.contains(name) -> {
             property("sonar.sources", "src/main/kotlin")
             property("sonar.tests", "src/test/kotlin")
             property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/kover/xml/report.xml"))
           }
 
           // Kotlin MPP coverage via Kover
-          Elide.multiplatformModules.contains(name) -> {
+          Projects.multiplatformModules.contains(name) -> {
             property("sonar.sources", "src/commonMain/kotlin,src/jvmMain/kotlin,src/jsMain/kotlin,src/nativeMain/kotlin")
             property("sonar.tests", "src/commonTest/kotlin,src/jvmTest/kotlin,src/jsTest/kotlin,src/nativeTest/kotlin")
             property("sonar.java.binaries", layout.buildDirectory.dir("classes/kotlin/jvm/main"))
@@ -410,7 +411,7 @@ tasks.register("samples") {
 tasks.register("buildSamples") {
   description = "Assemble all sample code."
 
-  Elide.samplesList.forEach {
+  Projects.samples.forEach {
     dependsOn("$it:assemble")
   }
 }
@@ -418,7 +419,7 @@ tasks.register("buildSamples") {
 tasks.register("testSamples") {
   description = "Run all tests for sample code."
 
-  Elide.samplesList.forEach {
+  Projects.samples.forEach {
     dependsOn("$it:test")
   }
 }
@@ -426,7 +427,7 @@ tasks.register("testSamples") {
 tasks.register("nativeTestSamples") {
   description = "Run native (GraalVM) tests for sample code."
 
-  Elide.samplesList.forEach {
+  Projects.samples.forEach {
     dependsOn("$it:nativeTest")
   }
 }
@@ -461,7 +462,7 @@ if (buildDocs == "true") {
 tasks {
   htmlDependencyReport {
     projects = project.allprojects.filter {
-      !Elide.multiplatformModules.contains(it.name)
+      !Projects.multiplatformModules.contains(it.name)
     }.toSet()
   }
 
@@ -538,7 +539,7 @@ val publishElide by tasks.registering {
   description = "Publish Elide library publications to Elide repositories and Maven Central"
   group = "Publishing"
 
-  dependsOn(Elide.publishedModules.map {
+  dependsOn(Projects.publishedModules.map {
     project(it).tasks.named("publishAllElidePublications")
   })
 }
@@ -547,7 +548,7 @@ val publishSubstrate by tasks.registering {
   description = "Publish Elide Substrate and Kotlin compiler plugins to Elide repositories and Maven Central"
   group = "Publishing"
 
-  dependsOn(Elide.publishedSubprojects.map {
+  dependsOn(Projects.publishedSubprojects.map {
     gradle.includedBuild(it.substringBefore(":")).task(listOf(
       "",
       it.substringAfter(":"),

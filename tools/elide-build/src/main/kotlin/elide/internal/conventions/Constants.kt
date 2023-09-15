@@ -115,6 +115,9 @@ internal object Constants {
     /** Maven group shared by Elide artifacts. */
     const val GROUP = "dev.elide"
 
+    /** Maven group shared by tooling projects. */
+    const val SUBSTRATE_GROUP = "dev.elide.tools"
+
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
       "-progressive",

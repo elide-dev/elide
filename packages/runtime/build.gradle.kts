@@ -20,7 +20,6 @@ plugins {
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
-  id("dev.elide.internal.kotlin.redakt")
   id("elide.internal.conventions")
 }
 

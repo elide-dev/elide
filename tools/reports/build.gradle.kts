@@ -18,12 +18,16 @@
   "DSL_SCOPE_VIOLATION",
 )
 
+import elide.internal.conventions.project.Projects
+
 plugins {
   id("project-report")
   id("test-report-aggregation")
   id("jacoco-report-aggregation")
   id("org.sonarqube")
   id("org.jetbrains.kotlinx.kover")
+
+  id("elide.internal.conventions")
 }
 
 val antJUnit: Configuration by configurations.creating
@@ -51,8 +55,8 @@ reporting {
 val buildSsg by properties
 
 dependencies {
-  Elide.serverModules.plus(
-    Elide.multiplatformModules
+  Projects.serverModules.plus(
+    Projects.multiplatformModules
   ).forEach {
     if (it == "ssg" && buildSsg != "true") {
       return@forEach
@@ -60,7 +64,7 @@ dependencies {
     testReportAggregation(project(":packages:$it"))
   }
 
-  antJUnit("org.apache.ant", "ant-junit", Versions.antJUnit)
+  antJUnit("org.apache.ant", "ant-junit", "1.10.12")
 }
 
 task<Copy>("locateCopyJUnitReports") {

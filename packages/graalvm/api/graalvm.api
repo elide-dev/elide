@@ -12,14 +12,6 @@ public abstract interface class elide/runtime/feature/FrameworkFeature : org/gra
 	public fun registerPackageForReflection (Lorg/graalvm/nativeimage/hosted/Feature$FeatureAccess;Ljava/lang/String;)V
 }
 
-public final synthetic class elide/runtime/gvm/$VMFacadeFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
 public abstract interface class elide/runtime/gvm/ContextFactory {
 	public abstract fun acquire (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun acquire$default (Lelide/runtime/gvm/ContextFactory;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
@@ -183,78 +175,6 @@ public abstract interface annotation class elide/runtime/gvm/api/GuestRuntime : 
 	public abstract fun engine ()Ljava/lang/String;
 }
 
-public final synthetic class elide/runtime/gvm/cfg/$GuestIOConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMConfiguration$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEEConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMEESandboxConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$GuestVMInspectConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsEsmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/cfg/$JsRuntimeConfig$JsNpmConfig$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
 public abstract interface class elide/runtime/gvm/cfg/GuestRuntimeConfiguration : io/micronaut/core/util/Toggleable {
 }
 
@@ -314,22 +234,6 @@ public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfi
 
 public final class elide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig$Companion {
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
-}
-
-public final synthetic class elide/runtime/gvm/internals/$GuestExecutorManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/$IntrinsicsManager$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public abstract class elide/runtime/gvm/internals/AbstractGVMScript : elide/runtime/gvm/GuestScript {
@@ -725,14 +629,6 @@ public final class elide/runtime/gvm/internals/VMStaticProperty$Companion {
 	public final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
 }
 
-public final synthetic class elide/runtime/gvm/internals/context/$NativeContextManagerImpl$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
 public abstract interface class elide/runtime/gvm/internals/context/ContextManager : elide/runtime/gvm/ContextFactory {
 	public static final field Companion Lelide/runtime/gvm/internals/context/ContextManager$Companion;
 	public fun acquireSuspend (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -749,22 +645,6 @@ public final class elide/runtime/gvm/internals/context/ContextManager$Companion 
 }
 
 public abstract interface class elide/runtime/gvm/internals/context/ContextManager$VMInvocation {
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/$BuiltinIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/$ServiceIntrinsicsResolver$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy {
@@ -823,125 +703,6 @@ public final class elide/runtime/gvm/internals/intrinsics/js/JsProxy$PropertyPro
 	public fun toString ()Ljava/lang/String;
 }
 
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/base64/$Base64Intrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/console/$ConsoleIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$WebCryptoKey$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/express/$ExpressIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
 public final class elide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue : elide/runtime/intrinsics/js/typed/UUID {
 	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$Companion;
 	public static final synthetic fun box-impl (Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue;
@@ -970,114 +731,6 @@ public final class elide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$Com
 	public fun of-KoDiJNU (Ljava/lang/String;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
 	public fun of-KoDiJNU (Ljava/util/UUID;)Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
 	public fun random-G0GOI2s ()Lelide/runtime/gvm/internals/intrinsics/js/typed/UUIDValue$ValidUUID;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/url/$URLSearchParamsIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/intrinsics/js/webstreams/$ReadableStreamIntrinsic$IntrospectionRef : io/micronaut/core/beans/AbstractBeanIntrospectionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getName ()Ljava/lang/String;
-	public fun load ()Lio/micronaut/core/beans/BeanIntrospection;
-}
-
-public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/js/$JsRuntime$JsRuntimeVFSConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/vfs/$GuestVFSPolicy$Intercepted$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference, io/micronaut/inject/AdvisedBeanType {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun getInterceptedType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/gvm/internals/vfs/$HostVFSImpl$HostVFSConfigurationFactory$Spawn$graalvm0$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun getBeanDefinitionType ()Ljava/lang/Class;
-	public fun getBeanType ()Ljava/lang/Class;
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {

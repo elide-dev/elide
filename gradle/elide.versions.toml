@@ -215,6 +215,7 @@ lombok = "8.3"
 jetbrains_annotations = "24.0.1"
 buildTimeTracker = "4.3.0"
 cyclonedx = "1.7.4"
+redacted_plugin = "1.6.1"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -273,6 +274,7 @@ versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.
 buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }
 spdx_sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
 cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted_plugin" }
 
 [libraries]
 jetbrains_annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains_annotations" }
@@ -593,6 +595,7 @@ plugin_proguard = { group = "com.guardsquare", name = "proguard-gradle", version
 plugin_openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite_plugin" }
 plugin_gradle_testretry = { group = "org.gradle", name = "test-retry-gradle-plugin", version.ref = "gradleTestRetry" }
 plugin_sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }
+plugin_redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted_plugin" }
 ## Elide Internal
 elide_uuid = { group = "dev.elide", name = "elide-uuid", version.ref = "elide_uuid" }
 elide_base = { group = "dev.elide", name = "elide-base", version.ref = "elide" }

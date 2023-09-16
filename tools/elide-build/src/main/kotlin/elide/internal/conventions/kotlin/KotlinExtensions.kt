@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 @JvmInline public value class DependenciesScope(internal val extension: KotlinMultiplatformExtension)
 
-public fun Project.dependencies(block: DependenciesScope.() -> Unit): Unit = afterEvaluate {
+public fun Project.dependencies(block: DependenciesScope.() -> Unit) {
   DependenciesScope(extensions.getByType(KotlinMultiplatformExtension::class.java)).apply(block)
 }
 

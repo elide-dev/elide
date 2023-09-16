@@ -84,7 +84,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  aliases = ["shell", "r", "s", "serve", "start", "js", "node", "python", "ruby", "wasm"],
+  aliases = ["shell", "r", "s", "serve", "start", "js", "node", "python", "ruby", "wasm", "kt", "jvm"],
   description = ["%nRun a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -100,8 +100,8 @@ import org.graalvm.polyglot.Engine as VMEngine
     "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|kt|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
+    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
   ]
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
@@ -143,14 +143,14 @@ import org.graalvm.polyglot.Engine as VMEngine
       names = ["--js", "--javascript", "-js"],
       description = ["Equivalent to passing '--language=JS'."],
     )
-    internal var javascript: Boolean = engine.languages.containsKey("js")
+    internal var javascript: Boolean = true
 
     /** Flag for JVM support. */
     @Option(
       names = ["--jvm", "--java", "-java"],
       description = ["Equivalent to passing '--language=JVM'."],
     )
-    internal var jvm: Boolean = engine.languages.containsKey("java")
+    internal var jvm: Boolean = false
 
     /** Flag for Kotlin support. */
     @Option(
@@ -164,28 +164,28 @@ import org.graalvm.polyglot.Engine as VMEngine
       names = ["--ruby", "--rb", "-rb"],
       description = ["Equivalent to passing '--language=RUBY'."],
     )
-    internal var ruby: Boolean = engine.languages.containsKey("ruby")
+    internal var ruby: Boolean = false
 
     /** Flag for Python support. */
     @Option(
       names = ["--python", "--py", "-py"],
       description = ["Equivalent to passing '--language=PYTHON'."],
     )
-    internal var python: Boolean = engine.languages.containsKey("python")
+    internal var python: Boolean = false
 
     /** Flag for WebAssembly support. */
     @Option(
       names = ["--wasm"],
       description = ["Equivalent to passing '--language=WASM'."],
     )
-    internal var wasm: Boolean = engine.languages.containsKey("wasm")
+    internal var wasm: Boolean = false
 
     /** Flag for LLVM support. */
     @Option(
       names = ["--llvm"],
       description = ["Equivalent to passing '--language=LLVM'."],
     )
-    internal var llvm: Boolean = engine.languages.containsKey("llvm")
+    internal var llvm: Boolean = false
 
     // Calculated and cached suite of supported languages loaded into the VM space.
     private val langs: EnumSet<GuestLanguage> by lazy {
@@ -451,6 +451,22 @@ import org.graalvm.polyglot.Engine as VMEngine
     }
   }
 
+  /** Settings which apply to WASM. */
+  @Introspected @ReflectiveAccess class WasmSettings : LanguageSettings() {
+    /** Whether to activate WASM debug mode. */
+    @Option(
+      names = ["--wasm:debug"],
+      description = ["Activate WASM debug mode"],
+      defaultValue = "false",
+    )
+    internal var debug: Boolean = false
+
+    /** Apply configuration to the WASM runtime based on the provided arguments. */
+    override fun apply(): Stream<out VMProperty> {
+      return Stream.empty()
+    }
+  }
+
   // Whether the last-seen command was a user exit.
   private val exitSeen = AtomicBoolean(false)
 
@@ -600,7 +616,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   /** Settings specific to Ruby. */
   @ArgGroup(
     validate = false,
-    heading = "%nEngine: JVM%n",
+    heading = "%nEngine: Ruby%n",
   ) internal var rubySettings: RubySettings = RubySettings()
 
   /** Settings specific to Ruby. */
@@ -620,6 +636,12 @@ import org.graalvm.polyglot.Engine as VMEngine
     validate = false,
     heading = "%nEngine: Groovy%n",
   ) internal var groovySettings: GroovySettings = GroovySettings()
+
+  /** Settings specific to Groovy. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nEngine: WASM%n",
+  ) internal var wasmSettings: WasmSettings = WasmSettings()
 
   /** File to run within the VM. */
   @Parameters(
@@ -837,6 +859,10 @@ import org.graalvm.polyglot.Engine as VMEngine
           "args.nanorc",
           "command.nanorc",
           "javascript.nanorc",
+          "python.nanorc",
+          "ruby.nanorc",
+          "java.nanorc",
+          "kotlin.nanorc",
           "json.nanorc",
         ).forEach {
           val target = jnanorcDir.resolve(it)
@@ -1406,7 +1432,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     // build all property sets into one unified stream, and configure the VM with it
     configureVM(Stream.concat(
       Stream.concat(baseProps, langProps.stream().flatMap { it }),
-      debugging.apply(debug),
+      debugging.apply(Statics.args.get().contains("--debug")),  // @TODO(sgammon): fix injection of this property
     ))
 
     // acquire VM with configured language support

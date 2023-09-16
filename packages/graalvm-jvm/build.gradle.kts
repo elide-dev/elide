@@ -44,6 +44,10 @@ dependencies {
   implementation(projects.packages.graalvm)
   compileOnly(libs.graalvm.espresso.polyglot)
   compileOnly(libs.graalvm.espresso.hotswap)
+
+  api(files(layout.projectDirectory.file("lib/espresso-libs-resources.jar")))
+  api(files(layout.projectDirectory.file("lib/espresso-runtime-resources.jar")))
+
   if (encloseSdk) {
     compileOnly(libs.graalvm.sdk)
     compileOnly(libs.graalvm.truffle.api)

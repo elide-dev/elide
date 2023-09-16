@@ -31,4 +31,7 @@ internal object Statics {
 
   /** Invocation args. */
   internal val args: AtomicReference<List<String>> = AtomicReference(emptyList())
+
+  /** Main top-level tool. */
+  val base: AtomicReference<ElideTool> = AtomicReference()
 }

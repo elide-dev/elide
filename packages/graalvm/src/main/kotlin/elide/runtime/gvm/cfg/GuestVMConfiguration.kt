@@ -57,6 +57,7 @@ internal interface GuestVMConfiguration : Toggleable {
       LANGUAGE_WASM,
       LANGUAGE_PYTHON,
       LANGUAGE_RUBY,
+      LANGUAGE_JAVA,
     )
 
     /** Default character set to use with raw data exchanged with the JS VM. */

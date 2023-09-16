@@ -176,7 +176,6 @@ dependencies {
   implementation(libs.kotlinx.serialization.json.jvm)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.collections.immutable.jvm)
-  runtimeOnly(libs.kotlinx.coroutines.reactor)
 
   // General
   implementation(libs.jimfs)
@@ -195,7 +194,6 @@ dependencies {
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.micronaut.http)
   implementation(mn.micronaut.context)
-  implementation(mn.micronaut.inject)
 
   // Netty
   implementation(libs.reactor.netty)

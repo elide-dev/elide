@@ -18,7 +18,11 @@ import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.InvocationMode
 
 /** Enumerates known/supported GraalVM guest languages. */
-public enum class GraalVMGuest (override val symbol: String, override val label: String) : GuestLanguage {
+public enum class GraalVMGuest (
+  override val symbol: String,
+  override val engine: String = symbol,
+  override val label: String,
+) : GuestLanguage {
   /**
    * ECMA2022-compliant JavaScript via Graal JS+JVM.
    */
@@ -41,5 +45,5 @@ public enum class GraalVMGuest (override val symbol: String, override val label:
   /**
    * JVM support via SVM and Espresso
    */
-  JVM(symbol = "java", label = "JVM"),
+  JVM(symbol = "jvm", engine = "java", label = "JVM"),
 }

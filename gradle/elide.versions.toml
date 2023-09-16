@@ -35,7 +35,7 @@ netty_iouring = "0.0.21.Final"
 netty_tcnative = "2.0.61.Final"
 dekorate = "3.1.1"
 micronaut_lib = "4.1.0"
-micronaut_aot = "2.1.0"
+micronaut_aot = "2.1.1"
 micronaut_plugin = "4.0.3"
 compose = "1.5.2"
 wasmtime = "0.18.0"
@@ -216,6 +216,7 @@ jetbrains_annotations = "24.0.1"
 buildTimeTracker = "4.3.0"
 cyclonedx = "1.7.4"
 redacted_plugin = "1.6.1"
+jprofiler = "14.0-PRE1"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -275,6 +276,7 @@ buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref =
 spdx_sbom = { id = "org.spdx.sbom", version.ref = "spdx" }
 cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
 redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted_plugin" }
+jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }
 
 [libraries]
 jetbrains_annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains_annotations" }

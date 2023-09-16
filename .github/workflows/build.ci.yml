@@ -274,8 +274,6 @@ jobs:
             check
             jacocoTestReport
             koverXmlReport
-            :substrate:redakt:test
-            :substrate:koverXmlReport
             :tools:reports:reports
             --scan
             --no-daemon

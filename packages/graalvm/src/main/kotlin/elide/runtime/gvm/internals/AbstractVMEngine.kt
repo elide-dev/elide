@@ -20,6 +20,7 @@ import org.graalvm.nativeimage.Platform
 import org.graalvm.polyglot.*
 import org.graalvm.polyglot.proxy.Proxy
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.io.InputStream
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
@@ -110,10 +111,21 @@ public abstract class AbstractVMEngine<
     private const val ENGINE_VERSION = "v3"
 
     /** Manifest name for runtime info. */
-    private const val RUNTIME_MANIFEST = "runtime.json.gz"
+    private const val RUNTIME_MANIFEST = "runtime.json"
 
     // Root where we can find runtime-related files.
     public const val EMBEDDED_ROOT: String = "/META-INF/elide/embedded/runtime"
+
+    private fun runtimeLangConfig(engine: String): Pair<Boolean, InputStream?> {
+      val resource = (
+          AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST.gz")
+      )
+      return if (resource != null) {
+        true to resource
+      } else {
+        false to AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST")
+      }
+    }
 
     /**
      * Resolve an internal runtime configuration file, which describes embedded assets which should be mounted for a
@@ -128,12 +140,18 @@ public abstract class AbstractVMEngine<
       mime: String? = null,
     ): Pair<RuntimeInfo, Source> {
       return try {
-        (AbstractVMEngine::class.java.getResourceAsStream("$EMBEDDED_ROOT/$engine/$RUNTIME_MANIFEST") ?: error(
-          "Failed to locate embedded runtime manifest for language: $engine"
-        )).let { manifestFile ->
+        runtimeLangConfig(engine).let { (compressed, manifestFile) ->
+          manifestFile ?: error(
+            "Failed to locate embedded runtime manifest for language: $engine"
+          )
+
           // decode manifest from JSON to discover injected artifacts
-          val manifest = GZIPInputStream(manifestFile).use {
-            Json.decodeFromStream(RuntimeInfo.serializer(), it)
+          val manifest = if (compressed) {
+            GZIPInputStream(manifestFile).use {
+              Json.decodeFromStream(RuntimeInfo.serializer(), it)
+            }
+          } else {
+            Json.decodeFromStream(RuntimeInfo.serializer(), manifestFile)
           }
           require(manifest.engine == ENGINE_VERSION) {
             "Cannot load runtime for engine version: ${manifest.engine} (expected: $ENGINE_VERSION)"
@@ -559,7 +577,7 @@ public abstract class AbstractVMEngine<
     // 2: build context
     return builder.build().apply {
       // 3: resolve target language bindings
-      val globals = getBindings(language().symbol)
+      val globals = getBindings(language().engine)
       val overlay = MutableIntrinsicBindings.Factory.create()
 
       // 4: resolve and install intrinsics into global overlay

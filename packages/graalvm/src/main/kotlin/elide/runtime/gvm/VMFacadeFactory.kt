@@ -30,6 +30,11 @@ import elide.runtime.gvm.internals.context.ContextManager
 import elide.runtime.gvm.internals.js.JsRuntime
 import org.graalvm.polyglot.Context as VMContext
 
+
+public typealias GenericEngine = (
+  AbstractVMEngine<out GuestRuntimeConfiguration, out ExecutableScript, out InvocationBindings>
+)
+
 /**
  * TBD.
  */
@@ -39,6 +44,9 @@ import org.graalvm.polyglot.Context as VMContext
 
   // Active bean context.
   private val beanContext: BeanContext,
+
+  // All DI-available engines.
+  private val engines: Collection<GenericEngine>,
 ) {
   /**
    * TBD.
@@ -99,15 +107,20 @@ import org.graalvm.polyglot.Context as VMContext
     ServiceLoader.load(VMEngineImpl::class.java)
   }
 
-  // Resolve the VM implementation class to use for the provided `language`.
+  // Resolve the VM implementation class to use for the provided `language` via static means (built-in VMs only).
   private fun resolveStaticVMFactoryImpl(language: GuestLanguage): KClass<*>? = when (language.symbol) {
     "js" -> JsRuntime::class
     else -> null
   }
 
+  // Resolve the VM implementation class to use for the provided `language` from the active bean context.
+  private fun resolveBuildTimeInjectedVMactoryImpl(language: GuestLanguage): GenericEngine? = engines.find { engine ->
+    engine.language().symbol == language.symbol
+  }
+
   // Load a VM implementation via a service-loader.
-  private fun resolveDynamicVMFactoryImpl(language: GuestLanguage): KClass<*>? {
-    return installedEngines.stream().filter {
+  private fun resolveDynamicVMFactoryImpl(language: GuestLanguage): KClass<*>? = installedEngines.let { engines ->
+    engines.stream().filter {
       it.type().annotations.find { anno ->
         anno.annotationClass.qualifiedName == GuestRuntime::class.qualifiedName
       }?.let { anno ->
@@ -125,8 +138,8 @@ import org.graalvm.polyglot.Context as VMContext
 
   // Initialize a VM engine after loading it from the service loader; this is done by acquiring an instance through the
   // active bean context.
-  private fun initializeVMEngine(impl: KClass<*>): AbstractVMEngine<*, *, *> {
-    return (beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>).apply {
+  private fun initializeVMEngine(impl: KClass<*>, instance: AbstractVMEngine<*, *, *>?): AbstractVMEngine<*, *, *> {
+    return (instance ?: (beanContext.getBean(impl.java) as AbstractVMEngine<*, *, *>)).apply {
       this@apply.contextManager = this@VMFacadeFactory.contextManager
       initialize()
     }
@@ -137,12 +150,23 @@ import org.graalvm.polyglot.Context as VMContext
    */
   public fun acquireVM(vararg languages: GuestLanguage): VMFacade {
     val engines = languages.map {
-      val impl = resolveStaticVMFactoryImpl(it) ?: resolveDynamicVMFactoryImpl(it) ?: error(
-        "Failed to resolve VM implementation for language: ${it.label}. Is it supported and installed?"
-      )
-      val vm = initializeVMEngine(impl)
-      object: VMFacade by vm {
-        /* No overrides at this time. */
+      when (val instance = resolveBuildTimeInjectedVMactoryImpl(it)) {
+        null -> {
+          val impl = (
+            resolveStaticVMFactoryImpl(it) ?:
+            resolveDynamicVMFactoryImpl(it)
+          ) ?: error(
+            "Failed to resolve VM implementation for language: ${it.label}. Is it supported and installed?"
+          )
+          object: VMFacade by initializeVMEngine(impl, null) {
+            /* No overrides at this time. */
+          }
+        }
+
+        // use the existing instance, if found
+        else -> object: VMFacade by initializeVMEngine(instance::class, instance) {
+          /* No overrides at this time. */
+        }
       }
     }
     return CompoundVMFacade.withEngines(

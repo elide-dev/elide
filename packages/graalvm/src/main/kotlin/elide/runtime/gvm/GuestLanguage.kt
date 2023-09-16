@@ -28,6 +28,11 @@ public interface GuestLanguage {
   /**
    * TBD.
    */
+  public val engine: String
+
+  /**
+   * TBD.
+   */
   public val label: String
 
   /**

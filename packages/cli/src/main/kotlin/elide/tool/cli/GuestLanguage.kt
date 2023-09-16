@@ -16,7 +16,7 @@ package elide.tool.cli
 /** Specifies languages supported for REPL access. */
 internal enum class GuestLanguage (
   internal val id: String,
-  internal val engine: String = id,
+  override val engine: String = id,
   internal val formalName: String,
   internal val experimental: Boolean = false,
   internal val unimplemented: Boolean = false,
@@ -64,7 +64,8 @@ internal enum class GuestLanguage (
 
   /** Interactive nested JVM. */
   JVM (
-    id = ENGINE_JVM,
+    id = "jvm",
+    engine = ENGINE_JVM,
     formalName = "JVM",
     experimental = true,
     unimplemented = true,
@@ -144,9 +145,7 @@ internal enum class GuestLanguage (
     }
   }
 
-  /** @inheritDoc */
-  override val symbol: String get() = engine
+  override val symbol: String get() = id
 
-  /** @inheritDoc */
   override val label: String get() = formalName
 }

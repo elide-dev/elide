@@ -73,7 +73,7 @@ internal sealed class PythonInvocationBindings (
   private val modes: EnumSet<DispatchStyle>,
   private val types: EnumSet<PythonEntrypointType>,
 ) : InvocationBindings, GVMInvocationBindings<PythonInvocationBindings, PythonExecutableScript>() {
-  /** Enumerates types of resolved Python entrypoints; a [PythonInvocationBindings] sub-class exists for each. */
+  /** Enumerates types of resolved Python entrypoints; a [PythonInvocationBindings] subclass exists for each. */
   internal enum class PythonEntrypointType {
     /** Indicates a "default" entrypoint of `__main__`. */
     MAIN,

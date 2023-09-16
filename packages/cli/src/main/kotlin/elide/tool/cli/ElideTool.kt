@@ -67,6 +67,7 @@ import elide.tool.cli.state.CommandState
   )
 )
 @Suppress("MemberVisibilityCanBePrivate")
+@Eager
 @Singleton class ElideTool internal constructor () :
   ToolCommandBase<CommandContext>() {
   companion object {
@@ -101,7 +102,12 @@ import elide.tool.cli.state.CommandState
       Workaround.enableLibraryLoad()
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
-      exitProcess(installWindowsTerminalSupport {
+
+      exitProcess(if (System.getProperty("os.name")?.lowercase()?.contains("windows") == true) {
+        installWindowsTerminalSupport {
+          op.invoke()
+        }
+      } else {
         op.invoke()
       })
     }
@@ -143,11 +149,12 @@ import elide.tool.cli.state.CommandState
         context
           .bootstrapEnvironment(false)
           .deduceEnvironment(false)
+          .deduceCloudEnvironment(false)
           .banner(false)
           .defaultEnvironments("cli")
           .eagerInitAnnotated(Eager::class.java)
           .eagerInitConfiguration(true)
-          .eagerInitSingletons(true)
+          .eagerInitSingletons(false)
           .environmentPropertySource(false)
           .enableDefaultPropertySources(false)
           .overrideConfigLocations("classpath:elide.yml")

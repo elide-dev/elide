@@ -19,9 +19,11 @@
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.crypto.checksum.Checksum
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
   java
@@ -49,25 +51,42 @@ plugins {
 group = "dev.elide"
 version = rootProject.version as String
 
+// Flags affecting this build script:
+//
+// - `elide.release`: true/false
+// - `elide.buildMode`: `dev`, `release`, etc
+// - `elide.targetOs`: `darwin`, `linux`, `windows`
+// - `elide.targetArch`: `amd64`, `arm64`
+
+val quickbuild = (
+  project.properties["elide.release"] != "true" ||
+  project.properties["elide.buildMode"] == "dev"
+)
+val isRelease = !quickbuild && (
+  project.properties["elide.release"] == "true" ||
+  project.properties["elide.buildMode"] == "release"
+)
+
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val enableEspresso = false
+val oracleGvm = false
+val enableEdge = true
 val enableWasm = true
-val enableLlvm = false
 val enablePython = true
-val enableTruffleJson = false
 val enableRuby = true
 val enableTools = true
-val enableSbom = false
-val enablePgo = false
-val enablePgoInstrumentation = false
 val enableMosaic = true
 val enableProguard = false
-val enableDashboard = false
-val oracleGvm = false
+val enableLlvm = false
+val enableEspresso = true
+val enableDashboard = oracleGvm
 val enableG1 = oracleGvm
-val enableEdge = true
+val enablePgo = oracleGvm && isRelease
+val enablePgoInstrumentation = oracleGvm && !isRelease
+val enableSbom = oracleGvm && enableTools
+val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
+val globalExclusions = emptyList<Pair<String, String>>()
 
 buildscript {
   repositories {
@@ -90,7 +109,11 @@ val jvmCompileArgs = listOf(
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
+  "--add-reads=elide.graalvm=ALL-UNNAMED",
+  "--add-reads=elide.cli=ALL-UNNAMED",
 )
+
+val jvmRuntimeArgs = emptyList<String>()
 
 val nativeCompileJvmArgs = jvmCompileArgs.map {
   "-J$it"
@@ -99,7 +122,7 @@ val nativeCompileJvmArgs = jvmCompileArgs.map {
 val jvmModuleArgs = listOf(
   "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
-).plus(jvmCompileArgs)
+).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
 
 val ktCompilerArgs = listOf(
   "-progressive",
@@ -156,7 +179,6 @@ kapt {
   includeCompileClasspath = false
   strictMode = true
   correctErrorTypes = true
-  keepJavacAnnotationProcessors = true
 }
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
@@ -174,16 +196,22 @@ buildConfig {
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
 }
 
+val modules: Configuration by configurations.creating
+
+val classpathExtras: Configuration by configurations.creating {
+  extendsFrom(configurations.runtimeClasspath.get())
+}
+
 dependencies {
   implementation(platform(libs.netty.bom))
 
   kapt(mn.micronaut.inject.java)
   kapt(libs.picocli.codegen)
+  classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
-  implementation(libs.conscrypt)
   implementation(libs.tink)
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
@@ -396,7 +424,7 @@ tasks {
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
-  runtime = MicronautRuntime.NETTY
+  runtime = MicronautRuntime.NONE
   enableNativeImage(true)
 
   processing {
@@ -433,19 +461,6 @@ tasks.withType(Test::class).configureEach {
   systemProperty("elide.test", "true")
 }
 
-tasks.named<JavaExec>("run") {
-  systemProperty("micronaut.environments", "dev")
-  systemProperty("picocli.ansi", "tty")
-  jvmArgs(jvmModuleArgs)
-  standardInput = System.`in`
-  standardOutput = System.out
-}
-
-val quickbuild = (
-  project.properties["elide.release"] != "true" ||
-  project.properties["elide.buildMode"] == "dev"
-)
-
 /**
  * Build: CLI Native Image
  */
@@ -471,6 +486,7 @@ val commonNativeArgs = listOf(
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
   "-H:+EnableAllSecurityServices",
+  "-H:+UnlockExperimentalVMOptions",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
@@ -539,6 +555,7 @@ val experimentalFlags = listOf(
 // CFlags for release mode.
 val releaseCFlags: List<String> = listOf(
   "-O3",
+  "-v",
 ).plus(if (!enableRuby) listOf(
   "-flto"
 ) else emptyList())
@@ -568,7 +585,7 @@ val releaseFlags: List<String> = listOf(
   "-H:+LocalizationOptimizedMode",
   "-H:+RemoveUnusedSymbols",
   "-J-Djdk.image.use.jvm.map=false",
-).plus(releaseCFlags.flatMap {
+).asSequence().plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
     "-H:CCompilerOption=$it",
@@ -583,7 +600,7 @@ val releaseFlags: List<String> = listOf(
   if (enableDashboard) dashboardFlags else emptyList()
 ).plus(
   if (oracleGvm) gvmReleaseFlags else emptyList()
-)
+).toList()
 
 val jvmDefs = mapOf(
   "user.country" to "US",
@@ -595,10 +612,13 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
-  "kotlin.DeprecationLevel",
-  "kotlin.annotation.AnnotationRetention",
-  "kotlin.coroutines.intrinsics.CoroutineSingletons",
-  "kotlin.annotation.AnnotationTarget",
+//  "kotlin.KotlinVersion",
+//  "kotlin.DeprecationLevel",
+//  "kotlin.annotation.AnnotationRetention",
+//  "kotlin.coroutines.intrinsics.CoroutineSingletons",
+//  "kotlin.annotation.AnnotationTarget",
+//  "kotlin.jvm.internal",
+//  "kotlin.reflect.jvm.internal.impl",
   "com.google.common.jimfs.Feature",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
   "ch.qos.logback",
@@ -628,6 +648,9 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueEntry${'$'}Helper",
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
+
+  // Elide Packages
+//  "tools.elide",
 //  "elide.runtime.intrinsics",
 //  "elide.runtime.intrinsics.js",
 //  "elide.runtime.gvm",
@@ -808,19 +831,20 @@ graalvmNative {
     named("main") {
       imageName = if (quickbuild) "elide.debug" else "elide"
       fallback = false
-      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
     }
 
     named("optimized") {
       imageName = "elide"
       fallback = false
-      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       quickBuild = quickbuild
       sharedLibrary = false
       systemProperty("picocli.ansi", "tty")
+      buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
+      classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
 
     named("test") {
@@ -841,13 +865,186 @@ val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
   into(layout.buildDirectory.dir("native/nativeOptimizedCompile"))
 }
 
+val excludedStatics = arrayOf(
+  "about.html",
+  "plugin.xml",
+)
+
+interface TargetInfo {
+  val tag: String
+
+  val resources: List<String> get() = listOf(
+    "META-INF/elide/embedded/runtime/*/*-$tag.*",
+  )
+}
+
+enum class ElideTarget (override val tag: String) : TargetInfo {
+  MACOS_AARCH64("darwin-aarch64"),
+  MACOS_AMD64("darwin-amd64"),
+  LINUX_AMD64("linux-amd64"),
+  WINDOWS_AMD64("windows-amd64");
+}
+
+fun resolveTarget(target: String? = properties["elide.targetOs"] as? String): ElideTarget = when {
+  target == "linux-amd64" -> ElideTarget.LINUX_AMD64
+  target == "darwin-amd64" -> ElideTarget.MACOS_AMD64
+  target == "darwin-aarch64" -> ElideTarget.MACOS_AARCH64
+  target == "windows-amd64" -> ElideTarget.WINDOWS_AMD64
+  HostManager.hostIsLinux -> ElideTarget.LINUX_AMD64
+  HostManager.hostIsMingw -> ElideTarget.WINDOWS_AMD64
+  HostManager.hostIsMac -> when (System.getProperty("os.arch")) {
+    "aarch64" -> ElideTarget.MACOS_AARCH64
+    else -> ElideTarget.MACOS_AMD64
+  }
+  else -> error("Failed to resolve target platform")
+}
+
+fun hostTargetResources(): Array<String> = resolveTarget().resources.toTypedArray()
+
+fun AbstractCopyTask.filterResources(targetArch: String? = null) {
+  duplicatesStrategy = EXCLUDE
+
+//  include(
+//    "logback.xml",
+//    "logback*",
+//    "**/*.class",
+//    "ElideTool*",
+//    "nanorc/*.*",
+//    "nanorc/**/*.*",
+//    "META-INF/native-image/**/*.*",
+//    "META-INF/services/*.*",
+//    "META-INF/versions/*.*",
+//    *hostTargetResources(),
+//  )
+
+  exclude(
+    "**/*.proto",
+    "freebsd/*/*.*",
+    "licenses/*.*",
+    "misc/registry.properties",
+    "linux/arm/*.so",
+    "linux/i386/*.so",
+    "linux/loongarch64/*.so",
+    "linux/mips64/*.so",
+    "linux/ppc64/*.so",
+    "linux/ppc64le/*.so",
+    "linux/s390x/*.so",
+    "META-INF/maven",
+    "META-INF/maven/*",
+    "META-INF/maven/**/*.*",
+    "META-INF/plexus/*",
+    "META-INF/proguard/*",
+    "META-INF/native/freebsd32/*",
+    "META-INF/native/freebsd64/*",
+    "META-INF/native/linux32/*",
+    "META-INF/com.android.tools",
+    "META-INF/com.android.tools/*/*",
+    *excludedStatics,
+    *(if (!HostManager.hostIsMingw) arrayOf(
+      "*.dll",
+      "**/*.dll",
+      "win",
+      "win/*",
+      "win/*/*",
+      "win/**/*.*",
+      "META-INF/elide/embedded/runtime/*/*-windows*",
+    ) else emptyArray()),
+
+    *(if (!HostManager.hostIsMac) arrayOf(
+      "*.dylib",
+      "**/*.dylib",
+      "darwin",
+      "darwin/*",
+      "darwin/*/*",
+      "darwin/**/*.*",
+      "META-INF/native/osx/*",
+      "META-INF/native/*darwin*",
+      "META-INF/native/*osx*",
+      "META-INF/native/*macos*",
+      "META-INF/native/*.dylib",
+      "META-INF/elide/embedded/runtime/*/*-darwin*",
+    ) else emptyArray()),
+
+    *(if (!HostManager.hostIsLinux) arrayOf(
+      "*.so",
+      "**/*.so",
+      "linux/aarch64/*.so",
+      "linux/amd64/*.so",
+      "*/epoll/*",
+      "META-INF/native/linux64/*",
+      "META-INF/native/*linux*",
+      "META-INF/native/*.so",
+      "META-INF/elide/embedded/runtime/*/*-linux*",
+    ) else emptyArray()),
+
+    *(when (targetArch ?: System.getProperty("os.arch")) {
+      "aarch64" -> arrayOf(
+        "*/x86_64/*",
+        "*/amd64/*",
+        "linux/amd64/*.so",
+        "darwin/x86_64/*.dylib",
+        "META-INF/native/linux64/*",
+        "META-INF/native/*x86_64*",
+        "META-INF/native/*amd64*",
+        "META-INF/elide/embedded/runtime/*/*-amd64*",
+      )
+      else -> arrayOf(
+        "*/arm64/*",
+        "*/aarch64/*",
+        "linux/aarch64/*.so",
+        "darwin/aarch64/*.dylib",
+        "META-INF/native/*aarch_64*",
+        "META-INF/native/*arm64*",
+        "META-INF/elide/embedded/runtime/*/*-aarch64*",
+      )
+    })
+  )
+}
+
+fun Jar.applyJarSettings() {
+  // include collected reachability metadata
+  from(tasks.collectReachabilityMetadata)
+  duplicatesStrategy = EXCLUDE
+  filterResources(properties["elide.targetArch"] as? String)
+
+  manifest {
+    attributes("Elide-Engine-Version" to "v3")
+  }
+}
+
 /**
  * Build: CLI Docker Images
  */
 
 tasks {
+  processResources {
+    filterResources()
+  }
+
+  listOf(
+    jar,
+    optimizedJitJar,
+    optimizedNativeJar,
+    shadowJar,
+  ).forEach {
+    it.configure {
+      applyJarSettings()
+    }
+  }
+
+  compileJava {
+    options.javaModuleVersion = provider { version as String }
+  }
+
   if (enableEdge) {
     named("run", JavaExec::class).configure {
+      systemProperty("micronaut.environments", "dev")
+      systemProperty("picocli.ansi", "tty")
+      jvmArgs(jvmModuleArgs)
+
+      standardInput = System.`in`
+      standardOutput = System.out
+
       javaToolchains {
         javaLauncher.set(launcherFor {
           languageVersion = JavaLanguageVersion.of(21)
@@ -857,6 +1054,12 @@ tasks {
     }
 
     optimizedRun {
+      systemProperty("micronaut.environments", "dev")
+      systemProperty("picocli.ansi", "tty")
+      jvmArgs(jvmModuleArgs)
+      standardInput = System.`in`
+      standardOutput = System.out
+
       javaToolchains {
         javaLauncher.set(launcherFor {
           languageVersion = JavaLanguageVersion.of(21)
@@ -873,10 +1076,6 @@ tasks {
         })
       }
     }
-  }
-
-  jar {
-    from(collectReachabilityMetadata)
   }
 
   withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
@@ -899,15 +1098,6 @@ tasks {
       freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
     }
   }
-
-//  shadowJar {
-//    from(collectReachabilityMetadata)
-//
-//    exclude(
-//      "java-header-style.xml",
-//      "license.header",
-//    )
-//  }
 
   nativeOptimizedCompile {
     dependsOn(decompressProfiles)
@@ -963,6 +1153,10 @@ tasks.named<com.bmuschko.gradle.docker.tasks.image.DockerBuildImage>("optimizedD
 }
 
 configurations.all {
+  globalExclusions.forEach {
+    exclude(group = it.first, module = it.second)
+  }
+
   resolutionStrategy.dependencySubstitution {
     substitute(module("net.java.dev.jna:jna"))
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
@@ -975,12 +1169,12 @@ configurations.all {
   }
 }
 
-afterEvaluate {
-  tasks.named<JavaExec>("optimizedRun") {
-    systemProperty("micronaut.environments", "dev")
-    systemProperty("picocli.ansi", "tty")
-  }
+// Fix: Java9 Modularity
+//val compileKotlin: KotlinCompile by tasks
+//val compileJava: JavaCompile by tasks
+//compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
 
+afterEvaluate {
   tasks.withType(KotlinJvmCompile::class.java).configureEach {
     kotlinOptions {
       apiVersion = Elide.kotlinLanguageBeta

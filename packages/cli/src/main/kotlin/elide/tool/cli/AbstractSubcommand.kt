@@ -14,6 +14,7 @@
 package elide.tool.cli
 
 import org.graalvm.polyglot.Language
+import picocli.CommandLine.Mixin
 import java.io.*
 import java.net.URI
 import java.util.*
@@ -272,10 +273,10 @@ import org.graalvm.polyglot.Engine as VMEngine
   private val sharedResources: MutableList<AutoCloseable> = LinkedList()
 
   // Main top-level tool.
-  @Inject private lateinit var base: ElideTool
+  @Inject internal lateinit var base: ElideTool
 
   // Context factory for guest VMs.
-  @Inject private lateinit var vmContextFactory: ContextFactory<VMContext, VMContext.Builder>
+  @Inject internal lateinit var vmContextFactory: ContextFactory<VMContext, VMContext.Builder>
 
   // Factory to acquire VM execution facades.
   @Inject protected lateinit var vmFactory: VMFacadeFactory
@@ -403,10 +404,10 @@ import org.graalvm.polyglot.Engine as VMEngine
    */
   override suspend fun Context.invoke(state: CommandState): CommandResult = use {
     // allow the subclass to register its own shared resources
-    sharedResources.addAll(initialize(base))
+    sharedResources.addAll(initialize())
 
     // build initial state
-    val toolState = state(base) ?: materializeInitialState()
+    val toolState = state() ?: materializeInitialState()
     val ctx = context(state)
 
     @Suppress("UNCHECKED_CAST")
@@ -543,12 +544,12 @@ import org.graalvm.polyglot.Engine as VMEngine
   /**
    * TBD.
    */
-  protected open fun initialize(base: ElideTool): List<AutoCloseable> = emptyList()
+  protected open fun initialize(): List<AutoCloseable> = emptyList()
 
   /**
    * TBD.
    */
-  protected open fun state(base: ElideTool): State? = null
+  protected open fun state(): State? = null
 
   /**
    * TBD.

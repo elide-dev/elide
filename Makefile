@@ -123,6 +123,8 @@ ifeq ($(SCAN),yes)
 BUILD_ARGS += --scan
 endif
 
+CLI_TASKS ?= :packages:cli:installDist
+
 ifeq ($(RELEASE),yes)
 BUILD_MODE ?= release
 SIGNING ?= yes
@@ -157,6 +159,11 @@ ifneq ($(NATIVE),no)
 BUILD_ARGS += $(patsubst %,-d %,$(NATIVE_TASKS))
 OMIT_NATIVE =
 else
+ifeq ($(RELEASE),yes)
+CLI_TASKS += :packages:cli:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.release=true -PenableSigning=true -PbuildDocs=true
+else
+CLI_TASKS += :packages:cli:nativeCompile
+endif
 endif
 endif
 
@@ -189,8 +196,8 @@ _ARGS ?= $(GRADLE_ARGS) $(BUILD_ARGS) $(ARGS)
 all: build test docs
 
 build:  ## Build the main library, and code-samples if SAMPLES=yes.
-	$(info Building Elide v3...)
-	$(CMD) $(GRADLE) build -x test -x check $(GRADLE_OMIT) $(_ARGS)
+	$(info Building Elide $(VERSION)...)
+	$(CMD) $(GRADLE) build $(CLI_TASKS) -x test -x check $(GRADLE_OMIT) $(_ARGS)
 
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)

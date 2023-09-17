@@ -1,6 +1,8 @@
 package elide.internal.conventions.kotlin
 
 import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import elide.internal.conventions.jvm.configureJavaModularity
@@ -62,6 +64,21 @@ internal fun Project.configureKotlinMultiplatform(
 
     // add native targets
     if (Native in target) registerNativeTargets()
+
+    // main host publication lock (for KMP projects targeting platforms without cross-compilation)
+    if (project.findProperty("publishMainHostLock") == "true") {
+      // the "Main Host" (e.g. a Linux-based GitHub runner) will publish the JVM, JS, and Common targets,
+      // other hosts will not configure these publications, instead pushing only their platform-specific components
+      val publicationsFromMainHost = listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+
+      project.extensions.getByType(PublishingExtension::class.java).publications.matching {
+        it.name in publicationsFromMainHost
+      }.all {
+        tasks.withType(AbstractPublishToMaven::class.java)
+          .matching { it.publication == this@all }
+          .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+      }
+    }
   }
 }
 

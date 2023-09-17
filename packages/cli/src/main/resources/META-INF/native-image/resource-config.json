@@ -1,6 +1,10 @@
 {
   "resources":{
   "includes":[{
+    "pattern":"META-INF/services/org/jline/terminal/provider/.*"
+  }, {
+    "pattern":"\\QMETA-INF/elide/**/*.*"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/facade.js\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/js.modules.tar.gz\\E"
@@ -9,11 +13,23 @@
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/polyfills.js\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/js/runtime.json.gz\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/js/runtime.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/runtime.json.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/jvm/runtime.json\\E"
   }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/python-darwin-aarch64.tar.xz\\E"
   }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json.gz\\E"
+  }, {
     "pattern":"\\QMETA-INF/elide/embedded/runtime/python/runtime.json\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/ruby-darwin-aarch64.tar.gz\\E"
+  }, {
+    "pattern":"\\QMETA-INF/elide/embedded/runtime/ruby/runtime.json.gz\\E"
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
@@ -21,15 +37,31 @@
   }, {
     "pattern":"\\QMETA-INF/micronaut/io.micronaut.inject.BeanDefinitionReference\\E"
   }, {
+    "pattern":"\\QMETA-INF/native/**/.*"
+  }, {
+    "pattern":"\\QMETA-INF/native/*.*"
+  }, {
+    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.dylib\\E"
+  }, {
+    "pattern":"\\QMETA-INF/native/libnetty_tcnative_osx_aarch_64.jnilib\\E"
+  }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_epoll_x86_64.so\\E"
+  }, {
+    "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib\\E"
   }, {
     "pattern":"\\QMETA-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/**/.*"
+  }, {
+    "pattern":"\\QMETA-INF/services/*.*"
+  }, {
     "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.fasterxml.jackson.databind.Module\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.graal.python.builtins.PythonBuiltins\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.TruffleLanguage$Provider\\E"
   }, {
@@ -37,13 +69,29 @@
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.instrumentation.provider.TruffleInstrumentProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.library.DefaultExportProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.object.LayoutFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.api.provider.TruffleLanguageProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.js.runtime.Evaluator\\E"
   }, {
     "pattern":"\\QMETA-INF/services/com.oracle.truffle.llvm.runtime.config.ConfigurationFactory\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.EngineCacheSupport\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.FloodControlHandler\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.oracle.truffle.runtime.TruffleTypes\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/elide.runtime.gvm.VMEngineImpl\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/elide.runtime.intrinsics.GuestIntrinsic\\E"
   }, {
     "pattern":"\\QMETA-INF/services/io.micronaut.context.ApplicationContextConfigurer\\E"
   }, {
@@ -57,11 +105,31 @@
   }, {
     "pattern":"\\QMETA-INF/services/io.micronaut.inject.BeanDefinitionReference\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.net.spi.InetAddressResolverProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.net.spi.URLStreamHandlerProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileSystemProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileTypeDetector\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.xml.parsers.SAXParserFactory\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/jdk.vm.ci.services.JVMCIServiceLocator\\E"
   }, {
     "pattern":"\\QMETA-INF/services/kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoader\\E"
   }, {
     "pattern":"\\QMETA-INF/services/kotlin.reflect.jvm.internal.impl.resolve.ExternalOverridabilityCondition\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper\\E"
   }, {
     "pattern":"\\QMETA-INF/services/kotlin.test.AsserterContributor\\E"
   }, {
@@ -71,7 +139,15 @@
   }, {
     "pattern":"\\QMETA-INF/services/org.slf4j.spi.SLF4JServiceProvider\\E"
   }, {
+    "pattern":"\\Qbootstrap-dev.conf\\E"
+  }, {
+    "pattern":"\\Qbootstrap-dev.json\\E"
+  }, {
     "pattern":"\\Qbootstrap-dev.properties\\E"
+  }, {
+    "pattern":"\\Qbootstrap.conf\\E"
+  }, {
+    "pattern":"\\Qbootstrap.json\\E"
   }, {
     "pattern":"\\Qbootstrap.properties\\E"
   }, {
@@ -417,17 +493,287 @@
   }, {
     "pattern":"\\Qcom/oracle/truffle/nfi/backend/libffi/LibFFILanguage.class\\E"
   }, {
+    "pattern":"\\Qcom/oracle/truffle/nfi/backend/panama/PanamaNFILanguage.class\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application-dev.conf\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application-dev.json\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application-dev.properties\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application.conf\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application.json\\E"
+  }, {
+    "pattern":"\\Qelide.yml/application.properties\\E"
+  }, {
+    "pattern":"\\Qgraalpy_versions\\E"
+  }, {
+    "pattern":"\\Qkotlin/io/io.kotlin_builtins\\E"
+  }, {
+    "pattern":"\\Qkotlin/kotlin.kotlin_builtins\\E"
+  }, {
+    "pattern":"\\Qlogback-test.scmo\\E"
+  }, {
+    "pattern":"\\Qlogback-test.xml\\E"
+  }, {
+    "pattern":"\\Qlogback.scmo\\E"
+  }, {
     "pattern":"\\Qlogback.xml\\E"
   }, {
     "pattern":"\\Qmicronaut-version.properties\\E"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib\\E"
+  }, {
+    "pattern":"\\Qorg/fusesource/jansi/jansi.properties\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/argf.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/array.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/basic_object.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/binding.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/class.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/comparable.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/complex.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/complexifier.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/configuration.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/dir.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/dir_glob.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/encoding.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/enumerable.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/enumerator.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/env.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/errno.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/exception.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/false.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/fiber.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/file.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/file_test.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/float.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/gc.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/hash.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/integer.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/io.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/kernel.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/lazy_rubygems.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/main.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/marshal.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/match_data.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/math.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/method.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/module.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/mutex.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/nil.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/numeric.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/object_space.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/posix.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/post.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/pre.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/proc.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/process.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/random.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/range.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/rational.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/rationalizer.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/refinement.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/regexp.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/signal.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/splitter.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/stat.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/string.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/struct.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/symbol.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/thread.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/throw_catch.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/time.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/tms.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/tracepoint.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/transcoding.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/true.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/backward.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/boot.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/complex_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/concurrent_map.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/ctype.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/debug.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/diggable.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/dir_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/encoding_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/enumerable_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/enumerator_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/exception_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/feature_loader.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/ffi/pointer.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/ffi/pointer_access.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/ffi/pointer_extra.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/file_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/float_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/gem_util.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/hash_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/integer_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/internal.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/interop.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/interop_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/io_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/kernel_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/method_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/numeric_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/platform.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/polyglot.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/polyglot_methods.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/proc_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/process_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/queue_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/random_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/range_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/regexp_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/stat_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/string_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/thread_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/time_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/truffleruby.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/versioned_array.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/truffle/warning_operations.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/type.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/unbound_method.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/warning.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/core/weakmap.rb\\E"
+  }, {
+    "pattern":"\\Qtruffleruby/post-boot/post-boot.rb\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfkc.nrm\\E"
   }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
+  }, {
     "pattern":"java.base:\\Qsun/net/www/content-types.properties\\E"
   }, {
+    "pattern":"jdk.jfr:\\Qjdk/jfr/internal/query/view.ini\\E"
+  }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/types/metadata.bin\\E"
+  }, {
+    "pattern":"org.graalvm.truffle.runtime:\\QMETA-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256\\E"
+  }, {
+    "pattern":"org/fusesource/jansi/internal/native/.*"
+  }, {
+    "pattern":"org/fusesource/jansi/jansi.properties"
+  }, {
+    "pattern":"org/fusesource/jansi/jansi.txt"
   }, {
     "pattern":"org/jline/utils/.*caps$"
   }, {

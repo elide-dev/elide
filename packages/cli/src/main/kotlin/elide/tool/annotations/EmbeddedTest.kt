@@ -11,16 +11,17 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.annotations
 
-    requires com.google.common;
+import io.micronaut.context.annotation.Bean
+import kotlin.annotation.AnnotationTarget.CLASS
+import kotlin.annotation.AnnotationTarget.FUNCTION
 
-    requires org.junit.jupiter.api;
-
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
-}
+/**
+ * TBD.
+ */
+@Bean
+@Target(CLASS, FUNCTION)
+annotation class EmbeddedTest(
+  val name: String = "",
+)

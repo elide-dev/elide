@@ -15,14 +15,13 @@ package elide.tool.cli
 
 import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.runMosaic
+import java.lang.Runnable
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
@@ -96,7 +95,7 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * @param op Operation which implements this command.
    * @return Exit code.
    */
-  private fun execute(op: suspend Context.(CommandState) -> CommandResult): Int = runBlocking {
+  private fun execute(ctx: CoroutineContext, op: suspend Context.(CommandState) -> CommandResult): Int {
     val exit = AtomicInteger(0)
     val logging = Statics.logging
     val options = CommandOptions.of(
@@ -119,29 +118,31 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
     logging.trace {
       "Built command state: \n$state"
     }
-    val ctx = context(state)
+    val commandCtx = context(state, ctx)
     logging.trace {
-      "Built command context: \n$ctx"
+      "Built command context: \n$commandCtx"
     }
 
     // invoke and set exit code
     logging.trace {
       "Invoking command implementation"
     }
-    op.invoke(ctx, state).let { result ->
-      exit.set(when (result) {
-        is CommandResult.Success -> 0
-        is CommandResult.Error -> result.exitCode
-      }.also {
-        logging.trace {
-          "Command implementation returned exit code: $it"
-        }
-        commandResult.set(result)
-      })
+    runBlocking {
+      op.invoke(commandCtx, state).let { result ->
+        exit.set(when (result) {
+           is CommandResult.Success -> 0
+           is CommandResult.Error -> result.exitCode
+         }.also {
+          logging.trace {
+            "Command implementation returned exit code: $it"
+          }
+          commandResult.set(result)
+        })
+      }
     }
 
     // return exit code
-    exit.get()
+    return exit.get()
   }
 
   /**
@@ -150,7 +151,7 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * @return Exit code from running the command.
    */
   override fun call(): Int {
-    return execute {
+    return execute(Dispatchers.IO) {
       invoke(it).also(commandResult::set)  // enter context and invoke
     }
   }
@@ -170,11 +171,13 @@ abstract class AbstractToolCommand<Context>: Callable<Int>, Runnable, CommandApi
    * The execution context may be customized on top of the baseline [CommandContext]. Various APIs are provided for
    * resolving configurations, accessing services, and so on, via the context.
    *
+   * @param state Command state to apply.
+   * @param ctx Co-routine context to execute the command in.
    * @return Execution context to use for this command.
    */
-  open fun context(state: CommandState): Context {
+  open fun context(state: CommandState, ctx: CoroutineContext): Context {
     @Suppress("UNCHECKED_CAST")
-    return CommandContext.default(state) as Context
+    return CommandContext.default(state, ctx) as Context
   }
 
   /**

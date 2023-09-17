@@ -13,11 +13,14 @@
 
 package elide.tool.cli.cmd.info
 
+import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.Platform
+import org.graalvm.polyglot.Engine
 import picocli.CommandLine.Command
+import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.CommandContext
-import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
 
 /** TBD. */
@@ -29,7 +32,16 @@ import elide.tool.cli.ToolState
 @Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    println("This command (`info`) is not implemented yet.")
+    val version = ElideTool.version()
+    val engine = Engine.create()
+    val operatingMode = if (ImageInfo.inImageCode()) "NATIVE" else "JVM"
+
+    output {
+      appendLine("Elide v${version}")
+      appendLine("Engine: ${engine.implementationName} v${engine.version}")
+      appendLine("Platform: $operatingMode")
+      appendLine("Languages: " + engine.languages.keys.joinToString(", "))
+    }
     return success()
   }
 }

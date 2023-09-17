@@ -218,6 +218,8 @@ buildTimeTracker = "4.3.0"
 cyclonedx = "1.7.4"
 redacted_plugin = "1.6.1"
 jprofiler = "14.0-PRE1"
+semver = "3.1.0"
+magicProgress = "0.3.2"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -548,6 +550,8 @@ confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", ve
 xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
 zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
 github_api = { group = "org.kohsuke", name = "github-api", version.ref = "github_api" }
+semver = { group = "com.vdurmont", name = "semver4j", version.ref = "semver" }
+magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
 ## Build Classpath
 openrewrite_kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite_lib" }
 openrewrite_test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite_lib" }

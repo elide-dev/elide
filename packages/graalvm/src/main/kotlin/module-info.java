@@ -25,7 +25,6 @@ module elide.graalvm {
   requires io.micronaut.core;
   requires io.micronaut.http;
   requires io.micronaut.inject;
-  requires io.micronaut.core_reactive;
   requires io.netty.codec.http;
   requires reactor.netty.core;
   requires reactor.netty.http;
@@ -41,6 +40,7 @@ module elide.graalvm {
   requires com.google.common.jimfs;
   requires org.apache.commons.compress;
   requires io.micronaut.context;
+  requires java.logging;
 
   exports elide.runtime.intrinsics.js;
   exports elide.runtime.intrinsics.js.express;

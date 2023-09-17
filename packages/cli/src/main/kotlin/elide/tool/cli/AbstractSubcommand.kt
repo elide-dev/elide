@@ -14,7 +14,6 @@
 package elide.tool.cli
 
 import org.graalvm.polyglot.Language
-import picocli.CommandLine.Mixin
 import java.io.*
 import java.net.URI
 import java.util.*
@@ -37,6 +36,7 @@ import elide.tool.cli.err.ShellError
 import elide.tool.cli.state.CommandState
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
+
 
 /**
  * TBD.
@@ -359,18 +359,23 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   // Attach a VM shutdown hook which cleans up and emits a shutdown message.
   private fun attachShutdownHook() {
-    Runtime.getRuntime().addShutdownHook(Thread {
-      logging.debug("Cleaning up tool resources")
-      close()
+    Runtime.getRuntime().addShutdownHook(
+      Thread {
+        logging.debug("Cleaning up tool resources")
+        close()
 
-      if (!quiet && interactive.get()) runBlocking {
-        out.pretty({
-          line("Exiting session. Have a great day! \uD83D\uDC4B")
-        }, {
-          line("Exited session")
-        })
-      }
-    })
+        if (!quiet && interactive.get()) runBlocking {
+          out.pretty(
+            {
+              line("Exiting session. Have a great day! \uD83D\uDC4B")
+            },
+            {
+              line("Exited session")
+            },
+          )
+        }
+      },
+    )
   }
 
   /**
@@ -408,7 +413,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // build initial state
     val toolState = state() ?: materializeInitialState()
-    val ctx = context(state)
+    val ctx = context(state, coroutineContext)
 
     @Suppress("UNCHECKED_CAST")
     initializeToolResources(toolState as State) {
@@ -473,14 +478,14 @@ import org.graalvm.polyglot.Engine as VMEngine
         it.fileSystem(
           EmbeddedGuestVFS.forBundle(
             *systemBundles.plus(bundles).toTypedArray(),
-          )
+          ),
         )
       } else if (systemBundles.isNotEmpty() && !hostIO) {
         logging.debug { "No user bundles, but ${systemBundles.size} system bundles present; mounting embedded" }
         it.fileSystem(
           EmbeddedGuestVFS.forBundle(
             *systemBundles.toTypedArray(),
-          )
+          ),
         )
       } else if (hostIO) {
         // if we're doing host I/O, mount that instead

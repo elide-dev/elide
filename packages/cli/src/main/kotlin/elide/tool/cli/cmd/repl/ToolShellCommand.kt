@@ -84,7 +84,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  aliases = ["shell", "r", "s", "serve", "start", "js", "node", "python", "ruby", "wasm", "kt", "jvm"],
+  aliases = ["shell", "r", "s", "serve"],
   description = ["%nRun a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -111,7 +111,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
     private val initialized: AtomicBoolean = AtomicBoolean(false)
-    private val engine: VMEngine = VMEngine.create()
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
@@ -737,24 +736,25 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   // Build or detect a terminal to use for interactive REPL use.
-  private fun buildTerminal(): Terminal = TerminalBuilder.builder()
-    .jansi(true)
-    .jna(false)  // not supported on M1 (crashes)
-    .color(pretty)
-    .encoding(StandardCharsets.UTF_8).build().apply {
-    val executeThread = Thread.currentThread()
-    if (width == 0 || height == 0) {
-      size = Size(120, 40)  // hard coded terminal size when redirecting
-    }
-    handle(Terminal.Signal.INT) {
-      executeThread.interrupt()
-    }
-    terminal.set(this)
+  private fun buildTerminal(): Terminal {
+    return TerminalBuilder.builder()
+      .jansi(true)
+      .jna(false)  // not supported on M1 (crashes)
+      .color(pretty)
+      .encoding(StandardCharsets.UTF_8).build().apply {
+        val executeThread = Thread.currentThread()
+        if (width == 0 || height == 0) {
+          size = Size(120, 40)  // hard coded terminal size when redirecting
+        }
+        handle(Terminal.Signal.INT) {
+          executeThread.interrupt()
+        }
+        terminal.set(this)
+      }
   }
 
   // Build a parser for use by the line reader.
   private fun buildParser(): Parser = DefaultParser().apply {
-    isEofOnUnclosedQuote = true
     escapeChars = null
     isEofOnUnclosedQuote = true
     setRegexVariable(null)
@@ -801,7 +801,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // order matters: initialize these last, because they depend on `ReplSystemRegistry` being registered as a
     // singleton, which happens in `setCommandRegistries`.
-    val (highlighter, langSyntax) = buildHighlighter(language, jnanorcFile)
+    val (highlighter, languageHighlighter) = buildHighlighter(language, jnanorcFile)
     val history = buildHistory()
 
     val reader = LineReaderBuilder.builder()
@@ -822,9 +822,8 @@ import org.graalvm.polyglot.Engine as VMEngine
       .option(LineReader.Option.INSERT_TAB, false)
       .build()
 
-    this.lineReader.set(reader)
-    this.langSyntax.set(langSyntax)
-
+    lineReader.set(reader)
+    langSyntax.set(languageHighlighter)
     builtins.setLineReader(reader)
     history.attach(reader)
     reader.apply {
@@ -1234,21 +1233,35 @@ import org.graalvm.polyglot.Engine as VMEngine
     }
 
     // type check: first, check file extension
-    if (!language.extensions.contains(script.extension)) {
+    val allowedMimeTypes = languages.flatMap { it.mimeTypes }.toSortedSet()
+    val allowedExtensions = languages.flatMap { it.extensions }.toSortedSet()
+    val openMimeMode = languages.any { it.mimeTypes.isEmpty() }
+
+    // @TODO(sgammon): less searching here
+    val targetLang = if (!allowedExtensions.contains(script.extension)) {
       logging.debug("Script fail: Extension is not present in language allowed extensions")
 
       val contentType = Files.probeContentType(Path(script.path))
-      if (!language.mimeTypes.contains(contentType)) {
+      if (!openMimeMode && !allowedMimeTypes.contains(contentType)) {
         logging.debug("Script fallback fail: Mime type is also not in allowed set for language. Rejecting.")
         throw ShellError.FILE_TYPE_MISMATCH.asError()
       } else {
         logging.trace("Script check: File mimetype matches")
       }
+      languages.find {
+        it.mimeTypes.contains(contentType)
+      }
     } else {
       logging.trace("Script check: File extension matches")
+      languages.find {
+        it.extensions.contains(script.extension)
+      }
+    }
+    requireNotNull(targetLang) {
+      "Failed to resolve target language for source file"
     }
 
-    return Source.newBuilder(language.symbol, script)
+    return Source.newBuilder(targetLang.symbol, script)
       .encoding(StandardCharsets.UTF_8)
       .internal(false)
       .build()

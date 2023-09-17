@@ -20,6 +20,7 @@
 )
 
 import ElidePackages.elidePackage
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import kotlinx.benchmark.gradle.*
 
 plugins {
@@ -44,15 +45,37 @@ version = rootProject.version as String
 
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
+  modularity.inferModulePath = true
+}
+
 kotlin {
   explicitApi()
 }
 
+kapt {
+  useBuildCache = true
+  includeCompileClasspath = false
+  strictMode = true
+  correctErrorTypes = true
+
+  javacOptions {
+    option("--modulepath", tasks.compileJava.get().classpath.files.joinToString(",") { it.path })
+  }
+}
+
 sourceSets {
+  val main by getting {
+    java.srcDirs(
+      layout.projectDirectory.dir("src/main/java9")
+    )
+  }
   val benchmarks by creating {
     kotlin.srcDirs(
-      "$projectDir/src/benchmarks/kotlin",
-      "$projectDir/src/main/kotlin",
+      layout.projectDirectory.dir("src/benchmarks/kotlin"),
+      layout.projectDirectory.dir("src/main/kotlin"),
     )
   }
 }
@@ -216,7 +239,9 @@ elidePackage(
   id = "graalvm",
   name = "Elide for GraalVM",
   description = "Integration package with GraalVM and GraalJS.",
-)
+) {
+  java9Modularity = false  // we handle it ourselves
+}
 
 // Configurations: Testing
 val testBase: Configuration by configurations.creating {}
@@ -227,6 +252,30 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+  }
+
+  javadoc {
+    enabled = false
+  }
+
+  jar {
+    manifest {
+      attributes(
+        "Elide-Engine-Version" to "v3",
+        "Elide-Release-Track" to "ALPHA",
+        "Elide-Release-Version" to version,
+        "Specification-Title" to "Elide VM Specification",
+        "Specification-Version" to "0.1",
+        "Implementation-Title" to "Elide VM Specification",
+        "Implementation-Version" to "0.1",
+        "Implementation-Vendor" to "Elide Ventures, LLC",
+      )
+    }
+  }
+
+  compileJava {
+    options.javaModuleVersion = version as String
+    modularity.inferModulePath = true
   }
 
   /**
@@ -242,3 +291,8 @@ tasks {
     add("testBase", testJar)
   }
 }
+
+// Fix: Java9 Modularity
+val compileKotlin: KotlinCompile by tasks
+val compileJava: JavaCompile by tasks
+compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)

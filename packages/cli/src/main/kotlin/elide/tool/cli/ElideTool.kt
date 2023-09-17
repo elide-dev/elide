@@ -38,8 +38,11 @@ import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
+import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.selftest.SelfTestCommand
+import elide.tool.cli.cmd.update.SelfUpdateCommand
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.output.Counter
 import elide.tool.cli.output.runJestSample
@@ -56,6 +59,9 @@ import elide.tool.cli.state.CommandState
     ToolInfoCommand::class,
     ToolShellCommand::class,
     ToolDiscordCommand::class,
+    HelpCommand::class,
+    SelfUpdateCommand::class,
+    SelfTestCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
     "   ______     __         __     _____     ______%n" +
@@ -64,7 +70,7 @@ import elide.tool.cli.state.CommandState
     "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
     "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
     " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
-  )
+  ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Eager
@@ -72,7 +78,19 @@ import elide.tool.cli.state.CommandState
   ToolCommandBase<CommandContext>() {
   companion object {
     init {
-      System.setProperty("elide.js.vm.enableStreams", "true")
+      listOf(
+        "elide.js.vm.enableStreams" to "true",
+        "io.netty.tmpdir" to "/tmp/elide-runtime/temp",
+        "io.netty.native.workdir" to "/tmp/elide-runtime/native",
+        "io.netty.native.deleteLibAfterLoading" to "false",
+        "io.netty.allocator.maxOrder" to "3",
+        "io.netty.serviceThreadPrefix" to "elide-svc",
+        "io.netty.buffer.bytebuf.checkAccessible" to "false",
+        org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
+        org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
+      ).forEach {
+        System.setProperty(it.first, it.second)
+      }
     }
 
     /** Name of the tool. */
@@ -86,36 +104,35 @@ import elide.tool.cli.state.CommandState
       Statics.logging
     }
 
+    @JvmStatic private fun initializeTerminal() {
+      org.fusesource.jansi.AnsiConsole.systemInstall()
+    }
+
     // Maybe install terminal support for Windows if it is needed.
     private fun installWindowsTerminalSupport(op: () -> Int): Int {
-      return if (System.getProperty("os.name") == "Windows") {
-        AnsiConsole.windowsInstall().use {
-          op.invoke()
+      return AnsiConsole.windowsInstall().use {
+        if (!org.fusesource.jansi.AnsiConsole.isInstalled()) {
+          initializeTerminal()
         }
-      } else {
         op.invoke()
       }
     }
 
     // Install static classes/perform static initialization.
-    private fun installStatics(op: () -> Int) {
-      Workaround.enableLibraryLoad()
+    private fun installStatics(op: () -> Int): Int {
       SLF4JBridgeHandler.removeHandlersForRootLogger()
       SLF4JBridgeHandler.install()
-
-      exitProcess(if (System.getProperty("os.name")?.lowercase()?.contains("windows") == true) {
-        installWindowsTerminalSupport {
-          op.invoke()
-        }
-      } else {
+      return installWindowsTerminalSupport {
         op.invoke()
-      })
+      }
     }
 
     /** CLI entrypoint and [args]. */
-    @JvmStatic fun main(args: Array<String>): Unit = installStatics {
-      exec(args)
-    }
+    @JvmStatic fun main(args: Array<String>): Unit = exitProcess(
+      installStatics {
+        exec(args)
+      },
+    )
 
     /** @return Tool version. */
     @JvmStatic fun version(): String = ELIDE_TOOL_VERSION
@@ -133,13 +150,17 @@ import elide.tool.cli.state.CommandState
         .setExitCodeExceptionMapper(exceptionMapper)
         .setPosixClusteredShortOptionsAllowed(true)
         .setUsageHelpAutoWidth(true)
-        .setColorScheme(Help.defaultColorScheme(if (args.find { arg ->
-            arg == "--no-pretty" || arg == "--pretty=false"
-        } != null) {
-          Help.Ansi.OFF
-        } else {
-          Help.Ansi.ON
-        }))
+        .setColorScheme(
+          Help.defaultColorScheme(
+            if (args.find { arg ->
+                arg == "--no-pretty" || arg == "--pretty=false"
+              } != null) {
+              Help.Ansi.OFF
+            } else {
+              Help.Ansi.ON
+            },
+          ),
+        )
         .execute(*args)
     }
 
@@ -172,10 +193,12 @@ import elide.tool.cli.state.CommandState
           val out = StringWriter()
           val printer = PrintWriter(out)
           inner.printStackTrace(printer)
-          logging.error(StringBuilder().apply {
-            append("Stacktrace:\n")
-            append(out.toString())
-          }.toString())
+          logging.error(
+            StringBuilder().apply {
+              append("Stacktrace:\n")
+              append(out.toString())
+            }.toString(),
+          )
           exitCode
         }
 
@@ -241,7 +264,7 @@ import elide.tool.cli.state.CommandState
     defaultValue = "true",
     scope = ScopeType.INHERIT,
   )
-  var pretty: Boolean = false
+  var pretty: Boolean = true
 
   /** Request timeout value to apply. */
   @Option(

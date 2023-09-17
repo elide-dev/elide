@@ -11,16 +11,16 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.testing
 
-    requires com.google.common;
+import io.micronaut.context.annotation.Bean
+import elide.tool.annotations.EmbeddedTest
+import elide.tool.testing.SelfTest
 
-    requires org.junit.jupiter.api;
-
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+/** Basic sanity self-test. */
+@Bean @EmbeddedTest class SanitySelfTest : SelfTest() {
+  override suspend fun SelfTestContext.test() {
+    assertNotNull(this, "`this` should never be `null`")
+    assertEquals(2, 1 + 1, "math should work")
+  }
 }

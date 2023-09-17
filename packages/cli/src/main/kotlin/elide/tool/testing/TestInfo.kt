@@ -11,16 +11,28 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.testing
 
-    requires com.google.common;
+/**
+ * TBD.
+ */
+@JvmInline value class TestInfo private constructor (private val info: TestInfoRecord) {
+  /**
+   * TBD.
+   */
+  @JvmRecord internal data class TestInfoRecord(
+    val name: String,
+  )
 
-    requires org.junit.jupiter.api;
+  /** @return Name of the test. */
+  val name: String get() = info.name
 
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+  companion object {
+    /**
+     * TBD.
+     */
+    @JvmStatic fun <C: TestContext, T: Testable<C>> of(name: String, case: T) = TestInfo(TestInfoRecord(
+      name = name,
+    ))
+  }
 }

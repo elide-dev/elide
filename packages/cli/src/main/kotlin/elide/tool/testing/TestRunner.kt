@@ -11,16 +11,15 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.testing
 
-    requires com.google.common;
-
-    requires org.junit.jupiter.api;
-
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+/**
+ * TBD.
+ */
+abstract class TestRunner<Test, Context>: Runnable, TestCase<Test, Context>
+        where Context: TestContext, Test: Testable<Context> {
+  /**
+   * Run a single test.
+   */
+  abstract suspend fun runTest(case: Testable<Context>, listener: TestEventListener<Test, Context>): TestResult
 }

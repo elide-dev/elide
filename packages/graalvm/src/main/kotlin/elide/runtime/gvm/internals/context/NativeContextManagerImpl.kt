@@ -20,9 +20,12 @@ import com.lmax.disruptor.SleepingWaitStrategy
 import com.lmax.disruptor.dsl.Disruptor
 import com.lmax.disruptor.dsl.ProducerType
 import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.nativeimage.LogHandler
 import org.graalvm.nativeimage.Platform
+import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
+import org.graalvm.word.UnsignedWord
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
@@ -45,6 +48,10 @@ import elide.runtime.gvm.internals.VMProperty
 import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
+
+import java.util.logging.Handler
+import java.util.logging.Level
+import java.util.logging.LogRecord
 
 /** TBD. */
 @Singleton internal class NativeContextManagerImpl @Inject constructor (config: GuestVMConfiguration) :
@@ -124,6 +131,45 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
     // Default thread-sleep (in nanoseconds).
     private const val defaultSleepNs: Long = 100L
+  }
+
+  /**
+   * TBD.
+   */
+  internal inner class LogProxy: Handler() {
+    private val engineLog: Logger = Logging.named("elide:engine")
+
+    override fun publish(record: LogRecord?) {
+      if (record == null) return
+      val fmt = record.message
+
+      when (record.level) {
+        // no-op if off
+        Level.OFF -> {}
+
+        // FINEST becomes trace
+        Level.FINEST -> engineLog.info(fmt)
+
+        // FINE and FINER become debug
+        Level.FINE,
+        Level.FINER -> engineLog.debug(fmt)
+
+        // INFO stays info
+        Level.INFO -> engineLog.info(fmt)
+
+        // WARN becomes warning, ERROR becomes SEVERE
+        Level.WARNING -> engineLog.warn(fmt)
+        Level.SEVERE -> engineLog.error(fmt)
+      }
+    }
+
+    override fun flush() {
+      // nothing at this time
+    }
+
+    override fun close() {
+      // nothing at this time
+    }
   }
 
   /** Stubbed output stream. */
@@ -235,7 +281,7 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
     private val lastException: AtomicReference<Throwable?> = AtomicReference(null)
 
     // Initialize VM context for this executor.
-    @Suppress("DEPRECATION") private fun initializeVMContext() {
+    private fun initializeVMContext() {
       val thread = Thread.currentThread()
       logging.debug { "Allocating VM context for thread '${thread.name}'" }
       val ctx = allocateContext()
@@ -370,6 +416,9 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 
         // forbid system property overrides
         useSystemProperties(false)
+
+        // assign core log handler
+        logHandler(LogProxy())
 
         // allow experimental options
         allowExperimentalOptions(true).let {

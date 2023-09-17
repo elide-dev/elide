@@ -56,8 +56,8 @@ sealed interface CommandContext : CoroutineScope {
   companion object {
     /** @return Default command context implementation. */
     @JvmStatic @Suppress("unused_parameter")
-    fun default(state: CommandState): CommandContext = object : DefaultCommandContext {
-      override val coroutineContext: CoroutineContext get() = TODO("Not yet implemented")
+    fun default(state: CommandState, ctx: CoroutineContext): CommandContext = object : DefaultCommandContext {
+      override val coroutineContext: CoroutineContext get() = ctx
       override val logging: Logger get() = Statics.logging
       override val serverLogging: Logger get() = Statics.serverLogger
       override val accessLogging: Logger get() = Statics.serverLogger
@@ -118,6 +118,7 @@ sealed interface CommandContext : CoroutineScope {
    */
   fun output(out: StringBuilder) {
     println(out.toString())
+    System.out.flush()
   }
 
   /**

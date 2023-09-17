@@ -11,16 +11,28 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.testing
 
-    requires com.google.common;
+/**
+ * TBD.
+ */
+@FunctionalInterface
+interface Testable<Context> where Context: TestContext {
+  /**
+   * TBD.
+   */
+  suspend fun runTestIn(context: Context): Unit = context.test()
 
-    requires org.junit.jupiter.api;
+  /**
+   * TBD.
+   */
+  suspend fun Context.test()
 
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+  /**
+   * TBD.
+   */
+  fun testInfo(): TestInfo = TestInfo.of(
+    this::class.java.simpleName,
+    this,
+  )
 }

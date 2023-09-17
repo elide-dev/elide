@@ -89,9 +89,6 @@
     },
     {
       "name":"java.util.concurrent.locks.ReentrantLock$Sync"
-    },
-    {
-      "name":"org.opentest4j.AssertionFailedError"
     }
   ],
   "lambdaCapturingTypes":[

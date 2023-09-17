@@ -843,12 +843,6 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
-  // withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
-  //   kotlinOptions {
-  //     allWarningsAsErrors = false
-  //     freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-  //   }
-  // }
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     kotlinOptions {
       allWarningsAsErrors = false

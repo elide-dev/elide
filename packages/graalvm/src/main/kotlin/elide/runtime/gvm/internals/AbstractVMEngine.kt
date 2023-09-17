@@ -613,7 +613,7 @@ public abstract class AbstractVMEngine<
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowPolyglotAccess(PolyglotAccess.ALL)
       .allowInnerContextOptions(false)
-      .allowCreateThread(false)
+      .allowCreateThread(true)
       .allowCreateProcess(false)
       .allowAllAccess(false)
       .allowHostClassLoading(false)

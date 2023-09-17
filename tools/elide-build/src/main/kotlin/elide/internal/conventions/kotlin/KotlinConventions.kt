@@ -11,6 +11,16 @@ import elide.internal.conventions.Constants.Kotlin
 import elide.internal.conventions.Constants.Versions
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
+/**
+ * Configure a Kotlin project targeting a specific platform. Options passed to this convention are applied to every
+ * Kotlin source set.
+ *
+ * @param explicitApi Whether to enable Explicit API mode for all source sets.
+ * @param configureKapt Whether to configure KAPT if present, according to internal conventions.
+ * @param configureAllOpen Whether to configure the AllOpen plugin with annotations used often in Elide packages.
+ * @param configureNoArgs Whether to configure the NoArgs plugin with annotations used often in Elide packages.
+ * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
+ */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
   explicitApi: Boolean = false,

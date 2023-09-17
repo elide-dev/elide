@@ -23,7 +23,6 @@ internal fun Project.configureJava() {
   }
 
   extensions.findByType(TestingExtension::class.java)?.apply {
-    // TODO(@darvld): does this work?
     (suites.getByName("test") as JvmTestSuite).useJUnitJupiter()
   }
 }

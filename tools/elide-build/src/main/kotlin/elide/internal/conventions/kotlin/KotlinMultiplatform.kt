@@ -1,16 +1,16 @@
 package elide.internal.conventions.kotlin
 
 import org.gradle.api.Project
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import elide.internal.conventions.jvm.configureJavaModularity
 import elide.internal.conventions.kotlin.KotlinTarget.*
 
 /**
- * - add all native targets if required
- * - configure publications?
+ * Configure a Kotlin Multiplatform project.
+ *
+ * If the [target] includes Kotlin/JVM, the [configureJavaModules] argument controls whether JPMS build is enabled.
+ * Maven publications are automatically configured for each target in multiplatform projects.
  */
 @OptIn(ExperimentalWasmDsl::class)
 internal fun Project.configureKotlinMultiplatform(
@@ -62,22 +62,13 @@ internal fun Project.configureKotlinMultiplatform(
 
     // add native targets
     if (Native in target) registerNativeTargets()
-
-
-    // publishing restrictions for KMP projects
-    // TODO: restore this
-    // if (findProperty("publishMainHostLock")?.toString().toBoolean()) {
-    //   configureMultiplatformPublishing(this)
-    // }
   }
 }
 
 private fun KotlinMultiplatformExtension.registerNativeTargets() {
   // add all basic native targets for both architecture families (mingw not available for ARM)
   mingwX64()
-
   linuxX64()
-  // linuxArm64()
 
   macosX64()
   macosArm64()
@@ -107,18 +98,5 @@ private fun KotlinMultiplatformExtension.registerNativeTargets() {
     
     named("macosArm64Main") { dependsOn(nativeMain) }
     named("macosArm64Test") { dependsOn(nativeTest) }
-  }
-}
-
-private fun Project.configureMultiplatformPublishing(extension: KotlinMultiplatformExtension) = with(extension) {
-  // TODO(@darvld): refactor this
-  val publicationsFromMainHost = listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
-
-  extensions.getByType(PublishingExtension::class.java).apply {
-    publications.matching { it.name in publicationsFromMainHost }.all {
-      tasks.withType(AbstractPublishToMaven::class.java)
-        .matching { it.publication == this }
-        .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
-    }
   }
 }

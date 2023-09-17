@@ -19,6 +19,7 @@
   "COMPATIBILITY_WARNING",
 )
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import elide.internal.conventions.elide
 import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -72,11 +73,39 @@ version = rootProject.version as String
 
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
-sourceSets.create("benchmarks") {
-  kotlin.srcDirs(
-    "$projectDir/src/benchmarks/kotlin",
-    "$projectDir/src/main/kotlin",
-  )
+java {
+  sourceCompatibility = JavaVersion.VERSION_20
+  targetCompatibility = JavaVersion.VERSION_20
+  modularity.inferModulePath = true
+}
+
+kotlin {
+  explicitApi()
+}
+
+kapt {
+  useBuildCache = true
+  includeCompileClasspath = false
+  strictMode = true
+  correctErrorTypes = true
+
+  javacOptions {
+    option("--modulepath", tasks.compileJava.get().classpath.files.joinToString(",") { it.path })
+  }
+}
+
+sourceSets {
+  val main by getting {
+    java.srcDirs(
+      layout.projectDirectory.dir("src/main/java9")
+    )
+  }
+  val benchmarks by creating {
+    kotlin.srcDirs(
+      layout.projectDirectory.dir("src/benchmarks/kotlin"),
+      layout.projectDirectory.dir("src/main/kotlin"),
+    )
+  }
 }
 
 val initializeAtBuildTime = listOf(
@@ -237,6 +266,30 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+  }
+
+  javadoc {
+    enabled = false
+  }
+
+  jar {
+    manifest {
+      attributes(
+        "Elide-Engine-Version" to "v3",
+        "Elide-Release-Track" to "ALPHA",
+        "Elide-Release-Version" to version,
+        "Specification-Title" to "Elide VM Specification",
+        "Specification-Version" to "0.1",
+        "Implementation-Title" to "Elide VM Specification",
+        "Implementation-Version" to "0.1",
+        "Implementation-Vendor" to "Elide Ventures, LLC",
+      )
+    }
+  }
+
+  compileJava {
+    options.javaModuleVersion = version as String
+    modularity.inferModulePath = true
   }
 
   /**

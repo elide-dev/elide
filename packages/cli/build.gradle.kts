@@ -16,6 +16,7 @@
   "UnstableApiUsage",
 )
 
+import com.jakewharton.mosaic.gradle.MosaicExtension
 import io.micronaut.gradle.MicronautRuntime
 import io.micronaut.gradle.docker.DockerBuildStrategy
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -88,6 +89,7 @@ val isRelease = !quickbuild && (
 val entrypoint = "elide.tool.cli.ElideTool"
 
 val oracleGvm = false
+val enableJpms = false
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
@@ -105,6 +107,10 @@ val enableSbom = oracleGvm && enableTools
 val enableTruffleJson = enableEdge
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 val globalExclusions = emptyList<Pair<String, String>>()
+
+val moduleExclusions = listOf(
+  "io.micronaut" to "micronaut-core-processor",
+)
 
 buildscript {
   repositories {
@@ -125,8 +131,11 @@ val jvmCompileArgs = listOf(
   "--add-exports=java.base/jdk.internal.module=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=elide.cli",
   "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.option=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
   "--add-reads=elide.cli=ALL-UNNAMED",
 )
@@ -160,6 +169,7 @@ val ktCompilerArgs = listOf(
 java {
   sourceCompatibility = JavaVersion.VERSION_20
   targetCompatibility = JavaVersion.VERSION_20
+  if (enableJpms) modularity.inferModulePath = true
 }
 
 ktlint {
@@ -175,6 +185,13 @@ ktlint {
   }
 }
 
+kapt {
+  useBuildCache = true
+  includeCompileClasspath = true
+  strictMode = true
+  correctErrorTypes = true
+}
+
 kotlin {
   target.compilations.all {
     kotlinOptions {
@@ -184,16 +201,17 @@ kotlin {
   }
 }
 
-// use consistent compose plugin version
-the<com.jakewharton.mosaic.gradle.MosaicExtension>().kotlinCompilerPlugin =
-  libs.versions.compose.get()
-
-kapt {
-  useBuildCache = true
-  includeCompileClasspath = false
-  strictMode = true
-  correctErrorTypes = true
+sourceSets {
+  val main by getting {
+    if (enableJpms) java.srcDirs(
+      layout.projectDirectory.dir("src/main/java9")
+    )
+  }
 }
+
+// use consistent compose plugin version
+the<MosaicExtension>().kotlinCompilerPlugin =
+  libs.versions.compose.get()
 
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 
@@ -220,14 +238,16 @@ dependencies {
   implementation(platform(libs.netty.bom))
 
   kapt(mn.micronaut.inject.java)
-  kapt(libs.picocli.codegen)
+  annotationProcessor(libs.picocli.codegen)
   classpathExtras(mn.micronaut.core.processor)
 
   api(projects.packages.base)
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.tink)
-  implementation(libs.github.api)
+  implementation(libs.github.api) {
+    exclude(group = "org.bouncycastle")
+  }
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
   // GraalVM: Engines
@@ -240,21 +260,33 @@ dependencies {
   if (enableWasm) implementation(projects.packages.graalvmWasm)
 
   api(libs.picocli)
+  api(libs.commons.compress)
+  api(libs.commons.pool)
+  api(libs.semver)
+  api(libs.magicProgress)
   api(libs.slf4j)
   api(libs.slf4j.jul)
   api(libs.slf4j.log4j.bridge)
 
+  // Elide
+  implementation(projects.packages.core)
+  implementation(projects.packages.base)
+  implementation(projects.packages.test)
+  implementation(projects.packages.runtimeCore)
+
+  implementation(libs.picocli.jline3)
   implementation(libs.picocli.jansi.graalvm)
   implementation(libs.jline.reader)
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jansi)
   implementation(libs.jline.builtins)
-  compileOnly(libs.jline.graal) {
+  implementation(libs.jline.graal) {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
   }
 
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.reactor)
 
   api(mn.micronaut.inject)
   implementation(mn.micronaut.picocli)
@@ -290,12 +322,16 @@ dependencies {
   }
   when {
     Os.isFamily(Os.FAMILY_WINDOWS) -> {
+      compileOnly(libs.netty.transport.native.epoll)
+      compileOnly(libs.netty.transport.native.kqueue)
       implementation(libs.netty.tcnative.boringssl.static)
     }
 
     Os.isFamily(Os.FAMILY_UNIX) -> {
       when {
         Os.isFamily(Os.FAMILY_MAC) -> {
+          compileOnly(libs.netty.transport.native.epoll)
+          compileOnly(libs.netty.transport.native.iouring)
           implementation(libs.netty.transport.native.kqueue)
           implementation(variantOf(libs.netty.transport.native.kqueue) { classifier("osx-$arch") })
           implementation(libs.netty.resolver.dns.native.macos)
@@ -303,6 +339,7 @@ dependencies {
         }
 
         else -> {
+          compileOnly(libs.netty.transport.native.kqueue)
           implementation(libs.netty.transport.native.epoll)
           implementation(variantOf(libs.netty.transport.native.epoll) { classifier("linux-$arch") })
           implementation(variantOf(libs.netty.transport.native.iouring) { classifier("linux-$arch") })
@@ -339,6 +376,7 @@ dependencies {
 
 application {
   mainClass = entrypoint
+  if (enableJpms) mainModule = "elide.cli"
 }
 
 val targetOs = when {
@@ -453,7 +491,7 @@ micronaut {
     optimizeServiceLoading = true
     optimizeClassLoading = true
     optimizeNetty = true
-    possibleEnvironments = listOf("cli")
+    possibleEnvironments = listOf("cli", "cloud", "gcp", "aws", "azure")
 
     netty {
       enabled = true
@@ -492,13 +530,13 @@ val commonNativeArgs = listOf(
   "-H:DefaultCharset=UTF-8",
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
-  "-H:+EnableAllSecurityServices",
-  "-H:+UnlockExperimentalVMOptions",
   "-R:MaxDirectMemorySize=256M",
   "-Dpolyglot.image-build-time.PreinitializeContexts=js",
   "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
-).plus(listOfNotNull(
+).plus(if (enableEdge) listOf(
+  "-H:+UnlockExperimentalVMOptions",
+) else emptyList()).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
   if (enableWasm) "--language:wasm" else null,
   if (enableLlvm) "--language:llvm" else null,
@@ -508,6 +546,7 @@ val commonNativeArgs = listOf(
     "--tool:chromeinspector",
     "--tool:coverage",
     "--tool:profiler",
+    "--tool:lsp",
 ) else emptyList()).plus(if (enableEdge) listOfNotNull(
   if (!enableTruffleJson) null else "--language:truffle-json",
 ) else emptyList()).plus(if (oracleGvm) commonGvmArgs else emptyList())
@@ -518,10 +557,13 @@ val dashboardFlags: List<String> = listOf(
 )
 
 val debugFlags: List<String> = listOfNotNull(
-  "-g",
   "-march=compatibility",
 ).plus(
   if (enableDashboard) dashboardFlags else emptyList()
+).plus(
+  if (HostManager.hostIsLinux) listOf(
+    "-g",
+  ) else emptyList()
 )
 
 val experimentalFlags = listOf(
@@ -595,7 +637,7 @@ val releaseFlags: List<String> = listOf(
 ).asSequence().plus(releaseCFlags.flatMap {
   listOf(
     "-H:NativeLinkerOption=$it",
-    "-H:CCompilerOption=$it",
+    "--native-compiler-options=$it",
   )
 }).plus(if (enablePgo) listOf(
   "--pgo=${profiles.joinToString(",")}",
@@ -823,7 +865,7 @@ graalvmNative {
       standard {}
     }
     metadataCopy {
-      inputTaskNames.add("test")
+      inputTaskNames.addAll(listOf("run", "optimizedRun"))
       outputDirectories.add("src/main/resources/META-INF/native-image")
       mergeWithExisting = true
     }
@@ -835,7 +877,6 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      systemProperty("picocli.ansi", "tty")
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
     }
 
@@ -844,7 +885,6 @@ graalvmNative {
       fallback = false
       quickBuild = quickbuild
       sharedLibrary = false
-      systemProperty("picocli.ansi", "tty")
       buildArgs.addAll(nativeCliImageArgs(debug = false, release = true, platform = targetOs))
       classpath = files(tasks.optimizedNativeJar, configurations.runtimeClasspath)
     }
@@ -905,19 +945,6 @@ fun hostTargetResources(): Array<String> = resolveTarget().resources.toTypedArra
 
 fun AbstractCopyTask.filterResources(targetArch: String? = null) {
   duplicatesStrategy = EXCLUDE
-
-//  include(
-//    "logback.xml",
-//    "logback*",
-//    "**/*.class",
-//    "ElideTool*",
-//    "nanorc/*.*",
-//    "nanorc/**/*.*",
-//    "META-INF/native-image/**/*.*",
-//    "META-INF/services/*.*",
-//    "META-INF/versions/*.*",
-//    *hostTargetResources(),
-//  )
 
   exclude(
     "**/*.proto",
@@ -1005,12 +1032,23 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
 
 fun Jar.applyJarSettings() {
   // include collected reachability metadata
-  from(tasks.collectReachabilityMetadata)
   duplicatesStrategy = EXCLUDE
   filterResources(properties["elide.targetArch"] as? String)
 
   manifest {
-    attributes("Elide-Engine-Version" to "v3")
+    attributes(
+      "Elide-Engine-Version" to "v3",
+      "Elide-Release-Track" to "ALPHA",
+      "Elide-Release-Version" to version,
+      "Application-Name" to "Elide",
+      "Specification-Title" to "Elide VM Specification",
+      "Specification-Version" to "0.1",
+      "Implementation-Title" to "Elide VM Specification",
+      "Implementation-Version" to "0.1",
+      "Implementation-Vendor" to "Elide Ventures, LLC",
+      "Application-Name" to "Elide",
+      "Codebase" to "https://github.com/elide-dev/elide",
+    )
   }
 }
 
@@ -1021,6 +1059,10 @@ fun Jar.applyJarSettings() {
 tasks {
   processResources {
     filterResources()
+  }
+
+  jar {
+    from(collectReachabilityMetadata)
   }
 
   listOf(
@@ -1035,47 +1077,59 @@ tasks {
   }
 
   compileJava {
-    options.javaModuleVersion = provider { version as String }
+    if (enableJpms) {
+      options.javaModuleVersion = provider { version as String }
+      modularity.inferModulePath = true
+    }
   }
 
-  if (enableEdge) {
-    named("run", JavaExec::class).configure {
-      systemProperty("micronaut.environments", "dev")
-      systemProperty("picocli.ansi", "tty")
-      jvmArgs(jvmModuleArgs)
+  named("run", JavaExec::class).configure {
+    systemProperty("micronaut.environments", "dev")
+    systemProperty("picocli.ansi", "tty")
+    jvmArgs(jvmModuleArgs)
 
-      standardInput = System.`in`
-      standardOutput = System.out
+    standardInput = System.`in`
+    standardOutput = System.out
 
+    if (enableEdge) {
       javaToolchains {
-        javaLauncher.set(launcherFor {
-          languageVersion = JavaLanguageVersion.of(21)
-          vendor = JvmVendorSpec.GRAAL_VM
-        })
+        javaLauncher.set(
+          launcherFor {
+            languageVersion = JavaLanguageVersion.of(21)
+            vendor = JvmVendorSpec.GRAAL_VM
+          }
+        )
       }
     }
+  }
 
-    optimizedRun {
-      systemProperty("micronaut.environments", "dev")
-      systemProperty("picocli.ansi", "tty")
-      jvmArgs(jvmModuleArgs)
-      standardInput = System.`in`
-      standardOutput = System.out
+  optimizedRun {
+    systemProperty("micronaut.environments", "dev")
+    jvmArgs(jvmModuleArgs)
+    standardInput = System.`in`
+    standardOutput = System.out
 
+    if (enableEdge) {
       javaToolchains {
-        javaLauncher.set(launcherFor {
-          languageVersion = JavaLanguageVersion.of(21)
-          vendor = JvmVendorSpec.GRAAL_VM
-        })
+        javaLauncher.set(
+          launcherFor {
+            languageVersion = JavaLanguageVersion.of(21)
+            vendor = JvmVendorSpec.GRAAL_VM
+          }
+        )
       }
     }
+  }
 
-    test {
+  test {
+    if (enableEdge) {
       javaToolchains {
-        javaLauncher.set(launcherFor {
-          languageVersion = JavaLanguageVersion.of(21)
-          vendor = JvmVendorSpec.GRAAL_VM
-        })
+        javaLauncher.set(
+          launcherFor {
+            languageVersion = JavaLanguageVersion.of(21)
+            vendor = JvmVendorSpec.GRAAL_VM
+          }
+        )
       }
     }
   }
@@ -1084,16 +1138,16 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
-  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
-    kotlinOptions {
-      jvmTarget = Elide.kotlinJvmTargetMaximum
-      javaParameters = true
-      languageVersion = Elide.kotlinLanguage
-      apiVersion = Elide.kotlinLanguage
-      allWarningsAsErrors = false
-      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-    }
-  }
+//  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
+//    kotlinOptions {
+//      jvmTarget = Elide.kotlinJvmTargetMaximum
+//      javaParameters = true
+//      languageVersion = Elide.kotlinLanguage
+//      apiVersion = Elide.kotlinLanguage
+//      allWarningsAsErrors = false
+//      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
+//    }
+//  }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     kotlinOptions {
@@ -1155,6 +1209,10 @@ configurations.all {
     exclude(group = it.first, module = it.second)
   }
 
+  if (enableJpms && name != "modules" && name != "classpathExtras") moduleExclusions.forEach {
+    exclude(group = it.first, module = it.second)
+  }
+
   resolutionStrategy.dependencySubstitution {
     substitute(module("net.java.dev.jna:jna"))
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
@@ -1168,9 +1226,11 @@ configurations.all {
 }
 
 // Fix: Java9 Modularity
-//val compileKotlin: KotlinCompile by tasks
-//val compileJava: JavaCompile by tasks
-//compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
+if (enableJpms) {
+  val compileKotlin: KotlinCompile by tasks
+  val compileJava: JavaCompile by tasks
+  compileKotlin.destinationDirectory.set(compileJava.destinationDirectory)
+}
 
 afterEvaluate {
   tasks.withType(KotlinJvmCompile::class.java).configureEach {

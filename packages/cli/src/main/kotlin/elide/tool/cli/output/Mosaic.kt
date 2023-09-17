@@ -32,10 +32,15 @@ import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 import elide.tool.cli.output.TestState.*
+import elide.tool.testing.TestInfo
+import elide.tool.testing.TestResult
 
 suspend fun MosaicScope.Counter() {
   // TODO https://github.com/JakeWharton/mosaic/issues/3
@@ -48,6 +53,59 @@ suspend fun MosaicScope.Counter() {
   for (i in 1..20) {
     delay(250)
     count = i
+  }
+}
+
+suspend fun testRenderer(
+  totalTests: Int,
+  allTests: Flow<Pair<TestInfo, suspend () -> Deferred<TestResult>>>,
+  workers: Int = 1,
+) = runMosaicBlocking {
+  val candidates = ArrayDeque(allTests.toList(ArrayList()))
+  val complete = mutableStateListOf<Test>()
+  val tests = mutableStateListOf<Test>()
+
+  repeat(workers) {
+    launch(start = UNDISPATCHED) {
+      while (true) {
+        val (info, candidateRunner) = candidates.removeFirstOrNull() ?: break
+        val index = Snapshot.withMutableSnapshot {
+          val nextIndex = tests.size
+          tests += Test(info.name, Running)
+          nextIndex
+        }
+
+        candidateRunner.invoke().await().let { result ->
+          // Flip a coin biased 60% to pass to produce the final state of the test.
+          tests[index] = when (result.effectiveResult.ok) {
+            true -> {
+              tests[index].copy(state = Pass, assertions = if (result.messages.isNotEmpty()) {
+                result.messages
+              } else emptyList())
+            }
+            else -> {
+              val test = tests[index]
+              val failures = buildList {
+                when (val thr = result.err) {
+                  null -> add("Test failure (unknown)")
+                  else -> add("Error: ${thr.message} (of type '${thr::class.java.name}')")
+                }
+              }
+              test.copy(state = Fail, failures = failures)
+            }
+          }
+          complete += tests[index]
+        }
+      }
+    }
+  }
+
+  setContent {
+    Column {
+      Log(complete)
+      Status(tests)
+      Summary(totalTests, tests)
+    }
   }
 }
 
@@ -131,10 +189,17 @@ fun TestRow(test: Test) {
       color = Black
     )
 
-    val dir = test.path.substringBeforeLast('/')
-    val name = test.path.substringAfterLast('/')
-    Text(" $dir/")
-    Text(name, style = Bold)
+    if (test.path.contains("/")) {
+      val dir = test.path.substringBeforeLast('/')
+      val name = test.path.substringAfterLast('/')
+      Text(" $dir/")
+      Text(name, style = Bold)
+    } else {
+      val pkg = test.path.substringBeforeLast('.')
+      val name = test.path.substringAfterLast('.')
+      Text(" $pkg/")
+      Text(name, style = Bold)
+    }
   }
 }
 
@@ -146,7 +211,13 @@ fun Log(complete: SnapshotStateList<Test>) {
       TestRow(test)
       if (test.failures.isNotEmpty()) {
         for (failure in test.failures) {
-          Text(" ‣ $failure")
+          Text(" ⨯ $failure")
+        }
+        Text("") // Blank line
+      }
+      if (test.assertions.isNotEmpty()) {
+        for (assertion in test.assertions) {
+          Text(" ✔ $assertion")
         }
         Text("") // Blank line
       }
@@ -180,6 +251,7 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
   val running = counts[Running] ?: 0
 
   var elapsed by remember { mutableStateOf(0) }
+
   LaunchedEffect(Unit) {
     while (true) {
       delay(1_000)
@@ -220,9 +292,11 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
 @Composable
 fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
   var showRunning by remember { mutableStateOf(true) }
+
   LaunchedEffect(Unit) {
     while (true) {
-      delay(500)
+      delay(500L)
+
       Snapshot.withMutableSnapshot {
         showRunning = !showRunning
       }
@@ -245,7 +319,8 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 data class Test(
   val path: String,
   val state: TestState,
-  val failures: List<String> = emptyList(),
+  val failures: Collection<String> = emptyList(),
+  val assertions: Collection<String> = emptyList(),
 )
 
 enum class TestState {

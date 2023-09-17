@@ -11,16 +11,27 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-module elide.test {
-    requires java.base;
-    requires kotlin.stdlib;
-    requires io.micronaut.http;
+package elide.tool.testing
 
-    requires com.google.common;
+import elide.tool.testing.SelfTest.SelfTestContext
+import elide.tool.testing.TestContext.TestStage
 
-    requires org.junit.jupiter.api;
+/**
+ * TBD.
+ */
+abstract class SelfTest : AbstractTest<SelfTestContext>() {
+  interface SelfTestContext : TestContext {
+    /**
+     * TBD.
+     */
+    fun notify(stage: TestStage)
 
-    requires elide.core;
-    requires elide.base;
-    requires io.micronaut.test.micronaut_test_junit5;
+    /**
+     * TBD.
+     */
+    fun assignResult(testResult: TestResult)
+  }
+  override val name: String get() = this::class.java.name
+
+  override fun testInfo(): TestInfo = TestInfo.of(name, this)
 }

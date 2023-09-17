@@ -11,16 +11,16 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.apache.tools.ant.taskdefs.condition.Os
 import elide.internal.conventions.elide
-import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
-import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.api.JavaVersion.VERSION_17
+import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
   kotlin("kapt")
+  kotlin("plugin.serialization")
   
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)

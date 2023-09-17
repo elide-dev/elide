@@ -27,6 +27,7 @@ import kotlinx.benchmark.gradle.*
 
 plugins {
   kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 

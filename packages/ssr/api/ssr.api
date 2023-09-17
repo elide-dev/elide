@@ -89,6 +89,10 @@ public final class elide/ssr/StreamResponse$Success : elide/ssr/StreamResponse {
 public abstract interface annotation class elide/ssr/annotations/Props : java/lang/annotation/Annotation {
 }
 
+public synthetic class elide/ssr/annotations/Props$Impl : elide/ssr/annotations/Props {
+	public fun <init> ()V
+}
+
 public final class elide/ssr/type/RequestState {
 	public fun <init> (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;)V
 	public synthetic fun <init> (Lio/micronaut/http/HttpRequest;Ljava/security/Principal;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V

@@ -245,6 +245,17 @@ public final class elide/server/assets/AssetReference : java/io/Serializable {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/server/assets/AssetReference$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/server/assets/AssetReference$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/server/assets/AssetReference;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/server/assets/AssetReference;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
 public abstract interface class elide/server/assets/AssetResolver {
 	public abstract fun findByModuleId (Ljava/lang/String;)Lelide/server/assets/ServerAsset;
 	public fun resolve (Lio/micronaut/http/HttpRequest;)Lelide/server/assets/ServerAsset;

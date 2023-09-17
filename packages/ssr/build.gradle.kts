@@ -16,6 +16,7 @@
 
 plugins {
   kotlin("multiplatform")
+  kotlin("plugin.serialization")
   id("elide.internal.conventions")
 }
 

@@ -1,0 +1,10 @@
+contact_links:
+  - name: Elide Discussions
+    url: https://github.com/elide-dev/elide/discussions
+    about: Ask questions about Elide on Github
+  - name: Elide Discord
+    url: https://elide.dev/discord
+    about: Join the conversation on Discord
+  - name: Stack Overflow
+    url: https://stackoverflow.com/tags/elide
+    about: Ask questions on Stack Overflow

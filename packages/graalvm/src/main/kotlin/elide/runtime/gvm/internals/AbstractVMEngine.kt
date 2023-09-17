@@ -52,6 +52,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.ssr.ServerResponse
 import elide.util.RuntimeFlag
 import java.util.zip.GZIPInputStream
+import elide.runtime.gvm.internals.context.GuestLogProxy
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Value as GuestValue
 
@@ -451,7 +452,7 @@ public abstract class AbstractVMEngine<
   )
 
   // Abstract VM engine logger.
-  private val logging: Logger = Logging.of(AbstractVMEngine::class)
+  private val logging: Logger = Logging.named("elide:engine:${language.symbol}")
 
   /** Whether this VM engine has initialized. */
   private val initialized = AtomicBoolean(false)
@@ -609,6 +610,18 @@ public abstract class AbstractVMEngine<
   @Suppress("DEPRECATION")
   public fun configureVM(builder: VMContext.Builder) {
     // set a strong secure baseline for context guest access
+    val hostAccess = HostAccess.newBuilder(HostAccess.ALL)
+      .allowImplementations(Proxy::class.java)
+      .allowAccessAnnotatedBy(HostAccess.Export::class.java)
+      .allowArrayAccess(true)
+      .allowBufferAccess(true)
+      .allowAccessInheritance(true)
+      .allowIterableAccess(true)
+      .allowIteratorAccess(true)
+      .allowListAccess(true)
+      .allowMapAccess(true)
+      .build()
+
     builder
       .allowEnvironmentAccess(EnvironmentAccess.NONE)
       .allowPolyglotAccess(PolyglotAccess.ALL)
@@ -622,17 +635,10 @@ public abstract class AbstractVMEngine<
       .allowValueSharing(true)
       .fileSystem(filesystem)
       .allowIO(true)
-      .allowHostAccess(HostAccess.newBuilder(HostAccess.ALL)
-        .allowImplementations(Proxy::class.java)
-        .allowAccessAnnotatedBy(HostAccess.Export::class.java)
-        .allowArrayAccess(true)
-        .allowBufferAccess(true)
-        .allowAccessInheritance(true)
-        .allowIterableAccess(true)
-        .allowIteratorAccess(true)
-        .allowListAccess(true)
-        .allowMapAccess(true)
-        .build())
+      .allowHostAccess(hostAccess)
+
+    // assign logger
+    builder.logHandler(GuestLogProxy.wrapping(logging))
 
     // allow the guest VM implementation to configure the builder with language-specific options
     Stream.concat(conditionalOptions.stream(), configure(contextManager.engine(), builder)).filter {

@@ -43,10 +43,19 @@
     <logger name="org.jline" level="error" />
     <logger name="info.picocli" level="error" />
 
+    <logger name="elide:engine" level="debug" />
+    <logger name="elide:engine:js" level="debug" />
+    <logger name="elide:engine:python" level="debug" />
+    <logger name="elide:engine:ruby" level="debug" />
+    <logger name="elide:engine:jvm" level="debug" />
+    <logger name="elide:engine:wasm" level="debug" />
+
     <logger name="elide.tool.cli.cmd.repl.ToolShellCommand" level="warn" />
     <logger name="elide.runtime.gvm.internals.AbstractVMEngine" level="warn" />
     <logger name="elide.runtime.gvm.internals.context.NativeContextManagerImpl" level="warn" />
     <logger name="elide.runtime.gvm.internals.js.JsRuntime" level="warn" />
+
+    <logger name="elide.tool.cli.cmd.update.SelfUpdateCommand" level="warn" />
 
     <!-- Server/Tool Logger -->
     <logger name="tool" additivity="false">

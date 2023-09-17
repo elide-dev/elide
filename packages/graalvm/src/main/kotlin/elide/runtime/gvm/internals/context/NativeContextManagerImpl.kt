@@ -82,14 +82,15 @@ import java.util.logging.LogRecord
     private val staticEngineOptions = listOfNotNull(
       StaticProperty.active("engine.BackgroundCompilation"),
       StaticProperty.active("engine.UsePreInitializedContext"),
+      StaticProperty.active("engine.OSR"),
       StaticProperty.active("engine.Compilation"),
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
-//      StaticProperty.active("engine.Inlining"),
-//      StaticProperty.active("engine.InlineAcrossTruffleBoundary"),
-//      StaticProperty.active("compiler.Inlining"),
-//      StaticProperty.active("compiler.InlineAcrossTruffleBoundary"),
-//      StaticProperty.inactive("engine.WarnOptionDeprecation"),
+      StaticProperty.of("engine.Mode", "latency"),  // @TODO(sgammon): swap for throughput in server mode
+      StaticProperty.active("compiler.Inlining"),
+      StaticProperty.active("compiler.EncodedGraphCache"),
+      StaticProperty.active("compiler.InlineAcrossTruffleBoundary"),
+      StaticProperty.inactive("engine.WarnOptionDeprecation"),
 
       // isolate options
       if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),
@@ -133,44 +134,8 @@ import java.util.logging.LogRecord
     private const val defaultSleepNs: Long = 100L
   }
 
-  /**
-   * TBD.
-   */
-  internal inner class LogProxy: Handler() {
-    private val engineLog: Logger = Logging.named("elide:engine")
-
-    override fun publish(record: LogRecord?) {
-      if (record == null) return
-      val fmt = record.message
-
-      when (record.level) {
-        // no-op if off
-        Level.OFF -> {}
-
-        // FINEST becomes trace
-        Level.FINEST -> engineLog.info(fmt)
-
-        // FINE and FINER become debug
-        Level.FINE,
-        Level.FINER -> engineLog.debug(fmt)
-
-        // INFO stays info
-        Level.INFO -> engineLog.info(fmt)
-
-        // WARN becomes warning, ERROR becomes SEVERE
-        Level.WARNING -> engineLog.warn(fmt)
-        Level.SEVERE -> engineLog.error(fmt)
-      }
-    }
-
-    override fun flush() {
-      // nothing at this time
-    }
-
-    override fun close() {
-      // nothing at this time
-    }
-  }
+  // Engine logger to use.
+  private val engineLog: Logger = Logging.named("elide:engine")
 
   /** Stubbed output stream. */
   private class StubbedOutputStream : OutputStream() {
@@ -418,7 +383,7 @@ import java.util.logging.LogRecord
         useSystemProperties(false)
 
         // assign core log handler
-        logHandler(LogProxy())
+        logHandler(GuestLogProxy.wrapping(engineLog))
 
         // allow experimental options
         allowExperimentalOptions(true).let {

@@ -38,6 +38,7 @@ micronaut_lib = "4.1.1"
 micronaut_aot = "2.1.1"
 micronaut_plugin = "4.1.0"
 compose = "1.5.2"
+github_api = "1.316"
 wasmtime = "0.18.0"
 kotlinx_coroutines = "1.7.3"
 kotlinx_collections = "0.3.5"
@@ -546,6 +547,7 @@ jimfs = { group = "com.google.jimfs", name = "jimfs", version.ref = "jimfs" }
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
 xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
 zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
+github_api = { group = "org.kohsuke", name = "github-api", version.ref = "github_api" }
 ## Build Classpath
 openrewrite_kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite_lib" }
 openrewrite_test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite_lib" }

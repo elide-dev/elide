@@ -227,6 +227,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8"))
   implementation(libs.logback)
   implementation(libs.tink)
+  implementation(libs.github.api)
   implementation("com.jakewharton.mosaic:mosaic-runtime:${libs.versions.mosaic.get()}")
 
   // GraalVM: Engines

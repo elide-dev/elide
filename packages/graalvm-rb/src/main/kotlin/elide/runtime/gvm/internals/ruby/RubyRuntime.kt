@@ -87,8 +87,17 @@ internal class RubyRuntime : AbstractVMEngine<RubyConfig, RubyScript, RubyBindin
     VMStaticProperty.active("ruby.platform-native"),
     VMStaticProperty.active("ruby.polyglot-stdio"),
     VMStaticProperty.active("ruby.rubygems"),
+    VMStaticProperty.active("ruby.lazy-default"),
+    VMStaticProperty.active("ruby.lazy-builtins"),
+    VMStaticProperty.active("ruby.lazy-calltargets"),
+    VMStaticProperty.active("ruby.lazy-rubygems"),
+    VMStaticProperty.active("ruby.lazy-translation-core"),
+    VMStaticProperty.active("ruby.lazy-translation-user"),
+    VMStaticProperty.active("ruby.shared-objects"),
+    VMStaticProperty.active("ruby.experimental-engine-caching"),
     VMStaticProperty.inactive("ruby.virtual-thread-fibers"),
     VMStaticProperty.inactive("ruby.cexts"),
+    VMStaticProperty.of("log.level", "OFF"),
   ).stream()
 
   override fun prepare(context: VMContext, globals: GuestValue) {

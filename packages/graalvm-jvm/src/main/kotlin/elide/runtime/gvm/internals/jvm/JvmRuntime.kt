@@ -80,7 +80,6 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
   override fun resolveConfig(): JvmRuntimeConfig = jvmConfig
 
   override fun configure(engine: Engine, context: Builder): Stream<out VMProperty> = listOfNotNull(
-    VMStaticProperty.active("java.EnableNativeAccess"),
     VMStaticProperty.active("java.EnablePreview"),
     VMStaticProperty.active("java.BuiltInPolyglotCollections"),
     VMStaticProperty.active("java.BytecodeLevelInlining"),
@@ -94,7 +93,6 @@ internal class JvmRuntime : AbstractVMEngine<JvmRuntimeConfig, JvmExecutableScri
     VMStaticProperty.inactive("java.EnableAgents"),
     VMStaticProperty.inactive("java.EnableManagement"),
     VMStaticProperty.inactive("java.ExposeNativeJavaVM"),
-//    VMStaticProperty.of("java.SpecCompliance", "hotspot"),
   ).stream()
 
   override fun prepare(context: VMContext, globals: Value) {

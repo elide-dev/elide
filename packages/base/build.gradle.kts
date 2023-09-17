@@ -66,8 +66,6 @@ dependencies {
   }
 
   js {
-    // KT-57235: fix for atomicfu-runtime error
-    api("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
     api(libs.kotlinx.collections.immutable)
     api(libs.kotlinx.datetime)
 

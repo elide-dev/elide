@@ -3,15 +3,15 @@ package elide.internal.conventions
 import org.gradle.api.Project
 
 /** Convention values used across all extensions. */
-internal object Constants {
+public object Constants {
   /**
    * The name of the property used to indicate that the project is running in CI.
    * @see isCI
    */
-  const val CI_FLAG = "elide.ci"
+  internal const val CI_FLAG = "elide.ci"
 
   /** Property names and env variables related to credentials. */
-  object Credentials {
+  internal object Credentials {
     /** Environment variable: path to the Google Cloud credentials file. */
     const val GOOGLE = "GOOGLE_APPLICATION_CREDENTIALS"
 
@@ -35,7 +35,7 @@ internal object Constants {
   }
 
   /** General publishing conventions. */
-  object Publishing {
+  internal object Publishing {
     /** Property: whether authentication should be used for Maven repositories. */
     const val MAVEN_AUTH_REQUIRED = "elide.publish.repo.maven.auth"
 
@@ -44,7 +44,7 @@ internal object Constants {
   }
 
   /** Remote repositories used for publishing, etc. */
-  object Repositories {
+  internal object Repositories {
     /** Project-specific Maven repository on GitHub. */
     const val GITHUB_MAVEN = "https://maven.pkg.github.com/elide-dev/elide"
 
@@ -53,7 +53,7 @@ internal object Constants {
   }
 
   /** Values for internal test conventions. */
-  object Tests {
+  internal object Tests {
     /** Sets the threshold at which tests are considered as 'slow'. */
     const val SLOW_TEST_THRESHOLD = 30_000L
 
@@ -62,7 +62,7 @@ internal object Constants {
   }
 
   /** Properties and conventions related to versioning. */
-  object Versions {
+  internal object Versions {
     /** Property: defines the Kotlin language version used in the project. */
     const val KOTLIN = "versions.kotlin.language"
 
@@ -79,7 +79,7 @@ internal object Constants {
   }
 
   /** Kotlin conventions. */
-  object Kotlin {
+  internal object Kotlin {
     /** Property: whether to treat all warnings as errors. */
     const val STRICT_MODE = "strictMode"
 
@@ -90,13 +90,13 @@ internal object Constants {
     }
   }
 
-  object Build {
+  internal object Build {
     /** Property: whether to build and bundle documentation from project sources, defaults to "true". */
     const val BUILD_DOCS = "buildDocs"
   }
 
   /** Static library configuration values. */
-  object Elide {
+  public object Elide {
     /** Major release version for Elide. */
     private const val TRACK = "v3"
 
@@ -110,13 +110,13 @@ internal object Constants {
     private const val REVISION = 12
 
     /** Version string for the library. */
-    const val VERSION = "$MAJOR_VERSION-$TRACK-$VERSION_TAG-b$REVISION"
+    public const val VERSION: String = "$MAJOR_VERSION-$TRACK-$VERSION_TAG-b$REVISION"
 
     /** Maven group shared by Elide artifacts. */
-    const val GROUP = "dev.elide"
+    public const val GROUP: String = "dev.elide"
 
     /** Maven group shared by tooling projects. */
-    const val SUBSTRATE_GROUP = "dev.elide.tools"
+    public const val SUBSTRATE_GROUP: String = "dev.elide.tools"
 
     /** Compiler args to include in all Kotlin targets. */
     private val BaseCompilerArgs = listOf(
@@ -126,7 +126,7 @@ internal object Constants {
     )
 
     /** Compiler args to include in Kotlin JVM targets. */
-    val JvmCompilerArgs = BaseCompilerArgs.plus(
+    internal val JvmCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-no-stdlib",
         "-Xjvm-default=all",
@@ -135,14 +135,14 @@ internal object Constants {
     )
 
     /** Compiler args to include in Kotlin JS targets. */
-    val JsCompilerArgs = BaseCompilerArgs.plus(
+    internal val JsCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-Xgenerate-dts",
       ),
     )
 
     /** Compiler args to include in Kotlin JVM targets which use `kapt`. */
-    val KaptCompilerArgs = BaseCompilerArgs.plus(
+    internal val KaptCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-no-stdlib",
         "-Xallow-unstable-dependencies",
@@ -153,7 +153,7 @@ internal object Constants {
     )
 
     /** Compiler args to include in KMP targets. */
-    val KmpCompilerArgs = BaseCompilerArgs.plus(
+    internal val KmpCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-Xexpect-actual-classes"
       )

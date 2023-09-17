@@ -1,0 +1,13 @@
+name: Feature request
+description: Create a new feature request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the feature you want for Elide, and please check if there is already an existing issue.
+  - type: textarea
+    attributes:
+      label: Feature description
+      placeholder: Tell us about your idea, feature, or module
+    validations:
+      required: true

@@ -759,10 +759,6 @@ val initializeAtBuildTime = listOf(
   // Databasing
   "org.sqlite.util.ProcessRunner",
 
-  // Netty
-  "io.netty",
-  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
-
   // Micronaut
   "io.micronaut.http.util.HttpTypeInformationProvider",
   "io.micronaut.inject.provider.ProviderTypeInformationProvider",
@@ -868,6 +864,9 @@ val initializeAtRuntime: List<String> = listOf(
   "com.sun.tools.javac.file.Locations",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
+  "io.netty.handler.codec.compression.BrotliOptions",
+  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
+  "io.netty.handler.ssl.JdkNpnApplicationProtocolNegotiator",
   "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
   "kotlin.random.AbstractPlatformRandom",

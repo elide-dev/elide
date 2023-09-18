@@ -33,9 +33,9 @@ body:
   - type: textarea
     id: stacktrace
     attributes:
-      label: Actual Behaviour
-      description: A concise description of what you're experiencing.
-      placeholder: Tell us what happens instead
+      label: Stacktrace
+      description: If this bug results in an exception, include the stacktrace here.
+      placeholder: Exception stacktrace
     validations:
       required: false
   - type: textarea

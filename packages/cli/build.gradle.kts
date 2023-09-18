@@ -481,7 +481,7 @@ micronaut {
     precomputeOperations = true
     cacheEnvironment = true
     deduceEnvironment = true
-    replaceLogbackXml = false
+    replaceLogbackXml = true
 
     optimizeServiceLoading = true
     optimizeClassLoading = true

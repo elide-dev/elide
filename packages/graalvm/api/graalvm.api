@@ -115,6 +115,7 @@ public final class elide/runtime/gvm/ExecutionInputs$Empty : elide/runtime/gvm/E
 
 public abstract interface class elide/runtime/gvm/GuestLanguage {
 	public static final field Companion Lelide/runtime/gvm/GuestLanguage$Companion;
+	public abstract fun getEngine ()Ljava/lang/String;
 	public fun getInvocationModes ()Ljava/util/EnumSet;
 	public abstract fun getLabel ()Ljava/lang/String;
 	public fun getSupportsSSR ()Z
@@ -655,7 +656,7 @@ public class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/ru
 	public static final field JVM Lelide/runtime/gvm/internals/GraalVMGuest;
 	public static final field PYTHON Lelide/runtime/gvm/internals/GraalVMGuest;
 	public static final field RUBY Lelide/runtime/gvm/internals/GraalVMGuest;
-	public synthetic fun <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getEngine ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
 	public fun getSymbol ()Ljava/lang/String;

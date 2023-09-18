@@ -89,7 +89,6 @@ val isRelease = !quickbuild && (
 val entrypoint = "elide.tool.cli.ElideTool"
 
 val oracleGvm = false
-val enableJpms = false
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
@@ -99,6 +98,9 @@ val enableMosaic = true
 val enableProguard = false
 val enableLlvm = false
 val enableEspresso = true
+val enableExperimental = false
+val enableEmbeddedResources = enableExperimental
+val enableJpms = enableExperimental
 val enableDashboard = oracleGvm
 val enableG1 = oracleGvm
 val enablePgo = oracleGvm && isRelease
@@ -152,7 +154,6 @@ val jvmModuleArgs = listOf(
 ).plus(jvmCompileArgs).plus(jvmRuntimeArgs)
 
 val ktCompilerArgs = listOf(
-  "-progressive",
   "-Xallow-unstable-dependencies",
   "-Xcontext-receivers",
   "-Xemit-jvm-type-annotations",
@@ -532,10 +533,14 @@ val commonNativeArgs = listOf(
   "-H:+UseContainerSupport",
   "-H:+ReportExceptionStackTraces",
   "-R:MaxDirectMemorySize=256M",
-  "-Dpolyglot.image-build-time.PreinitializeContexts=js",
-  "--trace-object-instantiation=elide.tool.cli.PropertySourceLoaderFactory",
+  "-Dpolyglot.image-build-time.PreinitializeContexts=" + listOfNotNull(
+    "js",
+    if (enablePython) "python" else null,
+    if (enableRuby) "ruby" else null,
+    if (enableExperimental && enableEspresso) "java" else null,
+  ).joinToString(","),
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
-).plus(if (enableEdge) listOf(
+).asSequence().plus(if (enableEdge) listOf(
   "-H:+UnlockExperimentalVMOptions",
 ) else emptyList()).plus(listOfNotNull(
   if (enableEspresso) "--language:java" else null,
@@ -544,13 +549,14 @@ val commonNativeArgs = listOf(
   if (enablePython) "--language:python" else null,
   if (enableRuby) "--language:ruby" else null,
 )).plus(if (enableTools) listOf(
-    "--tool:chromeinspector",
-    "--tool:coverage",
-    "--tool:profiler",
-    "--tool:lsp",
+  "--tool:chromeinspector",
+  "--tool:coverage",
+  "--tool:profiler",
+  "--tool:lsp",
+  "--tool:dap",
 ) else emptyList()).plus(if (enableEdge) listOfNotNull(
   if (!enableTruffleJson) null else "--language:truffle-json",
-) else emptyList()).plus(if (oracleGvm) commonGvmArgs else emptyList())
+) else emptyList()).plus(if (oracleGvm) commonGvmArgs else emptyList()).toList()
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -595,9 +601,7 @@ val experimentalFlags = listOf(
   "-H:+RunMainInNewThread",
 
   // Not yet supported/causes issues
-  "--tool:lsp",  // Causes crashes
   "--tool:sandbox",
-  "--tool:dap",
   "--tool:insight",
   "--tool:insightheap",
 )
@@ -662,36 +666,76 @@ val hostedRuntimeOptions = mapOf(
 )
 
 val initializeAtBuildTime = listOf(
-//  "kotlin.KotlinVersion",
-//  "kotlin.DeprecationLevel",
-//  "kotlin.annotation.AnnotationRetention",
-//  "kotlin.coroutines.intrinsics.CoroutineSingletons",
-//  "kotlin.annotation.AnnotationTarget",
-//  "kotlin.jvm.internal",
-//  "kotlin.reflect.jvm.internal.impl",
+  // Kotlin Core
+  "kotlin._Assertions",
+  "kotlin.KotlinVersion",
+  "kotlin.SafePublicationLazyImpl",
+  "kotlin.LazyThreadSafetyMode",
+  "kotlin.LazyKt__LazyJVMKt${'$'}WhenMappings",
+
+  // Kotlin Standard Library
+  "kotlin.coroutines.ContinuationInterceptor",
+  "kotlin.sequences",
+  "kotlin.text.Charsets",
+  "kotlin.time",
+  "kotlin.time.DurationJvmKt",
+  "kotlin.time.Duration",
+  "kotlin.time.DurationUnit",
+
+  // Kotlin Reflect / JVM Internals
+  "kotlin.jvm.internal.CallableReference",
+  "kotlin.jvm.internal.Reflection",
+  "kotlin.jvm.internal.PropertyReference",
+  "kotlin.jvm.internal.PropertyReference1",
+  "kotlin.jvm.internal.PropertyReference1Impl",
+  "kotlin.reflect.jvm.internal.CachesKt",
+  "kotlin.reflect.jvm.internal.CacheByClassKt",
+  "kotlin.reflect.jvm.internal.KClassImpl",
+  "kotlin.reflect.jvm.internal.KClassImpl${'$'}Data",
+  "kotlin.reflect.jvm.internal.KDeclarationContainerImpl",
+  "kotlin.reflect.jvm.internal.KDeclarationContainerImpl${'$'}Data",
+  "kotlin.reflect.jvm.internal.RuntimeTypeMapper",
+  "kotlin.reflect.jvm.internal.impl.builtins.CompanionObjectMapping",
+  "kotlin.reflect.jvm.internal.impl.builtins.PrimitiveType",
+  "kotlin.reflect.jvm.internal.impl.builtins.StandardNames",
+  "kotlin.reflect.jvm.internal.impl.builtins.StandardNames${'$'}FqNames",
+  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}Function",
+  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KFunction",
+  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}SuspendFunction",
+  "kotlin.reflect.jvm.internal.impl.builtins.functions.FunctionTypeKind${'$'}KSuspendFunction",
+  "kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap",
+  "kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectClassUtilKt",
+  "kotlin.reflect.jvm.internal.impl.name.FqName",
+  "kotlin.reflect.jvm.internal.impl.name.FqNameUnsafe",
+  "kotlin.reflect.jvm.internal.impl.name.SpecialNames",
+  "kotlin.reflect.jvm.internal.impl.name.StandardClassIds",
+  "kotlin.reflect.jvm.internal.impl.name.StandardClassIdsKt",
+  "kotlin.reflect.jvm.internal.impl.resolve.jvm.JvmPrimitiveType",
+
+  // KotlinX Modules
+  "kotlinx.datetime",
+  "kotlinx.io",
+  "kotlinx.coroutines",
+  "kotlinx.serialization",
+  "kotlinx.serialization.internal",
+
+  // KotlinX Serialization + KotlinX JSON
+  "kotlinx.serialization.internal.StringSerializer",
+  "kotlinx.serialization.modules.SerializersModuleKt",
+  "kotlinx.serialization.json.Json",
+  "kotlinx.serialization.json.Json${'$'}Default",
+  "kotlinx.serialization.json.JsonElementKt",
+  "kotlinx.serialization.json.internal.CharArrayPoolBatchSize",
+  "kotlinx.serialization.json.internal.StreamingJsonDecoder${'$'}WhenMappings",
+  "kotlinx.serialization.json.internal.WriteMode",
+  "kotlinx.serialization.json.internal.ArrayPoolsKt",
+  "kotlinx.serialization.json.internal.ByteArrayPool8k",
+
+  // Google Commons + Protobuf
+  "com.google.protobuf",
+  "com.google.common.html.types.Html",
   "com.google.common.jimfs.Feature",
   "com.google.common.jimfs.SystemJimfsFileSystemProvider",
-  "ch.qos.logback",
-  "org.slf4j.MarkerFactory",
-  "org.slf4j.simple.SimpleLogger",
-  "org.slf4j.impl.StaticLoggerBinder",
-  "org.codehaus.stax2.typed.Base64Variants",
-  "org.bouncycastle.util.Properties",
-  "org.bouncycastle.util.Strings",
-  "org.bouncycastle.crypto.macs.HMac",
-  "org.bouncycastle.crypto.prng.drbg.Utils",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG",
-  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
-  "com.sun.tools.doclint",
-  "jdk.jshell.Snippet${'$'}SubKind",
-  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
-  "org.xml.sax.helpers.LocatorImpl",
-  "org.xml.sax.helpers.AttributesImpl",
-  "org.sqlite.util.ProcessRunner",
-  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
-  "io.micronaut.http.util.HttpTypeInformationProvider",
-  "io.micronaut.inject.provider.ProviderTypeInformationProvider",
-  "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
   "com.google.common.collect.MapMakerInternalMap",
   "com.google.common.collect.MapMakerInternalMap${'$'}StrongKeyWeakValueSegment",
   "com.google.common.collect.MapMakerInternalMap${'$'}EntrySet",
@@ -699,17 +743,125 @@ val initializeAtBuildTime = listOf(
   "com.google.common.collect.MapMakerInternalMap${'$'}1",
   "com.google.common.base.Equivalence${'$'}Equals",
 
-  // Elide Packages
-//  "tools.elide",
-//  "elide.runtime.intrinsics",
-//  "elide.runtime.intrinsics.js",
-//  "elide.runtime.gvm",
-//  "elide.runtime.gvm.js",
-//  "elide.runtime.gvm.internals",
-//  "elide.runtime.gvm.internals.intrinsics",
-//  "elide.runtime.gvm.internals.intrinsics.js",
-//  "elide.runtime.gvm.internals.intrinsics.js.url",
-//  "elide.tool.cli",
+  // SLF4J + Logback
+  "ch.qos.logback",
+  "org.slf4j.MarkerFactory",
+  "org.slf4j.simple.SimpleLogger",
+  "org.slf4j.impl.StaticLoggerBinder",
+
+  // Encodings, Parsers, Cryptography
+  "com.sun.tools.doclint",
+  "org.codehaus.stax2.typed.Base64Variants",
+  "org.bouncycastle.util.Properties",
+  "org.bouncycastle.util.Strings",
+  "org.bouncycastle.crypto.macs.HMac",
+  "org.bouncycastle.crypto.prng.drbg.Utils",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG",
+  "org.xml.sax.helpers.LocatorImpl",
+  "org.xml.sax.helpers.AttributesImpl",
+  "jdk.jshell.Snippet${'$'}SubKind",
+  "com.sun.tools.javac.parser.Tokens${'$'}TokenKind",
+
+  // Databasing
+  "org.sqlite.util.ProcessRunner",
+
+  // Netty
+  "io.netty",
+  "io.netty.handler.codec.http.cookie.ServerCookieEncoder",
+
+  // Micronaut
+  "io.micronaut.http.util.HttpTypeInformationProvider",
+  "io.micronaut.inject.provider.ProviderTypeInformationProvider",
+  "io.micronaut.core.async.ReactiveStreamsTypeInformationProvider",
+
+  // --- Elide ------
+
+  // Elide Runtime Core
+  "elide.runtime.core.HostPlatform${'$'}Architecture",
+  "elide.runtime.core.HostPlatform${'$'}OperatingSystem",
+
+  // Elide VM Internals
+  "tools.elide",
+  "elide.runtime.gvm",
+  "elide.runtime.gvm.internals",
+  "elide.runtime.gvm.internals.context",
+  "elide.runtime.gvm.internals.intrinsics",
+  "elide.runtime.gvm.internals.vfs",
+  "elide.runtime.gvm.internals.AbstractGVMScript",
+  "elide.runtime.gvm.internals.AbstractVMAdapter",
+  "elide.runtime.gvm.internals.IntrinsicsManager",
+  "elide.runtime.gvm.internals.VMConditionalMultiProperty",
+  "elide.runtime.gvm.internals.VMConditionalProperty",
+  "elide.runtime.gvm.internals.VMRuntimeProperty",
+  "elide.runtime.gvm.internals.VMStaticProperty",
+  "elide.runtime.gvm.internals.GraalVMGuest",
+  "elide.runtime.gvm.internals.GraalVMGuest${'$'}JVM",
+  "elide.runtime.gvm.internals.GraalVMGuest${'$'}JAVASCRIPT",
+  "elide.runtime.gvm.internals.GraalVMGuest${'$'}PYTHON",
+  "elide.runtime.gvm.internals.GraalVMGuest${'$'}RUBY",
+  "elide.runtime.gvm.internals.GraalVMGuest${'$'}WASM",
+
+  // Elide VM Intrinsics: JavaScript
+  "elide.runtime.intrinsics",
+  "elide.runtime.intrinsics.js",
+  "elide.runtime.intrinsics.js.err",
+  "elide.runtime.intrinsics.js.express",
+  "elide.runtime.intrinsics.js.typed",
+  "elide.runtime.gvm.js",
+  "elide.runtime.gvm.internals.intrinsics.js",
+  "elide.runtime.gvm.internals.intrinsics.js.base64",
+  "elide.runtime.gvm.internals.intrinsics.js.console",
+  "elide.runtime.gvm.internals.intrinsics.js.crypto",
+  "elide.runtime.gvm.internals.intrinsics.js.express",
+  "elide.runtime.gvm.internals.intrinsics.js.fetch",
+  "elide.runtime.gvm.internals.intrinsics.js.stream",
+  "elide.runtime.gvm.internals.intrinsics.js.struct",
+  "elide.runtime.gvm.internals.intrinsics.js.typed",
+  "elide.runtime.gvm.internals.intrinsics.js.url",
+  "elide.runtime.gvm.internals.intrinsics.js.webstreams",
+
+  // Elide Tool Implementations
+  "elide.tool.cli.GuestLanguage",
+  "elide.tool.cli.cmd",
+  "elide.tool.cli.control",
+  "elide.tool.cli.err",
+  "elide.tool.cli.state",
+  "elide.tool.io",
+  "elide.tool.testing",
+
+  // Elide Packages: Framework
+  "elide.annotations",
+  "elide.base",
+  "elide.core",
+  "elide.core.crypto",
+  "elide.core.encoding",
+  "elide.core.encoding.base64",
+  "elide.core.encoding.hex",
+  "elide.core.platform",
+  "elide.util",
+  "elide.runtime.jvm",
+
+  // Elide Internals: Engine Implementations
+  "elide.runtime.gvm.internals.js",
+  "elide.runtime.gvm.internals.python",
+  "elide.runtime.gvm.internals.ruby",
+  "elide.runtime.gvm.internals.jvm",
+  "elide.runtime.gvm.internals.wasm",
+
+  // Elide Internals: VM Engines
+  "elide.runtime.gvm.internals.AbstractVMEngine",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}NativeImageInfo",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResources${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResourceBundle${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}NativeImageInfo${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeNativeResourceSignature${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeVFS${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}UniversalImageInfo",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeImageInfo${'$'}UniversalImageInfo${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeArtifact${'$'}${'$'}serializer",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeInfo",
+  "elide.runtime.gvm.internals.AbstractVMEngine${'$'}RuntimeInfo${'$'}${'$'}serializer",
 )
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -718,16 +870,27 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 )
 
 val initializeAtRuntime: List<String> = listOf(
-//  "io.netty.channel.ChannelInitializer",
   "ch.qos.logback.core.AsyncAppenderBase${'$'}Worker",
+  "com.sun.tools.javac.file.Locations",
   "io.micronaut.core.util.KotlinUtils",
   "io.micrometer.common.util.internal.logging.Slf4JLoggerFactory",
-  "com.sun.tools.javac.file.Locations",
+  "io.netty.handler.codec.http.HttpObjectEncoder",
+  "io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder",
+  "kotlin.random.AbstractPlatformRandom",
+  "kotlin.random.XorWowRandom",
+  "kotlin.random.Random${'$'}Default",
+  "kotlin.random.RandomKt",
+  "kotlin.random.jdk8.PlatformThreadLocalRandom",
+  "kotlin.internal.jdk8.JDK8PlatformImplementations",
+  "kotlin.internal.jdk8.JDK8PlatformImplementations${'$'}ReflectSdkVersion",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
 
-val rerunAtRuntime: List<String> = emptyList()
+val rerunAtRuntime: List<String> = listOf(
+  "elide.tool.cli.ElideTool",
+  "org.bouncycastle.jcajce.provider.drbg.DRBG$${'$'}Default",
+)
 
 val rerunAtRuntimeTest: List<String> = emptyList()
 
@@ -970,6 +1133,11 @@ fun AbstractCopyTask.filterResources(targetArch: String? = null) {
     "META-INF/com.android.tools",
     "META-INF/com.android.tools/*/*",
     *excludedStatics,
+    *(if (!enableEmbeddedResources) arrayOf(
+      "META-INF/elide/embedded/runtime/*/*-windows*",
+      "META-INF/elide/embedded/runtime/*/*-darwin*",
+      "META-INF/elide/embedded/runtime/*/*-linux*",
+    ) else emptyArray()),
     *(if (!HostManager.hostIsMingw) arrayOf(
       "*.dll",
       "**/*.dll",

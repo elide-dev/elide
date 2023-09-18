@@ -33,6 +33,7 @@ import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
+import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -47,6 +48,7 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.output.Counter
 import elide.tool.cli.output.runJestSample
 import elide.tool.cli.state.CommandState
+import elide.tool.io.WorkdirManager
 
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
@@ -73,16 +75,23 @@ import elide.tool.cli.state.CommandState
   ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Eager
-@Singleton class ElideTool internal constructor () :
+@Eager @Context @Singleton class ElideTool @Inject internal constructor (workdir: WorkdirManager) :
   ToolCommandBase<CommandContext>() {
+  init {
+    // these require workdir info
+    listOf(
+      "io.netty.tmpdir" to workdir.temporaryWorkdir().absolutePath,
+      "io.netty.native.workdir" to workdir.nativesDirectory().absolutePath,
+      "io.netty.native.deleteLibAfterLoading" to "false",
+    ).forEach {
+      System.setProperty(it.first, it.second)
+    }
+  }
+
   companion object {
     init {
       listOf(
         "elide.js.vm.enableStreams" to "true",
-        "io.netty.tmpdir" to "/tmp/elide-runtime/temp",
-        "io.netty.native.workdir" to "/tmp/elide-runtime/native",
-        "io.netty.native.deleteLibAfterLoading" to "false",
         "io.netty.allocator.maxOrder" to "3",
         "io.netty.serviceThreadPrefix" to "elide-svc",
         "io.netty.buffer.bytebuf.checkAccessible" to "false",

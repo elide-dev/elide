@@ -63,5 +63,8 @@ public interface GuestLanguage {
 
     /** Java Virtual Machine (JVM) as a guest language. */
     public val JVM: GuestLanguage = GraalVMGuest.JVM
+
+    /** WebAssembly (WASM) as a guest language. */
+    public val WASM: GuestLanguage = GraalVMGuest.WASM
   }
 }

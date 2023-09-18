@@ -147,7 +147,7 @@ import java.util.logging.LogRecord
     }
 
     override fun write(b: Int): Unit = error(
-      "Cannot write to stubbed stream from inside the JS VM."
+      "Cannot write to stubbed stream from inside a guest VM."
     )
   }
 
@@ -159,7 +159,7 @@ import java.util.logging.LogRecord
     }
 
     override fun read(): Int = error(
-      "Cannot read from stubbed stream from inside the JS VM."
+      "Cannot read from stubbed stream from inside a guest VM."
     )
   }
 
@@ -340,13 +340,6 @@ import java.util.logging.LogRecord
   // Counter for VM thread spawns.
   private val threadCounter: AtomicInteger = AtomicInteger(0)
 
-  // VM thread factory.
-  private val threadFactory: ThreadFactory = ThreadFactory { runnable ->
-    val thread = Thread(runnable, "elide-vm-${threadCounter.getAndIncrement()}")
-    thread.isDaemon = true
-    thread
-  }
-
   // Thread-local VM execution context.
   private val workerContext: VMThreadLocal = VMThreadLocal()
 
@@ -358,17 +351,6 @@ import java.util.logging.LogRecord
 
   // Additional properties to apply to created contexts.
   private val additionalProperties: MutableSet<VMProperty> = TreeSet()
-
-  // Disruptor instance for the VM executor.
-  private val disruptor: Disruptor<NativeVMInvocation<ExecutionInputs>> = Disruptor(
-    invocationEventFactory,
-    ringBufferSize,
-    threadFactory,
-    ProducerType.MULTI,
-    SleepingWaitStrategy(sleepingRetries, defaultSleepNs),
-  ).apply {
-    handleEventsWith(vmExecutor)
-  }
 
   init {
     // Acquire a global engine singleton.
@@ -461,21 +443,11 @@ import java.util.logging.LogRecord
       false,
       true,
     )
-    if (start) {
-      disruptor.start()
-    }
   }
 
   override fun engine(): Engine = engine.get()
 
   override fun <R> executeAsync(operation: VMContext.() -> R): CompletableFuture<R> {
-    // @TODO(sgammon): safe concurrent execution
-//    val completed = CountDownLatch(1)
-//
-//    disruptor.ringBuffer.publishEvent { event, sequence ->
-//
-//    }
-
     TODO("not yet implemented")
   }
 

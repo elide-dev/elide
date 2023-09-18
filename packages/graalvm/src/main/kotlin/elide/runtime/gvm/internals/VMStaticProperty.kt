@@ -14,6 +14,7 @@
 package elide.runtime.gvm.internals
 
 import io.micronaut.core.version.SemanticVersion
+import org.graalvm.nativeimage.ImageInfo
 
 /**
  * Represents a hard-coded JS Runtime property.
@@ -29,12 +30,26 @@ public data class VMStaticProperty internal constructor (
     private const val ENABLED_TRUE = "true"
     private const val DISABLED_FALSE = "false"
 
-    private fun currentVersion(): SemanticVersion {
+    private val svmVersionMap = sortedMapOf(
+      "35" to "23.1.0",
+    )
+
+    private fun currentVersion(): SemanticVersion? {
       // example: 20.0.2+9-jvmci-23.0-b14
       return System.getProperty("java.vm.version").let { vmVersion ->
         when {
+          // running on JVM
           vmVersion.contains("jvmci") -> parseSemanticVersion(vmVersion.split("-")[2])
-          else -> error("Failed to parse VM version: $vmVersion")
+
+          // in a native image, we'll need to translate the SVM release to a known SDK release
+          ImageInfo.inImageCode() -> parseSemanticVersion(
+            requireNotNull(svmVersionMap[vmVersion.split("+").last()]) {
+              "SVM version not registered: $vmVersion"
+            }
+          )
+
+          // dunno what version
+          else -> null
         }
       }
     }
@@ -56,7 +71,10 @@ public data class VMStaticProperty internal constructor (
       check: (SemanticVersion, SemanticVersion) -> Boolean,
     ): VMStaticProperty? {
       return parseSemanticVersion(version).let { requirement ->
-        if (check(requirement, currentVersion())) {
+        val current = currentVersion()
+          ?: return null  // can't determine version safely
+
+        if (check(requirement, current)) {
           if (state) {
             active(name)
           } else {

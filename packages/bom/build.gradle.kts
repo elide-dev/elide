@@ -14,6 +14,7 @@
 import elide.internal.conventions.elide
 import elide.internal.conventions.analysis.skipAnalysis
 import elide.internal.conventions.publishing.publish
+import elide.internal.conventions.Constants.Elide
 
 plugins {
   id("version-catalog")

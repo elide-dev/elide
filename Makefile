@@ -202,6 +202,7 @@ build:  ## Build the main library, and code-samples if SAMPLES=yes.
 test:  ## Run the library testsuite, and code-sample tests if SAMPLES=yes.
 	$(info Running testsuite...)
 	$(CMD)$(GRADLE) test $(_ARGS)
+	$(CMD)$(GRADLE) :packages:cli:optimizedRun --args="selftest"
 
 publish-substrate:
 	$(info Publishing Elide Substrate "$(VERSION)"...)

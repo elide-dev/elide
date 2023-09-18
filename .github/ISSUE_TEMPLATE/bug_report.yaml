@@ -14,7 +14,7 @@ body:
         Thanks for reporting an issue, please review the task list below before submitting the issue. Your issue report will be closed if the issue is incomplete and the below tasks not completed.
 
         NOTE: If you are unsure about something and the issue is more of a question a better place to ask questions is on Github Discussions :arrow_up:, [Stack Overflow](https://stackoverflow.com/tags/elide) or [Discord](https://elide.dev/discord).
-  - type: markdown
+  - type: textarea
     id: expected
     attributes:
       label: Expected Behavior
@@ -22,7 +22,7 @@ body:
       placeholder: Tell us what should happen
     validations:
       required: false
-  - type: markdown
+  - type: textarea
     id: actual
     attributes:
       label: Actual Behaviour
@@ -67,9 +67,8 @@ body:
       description: Runtime where the problem occurs.
       multiple: true
       options:
-        - Native (Default)
+        - Native
         - JVM
-      default: 0
     validations:
       required: true
   - type: dropdown
@@ -84,7 +83,6 @@ body:
         - Python
         - Ruby
         - JVM
-      default: 0
     validations:
       required: false
   - type: input

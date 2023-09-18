@@ -78,7 +78,6 @@ jobs:
       - name: "Patch: Restore Yarn Lock"
         run: mv yarn.inert yarn.lock
       - name: "Check: Library ABI"
-        if: !contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass')
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c # v2.7.0
         id: abicheck
         continue-on-error: ${{ contains(github.event.pull_request.labels.*.name, 'ci:api-check-bypass') }}
@@ -114,9 +113,6 @@ jobs:
             mode: Strict
             machine: macos-13
             provenance: false
-          - os: Windows
-            mode: Labs
-            machine: windows-latest
 
     name: "Build (${{ matrix.os }})"
     runs-on: ${{ matrix.machine }}

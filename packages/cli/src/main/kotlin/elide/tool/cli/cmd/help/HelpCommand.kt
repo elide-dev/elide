@@ -18,9 +18,8 @@ import picocli.CommandLine.Option
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
+import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.CommandContext
-import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand.Companion
@@ -41,10 +40,22 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     private const val issueTemplateFeature: String = "new_feature.yaml"
     private const val issueTemplateBugReport: String = "bug_report.yaml"
     private const val templateParam = "template"
+    private const val labelsParam = "label"
+    private const val versionParam = "version"
 
     @JvmStatic private fun assembleIssueUrl(type: String): URI {
+      val params = mapOf(
+        // set the issue template based on the type of issue (new feature or bug report)
+        templateParam to type,
+
+        // set the `version` of the current tool
+        versionParam to ElideTool.version(),
+      ).map {
+        "${it.key}=${it.value}"
+      }.joinToString("&")
+
       return URI.create(
-        "$issuesBase?$templateParam=$type"
+        "$issuesBase?$params"
       )
     }
   }

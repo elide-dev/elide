@@ -1,0 +1,49 @@
+public final synthetic class elide/runtime/gvm/internals/jvm/$JvmRuntime$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/gvm/internals/jvm/$JvmRuntime$PythonRuntimeVFSConfigurator$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/internals/jvm/JvmServerAdapter {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/jvm/JVM {
+	public static final field INSTANCE Lelide/runtime/gvm/jvm/JVM;
+}
+
+public final synthetic class elide/runtime/gvm/jvm/cfg/$JvmRuntimeConfig$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getBeanDefinitionType ()Ljava/lang/Class;
+	public fun getBeanType ()Ljava/lang/Class;
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/jvm/cfg/JvmRuntimeConfig : elide/runtime/gvm/cfg/GuestRuntimeConfiguration, io/micronaut/core/util/Toggleable {
+	public static final field Companion Lelide/runtime/gvm/jvm/cfg/JvmRuntimeConfig$Companion;
+	public static final field DEFAULT_ENABLED Z
+	public fun <init> ()V
+	public final fun getCharset ()Ljava/nio/charset/Charset;
+	public final fun getDefaultLocale ()Ljava/util/Locale;
+	public final fun getLocale ()Ljava/util/Locale;
+	public final fun getTimezone ()Ljava/time/ZoneId;
+	public fun isEnabled ()Z
+}
+
+public final class elide/runtime/gvm/jvm/cfg/JvmRuntimeConfig$Companion {
+	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
+	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
+	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
+}
+

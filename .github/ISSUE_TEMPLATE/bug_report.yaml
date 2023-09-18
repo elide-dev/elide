@@ -2,10 +2,10 @@ name: Bug Report
 description: File a bug report
 
 assignees:
-- @elide-dev/engineering
+  - "@elide-dev/engineering"
 
 labels:
-- bug
+  - bug
 
 body:
   - type: markdown
@@ -58,8 +58,33 @@ body:
       placeholder: |
         - Operating System:
         - Architecture:
-        - JDK Version:
-        - Native or JVM:
+    validations:
+      required: false
+  - type: dropdown
+    id: runtime_mode
+    attributes:
+      label: Runtime
+      description: Runtime where the problem occurs.
+      multiple: true
+      options:
+        - Native (Default)
+        - JVM
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Runtime
+      description: Runtime where the problem occurs.
+      multiple: true
+      options:
+        - N/A (Default)
+        - JavaScript
+        - Python
+        - Ruby
+        - JVM
+      default: 0
     validations:
       required: false
   - type: input

@@ -64,7 +64,7 @@ body:
     id: runtime_mode
     attributes:
       label: Runtime
-      description: Runtime where the problem occurs.
+      description: Runtime mode(s) where the problem occurs.
       multiple: true
       options:
         - Native
@@ -74,8 +74,8 @@ body:
   - type: dropdown
     id: language
     attributes:
-      label: Runtime
-      description: Runtime where the problem occurs.
+      label: Language
+      description: Language runtime(s) where the problem occurs.
       multiple: true
       options:
         - N/A (Default)

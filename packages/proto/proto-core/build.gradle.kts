@@ -42,7 +42,6 @@ elide {
 
   // disable module-info processing (not present)
   java {
-    includeSources = false
     configureModularity = false
   }
 }

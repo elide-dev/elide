@@ -35,7 +35,10 @@ elide {
   jvm { forceJvm17 = true }
 
   // disable module-info processing (not present)
-  java { configureModularity = false }
+  java {
+    configureModularity = false
+    includeJavadoc = false
+  }
 }
 
 configurations {
@@ -55,13 +58,8 @@ configurations {
 
 val capnproto: Configuration by configurations.getting
 
-val sourcesJar by tasks.getting
-val javadocJar by tasks.getting
-
 artifacts {
   add("capnpInternal", tasks.jar)
-  archives(sourcesJar)
-  archives(javadocJar)
 }
 
 dependencies {

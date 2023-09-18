@@ -36,6 +36,7 @@ internal fun Project.includeJavadocJar() {
   }
 
   // attempt to include in publications (only if the extension is applied)
+  configureJavadoc()
   publishJavadocJar()
 }
 
@@ -77,19 +78,19 @@ internal fun Project.alignJvmVersion(overrideVersion: String? = null) {
   }
 }
 
-/** Registers the Javadoc JAR task. */
-internal fun Project.configureJavaDoc() {
+/** Registers or configures the Javadoc JAR task. */
+internal fun Project.configureJavadoc() {
   val buildDocs = findProperty(Build.BUILD_DOCS)?.toString()?.toBoolean() ?: true
+  if (!buildDocs) return
 
-  tasks.create("javadocJar", Jar::class.java) {
+  // resolve or create the task
+  tasks.maybeCreate("javadocJar", Jar::class.java).apply {
     archiveClassifier.set("javadoc")
 
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 
-    if (buildDocs) {
-      from(tasks.named("dokkaJavadoc"))
-    }
+    from(tasks.named("dokkaHtml"))
   }
 
   tasks.withType(Javadoc::class.java).configureEach {

@@ -45,6 +45,7 @@ elide {
 
   java {
     configureModularity = false
+    includeJavadoc = false
   }
 }
 

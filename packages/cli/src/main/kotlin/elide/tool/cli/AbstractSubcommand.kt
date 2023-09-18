@@ -34,6 +34,7 @@ import elide.runtime.gvm.vfs.HostVFS
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.state.CommandState
+import elide.util.RuntimeFlag
 import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 
@@ -364,7 +365,8 @@ import org.graalvm.polyglot.Engine as VMEngine
         logging.debug("Cleaning up tool resources")
         close()
 
-        if (!quiet && interactive.get()) runBlocking {
+        // @TODO(sgammon): base injection bug
+        if (!Statics.args.get().contains("--quiet") && interactive.get()) runBlocking {
           out.pretty(
             {
               line("Exiting session. Have a great day! \uD83D\uDC4B")

@@ -46,4 +46,9 @@ public enum class GraalVMGuest (
    * JVM support via SVM and Espresso
    */
   JVM(symbol = "jvm", engine = "java", label = "JVM"),
+
+  /**
+   * WASM support via GraalWasm
+   */
+  WASM(symbol = "wasm", label = "WebAssembly"),
 }

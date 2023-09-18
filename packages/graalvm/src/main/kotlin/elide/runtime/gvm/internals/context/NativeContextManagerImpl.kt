@@ -87,10 +87,12 @@ import java.util.logging.LogRecord
       StaticProperty.active("engine.MultiTier"),
       StaticProperty.active("engine.Splitting"),
       StaticProperty.of("engine.Mode", "latency"),  // @TODO(sgammon): swap for throughput in server mode
-      StaticProperty.active("compiler.Inlining"),
-      StaticProperty.active("compiler.EncodedGraphCache"),
-      StaticProperty.active("compiler.InlineAcrossTruffleBoundary"),
-      StaticProperty.inactive("engine.WarnOptionDeprecation"),
+      StaticProperty.activeWhenAtMost("23.0", "engine.Inlining"),
+      StaticProperty.activeWhenAtMost("23.0", "engine.InlineAcrossTruffleBoundary"),
+      StaticProperty.activeWhenAtLeast("23.1", "compiler.Inlining"),
+      StaticProperty.activeWhenAtLeast("23.1", "compiler.EncodedGraphCache"),
+      StaticProperty.activeWhenAtLeast("23.1", "compiler.InlineAcrossTruffleBoundary"),
+      StaticProperty.inactiveWhenAtLeast("23.1", "engine.WarnOptionDeprecation"),
 
       // isolate options
       if (!enableIsolates) null else StaticProperty.inactive("engine.SpawnIsolate"),

@@ -1320,10 +1320,6 @@ tasks {
     }
   }
 
-  jar {
-    from(collectReachabilityMetadata)
-  }
-
 //  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
 //    kotlinOptions {
 //      jvmTarget = Elide.kotlinJvmTargetMaximum

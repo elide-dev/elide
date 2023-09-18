@@ -13,6 +13,8 @@
 
 package elide.runtime.gvm.internals
 
+import io.micronaut.core.version.SemanticVersion
+
 /**
  * Represents a hard-coded JS Runtime property.
  *
@@ -27,6 +29,45 @@ public data class VMStaticProperty internal constructor (
     private const val ENABLED_TRUE = "true"
     private const val DISABLED_FALSE = "false"
 
+    private fun currentVersion(): SemanticVersion {
+      // example: 20.0.2+9-jvmci-23.0-b14
+      return System.getProperty("java.vm.version").let { vmVersion ->
+        when {
+          vmVersion.contains("jvmci") -> parseSemanticVersion(vmVersion.split("-")[2])
+          else -> error("Failed to parse VM version: $vmVersion")
+        }
+      }
+    }
+
+    @JvmStatic private fun parseSemanticVersion(version: String): SemanticVersion {
+      return when (version.count { it == '.' }) {
+        2 -> SemanticVersion(version)
+        1 -> SemanticVersion("$version.0")
+        else -> error("Failed to parse semantic version: $version")
+      }
+    }
+
+    /** Test a parsed GraalVM version against the provided [version]. */
+    @JvmStatic private fun testGraalVMVersion(
+      version: String,
+      name: String,
+      state: Boolean,
+      alwaysProvide: Boolean = false,
+      check: (SemanticVersion, SemanticVersion) -> Boolean,
+    ): VMStaticProperty? {
+      return parseSemanticVersion(version).let { requirement ->
+        if (check(requirement, currentVersion())) {
+          if (state) {
+            active(name)
+          } else {
+            inactive(name)
+          }
+        } else if (alwaysProvide) {
+          inactive(name)
+        } else null
+      }
+    }
+
     /** @return Active setting. */
     @JvmStatic public fun of(name: String, value: String): VMStaticProperty = VMStaticProperty(name, value)
 
@@ -35,6 +76,72 @@ public data class VMStaticProperty internal constructor (
 
     /** @return Active setting. */
     @JvmStatic public fun inactive(name: String): VMStaticProperty = VMStaticProperty(name, DISABLED_FALSE)
+
+    /** @return Active setting if the current GraalVM is at least [version]. */
+    @JvmStatic public fun whenAtLeast(
+      version: String,
+      name: String,
+      state: Boolean,
+      alwaysProvide: Boolean = false,
+      check: (SemanticVersion, SemanticVersion) -> Boolean,
+    ): VMStaticProperty? {
+      return testGraalVMVersion(version, name, state, alwaysProvide, check)
+    }
+
+    /** @return Setting if the current GraalVM is at most [version]; by default, it is otherwise withheld. */
+    @JvmStatic public fun whenAtMost(
+      version: String,
+      name: String,
+      state: Boolean,
+      alwaysProvide: Boolean = false,
+      check: (SemanticVersion, SemanticVersion) -> Boolean,
+    ): VMStaticProperty? {
+      return testGraalVMVersion(version, name, state, alwaysProvide, check)
+    }
+
+    /** @return Setting if the current GraalVM is at lease [version]; by default, it is otherwise withheld. */
+    @JvmStatic public fun activeWhenAtLeast(
+      version: String,
+      name: String,
+      alwaysProvide: Boolean = false,
+    ): VMStaticProperty? {
+      return whenAtLeast(version, name, true, alwaysProvide) { requirement, active ->
+        active >= requirement
+      }
+    }
+
+    /** @return Active setting if the current GraalVM is at most [version]; otherwise, withheld. */
+    @JvmStatic public fun activeWhenAtMost(
+      version: String,
+      name: String,
+      alwaysProvide: Boolean = false,
+    ): VMStaticProperty? {
+      return whenAtLeast(version, name, true, alwaysProvide) { requirement, active ->
+        active <= requirement
+      }
+    }
+
+    /** @return Inactive setting if the current GraalVM is at least [version]; otherwise, withheld. */
+    @JvmStatic public fun inactiveWhenAtLeast(
+      version: String,
+      name: String,
+      alwaysProvide: Boolean = false,
+    ): VMStaticProperty? {
+      return whenAtLeast(version, name, false, alwaysProvide) { requirement, active ->
+        active >= requirement
+      }
+    }
+
+    /** @return Active setting if the current GraalVM is at most [version]; otherwise, withheld. */
+    @JvmStatic public fun inactiveWhenAtMost(
+      version: String,
+      name: String,
+      alwaysProvide: Boolean = false,
+    ): VMStaticProperty? {
+      return whenAtLeast(version, name, false, alwaysProvide) { requirement, active ->
+        active <= requirement
+      }
+    }
   }
 
   override fun value(): String = staticValue

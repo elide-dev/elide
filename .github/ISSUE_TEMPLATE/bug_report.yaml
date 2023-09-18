@@ -1,5 +1,12 @@
 name: Bug Report
 description: File a bug report
+
+assignees:
+- @elide-dev/engineering
+
+labels:
+- bug
+
 body:
   - type: markdown
     attributes:
@@ -7,14 +14,16 @@ body:
         Thanks for reporting an issue, please review the task list below before submitting the issue. Your issue report will be closed if the issue is incomplete and the below tasks not completed.
 
         NOTE: If you are unsure about something and the issue is more of a question a better place to ask questions is on Github Discussions :arrow_up:, [Stack Overflow](https://stackoverflow.com/tags/elide) or [Discord](https://elide.dev/discord).
-  - type: textarea
+  - type: markdown
+    id: expected
     attributes:
       label: Expected Behavior
       description: A concise description of what you expected to happen.
       placeholder: Tell us what should happen
     validations:
       required: false
-  - type: textarea
+  - type: markdown
+    id: actual
     attributes:
       label: Actual Behaviour
       description: A concise description of what you're experiencing.
@@ -22,6 +31,15 @@ body:
     validations:
       required: false
   - type: textarea
+    id: stacktrace
+    attributes:
+      label: Actual Behaviour
+      description: A concise description of what you're experiencing.
+      placeholder: Tell us what happens instead
+    validations:
+      required: false
+  - type: textarea
+    id: reproduction_steps
     attributes:
       label: Steps To Reproduce
       description: Steps to reproduce the behavior.
@@ -33,12 +51,15 @@ body:
     validations:
       required: false
   - type: textarea
+    id: env_info
     attributes:
       label: Environment Information
       description: Environment information where the problem occurs.
       placeholder: |
         - Operating System:
+        - Architecture:
         - JDK Version:
+        - Native or JVM:
     validations:
       required: false
   - type: input

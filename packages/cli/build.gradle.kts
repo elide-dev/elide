@@ -1307,19 +1307,6 @@ tasks {
     }
   }
 
-  test {
-    if (enableEdge) {
-      javaToolchains {
-        javaLauncher.set(
-          launcherFor {
-            languageVersion = JavaLanguageVersion.of(21)
-            vendor = JvmVendorSpec.GRAAL_VM
-          }
-        )
-      }
-    }
-  }
-
 //  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
 //    kotlinOptions {
 //      jvmTarget = Elide.kotlinJvmTargetMaximum

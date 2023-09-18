@@ -13,7 +13,6 @@ import elide.internal.conventions.Constants.Credentials
 import elide.internal.conventions.Constants.Publishing
 import elide.internal.conventions.Constants.Repositories
 import elide.internal.conventions.archives.excludeDuplicateArchives
-import elide.internal.conventions.jvm.configureJavaDoc
 
 /** Install the publishing plugins and apply common settings for all projects. */
 internal fun Project.configurePublishing(
@@ -125,7 +124,6 @@ internal fun Project.configurePublishingRepositories() {
 
 /** Register the "javadocJar" task and include it in maven publications. */
 internal fun Project.publishJavadocJar() {
-  configureJavaDoc()
   val buildDocs = findProperty(Build.BUILD_DOCS)?.toString()?.toBoolean() ?: true
 
   extensions.findByType(PublishingExtension::class.java)?.apply {

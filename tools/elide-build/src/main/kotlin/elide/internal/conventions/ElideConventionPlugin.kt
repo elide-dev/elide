@@ -21,7 +21,9 @@ import elide.internal.conventions.dependencies.configureDependencyLocking
 import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
+import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
+import elide.internal.conventions.kotlin.KotlinTarget.Multiplatform
 import elide.internal.conventions.kotlin.configureKotlinBuild
 import elide.internal.conventions.native.configureNativeBuild
 import elide.internal.conventions.native.publishNativeLibrary
@@ -103,6 +105,13 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       // this is required for proper JVM version alignment for example
       if (JVM in kotlinTarget) {
         conventions.jvm.requested = true
+
+        // for KMP projects including a JVM target, these two features need to be
+        // configured separately, since the java plugin is not applied
+        if(kotlinTarget is Multiplatform) conventions.java.apply {
+           includeJavadoc = false
+           includeSources = false
+        }
       }
 
       configureKotlinBuild(

@@ -19,15 +19,9 @@ import io.micronaut.context.annotation.Requires
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
 import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
-import java.net.URI
-import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import java.util.stream.Collectors
 import java.util.stream.Stream
-import kotlinx.serialization.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
 import elide.annotations.Context
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -35,8 +29,6 @@ import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.ExecutionInputs
-import elide.runtime.gvm.GuestLanguage
-import elide.runtime.gvm.GuestLanguage.Companion
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.gvm.api.GuestRuntime
 import elide.runtime.gvm.cfg.JsRuntimeConfig
@@ -124,7 +116,6 @@ import elide.runtime.gvm.internals.VMStaticProperty as StaticProperty
 @GuestRuntime(engine = "js")
 internal class JsRuntime @Inject constructor (
 ) : AbstractVMEngine<JsRuntimeConfig, JsExecutableScript, JsInvocationBindings>(JAVASCRIPT) {
-  @OptIn(ExperimentalSerializationApi::class)
   companion object {
     private const val DEFAULT_STREAM_ENCODING: String = "UTF-8"
     private const val DEFAULT_JS_LANGUAGE_LEVEL: String = "2022"

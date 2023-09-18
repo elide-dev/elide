@@ -475,6 +475,7 @@ micronaut {
 
   aot {
     configFile = file("$projectDir/aot-native.properties")
+    this@aot.version = libs.versions.micronaut.aot.get()
 
     convertYamlToJava = true
     precomputeOperations = true

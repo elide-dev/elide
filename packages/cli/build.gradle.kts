@@ -932,7 +932,23 @@ val darwinReleaseArgs = darwinOnlyArgs.plus(listOf(
 val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--static",
   "-march=native",
-  "-H:RuntimeCheckedCPUFeatures=AVX,AVX2",
+  "-H:RuntimeCheckedCPUFeatures=" + listOf(
+    "AVX",
+    "AVX2",
+    "AMD_3DNOW_PREFETCH",
+    "SSE3",
+    "LZCNT",
+    "TSCINV_BIT",
+    "ERMS",
+    "CLMUL",
+    "SHA",
+    "VZEROUPPER",
+    "FLUSH",
+    "FLUSHOPT",
+    "HV",
+    "FSRM",
+    "CET_SS",
+  ).joinToString(","),
   "-H:+StaticExecutableWithDynamicLibC",
 )).plus(
   if (enableG1) listOf(
@@ -950,7 +966,9 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(listOf(
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
-) else emptyList())
+) else listOf(
+  "-J-Xmx24g",
+))
 
 val linuxGvmReleaseFlags = listOf(
   "-H:+ObjectInlining",

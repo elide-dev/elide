@@ -14,25 +14,24 @@
 package elide.core.encoding.base64
 
 import kotlin.math.min
-import kotlin.native.concurrent.SharedImmutable
 import elide.core.encoding.*
 
 // Default globally-shared Base64 encoder.
-@SharedImmutable private val defaultEncoder: DefaultBase64.Encoder = DefaultBase64.Encoder(
+private val defaultEncoder: DefaultBase64.Encoder = DefaultBase64.Encoder(
   null,
   -1,
   true,
 )
 
 // Default globally-shared Base64 encoder for web-safe outputs.
-@SharedImmutable private val defaultEncoderWebsafe: DefaultBase64.Encoder = DefaultBase64.Encoder(
+private val defaultEncoderWebsafe: DefaultBase64.Encoder = DefaultBase64.Encoder(
   null,
   -1,
   false,
 )
 
 // Default globally-shared decoder.
-@SharedImmutable private val defaultDecoder: DefaultBase64.Decoder = DefaultBase64.Decoder()
+private val defaultDecoder: DefaultBase64.Decoder = DefaultBase64.Decoder()
 
 /**
  * # Base64

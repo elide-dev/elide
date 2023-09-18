@@ -14,23 +14,19 @@
 package elide.util
 
 import kotlin.math.min
-import kotlin.native.concurrent.SharedImmutable
 
-@SharedImmutable
 private val defaultEncoder: Base64Kt.Encoder = Base64Kt.Encoder(
   null,
   -1,
   true,
 )
 
-@SharedImmutable
 private val defaultEncoderWebsafe: Base64Kt.Encoder = Base64Kt.Encoder(
   null,
   -1,
   false,
 )
 
-@SharedImmutable
 private val defaultDecoder: Base64Kt.Decoder = Base64Kt.Decoder()
 
 /**

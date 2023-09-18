@@ -220,6 +220,7 @@ redacted_plugin = "1.6.1"
 jprofiler = "14.0-PRE1"
 semver = "3.1.0"
 magicProgress = "0.3.2"
+consoleui = "0.0.13"
 
 [plugins]
 elide = { id = "dev.elide.buildtools.plugin", version.ref = "elide_plugin" }
@@ -552,6 +553,7 @@ zstd = { group = "com.github.luben", name = "zstd-jni", version.ref = "zstd" }
 github_api = { group = "org.kohsuke", name = "github-api", version.ref = "github_api" }
 semver = { group = "com.vdurmont", name = "semver4j", version.ref = "semver" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
+consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
 ## Build Classpath
 openrewrite_kotlin = { group = "org.openrewrite", name = "rewrite-kotlin", version.ref = "openrewrite_lib" }
 openrewrite_test = { group = "org.openrewrite", name = "rewrite-test", version.ref = "openrewrite_lib" }

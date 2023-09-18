@@ -261,13 +261,14 @@ dependencies {
   if (enableWasm) implementation(projects.packages.graalvmWasm)
 
   api(libs.picocli)
-  api(libs.commons.compress)
-  api(libs.commons.pool)
-  api(libs.semver)
-  api(libs.magicProgress)
   api(libs.slf4j)
   api(libs.slf4j.jul)
   api(libs.slf4j.log4j.bridge)
+
+  implementation(libs.semver)
+  implementation(libs.magicProgress)
+  implementation(libs.consoleUi)
+  implementation(libs.commons.compress)
 
   // Elide
   implementation(projects.packages.core)
@@ -1306,17 +1307,6 @@ tasks {
       }
     }
   }
-
-//  withType(com.google.devtools.ksp.gradle.KspTaskJvm::class).configureEach {
-//    kotlinOptions {
-//      jvmTarget = Elide.kotlinJvmTargetMaximum
-//      javaParameters = true
-//      languageVersion = Elide.kotlinLanguage
-//      apiVersion = Elide.kotlinLanguage
-//      allWarningsAsErrors = false
-//      freeCompilerArgs = freeCompilerArgs.plus(ktCompilerArgs).toSortedSet().toList()
-//    }
-//  }
 
   withType(org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask::class).configureEach {
     kotlinOptions {

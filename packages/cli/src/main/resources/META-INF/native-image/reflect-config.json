@@ -875,7 +875,8 @@
 {
   "name":"elide.tool.cli.cmd.help.HelpCommand",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"elide.tool.cli.cmd.info.$ToolInfoCommand$Definition$Reference",
@@ -1052,6 +1053,58 @@
 },
 {
   "name":"elide.tool.engine.$WasmEngineTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultErrorHandler$DefaultErrorHandlerProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultErrorHandler$DefaultErrorHandlerProvider$Get0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultStructuredErrorRecorder$DefaultMarkdownErrorRecorderProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$DefaultStructuredErrorRecorder$DefaultMarkdownErrorRecorderProvider$Get0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$ErrorHandlerAcquireTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$ErrorRecorderAcquireTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.err.$ErrorRecorderWriteTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$RuntimeWorkdirManager$DefaultRuntimeWorkdirManagerProvider$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$RuntimeWorkdirManager$DefaultRuntimeWorkdirManagerProvider$Get0$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$RuntimeWorkdirManager$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$TempWriteTest$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$TestCacheWrite$Definition$Reference",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"elide.tool.io.$WorkdirTest$Definition$Reference",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

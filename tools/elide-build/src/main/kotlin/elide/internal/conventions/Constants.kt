@@ -138,6 +138,7 @@ public object Constants {
     internal val JsCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-Xgenerate-dts",
+        "-Xexpect-actual-classes",
       ),
     )
 
@@ -155,7 +156,7 @@ public object Constants {
     /** Compiler args to include in KMP targets. */
     internal val KmpCompilerArgs = BaseCompilerArgs.plus(
       listOf(
-        "-Xexpect-actual-classes"
+        "-Xexpect-actual-classes",
       )
     )
   }

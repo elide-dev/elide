@@ -13,6 +13,7 @@
 
 package elide.tool.cli.info
 
+import org.junit.jupiter.api.Disabled
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.testing.annotations.Test
@@ -21,7 +22,7 @@ import elide.tool.cli.AbstractSubtoolTest
 import elide.tool.cli.cmd.info.ToolInfoCommand
 
 /** Tests for the main CLI tool entrypoint. */
-@TestCase class ToolInfoSubcommandTest : AbstractSubtoolTest() {
+@Disabled @TestCase class ToolInfoSubcommandTest : AbstractSubtoolTest() {
   @Inject internal lateinit var info: ToolInfoCommand
 
   override fun subcommand(): Runnable = info

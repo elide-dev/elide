@@ -106,9 +106,9 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (JVM in kotlinTarget) {
         conventions.jvm.requested = true
 
-        // for KMP projects including a JVM target, these two features need to be
-        // configured separately, since the java plugin is not applied
-        if(kotlinTarget is Multiplatform) conventions.java.apply {
+        // for Kotlin projects, these two features need to be configured separately,
+        // since the java plugin is not always applied
+        conventions.java.apply {
            includeJavadoc = false
            includeSources = false
         }

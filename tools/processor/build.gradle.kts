@@ -17,7 +17,7 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
-  alias(libs.plugins.ksp)
+  id("com.google.devtools.ksp")
 
   id("elide.internal.conventions")
 }

@@ -60,7 +60,7 @@ dependencies {
   implementation(libs.plugin.sonar)
   implementation(libs.plugin.sigstore)
   implementation(libs.plugin.redacted)
-  compileOnly(libs.plugin.ksp)
+  implementation(libs.plugin.ksp)
 
   // embedded Kotlin plugins
   implementation(embeddedKotlin("allopen"))

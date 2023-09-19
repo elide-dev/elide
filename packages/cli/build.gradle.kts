@@ -278,6 +278,7 @@ dependencies {
   implementation(projects.packages.test)
   implementation(projects.packages.runtimeCore)
 
+  implementation(libs.jansi)
   implementation(libs.picocli.jline3)
   implementation(libs.picocli.jansi.graalvm)
   implementation(libs.jline.reader)

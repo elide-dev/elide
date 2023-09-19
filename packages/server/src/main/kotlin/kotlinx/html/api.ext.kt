@@ -13,7 +13,7 @@ public suspend inline fun <T : Tag> T.visitTagSuspend(crossinline block: suspend
   try {
     this.block()
   } catch (err: Throwable) {
-    consumer.onTagError(this, err)
+    throw err
   } finally {
     consumer.onTagEnd(this)
   }

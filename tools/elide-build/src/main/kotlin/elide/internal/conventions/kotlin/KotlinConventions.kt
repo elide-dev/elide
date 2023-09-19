@@ -101,7 +101,7 @@ internal fun Project.configureKotlinBuild(
   configurations.all {
     resolutionStrategy.eachDependency {
       if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("stdlib")) {
-        useVersion(kotlinSdk ?: "1.9.10")
+        useVersion(kotlinSdk ?: "1.9.20-Beta")
         because("pin kotlin stdlib")
       }
     }

@@ -188,7 +188,7 @@ ktlint {
 
 kapt {
   useBuildCache = true
-  includeCompileClasspath = true
+  includeCompileClasspath = false
   strictMode = true
   correctErrorTypes = true
 }

@@ -45,6 +45,7 @@ import elide.tool.cli.ToolState
   )
   var openLink: Boolean = true
 
+  @Suppress("DEPRECATION")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val printLink: () -> Unit = {
       println("Open link to join Discord: $REDIRECT_TARGET")

@@ -33,6 +33,8 @@ elide {
   }
 }
 
+val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
+
 dependencies {
   common {
     implementation(kotlin("stdlib-common"))
@@ -50,7 +52,9 @@ dependencies {
 
   jvm {
     api(mn.micronaut.http)
-    compileOnly(libs.graalvm.sdk)
+    if (encloseSdk) {
+      compileOnly(libs.graalvm.sdk)
+    }
   }
 
   jvmTest {

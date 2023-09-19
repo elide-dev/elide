@@ -31,6 +31,7 @@ package elide.tool.testing
     /**
      * TBD.
      */
+    @Suppress("UNUSED_PARAMETER")
     @JvmStatic fun <C: TestContext, T: Testable<C>> of(name: String, case: T) = TestInfo(TestInfoRecord(
       name = name,
     ))

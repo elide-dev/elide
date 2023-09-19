@@ -116,7 +116,7 @@ benchmark {
   targets {
     register("main") {
       this as JvmBenchmarkTarget
-      jmhVersion = "1.36"
+      jmhVersion = libs.versions.jmh.lib.get()
     }
   }
 }

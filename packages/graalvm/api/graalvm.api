@@ -128,6 +128,7 @@ public final class elide/runtime/gvm/GuestLanguage$Companion {
 	public final fun getJVM ()Lelide/runtime/gvm/GuestLanguage;
 	public final fun getPYTHON ()Lelide/runtime/gvm/GuestLanguage;
 	public final fun getRUBY ()Lelide/runtime/gvm/GuestLanguage;
+	public final fun getWASM ()Lelide/runtime/gvm/GuestLanguage;
 }
 
 public abstract interface class elide/runtime/gvm/GuestScript : elide/runtime/gvm/ExecutableScript {
@@ -656,6 +657,7 @@ public class elide/runtime/gvm/internals/GraalVMGuest : java/lang/Enum, elide/ru
 	public static final field JVM Lelide/runtime/gvm/internals/GraalVMGuest;
 	public static final field PYTHON Lelide/runtime/gvm/internals/GraalVMGuest;
 	public static final field RUBY Lelide/runtime/gvm/internals/GraalVMGuest;
+	public static final field WASM Lelide/runtime/gvm/internals/GraalVMGuest;
 	public fun getEngine ()Ljava/lang/String;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLabel ()Ljava/lang/String;
@@ -706,6 +708,8 @@ public final class elide/runtime/gvm/internals/VMRuntimeProperty$Companion {
 public final class elide/runtime/gvm/internals/VMStaticProperty : elide/runtime/gvm/internals/VMProperty {
 	public static final field Companion Lelide/runtime/gvm/internals/VMStaticProperty$Companion;
 	public static final fun active (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun activeWhenAtLeast (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun activeWhenAtMost (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
@@ -715,15 +719,31 @@ public final class elide/runtime/gvm/internals/VMStaticProperty : elide/runtime/
 	public fun getSymbol ()Ljava/lang/String;
 	public fun hashCode ()I
 	public static final fun inactive (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun inactiveWhenAtLeast (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun inactiveWhenAtMost (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
 	public static final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
 	public fun toString ()Ljava/lang/String;
 	public fun value ()Ljava/lang/String;
+	public static final fun whenAtLeast (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static final fun whenAtMost (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/gvm/internals/VMStaticProperty;
 }
 
 public final class elide/runtime/gvm/internals/VMStaticProperty$Companion {
 	public final fun active (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun activeWhenAtLeast (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun activeWhenAtLeast$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun activeWhenAtMost (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun activeWhenAtMost$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
 	public final fun inactive (Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun inactiveWhenAtLeast (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun inactiveWhenAtLeast$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun inactiveWhenAtMost (Ljava/lang/String;Ljava/lang/String;Z)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun inactiveWhenAtMost$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
 	public final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun whenAtLeast (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun whenAtLeast$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public final fun whenAtMost (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/gvm/internals/VMStaticProperty;
+	public static synthetic fun whenAtMost$default (Lelide/runtime/gvm/internals/VMStaticProperty$Companion;Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/gvm/internals/VMStaticProperty;
 }
 
 public final synthetic class elide/runtime/gvm/internals/context/$NativeContextManagerImpl$Definition$Reference : io/micronaut/context/AbstractInitializableBeanDefinitionReference {

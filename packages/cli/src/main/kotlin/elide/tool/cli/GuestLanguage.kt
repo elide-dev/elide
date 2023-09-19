@@ -14,7 +14,7 @@
 package elide.tool.cli
 
 /** Specifies languages supported for REPL access. */
-internal enum class GuestLanguage (
+enum class GuestLanguage (
   internal val id: String,
   override val engine: String = id,
   internal val formalName: String,

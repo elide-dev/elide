@@ -271,8 +271,10 @@ dependencies {
   implementation(libs.commons.compress)
 
   // Elide
+  implementation(libs.elide.uuid)
   implementation(projects.packages.core)
   implementation(projects.packages.base)
+  implementation(projects.packages.server)
   implementation(projects.packages.test)
   implementation(projects.packages.runtimeCore)
 
@@ -287,8 +289,12 @@ dependencies {
     exclude(group = "org.slf4j", module = "slf4j-jdk14")
   }
 
+  implementation(libs.kotlinx.datetime)
+  implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.reactor)
+  implementation(libs.kotlinx.serialization.core)
+  implementation(libs.kotlinx.serialization.json)
 
   api(mn.micronaut.inject)
   implementation(mn.micronaut.picocli)
@@ -823,6 +829,7 @@ val initializeAtBuildTime = listOf(
   "elide.tool.cli.control",
   "elide.tool.cli.err",
   "elide.tool.cli.state",
+  "elide.tool.err",
   "elide.tool.io",
   "elide.tool.testing",
 

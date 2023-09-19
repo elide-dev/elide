@@ -22,6 +22,7 @@ import elide.annotations.Singleton
 import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.ToolState
+import elide.tool.io.RuntimeWorkdirManager
 
 /** TBD. */
 @Command(
@@ -29,11 +30,17 @@ import elide.tool.cli.ToolState
   description = ["Show info about the current app and environment"],
   mixinStandardHelpOptions = true,
 )
-@Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton internal class ToolInfoCommand @Inject constructor(
+  private val workdir: RuntimeWorkdirManager,
+) : AbstractSubcommand<ToolState, CommandContext>() {
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val version = ElideTool.version()
     val engine = Engine.create()
+    val workingRoot = workdir.workingRoot()
+    val tempRoot = workdir.tmpDirectory()
+    val caches = workdir.cacheDirectory()
+    val natives = workdir.nativesDirectory()
     val operatingMode = if (ImageInfo.inImageCode()) "NATIVE" else "JVM"
 
     output {
@@ -41,6 +48,11 @@ import elide.tool.cli.ToolState
       appendLine("Engine: ${engine.implementationName} v${engine.version}")
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
+      appendLine("Paths: ")
+      appendLine("- Working Root: ${workingRoot.absolutePath}")
+      appendLine("- Temporary Root: ${tempRoot.absolutePath}")
+      appendLine("- Native Libs: ${natives.absolutePath}")
+      appendLine("- Caches: ${caches.absolutePath}")
     }
     return success()
   }

@@ -24,6 +24,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
  * @param configureAllOpen Whether to configure the AllOpen plugin with annotations used often in Elide packages.
  * @param configureNoArgs Whether to configure the NoArgs plugin with annotations used often in Elide packages.
  * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
+ * @param customKotlinCompilerArgs Custom Kotlin compiler args to apply.
  */
 internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
@@ -32,6 +33,7 @@ internal fun Project.configureKotlinBuild(
   configureAllOpen: Boolean = false,
   configureNoArgs: Boolean = false,
   configureJavaModules: Boolean = false,
+  customKotlinCompilerArgs: List<String> = emptyList(),
 ) {
   val kotlinVersion = findProperty(Versions.KOTLIN)?.toString()
   val kotlinSdk = findProperty(Versions.KOTLIN_SDK)?.toString()

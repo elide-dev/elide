@@ -21,7 +21,6 @@ import elide.internal.conventions.dependencies.configureDependencyLocking
 import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
-import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
 import elide.internal.conventions.kotlin.KotlinTarget.Multiplatform
 import elide.internal.conventions.kotlin.configureKotlinBuild
@@ -120,7 +119,8 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
         configureAllOpen = allOpen,
         configureNoArgs = noArgs,
         explicitApi = explicitApi,
-        configureJavaModules = conventions.java.configureModularity
+        configureJavaModules = conventions.java.configureModularity,
+        customKotlinCompilerArgs = customKotlinCompilerArgs,
       )
     }
 

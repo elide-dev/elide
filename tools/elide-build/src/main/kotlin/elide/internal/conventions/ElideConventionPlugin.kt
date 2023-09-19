@@ -143,6 +143,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       configureNativeBuild(
         target = this.target,
         enableAgent = useAgent,
+        customLauncher = configureLauncher,
         toolchains = javaToolchainService,
       )
     }

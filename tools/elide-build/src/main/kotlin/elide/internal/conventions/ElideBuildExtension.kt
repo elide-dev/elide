@@ -109,6 +109,9 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
 
     /** Whether to enable the use of GraalVM's agent for native compilation. */
     public var useAgent: Boolean = true
+
+    /** Whether to resolve a specific GraalVM distribution and use it as launcher for [APP] targets. */
+    public var configureLauncher: Boolean = false
   }
 
   internal val archives = Archives(project)

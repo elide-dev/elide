@@ -1260,6 +1260,10 @@ tasks {
     from(collectReachabilityMetadata)
   }
 
+  runnerJar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  }
+
   listOf(
     jar,
     optimizedJitJar,

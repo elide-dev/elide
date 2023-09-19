@@ -13,6 +13,8 @@
          <trust group="org.jetbrains.dokka"/>
          <trust group="org.jetbrains.kotlin"/>
          <trust group="org.jetbrains.kotlin.mulitplatform"/>
+         <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom" />
+         <trust file="micronaut-aot-api-2.1.1.jar" />
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3fcfa3b530afdce3" reason="Key couldn't be downloaded from any key server"/>

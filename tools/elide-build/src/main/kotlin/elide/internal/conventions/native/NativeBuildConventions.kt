@@ -40,6 +40,7 @@ internal fun Project.publishNativeLibrary() {
 internal fun Project.configureNativeBuild(
   target: NativeTarget,
   enableAgent: Boolean,
+  customLauncher: Boolean,
   toolchains: JavaToolchainService,
 ) {
   // TODO(@darvld): replace these with convention properties when the API is ready
@@ -103,7 +104,7 @@ internal fun Project.configureNativeBuild(
         // app-specific settings
         if (target == APP) {
           buildArgs("--enable-all-security-services")
-          javaLauncher.set(getLauncherForNativeApp(toolchains))
+          if (customLauncher) javaLauncher.set(getLauncherForNativeApp(toolchains))
         }
       }
 
@@ -121,7 +122,7 @@ internal fun Project.configureNativeBuild(
         // app-specific settings
         if (target == APP) {
           buildArgs("--enable-all-security-services")
-          javaLauncher.set(getLauncherForNativeApp(toolchains))
+          if (customLauncher) javaLauncher.set(getLauncherForNativeApp(toolchains))
         }
       }
 

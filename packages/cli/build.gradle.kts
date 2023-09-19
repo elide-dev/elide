@@ -65,8 +65,6 @@ elide {
   java {
     configureModularity = false
   }
-
-  native()
 }
 
 val entrypoint = "elide.tool.cli.ElideTool"

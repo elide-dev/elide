@@ -70,11 +70,11 @@ internal fun Project.configureKotlinBuild(
       allWarningsAsErrors = useStrictMode
       javaParameters = true
 
-      freeCompilerArgs = when (target) {
+      freeCompilerArgs = freeCompilerArgs.plus(when (target) {
         JVM -> if (configureKapt) Elide.KaptCompilerArgs else Elide.JvmCompilerArgs
         JsBrowser, JsNode -> Elide.JsCompilerArgs
         is Multiplatform, Native, WASM -> Elide.KmpCompilerArgs
-      }
+      }).plus(customKotlinCompilerArgs).toSortedSet().toList()
     }
   }
 

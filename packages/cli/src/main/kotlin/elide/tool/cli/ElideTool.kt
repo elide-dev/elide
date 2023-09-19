@@ -27,9 +27,6 @@ import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import picocli.CommandLine.*
 import picocli.jansi.graalvm.AnsiConsole
-import picocli.jansi.graalvm.Workaround
-import java.io.PrintWriter
-import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
 import kotlin.system.exitProcess
@@ -44,10 +41,12 @@ import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.selftest.SelfTestCommand
 import elide.tool.cli.cmd.update.SelfUpdateCommand
-import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.output.Counter
 import elide.tool.cli.output.runJestSample
 import elide.tool.cli.state.CommandState
+import elide.tool.engine.NativeEngine
+import elide.tool.err.DefaultErrorHandler
+import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.io.WorkdirManager
 
 /** Entrypoint for the main Elide command-line tool. */
@@ -75,30 +74,19 @@ import elide.tool.io.WorkdirManager
   ),
 )
 @Suppress("MemberVisibilityCanBePrivate")
-@Eager @Context @Singleton class ElideTool @Inject internal constructor (workdir: WorkdirManager) :
-  ToolCommandBase<CommandContext>() {
-  init {
-    // these require workdir info
-    listOf(
-      "io.netty.tmpdir" to workdir.temporaryWorkdir().absolutePath,
-      "io.netty.native.workdir" to workdir.nativesDirectory().absolutePath,
-      "io.netty.native.deleteLibAfterLoading" to "false",
-    ).forEach {
-      System.setProperty(it.first, it.second)
-    }
-  }
-
+@Eager @Context @Singleton class ElideTool : ToolCommandBase<CommandContext>() {
   companion object {
     init {
-      listOf(
-        "elide.js.vm.enableStreams" to "true",
-        "io.netty.allocator.maxOrder" to "3",
-        "io.netty.serviceThreadPrefix" to "elide-svc",
-        "io.netty.buffer.bytebuf.checkAccessible" to "false",
-        org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
-        org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
-      ).forEach {
-        System.setProperty(it.first, it.second)
+      // load natives
+      NativeEngine.boot(RuntimeWorkdirManager.acquire()) {
+        listOf(
+          "elide.js.vm.enableStreams" to "true",
+          "io.netty.allocator.maxOrder" to "3",
+          "io.netty.serviceThreadPrefix" to "elide-svc",
+          "io.netty.buffer.bytebuf.checkAccessible" to "false",
+          org.fusesource.jansi.AnsiConsole.JANSI_MODE to org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE,
+          org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL to "false",
+        )
       }
     }
 
@@ -106,7 +94,7 @@ import elide.tool.io.WorkdirManager
     const val TOOL_NAME: String = "elide"
 
     // Maps exceptions to process exit codes.
-    private val exceptionMapper = ExceptionMapper()
+    private val exceptionMapper = DefaultErrorHandler.acquire()
 
     // Tool-wide main logger.
     private val logging by lazy {
@@ -188,33 +176,6 @@ import elide.tool.io.WorkdirManager
           .environmentPropertySource(false)
           .enableDefaultPropertySources(false)
           .overrideConfigLocations("classpath:elide.yml")
-      }
-    }
-
-    /** Maps exceptions to exit codes. */
-    private class ExceptionMapper : IExitCodeExceptionMapper {
-        override fun getExitCode(exception: Throwable): Int = when (exception) {
-        // user code errors arising from the repl/shell/server
-        is AbstractToolError -> {
-          val exitCode = exception.exitCode
-          val inner = exception.cause ?: exception.exception ?: exception
-          logging.error("Execution failed with code $exitCode due to ${inner.message}")
-          val out = StringWriter()
-          val printer = PrintWriter(out)
-          inner.printStackTrace(printer)
-          logging.error(
-            StringBuilder().apply {
-              append("Stacktrace:\n")
-              append(out.toString())
-            }.toString(),
-          )
-          exitCode
-        }
-
-        else -> {
-          logging.error("Exiting with code -1 due to uncaught $exception")
-          -1
-        }
       }
     }
   }

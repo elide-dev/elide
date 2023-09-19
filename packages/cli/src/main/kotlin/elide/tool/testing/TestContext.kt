@@ -93,10 +93,12 @@ interface TestContext: AutoCloseable {
    * TBD.
    */
   class AssertionFailure(
-    name: String,
+    private val name: String,
     message: String? = null,
     err: Throwable? = null,
-  ) : RuntimeException()
+  ) : RuntimeException(message, err) {
+    override fun toString(): String = message ?: "failed $name"
+  }
 
   /**
    * TBD.

@@ -14,6 +14,8 @@
 package elide.tool.io
 
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 
 /**
  * # Working Directory Manager
@@ -24,30 +26,107 @@ import java.io.File
  */
 interface WorkdirManager : AutoCloseable {
   /**
+   * ## Working Directory: Handle
+   *
+   * Provided in lieu of a [File], in order to properly manage the lifecycle and lazy-initialization state of a working
+   * directory area.
+   */
+  interface WorkdirHandle {
+    /**
+     * Whether the working directory described by this handle exists.
+     */
+    val exists: Boolean
+
+    /**
+     * Whether the working directory described by this handle is writable.
+     */
+    val writable: Boolean
+
+    /**
+     * Whether the working directory described by this handle is readable.
+     */
+    val readable: Boolean
+
+    /**
+     * Return the absolute path for this file.
+     */
+    val absolutePath: String get() = toPath().absolutePathString()
+
+    /**
+     * Produce a [File] for this working directory handle.
+     *
+     * @return File object.
+     */
+    fun toFile(): File
+
+    /**
+     * Produce a [Path] for this working directory handle.
+     *
+     * @return Path object.
+     */
+    fun toPath(): Path
+
+    /**
+     * @return Whether the file exists.
+     */
+    fun exists(): Boolean = exists
+
+    /**
+     * @return Whether the file can be read.
+     */
+    fun canRead(): Boolean = readable
+
+    /**
+     * @return Whether the file can be written to.
+     */
+    fun canWrite(): Boolean = writable
+
+    /**
+     * @return Resolved file for the provided [path].
+     */
+    fun resolve(path: String): File = toFile().resolve(path)
+
+    /**
+     * @return Resolved file for the provided [file].
+     */
+    fun resolve(file: File): File = toFile().resolve(file)
+  }
+
+  /**
    * Obtain the root temporary working directory for this run.
    *
    * @return Temporary working directory, which may be shared across calls/components; guaranteed to be readable.
    */
-  fun temporaryWorkdir(): File
+  fun workingRoot(): File
 
   /**
    * Obtain the directory where native libraries should be unpacked.
    *
    * @return Directory to use for native libraries; guaranteed to be writable and readable.
    */
-  fun nativesDirectory(): File
+  fun nativesDirectory(): WorkdirHandle
+
+  /**
+   * Obtain the directory where errors and flight recorder events should be written.
+   *
+   * @param create Proactively create the flight recorder directory before returning.
+   * @return Directory to use for errors and flight recorder events; guaranteed to be writable and readable.
+   */
+  fun flightRecorderDirectory(create: Boolean = false): WorkdirHandle
 
   /**
    * Obtain the directory where temporary data should be written and read.
    *
+   * @param create Proactively create the flight recorder directory before returning.
    * @return Directory to use for temporary data; guaranteed to be writable and readable.
    */
-  fun tmpDirectory(): File
+  fun tmpDirectory(create: Boolean = false): WorkdirHandle
 
   /**
    * Obtain the cache root directory for this run.
    *
+   * @param create Proactively create the flight recorder directory before returning.
    * @return Directory to use for caching; guaranteed to be writable and readable.
    */
-  fun cacheDirectory(): File
+  fun cacheDirectory(create: Boolean = false): WorkdirHandle
 }

@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.datetime.Clock
 import elide.tool.cli.CommandContext
+import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.testing.TestEvent.Type
 import elide.tool.testing.TestEvent.Type.*
 
@@ -80,6 +81,7 @@ abstract class CommandTestRunner<Test, Context, Cmd>: TestCase<Test, Context>
           start = start,
           end = end,
           err = err.get(),
+          errOutput = StringBuilder(err.get()?.buildStacktrace()),
         ))
 
         // the test has finished

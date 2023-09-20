@@ -32,6 +32,17 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
     ALLOW_IO, ALLOW_NONE -> EnvironmentAccess.NONE
   }
 
+  /**
+   * Returns the underlying GraalVM [Engine] used by this instance.
+   *
+   * This method is considered delicate even for internal use within the Elide runtime, since it breaks the
+   * encapsulation provided by the core API; it should be used only in select cases where accessing the GraalVM engine
+   * directly is less complex than implementing a new abstraction for the desired feature.
+   */
+  internal fun unwrap(): Engine {
+    return engine
+  }
+
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(): GraalVMContext {
     // build a new context using the shared engine

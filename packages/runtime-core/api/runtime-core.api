@@ -169,6 +169,10 @@ public final class elide/runtime/core/extensions/ContextBuilderKt {
 	public static final fun setOptions (Lorg/graalvm/polyglot/Context$Builder;[Lkotlin/Pair;)V
 }
 
+public final class elide/runtime/core/extensions/ExecutionListenerKt {
+	public static final fun attach (Lorg/graalvm/polyglot/management/ExecutionListener$Builder;Lelide/runtime/core/PolyglotEngine;)Lorg/graalvm/polyglot/management/ExecutionListener;
+}
+
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public fun <init> ()V
 	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V

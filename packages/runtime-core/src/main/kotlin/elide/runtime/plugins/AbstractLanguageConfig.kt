@@ -12,7 +12,7 @@ import elide.runtime.core.PolyglotContext
  */
 @DelicateElideApi public abstract class AbstractLanguageConfig {
   /** Mutable counterpart to [intrinsicBindings]. */
-  private val mutableBindings: MutableMap<String, Any> get() = mutableMapOf()
+  private val mutableBindings: MutableMap<String, Any> = mutableMapOf()
 
   /** An immutable map of the intrinsics defined using the [bindings] function. */
   protected val intrinsicBindings: Map<String, Any> get() = mutableBindings

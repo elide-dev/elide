@@ -676,6 +676,11 @@ public abstract interface class elide/runtime/gvm/internals/GuestVFS$VFSConfigur
 	public fun image ()Lelide/runtime/gvm/internals/AbstractVMEngine$RuntimeVFS;
 }
 
+public final class elide/runtime/gvm/internals/IntrinsicsManager {
+	public fun <init> (Ljava/util/List;)V
+	public final fun resolver ()Lelide/runtime/intrinsics/IntrinsicsResolver;
+}
+
 public abstract interface class elide/runtime/gvm/internals/VMProperty : java/lang/Comparable {
 	public fun active ()Z
 	public fun compareTo (Lelide/runtime/gvm/internals/VMProperty;)I

@@ -14,28 +14,24 @@
 package elide.tool.cli
 
 import org.graalvm.polyglot.Language
-import java.io.*
-import java.net.URI
+import java.io.BufferedReader
+import java.io.Closeable
+import java.io.InputStream
+import java.io.PrintStream
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.stream.Stream
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 import elide.annotations.Inject
 import elide.runtime.Logger
-import elide.runtime.gvm.ContextFactory
-import elide.runtime.gvm.VMFacadeFactory
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.vfs.EmbeddedGuestVFS
-import elide.runtime.gvm.vfs.HostVFS
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration
 import elide.tool.cli.err.AbstractToolError
-import elide.tool.cli.err.ShellError
 import elide.tool.cli.state.CommandState
-import elide.util.RuntimeFlag
-import org.graalvm.polyglot.Context as VMContext
 import org.graalvm.polyglot.Engine as VMEngine
 
 
@@ -276,11 +272,12 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Main top-level tool.
   @Inject internal lateinit var base: ElideTool
 
-  // Context factory for guest VMs.
-  @Inject internal lateinit var vmContextFactory: ContextFactory<VMContext, VMContext.Builder>
-
-  // Factory to acquire VM execution facades.
-  @Inject protected lateinit var vmFactory: VMFacadeFactory
+  /**
+   * A lazily initialized [PolyglotEngine] instance, customized by the [configureEngine] event.
+   *
+   * @see createEngine
+   */
+  protected val engine: PolyglotEngine by lazy(::createEngine)
 
   /** Controller for tool output. */
   protected lateinit var out: OutputController
@@ -312,6 +309,17 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Base execution context.
   private val baseExecContext: CoroutineContext = Dispatchers.Default + CoroutineName("elide")
   override val coroutineContext: CoroutineContext get() = baseExecContext
+
+  /**
+   * Configure and create a new [PolyglotEngine], invoking the [configureEngine] event, and applying all relevant
+   * constraints. This method is meant to be used by the lazy [engine] property.
+   *
+   * @return A new, exclusive [PolyglotEngine] instance.
+   */
+  private fun createEngine(): PolyglotEngine = PolyglotEngine {
+    // allow subclasses to customize the engine
+    configureEngine()
+  }
 
   // Build an initial `ToolState` instance from the main tool.
   private fun materializeInitialState(): ToolState {
@@ -425,92 +433,28 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /**
-   * TBD.
+   * Run a [block] of code using a [PolyglotContext] configured by the current [engine]. The context is guaranteed to
+   * be exclusive, and it will not be reused after this operation completes.
+   *
+   * The first invocation of this method will cause the [engine] to be initialized, triggering the
+   * [configureEngine] event.
    */
-  protected fun configureVM(props: Stream<VMProperty>) {
-    vmContextFactory.configureVM(props)
-  }
-
-  /**
-   * TBD.
-   */
-  @Suppress("DEPRECATION")
-  protected open fun withVM(
-    context: ToolContext<State>,
-    userBundles: List<URI>,
-    systemBundles: List<URI>,
-    hostIO: Boolean,
-    contextBuilder: (VMContext.Builder) -> Unit = {},
-    op: VMCallable<State>,
-  ) {
-    require(!engineInitialized.get()) {
-      "Cannot re-initialize CLI guest VM"
-    }
-    engineInitialized.set(true)
-
-    logging.debug("Acquiring VM context for CLI tool")
-    val wrappedBuilder: (VMContext.Builder) -> Unit = {
-      // configure the VM as normal
-      contextBuilder.invoke(it)
-
-      // if we have a virtualized FS, mount it
-      if (userBundles.isNotEmpty() && !hostIO) {
-        val bundles = userBundles.map { fsBundleUri ->
-          // check the bundle URI
-          if (fsBundleUri.scheme == "classpath:") {
-            logging.debug("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
-            throw ShellError.BUNDLE_NOT_FOUND.asError()
-          } else {
-            // make sure the file can be read
-            val file = try {
-              logging.trace("Checking bundle at URI '$fsBundleUri'")
-              File(fsBundleUri)
-            } catch (err: IOException) {
-              throw ShellError.BUNDLE_NOT_FOUND.asError()
-            }
-            logging.trace("Checking existence of '$fsBundleUri'")
-            if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
-            logging.trace("Checking readability of '$fsBundleUri'")
-            if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
-            logging.debug("Mounting guest filesystem at URI: '$fsBundleUri'")
-            fsBundleUri
-          }
-        }
-
-        it.fileSystem(
-          EmbeddedGuestVFS.forBundle(
-            *systemBundles.plus(bundles).toTypedArray(),
-          ),
-        )
-      } else if (systemBundles.isNotEmpty() && !hostIO) {
-        logging.debug { "No user bundles, but ${systemBundles.size} system bundles present; mounting embedded" }
-        it.fileSystem(
-          EmbeddedGuestVFS.forBundle(
-            *systemBundles.toTypedArray(),
-          ),
-        )
-      } else if (hostIO) {
-        // if we're doing host I/O, mount that instead
-        logging.debug("Command-line flags indicate host I/O; mounting host filesystem")
-        it.fileSystem(HostVFS.acquire())
-      }
-    }
-    vmContextFactory.acquire(wrappedBuilder) {
-      try {
-        enter()
-        op.invoke(context, this)
-      } catch (err: AbstractToolError) {
-        // it's a known tool error. re-throw.
-        throw err
-      } catch (err: Throwable) {
-        logging.error(
+  protected open fun withContext(block: (PolyglotContext) -> Unit) {
+    logging.debug("Acquiring context for CLI tool")
+    with(engine.acquire()) {
+      logging.debug("Context acquired")
+      enter()
+      runCatching { block(this) }.onFailure { cause ->
+        // it's not a known tool error, log it
+        if (cause !is AbstractToolError) logging.error(
           "Uncaught exception within VM context. Please catch and handle all VM execution exceptions.",
-          err,
+          cause,
         )
-        throw err
-      } finally {
-        leave()
+
+        // always rethrow
+        throw cause
       }
+      leave()
     }
   }
 
@@ -557,6 +501,9 @@ import org.graalvm.polyglot.Engine as VMEngine
    * TBD.
    */
   protected open fun state(): State? = null
+
+  /** Configure the [PolyglotEngine] that will be used to acquire contexts used by the [withContext] function. */
+  protected open fun PolyglotEngineConfiguration.configureEngine(): Unit = Unit
 
   /**
    * TBD.

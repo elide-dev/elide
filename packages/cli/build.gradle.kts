@@ -163,6 +163,9 @@ val ktCompilerArgs = listOf(
   "-Xjvm-default=all",
   "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
 
+  // opt-in to Elide's delicate runtime API
+  "-opt-in=elide.runtime.core.DelicateElideApi",
+
   // Fix: Suppress Kotlin version compatibility check for Compose plugin (applied by Mosaic)
   "-P=plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.20-Beta",
 )
@@ -259,6 +262,12 @@ dependencies {
   if (enableRuby) implementation(projects.packages.graalvmRb)
   if (enableEspresso) implementation(projects.packages.graalvmKt)
   if (enableWasm) implementation(projects.packages.graalvmWasm)
+
+  // Runtime engines
+  implementation(projects.packages.runtimeCore)
+  implementation(projects.packages.runtimeJs)
+  implementation(projects.packages.runtimePy)
+  implementation(projects.packages.runtimeRb)
 
   api(libs.picocli)
   api(libs.slf4j)

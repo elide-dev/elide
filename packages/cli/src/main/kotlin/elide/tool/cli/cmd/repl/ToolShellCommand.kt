@@ -23,11 +23,9 @@ import ch.qos.logback.core.ConsoleAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
-import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.io.IOAccess
 import org.graalvm.polyglot.management.ExecutionEvent
 import org.graalvm.polyglot.management.ExecutionListener
 import org.jline.builtins.ConfigurationPath
@@ -58,8 +56,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
-import java.util.stream.Stream
-import kotlin.collections.ArrayList
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -68,17 +64,26 @@ import elide.annotations.Singleton
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.runtime.gvm.VMFacade
-import elide.runtime.gvm.internals.GuestVFS
-import elide.runtime.gvm.internals.VMProperty
-import elide.runtime.gvm.internals.VMStaticProperty
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotEngine
+import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
+import elide.runtime.core.extensions.attach
+import elide.runtime.gvm.internals.GraalVMGuest
+import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.js.ServerAgent
+import elide.runtime.plugins.debug.debug
+import elide.runtime.plugins.js.JavaScript
+import elide.runtime.plugins.js.JavaScriptConfig
+import elide.runtime.plugins.js.JavaScriptVersion
+import elide.runtime.plugins.python.Python
+import elide.runtime.plugins.ruby.Ruby
+import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.output.JLineLogbackAppender
-import org.graalvm.polyglot.Context as VMContext
-import org.graalvm.polyglot.Engine as VMEngine
+import elide.tool.extensions.installIntrinsics
 
 
 /** Interactive REPL entrypoint for Elide on the command-line. */
@@ -110,7 +115,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val CONFIG_PATH_USR = "~/.elide"
-    private val initialized: AtomicBoolean = AtomicBoolean(false)
+
     private val logging: Logger by lazy {
       Logging.of(ToolShellCommand::class)
     }
@@ -275,27 +280,19 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
     internal var sources: List<String> = emptyList()
 
-    /** Apply configuration to the VM based on the provided arguments. */
-    internal fun apply(debug: Boolean): Stream<VMProperty> {
-      return (if (!debug) emptyList<VMProperty>() else listOfNotNull(
-        // if specified, add custom `path`
-        when (val p = path) {
-          null -> null
-          else -> VMStaticProperty.of("inspect.Path", p)
-        },
-      ).plus(sources.joinToString(",").let { targets ->
-        // format + add any custom source directories
-        if (targets.isEmpty()) emptyList() else listOf(
-          VMStaticProperty.of("inspect.SourcePath", targets)
-        )
-      })).stream()
+    /** Apply these settings to the root engine configuration container. */
+    internal fun apply(config: PolyglotEngineConfiguration) {
+      // install and configure the Debug plugin
+      config.debug {
+        sourcePaths = sources
+        waitAttached = wait
+        path = this@DebugConfig.path
+        suspend = this@DebugConfig.suspend
+      }
     }
   }
 
-  internal sealed class LanguageSettings {
-    /** Apply configuration to the JS VM based on the provided arguments. */
-    abstract fun apply(): Stream<out VMProperty>
-  }
+  internal sealed class LanguageSettings
 
   /** Settings which apply to JavaScript only. */
   @Introspected @ReflectiveAccess class JavaScriptSettings : LanguageSettings() {
@@ -347,26 +344,10 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
     internal var wasm: Boolean = false
 
-    /** Apply configuration to the JS VM based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return listOfNotNull(
-        // set strict mode
-        VMStaticProperty.active("js.strict"),
-
-        // set ECMA version
-        VMStaticProperty.of("js.ecmascript-version", if (ecma.name.startsWith("ES")) {
-          ecma.name.substring(2)
-        } else {
-          ecma.name
-        }),
-
-        // if WASM is enabled, pass a prop for it
-        if (wasm) {
-          VMStaticProperty.active("js.webassembly")
-        } else {
-          null
-        }
-      ).stream()
+    /** Apply these settings to the configuration for the JavaScript runtime plugin. */
+    internal fun apply(config: JavaScriptConfig) {
+      config.language = JavaScriptVersion.valueOf(ecma.name)
+      config.wasm = wasm
     }
   }
 
@@ -379,11 +360,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the Python VM based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   /** Settings which apply to Ruby only. */
@@ -395,11 +371,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the Ruby VM based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   /** Settings which apply to JVM languages only. */
@@ -411,11 +382,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the JVM based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   /** Settings which apply to Kotlin. */
@@ -427,11 +393,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the Kotlin compiler and runtime based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   /** Settings which apply to Groovy. */
@@ -443,11 +404,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the Groovy compiler and runtime based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   /** Settings which apply to WASM. */
@@ -459,11 +415,6 @@ import org.graalvm.polyglot.Engine as VMEngine
       defaultValue = "false",
     )
     internal var debug: Boolean = false
-
-    /** Apply configuration to the WASM runtime based on the provided arguments. */
-    override fun apply(): Stream<out VMProperty> {
-      return Stream.empty()
-    }
   }
 
   // Whether the last-seen command was a user exit.
@@ -475,9 +426,6 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Count of statement lines seen; used as an offset for the length of `allSeenStatements`.
   private val statementCounter = AtomicInteger(0)
 
-  // VM facade to use for execution.
-  private lateinit var vm: VMFacade
-
   // Language-specific syntax highlighter.
   private val langSyntax: AtomicReference<SyntaxHighlighter?> = AtomicReference(null)
 
@@ -487,8 +435,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Active line reader.
   private val lineReader: AtomicReference<LineReader?> = AtomicReference(null)
 
-  // All VFS configurators.
-  @Inject lateinit var vfsConfigurators: List<GuestVFS.VFSConfigurator>
+  // Intrinsics manager
+  @Inject internal lateinit var intrinsicsManager: IntrinsicsManager
 
   // Server manager.
   @Inject private lateinit var server: ServerAgent
@@ -566,12 +514,13 @@ import org.graalvm.polyglot.Engine as VMEngine
     )
     internal var allowEnv: Boolean = false
 
-    /** Apply access control settings to the target [context]. */
-    fun apply(context: VMContext.Builder) {
-      if (allowAll) context.allowAllAccess(true)
-      else {
-        if (allowIo) context.allowIO(IOAccess.ALL)
-        if (allowEnv) context.allowEnvironmentAccess(EnvironmentAccess.INHERIT)
+    /** Apply these settings to the root engine configuration container. */
+    internal fun apply(config: PolyglotEngineConfiguration) {
+      config.hostAccess = when {
+        allowAll || (allowIo && allowEnv) -> ALLOW_ALL
+        allowIo -> ALLOW_IO
+        allowEnv -> ALLOW_ENV
+        else -> ALLOW_NONE
       }
     }
 
@@ -673,7 +622,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   @Suppress("SameParameterValue") private fun executeOneChunk(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: VMContext,
+    ctx: PolyglotContext,
     origin: String,
     code: String,
     interactive: Boolean = false,
@@ -691,13 +640,14 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     logging.trace("Code chunk built. Evaluating")
     val result = try {
-      ctx.eval(source)
+      ctx.evaluate(source)
     } catch (exc: PolyglotException) {
       when (val throwable = processUserCodeError(primaryLanguage, exc)) {
         null -> {
           logging.trace("Caught exception from code statement ${statementCounter.get()}", exc)
           throw exc
         }
+
         else -> throw throwable
       }
     }
@@ -709,7 +659,7 @@ import org.graalvm.polyglot.Engine as VMEngine
   private fun executeSingleStatement(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: VMContext,
+    ctx: PolyglotContext,
     code: String,
   ) {
     if (serveMode()) {
@@ -778,12 +728,10 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   // Build a line reader for interactive REPL use.
-  @Suppress("UNUSED_PARAMETER")
   private fun initCLI(
     root: String,
     language: GuestLanguage,
     jnanorcFile: Path,
-    ctx: VMContext,
     workDir: Supplier<Path>,
     configPath: ConfigurationPath,
     op: LineReader.(SystemRegistryImpl) -> Unit,
@@ -1118,8 +1066,8 @@ import org.graalvm.polyglot.Engine as VMEngine
   private fun beginInteractiveSession(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    engine: VMEngine,
-    ctx: VMContext,
+    engine: PolyglotEngine,
+    ctx: PolyglotContext,
   ) {
     // resolve working directory
     val workDir = Supplier { Paths.get(System.getProperty("user.dir")) }
@@ -1139,7 +1087,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
     // execution step listener
     ExecutionListener.newBuilder().onEnter(::onStatementEnter).statements(true).attach(engine).use {
-      initCLI(root, primaryLanguage, jnanorcFile.toPath(), ctx, workDir, configPath) { registry ->
+      initCLI(root, primaryLanguage, jnanorcFile.toPath(), workDir, configPath) { registry ->
         // before beginning execution loop, redirect logging to a new appender, which will add logs *above* the user
         // input section of an interactive session.
         redirectLoggingToJLine(this)
@@ -1277,13 +1225,14 @@ import org.graalvm.polyglot.Engine as VMEngine
   private fun serveMode(): Boolean = commandSpecifiesServer || executeServe
 
   // Read an executable script, and then execute the script and keep it started as a server.
-  private fun readStartServer(label: String, language: GuestLanguage, ctx: VMContext, source: Source) {
+  private fun readStartServer(label: String, language: GuestLanguage, ctx: PolyglotContext, source: Source) {
     try {
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
       // initialize the Express intrinsic
-      server.initialize(ctx, phaser.get())
+      // TODO(@darlvd): restore once new server agent implementation lands
+      // server.initialize(ctx, phaser.get())
 
       // parse the source
       val parsed = runCatching {
@@ -1318,7 +1267,7 @@ import org.graalvm.polyglot.Engine as VMEngine
     label: String,
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
-    ctx: VMContext,
+    ctx: PolyglotContext,
     source: Source,
   ) {
     if (serveMode()) readStartServer(
@@ -1391,69 +1340,78 @@ import org.graalvm.polyglot.Engine as VMEngine
     else -> if (languages.contains(JS)) JS else languages.first()
   }
 
-  /** @inheritDoc */
-  override fun initializeVM(base: ToolState): Boolean {
-    val baseProps: Stream<VMProperty> = emptyList<VMProperty>().stream()
-    val langs = (language ?: LanguageSelector()).resolve()
-    val langProps: ArrayList<Stream<out VMProperty>> = ArrayList(langs.size)
-    val languagesEnabled = ArrayList<GuestLanguage>(langs.size)
+  override fun PolyglotEngineConfiguration.configureEngine() {
+    // @TODO(sgammon): fix injection of this property
+    // conditionally apply debugging settings
+    if (Statics.args.get().contains("--debug")) debugging.apply(this)
 
-    langs.forEach { lang ->
+    // configure VFS with user-specified bundles
+    vfs {
+      // resolve the file-system bundles to use
+      val userBundles = filesystems.mapNotNull { checkFsBundle(it) }
+      if (userBundles.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
+        logging.debug("File-system bundle(s) specified: ${userBundles.joinToString(",")}")
+      } else {
+        logging.debug("No file-system bundles specified")
+      }
+
+      userBundles.forEach { uri ->
+        // check the bundle URI
+        if (uri.scheme == "classpath:") {
+          logging.warn("Rejecting `classpath:`-prefixed bundle: not supported by CLI")
+          throw ShellError.BUNDLE_NOT_FOUND.asError()
+        } else {
+          // make sure the file can be read
+          val file = try {
+            logging.trace("Checking bundle at URI '$uri'")
+            File(uri)
+          } catch (err: IOException) {
+            throw ShellError.BUNDLE_NOT_FOUND.asError()
+          }
+
+          logging.trace("Checking existence of '$uri'")
+          if (!file.exists()) throw ShellError.BUNDLE_NOT_FOUND.asError()
+
+          logging.trace("Checking readability of '$uri'")
+          if (!file.canRead()) throw ShellError.BUNDLE_NOT_ALLOWED.asError()
+
+          logging.debug("Mounting guest filesystem at URI: '$uri'")
+          include(uri)
+        }
+      }
+    }
+
+    // configure support for guest languages
+    val intrinsics = intrinsicsManager.resolver()
+    (language ?: LanguageSelector()).resolve().forEach { lang ->
       when (lang) {
-        JS -> {
+        JS -> install(JavaScript) {
           logging.debug("Configuring JS VM")
-          langProps.add(jsSettings.apply())
-          languagesEnabled.add(JS)
+          installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT)
+          jsSettings.apply(this)
         }
 
-        PYTHON -> {
+        PYTHON -> install(Python) {
           logging.debug("Configuring Python VM")
-          langProps.add(pythonSettings.apply())
-          languagesEnabled.add(PYTHON)
+          installIntrinsics(intrinsics, GraalVMGuest.PYTHON)
         }
 
-        RUBY -> {
+        RUBY -> install(Ruby) {
           logging.debug("Configuring Ruby VM")
-          langProps.add(rubySettings.apply())
-          languagesEnabled.add(RUBY)
-        }
-
-        JVM -> {
-          logging.debug("Configuring JVM")
-          langProps.add(jvmSettings.apply())
-          languagesEnabled.add(JVM)
+          installIntrinsics(intrinsics, GraalVMGuest.RUBY)
         }
 
         // Secondary Engines: JVM
-        GROOVY -> {
-          logging.debug("Configuring Groovy/JVM")
-        }
-
-        KOTLIN -> {
-          logging.debug("Configuring Kotlin/JVM")
-        }
-
-        SCALA -> {
-          logging.debug("Configuring Scala/JVM")
-        }
+        JVM -> logging.warn("JVM runtime plugin is not yet implemented")
+        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+        KOTLIN -> logging.warn("Kotlin runtime plugin is not yet implemented")
+        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
 
         else -> if (!lang.suppressExperimentalWarning) {
           Statics.logging.warn("Language is not supported yet for CLI use: ${lang.name}")
         }
       }
     }
-    // build all property sets into one unified stream, and configure the VM with it
-    configureVM(Stream.concat(
-      Stream.concat(baseProps, langProps.stream().flatMap { it }),
-      debugging.apply(Statics.args.get().contains("--debug")),  // @TODO(sgammon): fix injection of this property
-    ))
-
-    // acquire VM with configured language support
-    logging.debug("Acquiring VM (languages: ${languagesEnabled.joinToString(",") { it.formalName }})")
-    vm = vmFactory.acquireVM(
-      *languagesEnabled.toTypedArray()
-    )
-    return true  // initialize VMs now that it has been configured
   }
 
   /** @inheritDoc */
@@ -1472,24 +1430,6 @@ import org.graalvm.polyglot.Engine as VMEngine
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
     supported.find { langs.contains(it.first) }?.second ?: throw ShellError.LANGUAGE_NOT_SUPPORTED.asError()
     logging.debug("Initializing language contexts (${langs.joinToString(", ") { it.id }})")
-
-    // resolve the file-system bundle to use
-    val userBundleUris = filesystems.mapNotNull {
-      checkFsBundle(it)
-    }
-    if (userBundleUris.isNotEmpty() && logging.isEnabled(LogLevel.DEBUG)) {
-      logging.debug("File-system bundle(s) specified: ${userBundleUris.joinToString(",")}")
-    } else {
-      logging.debug("No file-system bundles specified")
-    }
-
-    // inject FS configurators and use them. order matters; user bundles go last.
-    val bundleUris = vfsConfigurators.flatMap {
-      it.bundles()
-    }
-
-    // determine whether host I/O is enabled
-    val hostIo = (bundleUris.isEmpty() && (accessControl.allowIo || accessControl.allowAll))
 
     if (!executeLiteral && !useStdin && runnable == null) {
       // if no script inputs are specified, we are entering an interactive session. in this case, we should notify the
@@ -1513,16 +1453,11 @@ import org.graalvm.polyglot.Engine as VMEngine
       )
     }
 
-    withVM(context, userBundleUris, bundleUris, hostIO = hostIo, accessControl::apply) {
-      // warn about experimental status, as applicable
-      require(!initialized.get()) {
-        "Cannot re-initialize guest VM"
-      }
-      initialized.compareAndSet(false, true)
-
+    withContext {
       // activate interactive behavior
       interactive.compareAndSet(false, true)
 
+      // warn about experimental status, as applicable
       if (experimentalLangs.isNotEmpty()) {
         logging.warn(
           "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
@@ -1550,7 +1485,7 @@ import org.graalvm.polyglot.Engine as VMEngine
           beginInteractiveSession(
             langs,
             primaryLang.invoke(null),
-            it.engine,
+            engine,
             it,
           )
         } else {

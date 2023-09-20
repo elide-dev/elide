@@ -34,6 +34,17 @@ import org.graalvm.polyglot.Source
   public fun bindings(language: GuestLanguage? = null): PolyglotValue
 
   /**
+   * Parse the given [source] without evaluating it, possibly throwing an exception if a syntax error is found.
+   * Sources processed in this way may also be cached and reused by later invocations of [parse] or [evaluate].
+   *
+   * The returned [PolyglotValue] only supports [execute][org.graalvm.polyglot.Value.execute] without arguments.
+   *
+   * @param source The guest code to be parsed.
+   * @return A [PolyglotValue] representing the parsed source, possibly ready for execution.
+   */
+  public fun parse(source: Source): PolyglotValue
+  
+  /**
    * Evaluate the given [source], returning the result of the execution. Depending on the configuration of the context,
    * this method may fail if the selected language is not enabled in the underlying engine.
    *

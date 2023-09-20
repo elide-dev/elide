@@ -132,6 +132,7 @@ public abstract interface class elide/runtime/core/PolyglotContext {
 	public abstract fun enter ()V
 	public abstract fun evaluate (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
 	public abstract fun leave ()V
+	public abstract fun parse (Lorg/graalvm/polyglot/Source;)Lorg/graalvm/polyglot/Value;
 }
 
 public final class elide/runtime/core/PolyglotContextKt {

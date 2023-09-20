@@ -19,12 +19,12 @@ import elide.internal.conventions.publishing.publish
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.serialization")
   
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
 
+  id(libs.plugins.ksp.get().pluginId)
   id("elide.internal.conventions")
 }
 
@@ -42,6 +42,7 @@ elide {
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    ksp = true
   }
 
   java {
@@ -56,7 +57,6 @@ elide {
 
 group = "dev.elide"
 version = rootProject.version as String
-val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 micronaut {
   version = libs.versions.micronaut.lib.get()
@@ -89,8 +89,8 @@ dependencies {
   api(libs.reactor.core)
 
   // KSP
-  kapt(mn.micronaut.inject)
-  kapt(mn.micronaut.inject.java)
+  ksp(mn.micronaut.inject)
+  ksp(mn.micronaut.inject.kotlin)
 
   // General
   implementation(libs.jackson.core)
@@ -155,9 +155,7 @@ dependencies {
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
 
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-  }
+  compileOnly(libs.graalvm.sdk)
 
   // Netty: Native
   implementation(libs.netty.tcnative)
@@ -195,8 +193,8 @@ dependencies {
   }
 
   // Testing
-  kaptTest(mn.micronaut.inject)
-  kaptTest(mn.micronaut.inject.java)
+//  kaptTest(mn.micronaut.inject)
+//  kaptTest(mn.micronaut.inject.java)
   testImplementation(libs.truth)
   testImplementation(libs.truth.java8)
   testImplementation(libs.truth.proto)

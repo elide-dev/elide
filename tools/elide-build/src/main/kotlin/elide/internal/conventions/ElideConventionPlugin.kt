@@ -22,7 +22,6 @@ import elide.internal.conventions.dependencies.configureDependencyResolution
 import elide.internal.conventions.docker.useGoogleCredentialsForDocker
 import elide.internal.conventions.jvm.*
 import elide.internal.conventions.kotlin.KotlinTarget.JVM
-import elide.internal.conventions.kotlin.KotlinTarget.Multiplatform
 import elide.internal.conventions.kotlin.configureKotlinBuild
 import elide.internal.conventions.native.configureNativeBuild
 import elide.internal.conventions.native.publishNativeLibrary
@@ -116,6 +115,7 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       configureKotlinBuild(
         target = kotlinTarget,
         configureKapt = kapt,
+        configureKsp = ksp,
         configureAllOpen = allOpen,
         configureNoArgs = noArgs,
         explicitApi = explicitApi,

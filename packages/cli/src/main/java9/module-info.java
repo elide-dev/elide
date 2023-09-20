@@ -20,9 +20,6 @@ module elide.cli {
   requires jakarta.inject;
   requires jakarta.annotation;
 
-  requires org.graalvm.sdk;
-  requires org.graalvm.truffle;
-
   requires kotlin.stdlib;
   requires kotlinx.coroutines.core;
 

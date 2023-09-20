@@ -52,9 +52,7 @@ dependencies {
 
   jvm {
     api(mn.micronaut.http)
-    if (encloseSdk) {
-      compileOnly(libs.graalvm.sdk)
-    }
+    compileOnly(libs.graalvm.sdk)
   }
 
   jvmTest {

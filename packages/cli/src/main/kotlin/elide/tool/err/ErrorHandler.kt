@@ -228,7 +228,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
           file = firstFrame?.fileName,
           line = firstFrame?.lineNumber,
           column = firstFrame?.columnNumber,
-          threadId = context.thread?.threadId(),
+          threadId = context.thread?.id,
           threadName = context.thread?.name,
           language = language?.id,
         )

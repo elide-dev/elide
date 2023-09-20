@@ -41,6 +41,7 @@ elide {
 
 dependencies {
   // Modules
+  api(libs.graalvm.polyglot)
   implementation(projects.packages.graalvm)
 
   // Kotlin / KotlinX

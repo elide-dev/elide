@@ -18,8 +18,6 @@ module elide.ssr {
     requires io.micronaut.core;
     requires io.micronaut.http;
 
-    requires org.graalvm.sdk;
-
     requires elide.base;
 
     exports elide.ssr;

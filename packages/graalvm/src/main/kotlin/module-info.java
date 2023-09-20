@@ -31,12 +31,12 @@ module elide.graalvm {
   requires org.reactivestreams;
   requires com.lmax.disruptor;
 
-  requires org.graalvm.sdk;
-  requires org.graalvm.truffle;
-
   requires elide.core;
   requires elide.base;
   requires elide.ssr;
+
+  requires org.graalvm.polyglot;
+
   requires com.google.common.jimfs;
   requires org.apache.commons.compress;
   requires io.micronaut.context;

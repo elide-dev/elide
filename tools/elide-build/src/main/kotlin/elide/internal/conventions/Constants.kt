@@ -123,6 +123,7 @@ public object Constants {
       "-progressive",
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
+      "-Xexpect-actual-classes",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */
@@ -138,7 +139,6 @@ public object Constants {
     internal val JsCompilerArgs = BaseCompilerArgs.plus(
       listOf(
         "-Xgenerate-dts",
-        "-Xexpect-actual-classes",
       ),
     )
 
@@ -154,11 +154,7 @@ public object Constants {
     )
 
     /** Compiler args to include in KMP targets. */
-    internal val KmpCompilerArgs = BaseCompilerArgs.plus(
-      listOf(
-        "-Xexpect-actual-classes",
-      )
-    )
+    internal val KmpCompilerArgs = BaseCompilerArgs
   }
 }
 

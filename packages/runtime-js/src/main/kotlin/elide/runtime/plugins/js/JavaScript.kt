@@ -92,6 +92,17 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.v8-compat" to config.v8,
     )
 
+    if(config.wasm) {
+      enableOptions(
+        "wasm.Memory64",
+        "wasm.MultiValue",
+        "wasm.UseUnsafeMemory",
+        "wasm.BulkMemoryAndRefTypes",
+      )
+
+      option("wasm.Builtins", WASI_STD)
+    }
+
     if (config.npmConfig.enabled) {
       val replacement = config.builtinModulesConfig.replacements().entries.joinToString(",") {
         "${it.key}:${it.value}"
@@ -109,6 +120,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     private const val JS_LANGUAGE_ID = "js"
     private const val JS_PLUGIN_ID = "JavaScript"
 
+    private const val WASI_STD = "wasi_snapshot_preview1"
     private const val FUNCTION_CONSTRUCTOR_CACHE_SIZE: String = "256"
     private const val UNHANDLED_REJECTIONS: String = "handler"
     private const val DEBUG_GLOBAL: String = "__ElideDebug__"

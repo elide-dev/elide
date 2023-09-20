@@ -108,6 +108,10 @@ public final class elide/runtime/core/HostPlatform$OperatingSystem : java/lang/E
 	public static fun values ()[Lelide/runtime/core/HostPlatform$OperatingSystem;
 }
 
+public final class elide/runtime/core/HostPlatformKt {
+	public static final fun isUnix (Lelide/runtime/core/HostPlatform$OperatingSystem;)Z
+}
+
 public abstract interface class elide/runtime/core/PluginRegistry {
 	public abstract fun install (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun install$default (Lelide/runtime/core/PluginRegistry;Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
@@ -246,6 +250,33 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginMa
 
 public final class elide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest$EmbeddedResource$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/plugins/debug/Debug {
+	public static final field Plugin Lelide/runtime/plugins/debug/Debug$Plugin;
+	public synthetic fun <init> (Lelide/runtime/plugins/debug/DebugConfig;Lelide/runtime/core/HostPlatform;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lelide/runtime/plugins/debug/DebugConfig;
+}
+
+public final class elide/runtime/plugins/debug/Debug$Plugin : elide/runtime/core/EnginePlugin {
+	public fun getKey-wLvarY0 ()Ljava/lang/String;
+	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/debug/Debug;
+	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/plugins/debug/DebugConfig {
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getSourcePaths ()Ljava/util/List;
+	public final fun getSuspend ()Z
+	public final fun getWaitAttached ()Z
+	public final fun setPath (Ljava/lang/String;)V
+	public final fun setSourcePaths (Ljava/util/List;)V
+	public final fun setSuspend (Z)V
+	public final fun setWaitAttached (Z)V
+}
+
+public final class elide/runtime/plugins/debug/DebugPluginKt {
+	public static final fun debug (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class elide/runtime/plugins/vfs/Vfs {

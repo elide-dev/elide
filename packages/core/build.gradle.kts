@@ -16,9 +16,7 @@ import elide.internal.conventions.kotlin.*
 
 plugins {
   id("elide.internal.conventions")
-
   kotlin("multiplatform")
-  kotlin("kapt")
 }
 
 elide {
@@ -31,7 +29,6 @@ elide {
   kotlin {
     target = KotlinTarget.All
     explicitApi = true
-    kapt = true
   }
 }
 
@@ -39,11 +36,5 @@ dependencies {
   jvm {
     api(kotlin("stdlib-jdk8"))
     api(libs.jetbrains.annotations)
-  }
-
-  jvmTest {
-    configurations["kapt"].dependencies.add(
-      mn.micronaut.inject.java.asProvider().get()
-    )
   }
 }

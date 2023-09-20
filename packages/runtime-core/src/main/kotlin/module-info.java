@@ -1,6 +1,6 @@
 module elide.runtime.core {
   requires elide.graalvm;
-  requires org.graalvm.sdk;
+  requires org.graalvm.polyglot;
 
   requires kotlin.stdlib;
   requires kotlinx.serialization.core;

@@ -17,15 +17,28 @@ package elide.tool.engine
 
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Requires
+import io.micronaut.context.condition.Condition
+import io.micronaut.context.condition.ConditionContext
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.Source
-import elide.runtime.gvm.jvm.cfg.JvmRuntimeConfig
-import elide.runtime.gvm.python.cfg.PythonRuntimeConfig
-import elide.runtime.gvm.ruby.cfg.RubyRuntimeConfig
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.testing.SelfTest
 import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
+
+
+abstract class LanguageCondition constructor (private val language: String): Condition {
+  override fun matches(context: ConditionContext<*>): Boolean {
+    TODO("Not yet implemented")
+  }
+}
+
+class JsEngineCondition: LanguageCondition("js")
+class PythonEngineCondition: LanguageCondition("python")
+class RubyEngineCondition: LanguageCondition("ruby")
+class JvmEngineCondition: LanguageCondition("java")
+class LlvmEngineCondition: LanguageCondition("llvm")
+class WasmEngineCondition: LanguageCondition("wasm")
 
 /** Basic engine tests. */
 @Bean @EmbeddedTest class EngineTest : SelfTest() {
@@ -42,6 +55,7 @@ import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 }
 
 /** JavaScript engine tests. */
+@Requires(classes = [JsEngineCondition::class])
 @Bean @EmbeddedTest class JsEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("js").engine(Engine.create()).build()
@@ -72,6 +86,7 @@ import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 }
 
 /** WASM engine tests. */
+@Requires(classes = [WasmEngineCondition::class])
 @Bean @EmbeddedTest class WasmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("wasm").engine(Engine.create()).build()
@@ -81,7 +96,7 @@ import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 }
 
 /** Python engine tests. */
-@Requires(classes = [PythonRuntimeConfig::class])
+@Requires(classes = [PythonEngineCondition::class])
 @Bean @EmbeddedTest class PythonEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("python").engine(Engine.create()).build()
@@ -111,7 +126,7 @@ import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 }
 
 /** Ruby engine tests. */
-@Requires(classes = [RubyRuntimeConfig::class])
+@Requires(classes = [RubyEngineCondition::class])
 @Bean @EmbeddedTest class RubyEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("ruby").engine(Engine.create()).build()
@@ -142,7 +157,7 @@ import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 }
 
 /** JVM engine tests. */
-@Requires(classes = [JvmRuntimeConfig::class])
+@Requires(classes = [JvmEngineCondition::class])
 @Bean @EmbeddedTest class JvmEngineTest : SelfTest() {
   override suspend fun SelfTestContext.test() = assertDoesNotThrow {
     Context.newBuilder("java").engine(Engine.create()).build()

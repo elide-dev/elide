@@ -56,6 +56,7 @@ elide {
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 dependencies {
+  api(libs.graalvm.polyglot.llvm)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   implementation(projects.packages.graalvmJvm)

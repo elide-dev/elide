@@ -254,7 +254,7 @@ import java.util.logging.LogRecord
       val ctx = allocateContext()
       logging.trace { "Context ready for VM thread '${thread.name}'" }
       workerContext.set(ctx)
-      threadId.set(thread.threadId())
+      threadId.set(thread.id)
       threadName = thread.name
       logging.trace { "VM worker initialized for thread '${thread.name}'" }
     }

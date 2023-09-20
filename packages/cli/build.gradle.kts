@@ -88,7 +88,7 @@ val isRelease = !quickbuild && (
 
 val entrypoint = "elide.tool.cli.ElideTool"
 
-val oracleGvm = false
+val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
@@ -535,8 +535,6 @@ val commonGvmArgs = listOf(
 )
 
 val commonNativeArgs = listOf(
-  "--language:js",
-  "--language:nfi",
   "--language:icu4j",
   "--language:regex",
   "--no-fallback",
@@ -559,13 +557,7 @@ val commonNativeArgs = listOf(
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).asSequence().plus(if (enableEdge) listOf(
   "-H:+UnlockExperimentalVMOptions",
-) else emptyList()).plus(listOfNotNull(
-  if (enableEspresso) "--language:java" else null,
-  if (enableWasm) "--language:wasm" else null,
-  if (enableLlvm) "--language:llvm" else null,
-  if (enablePython) "--language:python" else null,
-  if (enableRuby) "--language:ruby" else null,
-)).plus(if (enableTools) listOf(
+) else emptyList()).plus(if (enableTools) listOf(
   "--tool:chromeinspector",
   "--tool:coverage",
   "--tool:profiler",

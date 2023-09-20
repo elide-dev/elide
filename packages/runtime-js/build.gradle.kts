@@ -39,6 +39,7 @@ elide {
 
 dependencies {
   // Modules
+  api(libs.graalvm.polyglot.js)
   implementation(projects.packages.runtimeCore)
 
   // Kotlin

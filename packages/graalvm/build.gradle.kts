@@ -19,7 +19,6 @@
   "COMPATIBILITY_WARNING",
 )
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import elide.internal.conventions.elide
 import elide.internal.conventions.publishing.publish
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -28,13 +27,13 @@ import kotlinx.benchmark.gradle.*
 
 plugins {
   kotlin("jvm")
-  kotlin("kapt")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
   id("org.graalvm.buildtools.native")
+  id(libs.plugins.ksp.get().pluginId)
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
@@ -71,8 +70,6 @@ allOpen {
 group = "dev.elide"
 version = rootProject.version as String
 
-val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
-
 java {
   sourceCompatibility = JavaVersion.VERSION_20
   targetCompatibility = JavaVersion.VERSION_20
@@ -81,17 +78,6 @@ java {
 
 kotlin {
   explicitApi()
-}
-
-kapt {
-  useBuildCache = true
-  includeCompileClasspath = false
-  strictMode = true
-  correctErrorTypes = true
-
-  javacOptions {
-    option("--modulepath", tasks.compileJava.get().classpath.files.joinToString(",") { it.path })
-  }
 }
 
 sourceSets {
@@ -187,6 +173,9 @@ val benchmarksRuntimeOnly: Configuration by configurations.getting {
 }
 
 dependencies {
+  // KSP
+  ksp(mn.micronaut.inject.kotlin)
+
   // API Deps
   api(libs.jakarta.inject)
 
@@ -239,14 +228,16 @@ dependencies {
   implementation(projects.packages.proto.protoKotlinx)
   implementation(projects.packages.proto.protoFlatbuffers)
 
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-    compileOnly(libs.graalvm.svm)
-    compileOnly(libs.graalvm.truffle.api)
-    testCompileOnly(libs.graalvm.sdk)
-    testCompileOnly(libs.graalvm.svm)
-    testCompileOnly(libs.graalvm.truffle.api)
-  }
+  api(libs.graalvm.polyglot)
+  api(libs.graalvm.polyglot.tools.coverage)
+  api(libs.graalvm.polyglot.tools.dap)
+  api(libs.graalvm.polyglot.tools.inspect)
+  api(libs.graalvm.polyglot.tools.insight)
+  api(libs.graalvm.polyglot.tools.heap)
+  api(libs.graalvm.polyglot.tools.profiler)
+
+  testImplementation(libs.bundles.graalvm.polyglot)
+  testImplementation(libs.bundles.graalvm.tools)
 
   // Testing
   testImplementation(projects.packages.test)

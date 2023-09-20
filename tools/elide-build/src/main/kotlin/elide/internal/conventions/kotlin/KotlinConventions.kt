@@ -1,5 +1,6 @@
 package elide.internal.conventions.kotlin
 
+import com.google.devtools.ksp.gradle.KspExtension
 import com.google.devtools.ksp.gradle.KspTask
 import org.gradle.api.Project
 import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
@@ -21,6 +22,7 @@ import elide.internal.conventions.publishing.publishJavadocJar
  *
  * @param explicitApi Whether to enable Explicit API mode for all source sets.
  * @param configureKapt Whether to configure KAPT if present, according to internal conventions.
+ * @param configureKsp Whether to configure KSP if present, according to internal conventions.
  * @param configureAllOpen Whether to configure the AllOpen plugin with annotations used often in Elide packages.
  * @param configureNoArgs Whether to configure the NoArgs plugin with annotations used often in Elide packages.
  * @param configureJavaModules Whether to enable processing of `module-info.java` files for JPMS support.
@@ -30,6 +32,7 @@ internal fun Project.configureKotlinBuild(
   target: KotlinTarget,
   explicitApi: Boolean = false,
   configureKapt: Boolean = false,
+  configureKsp: Boolean = false,
   configureAllOpen: Boolean = false,
   configureNoArgs: Boolean = false,
   configureJavaModules: Boolean = false,
@@ -85,6 +88,11 @@ internal fun Project.configureKotlinBuild(
     correctErrorTypes = true
     keepJavacAnnotationProcessors = true
     includeCompileClasspath = false
+  }
+
+  // configure KSP extension
+  if (configureKsp) extensions.getByType(KspExtension::class.java).apply {
+    allowSourcesFromOtherPlugins = true
   }
 
   // configure AllOpen plugin

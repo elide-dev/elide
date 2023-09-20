@@ -8,8 +8,8 @@ jna = "5.8.0"
 ksp = "1.9.20-Beta-1.0.13"
 koin = "3.4.3"
 koin_ksp = "1.2.2"
-graalvm = "23.0.1"
-graalvm_sdk = "23.0.1"
+graalvm = "23.1.0"
+graalvm_pin = "23.1.0"
 graalvm_svm_driver = "22.0.0.2"
 graalvm_metadata = "0.3.3"
 graalvm_plugin = "0.9.27"
@@ -174,7 +174,7 @@ brotli4j = "1.12.0"
 projectreactor = "2022.0.11"
 projectreactor_core = "3.5.10"
 projectreactor_netty = "1.1.11"
-bouncycastle = "1.70"
+bouncycastle = "1.76"
 tink = "1.10.0"
 conscrypt = "2.5.2"
 kover = "0.7.3"
@@ -387,28 +387,73 @@ logback_core = { group = "ch.qos.logback", name = "logback-core", version.ref = 
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
-graalvm_sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graalvm_sdk" }
-graalvm_truffle_api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm_sdk" }
-graalvm_truffle_processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm_sdk" }
-graalvm_truffle_nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm_sdk" }
-graalvm_truffle_nfi_libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm_sdk" }
-graalvm_regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graalvm_sdk" }
-graalvm_js_engine = { group = "org.graalvm.js", name = "js", version.ref = "graalvm_sdk" }
-graalvm_js_benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm_sdk" }
-graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm_sdk" }
-graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm_sdk" }
-graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm_sdk" }
-graalvm_launcher_common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm_sdk" }
-graalvm_launcher_js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm_sdk" }
-graalvm_tools_lsp_api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm_sdk" }
-graalvm_tools_lsp_impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm_sdk" }
-graalvm_tools_profiler = { group = "org.graalvm.tools", name = "profiler", version.ref = "graalvm_sdk" }
-graalvm_tools_dap = { group = "org.graalvm.tools", name = "dap", version.ref = "graalvm_sdk" }
-graalvm_tools_coverage = { group = "org.graalvm.tools", name = "coverage", version.ref = "graalvm_sdk" }
-graalvm_tools_chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector", version.ref = "graalvm_sdk" }
-graalvm_svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm_sdk" }
+graalvm_shadowed_json = { group = "org.graalvm.shadowed", name = "json", version.ref = "graalvm" }
+graalvm_shadowed_jline = { group = "org.graalvm.shadowed", name = "jline", version.ref = "graalvm" }
+graalvm_shadowed_icu4j = { group = "org.graalvm.shadowed", name = "icu4j", version.ref = "graalvm" }
+graalvm_shadowed_antlr4 = { group = "org.graalvm.shadowed", name = "antlr4", version.ref = "graalvm" }
+graalvm_truffle_api = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graalvm" }
+graalvm_truffle_enterprise = { group = "org.graalvm.truffle", name = "truffle-enterprise", version.ref = "graalvm" }
+graalvm_truffle_processor = { group = "org.graalvm.truffle", name = "truffle-dsl-processor", version.ref = "graalvm" }
+graalvm_truffle_nfi = { group = "org.graalvm.truffle", name = "truffle-nfi", version.ref = "graalvm" }
+graalvm_truffle_nfi_panama = { group = "org.graalvm.truffle", name = "truffle-nfi-panama", version.ref = "graalvm" }
+graalvm_truffle_nfi_libffi = { group = "org.graalvm.truffle", name = "truffle-nfi-libffi", version.ref = "graalvm" }
+graalvm_truffle_nfi_native_linux_amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-amd64", version.ref = "graalvm" }
+graalvm_truffle_nfi_native_linux_aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-linux-aarch64", version.ref = "graalvm" }
+graalvm_truffle_nfi_native_darwin_amd64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-amd64", version.ref = "graalvm" }
+graalvm_truffle_nfi_native_darwin_aarch64 = { group = "org.graalvm.truffle", name = "truffle-nfi-native-darwin-aarch64", version.ref = "graalvm" }
+graalvm_llvm_api = { group = "org.graalvm.llvm", name = "llvm-api", version.ref = "graalvm" }
+graalvm_llvm_language = { group = "org.graalvm.llvm", name = "llvm-language", version.ref = "graalvm" }
+graalvm_llvm_language_enterprise = { group = "org.graalvm.llvm", name = "llvm-language-enterprise", version.ref = "graalvm" }
+graalvm_llvm_language_nfi = { group = "org.graalvm.llvm", name = "llvm-language-nfi", version.ref = "graalvm" }
+graalvm_llvm_language_native = { group = "org.graalvm.llvm", name = "llvm-language-native", version.ref = "graalvm" }
+graalvm_llvm_language_native_resources = { group = "org.graalvm.llvm", name = "llvm-language-native-resources", version.ref = "graalvm" }
+graalvm_llvm_language_native_enterprise = { group = "org.graalvm.llvm", name = "llvm-language-native-enterprise", version.ref = "graalvm" }
+graalvm_llvm_language_managed = { group = "org.graalvm.llvm", name = "llvm-language-managed", version.ref = "graalvm" }
+graalvm_llvm_language_managed_resources = { group = "org.graalvm.llvm", name = "llvm-language-managed-resources", version.ref = "graalvm" }
+graalvm_regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graalvm" }
+graalvm_js_benchmarks = { group = "org.graalvm.js", name = "js-interop-micro-benchmarks", version.ref = "graalvm" }
+graalvm_js_scriptEngine = { group = "org.graalvm.js", name = "js-scriptengine", version.ref = "graalvm" }
+graalvm_js_isolate = { group = "org.graalvm.js", name = "js-isolate", version.ref = "graalvm" }
+graalvm_js_language = { group = "org.graalvm.js", name = "js-language", version.ref = "graalvm" }
+graalvm_espresso_polyglot = { group = "org.graalvm.espresso", name = "polyglot", version.ref = "graalvm" }
+graalvm_espresso_hotswap = { group = "org.graalvm.espresso", name = "hotswap", version.ref = "graalvm" }
+graalvm_espresso_language = { group = "org.graalvm.espresso", name = "language", version.ref = "graalvm" }
+graalvm_launcher_common = { group = "org.graalvm.sdk", name = "launcher-common", version.ref = "graalvm" }
+graalvm_launcher_js = { group = "org.graalvm.js", name = "js-launcher", version.ref = "graalvm" }
+graalvm_tools_lsp_api = { group = "org.graalvm.tools", name = "lsp_api", version.ref = "graalvm" }
+graalvm_tools_lsp_impl = { group = "org.graalvm.tools", name = "lsp", version.ref = "graalvm" }
+graalvm_tools_profiler = { group = "org.graalvm.tools", name = "profiler", version.ref = "graalvm" }
+graalvm_tools_dap = { group = "org.graalvm.tools", name = "dap", version.ref = "graalvm" }
+graalvm_tools_coverage = { group = "org.graalvm.tools", name = "coverage", version.ref = "graalvm" }
+graalvm_tools_chromeinspector = { group = "org.graalvm.tools", name = "chromeinspector", version.ref = "graalvm" }
+graalvm_svm = { group = "org.graalvm.nativeimage", name = "svm", version.ref = "graalvm" }
 graalvm_svm_driver = { group = "org.graalvm.nativeimage", name = "svm_driver", version.ref = "graalvm_svm_driver" }
-graalvm_svm_nativeImage_base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm_sdk" }
+graalvm_svm_nativeImage_base = { group = "org.graalvm.nativeimage", name = "native-image-base", version.ref = "graalvm" }
+graalvm_polyglot = { group = "org.graalvm.polyglot", name = "polyglot", version.ref = "graalvm" }
+graalvm_polyglot_js = { group = "org.graalvm.polyglot", name = "js", version.ref = "graalvm" }
+graalvm_polyglot_js_isolate = { group = "org.graalvm.polyglot", name = "js-isolate", version.ref = "graalvm" }
+graalvm_polyglot_ruby = { group = "org.graalvm.polyglot", name = "ruby", version.ref = "graalvm" }
+graalvm_polyglot_python = { group = "org.graalvm.polyglot", name = "python", version.ref = "graalvm" }
+graalvm_polyglot_wasm = { group = "org.graalvm.polyglot", name = "wasm", version.ref = "graalvm" }
+graalvm_polyglot_llvm = { group = "org.graalvm.polyglot", name = "llvm", version.ref = "graalvm" }
+graalvm_polyglot_java = { group = "org.graalvm.polyglot", name = "java", version.ref = "graalvm" }
+graalvm_polyglot_tools = { group = "org.graalvm.polyglot", name = "tools", version.ref = "graalvm" }
+graalvm_polyglot_tools_coverage = { group = "org.graalvm.polyglot", name = "coverage", version.ref = "graalvm" }
+graalvm_polyglot_tools_dap = { group = "org.graalvm.polyglot", name = "dap", version.ref = "graalvm" }
+graalvm_polyglot_tools_insight = { group = "org.graalvm.polyglot", name = "insight", version.ref = "graalvm" }
+graalvm_polyglot_tools_inspect = { group = "org.graalvm.polyglot", name = "inspect", version.ref = "graalvm" }
+graalvm_polyglot_tools_heap = { group = "org.graalvm.polyglot", name = "heap", version.ref = "graalvm" }
+graalvm_polyglot_tools_profiler = { group = "org.graalvm.polyglot", name = "profiler", version.ref = "graalvm" }
+graalvm_polyglot_tools_lsp = { group = "org.graalvm.polyglot", name = "lsp", version.ref = "graalvm" }
+graalvm_python_launcher = { group = "org.graalvm.python", name = "python-launcher", version.ref = "graalvm" }
+graalvm_python_language = { group = "org.graalvm.python", name = "python-language", version.ref = "graalvm" }
+graalvm_python_language_enterprise = { group = "org.graalvm.python", name = "python-language-enterprise", version.ref = "graalvm" }
+graalvm_python_resources = { group = "org.graalvm.python", name = "python-resources", version.ref = "graalvm" }
+graalvm_wasm_language = { group = "org.graalvm.wasm", name = "wasm-language", version.ref = "graalvm" }
+graalvm_ruby_language = { group = "org.graalvm.ruby", name = "ruby-language", version.ref = "graalvm" }
+graalvm_ruby_resources = { group = "org.graalvm.ruby", name = "ruby-resources", version.ref = "graalvm" }
+graalvm_ruby_annotations = { group = "org.graalvm.ruby", name = "ruby-annotations", version.ref = "graalvm" }
+graalvm_ruby_shared = { group = "org.graalvm.ruby", name = "ruby-shared", version.ref = "graalvm" }
 opentelemetry_exporter_logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
 opentelemetry_exporter_googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 kotlinx_wrappers_bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinx_wrappers_bom" }
@@ -496,10 +541,10 @@ reactor_core = { group = "io.projectreactor", name = "reactor-core", version.ref
 reactor_netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor_netty" }
 reactor_netty_core = { group = "io.projectreactor.netty", name = "reactor-netty-core", version.ref = "projectreactor_netty" }
 reactor_netty_http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "projectreactor_netty" }
-bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk15on", version.ref = "bouncycastle" }
-bouncycastle_tls = { group = "org.bouncycastle", name = "bctls-jdk15on", version.ref = "bouncycastle" }
-bouncycastle_pkix = { group = "org.bouncycastle", name = "bcpkix-jdk15on", version.ref = "bouncycastle" }
-bouncycastle_util = { group = "org.bouncycastle", name = "bcutil-jdk15on", version.ref = "bouncycastle" }
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_tls = { group = "org.bouncycastle", name = "bctls-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
+bouncycastle_util = { group = "org.bouncycastle", name = "bcutil-jdk18on", version.ref = "bouncycastle" }
 tink = { group = "com.google.crypto.tink", name = "tink", version.ref = "tink" }
 tink_gcp = { group = "com.google.crypto.tink", name = "tink-gcpkms", version.ref = "tink" }
 tink_aws = { group = "com.google.crypto.tink", name = "tink-awskms", version.ref = "tink" }
@@ -647,23 +692,27 @@ arrow = [
   "arrow_optics_core",
   "arrow_fx"
 ]
+
 kotlinx_coroutines_jvm = [
   "kotlinx_coroutines_core",
   "kotlinx_coroutines_jdk8",
   "kotlinx_coroutines_jdk9",
   "kotlinx_coroutines_slf4j"
 ]
+
 kotlinx_serialization = [
   "kotlinx_serialization_core",
   "kotlinx_serialization_json",
   "kotlinx_serialization_protobuf",
   "kotlinx_serialization_properties"
 ]
+
 kotlinx_atomicfu = [
   "kotlinx_atomicfu",
   "kotlinx_atomicfu_linux_x64",
   "kotlinx_atomicfu_macos_x64"
 ]
+
 kotlinx = [
   "kotlinx_coroutines_core",
   "kotlinx_serialization_json",
@@ -673,7 +722,67 @@ kotlinx = [
   "kotlinx_collections_immutable",
   "kotlinx_datetime",
 ]
+
 koin = [
   "koin_core",
   "koin_annotations",
+]
+
+graalvm_polyglot = [
+  "graalvm_polyglot",
+  "graalvm_polyglot_js",
+  "graalvm_polyglot_ruby",
+  "graalvm_polyglot_python",
+  "graalvm_polyglot_wasm",
+  "graalvm_polyglot_llvm",
+  "graalvm_polyglot_java",
+]
+
+graalvm_tools = [
+  "graalvm_polyglot_tools",
+  "graalvm_polyglot_tools_coverage",
+  "graalvm_polyglot_tools_dap",
+  "graalvm_polyglot_tools_insight",
+  "graalvm_polyglot_tools_inspect",
+  "graalvm_polyglot_tools_heap",
+  "graalvm_polyglot_tools_profiler",
+  "graalvm_polyglot_tools_lsp",
+]
+
+graalvm_regex = [
+  "graalvm_regex",
+]
+
+graalvm_nfi = [
+  "graalvm_truffle_nfi",
+  "graalvm_truffle_nfi_panama",
+]
+
+graalvm_llvm = [
+  "graalvm_llvm_api",
+  "graalvm_llvm_language_nfi",
+  "graalvm_llvm_language_enterprise",
+  "graalvm_llvm_language_native_enterprise",
+]
+
+graalvm_espresso = [
+  "graalvm_espresso_hotswap",
+]
+
+graalvm_python = [
+  "graalvm_python_launcher",
+  "graalvm_python_language_enterprise",
+]
+
+graalvm_ruby = [
+  "graalvm_ruby_language",
+  "graalvm_ruby_resources",
+  "graalvm_ruby_annotations",
+]
+
+graalvm_js = [
+  "graalvm_js_isolate",
+  "graalvm_js_language",
+  "graalvm_polyglot_js",
+  "graalvm_polyglot_js_isolate",
 ]

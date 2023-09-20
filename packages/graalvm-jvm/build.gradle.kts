@@ -57,6 +57,7 @@ val encloseEspressoResources = false
 val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 dependencies {
+  api(libs.graalvm.polyglot.java)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.graalvm)
   compileOnly(libs.graalvm.espresso.polyglot)

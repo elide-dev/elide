@@ -1,5 +1,7 @@
 package elide.runtime.core
 
+import elide.runtime.core.HostPlatform.OperatingSystem.*
+
 /**
  * Provides read-only information about the Host platform, which can be used by plugins to run platform-specific
  * code.
@@ -85,3 +87,10 @@ package elide.runtime.core
     }
   }
 }
+
+/** Whether this OS family is UNIX-based. Returns true for [LINUX] and [DARWIN] enum entries. */
+@DelicateElideApi public inline val HostPlatform.OperatingSystem.isUnix: Boolean
+  get() = when (this) {
+    LINUX, DARWIN -> true
+    WINDOWS -> false
+  }

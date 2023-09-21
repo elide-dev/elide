@@ -52,7 +52,7 @@ dependencies {
 
   jvm {
     api(mn.micronaut.http)
-    compileOnly(libs.graalvm.sdk)
+    implementation(libs.graalvm.polyglot)
   }
 
   jvmTest {

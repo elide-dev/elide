@@ -54,7 +54,6 @@ elide {
 }
 
 val encloseEspressoResources = false
-val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
 
 dependencies {
   api(libs.graalvm.polyglot.java)
@@ -66,11 +65,6 @@ dependencies {
   if (encloseEspressoResources) {
     api(files(layout.projectDirectory.file("lib/espresso-libs-resources.jar")))
     api(files(layout.projectDirectory.file("lib/espresso-runtime-resources.jar")))
-  }
-
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-    compileOnly(libs.graalvm.truffle.api)
   }
 
   // Testing

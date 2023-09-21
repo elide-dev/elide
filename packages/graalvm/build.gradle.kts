@@ -27,13 +27,13 @@ import kotlinx.benchmark.gradle.*
 
 plugins {
   kotlin("jvm")
+  kotlin("kapt")
   kotlin("plugin.allopen")
   kotlin("plugin.serialization")
 
   alias(libs.plugins.micronaut.library)
   alias(libs.plugins.micronaut.graalvm)
   id("org.graalvm.buildtools.native")
-  id(libs.plugins.ksp.get().pluginId)
 
   alias(libs.plugins.jmh)
   alias(libs.plugins.kotlinx.plugin.benchmark)
@@ -52,9 +52,14 @@ elide {
     }
   }
 
+  java {
+    configureModularity = true
+  }
+
   kotlin {
     target = KotlinTarget.JVM
     explicitApi = true
+    kapt = true
   }
 
   native {
@@ -73,7 +78,6 @@ version = rootProject.version as String
 java {
   sourceCompatibility = JavaVersion.VERSION_20
   targetCompatibility = JavaVersion.VERSION_20
-  modularity.inferModulePath = true
 }
 
 kotlin {
@@ -174,7 +178,7 @@ val benchmarksRuntimeOnly: Configuration by configurations.getting {
 
 dependencies {
   // KSP
-  ksp(mn.micronaut.inject.kotlin)
+  kapt(mn.micronaut.inject.java)
 
   // API Deps
   api(libs.jakarta.inject)
@@ -235,6 +239,8 @@ dependencies {
   api(libs.graalvm.polyglot.tools.insight)
   api(libs.graalvm.polyglot.tools.heap)
   api(libs.graalvm.polyglot.tools.profiler)
+  api(libs.graalvm.regex)
+  api(libs.graalvm.polyglot.js)
 
   testImplementation(libs.bundles.graalvm.polyglot)
   testImplementation(libs.bundles.graalvm.tools)
@@ -279,8 +285,8 @@ tasks {
   }
 
   compileJava {
-    options.javaModuleVersion = version as String
-    modularity.inferModulePath = true
+//    options.javaModuleVersion = version as String
+//    modularity.inferModulePath = true
   }
 
   /**

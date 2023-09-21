@@ -27,9 +27,13 @@ import elide.tool.testing.SelfTest
 import elide.tool.testing.TestContext.Companion.assertDoesNotThrow
 
 
-abstract class LanguageCondition constructor (private val language: String): Condition {
+abstract class LanguageCondition (private val language: String): Condition {
+  companion object {
+    private val ENGINE = Engine.create()
+  }
+
   override fun matches(context: ConditionContext<*>): Boolean {
-    TODO("Not yet implemented")
+    return ENGINE.languages.containsKey(language)
   }
 }
 

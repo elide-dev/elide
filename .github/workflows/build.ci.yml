@@ -285,7 +285,7 @@ jobs:
           cache: "yarn"
       - name: "Setup: Yarn"
         run: npm install -g yarn@1.22.19 && yarn --ignore-platform
-      - name: "Run Tests (JVM)"
+      - name: "Testsuite (JVM)"
         uses: gradle/gradle-build-action@ef76a971e2fa3f867b617efd72f2fbd72cf6f8bc # v2.8.0
         env:
           CI: true
@@ -313,6 +313,32 @@ jobs:
             -PbuildSamples=false
             -PbuildDocs=false
             -PbuildDocsSite=false
+      - name: "Runtime Self-tests (JVM)"
+        uses: gradle/gradle-build-action@ef76a971e2fa3f867b617efd72f2fbd72cf6f8bc # v2.8.0
+        continue-on-error: true
+        env:
+          CI: true
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        with:
+          cache-read-only: false
+          arguments: |
+            optimizedRun
+            --scan
+            --no-daemon
+            --warning-mode=none
+            --dependency-verification=lenient
+            -x ktlintCheck
+            -x ktlintKotlinScriptCheck
+            -x apiCheck
+            -x nativeTest
+            -x nativeCompile
+            -x nativeOptimizedCompile
+            -Pelide.ci=true
+            -PbuildSamples=false
+            -PbuildDocs=false
+            -PbuildDocsSite=false
+            --args="selftest"
       - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: test-reports-jvm

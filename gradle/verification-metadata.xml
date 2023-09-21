@@ -4,6 +4,8 @@
       <verify-metadata>true</verify-metadata>
       <verify-signatures>true</verify-signatures>
       <trusted-artifacts>
+         <trust file="micronaut-aot-api-2.1.1.jar"/>
+         <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom"/>
          <trust group="com.autonomousapps.dependency-analysis"/>
          <trust group="dev.elide"/>
          <trust group="io.freefair.lombok"/>
@@ -13,12 +15,11 @@
          <trust group="org.jetbrains.dokka"/>
          <trust group="org.jetbrains.kotlin"/>
          <trust group="org.jetbrains.kotlin.mulitplatform"/>
-         <trust file="org.jetbrains.kotlin.multiplatform.gradle.plugin-1.9.20-Beta.pom" />
-         <trust file="micronaut-aot-api-2.1.1.jar" />
       </trusted-artifacts>
       <ignored-keys>
          <ignored-key id="3fcfa3b530afdce3" reason="Key couldn't be downloaded from any key server"/>
          <ignored-key id="91aa2c186c4d7a86" reason="Key couldn't be downloaded from any key server"/>
+         <ignored-key id="84e913a8e3a748c0" reason="Key couldn't be downloaded from any key server"/>
       </ignored-keys>
       <trusted-keys>
          <trusted-key id="015479e1055341431b4545ab72475fd306b9cab7" group="com.googlecode.javaewah" name="JavaEWAH" version="1.1.13"/>
@@ -58,6 +59,7 @@
          <trusted-key id="20723a6399bc060154283b37cfae163b64ac9189" group="^org[.]jetbrains[.]compose($|([.].*))" regex="true"/>
          <trusted-key id="24a43606bc3dd75dd8af7d283fcfa3b530afdce3" group="^nl[.]littlerobots($|([.].*))" regex="true"/>
          <trusted-key id="24d04176586361fda94ee0315f7786df73e61f56" group="com.google.devtools.ksp"/>
+         <trusted-key id="2655176f748fd83725b4805ff2a01147d830c125" group="org.testcontainers" name="testcontainers-bom"/>
          <trusted-key id="26fec9593e8d7c65732f62521a7e7697213cd197">
             <trusting group="org.kohsuke" name="github-api" version="1.313"/>
             <trusting group="org.kohsuke" name="github-api" version="1.316"/>
@@ -99,7 +101,10 @@
          <trusted-key id="475f3b8e59e6e63aa78067482c7b12f2a511e325" group="org.slf4j"/>
          <trusted-key id="4797b4f5dcc46cea61059071a1ae06236ca2ba62" group="com.diffplug.gradle" name="goomph" version="3.42.2"/>
          <trusted-key id="47eb6836245d2d40e89dfb4136d4e9618f3adab5" group="io.github.microutils" name="kotlin-logging-jvm"/>
-         <trusted-key id="48b086a7d843cfa258e83286928fbf39003c0425" group="^io[.]projectreactor($|([.].*))" regex="true"/>
+         <trusted-key id="48b086a7d843cfa258e83286928fbf39003c0425">
+            <trusting group="org.springframework"/>
+            <trusting group="^io[.]projectreactor($|([.].*))" regex="true"/>
+         </trusted-key>
          <trusted-key id="4db1a49729b053caf015cee9a6adfc93ef34893e" group="org.hamcrest"/>
          <trusted-key id="4f7e32d440ef90a83011a8fc6425559c47cc79c4" group="javax.annotation" name="javax.annotation-api"/>
          <trusted-key id="50a628ffaf58480736b1079fd1031d14464180e0" group="org.reactivestreams" name="reactive-streams" version="1.0.4"/>
@@ -149,6 +154,7 @@
          <trusted-key id="7faa0f2206de228f0db01ad741321490758aad6f" group="org.codehaus.groovy" name="groovy" version="2.5.8"/>
          <trusted-key id="7fe5e98df3a5c0dc34663ab7c1add37ca0069309" group="org.spdx" name="spdx-gradle-plugin" version="0.2.0"/>
          <trusted-key id="82c9ec0e52c47a936a849e0113d979595e6d01e1" group="org.apache.maven.shared" name="maven-shared-utils" version="3.3.4"/>
+         <trusted-key id="8446b9e902a3f3ddee711fdb8e26ff248bc7aead" group="^org[.]jruby($|([.].*))" regex="true"/>
          <trusted-key id="84789d24df77a32433ce1f079eb80e92eb2135b1">
             <trusting group="org.codehaus.mojo"/>
             <trusting group="^org[.]apache($|([.].*))" regex="true"/>
@@ -165,7 +171,10 @@
          <trusted-key id="89114d320b8b1c52c3b09991fa120a6742234999" group="com.google.jsinterop"/>
          <trusted-key id="8a10792983023d5d14c93b488d7f1bec1e2ecae7" group="^com[.]fasterxml($|([.].*))" regex="true"/>
          <trusted-key id="8da70c00df7af1b0d2f9dc74ddbcc1270a29d081" group="org.apache.ant"/>
-         <trusted-key id="8e3a02905a1ae67e7b0f9acd3967d4eda591b991" group="org.jetbrains.kotlinx"/>
+         <trusted-key id="8e3a02905a1ae67e7b0f9acd3967d4eda591b991">
+            <trusting group="io.ktor" name="ktor-bom" version="2.3.4"/>
+            <trusting group="org.jetbrains.kotlinx"/>
+         </trusted-key>
          <trusted-key id="90ee19787a7bcf6fd37a1e9180c08b1c29100955" group="com.jakewharton.mosaic"/>
          <trusted-key id="939b0d42eb73eda659af78ec37d490c301d1b205" group="de.cketti.unicode"/>
          <trusted-key id="98465301a4939c0279f2e847d89d05374952262b" group="org.jetbrains.dokka"/>
@@ -224,7 +233,10 @@
          <trusted-key id="dbd744ace7ade6aa50dd591f66b50994442d2d40" group="^com[.]squareup($|([.].*))" regex="true"/>
          <trusted-key id="dc057bc7f1115d8301c0c0e906e21faaf25a2c7a" group="com.lmax" name="disruptor" version="3.4.4"/>
          <trusted-key id="dc98224c6421a7a5bb87f346ed2378cd09a08cde" group="org.fusesource.jansi" name="jansi" version="2.4.0"/>
-         <trusted-key id="e2acb037933cdeaab7bf77d49a2c7a98e457c53d" group="io.projectreactor"/>
+         <trusted-key id="e2acb037933cdeaab7bf77d49a2c7a98e457c53d">
+            <trusting group="io.projectreactor"/>
+            <trusting group="org.springframework" name="spring-framework-bom" version="5.3.24"/>
+         </trusted-key>
          <trusted-key id="e5b8247af8a619a28f90fdfc9ff25980f5ba7e4f" group="^org[.]fusesource($|([.].*))" regex="true"/>
          <trusted-key id="e62231331bca7e1f292c9b88c1b12a5d99c0729d" group="org.jetbrains"/>
          <trusted-key id="e77417ac194160a3fabd04969a259c7ee636c5ed" group="com.google.errorprone"/>
@@ -6376,6 +6388,14 @@
             <sha256 value="285b8be595870f61d75e7881b0fb4edc2d1aa37d0a79c4fc8ff2dccf1d9c69fd" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="org.bouncycastle" name="bcpkix-jdk18on" version="1.76">
+         <artifact name="bcpkix-jdk18on-1.76.jar">
+            <sha256 value="935a388854c329f9a6f32708f30c90045d2f91294fa687281273145d4cf9834a" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
+         </artifact>
+         <artifact name="bcpkix-jdk18on-1.76.pom">
+            <sha256 value="f621ec7eaccd323e7d2fbcaf0ffd8720cf6ea842a65c2bd30e830588912c946e" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
+         </artifact>
+      </component>
       <component group="org.bouncycastle" name="bcprov-jdk15on" version="1.70">
          <artifact name="bcprov-jdk15on-1.70.jar">
             <sha256 value="8f3c20e3e2d565d26f33e8d4857a37d0d7f8ac39b62a7026496fcab1bdac30d4" origin="Generated by Gradle"/>
@@ -6392,6 +6412,14 @@
             <sha256 value="e3bb6d9e1346cfc230e0900f177e60a12b6dbe212a92e1cd2cfb1e48d4c04839" origin="Generated by Gradle"/>
          </artifact>
       </component>
+      <component group="org.bouncycastle" name="bcprov-jdk18on" version="1.76">
+         <artifact name="bcprov-jdk18on-1.76.jar">
+            <sha256 value="fda85d777aaae168015860b23a77cad9b8d3a1d5c904fda875313427bd560179" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
+         </artifact>
+         <artifact name="bcprov-jdk18on-1.76.pom">
+            <sha256 value="153009592d3b8f8349f97b8f1538bef0c83341b026918a2327dace22334ffee8" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
+         </artifact>
+      </component>
       <component group="org.bouncycastle" name="bcutil-jdk15on" version="1.70">
          <artifact name="bcutil-jdk15on-1.70.jar">
             <sha256 value="52dc5551b0257666526c5095424567fed7dc7b00d2b1ba7bd52298411112b1d0" origin="Generated by Gradle"/>
@@ -6406,6 +6434,14 @@
          </artifact>
          <artifact name="bcutil-jdk18on-1.72.pom">
             <sha256 value="570104ccac0dfa29e46fb6402f7e6a721702c255def43be301c6acb18c25e76d" origin="Generated by Gradle"/>
+         </artifact>
+      </component>
+      <component group="org.bouncycastle" name="bcutil-jdk18on" version="1.76">
+         <artifact name="bcutil-jdk18on-1.76.jar">
+            <sha256 value="1a65ad02958223a3f31373bd72eea942cafd1b1877a3ed0b492c2487e77c3c27" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
+         </artifact>
+         <artifact name="bcutil-jdk18on-1.76.pom">
+            <sha256 value="de5ed3ca118c693d190c5c46d89e0380bb5d77acd8a43b5190403e76483f81ed" origin="Generated by Gradle" reason="A key couldn't be downloaded"/>
          </artifact>
       </component>
       <component group="org.capnproto" name="runtime" version="0.1.16">

@@ -80,7 +80,7 @@ val peers = mapOf(
 
 // Generic version aliases.
 val versionAliases = mapOf(
-  "graalvm" to libs.versions.graalvm.sdk,
+  "graalvm" to libs.versions.graalvm.pin,
   "kotlin.language" to libs.versions.kotlin.language,
 )
 

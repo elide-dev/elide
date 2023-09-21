@@ -53,8 +53,6 @@ elide {
   }
 }
 
-val encloseSdk = !System.getProperty("java.vm.version").contains("jvmci")
-
 dependencies {
   api(libs.graalvm.polyglot.llvm)
   implementation(libs.kotlinx.coroutines.core)
@@ -62,10 +60,6 @@ dependencies {
   implementation(projects.packages.graalvmJvm)
   compileOnly(libs.graalvm.espresso.polyglot)
   compileOnly(libs.graalvm.espresso.hotswap)
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-    compileOnly(libs.graalvm.truffle.api)
-  }
 
   // Testing
   testImplementation(projects.packages.test)

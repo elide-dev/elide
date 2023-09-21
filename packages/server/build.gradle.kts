@@ -155,8 +155,6 @@ dependencies {
   implementation(libs.reactivestreams)
   implementation(libs.google.common.html.types.types)
 
-  compileOnly(libs.graalvm.sdk)
-
   // Netty: Native
   implementation(libs.netty.tcnative)
 

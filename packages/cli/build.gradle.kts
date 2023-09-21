@@ -92,16 +92,17 @@ val oracleGvm = true
 val enableEdge = true
 val enableWasm = true
 val enablePython = true
-val enableRuby = true
+val enableRuby = false
 val enableTools = true
 val enableMosaic = true
 val enableProguard = false
 val enableLlvm = false
-val enableEspresso = true
+val enableEspresso = false
 val enableExperimental = false
-val enableEmbeddedResources = enableExperimental
-val enableJpms = enableExperimental
-val enableDashboard = oracleGvm
+val enableEmbeddedResources = false
+val enableJpms = false
+val enableDashboard = false
+val enableStrictHeap = enableExperimental
 val enableG1 = oracleGvm
 val enablePgo = oracleGvm && isRelease
 val enablePgoInstrumentation = oracleGvm && !isRelease
@@ -131,6 +132,8 @@ if (enableMosaic) apply(plugin = "com.jakewharton.mosaic")
 val jvmCompileArgs = listOf(
   "--enable-preview",
   "--add-exports=java.base/jdk.internal.module=elide.cli",
+  "--add-exports=org.graalvm.truffle/com.oracle.truffle.object=ALL-UNNAMED",
+  "--add-exports=org.graalvm.truffle.runtime/com.oracle.truffle.runtime=ALL-UNNAMED",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=elide.cli",
   "--add-exports=jdk.internal.vm.compiler/org.graalvm.compiler.options=ALL-UNNAMED",
   "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
@@ -372,13 +375,14 @@ dependencies {
   // GraalVM: Tools + Compilers
   compileOnly(libs.graalvm.svm)
 
-  if (encloseSdk) {
-    compileOnly(libs.graalvm.sdk)
-    compileOnly(libs.graalvm.truffle.api)
-  }
-  compileOnly(libs.graalvm.tools.lsp.api)
-  compileOnly(libs.graalvm.truffle.nfi)
-  compileOnly(libs.graalvm.truffle.nfi.libffi)
+  api(libs.graalvm.polyglot)
+  api(libs.bundles.graalvm.tools)
+  api(libs.bundles.graalvm.espresso)
+  api(libs.graalvm.regex)
+//  api(libs.graalvm.truffle.nfi)
+//  api(libs.graalvm.truffle.nfi.libffi)
+//  api(libs.graalvm.truffle.nfi.panama)
+  compileOnly(libs.graalvm.svm)
 
   runtimeOnly(mn.micronaut.runtime)
 
@@ -531,12 +535,10 @@ tasks.withType(Test::class).configureEach {
 
 val commonGvmArgs = listOf(
   "-H:+UseCompressedReferences",
-  "-H:+BuildReport",
+//  "-H:+BuildReport",
 )
 
 val commonNativeArgs = listOf(
-  "--language:icu4j",
-  "--language:regex",
   "--no-fallback",
   "--enable-preview",
   "--enable-http",
@@ -557,15 +559,11 @@ val commonNativeArgs = listOf(
   if (enablePgoInstrumentation) "--pgo-instrument" else null,
 ).asSequence().plus(if (enableEdge) listOf(
   "-H:+UnlockExperimentalVMOptions",
-) else emptyList()).plus(if (enableTools) listOf(
-  "--tool:chromeinspector",
-  "--tool:coverage",
-  "--tool:profiler",
-  "--tool:lsp",
-  "--tool:dap",
-) else emptyList()).plus(if (enableEdge) listOfNotNull(
-  if (!enableTruffleJson) null else "--language:truffle-json",
-) else emptyList()).plus(if (oracleGvm) commonGvmArgs else emptyList()).toList()
+) else emptyList()).plus(
+  if (oracleGvm) commonGvmArgs else emptyList()
+).plus(if (enableStrictHeap) listOf(
+  "--strict-image-heap",
+) else emptyList()).toList()
 
 val dashboardFlags: List<String> = listOf(
   "-H:DashboardDump=elide-tool",
@@ -631,9 +629,7 @@ val profiles: List<String> = listOf(
 
 // GVM release flags
 val gvmReleaseFlags: List<String> = listOf(
-  "-H:+AOTInliner",
-  "-H:+AOTAggregateProfiles",
-  "-H:+AggressiveColdCodeOptimizations",
+  "-H:+AOTInline",
   "-H:+VectorizeSIMD",
   "-H:+LSRAOptimization",
   "-H:+MLProfileInference",
@@ -656,14 +652,11 @@ val releaseFlags: List<String> = listOf(
 }).plus(if (enablePgo) listOf(
   "--pgo=${profiles.joinToString(",")}",
   "-H:CodeSectionLayoutOptimization=ClusterByEdges",
-) else emptyList(),
-).plus(
-  if (enableSbom) listOf("--enable-sbom") else emptyList()
-).plus(
-  if (enableDashboard) dashboardFlags else emptyList()
-).plus(
-  if (oracleGvm) gvmReleaseFlags else emptyList()
-).toList()
+) else emptyList()).plus(listOf(
+  if (enableSbom) listOf("--enable-sbom=cyclonedx,export") else emptyList(),
+  if (enableDashboard) dashboardFlags else emptyList(),
+  if (oracleGvm) gvmReleaseFlags else emptyList(),
+).flatten()).toList()
 
 val jvmDefs = mapOf(
   "user.country" to "US",
@@ -1390,11 +1383,8 @@ configurations.all {
       .using(module("net.java.dev.jna:jna:${libs.versions.jna.get()}"))
   }
 
-  if (!encloseSdk) {
-    // provided by runtime
-    exclude(group = "org.graalvm.sdk", module = "graal-sdk")
-    exclude(group = "org.graalvm.truffle", module = "truffle-api")
-  }
+  // graduated to `23.1`
+  exclude(group = "org.graalvm.sdk", module = "graal-sdk")
 }
 
 // Fix: Java9 Modularity

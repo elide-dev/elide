@@ -170,6 +170,16 @@ public final class elide/runtime/core/extensions/ContextBuilderKt {
 	public static final fun setOptions (Lorg/graalvm/polyglot/Context$Builder;[Lkotlin/Pair;)V
 }
 
+public final class elide/runtime/core/extensions/EngineBuilderKt {
+	public static final fun disableOption (Lorg/graalvm/polyglot/Engine$Builder;Ljava/lang/String;)V
+	public static final fun disableOptions (Lorg/graalvm/polyglot/Engine$Builder;[Ljava/lang/String;)V
+	public static final fun enableOption (Lorg/graalvm/polyglot/Engine$Builder;Ljava/lang/String;)V
+	public static final fun enableOptions (Lorg/graalvm/polyglot/Engine$Builder;[Ljava/lang/String;)V
+	public static final fun setBooleanOptions (Lorg/graalvm/polyglot/Engine$Builder;[Lkotlin/Pair;)V
+	public static final fun setOption (Lorg/graalvm/polyglot/Engine$Builder;Ljava/lang/String;Z)V
+	public static final fun setOptions (Lorg/graalvm/polyglot/Engine$Builder;[Lkotlin/Pair;)V
+}
+
 public final class elide/runtime/core/extensions/ExecutionListenerKt {
 	public static final fun attach (Lorg/graalvm/polyglot/management/ExecutionListener$Builder;Lelide/runtime/core/PolyglotEngine;)Lorg/graalvm/polyglot/management/ExecutionListener;
 }
@@ -270,11 +280,37 @@ public final class elide/runtime/plugins/debug/Debug$Plugin : elide/runtime/core
 }
 
 public final class elide/runtime/plugins/debug/DebugConfig {
+	public final fun chromeInspector (Lkotlin/jvm/functions/Function1;)V
+	public final fun debugAdapter (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class elide/runtime/plugins/debug/DebugConfig$DebugAdapterConfig {
+	public final fun getEnabled ()Z
+	public final fun getHost ()Ljava/lang/String;
+	public final fun getPort ()I
+	public final fun getSuspend ()Z
+	public final fun getWaitAttached ()Z
+	public final fun setEnabled (Z)V
+	public final fun setHost (Ljava/lang/String;)V
+	public final fun setPort (I)V
+	public final fun setSuspend (Z)V
+	public final fun setWaitAttached (Z)V
+}
+
+public final class elide/runtime/plugins/debug/DebugConfig$InspectorConfig {
+	public final fun getEnabled ()Z
+	public final fun getHost ()Ljava/lang/String;
+	public final fun getInternal ()Z
 	public final fun getPath ()Ljava/lang/String;
+	public final fun getPort ()I
 	public final fun getSourcePaths ()Ljava/util/List;
 	public final fun getSuspend ()Z
 	public final fun getWaitAttached ()Z
+	public final fun setEnabled (Z)V
+	public final fun setHost (Ljava/lang/String;)V
+	public final fun setInternal (Z)V
 	public final fun setPath (Ljava/lang/String;)V
+	public final fun setPort (I)V
 	public final fun setSourcePaths (Ljava/util/List;)V
 	public final fun setSuspend (Z)V
 	public final fun setWaitAttached (Z)V

@@ -222,7 +222,95 @@ import elide.tool.extensions.installIntrinsics
     internal fun resolve(): EnumSet<GuestLanguage> = langs
   }
 
-  /** Specifies debugger/inspector settings. */
+  /** Specifies settings for the Chrome DevTools inspector. */
+  @Introspected @ReflectiveAccess class InspectorConfig {
+    @Option(
+      names = ["--inspect"],
+      description = ["Whether to enable the Chrome Devtools inspector"],
+      defaultValue = "false",
+    )
+    internal var enabled: Boolean = false
+
+    /** Specifies whether the inspector should suspend immediately at execution start. */
+    @Option(
+      names = ["--inspect:suspend"],
+      description = ["Whether the inspector should suspend execution immediately."],
+      defaultValue = "false",
+    )
+    internal var suspend: Boolean = false
+
+    /** Specifies whether the inspector should suspend for internal (facade) sources. */
+    @Option(
+      names = ["--inspect:internal"],
+      description = ["Specifies whether the inspector should suspend for internal (facade) sources"],
+      defaultValue = "false",
+      hidden = false,
+    )
+    internal var `internal`: Boolean = false
+
+    /** Specifies whether the inspector should suspend for internal (facade) sources. */
+    @Option(
+      names = ["--inspect:wait"],
+      description = ["Whether to wait for the inspector to attach before executing any code at all."],
+      defaultValue = "false",
+    )
+    internal var wait: Boolean = false
+
+    /** Specifies the port the inspector should bind to. */
+    @Option(
+      names = ["--inspect:port"],
+      description = ["Set the port the inspector binds to"],
+      defaultValue = "4200",
+    )
+    internal var port: Int = 0
+
+    /** Specifies the host the inspector should bind to. */
+    @Option(
+      names = ["--inspect:host"],
+      description = ["Set the host the inspector binds to"],
+      defaultValue = "localhost",
+    )
+    internal var host: String = ""
+
+    /** Specifies the path the inspector should bind to. */
+    @Option(
+      names = ["--inspect:path"],
+      description = ["Set a custom path for the inspector"],
+    )
+    internal var path: String? = null
+
+    /** Specifies paths where sources are available. */
+    @Option(
+      names = ["--inspect:sources"],
+      arity = "0..N",
+      description = ["Add a source directory to the inspector path. Specify 0-N times."],
+    )
+    internal var sources: List<String> = emptyList()
+
+    /** Apply these settings to the root engine configuration container. */
+    internal fun apply(config: PolyglotEngineConfiguration) {
+      if(!enabled) return
+
+      // install and configure the Debug plugin
+      config.debug {
+        chromeInspector {
+          enabled = this@InspectorConfig.enabled
+
+          suspend = this@InspectorConfig.suspend
+          internal = this@InspectorConfig.internal
+          waitAttached = wait
+
+          host = this@InspectorConfig.host
+          port = this@InspectorConfig.port
+
+          path = this@InspectorConfig.path
+          sourcePaths = sources
+        }
+      }
+    }
+  }
+
+  /** Specifies settings for the Debug Adapter Protocol host. */
   @Introspected @ReflectiveAccess class DebugConfig {
     /** Specifies whether the debugger should suspend immediately at execution start. */
     @Option(
@@ -231,15 +319,6 @@ import elide.tool.extensions.installIntrinsics
       defaultValue = "false",
     )
     internal var suspend: Boolean = false
-
-    /** Specifies whether the debugger should suspend for internal (facade) sources. */
-    @Option(
-      names = ["--debug:internal"],
-      description = ["Specifies whether the debugger should suspend for internal (facade) sources"],
-      defaultValue = "false",
-      hidden = false,
-    )
-    internal var `internal`: Boolean = false
 
     /** Specifies whether the debugger should suspend for internal (facade) sources. */
     @Option(
@@ -253,7 +332,7 @@ import elide.tool.extensions.installIntrinsics
     @Option(
       names = ["--debug:port"],
       description = ["Set the port the debugger binds to"],
-      defaultValue = "4200",
+      defaultValue = "4711",
     )
     internal var port: Int = 0
 
@@ -265,29 +344,17 @@ import elide.tool.extensions.installIntrinsics
     )
     internal var host: String = ""
 
-    /** Specifies the path the debugger should bind to. */
-    @Option(
-      names = ["--debug:path"],
-      description = ["Set a custom path for the debugger"],
-    )
-    internal var path: String? = null
-
-    /** Specifies paths where sources are available. */
-    @Option(
-      names = ["--debug:sources"],
-      arity = "0..N",
-      description = ["Add a source directory to the inspector path. Specify 0-N times."],
-    )
-    internal var sources: List<String> = emptyList()
-
     /** Apply these settings to the root engine configuration container. */
     internal fun apply(config: PolyglotEngineConfiguration) {
       // install and configure the Debug plugin
       config.debug {
-        sourcePaths = sources
-        waitAttached = wait
-        path = this@DebugConfig.path
-        suspend = this@DebugConfig.suspend
+        debugAdapter {
+          suspend = this@DebugConfig.suspend
+          waitAttached = wait
+
+          host = this@DebugConfig.host
+          port = this@DebugConfig.port
+        }
       }
     }
   }
@@ -537,11 +604,17 @@ import elide.tool.extensions.installIntrinsics
     heading = "%nAccess Control:%n",
   ) internal var accessControl: HostAccessSettings = HostAccessSettings.DEFAULTS
 
-  /** Debugger settings. */
+  /** Chrome inspector settings. */
   @ArgGroup(
     exclusive = false,
-    heading = "%nDebugging:%n",
-  ) internal var debugging: DebugConfig = DebugConfig()
+    heading = "%nInspector:%n",
+  ) internal var inspector: InspectorConfig = InspectorConfig()
+
+  /** DAP host settings. */
+  @ArgGroup(
+    exclusive = false,
+    heading = "%nDebugger:%n",
+  ) internal var debugger: DebugConfig = DebugConfig()
 
   /** Language selector. */
   @ArgGroup(
@@ -1341,9 +1414,9 @@ import elide.tool.extensions.installIntrinsics
   }
 
   override fun PolyglotEngineConfiguration.configureEngine() {
-    // @TODO(sgammon): fix injection of this property
     // conditionally apply debugging settings
-    if (Statics.args.get().contains("--debug")) debugging.apply(this)
+    if(debug) debugger.apply(this)
+    inspector.apply(this)
 
     // configure VFS with user-specified bundles
     vfs {

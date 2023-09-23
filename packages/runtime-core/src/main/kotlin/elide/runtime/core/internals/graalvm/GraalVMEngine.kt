@@ -7,7 +7,14 @@ import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
 import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.proxy.Proxy
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.logging.Handler
+import java.util.logging.Level
+import java.util.logging.LogRecord
 import kotlin.io.path.Path
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent
 import elide.runtime.core.EngineLifecycleEvent.EngineCreated
@@ -21,6 +28,7 @@ import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
+import elide.runtime.gvm.internals.VMStaticProperty
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
 /**
@@ -94,6 +102,47 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   }
 
   internal companion object {
+    /** Stubbed output stream. */
+    private object StubbedOutputStream : OutputStream() {
+      override fun write(b: Int): Unit = error("Cannot write to stubbed stream from inside a guest VM.")
+    }
+
+    /** Stubbed input stream. */
+    private object StubbedInputStream : InputStream() {
+      override fun read(): Int = error("Cannot read from stubbed stream from inside a guest VM.")
+    }
+
+    /** Simple proxy allowing the use of a [Logger] in GraalVM engines. */
+    private class EngineLogHandler(private val logger: Logger) : Handler() {
+      override fun publish(record: LogRecord?) {
+        if (record == null) return
+        val fmt = record.message
+
+        when (record.level) {
+          // no-op if off
+          Level.OFF -> {}
+
+          // FINEST becomes trace
+          Level.FINEST -> logger.info(fmt)
+
+          // FINE and FINER become debug
+          Level.FINE,
+          Level.FINER -> logger.debug(fmt)
+
+          // INFO stays info
+          Level.INFO -> logger.info(fmt)
+
+          // WARN becomes warning, ERROR becomes SEVERE
+          Level.WARNING -> logger.warn(fmt)
+          Level.SEVERE -> logger.error(fmt)
+        }
+      }
+
+      override fun flush() = Unit
+      override fun close() = Unit
+    }
+
+
     /** Whether to enable VM isolates. */
     private const val ENABLE_ISOLATES = false
 
@@ -102,6 +151,9 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
     /** Whether the runtime is built as a native image. */
     private val isNativeImage = ImageInfo.inImageCode()
+
+    /** Logger used for engine instances */
+    private val engineLogger = Logging.named("elide:engine")
 
     /** Whether the auxiliary cache is actually enabled. */
     private val useAuxCache = (
@@ -125,7 +177,18 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     ): GraalVMEngine {
       val languages = configuration.languages.map { it.languageId }.toTypedArray()
       val builder = Engine.newBuilder(*languages).apply {
+        useSystemProperties(false)
         allowExperimentalOptions(true)
+
+        // stub streams
+        if (System.getProperty("elide.js.vm.enableStreams", "false") != "true") {
+          `in`(StubbedInputStream)
+          out(StubbedOutputStream)
+          err(StubbedOutputStream)
+        }
+
+        // assign core log handler
+        logHandler(EngineLogHandler(engineLogger))
 
         // base options enabled for every engine
         enableOptions(
@@ -134,9 +197,24 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           "engine.Compilation",
           "engine.MultiTier",
           "engine.Splitting",
-          "engine.Inlining",
           "engine.InlineAcrossTruffleBoundary",
+          "engine.OSR",
         )
+
+        // TODO(@darvld): swap for throughput in server mode
+        option("engine.Mode", "latency")
+
+        // TODO(@darvld): translate this to an API in the core package
+        listOfNotNull(
+          VMStaticProperty.activeWhenAtMost("23.0", "engine.Inlining"),
+          VMStaticProperty.activeWhenAtMost("23.0", "engine.InlineAcrossTruffleBoundary"),
+          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.Inlining"),
+          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.EncodedGraphCache"),
+          VMStaticProperty.activeWhenAtLeast("23.1", "compiler.InlineAcrossTruffleBoundary"),
+          VMStaticProperty.inactiveWhenAtLeast("23.1", "engine.WarnOptionDeprecation"),
+        ).forEach {
+          option(it.symbol, it.value())
+        }
 
         // isolate options
         if (ENABLE_ISOLATES) {

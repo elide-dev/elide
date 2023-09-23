@@ -71,7 +71,7 @@ import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
 import elide.runtime.core.extensions.attach
 import elide.runtime.gvm.internals.GraalVMGuest
 import elide.runtime.gvm.internals.IntrinsicsManager
-import elide.runtime.intrinsics.js.ServerAgent
+import elide.runtime.intriniscs.server.http.HttpServerAgent
 import elide.runtime.plugins.debug.debug
 import elide.runtime.plugins.js.JavaScript
 import elide.runtime.plugins.js.JavaScriptConfig
@@ -108,7 +108,7 @@ import elide.tool.extensions.installIntrinsics
     "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|kt|jvm|python|ruby|wasm|node|deno|@ [OPTIONS] FILE",
-  ]
+  ],
 )
 @Singleton internal class ToolShellCommand : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
@@ -290,7 +290,7 @@ import elide.tool.extensions.installIntrinsics
 
     /** Apply these settings to the root engine configuration container. */
     internal fun apply(config: PolyglotEngineConfiguration) {
-      if(!enabled) return
+      if (!enabled) return
 
       // install and configure the Debug plugin
       config.debug {
@@ -506,10 +506,10 @@ import elide.tool.extensions.installIntrinsics
   // Intrinsics manager
   @Inject internal lateinit var intrinsicsManager: IntrinsicsManager
 
-  // Server manager.
-  @Inject private lateinit var server: ServerAgent
+  // Server manager
+  private val serverAgent: HttpServerAgent = HttpServerAgent()
 
-  // Server runner.
+  // Synchronization primitive used to coordinate server behavior
   private val phaser: AtomicReference<Phaser> = AtomicReference(Phaser(1))
 
   // Whether a server is running.
@@ -672,7 +672,7 @@ import elide.tool.extensions.installIntrinsics
     paramLabel = "FILE|CODE",
     description = [
       "File or snippet to run. If `-c|--code` is passed, interpreted " +
-      "as a snippet. If not specified, an interactive shell is started."
+              "as a snippet. If not specified, an interactive shell is started.",
     ],
   )
   internal var runnable: String? = null
@@ -746,7 +746,7 @@ import elide.tool.extensions.installIntrinsics
         Source.newBuilder(primaryLanguage.symbol, code, "stdin")
           .encoding(StandardCharsets.UTF_8)
           .internal(false)
-          .buildLiteral()
+          .buildLiteral(),
       )
     } else executeOneChunk(
       languages,
@@ -755,7 +755,7 @@ import elide.tool.extensions.installIntrinsics
       "stdin",
       code,
       interactive = false,
-      literal = false
+      literal = false,
     )
   }
 
@@ -909,13 +909,13 @@ import elide.tool.extensions.installIntrinsics
         fw.write(
           """
           theme ${rootPath.absolutePathString()}/nanorc/dark.nanorctheme
-          """.trimIndent()
+          """.trimIndent(),
         )
         fw.write("\n")
         fw.write(
           """
           include ${rootPath.absolutePathString()}/nanorc/*.nanorc
-          """.trimIndent()
+          """.trimIndent(),
         )
         fw.write("\n")
       }
@@ -1023,19 +1023,22 @@ import elide.tool.extensions.installIntrinsics
     val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
 
     // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
-    val width = minOf(term?.width ?: 120, maxOf(
-      // message plus padding
-      message.length + pad,
+    val width = minOf(
+      term?.width ?: 120,
+      maxOf(
+        // message plus padding
+        message.length + pad,
 
-      // error context lines
-      maxErrLineSize,
+        // error context lines
+        maxErrLineSize,
 
-      // advice
-      (advice?.length ?: 0) + pad,
+        // advice
+        (advice?.length ?: 0) + pad,
 
-      // stacktrace
-      stacktraceLines.maxOf { it.length + pad + 2 },
-    ))
+        // stacktrace
+        stacktraceLines.maxOf { it.length + pad + 2 },
+      ),
+    )
 
     val textWidth = width - (pad / 2)
     val top = ("╔" + "═".repeat(textWidth) + "╗")
@@ -1304,35 +1307,13 @@ import elide.tool.extensions.installIntrinsics
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
-      // initialize the Express intrinsic
-      // TODO(@darlvd): restore once new server agent implementation lands
-      // server.initialize(ctx, phaser.get())
+      // initialize the server intrinsic and run using the provided source
+      serverAgent.run(entrypoint = source, acquireContext = ::resolvePolyglotContext)
+      phaser.get().register()
 
-      // parse the source
-      val parsed = runCatching {
-        logging.debug("Parsing entrypoint source")
-        ctx.parse(source)
-      }.getOrElse { cause ->
-        logging.error("Failed to parse entrypoint source", cause)
-        throw cause
-      }
-
-      // sanity check
-      if(!parsed.canExecute()) {
-        logging.error("Parsed entrypoint is not executable, aborting")
-        return
-      }
-
-      // execute the script
-      logging.debug("Executing parsed source")
-      parsed.executeVoid()
-      logging.debug("Finished entrypoint execution")
       serverRunning.set(true)
     } catch (exc: PolyglotException) {
-      when (val throwable = processUserCodeError(language, exc)) {
-        null -> {}
-        else -> throw throwable
-      }
+      processUserCodeError(language, exc)?.let { throw it }
     }
   }
 
@@ -1416,7 +1397,7 @@ import elide.tool.extensions.installIntrinsics
 
   override fun PolyglotEngineConfiguration.configureEngine() {
     // conditionally apply debugging settings
-    if(debug) debugger.apply(this)
+    if (debug) debugger.apply(this)
     inspector.apply(this)
 
     // configure VFS with user-specified bundles
@@ -1527,7 +1508,7 @@ import elide.tool.extensions.installIntrinsics
 
           // in `serve` mode, or with a `runnable`, we return `runnable` (script is required)
           else -> target
-        }
+        },
       )
     }
 
@@ -1539,7 +1520,7 @@ import elide.tool.extensions.installIntrinsics
       if (experimentalLangs.isNotEmpty()) {
         logging.warn(
           "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
-          "considered experimental."
+                  "considered experimental.",
         )
       }
 

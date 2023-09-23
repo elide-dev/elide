@@ -272,6 +272,9 @@ import org.graalvm.polyglot.Engine as VMEngine
   // Main top-level tool.
   @Inject internal lateinit var base: ElideTool
 
+  /** A thread-local [PolyglotContext] instance acquired from the [engine]. */
+  private val contextHandle: ThreadLocal<PolyglotContext> = ThreadLocal()
+
   /**
    * A lazily initialized [PolyglotEngine] instance, customized by the [configureEngine] event.
    *
@@ -389,6 +392,31 @@ import org.graalvm.polyglot.Engine as VMEngine
   }
 
   /**
+   * Resolve a thread-local [PolyglotContext], acquiring a new one from the [engine] if necessary. That the returned
+   * context _must not_ be shared with other threads to avoid exceptions related to concurrent usage.
+   *
+   * Subclasses should prefer [withContext] as it provides a limited scope in which the context can be used.
+   */
+  protected fun resolvePolyglotContext(): PolyglotContext {
+    logging.debug("Resolving context for current thread")
+
+    // already intialized on the current thread
+    contextHandle.get()?.let { cached ->
+      logging.debug("Reusing cached context for current thread")
+      return cached
+    }
+
+    // not initialized yet, acquire a new one and store it
+    logging.debug("No cached context found for current thread, acquiring new context")
+    return engine.acquire().also { created ->
+      contextHandle.set(created)
+
+      // always explicitly enter the context on the current thread
+      created.enter()
+    }
+  }
+
+  /**
    * TBD.
    */
   override fun close() {
@@ -434,17 +462,16 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   /**
    * Run a [block] of code using a [PolyglotContext] configured by the current [engine]. The context is guaranteed to
-   * be exclusive, and it will not be reused after this operation completes.
+   * be exclusive to this thread, but it may be reused after this operation completes.
    *
    * The first invocation of this method will cause the [engine] to be initialized, triggering the
    * [configureEngine] event.
    */
   protected open fun withContext(block: (PolyglotContext) -> Unit) {
     logging.debug("Acquiring context for CLI tool")
-    with(engine.acquire()) {
+    with(resolvePolyglotContext()) {
       logging.debug("Context acquired")
-      enter()
-      runCatching { block(this) }.onFailure { cause ->
+      runCatching(block).onFailure { cause ->
         // it's not a known tool error, log it
         if (cause !is AbstractToolError) logging.error(
           "Uncaught exception within VM context. Please catch and handle all VM execution exceptions.",
@@ -454,7 +481,6 @@ import org.graalvm.polyglot.Engine as VMEngine
         // always rethrow
         throw cause
       }
-      leave()
     }
   }
 

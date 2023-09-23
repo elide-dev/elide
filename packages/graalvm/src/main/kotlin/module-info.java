@@ -48,6 +48,7 @@ module elide.graalvm {
   exports elide.runtime.gvm.cfg;
   exports elide.runtime.gvm.internals;
   exports elide.runtime.gvm.internals.context;
+  exports elide.runtime.gvm.internals.intrinsics.js;
   exports elide.runtime.gvm.internals.intrinsics.js.base64;
   exports elide.runtime.gvm.internals.intrinsics.js.console;
   exports elide.runtime.gvm.internals.intrinsics.js.crypto;
